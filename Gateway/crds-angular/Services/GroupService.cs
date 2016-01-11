@@ -4,12 +4,17 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Opportunity;
+using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
+using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
 namespace crds_angular.Services
 {
@@ -21,7 +26,8 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IEventService _eventService;
         private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly IOpportunityService _opportunityService;
+        private readonly IServeService _serveService;
+        
 
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
@@ -32,13 +38,13 @@ namespace crds_angular.Services
                             IConfigurationWrapper configurationWrapper,
                             IEventService eventService,
                             IContactRelationshipService contactRelationshipService,
-                            IOpportunityService opportunityService)
+                            IServeService serveService)
         {
             _mpGroupService = mpGroupService;
             _configurationWrapper = configurationWrapper;
             _eventService = eventService;
             _contactRelationshipService = contactRelationshipService;
-            _opportunityService = opportunityService;
+            _serveService = serveService;
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
         }
 
@@ -130,15 +136,18 @@ namespace crds_angular.Services
 
         private List<GroupContactDTO> GroupMembersThatHaveNotRepliedToEvent(int groupId, int eventId)
         {
-            var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants;
-            var participants = groupMembers.Select(p => new GroupParticipant {ContactId = p.ContactId, LastName = p.LastName, NickName = p.NickName}).ToList();
-            var responses = _opportunityService.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId);
-
-            return participants.Where(p => responses.All(r => r != p.ContactId)).Select(part => new GroupContactDTO
+            try
             {
-                ContactId = part.ContactId,
-                DisplayName = part.LastName + ", " + part.NickName
-            }).ToList();
+                var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p => 
+                    new GroupParticipant {ContactId = p.ContactId, LastName = p.LastName, NickName = p.NickName, ParticipantId = p.ParticipantId}
+                    ).ToList();
+                var evt = Mapper.Map<crds_angular.Models.Crossroads.Events.Event>(_eventService.GetEvent(eventId));
+                return _serveService.PotentialVolunteers(groupId, evt, groupMembers);                                
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(e.Message);
+            }
         }
 
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
@@ -171,7 +180,7 @@ namespace crds_angular.Services
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
                 if (events != null)
                 {
-                    detail.Events = Enumerable.ToList<Event>(events.Select(Mapper.Map<MinistryPlatform.Models.Event, crds_angular.Models.Crossroads.Events.Event>));
+                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Models.Event, crds_angular.Models.Crossroads.Events.Event>).ToList();
                 }
                 //the first instance of family must always be the logged in user
                 var fam = new SignUpFamilyMembers
