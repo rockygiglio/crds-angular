@@ -3,24 +3,24 @@ GO
 
 --Get the required data to add to our contact. 
 Declare @contactID as int
-Set @contactID = (select contact_id from contacts where email_address = 'mpcrds+tifalockheart@gmail.com' and last_name = 'Lockhart');
+Set @contactID = (select top 1 contact_id from contacts where email_address = 'mpcrds+tifalockhart@gmail.com' and last_name = 'Lockhart');
 
 Declare @houseHoldID as int
 set @houseHoldID = (select houseHold_ID from contacts where contact_id = @contactID);
 
 Declare @participantID as int
-set @participantID = (select participant_record from contacts where contact_id = @contactID);
+set @participantID = (select participant_id from participants where contact_id = @contactID);
 
 Declare @userAccount as int
-set @userAccount = (select user_account from contacts where contact_id = @contactID);
+set @userAccount = (select user_id from dp_users where contact_id = @contactID);
 
 Declare @donorID as int
-set @donorID = (select donor_record from contacts where contact_id = @contactID);
+set @donorID = (select donor_id from donors where contact_id = @contactID);
 
 --Update old contact record so we can delete it. 
 UPDATE [dbo].Contacts
 SET Household_ID = null, Participant_Record = null, User_Account = null, Donor_record = null
-WHERE email_address = 'mpcrds+tifalockheart@gmail.com' and last_name = 'Lockhart';
+WHERE email_address = 'mpcrds+tifalockhart@gmail.com' and last_name = 'Lockhart';
 
 --Delete the address if it exists.
 IF  (select address_id from households where Household_ID = @houseHoldID) is not Null
@@ -72,10 +72,24 @@ delete from [dbo].contact_relationships where contact_id = @contactID;
 
 delete from [dbo].contact_relationships where related_contact_id = @contactID;
 
+--Delete all donations for Tifa's trip pledge program.
+DECLARE @donationsTable table
+(
+	donation_id int
+)
+
+insert into @donationsTable (donation_id) (select donation_id from donation_distributions where program_id in (select program_id from programs where program_name like '(t) GO Midgar%'));
+
+delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
+
+delete from donations where donation_id in (select donation_id from @donationsTable);
+
 --Delete all of Tifa's donations.
 delete from @donationsTable;
 
 insert into @donationsTable (donation_id) (select donation_id from donations where donor_id = @donorId);
+
+insert into @donationsTable (donation_id) (select donation_id from donation_distributions where soft_credit_donor = @donorId);
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
@@ -103,10 +117,10 @@ delete from participants where participant_id = @participantID;
 GO
 
 --Delete userAccount
-delete from dp_user_roles where user_id = (select user_id from dp_users where user_email = 'mpcrds+tifalockheart@gmail.com');
+delete from dp_user_roles where user_id = (select user_id from dp_users where user_email = 'mpcrds+tifalockhart@gmail.com');
 
-delete from dp_users where user_email = 'mpcrds+tifalockheart@gmail.com';
+delete from dp_users where user_email = 'mpcrds+tifalockhart@gmail.com';
 
 --Delete Tifa's old contact record
-DELETE FROM [dbo].Contacts where email_address = 'mpcrds+tifalockheart@gmail.com' and last_name = 'Lockhart';
+DELETE FROM [dbo].Contacts where contact_id = (select top 1 contact_id from contacts where email_address = 'mpcrds+tifalockhart@gmail.com' and last_name = 'Lockhart');
 GO

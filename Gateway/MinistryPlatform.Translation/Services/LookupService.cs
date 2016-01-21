@@ -5,18 +5,24 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class LookupService : BaseService
+    public class LookupService : BaseService, ILookupService
     {
         private readonly IMinistryPlatformService _ministryPlatformServiceImpl;
+
         public LookupService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformServiceImpl)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformServiceImpl = ministryPlatformServiceImpl;
         }
 
-        public Dictionary<string, object> EmailSearch(String email, string token)
+        public Dictionary<string, object> EmailSearch(string email, string token)
         {
             return _ministryPlatformServiceImpl.GetLookupRecord(AppSettings("Emails"), email, token);
+        }
+
+        public List<Dictionary<string, object>> EventTypes(string token)
+        {
+            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("EventTypesLookup"), token);
         }
 
         public List<Dictionary<string, object>> Genders(string token)
@@ -47,6 +53,11 @@ namespace MinistryPlatform.Translation.Services
         public List<Dictionary<string, object>> CrossroadsLocations(string token)
         {
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("CrossroadsLocations"), token);
+        }
+
+        public List<Dictionary<string, object>> ReminderDays(string token)
+        {
+            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("ReminderDaysLookup"), token);
         }
 
         public List<Dictionary<string, object>> WorkTeams(string token)

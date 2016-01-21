@@ -92,7 +92,7 @@
           }
         })
         .state('login', {
-          parent: 'noSideBar',
+          parent: 'noHeaderOrFooter',
           url: '/signin',
           templateUrl: 'login/login_page.html',
           controller: 'LoginController',
@@ -116,7 +116,7 @@
           }
         })
         .state('register', {
-          parent: 'noSideBar',
+          parent: 'noHeaderOrFooter',
           url: '/register',
           templateUrl: 'register/register_page.html',
           controller: 'RegisterCtrl',
@@ -151,18 +151,6 @@
               var token = {token: $stateParams.token};
               return PasswordService.VerifyResetToken.get(token).$promise;
             }
-          }
-        })
-        .state('myprofile', {
-          parent: 'noSideBar',
-          url: '/myprofile',
-          controller: 'MyProfileCtrl as myProfile',
-          templateUrl: 'myprofile/myprofile.html',
-          data: {
-            meta: {
-              title: 'Profile',
-              description: ''
-            }, resolve:true
           }
         })
         .state('explore', {
@@ -412,6 +400,13 @@
             Trip: 'Trip'
           }
         })
+        .state('tools.createEvent', {
+          url: '/create-event',
+          template: '<add-event-tool></add-event-tool>',
+          resolve: {
+            MPTools: 'MPTools'
+          }
+        })
         .state('tools.volunteerContact', {
           url: '/volunteer-contact',
           template: '<volunteer-contact></volunteer-contact>',
@@ -501,8 +496,10 @@
                       return $templateFactory.fromUrl('templates/rightSideBar.html');
                     case 'ScreenWidth':
                       return $templateFactory.fromUrl('templates/screenWidth.html');
-                  case 'HomePage':
-                    return $templateFactory.fromUrl('templates/homePage.html');
+                    case 'HomePage':
+                      return $templateFactory.fromUrl('templates/homePage.html');
+                    case 'CenteredContentPage':
+                      return $templateFactory.fromUrl('templates/centeredContentPage.html');
                     default:
                       return $templateFactory.fromUrl('templates/noSideBar.html');
                   }

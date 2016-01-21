@@ -173,6 +173,7 @@
     <Compile Include="controllers\ServeControllerTest.cs" />
     <Compile Include="controllers\ProgramControllerTest.cs" />
     <Compile Include="controllers\StripeEventControllerTest.cs" />
+    <Compile Include="controllers\UserControllerTest.cs" />
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />
     <Compile Include="Models\Crossroads\Events\EventMapperTest.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Services\LoginServiceTest.cs" />
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
+    <Compile Include="Services\EventServiceTest.cs" />
     <Compile Include="Services\ServeServiceTest.cs" />
     <Compile Include="Services\StripeEventServiceTest.cs" />
     <Compile Include="Services\StripeServiceTest.cs" />
