@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -14,6 +14,12 @@ namespace crds_angular.Services
         public ProgramService(MPServices.IProgramService programService)
         {
             _programService = programService;
+        }
+
+        public List<ProgramDTO> GetAllProgramsForReal(string token)
+        {
+            var programs = _programService.GetAllPrograms(token);
+            return programs == null ? (null) : (programs.Select(Mapper.Map<ProgramDTO>).OrderBy(x => x.Name).ToList());
         }
 
         public List<ProgramDTO> GetOnlineGivingPrograms(int? programType = null)
