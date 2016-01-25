@@ -8,8 +8,8 @@ DECLARE @donationId AS INT
 
 ---delete Donations and donation distributions
 
-SET @fatherDonorId = (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+tremplay.richard@gmail.com'));
-SET @motherDonorId = (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+tremplay.richard@gmail.com'));
+SET @fatherDonorId = (SELECT top 1 Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+tremplay.richard@gmail.com'));
+SET @motherDonorId = (SELECT top 1 Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+tremplay.richard@gmail.com'));
 
 WHILE EXISTS (SELECT * FROM Donations WHERE Donor_ID = @fatherDonorId)
 BEGIN
@@ -81,7 +81,7 @@ DELETE FROM dp_commands WHERE communication_id in (SELECT communication_id FROM 
 DELETE FROM dp_contact_publications WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
 
 ---delete communication messages
-DELETE FROM dp_Communication_Messages WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address='mpcrds+tremplay%');
+DELETE FROM dp_Communication_Messages WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
 
 DELETE FROM [dbo].dp_communication_messages where communication_id in (select communication_id from dp_communications where TO_Contact in (select contact_id from contacts where email_address like 'mpcrds+tremplay%'));
 
@@ -91,13 +91,17 @@ DELETE FROM dp_communications WHERE To_Contact in (SELECT Contact_ID FROM contac
 ---delete households
 DELETE FROM Activity_Log where Household_ID = @householdID;
 
-DELETE FROM households WHERE household_name = 'Tremplay';
-
 ---delete address since we hard coded the id in the setup script
+update households set address_id = null where address_id = 100000020;
+
 DELETE FROM Addresses WHERE Address_ID =100000020;
 
 ---delete contact households
 DELETE FROM Contact_Households WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
+
+UPDATE contacts set household_id = null where household_id in (select household_id from households where household_name = 'Tremplay');
+
+DELETE FROM households WHERE household_name = 'Tremplay';
 
 ---delete contact relationships
 DELETE FROM contact_relationships WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
@@ -105,6 +109,15 @@ DELETE FROM contact_relationships WHERE Contact_ID in (SELECT Contact_ID FROM co
 ---delete donor accounts
 DELETE FROM Donor_Accounts WHERE Donor_ID = @fatherDonorId;
 DELETE FROM Donor_Accounts WHERE Donor_ID = @motherDonorId;
+
+--delete donation distributions
+delete donation_distributions where donation_id in (select donation_id from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%')));
+
+--delete donations
+delete from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%'));
+
+--Delete pledges
+delete from pledges where donor_id in (select donor_id from donors where contact_id in (select contact_id from contacts where email_address like 'mpcrds+tremplay%'));
 
 ---delete donor records
 DELETE FROM Donors WHERE Contact_ID in (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%');
