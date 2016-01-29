@@ -23,7 +23,9 @@ namespace Crossroads.BulkEmailSync
 
             TlsHelper.AllowTls12();
 
+            //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
+
 
             try
             {

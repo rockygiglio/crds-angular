@@ -165,7 +165,15 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void SetSubscriberStatus(string token, BulkEmailSubscriberOpt subscriberOpt)
+        public void SetSubscriberSyncs(string token, List<BulkEmailSubscriberOpt> subscriberOpts)
+        {
+            foreach (var subscriberOpt in subscriberOpts)
+            {
+                UpdateContactPublication(token, subscriberOpt);
+            }
+        }
+
+        public void UpdateContactPublication(string token, BulkEmailSubscriberOpt subscriberOpt)
         {
             var searchString = string.Format(",\"{0}\",,,,,,,\"{1}\"", subscriberOpt.PublicationID, subscriberOpt.EmailAddress);
             var contactPublications = _ministryPlatformService.GetPageViewRecords(_segmentationBasePageViewId, token, searchString);
@@ -185,7 +193,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Unsubscribed", (subscriberOpt.Status == "subscribed" ? false : true)}
             };
 
-            _ministryPlatformService.UpdateRecord(_subscribersBasePageViewId, subscriberOptDict, token);
+            _ministryPlatformService.UpdateRecord(_subscribersBasePageViewId, subscriberOptDict, token);         
         }
     }
 }
