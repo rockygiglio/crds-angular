@@ -38,8 +38,9 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public int CreateRoomReservation(RoomReservationDto roomReservation, string token)
+        public int CreateRoomReservation(RoomReservationDto roomReservation)
         {
+            var token = ApiLogin();
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             var reservationDictionary = new Dictionary<string, object>
             {
@@ -63,8 +64,9 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void UpdateRoomReservation(RoomReservationDto roomReservation, string token)
+        public void UpdateRoomReservation(RoomReservationDto roomReservation)
         {
+            var token = ApiLogin();
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             var reservationDictionary = new Dictionary<string, object>
             {

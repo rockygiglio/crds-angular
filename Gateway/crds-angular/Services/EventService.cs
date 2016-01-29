@@ -123,7 +123,7 @@ namespace crds_angular.Services
             }
         }
 
-        public bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token)
+        public bool UpdateEventReservation(EventToolDto eventReservation, int eventId)
         {
             try
             {
@@ -131,22 +131,22 @@ namespace crds_angular.Services
                 {
                     if (room.RoomReservationId == 0)
                     {
-                        AddRoom(eventId, room, token);
+                        AddRoom(eventId, room);
                     }
                     else
                     {
-                        UpdateRoom(eventId, room, token);
+                        UpdateRoom(eventId, room);
                     }
 
                     foreach (var equipment in room.Equipment)
                     {
                         if (equipment.EquipmentReservationId == 0)
                         {
-                            AddEquipment(equipment, eventId, room, token);
+                            AddEquipment(equipment, eventId, room);
                         }
                         else
                         {
-                            UpdateEquipment(equipment, eventId, room, token);
+                            UpdateEquipment(equipment, eventId, room);
                         }
                     }
                 }
@@ -160,7 +160,7 @@ namespace crds_angular.Services
             return true;
         }
 
-        public bool CreateEventReservation(EventToolDto eventTool, string token)
+        public bool CreateEventReservation(EventToolDto eventTool)
         {
             try
             {
@@ -168,11 +168,11 @@ namespace crds_angular.Services
 
                 foreach (var room in eventTool.Rooms)
                 {
-                    AddRoom(eventId, room, token);
+                    AddRoom(eventId, room);
 
                     foreach (var equipment in room.Equipment)
                     {
-                        AddEquipment(equipment, eventId, room, token);
+                        AddEquipment(equipment, eventId, room);
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace crds_angular.Services
             return true;
         }
 
-        private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
+        private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room)
         {
             var equipmentReservation = new EquipmentReservationDto();
             equipmentReservation.Cancelled = false;
@@ -193,10 +193,10 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            var equipmentReservationId = _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
+            var equipmentReservationId = _equipmentService.CreateEquipmentReservation(equipmentReservation);
         }
 
-        private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
+        private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room)
         {
             var equipmentReservation = new EquipmentReservationDto();
             equipmentReservation.Cancelled = equipment.Cancelled;
@@ -205,10 +205,10 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
+            _equipmentService.UpdateEquipmentReservation(equipmentReservation);
         }
 
-        private void AddRoom(int eventId, EventRoomDto room, string token)
+        private void AddRoom(int eventId, EventRoomDto room)
         {
             var roomReservation = new RoomReservationDto();
             roomReservation.Cancelled = false;
@@ -217,10 +217,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
-            var roomReservationId = _roomService.CreateRoomReservation(roomReservation, token);
+            var roomReservationId = _roomService.CreateRoomReservation(roomReservation);
         }
 
-        private void UpdateRoom(int eventId, EventRoomDto room, string token)
+        private void UpdateRoom(int eventId, EventRoomDto room)
         {
             var roomReservation = new RoomReservationDto();
             roomReservation.Cancelled = room.Cancelled;
@@ -230,7 +230,7 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
-            _roomService.UpdateRoomReservation(roomReservation, token);
+            _roomService.UpdateRoomReservation(roomReservation);
         }
 
         private int AddEvent(EventToolDto eventTool)
