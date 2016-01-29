@@ -26,7 +26,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var programs = _programService.GetAllProgramsForReal();
+                    var programs = _programService.GetAllProgramsForReal(token);
                     return this.Ok(programs);
                 }
                 catch (Exception exception)

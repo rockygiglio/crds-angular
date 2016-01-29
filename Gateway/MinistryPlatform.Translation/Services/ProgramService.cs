@@ -2,12 +2,12 @@
 using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Models;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ProgramService : BaseService, IProgramService
+    public class ProgramService : BaseService,IProgramService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _onlineGivingProgramsPageViewId;
@@ -21,9 +21,8 @@ namespace MinistryPlatform.Translation.Services
             _programsPageId = configurationWrapper.GetConfigIntValue("Programs");
         }
 
-        public List<Program> GetAllPrograms()
+        public List<Program> GetAllPrograms(string token)
         {
-            var token = ApiLogin();
             var records = _ministryPlatformService.GetPageViewRecords("AllProgramsList", token);
             var programs = new List<Program>();
             if (records == null || records.Count == 0)

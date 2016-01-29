@@ -10,6 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
+
     public class RoomService : BaseService, IRoomService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -38,9 +39,8 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public int CreateRoomReservation(RoomReservationDto roomReservation)
+        public int CreateRoomReservation(RoomReservationDto roomReservation, string token)
         {
-            var token = ApiLogin();
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             var reservationDictionary = new Dictionary<string, object>
             {

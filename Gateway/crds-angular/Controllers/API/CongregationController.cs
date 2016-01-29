@@ -6,6 +6,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Security;
+using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
@@ -62,7 +63,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof (List<RoomEquipment>))]
+        [ResponseType(typeof(List<RoomEquipment>))]
         [Route("api/congregation/{id}/equipment")]
         public IHttpActionResult GetEquipment(int id)
         {
