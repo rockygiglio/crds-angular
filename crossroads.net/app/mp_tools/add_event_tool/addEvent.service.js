@@ -14,6 +14,11 @@
         rooms: []
       },
       getEventDto: function(eventData) {
+        var reminderDays = null;
+        if (eventData.event.reminderDays !== undefined) {
+          reminderDays = (eventData.event.reminderDays.dp_RecordID > 0) ? eventData.event.reminderDays.dp_RecordID : null;
+        }
+
         return {
           congregationId: eventData.event.congregation.dp_RecordID,
           contactId: eventData.event.primaryContact.contactId,
@@ -26,7 +31,7 @@
           minutesSetup: eventData.event.minutesSetup,
           minutesTeardown: eventData.event.minutesCleanup,
           programId: eventData.event.program.ProgramId,
-          reminderDaysId: (eventData.event.reminderDays.dp_RecordID > 0) ? eventData.event.reminderDays.dp_RecordID : null,
+          reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
           sendReminder: eventData.event.sendReminder,
           rooms: _.map(eventData.rooms, function(r) { return getRoomDto(r); })
