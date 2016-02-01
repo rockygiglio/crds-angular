@@ -172,7 +172,8 @@
       </div>
 
       <div class="col-sm-6">
-        <div class="form-group well" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'endDate')}">
+        <div class="form-group well" ng-class="{'has-error': evt.validDateRange(eventForm)}">
+          <pre>{{evt.validDateRange(eventForm)}}</pre>
           <label class="required">End Date and Time</label>
           <p class="input-group">
             <input type="text"
@@ -192,7 +193,7 @@
               </button>
             </span>
           </p>
-          <ng-messages for="eventForm.endDate.$error" ng-if="evt.validation.showErrors(eventForm, 'endDate')">
+          <ng-messages for="eventForm.endDate.$error" ng-if="evt.validDateRange(eventForm)">
             <span ng-message="required">
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
             </span>

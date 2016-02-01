@@ -4,6 +4,7 @@
   module.exports = AddEventComponent;
 
   AddEventComponent.$inject = [
+    '$log',
     '$rootScope',
     'AddEvent',
     'Lookup',
@@ -25,7 +26,7 @@
     };
   }
 
-  function AddEventController($rootScope, AddEvent, Lookup, Programs, StaffContact, Validation) {
+  function AddEventController($log, $rootScope, AddEvent, Lookup, Programs, StaffContact, Validation) {
     var vm = this;
 
     vm.crossroadsLocations = [];
@@ -41,8 +42,45 @@
     vm.startDateOpen = startDateOpen;
     vm.startDateOpened = false;
     vm.validation = Validation;
+    vm.validDateRange = validDateRange;
 
     activate();
+
+    function validDateRange(theForm) {
+      if (theForm === undefined) {
+        return false;
+      }
+
+      var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
+      var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
+
+      if (moment(start) <= moment(end)) {
+        theForm.endDate.$error.endDate = false;
+        theForm.endDate.$valid = true;
+        theForm.endDate.$invalid = false;
+        return false;
+      }
+
+      // set the endDate Invalid...
+      theForm.endDate.$error.endDate = true;
+      theForm.endDate.$valid = false;
+      theForm.endDate.$invalid = true;
+      theForm.endDate.$dirty = true;
+      theForm.$valid = false;
+      theForm.$invalid = true;
+      return true;
+    }
+
+    function dateTime(dateForDate, dateForTime) {
+      return new Date(
+          dateForDate.getFullYear(),
+          dateForDate.getMonth(),
+          dateForDate.getDate(),
+          dateForTime.getHours(),
+          dateForTime.getMinutes(),
+          dateForTime.getSeconds(),
+          dateForTime.getMilliseconds());
+    }
 
     ///////
     function activate() {
