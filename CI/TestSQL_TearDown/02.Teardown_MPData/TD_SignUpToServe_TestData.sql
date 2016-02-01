@@ -1,6 +1,14 @@
 Use [MinistryPlatform]
 GO
 
+DELETE FROM Responses where opportunity_id in (SELECT opportunity_id FROM opportunities where opportunity_title like '(t) KC%');
+
+DELETE FROM Responses where opportunity_id in (SELECT opportunity_id FROM Opportunities where opportunity_title like '(t) Superbowl%');
+
+DELETE FROM Responses where event_id in (select event_id from events where event_title like '(t) Superbowl Oakley%');
+
+DELETE FROM Responses where event_id in (SELECT event_id from events where event_title like '(t) KC Nursery Oakley%');
+
 DELETE FROM Opportunities WHERE Add_to_Group IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
 
 DELETE FROM Opportunities WHERE Add_to_Group IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');

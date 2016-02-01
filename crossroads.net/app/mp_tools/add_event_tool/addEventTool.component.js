@@ -136,6 +136,8 @@
         if (vm.allData.$valid) {
           // build the dto...
           var event = AddEvent.getEventDto(AddEvent.eventData);
+          event.startDateTime = moment(event.startDateTime).utc().format();
+          event.endDateTime = moment(event.endDateTime).utc().format();
 
           if (AddEvent.editMode) {
             EventService.eventTool.update({eventId: vm.currentEventSelected}, event, function(result) {
@@ -167,6 +169,7 @@
               $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
             });
           }
+
           return;
         }
 
