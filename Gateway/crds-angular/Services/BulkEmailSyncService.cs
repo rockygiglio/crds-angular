@@ -158,7 +158,7 @@ namespace crds_angular.Services
                 }
 
                 // pause to allow the operations to complete -- consider switching this to async
-                Thread.Sleep(secondsToSleep * 1000);
+                Thread.Sleep(waitTime * 1000);
 
                 publicationOperationIds = ProcessSynchronizationResults(publicationOperationIds);
 
