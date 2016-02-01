@@ -14,11 +14,16 @@
         rooms: []
       },
       getEventDto: function(eventData) {
+        var reminderDays = null;
+        if (eventData.event.reminderDays !== undefined) {
+          reminderDays = (eventData.event.reminderDays.dp_RecordID > 0) ? eventData.event.reminderDays.dp_RecordID : null;
+        }
+
         return {
           congregationId: eventData.event.congregation.dp_RecordID,
           contactId: eventData.event.primaryContact.contactId,
           description: eventData.event.description,
-          donationBatchTool: (eventData.event.donationBatchTool) ? eventData.event.donationBatchTool : false,
+          donationBatchTool: (eventData.event.donationBatch) ? eventData.event.donationBatch : false,
           endDateTime: dateTime(eventData.event.endDate, eventData.event.endTime),
           startDateTime: dateTime(eventData.event.startDate, eventData.event.startTime),
           meetingInstructions: eventData.event.meetingInstructions,
@@ -26,7 +31,7 @@
           minutesSetup: eventData.event.minutesSetup,
           minutesTeardown: eventData.event.minutesCleanup,
           programId: eventData.event.program.ProgramId,
-          reminderDaysId: (eventData.event.reminderDays > 0) ? eventData.event.reminderDays : null,
+          reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
           sendReminder: eventData.event.sendReminder,
           rooms: _.map(eventData.rooms, function(r) { return getRoomDto(r); })
@@ -55,7 +60,7 @@
             program: {
               ProgramId: event.programId
             },
-            reminderDays: event.reminderDays,
+            reminderDays: event.reminderDaysId,
             sendReminder: event.sendReminder,
             startTime: new Date(event.startDateTime),
             endTime: new Date(event.endDateTime),
