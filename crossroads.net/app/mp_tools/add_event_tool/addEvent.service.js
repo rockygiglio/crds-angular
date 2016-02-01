@@ -23,7 +23,7 @@
           congregationId: eventData.event.congregation.dp_RecordID,
           contactId: eventData.event.primaryContact.contactId,
           description: eventData.event.description,
-          donationBatchTool: (eventData.event.donationBatchTool) ? eventData.event.donationBatchTool : false,
+          donationBatchTool: (eventData.event.donationBatch) ? eventData.event.donationBatch : false,
           endDateTime: dateTime(eventData.event.endDate, eventData.event.endTime),
           startDateTime: dateTime(eventData.event.startDate, eventData.event.startTime),
           meetingInstructions: eventData.event.meetingInstructions,
