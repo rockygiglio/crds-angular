@@ -46,42 +46,6 @@
 
     activate();
 
-    function validDateRange(theForm) {
-      if (theForm === undefined) {
-        return false;
-      }
-
-      var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
-      var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
-
-      if (moment(start) <= moment(end)) {
-        theForm.endDate.$error.endDate = false;
-        theForm.endDate.$valid = true;
-        theForm.endDate.$invalid = false;
-        return false;
-      }
-
-      // set the endDate Invalid...
-      theForm.endDate.$error.endDate = true;
-      theForm.endDate.$valid = false;
-      theForm.endDate.$invalid = true;
-      theForm.endDate.$dirty = true;
-      theForm.$valid = false;
-      theForm.$invalid = true;
-      return true;
-    }
-
-    function dateTime(dateForDate, dateForTime) {
-      return new Date(
-          dateForDate.getFullYear(),
-          dateForDate.getMonth(),
-          dateForDate.getDate(),
-          dateForTime.getHours(),
-          dateForTime.getMinutes(),
-          dateForTime.getSeconds(),
-          dateForTime.getMilliseconds());
-    }
-
     ///////
     function activate() {
 
@@ -116,6 +80,17 @@
       }
     }
 
+    function dateTime(dateForDate, dateForTime) {
+      return new Date(
+          dateForDate.getFullYear(),
+          dateForDate.getMonth(),
+          dateForDate.getDate(),
+          dateForTime.getHours(),
+          dateForTime.getMinutes(),
+          dateForTime.getSeconds(),
+          dateForTime.getMilliseconds());
+    }
+
     function endDateOpen($event) {
       $event.preventDefault();
       $event.stopPropagation();
@@ -136,6 +111,31 @@
       $event.preventDefault();
       $event.stopPropagation();
       vm.startDateOpened = true;
+    }
+
+    function validDateRange(form) {
+      if (form === undefined) {
+        return false;
+      }
+
+      var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
+      var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
+
+      if (moment(start) <= moment(end)) {
+        form.endDate.$error.endDate = false;
+        form.endDate.$valid = true;
+        form.endDate.$invalid = false;
+        return false;
+      }
+
+      // set the endDate Invalid...
+      form.endDate.$error.endDate = true;
+      form.endDate.$valid = false;
+      form.endDate.$invalid = true;
+      form.endDate.$dirty = true;
+      form.$valid = false;
+      form.$invalid = true;
+      return true;
     }
 
   }
