@@ -81,17 +81,6 @@
         return AddEvent.currentPage;
       }
 
-      function dateTime(dateForDate, dateForTime) {
-        return new Date(
-            dateForDate.getFullYear(),
-            dateForDate.getMonth(),
-            dateForDate.getDate(),
-            dateForTime.getHours(),
-            dateForTime.getMinutes(),
-            dateForTime.getSeconds(),
-            dateForTime.getMilliseconds());
-      }
-
       function isEditMode() {
         return AddEvent.editMode;
       }
