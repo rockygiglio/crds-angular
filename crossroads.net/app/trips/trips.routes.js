@@ -37,7 +37,6 @@
         url: '/trips/giving/:eventParticipantId',
         controller: 'TripGivingController as tripGiving',
         templateUrl: 'tripgiving/tripgiving.html',
-        $state: '$state',
         resolve: {
           Trip: 'Trip',
           $stateParams: '$stateParams',
@@ -47,13 +46,13 @@
             }).$promise;
           },
 
-          Meta: function(TripParticipant, $state) {
-            TripParticipant.$promise.then(
-              function() {
-                $state.next.data.meta.title = TripParticipant.participantName +
-                  ' - ' + TripParticipant.trips[0].tripName;
-              });
-          }
+          // Meta: function(TripParticipant, $state) {
+          //   TripParticipant.$promise.then(
+          //     function() {
+          //       $state.next.data.meta.title = TripParticipant.participantName +
+          //         ' - ' + TripParticipant.trips[0].tripName;
+          //     });
+          // }
         }
       })
       .state('tripgiving.amount', {
