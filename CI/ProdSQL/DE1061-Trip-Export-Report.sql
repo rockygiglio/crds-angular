@@ -9,7 +9,7 @@ INSERT INTO @ContactAttributesToUpdate
        FROM [MinistryPlatform].[dbo].[Contact_Attributes] ca
             INNER JOIN attributes a ON ca.attribute_ID = a.attribute_id
        WHERE ca.End_Date IS NULL
-	   AND ca.Attribute_ID in (3958, 3959, 3960, 3980)
+	   AND ca.Attribute_ID in (3958, 3959, 3960, 3980, 4623)
        GROUP BY ca.Contact_ID, a.Attribute_ID
        HAVING COUNT(*) > 1
 	   ORDER BY ca.Contact_ID;
@@ -48,5 +48,5 @@ ORDER BY Contact_ID, Attribute_ID;
 
 -- uncomment this when you are ready to update everything
 --UPDATE [dbo].[Contact_Attributes]
---   SET [End_Date] = GETDATE()
---   WHERE Contact_Attribute_ID IN (SELECT Contact_Attribute_ID FROM @FinalCountDown)
+  -- SET [End_Date] = GETDATE()
+   --WHERE Contact_Attribute_ID IN (SELECT Contact_Attribute_ID FROM @FinalCountDown)
