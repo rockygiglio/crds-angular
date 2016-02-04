@@ -37,7 +37,6 @@
         url: '/trips/giving/:eventParticipantId',
         controller: 'TripGivingController as tripGiving',
         templateUrl: 'tripgiving/tripgiving.html',
-        $state: '$state',
         resolve: {
           Trip: 'Trip',
           $stateParams: '$stateParams',
