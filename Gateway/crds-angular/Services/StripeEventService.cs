@@ -9,6 +9,7 @@ using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -64,42 +65,8 @@ namespace crds_angular.Services
         public void InvoicePaymentSucceeded(DateTime? eventTimestamp, StripeInvoice invoice)
         {
             _logger.Debug(string.Format("Processing invoice.payment_succeeded event for subscription id {0}", invoice.Subscription));
-            if (string.IsNullOrWhiteSpace(invoice.Charge) || invoice.Amount <= 0)
-            {
-                _logger.Info(string.Format("No charge or amount on invoice {0} for subscription {1} - this is likely a trial-period donation, skipping", invoice.Id, invoice.Subscription));
-                if (_logger.IsDebugEnabled)
-                {
-                    _logger.Debug(string.Format("Invoice: {0}", JsonConvert.SerializeObject(invoice)));
-                }
-                return;
-            }
-            var createDonation = _donorService.GetRecurringGiftForSubscription(invoice.Subscription);
-            _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
-            var charge = _paymentService.GetCharge(invoice.Charge);
-
-            var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
-            var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
-            var amount = charge.Amount / Constants.StripeDecimalConversionValue;
-
-            var donationAndDistribution = new DonationAndDistributionRecord
-            {
-                DonationAmt = (int)amount,
-                FeeAmt = fee,
-                DonorId = createDonation.DonorId,
-                ProgramId = createDonation.ProgramId,
-                ChargeId = invoice.Charge,
-                PymtType = createDonation.PaymentType,
-                ProcessorId = invoice.Customer,
-                SetupDate = DateTime.Now,
-                RegisteredDonor = true,
-                RecurringGift = true,
-                RecurringGiftId = createDonation.RecurringGiftId,
-                DonorAcctId = createDonation.DonorAccountId.HasValue ? createDonation.DonorAccountId.ToString() : null,
-                DonationStatus = (int)donationStatus
-            };
-
-            _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
-         }
+            _donationService.CreateDonationForInvoice(invoice);
+        }
 
         private void InvoicePaymentFailed(DateTime? created, StripeInvoice invoice)
         {
@@ -175,8 +142,44 @@ namespace crds_angular.Services
                     {
                         paymentId = charge.Id;
                     }
+
+                    DonationDTO donation;
+                    try
+                    {
+                        donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
+                    }
+                    catch (DonationNotFoundException e)
+                    {
+                        _logger.Warn(string.Format("Payment not found for charge {0} on transfer {1} - may be an ACH recurring gift that has not yet processed", paymentId, transfer.Id));
+                        var c = _paymentService.GetCharge(charge.Id);
+                        if (c != null && c.Source != null && "bank_account".Equals(c.Source.Object) && c.HasInvoice())
+                        {
+                            // We're making an assumption that if an ACH payment is included in a transfer, 
+                            // and if we don't have the corresponding Donation in our system yet, that
+                            // this is a mistake.  For instance, events delivered out of order from Stripe, and
+                            // we received the transfer.paid before the invoice.payment_succeeded.
+                            // In this scenario, we will go ahead and create the donation.
+                            if (_donationService.CreateDonationForInvoice(c.Invoice) != null)
+                            {
+                                _logger.Debug(string.Format("Creating donation for recurring gift payment {0}", charge.Id));
+                                donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
+                            }
+                            else
+                            {
+                                _logger.Error(string.Format("Donation not found for charge {0} on transfer {1}, and failed to create a donation", charge.Id, transfer.Id), e);
+                                // ReSharper disable once PossibleIntendedRethrow
+                                throw e;
+                            }
+                        }
+                        else
+                        {
+                            _logger.Error(string.Format("Donation not found for charge {0} on transfer {1}, charge does not appear to be related to an ACH recurring gift", charge.Id, transfer.Id));
+                            // ReSharper disable once PossibleIntendedRethrow
+                            throw e;
+                        }
+
+                    }
                     
-                    var donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
                     if (donation.BatchId != null)
                     {
                         var b = _donationService.GetDonationBatch(donation.BatchId.Value);
@@ -196,7 +199,7 @@ namespace crds_angular.Services
                         }
                     }
 
-                    _logger.Debug("Updating charge id " + charge + " to Deposited status");
+                    _logger.Debug(string.Format("Updating charge id {0} to Deposited status", charge));
                     var donationId = _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
                     response.SuccessfulUpdates.Add(charge.Id);
                     batch.ItemCount++;
