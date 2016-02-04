@@ -151,15 +151,15 @@ namespace crds_angular.Services
                     catch (DonationNotFoundException e)
                     {
                         _logger.Warn(string.Format("Payment not found for charge {0} on transfer {1} - may be an ACH recurring gift that has not yet processed", paymentId, transfer.Id));
-                        var c = _paymentService.GetCharge(charge.Id);
-                        if (c != null && c.Source != null && "bank_account".Equals(c.Source.Object) && c.HasInvoice())
+                        var stripeCharge = _paymentService.GetCharge(charge.Id);
+                        if (stripeCharge != null && stripeCharge.Source != null && "bank_account".Equals(stripeCharge.Source.Object) && stripeCharge.HasInvoice())
                         {
                             // We're making an assumption that if an ACH payment is included in a transfer, 
                             // and if we don't have the corresponding Donation in our system yet, that
                             // this is a mistake.  For instance, events delivered out of order from Stripe, and
                             // we received the transfer.paid before the invoice.payment_succeeded.
                             // In this scenario, we will go ahead and create the donation.
-                            if (_donationService.CreateDonationForInvoice(c.Invoice) != null)
+                            if (_donationService.CreateDonationForInvoice(stripeCharge.Invoice) != null)
                             {
                                 _logger.Debug(string.Format("Creating donation for recurring gift payment {0}", charge.Id));
                                 donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
