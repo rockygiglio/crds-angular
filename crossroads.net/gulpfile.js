@@ -86,6 +86,13 @@ var webPackDevConfigs = [Object.create(webPackDevConfig)];
 // Start the development server
 gulp.task('default', ['webpack-dev-server']);
 
+gulp.task('init', function() {
+  var version = process.env.CRDS_CORE_VERSION || '*';
+  gulp.src(['package.json'])
+    .pipe(replace(/\"crds-core\":(.*)/, '\"crds-core\": \"' + version  + '\",'))
+    .pipe(gulp.dest('./'));
+});
+
 // Build and watch cycle (another option for development)
 // Advantage: No server required, can run app from filesystem
 // Disadvantage: Requests are not blocked until bundle is available,
