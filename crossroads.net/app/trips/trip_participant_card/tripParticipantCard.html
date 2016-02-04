@@ -10,19 +10,29 @@
 	      </div>
 	      <ul class="list-group">
 	        <li class="list-group-item row-sm-same-height" ng-repeat="trip in tripParticipant.trips | orderBy:'tripStart'">
-	            <div class="go-trip-name col-xs-12 col-sm-height col-top" ng-class="{'col-sm-10' :tripParticipant.showGiveButton}">
+						<div class="col-xs-12 col-sm-height col-top" ng-class="{'col-sm-10' :tripParticipant.showGiveButton}">
+	            <div class="go-trip-name">
 	              <p>
 	                <strong>{{trip.tripName}}</strong>
 	                <br>{{trip.tripStart}} - {{trip.tripEnd}}
 	              </p>
 	            </div>
-	            <div class="go-trip-btn col-xs-12 col-sm-2 hard-sides col-sm-height" ng-show="tripParticipant.showGiveButton">
+	            <div class="go-trip-btn col-xs-12 col-sm-2 hard-sides col-xs-height" ng-show="tripParticipant.showGiveButton">
                 <a ng-click="goToGiving(trip.tripParticipantId)" class="table-btn table-btn-lg btn-standard"><span>Give</span></a>
 	            </div>
+							<div ng-if="tripParticipant.showShareButtons">
+	              <h4 class="small-heading flush-left inline pull-left">SHARE:</h4>
+	              <sn-addthis-toolbox
+	                class="addthis_crossroads_sharing clearfix addthis_20x20_style pull-left push-half-left push-half-top"
+	                data-url="{{shareUrl(trip.tripParticipantId)}}">
+	                  <a href class="addthis_button_facebook"></a>
+	                  <a href class="addthis_button_twitter"></a>
+	                  <a href class="addthis_button_email"></a>
+	              </sn-addthis-toolbox>
+	            </div>
+						</div>
 	        </li>
-	      </ul>
-	      <ul class="list-group" ng-if="tripParticipant.showShareButtons">
-          <li class="list-group-item hard-left row-same-height">
+					<!-- <li class="list-group-item hard-left row-same-height" ng-if="tripParticipant.showShareButtons">
             <div class=" go-trip-name col-xs-12 col-xs-height col-top">
               <h4 class="small-heading flush-left inline pull-left">SHARE:</h4>
               <sn-addthis-toolbox
@@ -33,8 +43,24 @@
                   <a href class="addthis_button_email"></a>
               </sn-addthis-toolbox>
             </div>
+          </li> -->
+	      </ul>
+	      <!-- <ul class="list-group" ng-if="tripParticipant.showShareButtons">
+          <li class="list-group-item hard-left row-same-height">
+            <div class=" go-trip-name col-xs-12 col-xs-height col-top">
+              <h4 class="small-heading flush-left inline pull-left">SHARE:</h4>
+							<pre>share: {{shareUrl}}</pre>
+							<pre>id: {{trip.tripName}}</pre>
+              <sn-addthis-toolbox
+                class="addthis_crossroads_sharing clearfix addthis_20x20_style pull-left push-half-left push-half-top"
+                data-url="{{shareUrl}}">
+                  <a href class="addthis_button_facebook"></a>
+                  <a href class="addthis_button_twitter"></a>
+                  <a href class="addthis_button_email"></a>
+              </sn-addthis-toolbox>
+            </div>
           </li>
-        </ul>
+        </ul> -->
 	  </div><!--/card-content-->
 	</div><!--/card-item-->
 </div>
