@@ -104,7 +104,6 @@ namespace crds_angular.Util
 
         private RestClient GetEmailClient()
         {
-            // NEED TO VERIFY THE CONFIG SETTINGS, WHICH ARE PROBABLY OKAY, BUT NOT WELL NAMED FOR THIS PURPOSE
             var apiUrl = _configWrapper.GetConfigValue("BulkEmailApiUrl");
             var apiKey = _configWrapper.GetEnvironmentVarAsString("BULK_EMAIL_API_KEY");
 
@@ -137,7 +136,6 @@ namespace crds_angular.Util
 
             foreach (KeyValuePair<string, object> d in values)
             {
-                // if (d.Value.GetType().FullName.Contains("Newtonsoft.Json.Linq.JObject"))
                 if (d.Value is JObject)
                 {
                     values2.Add(d.Key, DeserializeToDictionary(d.Value.ToString()));

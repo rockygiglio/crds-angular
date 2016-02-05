@@ -49,8 +49,8 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var success = _subscriptionService.AddListSubscriber(request.EmailAddress, request.ListName);
-                return this.Ok(success);
+                var response = _subscriptionService.AddListSubscriber(request.EmailAddress, request.ListName);
+                return this.Ok(response);
             }
             catch (System.Exception ex)
             {

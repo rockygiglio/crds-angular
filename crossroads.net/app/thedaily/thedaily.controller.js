@@ -22,9 +22,10 @@
         $log.debug('Inside The Daily Controller');
 
         var vm = this;
-        vm.saving = false;
         vm.email = '';
-        vm.listName = 'The Daily'; // need to pull from environment or build step
+        vm.listName = 'The Daily'; // eventually move to key, not list name
+        vm.saving = false;
+        vm.showSignup = true;
         vm.validation = Validation;
         vm.submitSignup = submitSignup;
 
@@ -35,18 +36,17 @@
                 EmailSubscriptionService.SubscriptionSignup.save({ emailAddress: vm.email, listName: vm.listName }, function(response) {
 
                     if (response.ErrorInSignupProcess === true) {
-                        debugger;
                         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
                     } else if (response.UserAlreadySubscribed === true) {
-                        debugger;
-                        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+                        vm.showSignup = false;
+                        $rootScope.$emit('notify', $rootScope.MESSAGES.dailyAlreadySignedUp
+                        );
                     } else if (response.UserAlreadySubscribed === false) {
-                        debugger;
-                        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+                        vm.showSignup = false;
+                        $rootScope.$emit('notify', $rootScope.MESSAGES.mailchimpSuccess);
                     }
 
                     vm.saving = false;
-                    debugger;
 
                 }, function(error) {
                     $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
@@ -55,7 +55,6 @@
             } else {
                 vm.saving = false;
             }
-
         }
     }
 })();
