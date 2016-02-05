@@ -245,8 +245,7 @@
 
     function apiRecurringGift(apiMethod, def, recurringGiftRequest = null, recurringGiftId = null, impersonateDonorId = null) {
       if (recurringGiftRequest && recurringGiftRequest.start_date) {
-        // Convert the start_date to UTC so we don't accidentally change the date on the community member
-        recurringGiftRequest.start_date = moment(recurringGiftRequest.start_date).utc().format();
+        setStartDateWithDatePartOnly(recurringGiftRequest);
       }
 
       $http({
@@ -258,6 +257,10 @@
         },
         data: recurringGiftRequest
       }).success(function(data) {
+        if (apiMethod === 'GET' || apiMethod === 'QUERY') {
+          setStartDateWithDatePartOnly(data);
+        }
+
         def.resolve(data);
       }).error(function(response, statusCode) {
         if (response !== null && response !== undefined) {
@@ -266,6 +269,21 @@
           def.reject();
         }
       });
+    }
+
+    function setStartDateWithDatePartOnly(data) {
+      // Strip time off the start_date, so that we don't end up changing the date due to timezone conversion
+      if (data) {
+        if (Array.isArray(data)) {
+          _.forEach(data, function(gift) {
+            if (gift.start_date) {
+              gift.start_date = moment(gift.start_date).utc().format('YYYY-MM-DD');
+            }
+          });
+        } else if (data.start_date) {
+          data.start_date = moment(data.start_date).utc().format('YYYY-MM-DD');
+        }
+      }
     }
 
     function apiRecurringGiftUrl(apiMethod, recurringGiftId = null, impersonateDonorId = null) {
