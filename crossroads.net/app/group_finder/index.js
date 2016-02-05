@@ -11,7 +11,7 @@
   angular.module('crossroads.group_finder', [MODULES.CORE, MODULES.COMMON])
     .config(require('./group_finder.routes'))
     .directive('question',          require('./question/question.directive'))
-    .factory('Group',               require('./services/group.service'))
+    .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .service('Responses',           require('./services/response.service'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))

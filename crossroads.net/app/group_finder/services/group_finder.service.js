@@ -1,17 +1,17 @@
 (function(){
   'use strict';
 
-  module.exports = GroupService;
+  module.exports = GroupFinderService;
 
-  GroupService.$inject = [];
+  GroupFinderService.$inject = [];
 
-  function GroupService() {
+  function GroupFinderService() {
 
-    function Group(data) {
+    function GroupFinder(data) {
       this.setData(data);
     }
 
-    Group.prototype = {
+    GroupFinder.prototype = {
       setData: function(data) {
         angular.extend(this, data);
       },
@@ -20,7 +20,7 @@
       }
     };
 
-    return Group;
+    return GroupFinder;
   }
 
 })();
