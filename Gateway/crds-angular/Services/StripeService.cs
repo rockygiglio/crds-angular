@@ -338,6 +338,7 @@ namespace crds_angular.Services
             var url = string.Format("charges/{0}", chargeId);
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "balance_transaction");
+            request.AddParameter("expand[]", "invoice");
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge", response);
