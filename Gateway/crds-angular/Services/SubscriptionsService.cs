@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using crds_angular.Models.Crossroads.Subscription;
 
 namespace crds_angular.Services
 {
     public class SubscriptionsService : MinistryPlatformBaseService, ISubscriptionsService
     {
         private readonly MPInterfaces.IMinistryPlatformService _ministryPlatformService;
-        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService)
+        private readonly Util.Interfaces.IEmailListHandler _emailListHandler;
+        private readonly MPInterfaces.IApiUserService _apiUserService;
+        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService, Util.Interfaces.IEmailListHandler emailListHandler, MPInterfaces.IApiUserService apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
+            _emailListHandler = emailListHandler;
+            _apiUserService = apiUserService;
         }
         public List<Dictionary<string, object>> GetSubscriptions(int contactId, string token)
         {
@@ -33,7 +38,7 @@ namespace crds_angular.Services
                     }
                 }
                 publication.Add("Subscribed", !(bool)unSub);
-            }
+            }http://mp-ci.centralus.cloudapp.azure.com/
             return publications;
         }
 
@@ -47,6 +52,12 @@ namespace crds_angular.Services
                 return Convert.ToInt32(spID);
             }
             return _ministryPlatformService.CreateSubRecord("SubscriptionsSubPage", contactId, subscription, token);
+        }
+
+        public OptInResponse AddListSubscriber(string emailAddress, string listName)
+        {
+            var token = _apiUserService.GetToken();
+            return _emailListHandler.AddListSubscriber(emailAddress, listName, token);
         }
     }
 }
