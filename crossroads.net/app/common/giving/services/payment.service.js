@@ -245,7 +245,7 @@
 
     function apiRecurringGift(apiMethod, def, recurringGiftRequest = null, recurringGiftId = null, impersonateDonorId = null) {
       if (recurringGiftRequest && recurringGiftRequest.start_date) {
-        setStartDateWithDatePartOnly(recurringGiftRequest);
+        recurringGiftRequest.start_date = moment(recurringGiftRequest.start_date).format('YYYY-MM-DD');
       }
 
       $http({
