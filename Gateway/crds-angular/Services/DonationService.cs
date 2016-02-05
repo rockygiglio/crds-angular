@@ -7,9 +7,11 @@ using crds_angular.Models.Crossroads.Stewardship;
 using MPServices=MinistryPlatform.Translation.Services.Interfaces;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util;
+using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 
@@ -426,6 +428,61 @@ namespace crds_angular.Services
             var date = DateTime.Today.ToString("yyMMdd");
             var batchName = batch.BatchName.Replace(" ", "_");
             return string.Format("XRDReceivables-{0}_{1}.txt", batchName, date);
+        }
+
+        public int? CreateDonationForInvoice(StripeInvoice invoice)
+        {
+            if (string.IsNullOrWhiteSpace(invoice.Charge) || invoice.Amount <= 0)
+            {
+                _logger.Info(string.Format("No charge or amount on invoice {0} for subscription {1} - this is likely a trial-period donation, skipping", invoice.Id, invoice.Subscription));
+                if (_logger.IsDebugEnabled)
+                {
+                    _logger.Debug(string.Format("Invoice: {0}", JsonConvert.SerializeObject(invoice)));
+                }
+                return (null);
+            }
+
+            // Make sure we don't create duplicate donations for the same charge (could happen if we get a transfer and a invoice.payment_succeeded events near each other
+            try
+            {
+                var donation = _mpDonationService.GetDonationByProcessorPaymentId(invoice.Charge);
+                if (donation != null)
+                {
+                    _logger.Info(string.Format("Donation already located for charge id {0}, not creating duplicate (existing donation {1})", invoice.Charge, donation.donationId));
+                    return (donation.donationId);
+                }
+            }
+            catch (DonationNotFoundException)
+            {
+                _logger.Info(string.Format("Donation not located for charge id {0}, this is expected", invoice.Charge));
+            }
+
+            var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription);
+            _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
+            var charge = _paymentService.GetCharge(invoice.Charge);
+
+            var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
+            var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
+            var amount = charge.Amount / Constants.StripeDecimalConversionValue;
+
+            var donationAndDistribution = new DonationAndDistributionRecord
+            {
+                DonationAmt = (int)amount,
+                FeeAmt = fee,
+                DonorId = createDonation.DonorId,
+                ProgramId = createDonation.ProgramId,
+                ChargeId = invoice.Charge,
+                PymtType = createDonation.PaymentType,
+                ProcessorId = invoice.Customer,
+                SetupDate = DateTime.Now,
+                RegisteredDonor = true,
+                RecurringGift = true,
+                RecurringGiftId = createDonation.RecurringGiftId,
+                DonorAcctId = createDonation.DonorAccountId.HasValue ? createDonation.DonorAccountId.ToString() : null,
+                DonationStatus = (int)donationStatus
+            };
+
+            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution));
         }
         
     }

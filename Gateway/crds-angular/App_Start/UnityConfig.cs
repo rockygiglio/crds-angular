@@ -15,7 +15,7 @@ namespace crds_angular
             var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
             IUnityContainer container = new UnityContainer();
             section.Configure(container);
-
+            
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
