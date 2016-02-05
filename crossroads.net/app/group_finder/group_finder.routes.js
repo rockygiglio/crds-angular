@@ -56,6 +56,7 @@
         templateUrl: 'host/host.html',
         resolve: {
           questions: function($http){
+            // TODO Update to use $resource?
             return $http.get('/app/group_finder/host/host.questions.json')
               .then(function(res){
                 return res.data;
