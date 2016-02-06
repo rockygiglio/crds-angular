@@ -38,7 +38,7 @@ namespace crds_angular.Services
                     }
                 }
                 publication.Add("Subscribed", !(bool)unSub);
-            }http://mp-ci.centralus.cloudapp.azure.com/
+            }
             return publications;
         }
 

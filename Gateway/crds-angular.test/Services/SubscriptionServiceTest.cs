@@ -25,32 +25,16 @@ namespace crds_angular.test.Services
             _subscriptionService = new SubscriptionsService(_ministryPlatformService.Object, _emailListHandler.Object, _apiUserService.Object);
 
             _emailListHandler.Setup(m => m.AddListSubscriber(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new OptInResponse());
-
-            //_logger = new Mock<ILog>();
-            //_authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
-            //_configurationWrapper = new Mock<IConfigurationWrapper>();
-            //_contactService = new Mock<MPInterfaces.IContactService>();
-            //_emailCommunication = new Mock<IEmailCommunication>();
-            //_userService = new Mock<MPInterfaces.IUserService>();
-
-            //_loginService = new LoginService(_authenticationService.Object, _configurationWrapper.Object, _contactService.Object, _emailCommunication.Object, _userService.Object);
-
-            //_contactService.Setup(m => m.GetContactIdByEmail(It.IsAny<string>())).Returns(123456);
-            //_userService.Setup(m => m.GetUserIdByUsername(It.IsAny<string>())).Returns(123456);
         }
 
         [Test]
         public void ShouldHandleSubscriptionRequest()
         {
-            //string email = "someone@someone.com";
-
-            //var result = _loginService.PasswordResetRequest(email);
-            //Assert.AreEqual(true, result);
             string email = "me@me.com";
             string listName = "the_daily";
-            string token = "111";
 
-            var result = _subscriptionService.AddListSubscriber(email, listName, token);
+            var result = _subscriptionService.AddListSubscriber(email, listName);
+            Assert.IsInstanceOf(typeof(OptInResponse), result);
         }
     }
 }
