@@ -55,12 +55,9 @@
         url: '/host/:step',
         templateUrl: 'host/host.html',
         resolve: {
-          questions: function($http){
-            // TODO Update to use $resource?
-            return $http.get('/app/group_finder/host/host.questions.json')
-              .then(function(res){
-                return res.data;
-              });
+          QuestionService: require('./services/group_questions.service'),
+          questions: function(QuestionService) {
+            return QuestionService.get().$promise;
           }
         },
         data: {
