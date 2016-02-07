@@ -15,6 +15,7 @@
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .service('Responses',           require('./services/response.service'))
+    .service('QuestionService',     require('./services/group_questions.service'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('DashboardCtrl',    require('./dashboard/dashboard.controller'))
     .controller('HostCtrl',         require('./host/host.controller'))
