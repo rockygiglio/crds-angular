@@ -8,6 +8,7 @@
   require('./input_number.html');
   require('./input_checkbox.html');
   require('./input_select.html');
+  require('./input_address.html');
 
   QuestionDirective.$inject = ['$log'];
 

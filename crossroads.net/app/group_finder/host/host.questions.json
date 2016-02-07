@@ -1,5 +1,10 @@
 
 {
+  "location": {
+    "question": "What is your home address?",
+    "model": "member",
+    "input_type": "address"
+  },
   "group_name": {
     "question": "Please name your group",
     "input_type": "text",
