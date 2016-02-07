@@ -64,9 +64,27 @@
 
       })
 
+      .state(seriesPermalink + '.host_review', {
+        controller: 'HostReviewCtrl as host',
+        url: '/host/review',
+        templateUrl: 'host/review.html',
+        resolve: {
+          QuestionService: require('./services/group_questions.service'),
+          questions: function(QuestionService) {
+            return QuestionService.get().$promise;
+          }
+        },
+        data: {
+          meta: {
+            title: seriesTitle,
+            description: ''
+          }
+        }
+      })
+
       .state(seriesPermalink + '.host', {
         controller: 'HostCtrl as host',
-        url: '/host/:step',
+        url: '/host/{step:(?:[0-9])}',
         templateUrl: 'host/host.html',
         resolve: {
           QuestionService: require('./services/group_questions.service'),
@@ -81,6 +99,7 @@
           }
         }
       })
+
     ;
 
     $urlRouterProvider.otherwise('/' + seriesPermalink + '/welcome');

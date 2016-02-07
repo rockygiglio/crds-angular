@@ -6,6 +6,7 @@
   require('./common/layout.html');
   require('./common/welcome.html');
   require('./host/host.html');
+  require('./host/review.html');
   require('./dashboard/dashboard.html');
   require('./summary/summary.html');
 
@@ -18,6 +19,7 @@
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('DashboardCtrl',    require('./dashboard/dashboard.controller'))
     .controller('HostCtrl',         require('./host/host.controller'))
+    .controller('HostReviewCtrl',   require('./host/host_review.controller'))
     .controller('SummaryCtrl',      require('./summary/summary.controller'))
     ;
 
