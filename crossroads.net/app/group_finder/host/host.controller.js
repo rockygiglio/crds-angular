@@ -21,17 +21,17 @@
 
     // Properties
     vm.questions = QuestionDefinitions.questions;
-    vm.total_questions = _.size(vm.questions);
+    vm.totalQuestions = _.size(vm.questions);
     vm.currentIteration = parseInt($stateParams.step) || 1;
     vm.responses = Responses.data;
 
     // Methods
-    vm.previous = function(){
+    vm.previousQuestion = function(){
       vm.currentIteration--;
       $state.go('brave.host', { step: vm.currentIteration });
     };
 
-    vm.next_question = function(){
+    vm.nextQuestion = function(){
       var req = vm.currentQuestion().required === true;
       if (req && vm.responses[vm.currentQuestion().model][vm.currentKey()] === undefined) {
         $window.alert('required');
@@ -52,7 +52,6 @@
     vm.startOver = function(){
       vm.currentIteration = 1;
     };
-
   }
 
 })();
