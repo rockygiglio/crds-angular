@@ -3,9 +3,13 @@
 
   module.exports = QuestionCtrl;
 
+  var constants = require('./constants');
+
   QuestionCtrl.$inject = ['$scope'];
 
   function QuestionCtrl($scope) {
+
+    $scope.states = constants.US_STATES;
 
     $scope.model = function() {
       return $scope.definition.model;

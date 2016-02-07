@@ -1,0 +1,23 @@
+<label>{{definition.question}}</label>
+
+<div class="row">
+  <div class="col-md-12">
+    <label>Street</label>
+    <input type="text" ng-model="responses[model()][definition.key].street" class="form-control" />
+  </div>
+  <div class="col-md-5">
+    <label>City</label>
+    <input class="form-control" type="text" ng-model="responses[model()][definition.key].city" />
+  </div>
+  <div class="col-md-4">
+    <label>State</label>
+    <select ng-model="responses[model()][definition.key].state" class="form-control">
+      <option ng-repeat="state in states" value="{{state.abbreviation}}">{{state.name}}</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label>Zip</label>
+    <input type="text" class="form-control" ng-model="responses[model()][definition.key].zip" />
+  </div>
+</div>
+
