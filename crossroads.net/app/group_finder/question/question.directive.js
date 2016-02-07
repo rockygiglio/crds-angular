@@ -16,7 +16,6 @@
     return {
       restrict: 'AE',
       scope: {
-        key: '@key',
         model: '@model',
         definition: '=',
         responses: '=responses',

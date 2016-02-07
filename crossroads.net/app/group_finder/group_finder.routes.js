@@ -70,7 +70,7 @@
         templateUrl: 'host/host.html',
         resolve: {
           QuestionService: require('./services/group_questions.service'),
-          questions: function(QuestionService) {
+          QuestionDefinitions: function(QuestionService) {
             return QuestionService.get().$promise;
           }
         },
