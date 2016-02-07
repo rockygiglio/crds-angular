@@ -87,7 +87,7 @@
         url: '/host/{step:(?:[0-9])}',
         templateUrl: 'host/host.html',
         resolve: {
-          QuestionService: require('./services/group_questions.service'),
+          QuestionService: 'QuestionService',
           QuestionDefinitions: function(QuestionService) {
             return QuestionService.get().$promise;
           }
