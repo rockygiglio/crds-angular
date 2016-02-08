@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
-using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Newtonsoft.Json.Bson;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -129,5 +123,10 @@ namespace MinistryPlatform.Translation.Services
                     string.Format("GetParticipantResponses failed.  Participant Id: {0}", participantId), ex);
             }
         }
+
+        public void GetGroupsForParticipant(int participantId)
+        {
+            
+        }  
     }
 }

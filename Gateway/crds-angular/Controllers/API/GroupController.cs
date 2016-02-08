@@ -137,5 +137,25 @@ namespace crds_angular.Controllers.API
                 }
             );
         }
+
+        [ResponseType(typeof (List<GroupContactDTO>))]
+        [Route("api/group/{groupTypeId}")]
+        public IHttpActionResult GetGroups(int groupTypeId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var participant = participantService.GetParticipantRecord(token);
+                   // var groups = 
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception();
+                }
+                
+            });
+        }
     }
 }
