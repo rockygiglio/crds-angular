@@ -13,6 +13,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using crds_angular.Models.Crossroads.Subscription;
+using crds_angular.Models.MailChimp;
 
 namespace crds_angular.Util
 {
@@ -31,17 +32,13 @@ namespace crds_angular.Util
         public OptInResponse AddListSubscriber(string email, string listName, string token)
         {
             var publications = _bulkEmailRepository.GetPublications(token);
-            string publicationId = publications.Where(r => r.Title == listName).First().ThirdPartyPublicationId;
+            string publicationId = publications.First(r => r.Title == listName).ThirdPartyPublicationId;
 
             var client = GetEmailClient();
 
-            // check to see if a person is subscribed
-            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
+            // query mailchimp to get list activity         
+            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members",Method.GET);
             subscriberStatusRequest.AddHeader("Content-Type", "application/json");
-
-            subscriberStatusRequest.JsonSerializer = new RestsharpJsonNetSerializer();
-            subscriberStatusRequest.RequestFormat = DataFormat.Json;
-            subscriberStatusRequest.Method = Method.GET;
 
             var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
 
@@ -56,15 +53,22 @@ namespace crds_angular.Util
             }
             else
             {
-                var responseValues = DeserializeToDictionary(subscriberStatusResponse.Content);
+                var responseContent = subscriberStatusResponse.Content;
+                var responseContentJson = JObject.Parse(responseContent);
+                List<BulkEmailSubscriberOptDTO> subscribersDTOs = JsonConvert.DeserializeObject<List<BulkEmailSubscriberOptDTO>>(responseContentJson["members"].ToString());
 
-                if (responseValues["status"].ToString() == "subscribed" || responseValues["status"].ToString() == "pending")
+                if (subscribersDTOs.Count(r => r.EmailAddress == email) > 0)
                 {
-                    return new OptInResponse
+                    var subscriber = subscribersDTOs.First(r => r.EmailAddress == email);
+
+                    if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
                     {
-                        ErrorInSignupProcess = false,
-                        UserAlreadySubscribed = true
-                    };
+                        return new OptInResponse
+                        {
+                            ErrorInSignupProcess = false,
+                            UserAlreadySubscribed = true
+                        };
+                    }
                 }
             }
 

@@ -30,7 +30,7 @@
         vm.submitSignup = submitSignup;
 
         function submitSignup() {
-            debugger;
+
             vm.saving = true;
             if (vm.MailchimpSubscriptionForm.$valid) {
                 EmailSubscriptionService.SubscriptionSignup.save({ emailAddress: vm.email, listName: vm.listName }, function(response) {
