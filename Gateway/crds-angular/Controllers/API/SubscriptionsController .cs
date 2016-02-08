@@ -4,6 +4,7 @@ using System.Web.Http.Description;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using crds_angular.Models.Crossroads.Subscription;
 
 namespace crds_angular.Controllers.API
 {
@@ -40,6 +41,21 @@ namespace crds_angular.Controllers.API
                 var recordId = new {dp_RecordID = _subscriptionService.SetSubscriptions(subscription, contactId, token)};
                 return this.Ok(recordId);
             }));
-        }  
+        }
+
+        [Route("api/subscriptions/optin")]
+        [HttpPost]
+        public IHttpActionResult PostOptIn(OptInRequest request)
+        {
+            try
+            {
+                var response = _subscriptionService.AddListSubscriber(request.EmailAddress, request.ListName);
+                return this.Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+                return this.InternalServerError();
+            }
+        }
     }
 }
