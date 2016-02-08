@@ -1,0 +1,17 @@
+{
+  "userId": "7306821",
+  "groups": [
+    {
+      "id": 1,
+      "type": 2,
+      "isHost": true,
+      "time": "Mondays at 9pm"
+    },
+    {
+      "id": 2,
+      "type": 2,
+      "isHost": false,
+      "time": "Sundays at 10am"
+    }
+  ]
+}
