@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Subscription;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -9,5 +10,7 @@ namespace crds_angular.Services.Interfaces
         List<Dictionary<string, object>> GetSubscriptions(int contactId, string token);
 
         int SetSubscriptions(Dictionary<string, object> subscription, int contactId, string token);
+
+        OptInResponse AddListSubscriber(string emailAddress, string listName);
     }
 }
