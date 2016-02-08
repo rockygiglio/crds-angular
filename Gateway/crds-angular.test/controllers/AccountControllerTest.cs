@@ -55,12 +55,9 @@ namespace crds_angular.test.controllers
        
         public void ShouldReturnOk()
         {
-            // First we need to get a sessionId
-            var authData = TranslationService.Login(USERNAME, PASSWORD);
-            Assert.IsNotNull(authData, "Token should be valid");
-            
+
             // Set the cookie in the header
-            var token = authData["token"].ToString();
+            var token = "Anything";
             HttpRequestMessage h = new HttpRequestMessage();
             h.Headers.Add("Authorization", token);
             accountController.Request = h;
