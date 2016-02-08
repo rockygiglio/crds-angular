@@ -81,17 +81,6 @@
         return AddEvent.currentPage;
       }
 
-      function dateTime(dateForDate, dateForTime) {
-        return new Date(
-            dateForDate.getFullYear(),
-            dateForDate.getMonth(),
-            dateForDate.getDate(),
-            dateForTime.getHours(),
-            dateForTime.getMinutes(),
-            dateForTime.getSeconds(),
-            dateForTime.getMilliseconds());
-      }
-
       function isEditMode() {
         return AddEvent.editMode;
       }
@@ -100,22 +89,6 @@
         vm.allData.eventForm.$setSubmitted();
 
         AddEvent.eventData.event = vm.event;
-
-        var start =  dateTime(vm.event.startDate, vm.event.startTime);
-        var end = dateTime(vm.event.endDate, vm.event.endTime);
-
-        if (moment(start) <= moment(end)) {
-          $log.debug('start less');
-          vm.allData.eventForm.endDate.$error.endDate = false;
-          vm.allData.eventForm.endDate.$valid = true;
-          vm.allData.eventForm.endDate.$invalid = false;
-        } else {
-          $log.debug('start less than');
-          // set the endDate Invalid...
-          vm.allData.eventForm.endDate.$error.endDate = true;
-          vm.allData.eventForm.endDate.$valid = false;
-          vm.allData.eventForm.endDate.$invalid = true;
-        }
 
         if (vm.allData.eventForm.$valid) {
 
