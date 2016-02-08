@@ -13,7 +13,7 @@
     $stateProvider
       .state(seriesPermalink, {
         url: '/' + seriesPermalink,
-        controller: 'GroupFinderCtrl as ctrl',
+        abstract: true,
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
@@ -118,7 +118,9 @@
 
     ;
 
-    $urlRouterProvider.otherwise('/' + seriesPermalink + '/welcome');
+    $urlRouterProvider
+      .when('/' + seriesPermalink, '/' + seriesPermalink + '/welcome')
+      .otherwise('/' + seriesPermalink + '/welcome');
 
   }
 
