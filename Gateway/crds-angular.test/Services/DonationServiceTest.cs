@@ -5,8 +5,11 @@ using crds_angular.App_Start;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Exceptions;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -1291,5 +1294,144 @@ namespace crds_angular.test.Services
             Assert.AreEqual("78", response.Donations[1].Id);
             Assert.AreEqual("67", response.Donations[2].Id);
         }
+
+        [Test]
+        public void TestCreateDonationForInvoiceNoAmount()
+        {
+            var invoice = new StripeInvoice
+            {
+                Subscription = "sub_123",
+                Amount = 0,
+                Charge = "ch_123",
+            };
+
+            _fixture.CreateDonationForInvoice(invoice);
+            _paymentService.VerifyAll();
+            _mpDonorService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForInvoiceNoCharge()
+        {
+            var invoice = new StripeInvoice
+            {
+                Subscription = "sub_123",
+                Amount = 123,
+                Charge = "   ",
+            };
+
+            _fixture.CreateDonationForInvoice(invoice);
+            _paymentService.VerifyAll();
+            _mpDonorService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForInvoiceDonationAlreadyExists()
+        {
+            const string processorId = "cus_123";
+            const string subscriptionId = "sub_123";
+            const string chargeId = "ch_123";
+
+            var invoice = new StripeInvoice
+            {
+                Subscription = subscriptionId,
+                Amount = 12300,
+                Charge = chargeId,
+                Customer = processorId,
+            };
+
+            var donation = new Donation
+            {
+                donationId = 123
+            };
+
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Returns(donation);
+
+            var donationId = _fixture.CreateDonationForInvoice(invoice);
+            _paymentService.VerifyAll();
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+
+            Assert.AreEqual(donation.donationId, donationId);
+        }
+
+        [Test]
+        public void TestCreateDonationForInvoice()
+        {
+            const string processorId = "cus_123";
+            const string subscriptionId = "sub_123";
+            const string chargeId = "ch_123";
+
+            var invoice = new StripeInvoice
+            {
+                Subscription = subscriptionId,
+                Amount = 12300,
+                Charge = chargeId,
+                Customer = processorId,
+            };
+
+            const int chargeAmount = 45600;
+            int? feeAmount = 987;
+
+            var charge = new StripeCharge
+            {
+                Amount = chargeAmount,
+                BalanceTransaction = new StripeBalanceTransaction
+                {
+                    Amount = 78900,
+                    Fee = feeAmount
+                },
+                Status = "succeeded"
+            };
+
+            _paymentService.Setup(mocked => mocked.GetCharge(chargeId)).Returns(charge);
+
+            const int donorId = 321;
+            const string programId = "3";
+            const string paymentType = "Bank";
+            const int recurringGiftId = 654;
+            const int donorAccountId = 987;
+            const int donationStatus = 4;
+            const decimal amt = 789;
+
+            var recurringGift = new CreateDonationDistDto
+            {
+                Amount = amt,
+                DonorAccountId = donorAccountId,
+                DonorId = donorId,
+                PaymentType = paymentType,
+                ProgramId = programId,
+                RecurringGiftId = recurringGiftId
+            };
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Throws(new DonationNotFoundException(chargeId));
+            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(recurringGift);
+            _mpDonorService.Setup(mocked => mocked.UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, Constants.ResetFailCount));
+
+            _mpDonorService.Setup(
+                mocked =>
+                    mocked.CreateDonationAndDistributionRecord(
+                        It.Is<DonationAndDistributionRecord>(
+                            d => d.DonationAmt == (int)(chargeAmount / Constants.StripeDecimalConversionValue) &&
+                                 d.FeeAmt == feeAmount &&
+                                 d.DonorId == donorId &&
+                                 d.ProgramId.Equals(programId) &&
+                                 d.PledgeId == null &&
+                                 d.ChargeId.Equals(chargeId) &&
+                                 d.PymtType.Equals(paymentType) &&
+                                 d.ProcessorId.Equals(processorId) &&
+                                 d.RegisteredDonor &&
+                                 !d.Anonymous &&
+                                 d.RecurringGift &&
+                                 d.RecurringGiftId == recurringGiftId &&
+                                 d.DonorAcctId.Equals(donorAccountId + "") &&
+                                 d.CheckScannerBatchName == null &&
+                                 d.DonationStatus == donationStatus &&
+                                 d.CheckNumber == null))).Returns(123);
+
+            _fixture.CreateDonationForInvoice(invoice);
+            _paymentService.VerifyAll();
+            _mpDonorService.VerifyAll();
+        }
+
     }
 }

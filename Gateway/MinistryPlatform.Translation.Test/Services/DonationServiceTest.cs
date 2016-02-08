@@ -233,7 +233,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             _ministryPlatformService.Setup(
-                mocked => mocked.GetRecordsDict(9090, It.IsAny<string>(), ",,,,,,,ch_123", It.IsAny<string>()))
+                mocked => mocked.GetRecordsDict(9090, It.IsAny<string>(), ",,,,,,,\"ch_123\"", It.IsAny<string>()))
                 .Returns(searchResult);
 
             _fixture.UpdateDonationStatus("ch_123", donationStatusId, donationStatusDate, donationStatusNotes);
