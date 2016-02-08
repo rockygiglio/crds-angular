@@ -23,6 +23,8 @@ namespace crds_angular.Util
         private readonly IConfigurationWrapper _configWrapper;
         private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
 
+        private const int MAX_SYNC_RECORDS = 1000000;
+
         public MailchimpListHandler(IConfigurationWrapper configWrapper, MPInterfaces.IBulkEmailRepository bulkEmailRepository)
         {
             _configWrapper = configWrapper;
@@ -37,7 +39,7 @@ namespace crds_angular.Util
             var client = GetEmailClient();
 
             // query mailchimp to get list activity         
-            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members",Method.GET);
+            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members?count=" + MAX_SYNC_RECORDS,Method.GET);
             subscriberStatusRequest.AddHeader("Content-Type", "application/json");
 
             var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
