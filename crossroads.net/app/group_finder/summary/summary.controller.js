@@ -3,14 +3,14 @@
 
   module.exports = SummaryCtrl;
 
-  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
+  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService', 'SERIES'];
 
-  function SummaryCtrl ($scope, $log, $state, AuthService) {
+  function SummaryCtrl ($scope, $log, $state, AuthService, SERIES) {
     $log.debug('summary.controller.js');
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go('brave.welcome');
+      $state.go(SERIES.permalink + '.welcome');
     }
 
     var vm = this;
@@ -26,7 +26,7 @@
             vm.nextButton = 'Choose a Role';
         }
       } else if (vm.onLastSlide()) {
-        $state.go('brave.host');
+        $state.go(SERIES.permalink + '.host');
       }
     };
 
@@ -42,6 +42,10 @@
 
     vm.onLastSlide = function () {
       return vm.currentSlide === vm.totalSlides;
+    };
+
+    vm.hostQuestions = function() {
+      $state.go(SERIES.permalink + '.host', { step: 1 });
     };
 
   }

@@ -3,16 +3,13 @@
 
   module.exports = GroupFinderRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider'];
+  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES'];
 
-  function GroupFinderRoutes($stateProvider, $urlRouterProvider) {
-
-    var seriesPermalink = 'brave';
-    var seriesTitle = 'Brave';
+  function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
 
     $stateProvider
-      .state(seriesPermalink, {
-        url: '/' + seriesPermalink,
+      .state(SERIES.permalink, {
+        url: '/' + SERIES.permalink,
         abstract: true,
         templateUrl: 'common/layout.html',
         resolve: {
@@ -34,53 +31,53 @@
         },
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
       })
 
-      .state(seriesPermalink + '.welcome', {
+      .state(SERIES.permalink + '.welcome', {
         controller: 'LoginCtrl as ctrl',
         url: '/welcome',
         templateUrl: 'login/welcome.html',
         resolve: {},
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
       })
 
-      .state(seriesPermalink + '.dashboard', {
+      .state(SERIES.permalink + '.dashboard', {
         controller: 'DashboardCtrl as dashboard',
         url: '/host/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         resolve: {},
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
       })
 
-      .state(seriesPermalink + '.summary', {
+      .state(SERIES.permalink + '.summary', {
         controller: 'SummaryCtrl as summary',
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {},
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
 
       })
 
-      .state(seriesPermalink + '.host_review', {
+      .state(SERIES.permalink + '.host_review', {
         controller: 'HostReviewCtrl as host',
         url: '/host/review',
         templateUrl: 'host/review.html',
@@ -92,13 +89,13 @@
         },
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
       })
 
-      .state(seriesPermalink + '.host', {
+      .state(SERIES.permalink + '.host', {
         controller: 'HostCtrl as host',
         url: '/host/{step:(?:[0-9])}',
         templateUrl: 'host/host.html',
@@ -110,7 +107,7 @@
         },
         data: {
           meta: {
-            title: seriesTitle,
+            title: SERIES.title,
             description: ''
           }
         }
@@ -119,8 +116,8 @@
     ;
 
     $urlRouterProvider
-      .when('/' + seriesPermalink, '/' + seriesPermalink + '/welcome')
-      .otherwise('/' + seriesPermalink + '/welcome');
+      .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')
+      .otherwise('/' + SERIES.permalink + '/welcome');
 
   }
 
