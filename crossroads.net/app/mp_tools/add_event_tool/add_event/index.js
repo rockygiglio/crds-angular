@@ -6,7 +6,6 @@
   require('./add_event.html');
 
   angular.module(MODULE)
-  .directive('addEvent', require('./addEvent.component'))
-  .directive('endDate', require('./endDate.directive'));
+  .directive('addEvent', require('./addEvent.component'));
 
 })();

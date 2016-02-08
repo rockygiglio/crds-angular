@@ -81,29 +81,23 @@
     }
 
     function dateTime(dateForDate, dateForTime) {
-      try {
-        return new Date(
-            dateForDate.getFullYear(),
-            dateForDate.getMonth(),
-            dateForDate.getDate(),
-            dateForTime.getHours(),
-            dateForTime.getMinutes(),
-            dateForTime.getSeconds(),
-            dateForTime.getMilliseconds());
-      } catch (err) {
-        $log.debug(err);
+
+      if (dateForDate === undefined) {
+        return null;
       }
 
-      return null;
+      if (dateForTime === undefined) {
+        return null;
+      }
 
-      // return new Date(
-      //     dateForDate.getFullYear(),
-      //     dateForDate.getMonth(),
-      //     dateForDate.getDate(),
-      //     dateForTime.getHours(),
-      //     dateForTime.getMinutes(),
-      //     dateForTime.getSeconds(),
-      //     dateForTime.getMilliseconds());
+      return new Date(
+          dateForDate.getFullYear(),
+          dateForDate.getMonth(),
+          dateForDate.getDate(),
+          dateForTime.getHours(),
+          dateForTime.getMinutes(),
+          dateForTime.getSeconds(),
+          dateForTime.getMilliseconds());
     }
 
     function endDateOpen($event) {
