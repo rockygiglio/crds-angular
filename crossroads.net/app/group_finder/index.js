@@ -4,7 +4,7 @@
   var MODULES = require('crds-constants').MODULES;
 
   require('./common/layout.html');
-  require('./common/welcome.html');
+  require('./login/welcome.html');
   require('./host/host.html');
   require('./host/review.html');
   require('./dashboard/dashboard.html');
@@ -18,6 +18,7 @@
     .factory('Profile',             require('./services/profile.service'))
     .service('Responses',           require('./services/response.service'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
+    .controller('LoginCtrl',        require('./login/login.controller'))
     .controller('DashboardCtrl',    require('./dashboard/dashboard.controller'))
     .controller('HostCtrl',         require('./host/host.controller'))
     .controller('HostReviewCtrl',   require('./host/host_review.controller'))

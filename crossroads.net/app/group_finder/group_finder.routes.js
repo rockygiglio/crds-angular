@@ -34,9 +34,9 @@
       })
 
       .state(seriesPermalink + '.welcome', {
-        controller: 'GroupFinderCtrl as ctrl',
+        controller: 'LoginCtrl as ctrl',
         url: '/welcome',
-        templateUrl: 'common/welcome.html',
+        templateUrl: 'login/welcome.html',
         resolve: {},
         data: {
           meta: {
