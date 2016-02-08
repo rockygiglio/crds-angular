@@ -15,6 +15,7 @@
     .directive('question',          require('./question/question.directive'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
+    .factory('Profile',             require('./services/profile.service'))
     .service('Responses',           require('./services/response.service'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('DashboardCtrl',    require('./dashboard/dashboard.controller'))

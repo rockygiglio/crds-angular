@@ -15,7 +15,16 @@
         url: '/' + seriesPermalink,
         controller: 'GroupFinderCtrl as ctrl',
         templateUrl: 'common/layout.html',
-        resolve: {},
+        resolve: {
+          Profile: 'Profile',
+          $cookies: '$cookies',
+          Person: function(Profile, $stateParams, $cookies) {
+            var cid = $cookies.get('userId');
+            if (cid) {
+              return Profile.Person.get({contactId: cid}).$promise;
+            }
+          }
+        },
         data: {
           meta: {
             title: seriesTitle,
