@@ -5,9 +5,6 @@ namespace crds_angular.Models.Crossroads.Stewardship
 {
     public class StripeInvoice : StripeObject
     {
-        [JsonProperty("id")]
-        public string InvoiceId { get; set; }
-
         [JsonProperty("subscription")]
         public string Subscription { get; set; }
 
@@ -19,5 +16,8 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("amount_due")]
         public int Amount { get; set; }
+
+        [JsonProperty("paid")]
+        public bool Paid { get; set; }
     }
 }

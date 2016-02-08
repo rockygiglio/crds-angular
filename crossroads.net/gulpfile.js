@@ -44,34 +44,32 @@ function htmlReplace(devBuild) {
   }
 
   gulp.src('app/atriumevents.html')
-      .pipe(htmlreplace({
-        angjs: assets.ang.js,
-        corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        corecss: assets.core.css,
-        commonjs: assets.common.js,
-        profilejs: assets.profile.js,
-        tripsjs: assets.trips.js,
-        searchjs: assets.search.js,
-        mediajs: assets.media.js,
-        givejs: assets.give.js,
-        js: assets.main.js
-      }))
-      .pipe(gulp.dest('./'));
+    .pipe(htmlreplace({
+      angjs: assets.ang.js,
+      corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      corecss: assets.core.css,
+      commonjs: assets.common.js,
+      profilejs: assets.profile.js,
+      tripsjs: assets.trips.js,
+      searchjs: assets.search.js,
+      mediajs: assets.media.js,
+      givejs: assets.give.js,
+      js: assets.main.js
+    })).pipe(gulp.dest('./'));
 
   gulp.src('app/index.html')
-      .pipe(htmlreplace({
-        angjs: assets.ang.js,
-        corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        corecss: assets.core.css,
-        commonjs: {src: assets.common.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        profilejs: {src: assets.profile.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        tripsjs: {src: assets.trips.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-        js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
-      }))
-      .pipe(gulp.dest('./'));
+    .pipe(htmlreplace({
+      angjs: assets.ang.js,
+      corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      corecss: assets.core.css,
+      commonjs: {src: assets.common.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      profilejs: {src: assets.profile.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      tripsjs: {src: assets.trips.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+    })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')
       .pipe(gulp.dest('./assets'));
@@ -180,7 +178,7 @@ gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
 
   new WebpackDevServer(webpack(webPackDevConfigs), {
     historyApiFallback: fallbackOptions,
-    publicPath: '/',
+    publicPath: '/assets/',
     quiet: false,
     watchDelay: 300,
     stats: {
