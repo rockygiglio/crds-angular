@@ -3,10 +3,15 @@
 
   module.exports = SummaryCtrl;
 
-  SummaryCtrl.$inject = ['$scope', '$log', '$state'];
+  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
 
-  function SummaryCtrl ($scope, $log, $state) {
+  function SummaryCtrl ($scope, $log, $state, AuthService) {
     $log.debug('summary.controller.js');
+
+    if (AuthService.isAuthenticated() === false) {
+      $log.debug('not logged in');
+      $state.go('brave.welcome');
+    }
 
     var vm = this;
 

@@ -15,7 +15,23 @@
         url: '/' + seriesPermalink,
         controller: 'GroupFinderCtrl as ctrl',
         templateUrl: 'common/layout.html',
-        resolve: {},
+        resolve: {
+          Profile: 'Profile',
+          $cookies: '$cookies',
+          Person: function(Profile, $cookies) {
+            var cid = $cookies.get('userId');
+            if (cid) {
+              return Profile.Person.get({contactId: cid}).$promise;
+            }
+          },
+          User: function($http){
+            // TODO Update to use $resource
+            return $http.get('/app/group_finder/data/user.group.json')
+              .then(function(res){
+                return res.data;
+              });
+          }
+        },
         data: {
           meta: {
             title: seriesTitle,
@@ -25,9 +41,9 @@
       })
 
       .state(seriesPermalink + '.welcome', {
-        controller: 'GroupFinderCtrl as ctrl',
+        controller: 'LoginCtrl as ctrl',
         url: '/welcome',
-        templateUrl: 'common/welcome.html',
+        templateUrl: 'login/welcome.html',
         resolve: {},
         data: {
           meta: {
