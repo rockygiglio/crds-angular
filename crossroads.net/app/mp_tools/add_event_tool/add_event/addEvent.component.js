@@ -98,6 +98,7 @@
           dateForTime.getMinutes(),
           dateForTime.getSeconds(),
           dateForTime.getMilliseconds());
+
     }
 
     function endDateOpen($event) {
