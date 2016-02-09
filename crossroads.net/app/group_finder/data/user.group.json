@@ -5,13 +5,43 @@
       "id": 1,
       "type": 2,
       "isHost": true,
+      "members": [
+        {
+          "firstName": "Jane",
+          "lastName": "Smith",
+          "emailAddress": "name@email.com",
+          "genderId": 2,
+          "affinities": [
+            "Has never journeyed before",
+            "Is looking to meet new people"
+          ]
+        },
+        {
+          "firstName": "Joe",
+          "lastName": "Bing",
+          "emailAddress": "name@email.com",
+          "genderId": 1,
+          "affinities": [
+            "Has journeyed multiple times",
+            "Is looking to meet new people"
+          ]
+        },
+        {
+          "firstName": "Harry",
+          "lastName": "Chang",
+          "emailAddress": "name@email.com",
+          "genderId": 1,
+          "affinities": [
+            "Has journeyed once before",
+            "Is looking to find answers"
+          ]
+        }
+      ],
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
       "time": "Mondays at 9pm"
-    },
-    {
-      "id": 2,
-      "type": 2,
-      "isHost": false,
-      "time": "Sundays at 10am"
     }
   ]
 }
