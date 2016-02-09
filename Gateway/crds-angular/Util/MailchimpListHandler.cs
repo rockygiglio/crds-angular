@@ -23,8 +23,6 @@ namespace crds_angular.Util
         private readonly IConfigurationWrapper _configWrapper;
         private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
 
-        private const int MAX_SYNC_RECORDS = 1000000;
-
         public MailchimpListHandler(IConfigurationWrapper configWrapper, MPInterfaces.IBulkEmailRepository bulkEmailRepository)
         {
             _configWrapper = configWrapper;
@@ -38,39 +36,45 @@ namespace crds_angular.Util
 
             var client = GetEmailClient();
 
-            // query mailchimp to get list activity         
-            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members?count=" + MAX_SYNC_RECORDS,Method.GET);
+            // query mailchimp to see if the subscriber is present on the list
+            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email),Method.GET);
             subscriberStatusRequest.AddHeader("Content-Type", "application/json");
 
             var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
 
             if (subscriberStatusResponse.StatusCode != HttpStatusCode.OK)
             {
-                _logger.ErrorFormat("Failed adding subscriber {0} for list {1} with StatusCode = {2}", email, listName, subscriberStatusResponse.StatusCode);
-                return new OptInResponse
+                // Mailchimp will return a not found error, if the member is not on a list -- since it's a 404, this
+                // additional step will determine if there is actually a problem connecting to the mailchimp list
+                var mailchimpStatusRequest = new RestRequest("lists/" + publicationId, Method.GET);
+                var mailchimpStatusResponse = client.Execute(mailchimpStatusRequest);
+
+                if (mailchimpStatusResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    ErrorInSignupProcess = true,
-                    UserAlreadySubscribed = false
-                };
+                    _logger.ErrorFormat("Failed adding subscriber {0} for list {1} with StatusCode = {2}", email, listName, subscriberStatusResponse.StatusCode);
+                    return new OptInResponse
+                    {
+                        ErrorInSignupProcess = true,
+                        UserAlreadySubscribed = false
+                    };
+                }
             }
+            // do this to notify the user if they're already signed up and need to look for an 
+            // opt-in message or take other action
             else
             {
                 var responseContent = subscriberStatusResponse.Content;
                 var responseContentJson = JObject.Parse(responseContent);
-                List<BulkEmailSubscriberOptDTO> subscribersDTOs = JsonConvert.DeserializeObject<List<BulkEmailSubscriberOptDTO>>(responseContentJson["members"].ToString());
 
-                if (subscribersDTOs.Count(r => r.EmailAddress == email) > 0)
+                BulkEmailSubscriberOptDTO subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
+
+                if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
                 {
-                    var subscriber = subscribersDTOs.First(r => r.EmailAddress == email);
-
-                    if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
+                    return new OptInResponse
                     {
-                        return new OptInResponse
-                        {
-                            ErrorInSignupProcess = false,
-                            UserAlreadySubscribed = true
-                        };
-                    }
+                        ErrorInSignupProcess = false,
+                        UserAlreadySubscribed = true
+                    };
                 }
             }
 
