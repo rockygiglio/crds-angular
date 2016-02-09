@@ -1,6 +1,6 @@
 <h3>{{dashboard.profileData.person.nickName}}'s Group</h3>
 <p>Your group of {{dashboard.groups[0].members.length}} meets {{dashboard.groups[0].time}} at {{dashboard.groups[0].addressLine1}}.</p>
-<p>This group is co-ed</p>
+<p>This group is {{dashboard.groupType}}</p>
 
 <div class="row">
   <div class="col-md-6">
@@ -9,7 +9,7 @@
       <div class="email"><a href="mailto:{{member.emailAddress}}">{{member.emailAddress}}</a></div>
       <ul class="desc">
         <li ng-repeat="affinity in member.affinities">{{affinity}}</li>
-        <li>Has about an 18 minute drive</li>
+        <li>Has about an {{dashboard.driveTime}} drive</li>
       </ul>
     </div>
     <button class="btn btn-primary" ng-click="dashboard.emailGroup()">Email Group</button>

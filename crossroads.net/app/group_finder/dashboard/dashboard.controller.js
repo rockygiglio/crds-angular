@@ -32,7 +32,16 @@
     };
     vm.startOver = function() {
       $state.go(SERIES.permalink + '.summary');
-    }
+    };
+
+    vm.driveTime = function() {
+      // TODO maps api integration to calculate this
+      return '18 minute';
+    };
+    vm.groupType = function() {
+      // TODO need lookup of available group types. Waiting on CRDS API to return this value
+      return 'co-ed';
+    };
   }
 
 })();

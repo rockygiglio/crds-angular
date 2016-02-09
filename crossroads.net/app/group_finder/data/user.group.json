@@ -9,7 +9,7 @@
         {
           "firstName": "Jane",
           "lastName": "Smith",
-          "emailAddress": "name@email.com",
+          "emailAddress": "jane.smith@email.com",
           "genderId": 2,
           "affinities": [
             "Has never journeyed before",
@@ -19,7 +19,7 @@
         {
           "firstName": "Joe",
           "lastName": "Bing",
-          "emailAddress": "name@email.com",
+          "emailAddress": "joe.bing@email.com",
           "genderId": 1,
           "affinities": [
             "Has journeyed multiple times",
@@ -29,7 +29,7 @@
         {
           "firstName": "Harry",
           "lastName": "Chang",
-          "emailAddress": "name@email.com",
+          "emailAddress": "harry.chang@email.com",
           "genderId": 1,
           "affinities": [
             "Has journeyed once before",
