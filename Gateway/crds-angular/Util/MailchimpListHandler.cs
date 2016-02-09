@@ -87,7 +87,7 @@ namespace crds_angular.Util
             request.Method = Method.PUT;
 
             Dictionary<string, string> requestBody = new Dictionary<string, string>();
-            requestBody.Add("email", email);
+            requestBody.Add("email_address", email);
             requestBody.Add("status", "pending");
             request.AddBody(requestBody);
 
