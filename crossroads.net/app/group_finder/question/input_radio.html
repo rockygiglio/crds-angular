@@ -1,6 +1,6 @@
 <label>{{definition.question}}</label>
 <div class="radio" ng-repeat="answer in definition.answers track by $index">
   <label>
-    <input type="radio" value="{{$index}}" ng-model="responses[model()][definition.key]" /> {{answer}}
+    <input type="radio" name="{{definition.key}}" value="{{$index}}" ng-model="responses[model()][definition.key]" ng-change="checkError()" /> {{answer}}
   </label>
 </div>

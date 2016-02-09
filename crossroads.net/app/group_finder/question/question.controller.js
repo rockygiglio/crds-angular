@@ -19,6 +19,10 @@
       return 'question/input_'+ $scope.definition.input_type +'.html';
     };
 
+    $scope.checkError = function() {
+      $scope.$parent.applyErrors();
+    };
+
   }
 
 })();

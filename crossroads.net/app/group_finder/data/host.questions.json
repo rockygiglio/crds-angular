@@ -4,7 +4,8 @@
       "key": "location",
       "question": "What is your home address?",
       "model": "member",
-      "input_type": "address"
+      "input_type": "address",
+      "required": true
     },
     {
       "key": "group_name",
