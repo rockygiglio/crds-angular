@@ -98,7 +98,6 @@
           dateForTime.getMinutes(),
           dateForTime.getSeconds(),
           dateForTime.getMilliseconds());
-
     }
 
     function endDateOpen($event) {
@@ -135,7 +134,6 @@
         start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
         end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
       } catch (err) {
-        // $log.debug(err);
         form.endDate.$error.endDate = true;
         form.endDate.$valid = false;
         form.endDate.$invalid = true;
@@ -144,9 +142,6 @@
         form.$invalid = true;
         return true;
       }
-
-      //var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
-      // var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
 
       if (moment(start) <= moment(end)) {
         form.endDate.$error.endDate = false;
