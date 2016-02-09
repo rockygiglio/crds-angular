@@ -10,12 +10,4 @@
   <tab heading="My Groups" active="tab[1].active" ng-click="dashboard.goToTab(tab)" class="{{tab.class}}">
     <ng-include src="'templates/groups.html'"></ng-include>
   </tab>
-  <li role="tab" class="dropdown hidden-md hidden-lg hidden-sm dropdown-toggle" dropdown is-open="status.isopen">
-    <a dropdown-toggle ng-disabled="disabled">More <span class="caret"></span></a>
-    <ul class="dropdown-menu" role="menu">
-      <li ng-repeat="tab in dashboard.tabs | filter:tab.title==='Resources'">
-        <a href="" ng-click="dashboard.goToTab(tab)">{{tab.title}}</a>
-      </li>
-    </ul>
-  </li>
 </tabset>
