@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  
+
   require('./tripgiving.html');
   require('./tripgivingTemplates/account.html');
   require('./tripgivingTemplates/amount.html');
@@ -12,8 +12,6 @@
 
   angular.module('crossroads.trips')
     .controller('TripGivingController', require('./tripgiving.controller'))
-    .factory('TripGiving', require('./tripGiving.service')) 
-    ;
-
+    .factory('TripGiving', require('./tripGiving.service'));
 
 })();

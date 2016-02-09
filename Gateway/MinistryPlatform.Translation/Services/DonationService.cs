@@ -6,6 +6,7 @@ using AutoMapper;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
+using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
 
@@ -267,14 +268,14 @@ namespace MinistryPlatform.Translation.Services
         {
             try
             {
-                string apiToken = ApiLogin();
+                var apiToken = ApiLogin();
                 var result = GetDonationByProcessorPaymentId(processorPaymentId, apiToken);
 
-                var rec = _ministryPlatformService.GetRecordsDict(_distributionPageId, apiToken, ",,,,,,,," + result.donationId);
+                var rec = _ministryPlatformService.GetRecordsDict(_distributionPageId, apiToken, string.Format(",,,,,,,,\"{0}\"", result.donationId));
                 
                 if (rec.Count == 0 || (rec.Last().ToNullableInt("dp_RecordID")) == null)
                 {
-                    throw (new ApplicationException("Could not locate donation for charge " + processorPaymentId));
+                    throw (new DonationNotFoundException(processorPaymentId));
                 }
                 
                 var program = rec.First().ToString("Statement_Title");
@@ -300,11 +301,11 @@ namespace MinistryPlatform.Translation.Services
         private Donation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken)
         {
             var result = _ministryPlatformService.GetRecordsDict(_donationsPageId, apiToken,
-                ",,,,,,," + processorPaymentId);
+                string.Format(",,,,,,,\"{0}\"", processorPaymentId));
           
             if (result.Count == 0 || (result.Last().ToNullableInt("dp_RecordID")) == null)
             {
-                throw (new ApplicationException("Could not locate donation for charge " + processorPaymentId));
+                throw (new DonationNotFoundException(processorPaymentId));
             }
 
             var dictionary = result.First();

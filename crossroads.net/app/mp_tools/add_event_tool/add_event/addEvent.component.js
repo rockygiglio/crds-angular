@@ -4,6 +4,7 @@
   module.exports = AddEventComponent;
 
   AddEventComponent.$inject = [
+    '$log',
     '$rootScope',
     'AddEvent',
     'Lookup',
@@ -25,7 +26,7 @@
     };
   }
 
-  function AddEventController($rootScope, AddEvent, Lookup, Programs, StaffContact, Validation) {
+  function AddEventController($log, $rootScope, AddEvent, Lookup, Programs, StaffContact, Validation) {
     var vm = this;
 
     vm.crossroadsLocations = [];
@@ -41,6 +42,7 @@
     vm.startDateOpen = startDateOpen;
     vm.startDateOpened = false;
     vm.validation = Validation;
+    vm.validDateRange = validDateRange;
 
     activate();
 
@@ -78,6 +80,17 @@
       }
     }
 
+    function dateTime(dateForDate, dateForTime) {
+      return new Date(
+          dateForDate.getFullYear(),
+          dateForDate.getMonth(),
+          dateForDate.getDate(),
+          dateForTime.getHours(),
+          dateForTime.getMinutes(),
+          dateForTime.getSeconds(),
+          dateForTime.getMilliseconds());
+    }
+
     function endDateOpen($event) {
       $event.preventDefault();
       $event.stopPropagation();
@@ -98,6 +111,31 @@
       $event.preventDefault();
       $event.stopPropagation();
       vm.startDateOpened = true;
+    }
+
+    function validDateRange(form) {
+      if (form === undefined) {
+        return false;
+      }
+
+      var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
+      var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
+
+      if (moment(start) <= moment(end)) {
+        form.endDate.$error.endDate = false;
+        form.endDate.$valid = true;
+        form.endDate.$invalid = false;
+        return false;
+      }
+
+      // set the endDate Invalid...
+      form.endDate.$error.endDate = true;
+      form.endDate.$valid = false;
+      form.endDate.$invalid = true;
+      form.endDate.$dirty = true;
+      form.$valid = false;
+      form.$invalid = true;
+      return true;
     }
 
   }

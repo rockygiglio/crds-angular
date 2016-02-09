@@ -11,6 +11,7 @@
 
   angular.module('crossroads.group_finder', [MODULES.CORE, MODULES.COMMON])
     .config(require('./group_finder.routes'))
+    .constant('SERIES',             require('./group_finder.constants'))
     .directive('question',          require('./question/question.directive'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))

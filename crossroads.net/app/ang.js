@@ -12,7 +12,6 @@
   require('angular-scroll');
   require('angular-stripe');
   require('angular-animate');
-  require('angular-touch');
   require('angular-payments');
   require('angular-bootstrap-npm');
   require('angular-ui-router');

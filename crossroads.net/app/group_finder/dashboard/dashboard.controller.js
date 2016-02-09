@@ -3,14 +3,14 @@
 
   module.exports = DashboardCtrl;
 
-  DashboardCtrl.$inject = ['$scope', '$log', '$state', 'Profile', 'Person', 'AuthService', 'User'];
+  DashboardCtrl.$inject = ['$scope', '$log', '$state', 'Profile', 'Person', 'AuthService', 'User', 'SERIES'];
 
-  function DashboardCtrl($scope, $log, $state, Profile, Person, AuthService, User) {
+  function DashboardCtrl($scope, $log, $state, Profile, Person, AuthService, User, SERIES) {
     var vm = this;
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go('brave.welcome');
+      $state.go(SERIES.permalink + '.welcome');
     }
 
     vm.profileData = { person: Person };
@@ -30,6 +30,9 @@
       // TODO add validation, email API calls
       $log.debug('Sending Email to: ' + email);
     };
+    vm.startOver = function() {
+      $state.go(SERIES.permalink + '.summary');
+    }
   }
 
 })();

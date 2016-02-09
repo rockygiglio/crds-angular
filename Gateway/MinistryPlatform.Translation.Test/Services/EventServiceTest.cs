@@ -148,7 +148,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact_ID", 12345},
                     {"Email_Address", "thecinnamonbagel@react.js"},
                     {"Parent_Event_ID", 6543219},
-                    {"Congregation_ID", It.IsAny<int>()}
+                    {"Congregation_ID", It.IsAny<int>()},
+                    {"Reminder_Days_Prior_ID", 2}
                 }
             };
             var searchString = eventId + ",";

@@ -12,10 +12,20 @@
                       '$state',
                       '$window',
                       'QuestionDefinitions',
-                      'Responses'
+                      'Responses',
+                      'SERIES'
                      ];
 
-  function HostCtrl($scope, $log, $http, $cookies, $stateParams, $state, $window, QuestionDefinitions, Responses) {
+  function HostCtrl($scope,
+                    $log,
+                    $http,
+                    $cookies,
+                    $stateParams,
+                    $state,
+                    $window,
+                    QuestionDefinitions,
+                    Responses,
+                    SERIES) {
 
     var vm = this;
 
@@ -26,18 +36,18 @@
     vm.responses = Responses.data;
 
     // Methods
-    vm.previousQuestion = function(){
+    vm.previousQuestion = function() {
       vm.currentIteration--;
-      $state.go('brave.host', { step: vm.currentIteration });
+      $state.go(SERIES.permalink + '.host', { step: vm.currentIteration });
     };
 
-    vm.nextQuestion = function(){
+    vm.nextQuestion = function() {
       var req = vm.currentQuestion().required === true;
       if (req && vm.responses[vm.currentQuestion().model][vm.currentKey()] === undefined) {
         $window.alert('required');
       } else {
         vm.currentIteration++;
-        $state.go('brave.host', { step: vm.currentIteration });
+        $state.go(SERIES.permalink + '.host', { step: vm.currentIteration });
       }
     };
 
@@ -49,8 +59,12 @@
       return vm.questions[vm.currentIteration - 1];
     };
 
-    vm.startOver = function(){
+    vm.startOver = function() {
       vm.currentIteration = 1;
+    };
+
+    vm.reviewResponses = function() {
+      $state.go(SERIES.permalink + '.host_review');
     };
   }
 
