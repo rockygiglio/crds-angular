@@ -5,11 +5,12 @@
 
   var constants = require('./constants');
 
-  QuestionCtrl.$inject = ['$scope'];
+  QuestionCtrl.$inject = ['$scope', '$compile'];
 
-  function QuestionCtrl($scope) {
+  function QuestionCtrl($scope, $compile) {
 
     $scope.states = constants.US_STATES;
+    $scope.tpl = $compile('<span>' + $scope.definition.question + '<span>')($scope);
 
     $scope.model = function() {
       return $scope.definition.model;
@@ -21,6 +22,10 @@
 
     $scope.checkError = function() {
       $scope.$parent.applyErrors();
+    };
+
+    $scope.renderedLabel = function() {
+      return $scope.tpl.html();
     };
 
   }

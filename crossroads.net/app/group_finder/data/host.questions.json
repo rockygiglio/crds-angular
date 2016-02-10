@@ -1,8 +1,15 @@
 {
   "questions": [
     {
+      "key": "first_name",
+      "question": "What is your first name?",
+      "model": "member",
+      "input_type": "text",
+      "required": true
+    },
+    {
       "key": "location",
-      "question": "What is your home address?",
+      "question": "Ok {{responses.member.first_name}}, what is your home address?",
       "model": "member",
       "input_type": "address",
       "required": true
