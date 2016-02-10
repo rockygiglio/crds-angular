@@ -7,6 +7,7 @@
       "groupTitle": "Gabe S",
       "members": [
         {
+          "profileId": 7656823,
           "firstName": "Jane",
           "lastName": "Smith",
           "emailAddress": "jane.smith@email.com",
@@ -22,6 +23,7 @@
           ]
         },
         {
+          "profileId": 7656823,
           "firstName": "Joe",
           "lastName": "Bing",
           "emailAddress": "joe.bing@email.com",
@@ -37,6 +39,7 @@
           ]
         },
         {
+          "profileId": 7656823,
           "firstName": "Harry",
           "lastName": "Chang",
           "emailAddress": "joe.bing@email.com",
