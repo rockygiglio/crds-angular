@@ -38,7 +38,6 @@
 
     vm.profileData = { person: Person };
     vm.groups = User.groups;
-    vm.invitee = ''; // empty invitee input text
     vm.tabs = [
       { title:'Resources', active: false, route: 'dashboard.resources' },
       { title:'My Groups', active: true, route: 'dashboard.groups'},
@@ -79,6 +78,7 @@
       };
 
     };
+
     vm.startOver = function() {
       $state.go(SERIES.permalink + '.summary');
     };

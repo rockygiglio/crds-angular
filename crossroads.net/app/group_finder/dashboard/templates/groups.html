@@ -15,9 +15,14 @@
     <button class="btn btn-primary" ng-click="dashboard.emailGroup()">Email Group</button>
   </div>
   <div class="col-md-6">
-    <label for="invite">Invite someone to join.</label>
-    <input type="text" placeholder="Enter email address" id="invite" name="invite" ng-model="dashboard.invitee">
-    <button class="btn btn-primary" ng-click="dashboard.inviteMember(dashboard.invitee)">Send</button>
+    <form name="inviteForm" role="form" ng-submit="dashboard.inviteMember()" novalidate>
+      <div class="form-group" ng-class="{ 'has-error': inviteForm.invite.$invalid && !inviteForm.invite.$pristine}">
+        <label for="invite">Invite someone to join.</label>
+        <input type="email" placeholder="Enter email address" id="invite" name="invite" ng-model="dashboard.invitee" required>
+        <button class="btn btn-primary" ng-disabled="inviteForm.$invalid">Send</button>
+        <p ng-show="inviteForm.invite.$invalid && inviteForm.$submitted" class="help-block">Valid email address required.</p>
+      </div>
+    </form>
 
     <div class="help">
       <h4>Need Help?</h4>
