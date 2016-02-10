@@ -141,6 +141,7 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
+                    ProcessorId = "sub_aeirhsjidhriuewiwq",
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
             };
@@ -351,7 +352,11 @@ namespace crds_angular.test.Services
             {
                 ProcessorId = "111000111",
                 DonorId = 111111,
-                RegisteredUser = true
+                RegisteredUser = true,
+                Account = new DonorAccount
+                {
+                    ProcessorId = "111000111"
+                }
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns(contactDonorExisting);
@@ -392,11 +397,16 @@ namespace crds_angular.test.Services
                 ContactId = 123,
                 ProcessorId = "111000111",
                 DonorId = 111111,
-                RegisteredUser = true
+                RegisteredUser = true,
+                Account = new DonorAccount
+                {
+                    ProcessorId = "111000111"
+                }
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns(contactDonorExisting);
-
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns(contactDonorExisting);
+           
             var result = _fixture.CreateDonor(check);
             _donorService.VerifyAll();
             Assert.NotNull(result);
