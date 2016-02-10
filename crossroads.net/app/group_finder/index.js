@@ -15,6 +15,7 @@
     .constant('SERIES',             require('./group_finder.constants'))
     .directive('questions',         require('./questions/questions.directive'))
     .directive('question',          require('./question/question.directive'))
+    .filter('humanize',             require('./filters/humanize.filter.js'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .factory('Profile',             require('./services/profile.service'))

@@ -28,6 +28,12 @@
       return $scope.tpl.html();
     };
 
+    $scope.onKeyUp = function(e) {
+      if(e.keyCode === 13) {
+        $scope.$parent.nextQuestion();
+      }
+    };
+
   }
 
 })();

@@ -3,9 +3,9 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$scope', '$state', '$stateParams', '$window', 'SERIES'];
+  QuestionsCtrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', '$window', 'SERIES'];
 
-  function QuestionsCtrl($scope, $state, $stateParams, $window, SERIES) {
+  function QuestionsCtrl($rootScope, $scope, $state, $stateParams, $window, SERIES) {
 
     // ------------------------ Properties
 
@@ -73,6 +73,13 @@
         }
       });
     };
+
+    $rootScope.$on('$viewContentLoaded',function(event){
+      setTimeout(function() {
+        var el = $('input[type=text], input[type=number]').filter('[name*=' + $scope.currentKey() + ']').first();
+            el.focus();
+      }, 100);
+    });
 
   }
 

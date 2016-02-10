@@ -2,11 +2,11 @@
 <div class="row">
   <div class="col-md-12">
     <label>Street</label>
-    <input type="text" name="{{definition.key}}Street" ng-model="responses[model()][definition.key].street" class="form-control" ng-change="checkError()" />
+    <input type="text" name="{{definition.key}}Street" ng-model="responses[model()][definition.key].street" class="form-control" ng-change="checkError()" ng-keyup="onKeyUp($event)" />
   </div>
   <div class="col-md-5">
     <label>City</label>
-    <input type="text" name="{{definition.key}}City" ng-model="responses[model()][definition.key].city" class="form-control" ng-keyup="checkError()" />
+    <input type="text" name="{{definition.key}}City" ng-model="responses[model()][definition.key].city" class="form-control" ng-keyup="checkError()" ng-keyup="onKeyUp($event)" />
   </div>
   <div class="col-md-4">
     <label>State</label>
@@ -16,7 +16,7 @@
   </div>
   <div class="col-md-3">
     <label>Zip</label>
-    <input type="text" name="{{definition.key}}Zip" class="form-control" ng-model="responses[model()][definition.key].zip" ng-change="checkError()" />
+    <input type="text" name="{{definition.key}}Zip" class="form-control" ng-model="responses[model()][definition.key].zip" ng-change="checkError()" ng-keyup="onKeyUp($event)" />
   </div>
 </div>
 

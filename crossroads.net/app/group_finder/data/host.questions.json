@@ -11,22 +11,19 @@
       "key": "location",
       "question": "Ok {{responses.member.first_name}}, what is your home address?",
       "model": "member",
-      "input_type": "address",
-      "required": true
+      "input_type": "address"
     },
     {
       "key": "group_name",
       "question": "Please name your group",
       "input_type": "text",
-      "model": "group",
-      "required": true
+      "model": "group"
     },
     {
       "key": "zip_code",
       "question": "Where will you host this group",
       "input_type": "text",
-      "model": "group",
-      "required": true
+      "model": "group"
     },
     {
       "key": "goals",
