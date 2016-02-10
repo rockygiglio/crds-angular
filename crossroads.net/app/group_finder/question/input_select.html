@@ -1,7 +1,7 @@
-<label>{{definition.question}}</label>
+<label ng-bind-html="renderedLabel()"></label>
 <div class="text">
   <label>
-    <select ng-model="responses[model()][definition.key]" class="form-control">
+    <select name="{{definition.key}}" ng-model="responses[model()][definition.key]" class="form-control" ng-change="checkError()">
       <option ng-repeat="answer in definition.answers">{{answer}}</option>
     </select>
   </label>
