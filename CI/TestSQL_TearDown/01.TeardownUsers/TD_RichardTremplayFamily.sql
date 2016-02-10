@@ -89,7 +89,7 @@ DELETE FROM [dbo].dp_communication_messages where communication_id in (select co
 DELETE FROM dp_communications WHERE To_Contact in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
 
 ---delete households
-DELETE FROM Activity_Log where Household_ID = @householdID;
+DELETE FROM Activity_Log where Household_ID = 100000020;
 
 ---delete address since we hard coded the id in the setup script
 update households set address_id = null where address_id = 100000020;
@@ -101,7 +101,8 @@ DELETE FROM Contact_Households WHERE Contact_ID in (SELECT Contact_ID FROM conta
 
 UPDATE contacts set household_id = null where household_id in (select household_id from households where household_name = 'Tremplay');
 
-DELETE FROM households WHERE household_name = 'Tremplay';
+
+DELETE FROM households WHERE household_id = 100000020;
 
 ---delete contact relationships
 DELETE FROM contact_relationships WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
