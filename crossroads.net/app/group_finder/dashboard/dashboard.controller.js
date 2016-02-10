@@ -37,11 +37,31 @@
     }
 
     vm.profileData = { person: Person };
-    vm.groups = User.groups;
-    vm.tabs = [
-      { title:'Resources', active: false, route: 'dashboard.resources' },
-      { title:'My Groups', active: true, route: 'dashboard.groups'},
-    ];
+    vm.person = Person;
+    vm.groups = {
+      hosting: [],
+      participating: []
+    };
+
+
+    _.each(User.groups, function(group, i, list) {
+      _.each(group.members, function(member, i, list) {
+
+        if (member.groupRoleId === 22) {
+          if (member.contactId === vm.person.contactId) {
+            group.isHost = true;
+            group.host = vm.person;
+            vm.groups.hosting.push(group);
+          } else {
+            group.isHost = false;
+            group.host = member;
+            vm.groups.participating.push(group);
+          }
+        }
+      });
+    });
+
+    $log.debug('groups:', vm.groups);
 
     vm.emailGroup = function() {
       // TODO popup with text block?
@@ -51,7 +71,7 @@
         controller: 'GroupContactCtrl as contactModal',
         resolve: {
           fromContactId: function() {
-            return vm.profileData.person.contactId;
+            return vm.person.contactId;
           },
           toContactIds: function() {
             return _.map(vm.groups[0].members, function(member) {return member.contactId;});
@@ -70,7 +90,7 @@
       // TODO add validation. Review how to send email without `toContactId`
       $log.debug('Sending Email to: ' + email);
       var toSend = {
-        'fromContactId': vm.profileData.person.contactId,
+        'fromContactId': vm.person.contactId,
         'fromUserId': 0,
         'toContactId': 0,
         'templateId': 0,
