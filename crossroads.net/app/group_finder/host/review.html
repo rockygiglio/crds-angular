@@ -1,15 +1,14 @@
 <div class="page-header">
-  <h2>Review</h2>
+  <h2>Are all your answers correct?</h2>
 </div>
 
 <div class="review">
-  <pre>
-  {{host.questions}}
-  </pre>
 
-  <pre>
-  {{host.responses}}
-  </pre>
+  <ul class="list-unstyled">
+    <li ng-repeat="definition in host.questions.questions">
+      <strong>{{definition.key | humanize}}:</strong> {{host.responses.getResponse(definition)}}
+    </li>
+  </ul>
 
   <div class="btns">
     <a class="btn btn-primary" href="#" ng-click="host.showDashboard()">Yes, this is correct</a>
