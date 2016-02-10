@@ -16,6 +16,7 @@
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .factory('Profile',             require('./services/profile.service'))
+    .factory('Email',               require('./services/email.service'))
     .service('Responses',           require('./services/response.service'))
     .service('QuestionService',     require('./services/group_questions.service'))
     .controller('LoginCtrl',        require('./login/login.controller'))
