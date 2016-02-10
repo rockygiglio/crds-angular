@@ -31,85 +31,75 @@ namespace crds_angular.Util
 
         public OptInResponse AddListSubscriber(string email, string listName, string token)
         {
-            var publications = _bulkEmailRepository.GetPublications(token);
-            string publicationId = publications.First(r => r.Title == listName).ThirdPartyPublicationId;
-
-            var client = GetEmailClient();
-
-            // query mailchimp to see if the subscriber is present on the list
-            var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email),Method.GET);
-            subscriberStatusRequest.AddHeader("Content-Type", "application/json");
-
-            var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
-
-            if (subscriberStatusResponse.StatusCode != HttpStatusCode.OK)
+            try
             {
-                // Mailchimp will return a not found error, if the member is not on a list -- since it's a 404, this
-                // additional step will determine if there is actually a problem connecting to the mailchimp list
-                var mailchimpStatusRequest = new RestRequest("lists/" + publicationId, Method.GET);
-                var mailchimpStatusResponse = client.Execute(mailchimpStatusRequest);
+                var publications = _bulkEmailRepository.GetPublications(token);
+                string publicationId = publications.First(r => r.Title == listName).ThirdPartyPublicationId;
 
-                if (mailchimpStatusResponse.StatusCode != HttpStatusCode.OK)
+                var client = GetEmailClient();
+
+                // query mailchimp to see if the subscriber is present on the list
+                var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email), Method.GET);
+                subscriberStatusRequest.AddHeader("Content-Type", "application/json");
+
+                var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
+
+                // handle existing user, opt them in if they're not
+                if (subscriberStatusResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    _logger.ErrorFormat("Failed adding subscriber {0} for list {1} with StatusCode = {2}", email, listName, subscriberStatusResponse.StatusCode);
-                    return new OptInResponse
+                    var responseContent = subscriberStatusResponse.Content;
+                    var responseContentJson = JObject.Parse(responseContent);
+
+                    BulkEmailSubscriberOptDTO subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
+
+                    if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
                     {
-                        ErrorInSignupProcess = true,
-                        UserAlreadySubscribed = false
-                    };
+                        return new OptInResponse
+                        {
+                            ErrorInSignupProcess = false,
+                            UserAlreadySubscribed = true
+                        };
+                    }
+                }
+                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // create opt in request, if the person isn't already subscribed
+                    var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
+                    request.AddHeader("Content-Type", "application/json");
+
+                    request.JsonSerializer = new RestsharpJsonNetSerializer();
+                    request.RequestFormat = DataFormat.Json;
+                    request.Method = Method.PUT;
+
+                    Dictionary<string, string> requestBody = new Dictionary<string, string>();
+                    requestBody.Add("email_address", email);
+                    requestBody.Add("status", "pending");
+                    request.AddBody(requestBody);
+
+                    var response = client.Execute(request);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return new OptInResponse
+                        {
+                            ErrorInSignupProcess = false,
+                            UserAlreadySubscribed = false
+                        };
+                    }
                 }
             }
-            // do this to notify the user if they're already signed up and need to look for an 
-            // opt-in message or take other action
-            else
+            catch (Exception ex)
             {
-                var responseContent = subscriberStatusResponse.Content;
-                var responseContentJson = JObject.Parse(responseContent);
-
-                BulkEmailSubscriberOptDTO subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
-
-                if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
-                {
-                    return new OptInResponse
-                    {
-                        ErrorInSignupProcess = false,
-                        UserAlreadySubscribed = true
-                    };
-                }
+                _logger.ErrorFormat("Failed adding subscriber {0} for list {1} with exception = {2}", email, listName, ex.ToString());
             }
 
-            // create opt in request, if the person isn't already subscribed
-            var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
-            request.AddHeader("Content-Type", "application/json");
-
-            request.JsonSerializer = new RestsharpJsonNetSerializer();
-            request.RequestFormat = DataFormat.Json;
-            request.Method = Method.PUT;
-
-            Dictionary<string, string> requestBody = new Dictionary<string, string>();
-            requestBody.Add("email_address", email);
-            requestBody.Add("status", "pending");
-            request.AddBody(requestBody);
-
-            var response = client.Execute(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
+            // if we don't get the correct response, return an error message
+            return new OptInResponse
             {
-                _logger.ErrorFormat("Failed adding subscriber {0} for list {1} with StatusCode = {2}", email, listName, response.StatusCode);
-                return new OptInResponse
-                {
-                    ErrorInSignupProcess = true,
-                    UserAlreadySubscribed = false
-                };
-            }
-            else
-            {
-                return new OptInResponse
-                {
-                    ErrorInSignupProcess = false,
-                    UserAlreadySubscribed = false
-                };
-            }
+                ErrorInSignupProcess = true,
+                UserAlreadySubscribed = false
+            };
+
         }
 
         private RestClient GetEmailClient()
