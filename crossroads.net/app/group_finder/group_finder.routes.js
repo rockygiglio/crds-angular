@@ -113,6 +113,25 @@
         }
       })
 
+
+      .state(SERIES.permalink + '.join', {
+        controller: 'JoinCtrl as join',
+        url: '/join/{step:(?:[0-9])}',
+        templateUrl: 'join/join.html',
+        resolve: {
+          QuestionService: 'QuestionService',
+          QuestionDefinitions: function(QuestionService) {
+            return QuestionService.get().$promise;
+          }
+        },
+        data: {
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
     ;
 
     $urlRouterProvider

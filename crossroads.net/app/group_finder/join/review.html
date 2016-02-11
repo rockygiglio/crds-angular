@@ -1,0 +1,17 @@
+<div class="page-header">
+  <h2>Are all your answers correct?</h2>
+</div>
+
+<div class="review">
+
+  <ul class="list-unstyled">
+    <li ng-repeat="definition in join.questions.questions">
+      <strong>{{definition.key | humanize}}:</strong> {{host.responses.getResponse(definition)}}
+    </li>
+  </ul>
+
+  <div class="btns">
+    <a class="btn btn-primary" href="#" ng-click="join.showDashboard()">Yes, this is correct</a>
+    <a class="btn btn-warning" href="#" ng-click="join.startOver()">No, I need to make some changes</a>
+  </div>
+</div>
