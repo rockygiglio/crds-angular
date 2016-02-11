@@ -3,11 +3,11 @@
 
   module.exports = LoginCtrl;
 
-  LoginCtrl.$inject = ['$log', '$state', '$cookies', 'Responses', 'AuthService', 'User', 'SERIES'];
+  LoginCtrl.$inject = ['$log', '$state', '$cookies', 'Responses', 'AuthService', 'GroupInfo', 'SERIES'];
 
-  function LoginCtrl($log, $state, $cookies, Responses, AuthService, User, SERIES) {
+  function LoginCtrl($log, $state, $cookies, Responses, AuthService, GroupInfo, SERIES) {
     if (AuthService.isAuthenticated() === true) {
-      if (User.groups.length > 1) {
+      if (GroupInfo.getHosting().length > 0 || GroupInfo.getParticipating().length > 0) {
         $log.debug('login.controller.js - group member: redirecting');
         $state.go(SERIES.permalink + '.dashboard');
       } else {
