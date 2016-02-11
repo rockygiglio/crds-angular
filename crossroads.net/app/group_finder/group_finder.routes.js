@@ -14,20 +14,9 @@
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
-          $cookies: '$cookies',
-          Person: function(Profile, $cookies) {
-            var cid = $cookies.get('userId');
-            if (cid) {
-              return Profile.Person.get({contactId: cid}).$promise;
-            }
-          },
-          User: function($http){
-            // TODO Update to use $resource
-            return $http.get('/app/group_finder/data/user.group.json')
-              .then(function(res){
-                return res.data;
-              });
-          }
+          Person: 'Person',
+          User: 'User',
+          GroupInfo: 'GroupInfo'
         },
         data: {
           meta: {
@@ -54,6 +43,21 @@
         controller: 'DashboardCtrl as dashboard',
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
+        resolve: {
+          GroupInfo: 'GroupInfo'
+        },
+        data: {
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
+      .state(SERIES.permalink + '.group', {
+        controller: 'GroupDetailCtrl as detail',
+        url: '/dashboard/group/:groupId',
+        templateUrl: 'dashboard/group_detail.html',
         resolve: {},
         data: {
           meta: {

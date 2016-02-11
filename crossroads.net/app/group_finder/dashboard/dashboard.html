@@ -3,11 +3,12 @@
   </div>
 </div>
 
-<tabset>
-  <tab heading="Resources" active="tab[0].active" ng-click="dashboard.goToTab(tab)" class="{{tab.class}}" >
-    <ng-include src="'templates/resources.html'"></ng-include>
-  </tab>
-  <tab heading="My Groups" active="tab[1].active" ng-click="dashboard.goToTab(tab)" class="{{tab.class}}" >
-    <ng-include src="'templates/groups.html'"></ng-include>
-  </tab>
-</tabset>
+<div class="hosting" ng-if="dashboard.groups.hosting.length > 0">
+  <h2>Groups you're hosting</h2>
+  <groupcard group="group" ng-repeat="group in dashboard.groups.hosting"></groupcard>
+</div>
+
+<div class="participating" ng-if="dashboard.groups.participating.length > 0">
+  <h2>Groups you've joined</h2>
+  <groupcard group="group" ng-repeat="group in dashboard.groups.participating"></groupcard>
+</div>
