@@ -7,7 +7,7 @@
 
   function LoginCtrl($log, $state, $cookies, Responses, AuthService, GroupInfo, SERIES) {
     if (AuthService.isAuthenticated() === true) {
-      if (GroupInfo.hosting.length > 0 || GroupInfo.participating.length > 0) {
+      if (GroupInfo.getHosting().length > 0 || GroupInfo.getParticipating().length > 0) {
         $log.debug('login.controller.js - group member: redirecting');
         $state.go(SERIES.permalink + '.dashboard');
       } else {

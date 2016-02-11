@@ -37,8 +37,8 @@
     vm.profileData = { person: Person };
     vm.person = Person;
     vm.groups = {
-      hosting: GroupInfo.hosting,
-      participating: GroupInfo.participating
+      hosting: GroupInfo.getHosting(),
+      participating: GroupInfo.getParticipating()
     };
 
     vm.emailGroup = function() {

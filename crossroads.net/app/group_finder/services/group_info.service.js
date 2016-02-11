@@ -6,15 +6,15 @@
   GroupInfoService.$inject = ['$http', '$cookies'];
 
   function GroupInfoService($http, $cookies) {
-    return $http.get('/app/group_finder/data/user.group.json')
+    var groupInfo = {};
+    var groups = {
+      hosting: [],
+      participating: []
+    };
+
+    // return $http.get('/app/group_finder/data/user.group.json')
+    $http.get('/app/group_finder/data/user.group.json')
       .then(function(res) {
-        var groups = {
-          hosting: [],
-          participating: []
-        };
-
-        var groupInfo = {};
-
         var cid = $cookies.get('userId');
         if (cid) {
           _.each(res.data.groups, function(group, i, list) {
@@ -35,7 +35,24 @@
           });
         }
         return groups;
-    });
+      });
+
+    groupInfo.getHosting = function() {
+      return groups.hosting;
+    };
+
+    groupInfo.getParticipating = function() {
+      return groups.participating;
+    };
+
+    groupInfo.findHosting = function(id) {
+      return _.find(groups.hosting, function(group) {
+        return group.id === parseInt(id);
+      });
+    };
+
+    return groupInfo;
+
   }
 
 })();
