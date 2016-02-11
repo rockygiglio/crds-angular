@@ -43,6 +43,21 @@
         controller: 'DashboardCtrl as dashboard',
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
+        resolve: {
+          GroupInfo: 'GroupInfo'
+        },
+        data: {
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
+      .state(SERIES.permalink + '.group', {
+        controller: 'GroupDetailCtrl as detail',
+        url: '/dashboard/group/:groupId',
+        templateUrl: 'dashboard/group_detail.html',
         resolve: {},
         data: {
           meta: {
