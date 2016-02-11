@@ -12,6 +12,12 @@
     $scope.totalQuestions = _.size($scope.questions);
     $scope.currentIteration = parseInt($stateParams.step) || 1;
 
+    Object.defineProperty($scope, 'nextBtn', {
+      get: function() {
+        return $scope.isPrivateGroup() ? 'Skip' : ($scope.currentQuestion().next || 'Next');
+      }
+    });
+
     // ------------------------ Methods
 
     $scope.previousQuestion = function() {
@@ -23,9 +29,28 @@
       if($scope.isRequired() && !_.isEmpty($scope.currentErrorFields())) {
         $scope.applyErrors();
       } else {
+        $scope.go();
+      }
+    };
+
+    $scope.go = function() {
+      if($scope.mode === 'host' && $scope.isPrivateGroup()) {
+        // TODO if private group skip review, save and show confirmation page.
+        $state.go(SERIES.permalink + '.' + $scope.mode + '_review');
+      } else if($scope.currentIteration === $scope.totalQuestions) {
+        $state.go(SERIES.permalink + '.' + $scope.mode + '_review');
+      } else {
         $scope.currentIteration++;
         $state.go(SERIES.permalink + '.' + $scope.mode, { step: $scope.currentIteration });
       }
+    };
+
+    $scope.isPrivateGroup = function() {
+      return ($scope.currentKey() === 'open_spots' && $scope.currentResponse() === 0);
+    };
+
+    $scope.currentResponse = function() {
+      return $scope.responses[$scope.currentQuestion().model][$scope.currentKey()];
     };
 
     $scope.currentKey = function() {
@@ -33,15 +58,17 @@
     };
 
     $scope.currentQuestion = function() {
-      return $scope.questions[$scope.currentIteration - 1];
+      return _.find($scope.questions, function(obj){
+        return obj['key'] === $scope.currentKey();
+      });
+    };
+
+    $scope.renderBtn = function(dir) {
+      return dir;
     };
 
     $scope.startOver = function() {
       $scope.currentIteration = 1;
-    };
-
-    $scope.reviewResponses = function() {
-      $state.go(SERIES.permalink + '.' + $scope.mode + '_review');
     };
 
     $scope.isRequired = function() {
