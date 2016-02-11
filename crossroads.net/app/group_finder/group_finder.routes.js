@@ -52,7 +52,7 @@
 
       .state(SERIES.permalink + '.dashboard', {
         controller: 'DashboardCtrl as dashboard',
-        url: '/host/dashboard',
+        url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         resolve: {},
         data: {
