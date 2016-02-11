@@ -14,20 +14,8 @@
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
-          $cookies: '$cookies',
-          Person: function(Profile, $cookies) {
-            var cid = $cookies.get('userId');
-            if (cid) {
-              return Profile.Person.get({contactId: cid}).$promise;
-            }
-          },
-          User: function($http){
-            // TODO Update to use $resource
-            return $http.get('/app/group_finder/data/user.group.json')
-              .then(function(res){
-                return res.data;
-              });
-          }
+          Person: 'Person',
+          User: 'User'
         },
         data: {
           meta: {
