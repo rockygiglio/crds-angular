@@ -15,7 +15,8 @@
         resolve: {
           Profile: 'Profile',
           Person: 'Person',
-          User: 'User'
+          User: 'User',
+          GroupInfo: 'GroupInfo'
         },
         data: {
           meta: {

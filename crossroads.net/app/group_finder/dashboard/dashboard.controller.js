@@ -7,26 +7,24 @@
     '$scope',
     '$log',
     '$state',
-    'Profile',
     'Person',
     'AuthService',
-    'User',
     'SERIES',
     'Email',
-    '$modal'
+    '$modal',
+    'GroupInfo'
   ];
 
   function DashboardCtrl(
     $scope,
     $log,
     $state,
-    Profile,
     Person,
     AuthService,
-    User,
     SERIES,
     Email,
-    $modal
+    $modal,
+    GroupInfo
   ) {
 
     var vm = this;
@@ -39,29 +37,9 @@
     vm.profileData = { person: Person };
     vm.person = Person;
     vm.groups = {
-      hosting: [],
-      participating: []
+      hosting: GroupInfo.hosting,
+      participating: GroupInfo.participating
     };
-
-
-    _.each(User.groups, function(group, i, list) {
-      _.each(group.members, function(member, i, list) {
-
-        if (member.groupRoleId === 22) {
-          if (member.contactId === vm.person.contactId) {
-            group.isHost = true;
-            group.host = vm.person;
-            vm.groups.hosting.push(group);
-          } else {
-            group.isHost = false;
-            group.host = member;
-            vm.groups.participating.push(group);
-          }
-        }
-      });
-    });
-
-    $log.debug('groups:', vm.groups);
 
     vm.emailGroup = function() {
       // TODO popup with text block?

@@ -16,6 +16,7 @@
     .directive('question',          require('./question/question.directive'))
     .directive('groupcard',         require('./directives/group_card.directive'))
     .factory('Group',               require('./services/group_finder.service'))
+    .factory('GroupInfo',           require('./services/group_info.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .factory('Profile',             require('./services/profile.service'))
     .factory('Person',              require('./services/person.service'))
