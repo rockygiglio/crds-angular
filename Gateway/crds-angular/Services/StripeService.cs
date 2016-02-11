@@ -422,6 +422,25 @@ namespace crds_angular.Services
 
             return response.Data;
         }
+
+        public StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate)
+        {
+            var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.POST);
+            request.AddParameter("prorate", false);
+            if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
+            {
+                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
+            }
+            else
+            {
+                request.AddParameter("trial_end", "now");
+            }
+
+            var response = _stripeRestClient.Execute<StripeSubscription>(request);
+            CheckStripeResponse("Invalid subscription update request", response);
+
+            return response.Data;
+        }
     }
 
     public class Error
