@@ -14,7 +14,7 @@
     .constant('SERIES',             require('./group_finder.constants'))
     .directive('questions',         require('./questions/questions.directive'))
     .directive('question',          require('./question/question.directive'))
-    .directive('groupinfo',         require('./directives/group_info.directive'))
+    .directive('groupcard',         require('./directives/group_card.directive'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupMember',         require('./services/group_member.service'))
     .factory('Profile',             require('./services/profile.service'))
