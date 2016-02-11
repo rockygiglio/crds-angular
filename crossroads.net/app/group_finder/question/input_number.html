@@ -1,4 +1,4 @@
-<label ng-bind-html="renderedLabel()"></label>
+<label ng-show="definition.label">{{definition.label}}</label>
 <div class="text">
   <label>
     <input type="number" name="{{definition.key}}" min="0" value="{{$index}}" ng-model="responses[model()][definition.key]" class="form-control" ng-change="checkError()" ng-keyup="onKeyUp($event)" />

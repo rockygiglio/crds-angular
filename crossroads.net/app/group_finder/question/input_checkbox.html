@@ -1,4 +1,4 @@
-<label ng-bind-html="renderedLabel()"></label>
+<label ng-show="definition.label">{{definition.label}}</label>
 <div class="checkbox" ng-repeat="answer in definition.answers track by $index">
   <label>
     <input type="checkbox" name="{{definition.key}}" value="{{$index}}" checklist-value="$index" ng-model="responses[model()][definition.key][$index]" ng-change="checkError()" /> {{answer}}
