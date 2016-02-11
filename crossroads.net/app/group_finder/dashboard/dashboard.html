@@ -5,10 +5,10 @@
 
 <div class="hosting" ng-if="dashboard.groups.hosting.length > 0">
   <h2>Groups you're hosting</h2>
-  <groupinfo group="group" ng-repeat="group in dashboard.groups.hosting"></groupinfo>
+  <groupcard group="group" ng-repeat="group in dashboard.groups.hosting"></groupcard>
 </div>
 
 <div class="participating" ng-if="dashboard.groups.participating.length > 0">
   <h2>Groups you've joined</h2>
-  <groupinfo group="group" ng-repeat="group in dashboard.groups.participating"></groupinfo>
+  <groupcard group="group" ng-repeat="group in dashboard.groups.participating"></groupcard>
 </div>

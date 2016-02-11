@@ -6,7 +6,7 @@
   <div class="description">
     <p>A co-ed group meeting on Mondays at 7:00pm</p>
     <p>This group meets at <a href="#">{{group.addressLine1}}, {{group.postalCode}}</a></p>
-    <a href="#" class="select btn btn-primary" ng-if="group.isHost === true">Select</a>
+    <a class="select btn btn-primary" ng-if="group.isHost === true" href="/brave/dashboard/group/{{group.id}}">Select</a>
     <a href="mailto:{{group.host.email}}" ng-if="group.isHost === false">Email your host {{group.host.firstName}} {{group.host.lastName}}</a>
   </div>
 </div>
