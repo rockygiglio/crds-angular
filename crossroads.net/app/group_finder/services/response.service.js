@@ -15,6 +15,11 @@
     this.clear = function(){
       this.data = {};
     };
+
+    this.getResponse = function(definition) {
+      return this.data[definition.model][definition.key];
+    };
+
   }
 
 })();
