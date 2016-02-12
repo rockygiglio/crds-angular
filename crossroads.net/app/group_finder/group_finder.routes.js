@@ -3,7 +3,7 @@
 
   module.exports = GroupFinderRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES'];
+  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES' ];
 
   function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
 
@@ -120,7 +120,7 @@
     ;
 
     $urlRouterProvider
-      .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')
+      .when('/' + SERIES.permalink, ['$state', function($state) { $state.go('brave.welcome'); }])
       .otherwise('/' + SERIES.permalink + '/welcome');
 
   }
