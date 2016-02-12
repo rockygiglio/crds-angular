@@ -1,0 +1,78 @@
+{
+  "questions": [
+    {
+      "body": "<h3>Let the grouping begin!</h3><p>We’re gonna ask you 5 questions to help us connect you with the perfect traveling companions.</p>",
+      "next": "Let's get started!"
+    },
+    {
+      "body": "<h3>And then...</h3><p>We’ll present you with several groups to choose from that will share similar goals, interests or wants. Doesn't that sound cool?? Great! Let’s roll. </p>",
+      "next": "Let's get started!"
+    },
+    {
+      "key": "prior_participation",
+      "header": "Have you journeyed with us before?",
+      "model": "member",
+      "input_type": "radio",
+      "answers": ["No. And I'm Nervous", "Nope. First Time and I am so excited!", "Once before", "Yes, multiple times"],
+      "required": true
+    },
+    {
+      "key": "affinity",
+      "header": "What are you hoping to get out of your BRAVE group experience?",
+      "description": "Pick the one that most represents how you feel.",
+      "model": "member",
+      "input_type": "radio",
+      "answers": ["Not really sure. You said I should join a group, so here I am!", "I want to grow spiritually", "I'm looking for someone I can learn from", "I want to make some new friends"],
+      "required": true
+    },
+    {
+      "key": "gender",
+      "header": "Are you a man or a woman?",
+      "input_type": "radio",
+      "model": "member",
+      "answers": ["I'm a grown Man", "I'm a Woman (roar)"],
+      "required": true
+    },
+    {
+      "key": "relationship_status",
+      "header": "Are you hitched?",
+      "model": "member",
+      "input_type": "radio",
+      "answers": ["Nope", "Yes but we are going throught the journey seperately", "Yes and I inted to journey with my spouse"],
+      "required": true
+    },
+    {
+      "body": "<h3>Next we're gonna ask some meeting time questions</h3><p>Keep in mind, BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>",
+      "next": "Let's get started!"
+    },
+    {
+      "key": "date_time_week",
+      "header": "When are you free to meet during the week (Mon-Fri)?",
+      "description": "The more options you check, the better we can find the right group for you.",
+      "model": "member",
+      "input_type": "checkbox",
+      "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
+      "required": true
+    },
+    {
+      "key": "date_time_weekend",
+      "header": "Great! What about SATURDAYS and SUNDAYS?",
+      "description": "Could you make any of these times work?",
+      "model": "member",
+      "input_type": "checkbox",
+      "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
+      "required": true
+    },
+    {
+      "key": "location",
+      "header": "Last one! Please add your address so we can show the distance between you and your potential groups. ",
+      "model": "member",
+      "input_type": "address",
+      "required": true
+    },
+    {
+      "body": "<h3>You did it. And now the science is happenning. </h3><p>The data you entered will be crunched, blended and matched. Creating an output of groups that will fit you perfectly. Stand by.</p>",
+      "next": "Let's get started!"
+    }
+  ]
+}

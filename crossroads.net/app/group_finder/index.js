@@ -24,7 +24,9 @@
     .factory('User',                require('./services/user.service'))
     .factory('Email',               require('./services/email.service'))
     .service('Responses',           require('./services/response.service'))
-    .service('QuestionService',     require('./services/group_questions.service'))
+    .service('QuestionService',     require('./services/questions.service'))
+    .service('GroupQuestionService',     require('./services/group_questions.service'))
+    .service('ParticipantQuestionService',     require('./services/participant_questions.service'))
     .controller('LoginCtrl',        require('./login/login.controller'))
     .controller('HostCtrl',         require('./host/host.controller'))
     .controller('HostReviewCtrl',   require('./host/host_review.controller'))
@@ -32,5 +34,6 @@
     ;
 
   require('./dashboard');
+  require('./join');
 
 })();
