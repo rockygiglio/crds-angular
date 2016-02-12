@@ -82,9 +82,9 @@
         url: '/host/review',
         templateUrl: 'host/review.html',
         resolve: {
-          QuestionService: require('./services/group_questions.service'),
-          questions: function(QuestionService) {
-            return QuestionService.get().$promise;
+          GroupQuestionService: require('./services/group_questions.service'),
+          questions: function(GroupQuestionService) {
+            return GroupQuestionService.get().$promise;
           }
         },
         data: {
@@ -113,6 +113,23 @@
         }
       })
 
+      .state(SERIES.permalink + '.join_review', {
+        controller: 'JoinReviewCtrl as join',
+        url: '/join/review',
+        templateUrl: 'join/review.html',
+        resolve: {
+          ParticipantQuestionService: require('./services/participant_questions.service'),
+          questions: function(ParticipantQuestionService) {
+            return ParticipantQuestionService.get().$promise;
+          }
+        },
+        data: {
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
 
       .state(SERIES.permalink + '.join', {
         controller: 'JoinCtrl as join',

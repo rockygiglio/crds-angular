@@ -13,7 +13,7 @@
 
     vm.startOver = function() {
       vm.currentQuestion = 1;
-      $state.go(SERIES.permalink + '.host', { step: vm.currentQuestion });
+      $state.go(SERIES.permalink + '.join', { step: vm.currentQuestion });
     };
 
     vm.showDashboard = function() {

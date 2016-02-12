@@ -6,7 +6,7 @@
 
   <ul class="list-unstyled">
     <li ng-repeat="definition in join.questions.questions">
-      <strong>{{definition.key | humanize}}:</strong> {{host.responses.getResponse(definition)}}
+      <strong>{{definition.key | humanize}}:</strong> {{join.responses.getResponse(definition)}}
     </li>
   </ul>
 
