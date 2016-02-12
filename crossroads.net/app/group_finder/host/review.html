@@ -5,7 +5,7 @@
 <div class="review">
 
   <ul class="list-unstyled">
-    <li ng-repeat="definition in host.questions.questions">
+    <li ng-repeat="definition in host.questions.questions" ng-if="definition.key">
       <strong>{{definition.key | humanize}}:</strong> {{host.responses.getResponse(definition)}}
     </li>
   </ul>
