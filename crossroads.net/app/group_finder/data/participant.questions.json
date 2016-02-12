@@ -1,6 +1,14 @@
 {
   "questions": [
     {
+      "body": "<h3>Let the grouping begin!</h3><p>We’re gonna ask you 5 questions to help us connect you with the perfect traveling companions.</p>",
+      "next": "Let's get started!"
+    },
+    {
+      "body": "<h3>And then...</h3><p>We’ll present you with several groups to choose from that will share similar goals, interests or wants. Doesn't that sound cool?? Great! Let’s roll. </p>",
+      "next": "Let's get started!"
+    },
+    {
       "key": "prior_participation",
       "question": "Have you journeyed with us before?",
       "model": "member",
@@ -33,6 +41,10 @@
       "required": true
     },
     {
+      "body": "<h3>Next we're gonna ask some meeting time questions</h3><p>Keep in mind, BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>",
+      "next": "Let's get started!"
+    },
+    {
       "key": "date_time_week",
       "question": "When are you free to meet during the week (Mon-Fri)?",
       "model": "member",
@@ -53,6 +65,10 @@
       "question": "Last one! Please add your address so we can show the distance between you and your potential groups. ",
       "model": "member",
       "input_type": "address"
-    }
+    },
+    {
+      "body": "<h3>You did it. And now the science is happenning. </h3><p>The data you entered will be crunched, blended and matched. Creating an output of groups that will fit you perfectly. Stand by.</p>",
+      "next": "Let's get started!"
+    },
   ]
 }
