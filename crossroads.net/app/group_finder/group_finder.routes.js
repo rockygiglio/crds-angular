@@ -101,7 +101,7 @@
 
       .state(SERIES.permalink + '.host', {
         controller: 'HostCtrl as host',
-        url: '/host/{step:(?:[0-9])}',
+        url: '/host/{step:(?:[0-9]+)}',
         templateUrl: 'host/host.html',
         resolve: {
           GroupQuestionService: 'GroupQuestionService',
@@ -119,7 +119,7 @@
 
       .state(SERIES.permalink + '.join_review', {
         controller: 'JoinReviewCtrl as join',
-        url: '/join/review',
+        url: '/join/results',
         templateUrl: 'join/review.html',
         resolve: {
           ParticipantQuestionService: require('./services/participant_questions.service'),
@@ -137,7 +137,7 @@
 
       .state(SERIES.permalink + '.join', {
         controller: 'JoinCtrl as join',
-        url: '/join/{step:(?:[0-9])}',
+        url: '/join/{step:(?:[0-9]+)}',
         templateUrl: 'join/join.html',
         resolve: {
           ParticipantQuestionService: 'ParticipantQuestionService',

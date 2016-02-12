@@ -10,7 +10,7 @@
     },
     {
       "key": "prior_participation",
-      "question": "Have you journeyed with us before?",
+      "header": "Have you journeyed with us before?",
       "model": "member",
       "input_type": "radio",
       "answers": ["No. And I'm Nervous", "Nope. First Time and I am so excited!", "Once before", "Yes, multiple times"],
@@ -18,7 +18,8 @@
     },
     {
       "key": "affinity",
-      "question": "What are you hoping to get out of your BRAVE group experience?",
+      "header": "What are you hoping to get out of your BRAVE group experience?",
+      "description": "Pick the one that most represents how you feel.",
       "model": "member",
       "input_type": "radio",
       "answers": ["Not really sure. You said I should join a group, so here I am!", "I want to grow spiritually", "I'm looking for someone I can learn from", "I want to make some new friends"],
@@ -26,7 +27,7 @@
     },
     {
       "key": "gender",
-      "question": "Are you a man or a woman?",
+      "header": "Are you a man or a woman?",
       "input_type": "radio",
       "model": "member",
       "answers": ["I'm a grown Man", "I'm a Woman (roar)"],
@@ -34,7 +35,7 @@
     },
     {
       "key": "relationship_status",
-      "question": "Are you hitched?",
+      "header": "Are you hitched?",
       "model": "member",
       "input_type": "radio",
       "answers": ["Nope", "Yes but we are going throught the journey seperately", "Yes and I inted to journey with my spouse"],
@@ -46,7 +47,8 @@
     },
     {
       "key": "date_time_week",
-      "question": "When are you free to meet during the week (Mon-Fri)?",
+      "header": "When are you free to meet during the week (Mon-Fri)?",
+      "description": "The more options you check, the better we can find the right group for you.",
       "model": "member",
       "input_type": "checkbox",
       "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
@@ -54,7 +56,8 @@
     },
     {
       "key": "date_time_weekend",
-      "question": "Great! What about SATURDAYS and SUNDAYS?",
+      "header": "Great! What about SATURDAYS and SUNDAYS?",
+      "description": "Could you make any of these times work?",
       "model": "member",
       "input_type": "checkbox",
       "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
@@ -62,9 +65,10 @@
     },
     {
       "key": "location",
-      "question": "Last one! Please add your address so we can show the distance between you and your potential groups. ",
+      "header": "Last one! Please add your address so we can show the distance between you and your potential groups. ",
       "model": "member",
-      "input_type": "address"
+      "input_type": "address",
+      "required": true
     },
     {
       "body": "<h3>You did it. And now the science is happenning. </h3><p>The data you entered will be crunched, blended and matched. Creating an output of groups that will fit you perfectly. Stand by.</p>",

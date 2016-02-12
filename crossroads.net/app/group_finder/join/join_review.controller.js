@@ -8,16 +8,17 @@
   function JoinReviewCtrl($state, questions, Responses, SERIES) {
     var vm = this;
 
-    vm.questions = questions;
     vm.responses = Responses;
+    vm.showUpsell = parseInt(vm.responses.data.member.prior_participation) > 2;
+    vm.showResults = vm.showUpsell === false;
 
-    vm.startOver = function() {
-      vm.currentQuestion = 1;
-      $state.go(SERIES.permalink + '.join', { step: vm.currentQuestion });
+    vm.goToHost = function() {
+      $state.go(SERIES.permalink + '.host', { step: 1 });
     };
 
-    vm.showDashboard = function() {
-      $state.go(SERIES.permalink + '.dashboard');
+    vm.goToResults = function() {
+      vm.showUpsell = false;
+      vm.showResults = true;
     };
 
   }
