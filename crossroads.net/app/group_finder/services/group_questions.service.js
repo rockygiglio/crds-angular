@@ -3,12 +3,11 @@
 
   module.exports = GroupQuestionsService;
 
-  GroupQuestionsService.$inject = ['$resource'];
+  GroupQuestionsService.$inject = ['QuestionService'];
 
-  function GroupQuestionsService($resource) {
+  function GroupQuestionsService(QuestionService) {
     // TODO Update with a production-friendly URL or endpoint.
-    var url = '/app/group_finder/data/host.questions.json';
-    return $resource(url, {}, { get: { method:'GET', cache: true }});
+    return QuestionService.Host;
   }
 
 })();
