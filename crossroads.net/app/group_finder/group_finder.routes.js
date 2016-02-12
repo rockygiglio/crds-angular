@@ -156,7 +156,7 @@
     ;
 
     $urlRouterProvider
-      .when('/' + SERIES.permalink, ['$state', function($state) { $state.go('brave.welcome'); }])
+      .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')
       .otherwise('/' + SERIES.permalink + '/welcome');
 
   }
