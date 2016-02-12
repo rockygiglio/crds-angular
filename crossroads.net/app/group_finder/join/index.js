@@ -7,6 +7,7 @@
   require('./review.html');
   require('./templates/upsell.html');
   require('./templates/results.html');
+  require('./templates/contact.html');
 
   angular.module('crossroads.group_finder')
     .controller('JoinCtrl', require('./join.controller'))

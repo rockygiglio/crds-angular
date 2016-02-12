@@ -21,6 +21,15 @@
       vm.showResults = true;
     };
 
+    vm.contactCrds = function() {
+      var zipcode = vm.responses.data.member.location.zip;
+      // TODO utilize zipcode lookup to determine if user can be matched at all
+      if (zipcode === '41075') {
+        vm.showUpsell = false;
+        vm.showResults = false;
+        return true;
+      }
+    };
   }
 
 })();
