@@ -3,6 +3,7 @@
 
   module.exports = QuestionDirective;
 
+  require('./question.html');
   require('./input_radio.html');
   require('./input_text.html');
   require('./input_number.html');
@@ -20,7 +21,7 @@
         definition: '=',
         responses: '=responses',
       },
-      template: '<ng-include src="getTemplateUrl()" />',
+      templateUrl: 'question/question.html',
       controller: require('./question.controller')
     };
   }

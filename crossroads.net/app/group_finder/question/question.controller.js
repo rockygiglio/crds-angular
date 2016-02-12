@@ -10,7 +10,10 @@
   function QuestionCtrl($scope, $compile) {
 
     $scope.states = constants.US_STATES;
-    $scope.tpl = $compile('<span>' + $scope.definition.question + '<span>')($scope);
+    $scope.header = $compile('<span>' + $scope.definition.header + '<span>')($scope);
+    $scope.description = $compile('<span>' + $scope.definition.description + '<span>')($scope);
+    $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
+    $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
 
     $scope.model = function() {
       return $scope.definition.model;
@@ -24,8 +27,8 @@
       $scope.$parent.applyErrors();
     };
 
-    $scope.renderedLabel = function() {
-      return $scope.tpl.html();
+    $scope.render = function(el) {
+      return $scope[el].html();
     };
 
     $scope.onKeyUp = function(e) {

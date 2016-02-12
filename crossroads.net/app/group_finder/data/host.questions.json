@@ -1,62 +1,78 @@
 {
   "questions": [
     {
-      "key": "first_name",
-      "question": "What is your first name?",
-      "model": "member",
-      "input_type": "text",
+      "body": "<h3>Look at you stepping up and leading the charge!</h3><p>Thanks for being awesome. Now comes the part where we help you plant the seeds that will grow a super group.</p><h3>We're gonna ask you 10 questions</h3><p>Your answers will help us define your group's style and will — in the end — connect you with the perfect traveling companions. Aready have people mind? That's cool. You can invite 'em later.</p>",
+      "next": "Let's get started!"
+    },
+    {
+      "key": "total_capacity",
+      "header": "How many folks are you ready to lead?",
+      "description": "Think about your space. Perhaps you can base this on how many people fit comfortably in your living room, or the number of chairs that fit around your dining room table.",
+      "label": "I have room for:",
+      "model": "group",
+      "input_type": "number",
       "required": true
     },
     {
-      "key": "location",
-      "question": "Ok {{responses.member.first_name}}, what is your home address?",
+      "key": "open_spots",
+      "header": "Of those ({{responses.group.total_capacity}} spots) how many are open to anyone?",
+      "description": "For example: If you can lead {{responses.group.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.group.total_capacity - 1}}.",
+      "label": "My group is open to:",
+      "model": "group",
+      "input_type": "number",
+      "footer": "<p ng-if='responses.group.open_spots === 0'><strong>Are you sure you don't have any room at the Inn?</strong><br>Meeting people is fun and one of the most rewarding parts of BRAVE. But if your group is set and full to the brim, you can skip to the end.</p>",
+      "required": true
+    },
+    {
+      "key": "previous_experience",
+      "header": "Have you led a journey with us before?",
+      "answers": [
+        "No. And I’m nervous.",
+        "Nope. First time and I am so excited!",
+        "Once before.",
+        "Yes, multiple times."
+      ],
+      "input_type": "radio",
       "model": "member",
-      "input_type": "address"
-    },
-    {
-      "key": "group_name",
-      "question": "Please name your group",
-      "input_type": "text",
-      "model": "group"
-    },
-    {
-      "key": "zip_code",
-      "question": "Where will you host this group",
-      "input_type": "text",
-      "model": "group"
+      "required": true
     },
     {
       "key": "goals",
-      "question": "What do you hope to get out of this journey? It's cool not to know...",
+      "header": "What do you hope to get out of this journey?",
       "answers": [
-        "I want to expand my relationship with God.",
-        "I want to know myself better.",
-        "I want to get to know others.",
+        "I want to expand my relationship with God",
+        "I want to know myself better",
+        "I want to get to know others",
         "I'm looking for answers",
-        "I want to find God",
-        "I have no idea -- and that's cool."
+        "I want to help others find God"
       ],
+      "input_type": "radio",
       "model": "member",
-      "input_type": "checkbox"
+      "required": true
     },
     {
-      "key": "site",
-      "question": "Which Crossroads site do you attend?",
-      "answers": ["Oakley", "Florence", "Mason"],
-      "model": "member",
-      "input_type": "radio"
-    },
-    {
-      "key": "past_experience",
-      "question": "Have you journeyed with us before?",
+      "key": "gender",
+      "header": "Are you a man or a woman?",
       "answers": [
-        "No, and I'm nervous",
-        "Nope. First time and I'm excited!",
-        "Once before",
-        "Yes, multiple times."
+        "Man",
+        "Woman"
       ],
+      "input_type": "radio",
       "model": "member",
-      "input_type": "radio"
+      "required": true
+    },
+    {
+      "key": "marital_status",
+      "header": "What is your relationship status?",
+      "description": "This is so Facebook right? But it can mean a lot to your group status too.",
+      "model": "member",
+      "answers": [
+        "I'm not married.",
+        "I'm married but we are going through the journey seperately.",
+        "I'm married and I intend to journey with my spouse."
+      ],
+      "input_type": "radio",
+      "required": true
     }
   ]
 }

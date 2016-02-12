@@ -1,0 +1,34 @@
+<div class="dashboard-header" style="height: 275px">
+  <div class="col-sm-12 push-top nextstep-dark nextstep-background imgix-fluid-bg" data-src="https://crds-cms-uploads.imgix.net/content/images/ns-attendbg.jpg" style="background-image: url(&quot;https://crds-cms-uploads.imgix.net/content/images/ns-attendbg.jpg?ixjsv=1.1.2&amp;w=950&quot;);">
+  </div>
+</div>
+
+<tabset>
+  <tab heading="Resources" active="tab[0].active" ng-click="detail.goToTab(tab)" class="{{tab.class}}" >
+    <ng-include src="'templates/resources.html'"></ng-include>
+  </tab>
+  <tab heading="My Group" active="tab[1].active" ng-click="detail.goToTab(tab)" class="{{tab.class}}" >
+    <div class="row">
+      <div class="col-md-6">
+        <pre>{{detail.group}}</pre>
+        <button class="btn btn-primary" ng-click="detail.emailGroup()">Email Group</button>
+      </div>
+      <div class="col-md-6">
+        <form name="inviteForm" role="form" ng-submit="dashboard.inviteMember()" novalidate>
+          <div class="form-group" ng-class="{ 'has-error': inviteForm.invite.$invalid && !inviteForm.invite.$pristine}">
+            <label for="invite">Invite someone to join.</label>
+            <input type="email" placeholder="Enter email address" id="invite" name="invite" ng-model="dashboard.invitee" required>
+            <button class="btn btn-primary" ng-disabled="inviteForm.$invalid">Send</button>
+            <p ng-show="inviteForm.invite.$invalid && inviteForm.$submitted" class="help-block">Valid email address required.</p>
+          </div>
+        </form>
+
+        <div class="help">
+          <h4>Need Help?</h4>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean lacinia bibendum nulla sed consectetur. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. <a href="#">Bill Johnson would love to hear from you.</a></p>
+        </div>
+      </div>
+    </div>
+
+  </tab>
+</tabset>
