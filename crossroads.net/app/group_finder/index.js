@@ -4,6 +4,7 @@
   var MODULES = require('crds-constants').MODULES;
 
   require('./common/layout.html');
+  require('./common/header.html');
   require('./login/welcome.html');
   require('./host/host.html');
   require('./host/review.html');
@@ -11,10 +12,11 @@
 
   angular.module('crossroads.group_finder', [MODULES.CORE, MODULES.COMMON])
     .config(require('./group_finder.routes'))
-    .constant('SERIES',             require('./group_finder.constants'))
+    .constant('SERIES',             require('./group_finder.constants').SERIES)
+    .constant('GROUP_TYPES',        require('./group_finder.constants').GROUP_TYPES)
     .directive('questions',         require('./directives/questions/questions.directive'))
     .directive('question',          require('./directives/question/question.directive'))
-    .directive('groupcard',         require('./directives/group_card.directive'))
+    .directive('groupcard',         require('./directives/group_card/group_card.directive'))
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupInfo',           require('./services/group_info.service'))

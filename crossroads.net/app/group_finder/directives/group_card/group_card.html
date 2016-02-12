@@ -1,0 +1,10 @@
+<div class="group">
+  <div class="group-images">
+    <img ng-src="{{getMemberImage(member)}}" err-src="{{defaultImage}}" alt="" ng-repeat="member in group.members" ng-if="member.groupRoleId == 15">
+  </div>
+  <div class="group-description">
+    <p>{{groupDescription()}}. This group meets at <a href="#">{{group.addressLine1}}, {{group.postalCode}}</a></p>
+    <a class="select btn btn-primary" ng-if="group.isHost === true" href="/brave/dashboard/group/{{group.id}}">Select</a>
+    <a class="select btn btn-primary" href="mailto:{{group.host.email}}" ng-if="group.isHost === false">Email Host</a>
+  </div>
+</div>

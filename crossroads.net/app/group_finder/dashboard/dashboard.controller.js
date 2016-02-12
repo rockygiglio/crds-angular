@@ -12,6 +12,7 @@
     'SERIES',
     'Email',
     '$modal',
+    'ImageService',
     'GroupInfo'
   ];
 
@@ -24,6 +25,7 @@
     SERIES,
     Email,
     $modal,
+    ImageService,
     GroupInfo
   ) {
 
@@ -36,6 +38,10 @@
 
     vm.profileData = { person: Person };
     vm.person = Person;
+    vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
+    vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
+    vm.defaultImage = ImageService.DefaultProfileImage;
+
     vm.groups = {
       hosting: GroupInfo.getHosting(),
       participating: GroupInfo.getParticipating()
@@ -89,6 +95,11 @@
       // TODO need lookup of available group types. Waiting on CRDS API to return this value
       return 'co-ed';
     };
+
+    vm.displayName = function() {
+      return vm.person.firstName + ' ' + vm.person.lastName[0] + '.';
+    };
+
   }
 
 })();

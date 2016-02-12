@@ -11,6 +11,7 @@
       .state(SERIES.permalink, {
         url: '/' + SERIES.permalink,
         abstract: true,
+        parent: 'noHeaderOrFooter',
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',

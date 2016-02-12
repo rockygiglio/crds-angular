@@ -14,7 +14,8 @@
         group: '=',
         host: '='
       },
-      templateUrl: 'directives/group_card.html'
+      controller: require('./group_card.controller'),
+      templateUrl: 'group_card/group_card.html'
     };
   }
 })();
