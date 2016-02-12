@@ -100,9 +100,9 @@
         url: '/host/{step:(?:[0-9])}',
         templateUrl: 'host/host.html',
         resolve: {
-          QuestionService: 'QuestionService',
-          QuestionDefinitions: function(QuestionService) {
-            return QuestionService.get().$promise;
+          GroupQuestionService: 'GroupQuestionService',
+          QuestionDefinitions: function(GroupQuestionService) {
+            return GroupQuestionService.get().$promise;
           }
         },
         data: {
@@ -119,9 +119,9 @@
         url: '/join/{step:(?:[0-9])}',
         templateUrl: 'join/join.html',
         resolve: {
-          QuestionService: 'QuestionService',
-          QuestionDefinitions: function(QuestionService) {
-            return QuestionService.get().$promise;
+          ParticipantQuestionService: 'ParticipantQuestionService',
+          QuestionDefinitions: function(ParticipantQuestionService) {
+            return ParticipantQuestionService.get().$promise;
           }
         },
         data: {
