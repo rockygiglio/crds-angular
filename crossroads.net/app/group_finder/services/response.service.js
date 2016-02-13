@@ -3,13 +3,13 @@
 
   module.exports = ResponseService;
 
-  ResponseService.$inject = ['$log', 'Group', 'GroupMember'];
+  ResponseService.$inject = ['$log'];
 
-  function ResponseService($log, Group, GroupMember) {
+  function ResponseService($log) {
 
     this.data = {
-      group: new Group(),
-      member: new GroupMember()
+      group: [],
+      member: []
     };
 
     this.clear = function(){
