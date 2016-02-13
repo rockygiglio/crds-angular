@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var MODULES = require('crds-constants');
+  var constants = require('crds-constants');
 
   require('./dashboard.html');
   require('./group_detail.html');
@@ -10,7 +10,7 @@
   require('./templates/group_resources.html');
   require('./templates/group_contact_modal.html');
 
-  angular.module('crossroads.group_finder')
+  angular.module(constants.MODULES.GROUP_FINDER)
     .controller('GroupContactCtrl', require('./group_contact.controller.js'))
     .controller('GroupDetailCtrl', require('./group_detail.controller.js'))
     .controller('DashboardCtrl', require('./dashboard.controller.js'));

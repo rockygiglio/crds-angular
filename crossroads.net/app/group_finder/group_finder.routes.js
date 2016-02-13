@@ -17,7 +17,6 @@
         resolve: {
           Profile: 'Profile',
           Person: 'Person',
-          User: 'User',
           GroupInfo: 'GroupInfo'
         },
         data: {
