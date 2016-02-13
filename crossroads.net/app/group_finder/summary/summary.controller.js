@@ -48,5 +48,9 @@
       $state.go(SERIES.permalink + '.host', { step: 1 });
     };
 
+    vm.joinQuestions = function() {
+      $state.go(SERIES.permalink + '.join', { step: 1 });
+    };
+
   }
 })();

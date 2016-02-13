@@ -6,9 +6,12 @@
   PersonService.$inject = ['Profile', '$cookies'];
 
   function PersonService(Profile, $cookies) {
+    var resource = Profile.Person;
     var cid = $cookies.get('userId');
     if (cid) {
-      return Profile.Person.get({contactId: cid}).$promise;
+      resource = resource.get({contactId: cid}).$promise;
     }
+
+    return resource;
   }
 })();
