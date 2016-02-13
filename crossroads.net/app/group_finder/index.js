@@ -27,6 +27,7 @@
     .factory('Email',               require('./services/email.service'))
     .service('Responses',           require('./services/response.service'))
     .service('QuestionService',     require('./services/group_questions.service'))
+    .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('LoginCtrl',        require('./login/login.controller'))
     .controller('HostCtrl',         require('./host/host.controller'))
     .controller('HostReviewCtrl',   require('./host/host_review.controller'))

@@ -4,6 +4,7 @@
   module.exports = DashboardCtrl;
 
   DashboardCtrl.$inject = [
+    '$rootScope',
     '$scope',
     '$log',
     '$state',
@@ -17,6 +18,7 @@
   ];
 
   function DashboardCtrl(
+    $rootScope,
     $scope,
     $log,
     $state,
@@ -80,7 +82,6 @@
         'templateId': 0,
         'mergeData': {}
       };
-
     };
 
     vm.startOver = function() {
@@ -99,6 +100,14 @@
     vm.displayName = function() {
       return vm.person.firstName + ' ' + vm.person.lastName[0] + '.';
     };
+
+    $scope.setGroup = function(group) {
+      vm.group = group;
+    };
+
+    $rootScope.$on('$viewContentLoading', function(event){
+      vm.group = undefined;
+    });
 
   }
 

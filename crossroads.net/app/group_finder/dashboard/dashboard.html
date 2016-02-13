@@ -1,31 +1,25 @@
-<div class="page-header text-center">
-  <img class="profile-image img-circle" ng-src="{{dashboard.profileImage}}" alt="Profile Photo" err-src="{{dashboard.defaultImage}}"/>
-  <h2>{{dashboard.displayName()}}</h2>
-</div>
+<header ng-include="'templates/dashboard_header.html'"></header>
 
 <div class="dashboard">
-  <div class="container">
-    <div class="row">
+  <div class="container"><div class="row">
+    <div ui-view class="col-md-offset-4 col-md-4">
 
-      <div class="col-md-offset-4 col-md-4">
-        <div class="groups hosting" ng-if="dashboard.groups.hosting.length > 0">
-          <div class="page-header">
-            <h3>Groups you're hosting</h3>
-          </div>
-          <groupcard group="group" ng-repeat="group in dashboard.groups.hosting"></groupcard>
-          <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.host({ step: 1 })">Host Another Group</a></p>
+      <div class="groups hosting" ng-if="dashboard.groups.hosting.length > 0">
+        <div class="page-header">
+          <h3>Groups you're hosting</h3>
         </div>
-
-
-        <div class="groups participating" ng-if="dashboard.groups.participating.length > 0">
-          <div class="page-header">
-            <h3>Groups you've joined</h3>
-          </div>
-          <groupcard group="group" ng-repeat="group in dashboard.groups.participating"></groupcard>
-          <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.join">Join Another Group</a></p>
-        </div>
+        <groupcard group="group" ng-repeat="group in dashboard.groups.hosting"></groupcard>
+        <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.host({ step: 1 })">Host Another Group</a></p>
       </div>
 
-    </div>
+      <div class="groups participating" ng-if="dashboard.groups.participating.length > 0">
+        <div class="page-header">
+          <h3>Groups you've joined</h3>
+        </div>
+        <groupcard group="group" ng-repeat="group in dashboard.groups.participating"></groupcard>
+        <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.join">Join Another Group</a></p>
+      </div>
+
+    </div></div>
   </div>
 </div>

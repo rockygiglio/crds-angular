@@ -3,9 +3,9 @@
 
   module.exports = GroupDetailCtrl;
 
-  GroupDetailCtrl.$inject = ['$log', '$scope', 'GroupInfo', '$stateParams', '$modal'];
+  GroupDetailCtrl.$inject = ['$log', '$scope', '$stateParams', '$modal', 'GroupInfo'];
 
-  function GroupDetailCtrl($log, $scope, GroupInfo, $stateParams, $modal) {
+  function GroupDetailCtrl($log, $scope, $stateParams, $modal, GroupInfo) {
     var vm = this;
 
     vm.group = GroupInfo.findHosting($stateParams.groupId);
@@ -50,6 +50,10 @@
       };
 
     };
+
+    $scope.$on('$viewContentLoaded', function(event){
+      $scope.$parent.setGroup(vm.group);
+    });
   }
 
 })();

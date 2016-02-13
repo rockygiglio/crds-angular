@@ -1,0 +1,8 @@
+<div class="page-header text-center">
+  <img class="profile-image img-circle" ng-src="{{dashboard.profileImage}}" alt="Profile Photo" err-src="{{dashboard.defaultImage}}"/>
+  <h2>
+    {{dashboard.displayName()}}
+    <small ng-if="dashboard.group">{{dashboard.group.time}}</small>
+  </h2>
+  <p ng-if="dashboard.group"><a href="#" ui-sref="brave.dashboard">View All Groups</a></p>
+</div>
