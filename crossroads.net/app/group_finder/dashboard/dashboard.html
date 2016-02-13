@@ -1,8 +1,8 @@
 <header ng-include="'templates/dashboard_header.html'"></header>
 
-<div class="dashboard">
+<div ui-view class="dashboard">
   <div class="container"><div class="row">
-    <div ui-view class="col-md-offset-4 col-md-4">
+    <div class="col-md-offset-4 col-md-4">
 
       <div class="groups hosting" ng-if="dashboard.groups.hosting.length > 0">
         <div class="page-header">

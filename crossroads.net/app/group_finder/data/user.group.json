@@ -5,6 +5,7 @@
       "type": 2,
       "isHost": true,
       "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "members": [
         {
           "firstName": "Gabe",
@@ -66,6 +67,7 @@
       "type": 1,
       "isHost": true,
       "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "members": [
         {
           "firstName": "Gabe",
@@ -127,6 +129,7 @@
       "type": 2,
       "isHost": false,
       "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "members": [
         {
           "firstName": "Gabe",

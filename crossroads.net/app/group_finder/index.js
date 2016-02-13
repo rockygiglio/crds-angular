@@ -17,6 +17,7 @@
     .directive('questions',         require('./directives/questions/questions.directive'))
     .directive('question',          require('./directives/question/question.directive'))
     .directive('groupcard',         require('./directives/group_card/group_card.directive'))
+    .directive('membercard',        require('./directives/member_card/member_card.directive'))
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .factory('Group',               require('./services/group_finder.service'))
     .factory('GroupInfo',           require('./services/group_info.service'))

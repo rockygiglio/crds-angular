@@ -10,11 +10,6 @@
 
     vm.group = GroupInfo.findHosting($stateParams.groupId);
 
-    vm.tabs = [
-      { title:'Host Resources', active: false, route: 'dashboard.resources' },
-      { title:'My Group', active: true, route: 'dashboard.group'},
-    ];
-
     vm.emailGroup = function() {
       // TODO popup with text block?
       $log.debug('Sending Email to group');

@@ -7,7 +7,7 @@
   require('./group_detail.html');
   require('./templates/dashboard_header.html');
   require('./templates/groups.html');
-  require('./templates/resources.html');
+  require('./templates/group_resources.html');
   require('./templates/group_contact_modal.html');
 
   angular.module('crossroads.group_finder')
