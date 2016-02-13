@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var MODULES = require('crds-constants');
+  var constants = require('crds-constants');
 
   require('./join.html');
   require('./review.html');
@@ -9,7 +9,7 @@
   require('./templates/results.html');
   require('./templates/contact.html');
 
-  angular.module('crossroads.group_finder')
+  angular.module(constants.MODULES.GROUP_FINDER)
     .controller('JoinCtrl', require('./join.controller'))
     .controller('JoinReviewCtrl', require('./join_review.controller'));
 })();
