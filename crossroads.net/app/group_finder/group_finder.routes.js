@@ -11,6 +11,8 @@
       .state(SERIES.permalink, {
         url: '/' + SERIES.permalink,
         abstract: true,
+        parent: 'noHeaderOrFooter',
+        controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
@@ -39,9 +41,9 @@
       })
 
       .state(SERIES.permalink + '.dashboard', {
-        controller: 'DashboardCtrl as dashboard',
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
+        controller: 'DashboardCtrl as dashboard',
         resolve: {
           GroupInfo: 'GroupInfo'
         },
@@ -53,11 +55,10 @@
         }
       })
 
-      .state(SERIES.permalink + '.group', {
+      .state(SERIES.permalink + '.dashboard.group', {
+        url: '/groups/:groupId',
         controller: 'GroupDetailCtrl as detail',
-        url: '/dashboard/group/:groupId',
         templateUrl: 'dashboard/group_detail.html',
-        resolve: {},
         data: {
           meta: {
             title: SERIES.title,
@@ -151,8 +152,7 @@
           }
         }
       })
-
-    ;
+      ;
 
     $urlRouterProvider
       .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')

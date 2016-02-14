@@ -2,8 +2,15 @@
   'use strict';
 
   module.exports = {
-    permalink: 'brave',
-    title: 'Brave'
+    GROUP_TYPES: {
+      1: 'men only',
+      2: 'female only',
+      3: 'co-ed'
+    },
+    SERIES: {
+      permalink: 'brave',
+      title: 'Brave'
+    }
   };
 
 })();

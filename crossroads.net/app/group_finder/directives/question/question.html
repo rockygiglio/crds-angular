@@ -1,5 +1,5 @@
-<div class="page-header" ng-show="definition.header || definition.description">
-  <h2 ng-bind-html="render('header')"></h2>
+<div class="page-header">
+  <h2 ng-show="definition.header" ng-bind-html="render('header')"></h2>
   <p class="lead" ng-show="definition.description" ng-bind-html="render('description')"></p>
 </div>
 
