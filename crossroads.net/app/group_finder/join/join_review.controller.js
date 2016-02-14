@@ -12,13 +12,16 @@
     vm.showUpsell = parseInt(vm.responses.data.member.prior_participation) > 2;
     vm.showResults = vm.showUpsell === false;
 
+    if (vm.showResults === true) {
+      $state.go('group_finder.join.results');
+    }
+
     vm.goToHost = function() {
       $state.go('group_finder.host');
     };
 
     vm.goToResults = function() {
-      vm.showUpsell = false;
-      vm.showResults = true;
+      $state.go('group_finder.join.results');
     };
 
     vm.contactCrds = function() {
@@ -28,7 +31,9 @@
         vm.showUpsell = false;
         vm.showResults = false;
         return true;
+      }
     };
+
   }
 
 })();

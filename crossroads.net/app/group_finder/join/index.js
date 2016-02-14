@@ -15,8 +15,8 @@
     .config(require('./join.routes'))
     .controller('JoinCtrl', require('./join.controller'))
     .controller('JoinQuestionsCtrl', require('./join_questions.controller'))
-    // .controller('JoinReviewCtrl', require('./join_review.controller'))
-    // .controller('JoinResultsCtrl', require('./join_results.controller'))
+    .controller('JoinReviewCtrl', require('./join_review.controller'))
+    .controller('JoinResultsCtrl', require('./join_results.controller'))
     ;
 
 })();
