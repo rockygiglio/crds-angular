@@ -27,8 +27,9 @@
     };
 
     $scope.nextQuestion = function() {
-      if($scope.isRequired() && !_.isEmpty($scope.currentErrorFields())) {
+      if($scope.isRequired() && _.any($scope.currentErrorFields())) {
         $scope.applyErrors();
+        $scope.provideFocus();
       } else {
         $scope.go();
       }
@@ -84,10 +85,26 @@
     };
 
     $scope.currentErrorFields = function() {
+
       return _.chain($scope.requiredFields())
+              .uniq()
               .map(function(name) {
-                var el = $('[name=' + name + ']');
-                return el.val() === '' || el.val().indexOf('undefined') > -1 ? el : false;
+
+                var pattern = /([^\[\]]*)(\[(.*)\])?/;
+                var matches = name.match(pattern);
+                var cleanedName = matches[1];
+                var controlName = matches[3];
+
+                var el = $('[name="' + name + '"]');
+                var response = $scope.responses[cleanedName];
+
+                if(typeof response === 'object') {
+                  response = response[controlName];
+                }
+
+                var hasError = (response === undefined || response === '');
+
+                return hasError ? el : false;
               })
               .compact()
               .value();
@@ -95,6 +112,7 @@
 
     $scope.applyErrors = function() {
       $('div.has-error:visible').removeClass('has-error');
+
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
@@ -105,7 +123,7 @@
 
     $scope.provideFocus = function() {
       $timeout(function() {
-        var el = $('input[type=text], input[type=number]').filter('[name*=' + $scope.currentKey() + ']').first();
+        var el = $('input, select').filter('[name*=' + $scope.currentKey() + ']').first();
             el.focus();
       },100);
     };
