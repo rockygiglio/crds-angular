@@ -40,62 +40,11 @@
         }
       })
 
-      .state('group_finder.dashboard', {
-        url: '/dashboard',
-        templateUrl: 'dashboard/dashboard.html',
-        controller: 'DashboardCtrl as dashboard',
-        resolve: {
-          GroupInfo: 'GroupInfo'
-        },
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
-      .state('group_finder.dashboard.group', {
-        url: '/groups/:groupId',
-        controller: 'GroupDetailCtrl as detail',
-        templateUrl: 'dashboard/group_detail.html',
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
-
-      .state('group_finder.join_review', {
-        controller: 'JoinReviewCtrl as join',
-        url: '/join/results',
-        templateUrl: 'join/review.html',
-        resolve: {
-          ParticipantQuestionService: require('./services/participant_questions.service'),
-          questions: function(ParticipantQuestionService) {
-            return ParticipantQuestionService.get().$promise;
-          }
-        },
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
-      .state('group_finder.join', {
-        controller: 'JoinCtrl as join',
-        url: '/join/{step:(?:[0-9]+)}',
-        templateUrl: 'join/join.html',
-        resolve: {
-          ParticipantQuestionService: 'ParticipantQuestionService',
-          QuestionDefinitions: function(ParticipantQuestionService) {
-            return ParticipantQuestionService.get().$promise;
-          }
-        },
+      .state('group_finder.summary', {
+        controller: 'SummaryCtrl as summary',
+        url: '/summary',
+        templateUrl: 'summary/summary.html',
+        resolve: {},
         data: {
           meta: {
             title: SERIES.title,

@@ -1,15 +1,15 @@
 (function(){
   'use strict';
 
-  module.exports = GroupFinderRoutes;
+  module.exports = HostRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES' ];
+  HostRoutes.$inject = ['$stateProvider', 'SERIES'];
 
-  function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
+  function HostRoutes($stateProvider, SERIES) {
 
     $stateProvider
       .state('group_finder.host', {
-        controller: 'HostCtrl as summary',
+        controller: 'HostCtrl as host',
         url: '/host',
         templateUrl: 'host/host.html',
         resolve: {

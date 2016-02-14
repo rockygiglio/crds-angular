@@ -2,42 +2,13 @@
   <div class="row">
     <div ui-view class="col-md-offset-3 col-md-6">
 
-      <div class="page-header">
-        <h2>Series Summary</h2>
-      </div>
+      <h3>Look at you stepping up and leading the charge!</h3>
+      <p>Thanks for being awesome. Now comes the part where we help you plant the seeds that will grow a super group.</p>
 
-      <div class="summary" id="summary-1" ng-show="summary.showSlide(1)">
-        <h3>Slide 1</h3>
-        <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.</p>
-      </div>
-      <div class="summary" id="summary-2" ng-show="summary.showSlide(2)">
-        <h3>Slide 2</h3>
-        <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas faucibus mollis interdum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
-      </div>
-      <div class="summary" id="summary-3" ng-show="summary.showSlide(3)">
-        <h3>Slide 3</h3>
-        <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+      <h3>We're gonna ask you 10 questions</h3>
+      <p>Your answers will help us define your group's style and will — in the end — connect you with the perfect traveling companions. Aready have people mind? That's cool. You can invite 'em later.</p>
 
-      </div>
-      <div class="summary" id="summary-4" ng-show="summary.showSlide(4)">
-        <h3>Slide 4</h3>
-        <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-      </div>
-      <div class="summary" id="summary-5" ng-show="summary.showSlide(5)">
-        <h3>Slide 5</h3>
-        <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.</p>
-      </div>
-
-      <a class="btn btn-primary" ng-hide="summary.onLastSlide()" ng-click="summary.nextSlide()">{{summary.nextButton}}</a>
-      <a href="#" class="btn btn-link" ng-hide="summary.currentSlide==1" ng-click="summary.previousSlide()">Go Back</a>
-
-      <div class="text-center" ng-show="summary.onLastSlide()">
-        <hr />
-        <div>
-          <a class="btn btn-primary" ng-click="summary.joinQuestions()">Join a Group</a>
-          <a class="btn btn-warning" ui-sref="group_finder.host.questions">Host a Group</a>
-        </div>
-      </div>
+      <p><a href="#" ui-sref="group_finder.host.questions" class="btn btn-primary">Let's Get Started</a>
 
     </div>
   </div>

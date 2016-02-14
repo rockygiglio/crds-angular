@@ -3,9 +3,9 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$state', 'questions', 'Responses'];
+  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses'];
 
-  function JoinReviewCtrl($state, questions, Responses) {
+  function JoinReviewCtrl($scope, $state, Responses) {
     var vm = this;
 
     vm.responses = Responses;
@@ -13,7 +13,7 @@
     vm.showResults = vm.showUpsell === false;
 
     vm.goToHost = function() {
-      $state.go('group_finder.host', { step: 1 });
+      $state.go('group_finder.host');
     };
 
     vm.goToResults = function() {
@@ -21,6 +21,14 @@
       vm.showResults = true;
     };
 
+    vm.startOver = function() {
+      $scope.$parent.currentStep = 2;
+      $state.go('group_finder.host.questions');
+    };
+
+    vm.showDashboard = function() {
+      $state.go('group_finder.dashboard');
+    };
   }
 
 })();
