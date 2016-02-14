@@ -11,12 +11,12 @@
     },
     {
       "key": "open_spots",
-      "header": "Of those ({{responses.group.total_capacity}} spots) how many are open to anyone?",
-      "description": "For example: If you can lead {{responses.group.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.group.total_capacity - 1}}.",
+      "header": "Of those ({{responses.total_capacity}} spots) how many are open to anyone?",
+      "description": "For example: If you can lead {{responses.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.total_capacity - 1}}.",
       "label": "My group is open to:",
       "model": "group",
       "input_type": "number",
-      "footer": "<p ng-if='responses.group.open_spots === 0'><strong>Are you sure you don't have any room at the Inn?</strong><br>Meeting people is fun and one of the most rewarding parts of BRAVE. But if your group is set and full to the brim, you can skip to the end.</p>",
+      "footer": "<p ng-if='responses.open_spots === 0'><strong>Are you sure you don't have any room at the Inn?</strong><br>Meeting people is fun and one of the most rewarding parts of BRAVE. But if your group is set and full to the brim, you can skip to the end.</p>",
       "required": true
     },
     {

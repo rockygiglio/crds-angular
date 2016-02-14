@@ -11,12 +11,8 @@
     vm.responses = Responses;
 
     vm.startOver = function() {
-      $scope.$parent.currentStep = 2;
+      $scope.$parent.currentStep = 1;
       $state.go('group_finder.host.questions');
-    };
-
-    vm.showDashboard = function() {
-      $state.go('group_finder.dashboard');
     };
 
   }

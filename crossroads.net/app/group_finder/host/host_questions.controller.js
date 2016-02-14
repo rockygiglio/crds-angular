@@ -3,9 +3,9 @@
 
   module.exports = HostQuestionsCtrl;
 
-  HostQuestionsCtrl.$inject = ['$scope', 'Responses', 'QuestionDefinitions', 'SERIES'];
+  HostQuestionsCtrl.$inject = ['$scope', 'Responses', 'QuestionDefinitions'];
 
-  function HostQuestionsCtrl($scope, Responses, QuestionDefinitions, SERIES) {
+  function HostQuestionsCtrl($scope, Responses, QuestionDefinitions) {
 
     var vm = this;
         vm.questions = QuestionDefinitions.questions;

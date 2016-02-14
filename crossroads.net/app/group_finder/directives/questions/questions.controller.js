@@ -3,12 +3,14 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window'];
+  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'Responses'];
 
-  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window) {
+  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, Responses) {
+
 
     // ------------------------ Properties
 
+    $scope.responses = Responses.data;
     $scope.totalQuestions = _.size($scope.questions);
 
     Object.defineProperty($scope, 'nextBtn', {
@@ -47,7 +49,7 @@
     };
 
     $scope.currentResponse = function() {
-      return $scope.responses[$scope.currentQuestion().model][$scope.currentKey()];
+      return $scope.responses[$scope.currentKey()];
     };
 
     $scope.currentKey = function() {

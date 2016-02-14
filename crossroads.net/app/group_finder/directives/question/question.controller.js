@@ -15,10 +15,6 @@
     $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
     $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
 
-    $scope.model = function() {
-      return $scope.definition.model;
-    };
-
     $scope.getTemplateUrl = function () {
       return 'question/input_'+ $scope.definition.input_type +'.html';
     };

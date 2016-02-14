@@ -13,8 +13,7 @@
       scope: {
         mode: '@mode',
         step: '=',
-        questions: '=definitions',
-        responses: '=responses'
+        questions: '=definitions'
       },
       templateUrl: 'questions/questions.html',
       controller: require('./questions.controller')

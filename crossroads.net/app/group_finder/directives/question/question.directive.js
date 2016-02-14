@@ -19,7 +19,7 @@
       scope: {
         model: '@model',
         definition: '=',
-        responses: '=responses',
+        responses: '=',
       },
       templateUrl: 'question/question.html',
       controller: require('./question.controller')

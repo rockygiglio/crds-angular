@@ -7,17 +7,14 @@
 
   function ResponseService($log) {
 
-    this.data = {
-      group: [],
-      member: []
-    };
+    this.data = {};
 
     this.clear = function(){
       this.data = {};
     };
 
     this.getResponse = function(definition) {
-      return this.data[definition.model][definition.key];
+      return this.data[definition.key];
     };
 
   }
