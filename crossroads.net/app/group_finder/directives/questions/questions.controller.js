@@ -23,6 +23,7 @@
 
     $scope.previousQuestion = function() {
       $scope.step--;
+      $scope.provideFocus();
     };
 
     $scope.nextQuestion = function() {
@@ -41,6 +42,7 @@
         $state.go('group_finder.' + $scope.mode + '.review');
       } else {
         $scope.step++;
+        $scope.provideFocus();
       }
     };
 
@@ -100,12 +102,13 @@
       });
     };
 
-    $rootScope.$on('$viewContentLoaded',function(event){
-      setTimeout(function() {
+
+    $scope.provideFocus = function() {
+      $timeout(function() {
         var el = $('input[type=text], input[type=number]').filter('[name*=' + $scope.currentKey() + ']').first();
             el.focus();
-      }, 100);
-    });
+      },100);
+    };
 
   }
 

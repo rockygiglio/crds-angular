@@ -11,7 +11,6 @@
         vm.questions = QuestionDefinitions.questions;
         vm.currentStep = $scope.$parent.currentStep;
         vm.responses = Responses.data;
-
   }
 
 })();
