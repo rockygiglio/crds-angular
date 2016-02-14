@@ -6,8 +6,6 @@
   require('./common/layout.html');
   require('./common/header.html');
   require('./login/welcome.html');
-  require('./host/host.html');
-  require('./host/review.html');
   require('./summary/summary.html');
 
   angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])
@@ -21,13 +19,12 @@
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('LoginCtrl',        require('./login/login.controller'))
-    .controller('HostCtrl',         require('./host/host.controller'))
-    .controller('HostReviewCtrl',   require('./host/host_review.controller'))
     .controller('SummaryCtrl',      require('./summary/summary.controller'))
     ;
 
   require('./services');
   require('./dashboard');
+  require('./host');
   require('./join');
 
 })();

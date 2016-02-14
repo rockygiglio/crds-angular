@@ -45,7 +45,7 @@
     };
 
     vm.hostQuestions = function() {
-      $state.go(SERIES.permalink + '.host', { step: 1 });
+      $state.go(SERIES.permalink + '.host.questions');
     };
 
     vm.joinQuestions = function() {

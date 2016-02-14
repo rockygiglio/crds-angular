@@ -13,5 +13,7 @@
   angular.module(constants.MODULES.GROUP_FINDER)
     .controller('GroupContactCtrl', require('./group_contact.controller.js'))
     .controller('GroupDetailCtrl', require('./group_detail.controller.js'))
-    .controller('DashboardCtrl', require('./dashboard.controller.js'));
+    .controller('DashboardCtrl', require('./dashboard.controller.js'))
+    ;
+
 })();

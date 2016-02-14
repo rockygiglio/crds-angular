@@ -3,14 +3,13 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', '$window', 'SERIES'];
+  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'SERIES'];
 
-  function QuestionsCtrl($rootScope, $scope, $state, $stateParams, $window, SERIES) {
+  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, SERIES) {
 
     // ------------------------ Properties
 
     $scope.totalQuestions = _.size($scope.questions);
-    $scope.currentIteration = parseInt($stateParams.step) || 1;
 
     Object.defineProperty($scope, 'nextBtn', {
       get: function() {
@@ -21,8 +20,7 @@
     // ------------------------ Methods
 
     $scope.previousQuestion = function() {
-      $scope.currentIteration--;
-      $state.go(SERIES.permalink + '.' + $scope.mode, { step: $scope.currentIteration });
+      $scope.step--;
     };
 
     $scope.nextQuestion = function() {
@@ -36,12 +34,11 @@
     $scope.go = function() {
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
         // TODO if private group skip review, save and show confirmation page.
-        $state.go(SERIES.permalink + '.' + $scope.mode + '_review');
-      } else if($scope.currentIteration === $scope.totalQuestions) {
-        $state.go(SERIES.permalink + '.' + $scope.mode + '_review');
+        $state.go(SERIES.permalink + '.' + $scope.mode + '.review');
+      } else if($scope.step === $scope.totalQuestions) {
+        $state.go(SERIES.permalink + '.' + $scope.mode + '.review');
       } else {
-        $scope.currentIteration++;
-        $state.go(SERIES.permalink + '.' + $scope.mode, { step: $scope.currentIteration });
+        $scope.step++;
       }
     };
 
@@ -54,7 +51,7 @@
     };
 
     $scope.currentKey = function() {
-      return _.pluck($scope.questions, 'key')[$scope.currentIteration - 1];
+      return _.pluck($scope.questions, 'key')[$scope.step - 1];
     };
 
     $scope.currentQuestion = function() {
@@ -68,7 +65,7 @@
     };
 
     $scope.startOver = function() {
-      $scope.currentIteration = 1;
+      $scope.step = 1;
     };
 
     $scope.isRequired = function() {

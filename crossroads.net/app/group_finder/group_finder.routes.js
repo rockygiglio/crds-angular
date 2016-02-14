@@ -67,55 +67,6 @@
         }
       })
 
-      .state(SERIES.permalink + '.summary', {
-        controller: 'SummaryCtrl as summary',
-        url: '/summary',
-        templateUrl: 'summary/summary.html',
-        resolve: {},
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-
-      })
-
-      .state(SERIES.permalink + '.host_review', {
-        controller: 'HostReviewCtrl as host',
-        url: '/host/review',
-        templateUrl: 'host/review.html',
-        resolve: {
-          GroupQuestionService: require('./services/group_questions.service'),
-          questions: function(GroupQuestionService) {
-            return GroupQuestionService.get().$promise;
-          }
-        },
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
-      .state(SERIES.permalink + '.host', {
-        controller: 'HostCtrl as host',
-        url: '/host/{step:(?:[0-9]+)}',
-        templateUrl: 'host/host.html',
-        resolve: {
-          GroupQuestionService: 'GroupQuestionService',
-          QuestionDefinitions: function(GroupQuestionService) {
-            return GroupQuestionService.get().$promise;
-          }
-        },
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
 
       .state(SERIES.permalink + '.join_review', {
         controller: 'JoinReviewCtrl as join',
