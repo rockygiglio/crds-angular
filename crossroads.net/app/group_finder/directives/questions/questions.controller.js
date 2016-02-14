@@ -7,19 +7,26 @@
 
   function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, Responses) {
 
+    $scope.initialize = function() {
+      $scope.responses = Responses.data;
+      $scope.totalQuestions = _.size($scope.getQuestions());
 
-    // ------------------------ Properties
+      Object.defineProperty($scope, 'nextBtn', {
+        get: function() {
+          return $scope.isPrivateGroup() ? 'Skip' : ($scope.currentQuestion().next || 'Next');
+        }
+      });
 
-    $scope.responses = Responses.data;
-    $scope.totalQuestions = _.size($scope.questions);
+    };
 
-    Object.defineProperty($scope, 'nextBtn', {
-      get: function() {
-        return $scope.isPrivateGroup() ? 'Skip' : ($scope.currentQuestion().next || 'Next');
+    $scope.getQuestions = function() {
+      if(!$scope._questions) {
+        $scope._questions = _.reject($scope.questions, function(q) {
+          return q.hidden !== undefined && q.hidden === true;
+        });
       }
-    });
-
-    // ------------------------ Methods
+      return $scope._questions;
+    };
 
     $scope.previousQuestion = function() {
       $scope.step--;
@@ -56,11 +63,11 @@
     };
 
     $scope.currentKey = function() {
-      return _.pluck($scope.questions, 'key')[$scope.step - 1];
+      return _.pluck($scope.getQuestions(), 'key')[$scope.step - 1];
     };
 
     $scope.currentQuestion = function() {
-      return _.find($scope.questions, function(obj){
+      return _.find($scope.getQuestions(), function(obj){
         return obj['key'] === $scope.currentKey();
       });
     };
@@ -128,6 +135,9 @@
       },100);
     };
 
+    // ----------------------------------- //
+
+    $scope.initialize();
   }
 
 })();

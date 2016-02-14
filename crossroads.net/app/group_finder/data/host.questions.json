@@ -1,6 +1,7 @@
 {
   "questions": [
     {
+      "hidden": true,
       "key": "total_capacity",
       "header": "How many folks are you ready to lead?",
       "description": "Think about your space. Perhaps you can base this on how many people fit comfortably in your living room, or the number of chairs that fit around your dining room table.",
@@ -10,6 +11,7 @@
       "required": true
     },
     {
+      "hidden": true,
       "key": "open_spots",
       "header": "Of those ({{responses.total_capacity}} spots) how many are open to anyone?",
       "description": "For example: If you can lead {{responses.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.total_capacity - 1}}.",
