@@ -4,6 +4,7 @@
   module.exports = DashboardCtrl;
 
   DashboardCtrl.$inject = [
+    '$rootScope',
     '$scope',
     '$log',
     '$state',
@@ -12,10 +13,12 @@
     'SERIES',
     'Email',
     '$modal',
+    'ImageService',
     'GroupInfo'
   ];
 
   function DashboardCtrl(
+    $rootScope,
     $scope,
     $log,
     $state,
@@ -24,6 +27,7 @@
     SERIES,
     Email,
     $modal,
+    ImageService,
     GroupInfo
   ) {
 
@@ -36,6 +40,10 @@
 
     vm.profileData = { person: Person };
     vm.person = Person;
+    vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
+    vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
+    vm.defaultImage = ImageService.DefaultProfileImage;
+
     vm.groups = {
       hosting: GroupInfo.getHosting(),
       participating: GroupInfo.getParticipating()
@@ -74,7 +82,6 @@
         'templateId': 0,
         'mergeData': {}
       };
-
     };
 
     vm.startOver = function() {
@@ -89,6 +96,19 @@
       // TODO need lookup of available group types. Waiting on CRDS API to return this value
       return 'co-ed';
     };
+
+    vm.displayName = function() {
+      return vm.person.firstName + ' ' + vm.person.lastName[0] + '.';
+    };
+
+    $scope.setGroup = function(group) {
+      vm.group = group;
+    };
+
+    $rootScope.$on('$viewContentLoading', function(event){
+      vm.group = undefined;
+    });
+
   }
 
 })();
