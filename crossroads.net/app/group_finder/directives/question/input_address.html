@@ -6,7 +6,7 @@
   </div>
   <div class="col-md-5">
     <label>City</label>
-    <input type="text" name="{{definition.key}}[city]" ng-model="responses[definition.key].city" class="form-control" ng-keyup="checkError()" ng-keyup="onKeyUp($event)" />
+    <input type="text" name="{{definition.key}}[city]" ng-model="responses[definition.key].city" class="form-control" ng-change="checkError()" ng-keyup="onKeyUp($event)" />
   </div>
   <div class="col-md-4">
     <label>State</label>

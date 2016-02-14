@@ -5,6 +5,7 @@
 
   require('./common/layout.html');
   require('./common/header.html');
+  require('./common/example_profile.html');
   require('./login/welcome.html');
   require('./summary/summary.html');
 

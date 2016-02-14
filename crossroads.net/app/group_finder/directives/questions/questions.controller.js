@@ -10,13 +10,6 @@
     $scope.initialize = function() {
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.getQuestions());
-
-      Object.defineProperty($scope, 'nextBtn', {
-        get: function() {
-          return $scope.isPrivateGroup() ? 'Skip' : ($scope.currentQuestion().next || 'Next');
-        }
-      });
-
     };
 
     $scope.getQuestions = function() {

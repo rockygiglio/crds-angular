@@ -4,7 +4,10 @@
 </div>
 
 <div ng-bind-html="render('body')" ng-if="definition.body"></div>
-<div class="form-group" ng-if="definition.input_type">
+
+<div ng-include="definition.include" ng-if="definition.include"></div>
+
+<div class="form-group question" ng-if="definition.input_type">
   <ng-include src="getTemplateUrl()" />
 </div>
 
