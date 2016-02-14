@@ -3,9 +3,9 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'SERIES'];
+  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window'];
 
-  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, SERIES) {
+  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window) {
 
     // ------------------------ Properties
 
@@ -34,9 +34,9 @@
     $scope.go = function() {
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
         // TODO if private group skip review, save and show confirmation page.
-        $state.go(SERIES.permalink + '.' + $scope.mode + '.review');
+        $state.go('group_finder.' + $scope.mode + '.review');
       } else if($scope.step === $scope.totalQuestions) {
-        $state.go(SERIES.permalink + '.' + $scope.mode + '.review');
+        $state.go('group_finder.' + $scope.mode + '.review');
       } else {
         $scope.step++;
       }

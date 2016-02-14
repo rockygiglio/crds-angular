@@ -3,13 +3,13 @@
 
   module.exports = HostCtrl;
 
-  HostCtrl.$inject = ['$scope', '$log', '$state', 'AuthService', 'QuestionDefinitions', 'SERIES'];
+  HostCtrl.$inject = ['$scope', '$log', '$state', 'AuthService', 'QuestionDefinitions'];
 
-  function HostCtrl ($scope, $log, $state, AuthService, QuestionDefinitions, SERIES) {
+  function HostCtrl ($scope, $log, $state, AuthService, QuestionDefinitions) {
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go(SERIES.permalink + '.welcome');
+      $state.go('group_finder.welcome');
     }
 
     var vm = this;
@@ -26,7 +26,7 @@
             vm.nextButton = 'Choose a Role';
         }
       } else if (vm.onLastSlide()) {
-        $state.go(SERIES.permalink + '.host');
+        $state.go('group_finder.host');
       }
     };
 
@@ -45,11 +45,11 @@
     };
 
     vm.hostQuestions = function() {
-      $state.go(SERIES.permalink + '.host.questions');
+      $state.go('group_finder.host.questions');
     };
 
     vm.joinQuestions = function() {
-      $state.go(SERIES.permalink + '.join', { step: 1 });
+      $state.go('group_finder.join', { step: 1 });
     };
 
   }

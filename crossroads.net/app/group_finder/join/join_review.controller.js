@@ -3,9 +3,9 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$state', 'questions', 'Responses', 'SERIES'];
+  JoinReviewCtrl.$inject = ['$state', 'questions', 'Responses'];
 
-  function JoinReviewCtrl($state, questions, Responses, SERIES) {
+  function JoinReviewCtrl($state, questions, Responses) {
     var vm = this;
 
     vm.responses = Responses;
@@ -13,7 +13,7 @@
     vm.showResults = vm.showUpsell === false;
 
     vm.goToHost = function() {
-      $state.go(SERIES.permalink + '.host', { step: 1 });
+      $state.go('group_finder.host', { step: 1 });
     };
 
     vm.goToResults = function() {

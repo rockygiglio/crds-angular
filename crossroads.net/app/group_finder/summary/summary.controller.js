@@ -3,14 +3,14 @@
 
   module.exports = SummaryCtrl;
 
-  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService', 'SERIES'];
+  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
 
-  function SummaryCtrl ($scope, $log, $state, AuthService, SERIES) {
+  function SummaryCtrl ($scope, $log, $state, AuthService) {
     $log.debug('summary.controller.js');
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go(SERIES.permalink + '.welcome');
+      $state.go('group_finder.welcome');
     }
 
     var vm = this;
@@ -26,7 +26,7 @@
             vm.nextButton = 'Choose a Role';
         }
       } else if (vm.onLastSlide()) {
-        $state.go(SERIES.permalink + '.host');
+        $state.go('group_finder.host');
       }
     };
 
@@ -45,11 +45,11 @@
     };
 
     vm.hostQuestions = function() {
-      $state.go(SERIES.permalink + '.host.questions');
+      $state.go('group_finder.host.questions');
     };
 
     vm.joinQuestions = function() {
-      $state.go(SERIES.permalink + '.join', { step: 1 });
+      $state.go('group_finder.join', { step: 1 });
     };
 
   }

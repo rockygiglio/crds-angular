@@ -8,7 +8,7 @@
   function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
 
     $stateProvider
-      .state(SERIES.permalink + '.host', {
+      .state('group_finder.host', {
         controller: 'HostCtrl as summary',
         url: '/host',
         templateUrl: 'host/host.html',
@@ -20,13 +20,13 @@
         },
         data: {meta: {title: SERIES.title,description: ''}}
       })
-      .state(SERIES.permalink + '.host.questions', {
+      .state('group_finder.host.questions', {
         controller: 'HostQuestionsCtrl as host',
         url: '/questions',
         templateUrl: 'host/host_questions.html',
         data: {meta: {title: SERIES.title,description: ''}}
       })
-      .state(SERIES.permalink + '.host.review', {
+      .state('group_finder.host.review', {
         controller: 'HostReviewCtrl as host',
         url: '/review',
         templateUrl: 'host/host_review.html',

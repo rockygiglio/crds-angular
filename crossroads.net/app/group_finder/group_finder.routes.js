@@ -8,7 +8,7 @@
   function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
 
     $stateProvider
-      .state(SERIES.permalink, {
+      .state('group_finder', {
         url: '/' + SERIES.permalink,
         abstract: true,
         parent: 'noHeaderOrFooter',
@@ -27,7 +27,7 @@
         }
       })
 
-      .state(SERIES.permalink + '.welcome', {
+      .state('group_finder.welcome', {
         controller: 'LoginCtrl as ctrl',
         url: '/welcome',
         templateUrl: 'login/welcome.html',
@@ -40,7 +40,7 @@
         }
       })
 
-      .state(SERIES.permalink + '.dashboard', {
+      .state('group_finder.dashboard', {
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
@@ -55,7 +55,7 @@
         }
       })
 
-      .state(SERIES.permalink + '.dashboard.group', {
+      .state('group_finder.dashboard.group', {
         url: '/groups/:groupId',
         controller: 'GroupDetailCtrl as detail',
         templateUrl: 'dashboard/group_detail.html',
@@ -68,7 +68,7 @@
       })
 
 
-      .state(SERIES.permalink + '.join_review', {
+      .state('group_finder.join_review', {
         controller: 'JoinReviewCtrl as join',
         url: '/join/results',
         templateUrl: 'join/review.html',
@@ -86,7 +86,7 @@
         }
       })
 
-      .state(SERIES.permalink + '.join', {
+      .state('group_finder.join', {
         controller: 'JoinCtrl as join',
         url: '/join/{step:(?:[0-9]+)}',
         templateUrl: 'join/join.html',
