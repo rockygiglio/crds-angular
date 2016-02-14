@@ -3,21 +3,20 @@
 
   module.exports = HostReviewCtrl;
 
-  HostReviewCtrl.$inject = ['$state', 'questions', 'Responses', 'SERIES'];
+  HostReviewCtrl.$inject = ['$scope', '$state', 'Responses'];
 
-  function HostReviewCtrl($state, questions, Responses, SERIES) {
+  function HostReviewCtrl($scope, $state, Responses) {
     var vm = this;
 
-    vm.questions = questions;
     vm.responses = Responses;
 
     vm.startOver = function() {
-      vm.currentQuestion = 1;
-      $state.go(SERIES.permalink + '.host', { step: vm.currentQuestion });
+      $scope.$parent.currentStep = 2;
+      $state.go('group_finder.host.questions');
     };
 
     vm.showDashboard = function() {
-      $state.go(SERIES.permalink + '.dashboard');
+      $state.go('group_finder.dashboard');
     };
 
   }

@@ -1,11 +1,11 @@
 (function() {
   'use strict';
 
-  module.exports = ResultsCtrl;
+  module.exports = JoinResultsCtrl;
 
-  ResultsCtrl.$inject = ['$log', 'Results'];
+  JoinResultsCtrl.$inject = ['$log', 'Results'];
 
-  function ResultsCtrl($log, Results) {
+  function JoinResultsCtrl($log, Results) {
     var vm = this;
 
     vm.results = Results.getGroups();

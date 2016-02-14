@@ -3,16 +3,16 @@
 
   module.exports = LoginCtrl;
 
-  LoginCtrl.$inject = ['$log', '$state', '$cookies', 'Responses', 'AuthService', 'GroupInfo', 'SERIES'];
+  LoginCtrl.$inject = ['$log', '$state', '$cookies', 'Responses', 'AuthService', 'GroupInfo'];
 
-  function LoginCtrl($log, $state, $cookies, Responses, AuthService, GroupInfo, SERIES) {
+  function LoginCtrl($log, $state, $cookies, Responses, AuthService, GroupInfo) {
     if (AuthService.isAuthenticated() === true) {
       if (GroupInfo.getHosting().length > 0 || GroupInfo.getParticipating().length > 0) {
         $log.debug('login.controller.js - group member: redirecting');
-        $state.go(SERIES.permalink + '.dashboard');
+        $state.go('group_finder.dashboard');
       } else {
         $log.debug('login.controller.js - registered but not in group');
-        $state.go(SERIES.permalink + '.summary');
+        $state.go('group_finder.summary');
       }
     }
   }
