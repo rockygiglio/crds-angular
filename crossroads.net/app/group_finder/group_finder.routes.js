@@ -17,7 +17,6 @@
         resolve: {
           Profile: 'Profile',
           Person: 'Person',
-          GroupInfo: 'GroupInfo'
         },
         data: {
           meta: {
@@ -119,7 +118,7 @@
 
       .state(SERIES.permalink + '.join_review', {
         controller: 'JoinReviewCtrl as join',
-        url: '/join/results',
+        url: '/join/review',
         templateUrl: 'join/review.html',
         resolve: {
           ParticipantQuestionService: require('./services/participant_questions.service'),
@@ -152,7 +151,23 @@
           }
         }
       })
-      ;
+
+      .state(SERIES.permalink + '.results', {
+        controller: 'ResultsCtrl as results',
+        url: '/join/results',
+        templateUrl: 'join/results.html',
+        resolve: {
+          Results: 'Results'
+        },
+        data: {
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
+    ;
 
     $urlRouterProvider
       .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')
