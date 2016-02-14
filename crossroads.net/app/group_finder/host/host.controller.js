@@ -1,31 +1,12 @@
-(function(){
+(function () {
   'use strict';
 
   module.exports = HostCtrl;
 
-  HostCtrl.$inject = [
-                      '$scope',
-                      '$log',
-                      '$http',
-                      '$cookies',
-                      'QuestionDefinitions',
-                      'Responses',
-                      'SERIES'
-                     ];
+  HostCtrl.$inject = ['$scope'];
 
-  function HostCtrl($scope,
-                    $log,
-                    $http,
-                    $cookies,
-                    QuestionDefinitions,
-                    Responses,
-                    SERIES) {
-
-    var vm = this;
-
-    // Properties
-    vm.questions = QuestionDefinitions.questions;
-    vm.responses = Responses.data;
+  function HostCtrl ($scope) {
+    $scope.currentStep = 1;
   }
 
 })();

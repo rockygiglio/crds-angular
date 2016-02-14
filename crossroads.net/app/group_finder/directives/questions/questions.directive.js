@@ -12,6 +12,7 @@
       restrict: 'AE',
       scope: {
         mode: '@mode',
+        step: '=',
         questions: '=definitions',
         responses: '=responses'
       },

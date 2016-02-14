@@ -1,10 +1,6 @@
 {
   "questions": [
     {
-      "body": "<h3>Look at you stepping up and leading the charge!</h3><p>Thanks for being awesome. Now comes the part where we help you plant the seeds that will grow a super group.</p><h3>We're gonna ask you 10 questions</h3><p>Your answers will help us define your group's style and will — in the end — connect you with the perfect traveling companions. Aready have people mind? That's cool. You can invite 'em later.</p>",
-      "next": "Let's get started!"
-    },
-    {
       "key": "total_capacity",
       "header": "How many folks are you ready to lead?",
       "description": "Think about your space. Perhaps you can base this on how many people fit comfortably in your living room, or the number of chairs that fit around your dining room table.",

@@ -1,14 +1,6 @@
 {
   "questions": [
     {
-      "body": "<h3>Let the grouping begin!</h3><p>We’re gonna ask you 5 questions to help us connect you with the perfect traveling companions.</p>",
-      "next": "Let's get started!"
-    },
-    {
-      "body": "<h3>And then...</h3><p>We’ll present you with several groups to choose from that will share similar goals, interests or wants. Doesn't that sound cool?? Great! Let’s roll. </p>",
-      "next": "Let's get started!"
-    },
-    {
       "key": "prior_participation",
       "header": "Have you journeyed with us before?",
       "model": "member",

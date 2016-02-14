@@ -3,14 +3,14 @@
 
   module.exports = SummaryCtrl;
 
-  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService', 'SERIES'];
+  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
 
-  function SummaryCtrl ($scope, $log, $state, AuthService, SERIES) {
+  function SummaryCtrl ($scope, $log, $state, AuthService) {
     $log.debug('summary.controller.js');
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go(SERIES.permalink + '.welcome');
+      $state.go('group_finder.welcome');
     }
 
     var vm = this;
@@ -19,37 +19,38 @@
     vm.currentSlide = 1;
     vm.nextButton = 'Next';
 
-    vm.nextSlide = function () {
+    vm.nextSlide = function() {
       if (vm.currentSlide < vm.totalSlides) {
         vm.currentSlide++;
         if (vm.onLastSlide()) {
             vm.nextButton = 'Choose a Role';
         }
       } else if (vm.onLastSlide()) {
-        $state.go(SERIES.permalink + '.host');
+        $state.go('group_finder.host');
       }
     };
 
-    vm.previousSlide = function () {
+    vm.previousSlide = function() {
       if (vm.currentSlide > 1) {
         vm.currentSlide--;
       }
     };
 
-    vm.showSlide = function (index) {
+    vm.showSlide = function(index) {
+      console.log(vm.currentSlide);
       return index === vm.currentSlide;
     };
 
-    vm.onLastSlide = function () {
+    vm.onLastSlide = function() {
       return vm.currentSlide === vm.totalSlides;
     };
 
     vm.hostQuestions = function() {
-      $state.go(SERIES.permalink + '.host', { step: 1 });
+      $state.go('group_finder.host.questions');
     };
 
     vm.joinQuestions = function() {
-      $state.go(SERIES.permalink + '.join', { step: 1 });
+      $state.go('group_finder.join', { step: 1 });
     };
 
   }

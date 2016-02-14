@@ -10,7 +10,6 @@
     '$state',
     'Person',
     'AuthService',
-    'SERIES',
     'Email',
     '$modal',
     'ImageService',
@@ -24,7 +23,6 @@
     $state,
     Person,
     AuthService,
-    SERIES,
     Email,
     $modal,
     ImageService,
@@ -35,7 +33,7 @@
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
-      $state.go(SERIES.permalink + '.welcome');
+      $state.go('group_finder.welcome');
     }
 
     vm.profileData = { person: Person };
@@ -85,7 +83,7 @@
     };
 
     vm.startOver = function() {
-      $state.go(SERIES.permalink + '.summary');
+      $state.go('group_finder.summary');
     };
 
     vm.driveTime = function() {

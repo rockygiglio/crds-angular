@@ -9,7 +9,7 @@
           <h3>Groups you're hosting</h3>
         </div>
         <groupcard group="group" ng-repeat="group in dashboard.groups.hosting"></groupcard>
-        <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.host({ step: 1 })">Host Another Group</a></p>
+        <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.host({ step: 1 })">Host Another Group</a></p>
       </div>
 
       <div class="groups participating" ng-if="dashboard.groups.participating.length > 0">
@@ -17,7 +17,7 @@
           <h3>Groups you've joined</h3>
         </div>
         <groupcard group="group" ng-repeat="group in dashboard.groups.participating"></groupcard>
-        <p><a class="btn btn-standard-dark btn-block" ui-sref="brave.join">Join Another Group</a></p>
+        <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.join">Join Another Group</a></p>
       </div>
 
     </div></div>
