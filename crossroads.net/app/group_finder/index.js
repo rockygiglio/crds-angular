@@ -6,7 +6,6 @@
   require('./common/layout.html');
   require('./common/header.html');
   require('./common/example_profile.html');
-  require('./login/welcome.html');
   require('./summary/summary.html');
 
   angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])
@@ -19,7 +18,6 @@
     .directive('membercard',        require('./directives/member_card/member_card.directive'))
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
-    .controller('LoginCtrl',        require('./login/login.controller'))
     .controller('SummaryCtrl',      require('./summary/summary.controller'))
     ;
 

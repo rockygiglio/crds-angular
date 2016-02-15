@@ -10,7 +10,6 @@
     $stateProvider
       .state('group_finder', {
         url: '/' + SERIES.permalink,
-        abstract: true,
         parent: 'noHeaderOrFooter',
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
@@ -20,19 +19,7 @@
           GroupInfo: 'GroupInfo'
         },
         data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
-      .state('group_finder.welcome', {
-        controller: 'LoginCtrl as ctrl',
-        url: '/welcome',
-        templateUrl: 'login/welcome.html',
-        resolve: {},
-        data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''
@@ -53,10 +40,6 @@
         }
       })
       ;
-
-    $urlRouterProvider
-      .when('/' + SERIES.permalink, '/' + SERIES.permalink + '/welcome')
-      .otherwise('/' + SERIES.permalink + '/welcome');
 
   }
 
