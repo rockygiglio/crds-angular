@@ -31,11 +31,6 @@
 
     var vm = this;
 
-    if (AuthService.isAuthenticated() === false) {
-      $log.debug('not logged in');
-      $state.go('group_finder.welcome');
-    }
-
     vm.profileData = { person: Person };
     vm.person = Person;
     vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;

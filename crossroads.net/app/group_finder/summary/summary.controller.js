@@ -7,11 +7,6 @@
 
   function SummaryCtrl ($scope, $log, $state, AuthService) {
 
-    if (AuthService.isAuthenticated() === false) {
-      $log.debug('not logged in');
-      $state.go('group_finder.welcome');
-    }
-
     var vm = this;
 
     vm.totalSlides = 5;

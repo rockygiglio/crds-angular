@@ -17,10 +17,12 @@
         // TODO
         vm.isHost = true;
 
-    if(vm.isHost) {
-      $state.go('group_finder.dashboard');
-    } else {
-      $state.go('group_finder.summary');
+    if ($state.$current.name === 'group_finder') {
+      if(vm.isHost) {
+        $state.go('group_finder.dashboard');
+      } else {
+        $state.go('group_finder.summary');
+      }
     }
 
   }
