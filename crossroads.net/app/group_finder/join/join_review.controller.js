@@ -9,7 +9,7 @@
     var vm = this;
 
     vm.responses = Responses;
-    vm.showUpsell = parseInt(vm.responses.data.member.prior_participation) > 2;
+    vm.showUpsell = parseInt(vm.responses.data.prior_participation) > 2;
     vm.showResults = vm.showUpsell === false;
 
     if (vm.showResults === true) {
@@ -25,7 +25,7 @@
     };
 
     vm.contactCrds = function() {
-      var zipcode = vm.responses.data.member.location.zip;
+      var zipcode = vm.responses.data.location.zip;
       // TODO utilize zipcode lookup to determine if user can be matched at all
       if (zipcode === '41075') {
         vm.showUpsell = false;
