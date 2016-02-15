@@ -1,2 +1,2 @@
-<h2>results</h2>
+<div ng-include="'templates/empty_results.html'" ng-if="results.results <= 0"></div>
 <groupcard template="join" group="group" ng-repeat="group in results.results">

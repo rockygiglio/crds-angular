@@ -11,6 +11,7 @@
   require('./templates/upsell.html');
   require('./templates/results.html');
   require('./templates/contact.html');
+  require('./templates/empty_results.html');
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .config(require('./join.routes'))
