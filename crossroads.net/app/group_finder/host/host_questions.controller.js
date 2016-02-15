@@ -11,6 +11,10 @@
         vm.questions = QuestionDefinitions.questions;
         vm.currentStep = $scope.$parent.currentStep;
         vm.responses = Responses.data;
+
+    // TODO pass this to directives via attribute.
+    $scope.person = $scope.$parent.person;
+
   }
 
 })();

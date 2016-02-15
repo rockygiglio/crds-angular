@@ -109,15 +109,7 @@
       "key": "date_and_time",
       "header": "When do you want to meet? ",
       "description": "Remember that BRAVE groups meet once a week for 5 weeks. They begin the week of April 3rd and will end the week of May 1st. They usually take less than 90 minutes from start to finish.",
-      "label": "Select all that apply:",
       "model": "member",
-      "answers": [
-        "I have a dog",
-        "I have a cat",
-        "I have an alpaca",
-        "I have rodents (by choice)",
-        "I have rodents (not by choice)"
-      ],
       "input_type": "day_time",
       "required": true
     },
@@ -150,16 +142,15 @@
     {
       "key": "profile_setup2",
       "header": "You'll end up with something like this...",
-      "description": "(See example profile)",
-      "include": "common/example_profile.html",
-      "footer": "FYI: Don't worry about the profile pic. It'll be your Crossroads.net profile picture. So what ever you load there, will appear here. Yay technology!"
+      "include": "templates/example_group.html",
+      "help": "FYI: Don't worry about the profile pic. It'll be your Crossroads.net profile picture. So what ever you load there, will appear here. Yay technology!"
     },
     {
       "key": "description",
       "header": "So let's make your's personal",
       "description": "Write a few highlights that tell people what you're all about.",
       "label": "Your message",
-      "footer": "Example: Hi, I'm Kevin, a 30 something father, husband and Bengals apologist. This isn't my first rodeo, but it's my first time hosting a group. We’ll be meeting at my humble home in Hyde Park.",
+      "help": "Example: Hi, I'm Kevin, a 30 something father, husband and Bengals apologist. This isn't my first rodeo, but it's my first time hosting a group. We’ll be meeting at my humble home in Hyde Park.",
       "input_type": "textarea",
       "required": true
     },

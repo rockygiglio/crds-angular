@@ -11,4 +11,6 @@
   <ng-include src="getTemplateUrl()" />
 </div>
 
+<span class="help-block" ng-if="definition.help" ng-bind-html="render('help')"></span>
+
 <div ng-bind-html="render('footer')" ng-if="definition.footer"></div>

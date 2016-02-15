@@ -7,6 +7,8 @@
 
   function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, Responses) {
 
+    $scope.person = $scope.$parent.person;
+
     $scope.initialize = function() {
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.getQuestions());
