@@ -1,0 +1,23 @@
+<div class="group">
+  <div class="host-image">
+    <img ng-src="{{getHostImage(group)}}" err-src="{{defaultImage}}" alt="">
+    <div class="group-details">
+      <div class="title">{{ group.groupTitle }}</div>
+      <div class="type">{{getGroupType()}} group</div>
+      <div class="time">{{ group.time }}</div>
+      <div class="distance"><a href="#">2 miles from you</a></div>
+    </div>
+  </div>
+  <div class="group-description">
+    <p>{{ group.description }}</p>
+    <hr>
+    <div class="attributes">
+      <ul class="attr">
+        <li ng-repeat="attribute in group.attributes">{{ attribute }}</li>
+      </ul>
+      <div class="button">
+        <a class="select btn btn-primary" ng-click="joinGroup(group.id)">Join Group</a>
+      </div>
+    </div>
+  </div>
+</div>
