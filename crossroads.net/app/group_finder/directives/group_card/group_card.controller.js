@@ -39,22 +39,8 @@
 
       var modalInstance = $modal.open({
         templateUrl: 'group_card/join_modal.html',
-        controller: ['$scope', '$state', '$modalInstance', function($scope, $state, $modalInstance) {
-          $scope.join = function() {
-            // TODO integrate person -> group service here
-            $modalInstance.close($scope.confirmed = true);
-            $state.go('^.complete', { 'groupId': groupId});
-          };
-          $scope.cancel = function() {
-            $modalInstance.close();
-          };
-        }],
-        resolve: {
-          groupId: function() {
-            return $scope.groupId;
-
-          }
-        }
+        controller: 'JoinModalCtrl as modal',
+        scope: $scope,
       });
     };
 

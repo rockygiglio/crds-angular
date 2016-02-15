@@ -18,7 +18,6 @@
         template: '@'
       },
       controller: require('./group_card.controller'),
-      // templateUrl: 'group_card/group_card.html'
       templateUrl: function (el, attrs) {
         var template = 'group_card/group_card.html';
         if (attrs.template === 'join') {
