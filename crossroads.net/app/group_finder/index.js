@@ -5,6 +5,7 @@
 
   require('./common/layout.html');
   require('./common/header.html');
+  require('./common/example_profile.html');
   require('./summary/summary.html');
 
   angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])

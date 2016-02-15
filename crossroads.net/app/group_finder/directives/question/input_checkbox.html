@@ -1,6 +1,8 @@
 <label ng-show="definition.label">{{definition.label}}</label>
-<div class="checkbox" ng-repeat="answer in definition.answers track by $index">
-  <label>
-    <input type="checkbox" name="{{definition.key}}" value="{{$index}}" checklist-value="$index" ng-model="responses[model()][definition.key][$index]" ng-change="checkError()" /> {{answer}}
-  </label>
+<div class="bordered">
+  <div class="checkbox" ng-repeat="answer in definition.answers track by $index">
+    <label>
+      <input type="checkbox" name="{{definition.key}}" value="{{$index}}" checklist-value="$index" ng-model="responses[definition.key][$index]" ng-change="checkError()" /> {{answer}}
+    </label>
+  </div>
 </div>
