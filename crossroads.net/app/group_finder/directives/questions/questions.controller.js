@@ -3,29 +3,33 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window'];
+  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'Responses'];
 
-  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window) {
+  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, Responses) {
 
-    // ------------------------ Properties
+    $scope.initialize = function() {
+      $scope.responses = Responses.data;
+      $scope.totalQuestions = _.size($scope.getQuestions());
+    };
 
-    $scope.totalQuestions = _.size($scope.questions);
-
-    Object.defineProperty($scope, 'nextBtn', {
-      get: function() {
-        return $scope.isPrivateGroup() ? 'Skip' : ($scope.currentQuestion().next || 'Next');
+    $scope.getQuestions = function() {
+      if(!$scope._questions) {
+        $scope._questions = _.reject($scope.questions, function(q) {
+          return q.hidden !== undefined && q.hidden === true;
+        });
       }
-    });
-
-    // ------------------------ Methods
+      return $scope._questions;
+    };
 
     $scope.previousQuestion = function() {
       $scope.step--;
+      $scope.provideFocus();
     };
 
     $scope.nextQuestion = function() {
-      if($scope.isRequired() && !_.isEmpty($scope.currentErrorFields())) {
+      if($scope.isRequired() && _.any($scope.currentErrorFields())) {
         $scope.applyErrors();
+        $scope.provideFocus();
       } else {
         $scope.go();
       }
@@ -39,6 +43,7 @@
         $state.go('group_finder.' + $scope.mode + '.review');
       } else {
         $scope.step++;
+        $scope.provideFocus();
       }
     };
 
@@ -47,15 +52,15 @@
     };
 
     $scope.currentResponse = function() {
-      return $scope.responses[$scope.currentQuestion().model][$scope.currentKey()];
+      return $scope.responses[$scope.currentKey()];
     };
 
     $scope.currentKey = function() {
-      return _.pluck($scope.questions, 'key')[$scope.step - 1];
+      return _.pluck($scope.getQuestions(), 'key')[$scope.step - 1];
     };
 
     $scope.currentQuestion = function() {
-      return _.find($scope.questions, function(obj){
+      return _.find($scope.getQuestions(), function(obj){
         return obj['key'] === $scope.currentKey();
       });
     };
@@ -80,10 +85,26 @@
     };
 
     $scope.currentErrorFields = function() {
+
       return _.chain($scope.requiredFields())
+              .uniq()
               .map(function(name) {
-                var el = $('[name=' + name + ']');
-                return el.val() === '' || el.val().indexOf('undefined') > -1 ? el : false;
+
+                var pattern = /([^\[\]]*)(\[(.*)\])?/;
+                var matches = name.match(pattern);
+                var cleanedName = matches[1];
+                var controlName = matches[3];
+
+                var el = $('[name="' + name + '"]');
+                var response = $scope.responses[cleanedName];
+
+                if(typeof response === 'object') {
+                  response = response[controlName];
+                }
+
+                var hasError = (response === undefined || response === '');
+
+                return hasError ? el : false;
               })
               .compact()
               .value();
@@ -91,6 +112,7 @@
 
     $scope.applyErrors = function() {
       $('div.has-error:visible').removeClass('has-error');
+
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
@@ -98,13 +120,17 @@
       });
     };
 
-    $rootScope.$on('$viewContentLoaded',function(event){
-      setTimeout(function() {
-        var el = $('input[type=text], input[type=number]').filter('[name*=' + $scope.currentKey() + ']').first();
-            el.focus();
-      }, 100);
-    });
 
+    $scope.provideFocus = function() {
+      $timeout(function() {
+        var el = $('input, select').filter('[name*=' + $scope.currentKey() + ']').first();
+            el.focus();
+      },100);
+    };
+
+    // ----------------------------------- //
+
+    $scope.initialize();
   }
 
 })();

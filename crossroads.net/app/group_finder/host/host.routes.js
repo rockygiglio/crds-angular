@@ -32,6 +32,12 @@
         templateUrl: 'host/host_review.html',
         data: {meta: {title: SERIES.title,description: ''}}
       })
+      .state('group_finder.host.confirm', {
+        controller: 'HostConfirmCtrl as host',
+        url: '/success',
+        templateUrl: 'host/host_confirm.html',
+        data: {meta: {title: SERIES.title,description: ''}}
+      })
       ;
 
   }
