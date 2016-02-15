@@ -834,13 +834,17 @@ namespace MinistryPlatform.Translation.Test.Services
             const string guestDonorPageViewId = "DonorByContactId";
             const string accountNumber = "1234567";
             const string routingNumber = "042000314";
+            const string processorAccountId = "bk_2985405871018";
+            const string accountProcessorId = "sub_954859038710";
           
             var expectedEncAcct = _fixture.CreateHashedAccountAndRoutingNumber(accountNumber, routingNumber);
             var queryResults = new List<Dictionary<string, object>>
             {
                 new Dictionary<string, object>
                 {
-                    { "Contact_ID", contactId }
+                    { "Contact_ID", contactId },
+                    {"Processor_Account_ID", processorAccountId},
+                    {"Processor_ID", accountProcessorId},
                 }
             };
 
@@ -858,7 +862,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Statement_Type_ID", 1},
                     {"Statement_Frequency", "Quarterly"},
                     {"Statement_Method", "None"},
-                    {"Household_ID", 1}
+                    {"Household_ID", 1},
                 }
             };
             var donor = new ContactDonor()
@@ -866,7 +870,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 DonorId = donorId,
                 ProcessorId = processorId,
                 ContactId = contactId,
-                Email = email
+                Email = email,
+                
+                Account = new DonorAccount
+                {
+                    ProcessorAccountId = processorAccountId,
+                    ProcessorId = accountProcessorId
+                }
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(

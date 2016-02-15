@@ -36,10 +36,10 @@ namespace crds_angular.Controllers.API
             this.participantService = participantService;
         }
 
-        /**
-         * Enroll the currently logged-in user into a Community Group, and also register this user for all events for the CG.
-         */
-
+        /// <summary>
+        /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
+        /// Also send email confirmation to user
+        /// </summary>
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
@@ -68,7 +68,7 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
-        
+
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}")]
         public IHttpActionResult Get(int groupId)
@@ -90,8 +90,7 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
-            }
-                );
+            });
         }
 
         [ResponseType(typeof(List<Event>))]
