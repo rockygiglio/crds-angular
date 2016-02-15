@@ -3,917 +3,482 @@
     {
       "id": 1,
       "type": 2,
-      "isHost": true,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "contactId": 12345,
-          "groupRoleId": 15,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
       "id": 2,
-      "type": 1,
-      "isHost": true,
+      "type": 2,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
       "id": 3,
-      "type": 2,
-      "isHost": false,
+      "type": 3,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "groupRoleId": 15,
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
-      "id": 1,
-      "type": 2,
-      "isHost": true,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "contactId": 12345,
-          "groupRoleId": 15,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 2,
+      "id": 4,
       "type": 1,
-      "isHost": true,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
-      "id": 3,
-      "type": 2,
-      "isHost": false,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "groupRoleId": 15,
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 1,
-      "type": 2,
-      "isHost": true,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "contactId": 12345,
-          "groupRoleId": 15,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 2,
+      "id": 5,
       "type": 1,
-      "isHost": true,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
-      "id": 3,
-      "type": 2,
-      "isHost": false,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "groupRoleId": 15,
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 1,
-      "type": 2,
-      "isHost": true,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "contactId": 12345,
-          "groupRoleId": 15,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 2,
+      "id": 6,
       "type": 1,
-      "isHost": true,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
-      "id": 3,
-      "type": 2,
-      "isHost": false,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "groupRoleId": 15,
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 1,
-      "type": 2,
-      "isHost": true,
-      "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "contactId": 12345,
-          "groupRoleId": 15,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
-      "addressLine1": "123 Main St",
-      "city": "Cincinnati",
-      "state": "OH",
-      "postalCode": "45215",
-      "time": "Mondays at 9pm"
-    },
-    {
-      "id": 2,
+      "id": 7,
       "type": 1,
-      "isHost": true,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 1234,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     },
     {
-      "id": 3,
-      "type": 2,
-      "isHost": false,
+      "id": 8,
+      "type": 1,
       "groupTitle": "Gabe S",
-      "members": [
-        {
-          "firstName": "Gabe",
-          "lastName": "Smith",
-          "groupRoleId": 15,
-          "emailAddress": "jane.smith@email.com",
-          "genderId": 2,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has never journeyed before",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Joe",
-          "lastName": "Bing",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 22,
-          "contactId": 7656822,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed multiple times",
-            "Is looking to meet new people"
-          ]
-        },
-        {
-          "firstName": "Harry",
-          "lastName": "Chang",
-          "emailAddress": "joe.bing@email.com",
-          "genderId": 1,
-          "groupRoleId": 15,
-          "contactId": 12345,
-          "addressLine1": "123 Main St",
-          "city": "Cincinnati",
-          "state": "OH",
-          "postalCode": "45215",
-          "affinities": [
-            "Has journeyed once before",
-            "Is looking to find answers"
-          ]
-        }
-      ],
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
       "addressLine1": "123 Main St",
       "city": "Cincinnati",
       "state": "OH",
       "postalCode": "45215",
-      "time": "Mondays at 9pm"
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 9,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 10,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 11,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 12,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 13,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 14,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 15,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "123 Main St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45215",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
     }
   ]
 }

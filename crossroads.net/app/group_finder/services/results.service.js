@@ -11,12 +11,7 @@
 
     $http.get('/app/group_finder/data/results.json')
       .then(function(res) {
-        _.each(res.data.groups, function(group, i, list) {
-          group.host = _.find(group.members, function(member) {
-            return parseInt(member.groupRoleId) === 22;
-          });
-          groups.push(group);
-        });
+        groups = res.data.groups;
         return groups;
       });
 
