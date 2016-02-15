@@ -33,7 +33,7 @@
         data: {meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.join.results', {
-        controller: 'JoinResultsCtrl as results',
+        controller: 'JoinResultsCtrl as result',
         url: '/results',
         templateUrl: 'join/join_results.html',
         resolve: {
@@ -45,6 +45,13 @@
         controller: 'JoinCompleteCtrl as results',
         url: '/complete/:groupId',
         templateUrl: 'join/join_complete.html',
+        resolve: {},
+        data: {meta: {title: SERIES.title,description: ''}}
+      })
+      .state('group_finder.join.contact', {
+        controller: 'JoinContactCtrl as results',
+        url: '/contact',
+        templateUrl: 'join/join_contact.html',
         resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })

@@ -8,10 +8,12 @@
   require('./join_results.html');
   require('./join_questions.html');
   require('./join_complete.html');
+  require('./join_contact.html');
   require('./templates/upsell.html');
   require('./templates/results.html');
   require('./templates/contact.html');
   require('./templates/empty_results.html');
+  require('./templates/pager.html');
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .config(require('./join.routes'))
@@ -21,6 +23,7 @@
     .controller('JoinReviewCtrl', require('./join_review.controller'))
     .controller('JoinResultsCtrl', require('./join_results.controller'))
     .controller('JoinCompleteCtrl', require('./join_complete.controller'))
+    .controller('JoinContactCtrl', require('./join_contact.controller'))
     ;
 
 })();

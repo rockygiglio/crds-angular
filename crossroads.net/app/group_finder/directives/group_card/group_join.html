@@ -1,8 +1,8 @@
 <div class="group">
   <div class="host-image">
-    <img ng-src="{{getHostImage(group)}}" err-src="{{defaultImage}}" alt="">
+    <img class="profile-image" ng-src="{{getHostImage(group)}}" err-src="{{defaultImage}}" alt="">
     <div class="group-details">
-      <div class="title">{{ group.groupTitle }}</div>
+      <div class="title">{{ group.groupTitle }} + {{ group.id }}</div>
       <div class="type">{{getGroupType()}} group</div>
       <div class="time">{{ group.time }}</div>
       <div class="distance"><a href="#">2 miles from you</a></div>
