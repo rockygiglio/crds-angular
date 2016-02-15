@@ -28,7 +28,7 @@ $backupSql = @"
 USE [master];
 BACKUP DATABASE [$DBName]
 TO DISK = N'$backupFileName'
-WITH COPY_ONLY, NOFORMAT, INIT, NAME = N'$backupDescription', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+WITH COPY_ONLY, NOFORMAT, INIT, NAME = N'$backupDescription', SKIP, NOREWIND, NOUNLOAD, STATS = 10, COMPRESSION;
 "@;
 
 $command = $connection.CreateCommand();
