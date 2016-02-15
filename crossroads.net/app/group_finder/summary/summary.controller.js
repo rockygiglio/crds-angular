@@ -6,7 +6,6 @@
   SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
 
   function SummaryCtrl ($scope, $log, $state, AuthService) {
-    $log.debug('summary.controller.js');
 
     if (AuthService.isAuthenticated() === false) {
       $log.debug('not logged in');
@@ -37,7 +36,6 @@
     };
 
     vm.showSlide = function(index) {
-      console.log(vm.currentSlide);
       return index === vm.currentSlide;
     };
 
