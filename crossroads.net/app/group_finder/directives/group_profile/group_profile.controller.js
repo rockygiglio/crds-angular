@@ -9,7 +9,7 @@
 
     var defaultGroup = {
       groupTitle: 'Jon S',
-      description: 'Your description goes here...',
+      description: 'Your description will go here...',
       type: 0,
       time: 'Fridays at 7pm',
       attributes: ['kids welcome', 'has a cat'],
@@ -33,7 +33,6 @@
     };
 
     $scope.getGroupType = function() {
-      console.log('getGroupType', $scope.group);
       return GROUP_TYPES[$scope.group.type];
     };
 
