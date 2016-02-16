@@ -11,8 +11,7 @@
     return {
       restrict: 'AE',
       scope: {
-        details: '=',
-        host: '='
+        group: '='
       },
       controller: require('./group_profile.controller'),
       templateUrl: 'group_profile/group_profile.html'
