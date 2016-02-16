@@ -15,8 +15,7 @@
       "model": "member",
       "input_type": "radio",
       "answers": ["Not really sure. You said I should join a group, so here I am!", "I want to grow spiritually", "I'm looking for someone I can learn from", "I want to make some new friends"],
-      "required": true,
-      "hidden": true
+      "required": true
     },
     {
       "key": "gender",
@@ -24,8 +23,7 @@
       "input_type": "radio",
       "model": "member",
       "answers": ["I'm a grown Man", "I'm a Woman (roar)"],
-      "required": true,
-      "hidden": true
+      "required": true
     },
     {
       "key": "relationship_status",
@@ -37,8 +35,7 @@
     },
     {
       "body": "<h3>Next we're gonna ask some meeting time questions</h3><p>Keep in mind, BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>",
-      "next": "Let's get started!",
-      "hidden": true
+      "next": "Let's get started!"
     },
     {
       "key": "date_time_week",
@@ -47,8 +44,7 @@
       "model": "member",
       "input_type": "checkbox",
       "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
-      "required": true,
-      "hidden": true
+      "required": true
     },
     {
       "key": "date_time_weekend",
@@ -57,8 +53,7 @@
       "model": "member",
       "input_type": "checkbox",
       "answers": ["Early mornings (before 9am)", "Mornings (between 9am and noon)", "Afternoons (between noon and 5pm)", "Evenings after work (between 5pm and 8pm)", "Late evenings (after 8pm)"],
-      "required": true,
-      "hidden": true
+      "required": true
     },
     {
       "key": "location",
@@ -69,8 +64,7 @@
     },
     {
       "body": "<h3>You did it. And now the science is happenning. </h3><p>The data you entered will be crunched, blended and matched. Creating an output of groups that will fit you perfectly. Stand by.</p>",
-      "next": "Let's get started!",
-      "hidden": true
+      "next": "Let's get started!"
     }
   ]
 }
