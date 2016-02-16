@@ -312,8 +312,12 @@ namespace crds_angular.Services
                 }
                 eventIds.Add(trip.EventId);
 
-                var campaign = _mpPledgeService.GetPledgeByCampaignAndDonor(trip.CampaignId, trip.DonorId);
-                if (campaign.PledgeStatusId != AppSetting("PledgeStatusDiscontinued"))
+                var pledge = _mpPledgeService.GetPledgeByCampaignAndDonor(trip.CampaignId, trip.DonorId);
+                if (pledge == null)
+                {
+                    throw new ApplicationException("Pledge not found!");
+                }
+                if (pledge.PledgeStatusId != AppSetting("PledgeStatusDiscontinued"))
                 {
                     var t = new Trip();
                     t.EventId = trip.EventId;
@@ -321,8 +325,8 @@ namespace crds_angular.Services
                     t.EventStartDate = trip.EventStartDate.ToString("MMM dd, yyyy");
                     t.EventTitle = trip.EventTitle;
                     t.EventType = trip.EventType;
-                    t.FundraisingDaysLeft = Math.Max(0, (campaign.CampaignEndDate - DateTime.Today).Days);
-                    t.FundraisingGoal = Convert.ToInt32(campaign.PledgeTotal);
+                    t.FundraisingDaysLeft = Math.Max(0, (pledge.CampaignEndDate - DateTime.Today).Days);
+                    t.FundraisingGoal = Convert.ToInt32(pledge.PledgeTotal);
                     t.EventParticipantId = tripParticipant.EventParticipantId;
                     t.EventParticipantFirstName = tripParticipant.Nickname;
                     t.EventParticipantLastName = tripParticipant.Lastname;

@@ -388,7 +388,7 @@ namespace crds_angular.Services
             request.AddParameter("plan", planName);
             if (trialEndDate.ToUniversalTime().Date > DateTime.UtcNow.Date)
             {
-                request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.ConvertDateTimeToEpoch());
+                request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
@@ -414,7 +414,7 @@ namespace crds_angular.Services
             request.AddParameter("plan", planId);
             if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
             {
-                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.ConvertDateTimeToEpoch());
+                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
@@ -462,4 +462,3 @@ namespace crds_angular.Services
         public Error Error { get; set; }
     }
 }
-
