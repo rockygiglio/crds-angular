@@ -50,11 +50,11 @@ namespace crds_angular.Services
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
-            Group g;
+            Group group;
 
             try
             {
-                g = _mpGroupService.getGroupDetails(groupId);
+                group = _mpGroupService.getGroupDetails(groupId);
             }
             catch (Exception e)
             {
@@ -64,21 +64,21 @@ namespace crds_angular.Services
             }
 
             var numParticipantsToAdd = participants.Count;
-            var spaceRemaining = g.TargetSize - g.Participants.Count;
-            if (((g.TargetSize > 0) && (numParticipantsToAdd > spaceRemaining)) || (g.Full))
+            var spaceRemaining = group.TargetSize - group.Participants.Count;
+            if (((group.TargetSize > 0) && (numParticipantsToAdd > spaceRemaining)) || (group.Full))
             {
-                throw (new GroupFullException(g));
+                throw (new GroupFullException(group));
             }
 
             try
             {
-                foreach (var p in participants)
+                foreach (var participant in participants)
                 {
                     // First sign this user up for the community group
-                    int groupParticipantId = _mpGroupService.addParticipantToGroup(p.particpantId,
+                    int groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
                                                                                    Convert.ToInt32(groupId),
                                                                                    GroupRoleDefaultId,
-                                                                                   p.childCareNeeded,
+                                                                                   participant.childCareNeeded,
                                                                                    DateTime.Now);
                     logger.Debug("Added user - group/participant id = " + groupParticipantId);
 
@@ -89,12 +89,12 @@ namespace crds_angular.Services
                     {
                         foreach (var e in events)
                         {
-                            _eventService.RegisterParticipantForEvent(p.particpantId, e.EventId, groupId, groupParticipantId);
-                            logger.Debug("Added participant " + p + " to group event " + e.EventId);
+                            _eventService.RegisterParticipantForEvent(participant.particpantId, e.EventId, groupId, groupParticipantId);
+                            logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
-                    var waitlist = g.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
-                    _mpGroupService.SendCommunityGroupConfirmationEmail(p.particpantId, groupId, waitlist, p.childCareNeeded);
+                    var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
+                    _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
                 }
 
                 return;
