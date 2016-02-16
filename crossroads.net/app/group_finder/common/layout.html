@@ -1,4 +1,32 @@
 <div class="group-finder">
   <header ng-include="'common/header.html'"></header>
   <ui-view>
+
+    <div class="welcome">
+      <div class="page-header">
+        <h1>
+          <small>the</small>
+          <span class="cr-logo-svg">
+            <svg viewBox="0 0 800.416 115.217" class="icon-logo">
+              <use xlink:href="#logo"></use>
+            </svg>
+          </span>
+          <span>Group</span>
+          <span>Finder</span>
+        </h1>
+      </div>
+      <hr />
+      <p>
+        <strong>Let's get you in a group.</strong><br>
+        We are so excited for you to try this. It's new. Which can be scary. But trust us. It will be awesome.
+      </p>
+      <br />
+      <div ng-switch="base.hasSession">
+        <p ng-switch-when="false"><a class="btn btn-next-question" ui-sref="group_finder.summary">Login to your crossroads account</a></p>
+        <p ng-switch-when="true"><a class="btn btn-next-question" ui-sref="group_finder.summary">Let's Get Started</a></p>
+        <p ng-switch-when="true" ng-if="base.isHost"><a class="btn btn-previous-question" ui-sref="group_finder.dashboard">Go To Your Dashboard</a></p>
+      </div>
+    </div>
+
+  </ui-view>
 </div>

@@ -18,7 +18,10 @@
             return ParticipantQuestionService.get().$promise;
           }
         },
-        data: { meta: { title: SERIES.title, description: '' }}
+        data: {
+          isProtected: true,
+          meta: { title: SERIES.title, description: '' }
+        }
       })
       .state('group_finder.join.questions', {
         controller: 'JoinQuestionsCtrl as join',

@@ -15,10 +15,9 @@
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
-          Person: 'Person',
+          Person: 'Person'
         },
         data: {
-          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''
@@ -32,6 +31,7 @@
         templateUrl: 'summary/summary.html',
         resolve: {},
         data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''

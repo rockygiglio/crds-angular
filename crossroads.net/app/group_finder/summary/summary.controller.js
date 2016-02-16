@@ -3,9 +3,9 @@
 
   module.exports = SummaryCtrl;
 
-  SummaryCtrl.$inject = ['$scope', '$log', '$state', 'AuthService'];
+  SummaryCtrl.$inject = ['$scope', '$log', '$state'];
 
-  function SummaryCtrl ($scope, $log, $state, AuthService) {
+  function SummaryCtrl ($scope, $log, $state) {
 
     var vm = this;
 
@@ -16,11 +16,6 @@
     vm.nextSlide = function() {
       if (vm.currentSlide < vm.totalSlides) {
         vm.currentSlide++;
-        if (vm.onLastSlide()) {
-            vm.nextButton = 'Choose a Role';
-        }
-      } else if (vm.onLastSlide()) {
-        $state.go('group_finder.host');
       }
     };
 
