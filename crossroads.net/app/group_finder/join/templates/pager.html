@@ -1,0 +1,5 @@
+<ul class="pager">
+  <li ng-class="{disabled: noPrevious()||ngDisabled, previous: align}"><a href ng-click="selectPage(page - 1, $event)">{{::getText('previous')}}</a></li>
+  <li ng-hide="noNext()" ng-class="{disabled: noNext()||ngDisabled, next: align}"><a href ng-click="selectPage(page + 1, $event)">{{::getText('next')}}</a></li>
+  <li ng-show="noNext()"><a class="btn btn-primary" ui-sref="group_finder.join.contact">Contact Crossroads</a></li>
+</ul>

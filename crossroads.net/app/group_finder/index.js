@@ -11,6 +11,7 @@
     .config(require('./group_finder.routes'))
     .constant('SERIES',             require('./group_finder.constants').SERIES)
     .constant('GROUP_TYPES',        require('./group_finder.constants').GROUP_TYPES)
+    .constant('GOOGLE_API_KEY',     require('./group_finder.constants').GOOGLE_API_KEY)
     .directive('questions',         require('./directives/questions/questions.directive'))
     .directive('question',          require('./directives/question/question.directive'))
     .directive('groupcard',         require('./directives/group_card/group_card.directive'))
