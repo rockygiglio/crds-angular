@@ -11,9 +11,9 @@ DECLARE @Prevent_Multiple_Selection BIT
 DECLARE @Available_Online BIT
 
 SELECT 
-	@Attribute_Type_ID = 70,
-	@Attribute_Type_Name = 'GroupParticipantPastExperience',
-	@Attribute_Type_Description = 'Have you done a journey with us before?',
+	@Attribute_Type_ID = 71,	
+	@Attribute_Type_Name = 'GroupGoal',
+	@Attribute_Type_Description = 'What made you want to host a BRAVE group?',
 	@Prevent_Multiple_Selection = 1,
 	@Available_Online = 1
 
@@ -55,7 +55,6 @@ END
 SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF
 
 -- Add / Update the Attributes
-
 SET IDENTITY_INSERT [dbo].[Attributes] ON
 
 DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75), [Description] VARCHAR(255), Sort_Order INT)
@@ -63,10 +62,10 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(6995, 'No. And I''m nervous.', NULL, 1),
-	(6996, 'Once before.', NULL, 2),
-	(6997, 'Nope. First time and I am so excited!', NULL, 3),
-	(6998, 'Yes, multiple times.', NULL, 4)
+	(6999, 'I want to help others feel connected to the community', NULL, 1),
+	(7000, 'I want to learn & grow', NULL, 2),
+	(7001, 'I want to find people to disciple', NULL, 3),
+	(7002, 'I want to make some new friends', NULL, 4)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
