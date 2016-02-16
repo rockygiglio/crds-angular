@@ -7,7 +7,19 @@
 
   function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
 
+    var defaultGroup = {
+      groupTitle: 'Jon S',
+      description: 'Your description will go here...',
+      type: 0,
+      time: 'Fridays at 7pm',
+      attributes: ['kids welcome', 'has a cat'],
+      host: { contactId: 12345 }
+    };
+
+    $scope.group = angular.isDefined($scope.group) ? $scope.group : defaultGroup;
+
     $scope.host = $scope.group.host;
+
     $scope.getProfileImage = function() {
       return ImageService.ProfileImageBaseURL + $scope.host.contactId;
     };

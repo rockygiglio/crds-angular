@@ -8,12 +8,41 @@
   function HostReviewCtrl($scope, $state, Responses) {
     var vm = this;
 
-    vm.responses = Responses;
+    vm.initialize = function() {
+      vm.responses = Responses.data;
+      vm.group = {
+        groupTitle: $scope.person.firstName + ' ' + $scope.person.lastName[0] + '.',
+        description: vm.responses.description,
+        type: vm.responses.group_type,
+        attributes: vm.getGroupAttributes(),
+        host: {
+          contactId: $scope.person.contactId
+        }
+      };
+    };
+
 
     vm.startOver = function() {
       $scope.$parent.currentStep = 1;
       $state.go('group_finder.host.questions');
     };
+
+    vm.getGroupAttributes = function() {
+      var ret = [];
+      if(vm.responses.kids === '1') { ret.push('kids welcome'); }
+      if(vm.responses.pets) {
+        var pet_selections = _.map(Object.keys(vm.responses.pets), function(el) {
+          return parseInt(el);
+        });
+        if(pet_selections.indexOf(0) !== -1) { ret.push('has a cat'); }
+        if(pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
+      }
+      return ret;
+    };
+
+    // ------------------------------- //
+
+    vm.initialize();
 
   }
 

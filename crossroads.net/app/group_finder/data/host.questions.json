@@ -1,13 +1,11 @@
 {
   "questions": [
     {
-      "hidden": true,
       "key": "setup",
       "header": "We're gonna ask you 10 questions",
       "description": "Your answers will help us define your group's style and will — in the end — connect you with the perfect traveling companions. Aready have people mind? That's cool. You can invite 'em later."
     },
     {
-      "hidden": true,
       "key": "total_capacity",
       "header": "How many folks are you ready to lead?",
       "description": "Think about your space. Perhaps you can base this on how many people fit comfortably in your living room, or the number of chairs that fit around your dining room table.",
@@ -17,7 +15,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "open_spots",
       "header": "Of those ({{responses.total_capacity}} spots) how many are open to anyone?",
       "description": "For example: If you can lead {{responses.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.total_capacity - 1}}.",
@@ -28,7 +25,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "goals",
       "header": "What made you want to host a BRAVE group?",
       "description": "Pick the one that most represents how you feel.",
@@ -43,7 +39,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "gender",
       "header": "Are you a man or a woman?",
       "answers": [
@@ -55,7 +50,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "marital_status",
       "header": "Relationship status?",
       "description": "This is so Facebook right? But it can mean a lot to your group status too. ",
@@ -69,7 +63,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "group_type",
       "header": "What kind of group are you interested in hosting?",
       "description": "We’re not trying to create a grade school lunchroom dynamic... but some groups choose to roll with just guys, others with strictly gals. ",
@@ -82,10 +75,9 @@
         "Married couples group"
       ],
       "input_type": "radio",
-      "required": false
+      "required": true
     },
     {
-      "hidden": true,
       "key": "kids",
       "header": "Are kids welcome or is this adults only? ",
       "description": "Being kid friendly does not mean that you have to run a day care. Only that you are open to people bringing thier kids along with them. ",
@@ -98,7 +90,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "pets",
       "header": "Got animals?",
       "description": "Do you have cats, dogs, alpacas or any other type of animal to which someone may be allergic or terrified?",
@@ -111,20 +102,18 @@
         "I have rodents (by choice)",
         "I have rodents (not by choice)"
       ],
-      "input_type": "radio",
-      "required": true
+      "input_type": "checkbox",
+      "required": false
     },
     {
-      "hidden": true,
       "key": "date_and_time",
       "header": "When do you want to meet? ",
       "description": "Remember that BRAVE groups meet once a week for 5 weeks. They begin the week of April 3rd and will end the week of May 1st. They usually take less than 90 minutes from start to finish.",
       "model": "member",
       "input_type": "day_time",
-      "required": false
+      "required": true
     },
     {
-      "hidden": true,
       "key": "location",
       "header": "So where you gonna meet? ",
       "description": "We want to make sure people are choosing groups they can get to. This is the address we have on file. Please edit if we got it wrong.",
@@ -133,7 +122,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "previous_experience",
       "header": "Have you led a journey with us before?",
       "answers": [
@@ -147,7 +135,6 @@
       "required": true
     },
     {
-      "hidden": true,
       "key": "profile_setup1",
       "header": "Great Job!",
       "description": "You're almost done. Let's just add a little of your own personality. Some flavor if you will."
