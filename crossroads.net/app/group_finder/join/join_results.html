@@ -1,0 +1,12 @@
+<div ng-include="'templates/empty_results.html'" ng-if="result.results.length <= 0"></div>
+<div class="results" ng-if="result.results.length > 0">
+  <groupcard template="join" group="group" ng-repeat="group in result.filteredResults"></groupcard>
+  <pager
+  ng-model="result.currentPage"
+  total-items="result.results.length"
+  items-per-page="6"
+  next-text="More Results"
+  template-url="templates/pager.html"
+  >
+</pager>
+</div>

@@ -16,7 +16,6 @@
         resolve: {
           Profile: 'Profile',
           Person: 'Person',
-          GroupInfo: 'GroupInfo'
         },
         data: {
           isProtected: true,
@@ -39,7 +38,8 @@
           }
         }
       })
-      ;
+
+    ;
 
   }
 

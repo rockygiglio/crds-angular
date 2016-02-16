@@ -3,32 +3,39 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses'];
+  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', '$log'];
 
-  function JoinReviewCtrl($scope, $state, Responses) {
+  function JoinReviewCtrl($scope, $state, Responses, $log) {
     var vm = this;
 
     vm.responses = Responses;
-    vm.showUpsell = parseInt(vm.responses.data.member.prior_participation) > 2;
+    vm.showUpsell = parseInt(vm.responses.data.prior_participation) > 2;
     vm.showResults = vm.showUpsell === false;
+    vm.contactCrds = false;
+
+    if (vm.responses.data.location && vm.responses.data.location.zip === '41075') {
+      vm.showUpsell = false;
+      vm.showResults = false;
+      vm.contactCrds = true;
+    }
+
+    if (vm.showResults === true && vm.contactCrds === false) {
+      $state.go('group_finder.join.results');
+    }
+
+    if (parseInt(vm.responses.data.relationship_status) === 2) {
+      $log.debug('married');
+      $scope.showInvite = true;
+    }
 
     vm.goToHost = function() {
       $state.go('group_finder.host');
     };
 
     vm.goToResults = function() {
-      vm.showUpsell = false;
-      vm.showResults = true;
+      $state.go('group_finder.join.results');
     };
 
-    vm.startOver = function() {
-      $scope.$parent.currentStep = 1;
-      $state.go('group_finder.host.questions');
-    };
-
-    vm.showDashboard = function() {
-      $state.go('group_finder.dashboard');
-    };
   }
 
 })();
