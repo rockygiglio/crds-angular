@@ -4,8 +4,6 @@
   module.exports = GroupCardDirective;
 
   require('./group_card.html');
-  require('./group_join.html');
-  require('./join_modal.html');
 
   GroupCardDirective.$inject = ['$log'];
 
