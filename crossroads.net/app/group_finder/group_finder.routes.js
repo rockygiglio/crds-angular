@@ -25,25 +25,13 @@
         }
       })
 
-      .state('group_finder.welcome', {
-        controller: 'WelcomeCtrl as welcome',
-        url: '/welcome',
-        templateUrl: 'common/welcome.html',
-        resolve: {},
-        data: {
-          meta: {
-            title: SERIES.title,
-            description: ''
-          }
-        }
-      })
-
       .state('group_finder.summary', {
         controller: 'SummaryCtrl as summary',
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {},
         data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''

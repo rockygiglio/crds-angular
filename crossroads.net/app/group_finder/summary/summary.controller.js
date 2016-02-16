@@ -16,11 +16,6 @@
     vm.nextSlide = function() {
       if (vm.currentSlide < vm.totalSlides) {
         vm.currentSlide++;
-        if (vm.onLastSlide()) {
-            vm.nextButton = 'Choose a Role';
-        }
-      } else if (vm.onLastSlide()) {
-        $state.go('group_finder.host');
       }
     };
 

@@ -17,6 +17,7 @@
           GroupInfo: 'GroupInfo'
         },
         data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''

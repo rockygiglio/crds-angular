@@ -18,7 +18,10 @@
             return GroupQuestionService.get().$promise;
           }
         },
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {
+          isProtected: true,
+          meta: { title: SERIES.title,description: '' }
+        }
       })
       .state('group_finder.host.questions', {
         controller: 'HostQuestionsCtrl as host',
