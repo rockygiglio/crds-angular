@@ -202,6 +202,17 @@ BEGIN
 
 END;
 
+Use MinistryPlatform
+CREATE USER [MP-INT-DB\MPUser] FOR LOGIN [MP-INT-DB\MPUser];
+ALTER ROLE [db_accessadmin] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_backupoperator] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_datareader] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_datawriter] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_ddladmin] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_executor] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_owner] ADD MEMBER [MP-INT-DB\MPUser];
+ALTER ROLE [db_securityadmin] ADD MEMBER [MP-INT-DB\MPUser];
+
 ALTER AUTHORIZATION ON DATABASE::$DBName to sa;
 "@;
 

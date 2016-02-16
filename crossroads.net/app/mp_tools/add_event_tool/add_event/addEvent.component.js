@@ -81,6 +81,15 @@
     }
 
     function dateTime(dateForDate, dateForTime) {
+
+      if (dateForDate === undefined) {
+        return null;
+      }
+
+      if (dateForTime === undefined) {
+        return null;
+      }
+
       return new Date(
           dateForDate.getFullYear(),
           dateForDate.getMonth(),
@@ -118,8 +127,21 @@
         return false;
       }
 
-      var start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
-      var end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
+      //verify that dates are valid;
+      var start;
+      var end;
+      try {
+        start =  dateTime(vm.eventData.startDate, vm.eventData.startTime);
+        end = dateTime(vm.eventData.endDate, vm.eventData.endTime);
+      } catch (err) {
+        form.endDate.$error.endDate = true;
+        form.endDate.$valid = false;
+        form.endDate.$invalid = true;
+        form.endDate.$dirty = true;
+        form.$valid = false;
+        form.$invalid = true;
+        return true;
+      }
 
       if (moment(start) <= moment(end)) {
         form.endDate.$error.endDate = false;

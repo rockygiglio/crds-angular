@@ -36,10 +36,10 @@ namespace crds_angular.Controllers.API
             this.participantService = participantService;
         }
 
-        /**
-         * Enroll the currently logged-in user into a Community Group, and also register this user for all events for the CG.
-         */
-
+        /// <summary>
+        /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
+        /// Also send email confirmation to user
+        /// </summary>
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
@@ -67,14 +67,6 @@ namespace crds_angular.Controllers.API
                     return BadRequest();
                 }
             });
-        }
-
-        // TODO: implement later
-        [ResponseType(typeof (GroupDTO))]
-        [Route("api/group/{groupId}/users")]
-        public IHttpActionResult Post(String groupId, [FromBody] List<ContactDTO> contact)
-        {
-            throw new NotImplementedException();
         }
 
         [ResponseType(typeof (GroupDTO))]
@@ -146,21 +138,6 @@ namespace crds_angular.Controllers.API
             );
         }
 
-        // TODO: implement later
-        [ResponseType(typeof (ContactDTO))]
-        [Route("api/group/{groupId}/user/{userId}")]
-        public IHttpActionResult Get(String groupId, String userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: implement later
-        [ResponseType(typeof (GroupDTO))]
-        [Route("api/group/{groupId}/user/{userId}")]
-        public IHttpActionResult Delete(String groupId, String userId)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class ContactDTO

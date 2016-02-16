@@ -442,7 +442,21 @@ namespace MinistryPlatform.Translation.Services
             }
 
             var contactId = accounts[0]["Contact_ID"] as int? ?? -1;
-            return contactId == -1 ? (null) : (GetContactDonor(contactId));
+
+            if (contactId == -1)
+            {
+                return (null); 
+            }
+
+            var contactDonor = GetContactDonor(contactId);
+
+            contactDonor.Account = new DonorAccount
+            {
+                ProcessorAccountId = accounts[0]["Processor_Account_ID"].ToString(),
+                ProcessorId = accounts[0]["Processor_ID"].ToString()
+            };
+
+            return contactDonor;
         }
 
         public ContactDonor GetContactDonorForCheckAccount(string encrptedKey)
