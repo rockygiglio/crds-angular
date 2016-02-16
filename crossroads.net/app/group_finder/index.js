@@ -5,6 +5,7 @@
 
   require('./common/layout.html');
   require('./common/header.html');
+  require('./common/welcome.html');
   require('./summary/summary.html');
 
   angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])
@@ -20,6 +21,7 @@
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('SummaryCtrl',      require('./summary/summary.controller'))
+    .controller('WelcomeCtrl',      require('./common/welcome.controller'))
     ;
 
   require('./services');

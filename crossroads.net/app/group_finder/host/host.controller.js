@@ -3,9 +3,9 @@
 
   module.exports = HostCtrl;
 
-  HostCtrl.$inject = ['$scope', '$state', 'AuthService', 'Person'];
+  HostCtrl.$inject = ['$scope', '$state', 'Person'];
 
-  function HostCtrl ($scope, $state, AuthService, Person) {
+  function HostCtrl ($scope, $state, Person) {
     $scope.currentStep = 1;
     $scope.person = Person;
   }
