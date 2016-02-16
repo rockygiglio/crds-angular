@@ -18,7 +18,7 @@ namespace CrossroadsStripeOnboarding
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(Program));
 
-        public static void Main(string [] args)
+        public static void Main(string[] args)
         {
             var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
             var container = new UnityContainer();
@@ -32,14 +32,18 @@ namespace CrossroadsStripeOnboarding
 
         private readonly StripePlansAndSubscriptions _stripePlansAndSubscriptions;
         private readonly VerifyStripeSubscriptions _verifyStripeSubscriptions;
+        private readonly ListStripeSubscriptions _listStripeSubscriptions;
+        private readonly FixSubscriptionCycle _fixSubscriptionCycle;
 
-        public Program(StripePlansAndSubscriptions stripePlansAndSubscriptions, VerifyStripeSubscriptions verifyStripeSubscriptions)
+        public Program(StripePlansAndSubscriptions stripePlansAndSubscriptions, VerifyStripeSubscriptions verifyStripeSubscriptions, ListStripeSubscriptions listStripeSubscriptions, FixSubscriptionCycle fixSubscriptionCycle)
         {
             _stripePlansAndSubscriptions = stripePlansAndSubscriptions;
             _verifyStripeSubscriptions = verifyStripeSubscriptions;
+            _listStripeSubscriptions = listStripeSubscriptions;
+            _fixSubscriptionCycle = fixSubscriptionCycle;
         }
 
-        public void run(string [] args)
+        public void run(string[] args)
         {
             var options = new Options();
             if (!Parser.Default.ParseArguments(args, options))
@@ -55,6 +59,18 @@ namespace CrossroadsStripeOnboarding
                 _verifyStripeSubscriptions.Verify();
                 Environment.Exit(0);
             }
+            else if (options.ListSubscriptionsFileName != null && !string.IsNullOrWhiteSpace(options.ListSubscriptionsFileName))
+            {
+                logger.Info("Running in List Subscriptions mode");
+                _listStripeSubscriptions.ListSubscriptions(options.ListSubscriptionsFileName);
+                Environment.Exit(0);
+            }
+            else if (options.FixMode)
+            {
+                logger.Info("Running in Fix Subscription Cycle mode");
+                _fixSubscriptionCycle.Fix();
+                Environment.Exit(0);
+            }
 
             LoadAndImportFile();
             CreateStripePlansAndSubscriptions();
@@ -64,7 +80,7 @@ namespace CrossroadsStripeOnboarding
         {
             var result = new KeyValuePair<Messages, StripeJsonExport>(Messages.NotRun, null);
 
-            while (result.Key != Messages.ImportFileSuccess && result.Key != Messages.SkipImportProcess )
+            while (result.Key != Messages.ImportFileSuccess && result.Key != Messages.SkipImportProcess)
             {
                 Console.WriteLine("Enter the exports file path/location to import.  Otherwise press S to skip this step or X to close the program: ");
                 result = LoadExportFile.ReadFile(Console.ReadLine());
@@ -122,9 +138,17 @@ namespace CrossroadsStripeOnboarding
 
         public class Options
         {
-            [Option('V', "verify", Required = false, DefaultValue = false,
+            [Option('V', "verify", Required = false, DefaultValue = false, MutuallyExclusiveSet = "OpMode",
               HelpText = "Execute in verification mode - by default will run in execute mode")]
             public bool VerifyMode { get; set; }
+
+            [Option('L', "list", Required = false, DefaultValue = null, MutuallyExclusiveSet = "OpMode",
+              HelpText = "Execute in List Subscriptions mode, specifying the filename - by default will run in execute mode")]
+            public string ListSubscriptionsFileName { get; set; }
+
+            [Option('F', "fix", Required = false, DefaultValue = null, MutuallyExclusiveSet = "OpMode",
+              HelpText = "Execute in \"Fix Subscription Cycle\" mode, to make subscriptions bill on the correct day - by default will run in execute mode")]
+            public bool FixMode { get; set; }
 
             [ParserState]
             public IParserState LastParserState { get; set; }
