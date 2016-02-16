@@ -43,7 +43,7 @@
       })
       .state('group_finder.join.complete', {
         controller: 'JoinCompleteCtrl as results',
-        url: '/complete/:groupId',
+        url: '/complete',
         templateUrl: 'join/join_complete.html',
         resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}

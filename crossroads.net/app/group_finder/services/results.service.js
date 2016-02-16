@@ -19,6 +19,14 @@
       return groups;
     };
 
+    results.find = function(groupId) {
+      var found = _.find(groups, function (group) {
+        return group.id === parseInt(groupId);
+      });
+
+      return found;
+    };
+
     return results;
 
   }
