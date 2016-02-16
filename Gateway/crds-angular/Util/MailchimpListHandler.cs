@@ -63,7 +63,7 @@ namespace crds_angular.Util
                         UserAlreadySubscribed = true
                     };
                 }
-                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound || subscriber.Status == "unsubscribed")
+                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound || (subscriber != null && subscriber.Status == "unsubscribed"))
                 {
                     // create opt in request, if the person isn't already subscribed
                     var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
