@@ -16,12 +16,20 @@
   </header>
   <div>
     <p>{{group.description}}</p>
-    <ul class="list-unstyled">
-      <li ng-repeat="affinity in group.attributes">
-        <svg ng-if="affinity.indexOf('kids')!==-1" viewBox="0 0 20 28" class="icon icon-child"><use xlink:href="#child"></use></svg>
-        <svg ng-if="affinity.indexOf('cat')!==-1||affinity.indexOf('dog')!==-1" viewBox="0 0 26 28" class="icon icon-paw"><use xlink:href="#paw"></use></svg>
-        {{affinity}}
-      </li>
-    </ul>
+    <hr />
+    <div class="row">
+      <div class="col-xs-6">
+        <ul class="list-unstyled">
+          <li ng-repeat="affinity in group.attributes">
+            <svg ng-if="affinity.indexOf('kids')!==-1" viewBox="0 0 20 28" class="icon icon-child"><use xlink:href="#child"></use></svg>
+            <svg ng-if="affinity.indexOf('cat')!==-1||affinity.indexOf('dog')!==-1" viewBox="0 0 26 28" class="icon icon-paw"><use xlink:href="#paw"></use></svg>
+            {{affinity}}
+          </li>
+        </ul>
+      </div>
+      <div class="col-xs-6">
+        <p><a ng-if="group.id" href="#{{group.id}}" class="pull-right btn btn-primary">Join Group</a></p>
+      </div>
+    </div>
   </div>
 </div>
