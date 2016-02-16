@@ -99,7 +99,13 @@
                 var response = $scope.responses[cleanedName];
 
                 if(typeof response === 'object') {
-                  response = response[controlName];
+                  if(controlName === undefined) {
+                    // multi-select value, ie. checkbox
+                    response = Object.keys(response);
+                  } else {
+                    // compound group of fields, ie. address, date/time, etc.
+                    response = response[controlName];
+                  }
                 }
 
                 var hasError = (response === undefined || response === '');
