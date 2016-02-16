@@ -15,10 +15,22 @@
         templateUrl: 'common/layout.html',
         resolve: {
           Profile: 'Profile',
-          Person: 'Person',
+          Person: 'Person'
         },
         data: {
-          isProtected: true,
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
+      .state('group_finder.welcome', {
+        controller: 'WelcomeCtrl as welcome',
+        url: '/welcome',
+        templateUrl: 'common/welcome.html',
+        resolve: {},
+        data: {
           meta: {
             title: SERIES.title,
             description: ''

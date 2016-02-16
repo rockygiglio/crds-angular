@@ -1,11 +1,14 @@
 (function () {
   'use strict';
 
-  module.exports = Ctrl;
+  module.exports = WelcomeCtrl;
 
-  Ctrl.$scope = [];
+  WelcomeCtrl.$scope = ['AuthService', '$state'];
 
-  function Ctrl() {
-
+  function WelcomeCtrl(AuthService, $state) {
+    var vm = this;
+    if (AuthService.isAuthenticated()) {
+      $state.go('group_finder');
+    }
   }
 })();
