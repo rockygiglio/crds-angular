@@ -3,10 +3,11 @@
 
   module.exports = JoinCtrl;
 
-  JoinCtrl.$inject = ['$scope'];
+  JoinCtrl.$inject = ['$scope', 'Person'];
 
-  function JoinCtrl ($scope) {
+  function JoinCtrl ($scope, Person) {
     $scope.currentStep = 1;
+    $scope.person = Person
   }
 
 })();

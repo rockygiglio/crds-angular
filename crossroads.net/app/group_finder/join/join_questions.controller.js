@@ -12,6 +12,8 @@
         vm.currentStep = $scope.$parent.currentStep;
         vm.responses = Responses.data;
 
+    $scope.person = $scope.$parent.person;
+
   }
 
 })();
