@@ -6,11 +6,8 @@
   HostCtrl.$inject = ['$scope', '$state', 'AuthService', 'Person'];
 
   function HostCtrl ($scope, $state, AuthService, Person) {
-
     $scope.currentStep = 1;
     $scope.person = Person;
-
-    console.log($scope.person);
   }
 
 })();

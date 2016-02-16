@@ -5,9 +5,9 @@
 
   require('./questions.html');
 
-  QuestionsDirective.$inject = ['$rootScope'];
+  QuestionsDirective.$inject = [];
 
-  function QuestionsDirective($rootScope) {
+  function QuestionsDirective() {
 
     return {
       restrict: 'AE',
