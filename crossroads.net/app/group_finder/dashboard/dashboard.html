@@ -18,7 +18,7 @@
           <h3>Groups you've joined</h3>
         </div>
         <div class="group-cards">
-          <group-card group="group" ng-repeat="group in dashboard.groups.participating"></group-card>
+          <group-card display="host" group="group" ng-repeat="group in dashboard.groups.participating"></group-card>
         </div>
         <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.join">Join Another Group</a></p>
       </div>
