@@ -3,9 +3,9 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', '$log'];
+  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', '$log', 'ZipcodeService'];
 
-  function JoinReviewCtrl($scope, $state, Responses, $log) {
+  function JoinReviewCtrl($scope, $state, Responses, $log, ZipcodeService) {
     var vm = this;
 
     vm.responses = Responses;
@@ -13,10 +13,13 @@
     vm.showResults = vm.showUpsell === false;
     vm.contactCrds = false;
 
-    if (vm.responses.data.location && vm.responses.data.location.zip === '41075') {
-      vm.showUpsell = false;
-      vm.showResults = false;
-      vm.contactCrds = true;
+    if (vm.responses.data.location && vm.responses.data.location.zip) {
+      vm.zipcode = parseInt(vm.responses.data.location.zip);
+      if (ZipcodeService.isLocalZipcode(vm.zipcode) === false) {
+        vm.showUpsell = false;
+        vm.showResults = false;
+        vm.contactCrds = true;
+      }
     }
 
     if (vm.showResults === true && vm.contactCrds === false) {
