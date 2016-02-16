@@ -10,7 +10,7 @@
     var vm = this;
         vm.questions = QuestionDefinitions.questions;
         vm.currentStep = $scope.$parent.currentStep;
-        vm.responses = Responses.data;
+        vm.responses = $scope.responses = Responses.data;
 
     $scope.person = $scope.$parent.person;
 

@@ -8,7 +8,7 @@
   function JoinResultsCtrl($log, Results, $scope) {
     var vm = this;
 
-    vm.results = Results.getGroups();
+    vm.results = Results.data.groups;
     vm.currentPage = 1;
     vm.numPerPage = 6;
 
