@@ -3,17 +3,29 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses'];
+  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', '$log'];
 
-  function JoinReviewCtrl($scope, $state, Responses) {
+  function JoinReviewCtrl($scope, $state, Responses, $log) {
     var vm = this;
 
     vm.responses = Responses;
     vm.showUpsell = parseInt(vm.responses.data.prior_participation) > 2;
     vm.showResults = vm.showUpsell === false;
+    vm.contactCrds = false;
 
-    if (vm.showResults === true) {
+    if (vm.responses.data.location && vm.responses.data.location.zip === '41075') {
+      vm.showUpsell = false;
+      vm.showResults = false;
+      vm.contactCrds = true;
+    }
+
+    if (vm.showResults === true && vm.contactCrds === false) {
       $state.go('group_finder.join.results');
+    }
+
+    if (parseInt(vm.responses.data.relationship_status) === 2) {
+      $log.debug('married');
+      $scope.showInvite = true;
     }
 
     vm.goToHost = function() {
@@ -22,16 +34,6 @@
 
     vm.goToResults = function() {
       $state.go('group_finder.join.results');
-    };
-
-    vm.contactCrds = function() {
-      var zipcode = vm.responses.data.location.zip;
-      // TODO utilize zipcode lookup to determine if user can be matched at all
-      if (zipcode === '41075') {
-        vm.showUpsell = false;
-        vm.showResults = false;
-        return true;
-      }
     };
 
   }

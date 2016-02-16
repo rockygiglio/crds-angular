@@ -42,7 +42,7 @@
         data: {meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.join.complete', {
-        controller: 'JoinCompleteCtrl as results',
+        controller: 'JoinCompleteCtrl as complete',
         url: '/complete',
         templateUrl: 'join/join_complete.html',
         resolve: {},

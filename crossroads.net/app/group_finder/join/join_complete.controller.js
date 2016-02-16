@@ -8,7 +8,10 @@
   function JoinCompleteCtrl($log, $stateParams, Responses, Results, $scope) {
     var vm = this;
 
-    vm.error = $scope.error;
-
+    vm.showInvite = false;
+    if (Responses.data.relationship_status) {
+      vm.showInvite = parseInt(Responses.data.relationship_status) === 2;
+    }
+    $log.debug('showInvite', vm.showInvite);
   }
 })();
