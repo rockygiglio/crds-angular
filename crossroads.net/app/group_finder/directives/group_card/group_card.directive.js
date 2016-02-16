@@ -11,6 +11,7 @@
     return {
       restrict: 'AE',
       scope: {
+        display: '@',
         group: '=',
         host: '='
       },
