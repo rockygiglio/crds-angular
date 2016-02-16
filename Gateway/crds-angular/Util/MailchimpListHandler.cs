@@ -44,24 +44,26 @@ namespace crds_angular.Util
 
                 var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
 
+                BulkEmailSubscriberOptDTO subscriber = null;
+
                 // handle existing user, opt them in if they're not
                 if (subscriberStatusResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var responseContent = subscriberStatusResponse.Content;
                     var responseContentJson = JObject.Parse(responseContent);
 
-                    BulkEmailSubscriberOptDTO subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
-
-                    if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
-                    {
-                        return new OptInResponse
-                        {
-                            ErrorInSignupProcess = false,
-                            UserAlreadySubscribed = true
-                        };
-                    }
+                    subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
                 }
-                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound)
+
+                if (subscriber != null && (subscriber.Status == "subscribed" || subscriber.Status == "pending"))
+                {
+                    return new OptInResponse
+                    {
+                        ErrorInSignupProcess = false,
+                        UserAlreadySubscribed = true
+                    };
+                }
+                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound || subscriber.Status == "unsubscribed")
                 {
                     // create opt in request, if the person isn't already subscribed
                     var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
