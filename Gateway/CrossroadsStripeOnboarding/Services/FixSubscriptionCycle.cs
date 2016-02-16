@@ -30,7 +30,7 @@ namespace CrossroadsStripeOnboarding.Services
             var appender = FixSubOutput.Logger.Repository.GetAppenders().First(x => x.Name.Equals("FixSubOutputLog"));
 
             Logger.Info(string.Format("Starting fix subscription process - CSV results will be written to {0}", ((FileAppender)appender).File));
-            var recurringGifts = _mpContext.RecurringGifts.ToList().Where(gift => !gift.End_Date.HasValue).ToList();
+            var recurringGifts = _mpContext.RecurringGifts.ToList().Where(gift => !gift.End_Date.HasValue).ToList();             
             var giftsToProcess = recurringGifts.Count();
             Logger.Info(string.Format("Fixing {0} recurring gifts", giftsToProcess));
 
@@ -83,14 +83,7 @@ namespace CrossroadsStripeOnboarding.Services
                 DateTime? trialEndDate = null;
                 if (success)
                 {
-                    if ("trialing".Equals(sub.Status) && sub.TrialEnd.HasValue)
-                    {
-                        trialEndDate = sub.TrialEnd.Value.Date;
-                    }
-                    else
-                    {
-                        trialEndDate = CalculateTrialEndDate(gift);
-                    }
+                    trialEndDate = CalculateTrialEndDate(gift);
 
                     if (!trialEndDate.HasValue)
                     {
