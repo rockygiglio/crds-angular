@@ -7,6 +7,7 @@
   require('./host_questions.html');
   require('./host_review.html');
   require('./host_confirm.html');
+  require('./templates/example_group.html');
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .config(require('./host.routes'))

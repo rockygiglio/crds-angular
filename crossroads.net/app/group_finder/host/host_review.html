@@ -3,13 +3,8 @@
     <h2>Are all your answers correct?</h2>
   </div>
 
-  <pre>{{host.responses}}</pre>
-
-  <ul class="list-unstyled">
-    <li ng-repeat="definition in host.questions.questions" ng-if="definition.key">
-      <strong>{{definition.key | humanize}}:</strong> {{host.responses.getResponse(definition)}}
-    </li>
-  </ul>
+  <!-- TODO Make this a directive -->
+  <ng-include src="'templates/example_group.html'"></ng-include>
 
   <div class="btns">
     <a class="btn btn-primary" href="#" ui-sref="group_finder.host.confirm">Yes, this is correct</a>
