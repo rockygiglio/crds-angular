@@ -4,6 +4,8 @@
   </div>
   <div class="group-description">
     <p>{{groupDescription()}}. This group meets at <a href="#">{{group.addressLine1}}, {{group.postalCode}}</a></p>
+  </div>
+  <div class="footer">
     <a class="select btn btn-primary" ng-if="group.isHost === true" ui-sref="group_finder.dashboard.group({groupId: group.id})">Select</a>
     <a class="select btn btn-primary" href="mailto:{{group.host.email}}" ng-if="group.isHost === false">Email Host</a>
   </div>

@@ -7,7 +7,9 @@
         <div class="page-header">
           <h3>Groups you're hosting</h3>
         </div>
-        <group-card group="group" ng-repeat="group in dashboard.groups.hosting"></group-card>
+        <div class="group-cards">
+          <group-card group="group" ng-repeat="group in dashboard.groups.hosting"></group-card>
+        </div>
         <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.host({ step: 1 })">Host Another Group</a></p>
       </div>
 
@@ -15,7 +17,9 @@
         <div class="page-header">
           <h3>Groups you've joined</h3>
         </div>
-        <group-card group="group" ng-repeat="group in dashboard.groups.participating"></group-card>
+        <div class="group-cards">
+          <group-card group="group" ng-repeat="group in dashboard.groups.participating"></group-card>
+        </div>
         <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.join">Join Another Group</a></p>
       </div>
 
