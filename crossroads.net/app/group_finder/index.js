@@ -14,6 +14,7 @@
     .constant('GOOGLE_API_KEY',     require('./group_finder.constants').GOOGLE_API_KEY)
     .directive('questions',         require('./directives/questions/questions.directive'))
     .directive('question',          require('./directives/question/question.directive'))
+    .directive('groupProfile',      require('./directives/group_profile/group_profile.directive'))
     .directive('groupcard',         require('./directives/group_card/group_card.directive'))
     .directive('membercard',        require('./directives/member_card/member_card.directive'))
     .filter('humanize',             require('./filters/humanize.filter.js'))

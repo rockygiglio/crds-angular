@@ -5,19 +5,22 @@
 
   require('./questions.html');
 
-  QuestionsDirective.$inject = ['$log'];
+  QuestionsDirective.$inject = ['$rootScope'];
 
-  function QuestionsDirective($log) {
+  function QuestionsDirective($rootScope) {
+
     return {
       restrict: 'AE',
       scope: {
         mode: '@mode',
         step: '=',
-        questions: '=definitions'
+        questions: '=definitions',
+        responses: '='
       },
       templateUrl: 'questions/questions.html',
       controller: require('./questions.controller')
     };
+
   }
 
 })();

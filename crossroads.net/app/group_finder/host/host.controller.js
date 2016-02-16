@@ -9,6 +9,8 @@
 
     $scope.currentStep = 1;
     $scope.person = Person;
+
+    console.log($scope.person);
   }
 
 })();

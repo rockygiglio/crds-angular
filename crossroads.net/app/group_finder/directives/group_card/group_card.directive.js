@@ -14,18 +14,10 @@
       restrict: 'AE',
       scope: {
         group: '=',
-        host: '=',
-        template: '@'
+        host: '='
       },
       controller: require('./group_card.controller'),
-      templateUrl: function (el, attrs) {
-        var template = 'group_card/group_card.html';
-        if (attrs.template === 'join') {
-          template = 'group_card/group_join.html';
-        }
-
-        return template;
-      }
+      templateUrl: 'group_card/group_card.html'
     };
   }
 })();
