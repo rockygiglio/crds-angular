@@ -6,6 +6,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IGroupService
     {
+        int createGroup(Dictionary<string, object> group);
+
         int addParticipantToGroup(int participantId,
                                   int groupId,
                                   int groupRoleId,

@@ -37,6 +37,29 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Create Group with provided details, returns created group with ID
+        /// </summary>
+        [ResponseType(typeof(GroupDTO))]
+        [Route("api/group")]
+        public IHttpActionResult PostGroup([FromBody] GroupDTO group)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    group = groupService.createGroup(group);
+                    _logger.Debug(String.Format("Successfully created group {0} ", group.GroupId));
+                    return (Created(String.Format("api/group/{0}", group.GroupId), group));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not create group", e);
+                    return BadRequest();
+                }
+            });
+        }
+
+        /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
         /// Also send email confirmation to user
         /// </summary>

@@ -48,6 +48,22 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
         }
 
+        public GroupDTO createGroup(GroupDTO @group)
+        {
+            try
+            {
+                group.GroupId = _mpGroupService.createGroup(null);//TODO: convert GroupDTO to dictionary or Group?
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not create group {0}", group.GroupName, e.Message);
+                logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            return group;
+        }
+
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
             Group g;

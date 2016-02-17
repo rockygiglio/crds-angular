@@ -41,6 +41,25 @@ namespace MinistryPlatform.Translation.Services
             this._contentBlockService = contentBlockService;
         }
 
+        public int createGroup(Dictionary<string, object> @group)
+        {
+            logger.Debug("Adding group");
+
+            var groupId =
+                WithApiLogin<int>(
+                    apiToken =>
+                    {
+                        return
+                            (ministryPlatformService.CreateRecord(GroupsPageId,
+                                                                     group,
+                                                                     apiToken,
+                                                                     true));
+                    });
+
+            logger.Debug("Added group " + groupId);
+            return (groupId);
+        }
+
         public int addParticipantToGroup(int participantId,
                                          int groupId,
                                          int groupRoleId,
