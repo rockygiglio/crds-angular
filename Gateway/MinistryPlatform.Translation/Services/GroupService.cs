@@ -6,6 +6,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Groups;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -25,7 +26,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int GroupSignupRelationsPageId = Convert.ToInt32((AppSettings("GroupSignUpRelations")));
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
-
+        private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
 
@@ -359,5 +360,35 @@ namespace MinistryPlatform.Translation.Services
                 ContactId = rec.ToInt("Contact_ID"), NickName = rec.ToString("Nickname"), LastName = rec.ToString("Last_Name")
             }).ToList();
         }
+
+        public List<GroupDetails> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        {
+            var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
+            if (groupDetails == null || groupDetails.Count == 0)
+            {
+                return null;
+            }
+            return groupDetails.Select(details => new GroupDetails()
+            {
+                GroupId = details.ToInt("Group_ID"),
+                GroupCongregationId = details.ToInt("Congregation_ID"),
+                GroupName = details.ToString("Group_Name"),
+                GroupRoleId = details.ToInt("Group_Role_ID"),
+                GroupDescription = details.ToString("Description"),
+                GroupMinistryId = details.ToInt("Ministry_ID"),
+                GroupPrimaryContactId = details.ToInt("Primary_Contact"),
+                GroupTypeId = details.ToInt("Group_Type_ID"),
+                GroupStartDate = details.ToDate("Start_Date"),
+                GroupEndDate = details.ToDate("End_Date"),
+                GroupMeetingDayId = details.ToInt("Meeting_Day_ID"),
+                GroupMeetingTime = details.ToDate("Meeting_Time"),
+                GroupAvailableOnline = details.ToBool("Available_Online"),
+                AddressLine1 = details.ToString("Address_Line_1"),
+                AddressLine2 = details.ToString("Address_Line_2"),
+                City = details.ToString("City"),
+                State = details.ToString("State"),
+                Zip = details.ToString("Zip_Code")
+            }).ToList();
+        } 
     }
 }

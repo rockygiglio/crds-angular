@@ -4,13 +4,12 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models.Groups;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -33,6 +32,7 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
+        private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -46,6 +46,7 @@ namespace crds_angular.Services
             _contactRelationshipService = contactRelationshipService;
             _serveService = serveService;
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
+            MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
@@ -210,6 +211,13 @@ namespace crds_angular.Services
             }
 
             return (detail);
+        }
+
+        public List<GroupDetailsDto> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        {
+            var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+            var groupDetail = groupsByType.Select(Mapper.Map<GroupDetails, GroupDetailsDto>).ToList();
+            return groupDetail;
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Groups
 {
     
-    public class GroupDetailsDTO
+    public class GroupDetailsDto
     {
         [JsonProperty(PropertyName = "groupId")]
         public int GroupId { get; set; }
@@ -13,38 +14,51 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "groupName")]
         public string GroupName { get; set; }
 
-        [JsonProperty(PropertyName = "groupType")]
-        public bool GroupType { get; set; }
+        [JsonProperty(PropertyName = "groupTypeId")]
+        public int GroupTypeId { get; set; }
 
-        [JsonProperty(PropertyName = "groupMinistry")]
-        public bool GroupMinistry { get; set; }
+        [JsonProperty(PropertyName = "ministryId")]
+        public int GroupMinistryId { get; set; }
 
-        [JsonProperty(PropertyName = "groupCongregation")]
-        public int GroupCongregation { get; set; }
+        [JsonProperty(PropertyName = "congregationId")]
+        public int GroupCongregationId { get; set; }
 
-        [JsonProperty(PropertyName = "groupPrimaryContact")]
-        public bool GroupPrimaryContact { get; set; }
+        [JsonProperty(PropertyName = "primaryContactId")]
+        public int GroupPrimaryContactId { get; set; }
 
-        [JsonProperty(PropertyName = "groupDescription")]
-        public int GroupDescription { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string GroupDescription { get; set; }
 
-        [JsonProperty(PropertyName = "groupStartDate")]
-        public int GroupStartDate { get; set; }
+        [JsonProperty(PropertyName = "startDate")]
+        public DateTime GroupStartDate { get; set; }
 
-        [JsonProperty(PropertyName = "groupEndDate")]
-        public int GroupEndDate { get; set; }
+        [JsonProperty(PropertyName = "endDate")]
+        public DateTime GroupEndDate { get; set; }
 
-        [JsonProperty(PropertyName = "groupTargetSize")]
-        public int GroupTargetSize { get; set; }
+        [JsonProperty(PropertyName = "addressLine1")]
+        public string AddressLine1 { get; set; }
 
-        [JsonProperty(PropertyName = "groupOffsiteAddress")]
-        public int GroupOffsiteAddress { get; set; }
+        [JsonProperty(PropertyName = "addressLine2")]
+        public string AddressLine2 { get; set; }
 
-        [JsonProperty(PropertyName = "groupMeetingDay")]
-        public int GroupMeetingDay { get; set; }
+        [JsonProperty(PropertyName = "city")]
+        public string City { get; set; }
 
-        [JsonProperty(PropertyName = "groupMeetingTime")]
-        public int GroupMeetingTime { get; set; }
+        [JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
+
+        [JsonProperty(PropertyName = "zip")]
+        public string Zip { get; set; }
+
+        [JsonProperty(PropertyName = "meetingTime")]
+        public DateTime GroupMeetingTime { get; set; }
+
+        [JsonProperty(PropertyName = "meetingDayId")]
+        public int GroupMeetingDayId { get; set; }
+
+        [JsonProperty(PropertyName = "groupAvailableOnline")]
+        public bool GroupAvailableOnline { get; set; }
+
     }
 
    

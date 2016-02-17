@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
@@ -12,6 +13,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Groups;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Group = MinistryPlatform.Models.Group;
 using Response = MinistryPlatform.Models.Response;
@@ -224,6 +226,8 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, BulkEmailSubscriberOpt>();
             Mapper.CreateMap<BulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
+
+            Mapper.CreateMap<GroupDetails, GroupDetailsDto>();
         }
     }
 }
