@@ -162,8 +162,8 @@ namespace crds_angular.Services
             var donationsResponse = new DonationsDTO();
 
             donationsResponse.Donations.AddRange(donations);
-            donationsResponse.BeginningDonationDate = donationsResponse.Donations.Last().DonationDate;
-            donationsResponse.EndingDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.BeginningDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.EndingDonationDate = donationsResponse.Donations.Last().DonationDate;
 
             return donationsResponse;
         }
