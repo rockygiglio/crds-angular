@@ -16,6 +16,7 @@
     .directive('question',          require('./directives/question/question.directive'))
     .directive('groupProfile',      require('./directives/group_profile/group_profile.directive'))
     .directive('groupCard',         require('./directives/group_card/group_card.directive'))
+    .directive('groupInvitation',   require('./directives/group_invitation/group_invitation.directive'))
     .directive('memberCard',        require('./directives/member_card/member_card.directive'))
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))

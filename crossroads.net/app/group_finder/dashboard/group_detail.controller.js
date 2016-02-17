@@ -33,19 +33,6 @@
       });
     };
 
-    vm.inviteMember = function(email) {
-      // TODO add validation. Review how to send email without `toContactId`
-      $log.debug('Sending Email to: ' + email);
-      var toSend = {
-        'fromContactId': vm.group.host.contactId,
-        'fromUserId': 0,
-        'toContactId': 0,
-        'templateId': 0,
-        'mergeData': {}
-      };
-
-    };
-
     $scope.$on('$viewContentLoaded', function(event){
       $scope.$parent.setGroup(vm.group);
     });
