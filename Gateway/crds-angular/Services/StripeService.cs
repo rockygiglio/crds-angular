@@ -338,6 +338,7 @@ namespace crds_angular.Services
             var url = string.Format("charges/{0}", chargeId);
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "balance_transaction");
+            request.AddParameter("expand[]", "invoice");
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge", response);
@@ -385,9 +386,9 @@ namespace crds_angular.Services
         {
             var request = new RestRequest("customers/" + customer +"/subscriptions", Method.POST);
             request.AddParameter("plan", planName);
-            if (trialEndDate.Date > DateTime.Today)
+            if (trialEndDate.ToUniversalTime().Date > DateTime.UtcNow.Date)
             {
-                request.AddParameter("trial_end", trialEndDate.Date.ConvertDateTimeToEpoch());
+                request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
@@ -406,11 +407,34 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public StripeSubscription UpdateSubscriptionPlan(string customerId, string subscriptionId, string planId)
+        public StripeSubscription UpdateSubscriptionPlan(string customerId, string subscriptionId, string planId, DateTime? trialEndDate = null)
         {
             var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.POST);
             request.AddParameter("prorate", false);
             request.AddParameter("plan", planId);
+            if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
+            {
+                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
+            }
+
+            var response = _stripeRestClient.Execute<StripeSubscription>(request);
+            CheckStripeResponse("Invalid subscription update request", response);
+
+            return response.Data;
+        }
+
+        public StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate)
+        {
+            var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.POST);
+            request.AddParameter("prorate", false);
+            if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
+            {
+                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
+            }
+            else
+            {
+                request.AddParameter("trial_end", "now");
+            }
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription update request", response);
@@ -438,4 +462,3 @@ namespace crds_angular.Services
         public Error Error { get; set; }
     }
 }
-

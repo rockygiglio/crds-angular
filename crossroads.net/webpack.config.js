@@ -27,6 +27,7 @@ module.exports = {
     give: './app/give/give.module.js',
     profile: './app/profile/profile.module.js',
     main: './app/app.js',
+    ang: './app/ang.js',
     core: ['./node_modules/crds-core'],
     common: ['./app/common/common.module.js'],
   },
@@ -80,6 +81,11 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('[name].[hash].css'),
     definePlugin,
-    assetsPluginInstance
+    assetsPluginInstance,
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      mangle: false,
+      output: { ascii_only: true }
+    })
   ]
 };

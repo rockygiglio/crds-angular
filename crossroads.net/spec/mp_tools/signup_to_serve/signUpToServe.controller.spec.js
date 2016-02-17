@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../../app/ang');
+
 require('../../../app/app');
 
 describe('Signup To Serve Tool', function(){
@@ -33,6 +35,7 @@ describe('Signup To Serve Tool', function(){
   var expectedSingleRSVP = {
     'contactId':768379,
     'opportunityId':'2923',
+    'opportunityIds': ['2923'],
     'eventTypeId':142,
     'endDate':'1430452800',
     'startDate':'1430452800',
@@ -63,6 +66,7 @@ describe('Signup To Serve Tool', function(){
     'endDate':'1430452800',
     'eventTypeId':142,
     'opportunityId':'2923',
+    'opportunityIds': ['2923'],
     'signUp':true,
     'startDate':'1430452800'
   };
@@ -73,6 +77,7 @@ describe('Signup To Serve Tool', function(){
     'endDate':'1430452800',
     'eventTypeId':142,
     'opportunityId':'2923',
+    'opportunityIds': ['2923'],
     'signUp':true,
     'startDate':'1430452800'
   };
@@ -145,14 +150,16 @@ describe('Signup To Serve Tool', function(){
       it('should save RSVP for one participant', function(){
 
         $httpBackend.flush();
-        $httpBackend.expectPOST( window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', expectedSingleRSVP).respond(201, '');
+        $httpBackend.expectPOST(
+          window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', expectedSingleRSVP
+        ).respond(201, '');
         controller.group.eventTypeId = 142;
         controller.participants = singleParticipant;
         controller.selectedFrequency = {'value':0,'text':'Once'};
         controller.selectedEvent = '5/1/2015';
         controller.attending = true;
         controller.saveRsvp(true);
-        $httpBackend.flush();
+        $httpBackend.flush(true);
       });
 
       it('should save RSVP for multiple participants', function(){

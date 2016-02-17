@@ -40,5 +40,27 @@ namespace crds_angular.Models.Crossroads.Stewardship
             }
         }
         #endregion
+
+        #region Expandable Invoice
+
+        public bool HasInvoice()
+        {
+            return (!string.IsNullOrWhiteSpace(InvoiceId) || (Invoice != null && !string.IsNullOrWhiteSpace(Invoice.Id)));
+        }
+
+        public string InvoiceId { get; set; }
+
+        [JsonIgnore]
+        public StripeInvoice Invoice { get; set; }
+
+        [JsonProperty("invoice")]
+        internal object InternalInvoice
+        {
+            set
+            {
+                StripeExpandableProperty<StripeInvoice>.Map(value, s => InvoiceId = s, o => Invoice = o);
+            }
+        }
+        #endregion
     }
 }

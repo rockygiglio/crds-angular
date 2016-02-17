@@ -1,13 +1,12 @@
 <!-- <div ng-show="groupsignup.viewReady"> -->
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-8 col-sm-offset-2">
     <div ng-show="groupsignup.viewReady">
       <h1 class="page-header" dynamic-content="groupsignup.signupPage.title | html"></h1>
-      
+
         <div ng-show="groupsignup.alreadySignedUp" dynamic-content="groupsignup.signupPage.existingMember | html"></div>
 
         <div >
-
           <p id="content" class="noPspace" dir="ltr"
              dynamic-content="groupsignup.signupPage.content | html"
              ng-show="groupsignup.showContent && !groupsignup.waitListCase && !groupsignup.alreadySignedUp && !groupsignup.showFull">
@@ -20,13 +19,15 @@
         </div>
 
         <div class="row" ng-show="groupsignup.showContent">
-          <legend>Participants</legend>
-          <form  class="form-group" name="myForm" role="form" ng-submit="groupsignup.signup(myForm)" id="myForm">
-            <p>
-              <div class="checkbox"
+          <div class="col-sm-12">
+          <label ng-show="groupsignup.response.length > 1 && !groupsignup.alreadySignedUp">Select participants:</label>
+          <label ng-show="groupsignup.response.length <= 1 && !groupsignup.alreadySignedUp">Signing up:</label>
+          
+          <form class="form-group" name="myForm" role="form" ng-submit="groupsignup.signup(myForm)" id="myForm">
+              <div class="checkbox flush-top"
                    ng-repeat="person in groupsignup.response as people"
                    ng-class="{'has-error':!groupsignup.formValid && !person['userInGroup']}">
-                <label>
+                <label ng-class="{'hidden-input': groupsignup.response.length <= 1}">
                   <span ng-show="groupsignup.response.length > 1">
                     <input name="input"
                            type="checkbox"
@@ -47,27 +48,38 @@
                     </a>
                   </span>
                 </label>
-                <div ng-show="groupsignup.childCareAvailable && !person.userInGroup"> 
+                <div ng-show="groupsignup.childCareAvailable && !person.userInGroup">
                   <child-care-need
                       participant-id='person.participantId'
                       on-change='groupsignup.childCareChange'>
                   </child-care-need>
                 </div>
               </div>
-            </p>
-            <p ng-show="!groupsignup.alreadySignedUp && !groupsignup.showFull">
-              <input type="submit" name="submit_group_signup" value="Sign Up" id="submit_group_signup" class="btn btn-primary push-half-bottom">
+            <p class="push-top" ng-show="!groupsignup.alreadySignedUp && !groupsignup.showFull">
+              <loading-button
+                 loading-text='Saving...'
+                 normal-text='Sign Up'
+                 input-type='submit'
+                 input-classes='btn btn-primary push-half-bottom'
+                 loading-class='disabled'
+                 loading='groupsignup.saving' >
+              </loading-button>
             </p>
           </form>
-        </div>
-
+        </div><!--/col-sm-12-->
+      </div><!--row-->
       <script type="text/ng-template" id="editProfile.html">
         <div class="modal-header">
           <a type="button" class="close" ng-click="groupsignup.modalInstance.close()">x</a>
           <h4 class="modal-title">Edit Profile</h4>
         </div>
         <div class="modal-body">
-          <profile-personal updated-person="groupsignup.response[0]" modal-instance="groupsignup.modalInstance"/>
+          <profile-personal
+            updated-person='groupsignup.response[0]'
+            modal-instance="groupsignup.modalInstance"
+            for-trips="true"
+            locations='groupsignup.locations'
+            allow-password-change="false"/>
         </div>
       </script>
     </div>

@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
-using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.Routing.Constraints;
 using crds_angular.Exceptions.Models;
-using Crossroads.Utilities.Extensions;
-using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
-using log4net;
-using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -66,7 +60,8 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (List<FamilyMember>))]
         [Route("api/serve/family/{contactId?}")]
         public IHttpActionResult GetFamily(int contactId = 0)
-        {//TODO: I don't think you need to pass in contactId here, use the token
+        {
+            //TODO: I don't think you need to pass in contactId here, use the token
             return Authorized(token =>
             {
                 try
@@ -79,19 +74,18 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("GetFamily Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
             });
         }
 
-        [ResponseType(typeof(List<QualifiedServerDto>))]
-        [Route("api/serve/qualifiedservers/{groupId}/{contactId}")]
-        public IHttpActionResult GetQualifiedServers(int groupId, int contactId)
-        {//TODO: I don't think you need to pass in contactId, use the token instead
+        [ResponseType(typeof (List<QualifiedServerDto>))]
+        [Route("api/serve/qualifiedservers/{groupId}/{opportunityId}")]
+        public IHttpActionResult GetQualifiedServers(int groupId, int opportunityId)
+        {
             return Authorized(token =>
             {
                 try
                 {
-                    var list = _serveService.GetQualifiedServers(groupId, token);
+                    var list = _serveService.GetQualifiedServers(groupId, opportunityId, token);
                     return Ok(list);
                 }
                 catch (Exception ex)
@@ -99,7 +93,6 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("GetQualifiedServers Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-
             });
         }
 
@@ -121,7 +114,6 @@ namespace crds_angular.Controllers.API
 
             return Authorized(token =>
             {
-
                 var message = _messageFactory.CreateMessage(saveRsvp);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
 
@@ -140,7 +132,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(Capacity))]
+        [ResponseType(typeof (Capacity))]
         [Route("api/serve/opp-capacity")]
         public IHttpActionResult GetOpportunityCapacity([FromUri] OpportunityCapacityDto oppCap)
         {
@@ -148,7 +140,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var oppCapacity = _serveService.OpportunityCapacity(oppCap.Id, oppCap.EventId, oppCap.Min, oppCap.Max, token);
+                    var oppCapacity = _serveService.OpportunityCapacity(oppCap.Id, oppCap.EventId, oppCap.Min, oppCap.Max);
                     if (oppCapacity == null)
                     {
                         return Unauthorized();

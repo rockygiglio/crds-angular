@@ -99,6 +99,17 @@ namespace crds_angular.Models.Crossroads.Profile
         [JsonProperty(PropertyName = "nickName")]
         public string NickName { get; set; }
 
+        // this is only sent from the client when resetting the password as
+        // part of a profile save
+        [JsonProperty(PropertyName = "newPassword")]
+        public string NewPassword { get; set; }
+
+        [JsonProperty(PropertyName = "oldEmail")]
+        public string OldEmail { get; set; }
+
+        [JsonProperty(PropertyName = "oldPassword")]
+        public string OldPassword { get; set; }
+
         [JsonProperty(PropertyName = "postalCode")]
         public string PostalCode { get; set; }
         
@@ -117,6 +128,12 @@ namespace crds_angular.Models.Crossroads.Profile
         [JsonProperty(PropertyName = "singleAttributes")]
         public Dictionary<int, ContactSingleAttributeDTO> SingleAttributes { get; set; }
 
+        [JsonProperty(PropertyName = "participantStartDate")]
+        public DateTime? ParticipantStartDate { get; set; }
+
+        [JsonProperty(PropertyName = "attendanceStartDate")]
+        public DateTime? AttendanceStartDate { get; set; }
+
         public MyContact GetContact()
         {
             return new MyContact
@@ -134,7 +151,6 @@ namespace crds_angular.Models.Crossroads.Profile
                 Marital_Status_ID = MaritalStatusId,
                 Gender_ID = GenderId,
                 Employer_Name = EmployerName,
-                Anniversary_Date = AnniversaryDate,
                 Address_ID = AddressId,
                 Address_Line_1 = AddressLine1,
                 Address_Line_2 = AddressLine2,
@@ -176,6 +192,22 @@ namespace crds_angular.Models.Crossroads.Profile
                 County = County,
                 Foreign_Country = ForeignCountry
             };
+        }
+
+        //Dictionary<string, object> userUpdateValues = new Dictionary<string, object>();
+        public Dictionary<string, object> GetUserUpdateValues()
+        {
+            Dictionary<string, object> userUpdateValues = new Dictionary<string, object>();
+
+            if (!String.IsNullOrEmpty(NewPassword))
+            {
+                userUpdateValues["Password"] = NewPassword;
+            }
+
+            userUpdateValues["User_Name"] = EmailAddress;
+            userUpdateValues["User_Email"] = EmailAddress;
+
+            return userUpdateValues;
         }
     }
 }

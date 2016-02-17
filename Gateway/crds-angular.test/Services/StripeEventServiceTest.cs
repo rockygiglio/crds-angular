@@ -8,6 +8,7 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Exceptions;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -149,8 +150,7 @@ namespace crds_angular.test.Services
                     Object = JObject.FromObject(new StripeTransfer
                     {
                         Id = "tx9876",
-                        Amount = 50000,
-                        Fee = 1500
+                        Amount = 1443
                     })
                 }
             };
@@ -183,6 +183,13 @@ namespace crds_angular.test.Services
                     Id = "ch777",
                     Amount = 777, 
                     Fee = 7,
+                    Type = "charge"
+                },
+                new StripeCharge
+                {
+                    Id = "ch888",
+                    Amount = 888, 
+                    Fee = 8,
                     Type = "charge"
                 },
                 new StripeCharge
@@ -252,11 +259,45 @@ namespace crds_angular.test.Services
                 Id = "7777",
                 BatchId = 2112
             });
+
             _donationService.Setup(mocked => mocked.GetDonationBatch(2112)).Returns(new DonationBatchDTO
             {
                 Id = 2112,
                 ProcessorTransferId = null
             });
+
+            var first = true;
+            _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch888")).Returns(() =>
+            {
+                if (first)
+                {
+                    first = false;
+                    throw (new DonationNotFoundException("ch888"));
+                }
+
+                return (new DonationDTO()
+                {
+                    Id = "8888",
+                    BatchId = null,
+                    Amount = 888
+                });
+            });
+
+            var invoice = new StripeInvoice
+            {
+                Amount = 100,
+                Id = "in_888"
+            };
+            _paymentService.Setup(mocked => mocked.GetCharge("ch888")).Returns(new StripeCharge
+            {
+                Source = new StripeSource
+                {
+                    Object = "bank_account"
+                },
+                Invoice = invoice
+            });
+
+            _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(88);
 
             _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
             _paymentService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
@@ -266,6 +307,7 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(2222, 999, e.Created, null)).Returns(2222);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(3333, 999, e.Created, null)).Returns(3333);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(7777, 999, e.Created, null)).Returns(7777);
+            _donationService.Setup(mocked => mocked.UpdateDonationStatus(8888, 999, e.Created, null)).Returns(8888);
             _donationService.Setup(mocked => mocked.CreateDeposit(It.IsAny<DepositDTO>())).Returns(
                 (DepositDTO o) =>
                 {
@@ -278,9 +320,9 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<TransferPaidResponseDTO>(result);
             var tp = (TransferPaidResponseDTO)result;
-            Assert.AreEqual(6, tp.TotalTransactionCount);
-            Assert.AreEqual(4, tp.SuccessfulUpdates.Count);
-            Assert.AreEqual(charges.GetRange(0, 4).Select(charge => charge.Id), tp.SuccessfulUpdates);
+            Assert.AreEqual(7, tp.TotalTransactionCount);
+            Assert.AreEqual(5, tp.SuccessfulUpdates.Count);
+            Assert.AreEqual(charges.GetRange(0, 5).Select(charge => charge.Id), tp.SuccessfulUpdates);
             Assert.AreEqual(2, tp.FailedUpdates.Count);
             Assert.AreEqual("ch444", tp.FailedUpdates[0].Key);
             Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[0].Value);
@@ -293,10 +335,10 @@ namespace crds_angular.test.Services
                 o.BatchName.Matches(@"MP\d{12}")
                 && o.SetupDateTime == o.FinalizedDateTime
                 && o.BatchEntryType == 555
-                && o.ItemCount == 4
-                && o.BatchTotalAmount == ((111 + 222 + 333 + 777) / Constants.StripeDecimalConversionValue)
+                && o.ItemCount == 5
+                && o.BatchTotalAmount == ((111 + 222 + 333 + 777 + 888) / Constants.StripeDecimalConversionValue)
                 && o.Donations != null
-                && o.Donations.Count == 4
+                && o.Donations.Count == 5
                 && o.DepositId == 98765
                 && o.ProcessorTransferId.Equals("tx9876")
             )));
@@ -307,9 +349,9 @@ namespace crds_angular.test.Services
                 && o.AccountNumber.Equals(" ")
                 && o.BatchCount == 1
                 && o.DepositDateTime != null
-                && o.DepositTotalAmount == 515M
-                &&o.ProcessorFeeTotal == 15M
-                &&o.DepositAmount == 500M
+                && o.DepositTotalAmount == (1464 / Constants.StripeDecimalConversionValue)
+                && o.ProcessorFeeTotal == (21 / Constants.StripeDecimalConversionValue)
+                && o.DepositAmount == (1443 / Constants.StripeDecimalConversionValue)
                 && o.Notes == null
                 && o.ProcessorTransferId.Equals("tx9876")
             )));
@@ -319,112 +361,21 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void TestInvoicePaymentSucceededNoAmount()
-        {
-            var invoice = new StripeInvoice
-            {
-                Subscription = "sub_123",
-                Amount = 0,
-                Charge = "ch_123",
-            };
-
-            _fixture.InvoicePaymentSucceeded(DateTime.Now, invoice);
-            _paymentService.VerifyAll();
-            _donorService.VerifyAll();
-        }
-
-        [Test]
-        public void TestInvoicePaymentSucceededNoCharge()
+        public void TestInvoicePaymentSucceeded()
         {
             var invoice = new StripeInvoice
             {
                 Subscription = "sub_123",
                 Amount = 123,
-                Charge = "   ",
+                Charge = "ch_123",
             };
+
+            _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(987);
 
             _fixture.InvoicePaymentSucceeded(DateTime.Now, invoice);
             _paymentService.VerifyAll();
             _donorService.VerifyAll();
-        }
-
-        [Test]
-        public void TestInvoicePaymentSucceeded()
-        {
-            var eventTimestamp = DateTime.Now;
-            const string processorId = "cus_123";
-            const string subscriptionId = "sub_123";
-            const string chargeId = "ch_123";
-
-            var invoice = new StripeInvoice
-            {
-                Subscription = subscriptionId,
-                Amount = 12300,
-                Charge = chargeId,
-                Customer = processorId,
-            };
-
-            const int chargeAmount = 45600;
-            int? feeAmount = 987;
-
-            var charge = new StripeCharge
-            {
-                Amount = chargeAmount,
-                BalanceTransaction = new StripeBalanceTransaction
-                {
-                    Amount = 78900,
-                    Fee = feeAmount
-                },
-                Status = "succeeded"
-            };
-
-            _paymentService.Setup(mocked => mocked.GetCharge(chargeId)).Returns(charge);
-
-            const int donorId = 321;
-            const string programId = "3";
-            const string paymentType = "Bank";
-            const int recurringGiftId = 654;
-            const int donorAccountId = 987;
-            const int donationStatus = 4;
-            const decimal amt = 789;
-
-            var recurringGift = new CreateDonationDistDto
-            {
-                Amount = amt,
-                DonorAccountId = donorAccountId,
-                DonorId = donorId,
-                PaymentType = paymentType,
-                ProgramId = programId,
-                RecurringGiftId = recurringGiftId
-            };
-            _donorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(recurringGift);
-            _mpDonorService.Setup(mocked => mocked.UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, Constants.ResetFailCount));
-
-            _mpDonorService.Setup(
-                mocked =>
-                    mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(
-                            d => d.DonationAmt == (int) (chargeAmount/Constants.StripeDecimalConversionValue) && 
-                                 d.FeeAmt == feeAmount && 
-                                 d.DonorId == donorId &&
-                                 d.ProgramId.Equals(programId) &&
-                                 d.PledgeId == null &&
-                                 d.ChargeId.Equals(chargeId) &&
-                                 d.PymtType.Equals(paymentType) &&
-                                 d.ProcessorId.Equals(processorId) &&
-                                 d.RegisteredDonor &&
-                                 !d.Anonymous &&
-                                 d.RecurringGift &&
-                                 d.RecurringGiftId == recurringGiftId &&
-                                 d.DonorAcctId.Equals(donorAccountId+"") &&
-                                 d.CheckScannerBatchName == null &&
-                                 d.DonationStatus == donationStatus &&
-                                 d.CheckNumber == null))).Returns(123);
-
-            _fixture.InvoicePaymentSucceeded(eventTimestamp, invoice);
-            _paymentService.VerifyAll();
-            _mpDonorService.VerifyAll();
-            _donorService.VerifyAll();
+            _donationService.VerifyAll();
         }
 
         [Test]

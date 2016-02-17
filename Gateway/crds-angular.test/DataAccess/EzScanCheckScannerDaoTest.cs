@@ -2,7 +2,6 @@
 using System.Data;
 using crds_angular.DataAccess;
 using crds_angular.Models.Crossroads.Stewardship;
-using Crossroads.Utilities.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,15 +11,13 @@ namespace crds_angular.test.DataAccess
     {
         private EzScanCheckScannerDao _fixture;
         private Mock<IDbConnection> _dbConnection;
-        private Mock<ICryptoProvider> _crypto;
 
         [SetUp]
         public void SetUp()
         {
             _dbConnection = new Mock<IDbConnection>(MockBehavior.Strict);
-            _crypto = new Mock<ICryptoProvider>(MockBehavior.Strict);
 
-            _fixture = new EzScanCheckScannerDao(_dbConnection.Object, _crypto.Object);
+            _fixture = new EzScanCheckScannerDao(_dbConnection.Object);
         }
 
         [Test]
@@ -35,12 +32,12 @@ namespace crds_angular.test.DataAccess
             dataReader.SetupSequence(mocked => mocked[1]).Returns("name1").Returns("name2");
             dataReader.SetupSequence(mocked => mocked[2]).Returns(dateTime1).Returns(dateTime2);
             dataReader.Setup(mocked => mocked.IsDBNull(3)).Returns(false);
-            dataReader.SetupSequence(mocked => mocked.GetInt32(3)).Returns(0).Returns(1);
+            dataReader.SetupSequence(mocked => mocked.GetInt16(3)).Returns(0).Returns(1);
 
             var dbCommand = new Mock<IDbCommand>();
             dbCommand.Setup(mocked => mocked.Dispose());
             dbCommand.SetupSet(mocked => mocked.CommandType = CommandType.Text).Verifiable();
-            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, IDBatch, DateProcess, BatchStatus FROM batches WHERE COALESCE(BatchStatus, 0) <> 1 ORDER BY DateProcess DESC").Verifiable();
+            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, IDBatch, DateProcess, Exported FROM Batches WHERE COALESCE(Exported, 0) <> 1 ORDER BY DateProcess DESC").Verifiable();
             dbCommand.Setup(mocked => mocked.ExecuteReader()).Returns(dataReader.Object);
 
             _dbConnection.Setup(mocked => mocked.Open());
@@ -78,12 +75,12 @@ namespace crds_angular.test.DataAccess
             dataReader.SetupSequence(mocked => mocked[1]).Returns("name1").Returns("name2");
             dataReader.SetupSequence(mocked => mocked[2]).Returns(dateTime1).Returns(dateTime2);
             dataReader.Setup(mocked => mocked.IsDBNull(3)).Returns(false);
-            dataReader.SetupSequence(mocked => mocked.GetInt32(3)).Returns(0).Returns(1);
+            dataReader.SetupSequence(mocked => mocked.GetInt16(3)).Returns(0).Returns(1);
 
             var dbCommand = new Mock<IDbCommand>();
             dbCommand.Setup(mocked => mocked.Dispose());
             dbCommand.SetupSet(mocked => mocked.CommandType = CommandType.Text).Verifiable();
-            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, IDBatch, DateProcess, BatchStatus FROM batches  ORDER BY DateProcess DESC").Verifiable();
+            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, IDBatch, DateProcess, Exported FROM Batches  ORDER BY DateProcess DESC").Verifiable();
             dbCommand.Setup(mocked => mocked.ExecuteReader()).Returns(dataReader.Object);
 
             _dbConnection.Setup(mocked => mocked.Open());
@@ -113,7 +110,8 @@ namespace crds_angular.test.DataAccess
         public void TestGetChecksForBatch()
         {
             const int checkId = 1;
-            const long exported = 1;
+            const int donorId = 5;
+            const int exported = 1;
             const string error = null;
             const string accountNumber = "123456789";
             const double amount = 5.67;
@@ -132,35 +130,34 @@ namespace crds_angular.test.DataAccess
             var dataReader = new Mock<IDataReader>();
             dataReader.SetupSequence(mocked => mocked.Read()).Returns(true).Returns(false);
             dataReader.SetupGet(mocked => mocked[0]).Returns(checkId);
-            dataReader.SetupGet(mocked => mocked[1]).Returns(exported);
-            dataReader.SetupGet(mocked => mocked[2]).Returns(error);
-            dataReader.SetupGet(mocked => mocked[3]).Returns(accountNumber);
-            dataReader.SetupGet(mocked => mocked[4]).Returns(amount);
-            dataReader.SetupGet(mocked => mocked[5]).Returns(checkNumber);
-            dataReader.SetupGet(mocked => mocked[6]).Returns(scanDate);
-            dataReader.SetupGet(mocked => mocked[7]).Returns(routingNumber);
-            dataReader.SetupGet(mocked => mocked[8]).Returns(name1);
-            dataReader.SetupGet(mocked => mocked[9]).Returns(checkDate);
-            dataReader.SetupGet(mocked => mocked[10]).Returns(name2);
-            dataReader.SetupGet(mocked => mocked[11]).Returns(addressLine1);
-            dataReader.SetupGet(mocked => mocked[12]).Returns(addressLine2);
-            dataReader.SetupGet(mocked => mocked[13]).Returns(city);
-            dataReader.SetupGet(mocked => mocked[14]).Returns(state);
-            dataReader.SetupGet(mocked => mocked[15]).Returns(postalCode);
-
-            _crypto.Setup(mocked => mocked.EncryptValueToString(accountNumber)).Returns(accountNumber + "enc");
-            _crypto.Setup(mocked => mocked.EncryptValueToString(routingNumber)).Returns(routingNumber + "enc");
+            dataReader.SetupGet(mocked => mocked[1]).Returns(donorId+"");
+            dataReader.SetupGet(mocked => mocked[2]).Returns(exported);
+            dataReader.SetupGet(mocked => mocked[3]).Returns(error);
+            dataReader.SetupGet(mocked => mocked[4]).Returns(accountNumber);
+            dataReader.SetupGet(mocked => mocked[5]).Returns(amount);
+            dataReader.SetupGet(mocked => mocked[6]).Returns(checkNumber);
+            dataReader.SetupGet(mocked => mocked[7]).Returns(scanDate);
+            dataReader.SetupGet(mocked => mocked[8]).Returns(routingNumber);
+            dataReader.SetupGet(mocked => mocked[9]).Returns(name1);
+            dataReader.SetupGet(mocked => mocked[10]).Returns(checkDate);
+            dataReader.SetupGet(mocked => mocked[11]).Returns(name2);
+            dataReader.SetupGet(mocked => mocked[12]).Returns(addressLine1);
+            dataReader.SetupGet(mocked => mocked[13]).Returns(addressLine2);
+            dataReader.SetupGet(mocked => mocked[14]).Returns(city);
+            dataReader.SetupGet(mocked => mocked[15]).Returns(state);
+            dataReader.SetupGet(mocked => mocked[16]).Returns(postalCode);
 
             var dbCommand = new Mock<IDbCommand>();
             dbCommand.Setup(mocked => mocked.Dispose());
             dbCommand.SetupSet(mocked => mocked.CommandType = CommandType.Text).Verifiable();
-            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, COALESCE(Exported, 0), ErrorMessage, Account, Amount, CheckNo, DateScan, Route, Payor, DateCheck, Payor2, Address, Address2, City, State, Zip FROM items LEFT JOIN itemsStatus ON items.ID = itemsStatus.ItemID WHERE IDBatch = @IDBatch").Verifiable();
+            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, DonorID, COALESCE(Exported, 0), ErrorMessage, EncryptAccount, Amount, CheckNo, DateScan, EncryptRoute, Payor, DateProcess, Payor2, Address, Address2, City, State, Zip FROM Items WHERE IDBatch = @IDBatch").Verifiable();
             dbCommand.Setup(mocked => mocked.ExecuteReader()).Returns(dataReader.Object);
 
             var idBatchParam = new Mock<IDbDataParameter>();
             idBatchParam.SetupSet(mocked => mocked.ParameterName = "IDBatch");
             idBatchParam.SetupSet(mocked => mocked.DbType = DbType.String);
             idBatchParam.SetupSet(mocked => mocked.Value = "batch123");
+            idBatchParam.SetupSet(mocked => mocked.Size = "batch123".Length);
 
             var parameters = new Mock<IDataParameterCollection>(MockBehavior.Strict);
             parameters.Setup(mocked => mocked.Add(idBatchParam.Object)).Returns(1);
@@ -175,7 +172,6 @@ namespace crds_angular.test.DataAccess
 
             var result = _fixture.GetChecksForBatch("batch123");
             _dbConnection.VerifyAll();
-            _crypto.VerifyAll();
             dataReader.VerifyAll();
             dbCommand.VerifyAll();
 
@@ -184,11 +180,12 @@ namespace crds_angular.test.DataAccess
             Assert.IsTrue(result[0].Exported);
             Assert.AreEqual(error, result[0].Error);
             Assert.AreEqual(checkId, result[0].Id);
-            Assert.AreEqual(accountNumber + "enc", result[0].AccountNumber);
+            Assert.AreEqual(donorId, result[0].DonorId);
+            Assert.AreEqual(accountNumber, result[0].AccountNumber);
             Assert.AreEqual((decimal)amount, result[0].Amount);
             Assert.AreEqual(checkNumber, result[0].CheckNumber);
             Assert.AreEqual(scanDate, result[0].ScanDate);
-            Assert.AreEqual(routingNumber + "enc", result[0].RoutingNumber);
+            Assert.AreEqual(routingNumber, result[0].RoutingNumber);
             Assert.AreEqual(name1, result[0].Name1);
             Assert.AreEqual(checkDate, result[0].CheckDate);
             Assert.AreEqual(name2, result[0].Name2);
@@ -205,7 +202,7 @@ namespace crds_angular.test.DataAccess
             var dbCommand = new Mock<IDbCommand>();
             dbCommand.Setup(mocked => mocked.Dispose());
             dbCommand.SetupSet(mocked => mocked.CommandType = CommandType.Text).Verifiable();
-            dbCommand.SetupSet(mocked => mocked.CommandText = "UPDATE batches SET BatchStatus = @BatchStatus WHERE IDBatch = @IDBatch").Verifiable();
+            dbCommand.SetupSet(mocked => mocked.CommandText = "UPDATE Batches SET Exported = @BatchStatus WHERE IDBatch = @IDBatch").Verifiable();
             dbCommand.Setup(mocked => mocked.ExecuteNonQuery());
 
             var idBatchParam = new Mock<IDbDataParameter>();

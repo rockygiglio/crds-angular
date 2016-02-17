@@ -6,6 +6,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -34,12 +35,12 @@ namespace MinistryPlatform.Translation.Services
             _apiUserService = apiUserService;
         }
 
-        public Response GetMyOpportunityResponses(int contactId, int opportunityId, string token)
+        public Response GetMyOpportunityResponses(int contactId, int opportunityId)
         {
             var searchString = ",,,," + contactId;
             var subpageViewRecords = MinistryPlatformService.GetSubpageViewRecords(_contactOpportunityResponses,
                                                                                    opportunityId,
-                                                                                   token,
+                                                                                   ApiLogin(),
                                                                                    searchString);
             var list = subpageViewRecords.ToList();
             var s = list.SingleOrDefault();
@@ -60,6 +61,8 @@ namespace MinistryPlatform.Translation.Services
         public Opportunity GetOpportunityById(int opportunityId, string token)
         {
             var opp = _ministryPlatformService.GetRecordDict(_opportunityPage, opportunityId, token);
+            var shiftStart = opp.ToNullableTimeSpan("Shift_Start");
+            var shiftEnd = opp.ToNullableTimeSpan("Shift_End"); 
             var opportunity = new Opportunity
             {
                 OpportunityId = opportunityId,
@@ -73,8 +76,8 @@ namespace MinistryPlatform.Translation.Services
                 GroupContactName = opp.ToString("Contact_Person_Text"),
                 GroupName = opp.ToString("Add_to_Group_Text"),
                 GroupId = opp.ToInt("Add_to_Group"),
-                ShiftStart = TimeSpan.Parse(opp.ToString("Shift_Start")),
-                ShiftEnd = TimeSpan.Parse(opp.ToString("Shift_End")),
+                ShiftStart = shiftStart,
+                ShiftEnd = shiftEnd,
                 Room = opp.ToString("Room")
             };
             return opportunity;
@@ -87,7 +90,7 @@ namespace MinistryPlatform.Translation.Services
                                                                                     opportunityId,
                                                                                     ApiLogin(),
                                                                                     searchString);
-            var record = subpageViewRecords.ToList().SingleOrDefault();
+            var record = subpageViewRecords.ToList().FirstOrDefault();
             if (record == null)
             {
                 return null;
@@ -155,13 +158,33 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public List<int> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
+        public List<MPResponse> SearchResponseByGroupAndEvent(String searchString)
         {
-            var search = string.Format(",{0}, {1}", groupId, eventId);
             var token = _apiUserService.GetToken();
-            var records = _ministryPlatformService.GetPageViewRecords("OpportunityResponsesByGroupAndEvent", token, search);
+            var records = _ministryPlatformService.GetPageViewRecords("ResponsesByEventAndGroup", token, searchString);
+            return ConvertToMPResponse(records);
+        } 
 
-            return records.Select(r => r.ToInt("Contact_ID")).ToList();
+        public List<MPResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
+        {
+            var search = string.Format("{0}, {1}", groupId, eventId);
+            var token = _apiUserService.GetToken();
+            var records = _ministryPlatformService.GetPageViewRecords("ResponsesByEventAndGroup", token, search);
+            return ConvertToMPResponse(records);
+
+        }
+
+        private List<MPResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
+        {
+            return response.Select(r => new MPResponse()
+            {
+                Contact_ID = r.ToInt("Contact_ID"),
+                Event_ID = r.ToInt("Event_ID"),
+                Group_ID = r.ToInt("Group_ID"),
+                Participant_ID = r.ToInt("Participant_ID"),
+                Response_Result_ID = r.ToInt("Response_Result_ID"),
+                Response_Date = r.ToDate("Response_Date")
+            }).ToList();
         }
 
         public List<Response> GetOpportunityResponses(int opportunityId, string token)
@@ -198,6 +221,11 @@ namespace MinistryPlatform.Translation.Services
             //First get the event type
             var opp = _ministryPlatformService.GetRecordDict(_opportunityPage, opportunityId, token);
             var eventType = opp["Event_Type_ID_Text"];
+
+            if (eventType == null)
+            {
+                throw new ApplicationException("Invalid Event Type, Opportunity Id: " + opportunityId);
+            }
 
             //Now get all the events for this type
             var searchString = ",," + eventType;
@@ -334,9 +362,10 @@ namespace MinistryPlatform.Translation.Services
             var groupName = opp.ToString("Add_to_Group_Text");
             var searchString = ",,,," + opp.ToString("Group_Role_ID");
             var eventTypeId = opp.ToInt("Event_Type_ID");
+            var apiToken = ApiLogin();
             var group = _ministryPlatformService.GetSubpageViewRecords(_groupParticpantsSubPageView,
                                                                        groupId,
-                                                                       token,
+                                                                       apiToken,
                                                                        searchString);
             var participants = new List<GroupParticipant>();
             foreach (var groupParticipant in group)

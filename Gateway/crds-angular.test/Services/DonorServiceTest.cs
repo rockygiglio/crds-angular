@@ -102,7 +102,8 @@ namespace crds_angular.test.Services
                 ContactId = 12345,
                 DonorId = 67890,
                 ProcessorId = "Processor_ID",
-                RegisteredUser = true
+                RegisteredUser = true,
+                Email = "me@here.com"
             };
 
             var response = _fixture.CreateOrUpdateContactDonor(donor, EncryptedKey, "me@here.com", "stripe_token", DateTime.Now);
@@ -115,6 +116,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(donor.DonorId, response.DonorId);
             Assert.AreEqual(donor.ProcessorId, response.ProcessorId);
             Assert.AreEqual(donor.RegisteredUser, response.RegisteredUser);
+            Assert.AreEqual("me@here.com", response.Email);
         }
 
         [Test]
@@ -141,6 +143,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(456, response.DonorId);
             Assert.AreEqual(stripeCust.id, response.ProcessorId);
             Assert.IsFalse(response.RegisteredUser);
+            Assert.AreEqual("me@here.com", response.Email);
         }
 
         [Test]
@@ -150,6 +153,7 @@ namespace crds_angular.test.Services
             {
                 ContactId = 12345,
                 DonorId = 0,
+                Email = "me@here.com"
             };
 
             var stripeCust = new StripeCustomer
@@ -171,6 +175,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(12345, response.ContactId);
             Assert.AreEqual(456, response.DonorId);
             Assert.AreEqual(stripeCust.id, response.ProcessorId);
+            Assert.AreEqual("me@here.com", response.Email);
         }
 
         [Test]
@@ -205,6 +210,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(456, response.DonorId);
             Assert.AreEqual(stripeCust.id, response.ProcessorId);
             Assert.AreEqual(donor.RegisteredUser, response.RegisteredUser);
+            Assert.AreEqual("me@here.com", response.Email);
         }
 
         [Test]
@@ -214,6 +220,7 @@ namespace crds_angular.test.Services
             {
                 ContactId = 12345,
                 DonorId = 456,
+                Email = "me@here.com"
             };
 
             var stripeCust = new StripeCustomer
@@ -235,6 +242,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(12345, response.ContactId);
             Assert.AreEqual(456, response.DonorId);
             Assert.AreEqual(stripeCust.id, response.ProcessorId);
+            Assert.AreEqual("me@here.com", response.Email);
         }
 
         [Test]
@@ -336,7 +344,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(recurringGift.DonorAccountId.Value)).Returns(1);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Check", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
 
             var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
             _paymentService.VerifyAll();
@@ -707,10 +715,10 @@ namespace crds_angular.test.Services
             _paymentService.Setup(mocked => mocked.CancelPlan(subscription.Plan.Id)).Returns(plan);
             _mpDonorService.Setup(mocked => mocked.CancelRecurringGift(authUserToken, recurringGiftId));
 
-            _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(gift.DonorAccountId.Value)).Returns(1);
+            _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(gift.DonorAccountId.Value)).Returns(3);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Check", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Credit Card", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
 
             _fixture.CancelRecurringGift(authUserToken, recurringGiftId);
             _mpDonorService.VerifyAll();
@@ -865,13 +873,15 @@ namespace crds_angular.test.Services
 
             const int newDonorAccountId = 987;
 
+            DateTime? trialEndDate = DateTime.Now.AddDays(3);
             var oldSubscription = new StripeSubscription
             {
                 Id = "sub_123",
                 Plan = new StripePlan
                 {
                     Id = "plan_123"
-                }
+                },
+                TrialEnd = trialEndDate
             };
 
             var newPlan = new StripePlan
@@ -910,7 +920,7 @@ namespace crds_angular.test.Services
             _paymentService.Setup(mocked => mocked.UpdateCustomerSource(existingGift.StripeCustomerId, editGift.StripeTokenId)).Returns(stripeSource);
             _mpDonorService.Setup(mocked => mocked.CreateDonorAccount(stripeSource.brand, "0", stripeSource.last4, null, existingGift.DonorId, stripeSource.id, existingGift.StripeCustomerId)).Returns(newDonorAccountId);
             _paymentService.Setup(mocked => mocked.GetSubscription(existingGift.StripeCustomerId, existingGift.SubscriptionId)).Returns(oldSubscription);
-            _paymentService.Setup(mocked => mocked.UpdateSubscriptionPlan(existingGift.StripeCustomerId, existingGift.SubscriptionId, newPlan.Id)).Returns(oldSubscription);
+            _paymentService.Setup(mocked => mocked.UpdateSubscriptionPlan(existingGift.StripeCustomerId, existingGift.SubscriptionId, newPlan.Id, trialEndDate)).Returns(oldSubscription);
             _paymentService.Setup(mocked => mocked.CancelPlan(oldSubscription.Plan.Id)).Returns(oldSubscription.Plan);
             _paymentService.Setup(mocked => mocked.CreatePlan(editGift, donor)).Returns(newPlan);
             _mpDonorService.Setup(mocked => mocked.CancelRecurringGift(authUserToken, existingGift.RecurringGiftId.Value));
@@ -930,7 +940,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(234)).Returns(1);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftUpdateEmailTemplateId, newRecurringGift.DonorId, (int)(80000M / 100), "Check", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftUpdateEmailTemplateId, newRecurringGift.DonorId, (int)(80000M / 100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
 
             var result = _fixture.EditRecurringGift(authUserToken, editGift, donor);
             _mpDonorService.VerifyAll();
@@ -1068,6 +1078,58 @@ namespace crds_angular.test.Services
             Assert.AreEqual(newRecurringGift.DonorId, result.DonorID);
             Assert.AreEqual(donor.Email, result.EmailAddress);
             Assert.AreEqual(newSubscription.Id, result.SubscriptionID);
+        }
+
+        [Test]
+        public void ShouldGetPledgesInDateOrder()
+        {
+
+            var userAuthToken = "auth";
+
+            var pledgeList = new List<Pledge>
+            {
+                new Pledge(){CampaignName = "Oldest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2000")},
+                new Pledge(){CampaignName = "Youngest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016")},
+                new Pledge(){CampaignName = "Middle Campaign", PledgeStatus = "Active",CampaignStartDate = DateTime.Parse("1/1/2010")}
+            }; 
+
+            _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32 [1] )).Returns(pledgeList);
+
+            var pledges = _fixture.GetCapitalCampaignPledgesForAuthenticatedUser(userAuthToken);
+            _pledgeService.VerifyAll();
+
+            Assert.AreEqual(pledges[0].PledgeCampaign, "Youngest Campaign");
+            Assert.AreEqual(pledges[0].CampaignStartDate, "January 1, 2016");
+            Assert.AreEqual(pledges[1].PledgeCampaign, "Middle Campaign");
+            Assert.AreEqual(pledges[1].CampaignStartDate, "January 1, 2010");
+            Assert.AreEqual(pledges[2].PledgeCampaign, "Oldest Campaign");
+            Assert.AreEqual(pledges[2].CampaignStartDate, "January 1, 2000");
+        }
+
+        [Test]
+        public void ShouldGetPledgesThatAreActive()
+        {
+
+            var userAuthToken = "auth";
+
+            var pledgeList = new List<Pledge>
+            {
+                new Pledge(){CampaignName = "Active Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016") },
+                new Pledge(){CampaignName = "Completed Campaign", PledgeStatus = "Completed", CampaignStartDate = DateTime.Parse("1/1/2010")},
+                new Pledge(){CampaignName = "Inactive Campaign", PledgeStatus = "Discontinued", CampaignStartDate = DateTime.Parse("1/1/2000")}
+            };
+
+            _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32[1])).Returns(pledgeList);
+
+            var pledges = _fixture.GetCapitalCampaignPledgesForAuthenticatedUser(userAuthToken);
+            _pledgeService.VerifyAll();
+
+            Assert.AreEqual(pledges.Count, 2);
+            Assert.AreEqual(pledges[0].PledgeCampaign, "Active Campaign");
+            Assert.AreEqual(pledges[0].CampaignStartDate, "January 1, 2016");
+            Assert.AreEqual(pledges[1].PledgeCampaign, "Completed Campaign");
+            Assert.AreEqual(pledges[1].CampaignStartDate, "January 1, 2010");
+
         }
     }
 }

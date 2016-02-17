@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../../app/ang');
+
 require('../../../app/common/common.module');
 require('../../../app/app');
 
@@ -294,7 +296,7 @@ describe('PaymentService', function() {
         amount: 100,
         program: 1,
         interval: 'week',
-        start_date: startDate
+        start_date: moment(startDate).utc().format('YYYY-MM-DD')
       };
       GiveTransferService.amount = 100;
       GiveTransferService.program = {ProgramId: 1};
@@ -374,7 +376,7 @@ describe('PaymentService', function() {
         amount: 100,
         program: 1,
         interval: 'week',
-        start_date: startDate
+        start_date: moment(startDate).utc().format('YYYY-MM-DD')
       };
       GiveTransferService.amount = 100;
       GiveTransferService.program = { ProgramId: 1 };

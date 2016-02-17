@@ -138,14 +138,6 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.6.9.7\lib\net45\MySql.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySql.Web">
-      <HintPath>..\packages\MySql.Web.6.9.7\lib\net45\MySql.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -261,27 +253,55 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\API\AccountController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
+    <Compile Include="Controllers\API\CongregationController.cs" />
+    <Compile Include="Controllers\API\EventToolController.cs" />
+    <Compile Include="Controllers\API\RoomController.cs" />
+    <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
+    <Compile Include="Exceptions\ContactEmailExistsException.cs" />
+    <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Models\Crossroads\CommunicationDTO.cs" />
+    <Compile Include="Models\Crossroads\Congregation.cs" />
     <Compile Include="Models\Crossroads\DonorStatementDTO.cs" />
     <Compile Include="Controllers\API\SubscriptionsController .cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareRsvpDto.cs" />
+    <Compile Include="Models\Crossroads\Events\EventRoomDto.cs" />
+    <Compile Include="Models\Crossroads\Events\EventRoomEquipmentDto.cs" />
+    <Compile Include="Models\Crossroads\Events\EventToolDto.cs" />
+    <Compile Include="Models\Crossroads\Events\Room.cs" />
+    <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
+    <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
     <Compile Include="Models\Crossroads\GroupContactDTO.cs" />
     <Compile Include="Models\Crossroads\Events\Event.cs" />
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
     <Compile Include="Models\Crossroads\Events\EventRsvpDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
+    <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
+    <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
+    <Compile Include="Models\Crossroads\Serve\ServeProfile.cs" />
+    <Compile Include="Models\Crossroads\Serve\ServeReminder.cs" />
     <Compile Include="Models\Crossroads\SponsoredChild.cs" />
     <Compile Include="Models\Crossroads\Stewardship\PledgeDto.cs" />
+    <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
+    <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
+    <Compile Include="Models\Json\PasswordReset.cs" />
+    <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
+    <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\EquipmentService.cs" />
+    <Compile Include="Services\Interfaces\ICongregationService.cs" />
+    <Compile Include="Services\Interfaces\IEquipmentService.cs" />
+    <Compile Include="Services\Interfaces\IRoomService.cs" />
+    <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Services\StaffContactService.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\Interfaces\IBulkEmailSyncService.cs" />
+    <Compile Include="Services\Interfaces\IContactService.cs" />
     <Compile Include="Services\Interfaces\IEventService.cs" />
     <Compile Include="Models\Json\PasswordResetRequest.cs" />
-    <Compile Include="Models\Json\PasswordResetVerification.cs" />
     <Compile Include="Services\DonorStatementService.cs" />
     <Compile Include="Services\Interfaces\IDonorStatementService.cs" />
     <Compile Include="Services\Interfaces\ILoginService.cs" />
@@ -293,6 +313,8 @@
     <Compile Include="Models\MailChimp\SubscriberBatchDTO.cs" />
     <Compile Include="Services\SubscriptionsService.cs" />
     <Compile Include="Services\Interfaces\ISubscriptionsService.cs" />
+    <Compile Include="Util\MailchimpListHandler.cs" />
+    <Compile Include="Util\HttpAuthResult.cs" />
     <Compile Include="Util\FileResult.cs" />
     <Compile Include="Controllers\API\ImageController.cs" />
     <Compile Include="Controllers\API\EmailCommunicationController.cs" />
@@ -471,6 +493,7 @@
     <Compile Include="Util\CSV.cs" />
     <Compile Include="Util\DateTimeWrapper.cs" />
     <Compile Include="Util\Interfaces\IDateTime.cs" />
+    <Compile Include="Util\Interfaces\IEmailListHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

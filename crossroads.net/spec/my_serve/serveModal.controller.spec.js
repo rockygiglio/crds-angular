@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../app/ang');
+
 require('../../app/app');
 
 describe('Serve Modal Controller', function() {
@@ -78,7 +80,7 @@ describe('Serve Modal Controller', function() {
     }
     var d = moment(date);
     d.add(days, 'd');
-    return d.format('MM/DD/YY');
+    return d.format('MM/DD/YYYY');
   }
 
 });

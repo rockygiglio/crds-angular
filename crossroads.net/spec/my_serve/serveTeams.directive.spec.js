@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../app/ang');
+
 require('../../app/app');
 
 var $compile, $rootScope, element, scope, mockSession, mockServeDate, $httpBackend;

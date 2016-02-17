@@ -132,18 +132,36 @@ namespace crds_angular.Services
 
         public ContactDonor CreateDonor(CheckScannerCheck checkDetails)
         {
-            var contactDonor = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new ContactDonor();
-
-            if (contactDonor.HasPaymentProcessorRecord)
+            ContactDonor contactDonorById = null;
+            // If scanned check has a donor id, try to use it to lookup the donor
+            if (checkDetails.DonorId != null && checkDetails.DonorId > 0)
             {
-                return contactDonor;
+                contactDonorById = _donorService.GetContactDonorForDonorId(checkDetails.DonorId.Value);
             }
+
+            // Get the contactDonor and info based off of the account and routing number to see if we need to create a new one
+            var contactDonorByAccount = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new ContactDonor();
+
+            // if find by contact donor id is used then contact donor found by id matches contact donor 
+            // found by account and account has stripe token
+            if (contactDonorById != null && contactDonorById.ContactId == contactDonorByAccount.ContactId &&
+                contactDonorByAccount.Account.ProcessorId != null)
+            {
+                return contactDonorByAccount;
+            }
+            // if find by contact donor id is not used then contact donor 
+            // found by account has stripe token
+            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.ProcessorId != null)
+            {
+                return contactDonorByAccount;
+            }
+
+            var contactDonor = (contactDonorById == null) ? contactDonorByAccount : contactDonorById;
+
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
 
-            //TODO:: Will need to remove hard coded values and make var token = _paymentService.CreateToken(account, routing);
-            //TODO:: This was put into place for EZScan to test.
-            var token = _paymentService.CreateToken("000123456789", "110000000");
+            var token = _paymentService.CreateToken(account, routing);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
             
             contactDonor.Details = new ContactDetails

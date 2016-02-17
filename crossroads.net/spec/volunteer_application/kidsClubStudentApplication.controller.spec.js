@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../app/ang');
+
 require('../../app/app');
 
 describe('KidsClub Student Application Controller', function() {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using MinistryPlatform.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
@@ -11,5 +7,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         List<Program> GetOnlineGivingPrograms(int? programType);
         Program GetProgramById(int programId);
+        List<Program> GetAllPrograms();
     }
 }

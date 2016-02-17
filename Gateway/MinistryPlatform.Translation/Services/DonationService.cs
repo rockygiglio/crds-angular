@@ -6,6 +6,7 @@ using AutoMapper;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
+using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
 
@@ -267,14 +268,14 @@ namespace MinistryPlatform.Translation.Services
         {
             try
             {
-                string apiToken = ApiLogin();
+                var apiToken = ApiLogin();
                 var result = GetDonationByProcessorPaymentId(processorPaymentId, apiToken);
 
-                var rec = _ministryPlatformService.GetRecordsDict(_distributionPageId, apiToken, ",,,,,,,," + result.donationId);
+                var rec = _ministryPlatformService.GetRecordsDict(_distributionPageId, apiToken, string.Format(",,,,,,,,\"{0}\"", result.donationId));
                 
                 if (rec.Count == 0 || (rec.Last().ToNullableInt("dp_RecordID")) == null)
                 {
-                    throw (new ApplicationException("Could not locate donation for charge " + processorPaymentId));
+                    throw (new DonationNotFoundException(processorPaymentId));
                 }
                 
                 var program = rec.First().ToString("Statement_Title");
@@ -300,11 +301,11 @@ namespace MinistryPlatform.Translation.Services
         private Donation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken)
         {
             var result = _ministryPlatformService.GetRecordsDict(_donationsPageId, apiToken,
-                ",,,,,,," + processorPaymentId);
+                string.Format(",,,,,,,\"{0}\"", processorPaymentId));
           
             if (result.Count == 0 || (result.Last().ToNullableInt("dp_RecordID")) == null)
             {
-                throw (new ApplicationException("Could not locate donation for charge " + processorPaymentId));
+                throw (new DonationNotFoundException(processorPaymentId));
             }
 
             var dictionary = result.First();
@@ -406,12 +407,25 @@ namespace MinistryPlatform.Translation.Services
         public void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName )
         {
             var template = _communicationService.GetTemplate(_donorMessageTemplateId);
+            var defaultContactId = AppSetting("DefaultGivingContactEmailId");
+            var defaultContactEmail = _communicationService.GetEmailFromContactId(defaultContactId);
+
             var messageData = new Dictionary<string, object>
             {
                 {"TripName", tripName},
                 {"DonorMessage", body}
             };
             var toEmail = _donorService.GetEmailViaDonorId(donorId);
+
+            var to = new List<Contact>()
+            {
+                new Contact()
+                {
+                     ContactId = toEmail.ContactId,
+                    EmailAddress = toEmail.Email
+                }
+            };
+
             var authorId = _communicationService.GetUserIdFromContactId(fromContactId);
             var fromEmail = _communicationService.GetEmailFromContactId(fromContactId);
 
@@ -419,9 +433,9 @@ namespace MinistryPlatform.Translation.Services
             {
                 AuthorUserId = authorId,
                 DomainId = 1,
-                ToContacts = {new Contact{ContactId = toEmail.ContactId, EmailAddress = toEmail.Email}},
-                FromContact = {ContactId = fromContactId, EmailAddress = fromEmail},
-                ReplyToContact = {ContactId = fromContactId, EmailAddress = fromEmail},
+                ToContacts = to,
+                FromContact = new Contact(){ContactId = defaultContactId, EmailAddress = defaultContactEmail},
+                ReplyToContact = new Contact(){ContactId = fromContactId, EmailAddress = fromEmail},
                 EmailSubject = _communicationService.ParseTemplateBody(template.Subject, messageData),
                 EmailBody = _communicationService.ParseTemplateBody(template.Body, messageData),
                 MergeData = messageData
@@ -444,15 +458,27 @@ namespace MinistryPlatform.Translation.Services
             var toDonor = _pledgeService.GetDonorForPledge(pledgeId);
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
             var template = _communicationService.GetTemplate(_tripDonationMessageTemplateId);
+
+            var toContacts = new List<Contact> {new Contact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
+
+            var from = new Contact()
+            {
+                ContactId = 5,
+                EmailAddress = "updates@crossroads.net"
+            };
+
+            var defaultContactId = AppSetting("DefaultContactEmailId");
+            var defaultContactEmail = _communicationService.GetEmailFromContactId(defaultContactId);
+
             var comm = new Communication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = message,
                 EmailSubject = template.Subject,
-                FromContact = {ContactId = 5, EmailAddress = "updates@crossroads.net"},
-                ReplyToContact = { ContactId = 5, EmailAddress = "updates@crossroads.net" },
-                ToContacts = {new Contact{ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}},
+                FromContact = from,
+                ReplyToContact = from,
+                ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
             _communicationService.SendMessage(comm);

@@ -1,4 +1,4 @@
-(function(){
+(function() {
   'use strict';
 
   module.exports = CommunityGroupsController;
@@ -12,7 +12,8 @@
     '$stateParams',
     'Page',
     '$modal',
-    'ChildCare'
+    'ChildCare',
+    'Session'
   ];
 
   function CommunityGroupsController(
@@ -24,7 +25,8 @@
     $stateParams,
     Page,
     $modal,
-    ChildCare) {
+    ChildCare,
+    Session) {
 
     var vm = this;
     vm.allSignedUp = allSignedUp;
@@ -32,12 +34,14 @@
     vm.atLeastOneParticipant = false;
     vm.childCareAvailable = false;
     vm.childCareChange = childCareChange;
+    vm.contactId = Session.exists('userId') !== undefined ? Session.exists('userId') : 0;
     vm.editProfile = editProfile;
     vm.formValid = true;
     vm.hasParticipantID = hasParticipantID;
     vm.modalInstance = {};
     vm.person = {};
     vm.response = {};
+    vm.saving = false;
     vm.showContent = true;
     vm.showFull = false;
     vm.showSuccess = false;
@@ -53,18 +57,8 @@
     ///////////////////////////
 
     function activate() {
-      // Initialize Person data for logged-in user
-      Profile.Personal.get(function(response) {
-        vm.person = response;
-      },
-
-      function(err) {
-        console.log('Can\'t get your profile! ' + err);
-      });
-
-      var pageRequest = Page.get({
-        url: $stateParams.link
-      }, function() {
+      var link = (_.endsWith($stateParams.link, '/') === false) ? $stateParams.link + '/' : $stateParams.link;
+      var pageRequest = Page.get({url: link}, function() {
         if (pageRequest.pages.length > 0) {
           vm.signupPage = pageRequest.pages[0];
           vm.groupId = vm.signupPage.group;
@@ -115,23 +109,25 @@
                 vm.viewReady = true;
               });
 
-
-              //this is the case where the group is full and there is NO waitlist and at least one of your family IS a participant
-            } else if (response.groupFullInd && !response.waitListInd && vm.atLeastOneParticipant) {
+              // this is the case where the group is full and
+              // there is NO waitlist and at least one of your family IS a participant
+            } else if (response.groupFullInd &&
+                      !response.waitListInd &&
+                      vm.atLeastOneParticipant) {
               vm.waitListCase = false;
               vm.showFull = true;
               vm.showContent = true;
               vm.showWaitList = false;
               vm.viewReady = true;
-              
+
               //this is the case where the group is NOT full and there IS waitlist
             } else if (!response.groupFullInd && response.waitListInd) {
               vm.waitListCase = false;
               vm.showFull = false;
               vm.showContent = true;
               vm.showWaitList = false;
-              vm.viewReady = true;  
-              
+              vm.viewReady = true;
+
               //this is the case where the group is full and there is NO waitlist
             } else if (response.groupFullInd && !response.waitListInd && !vm.alreadySignedUp) {
               vm.showFull = true;
@@ -165,7 +161,6 @@
           } else {
             result = true;
             vm.atLeastOneParticipant = true;
-            vm.childCareAvailable = false;
           }
         }
       } else {
@@ -173,7 +168,6 @@
           result = false;
         } else {
           result = true;
-          vm.childCareAvailable = false;
         }
       }
 
@@ -219,6 +213,7 @@
     }
 
     function signup(form) {
+      vm.saving = true;
       var participantArray = hasParticipantID(vm.response);
       var flag = false;
       for (var i = 0; i < vm.response.length; i++) {
@@ -237,6 +232,7 @@
       vm.formValid = flag;
       if (!vm.formValid) {
         $rootScope.$emit('notify', $rootScope.MESSAGES.noPeopleSelectedError);
+        vm.saving = false;
         return;
       }
 
@@ -254,6 +250,7 @@
         vm.showSuccess = true;
         vm.showWaitList = false;
         vm.showWaitSuccess = true;
+        vm.saving = false;
 
       }, function(error) {
         // 422 indicates an HTTP "Unprocessable Entity", in this case meaning Group is Full
@@ -267,6 +264,8 @@
           vm.showFull = false;
           vm.showContent = true;
         }
+
+        vm.saving = false;
 
       });
     }

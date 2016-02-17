@@ -26,6 +26,7 @@ require('../lib/select.css');
 
   require('./signup');
   require('./styleguide');
+  require('./superbowl');
   require('./thedaily');
   require('./explore');
   require('./gotrips');
@@ -33,6 +34,5 @@ require('../lib/select.css');
   require('./volunteer_signup');
   require('./volunteer_application');
   require('./giving_history');
-  require('./myprofile');
 
 })();

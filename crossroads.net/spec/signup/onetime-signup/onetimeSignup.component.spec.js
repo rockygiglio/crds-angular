@@ -1,4 +1,6 @@
 require('crds-core');
+require('../../../app/ang');
+
 require('../../../app/common/common.module');
 require('../../../app/signup/onetime_event');
 
@@ -30,7 +32,6 @@ describe('Onetime Signup Component', function() {
     scope = $rootScope.$new();
     scope.cmsInfo = helpers.cmsInfo.pages[0];
     scope.group = helpers.group;
-
     element = '<onetime-event cms-info=\'cmsInfo\' group=\'group\'></onetime-event>';
     element = $compile(element)(scope);
 

@@ -113,13 +113,14 @@ namespace crds_angular.Services
         /// <param name="contactDonor">An existing ContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing contact or donor.</param>
         ///  <param name="encryptedKey"> The encrypted routing and account number</param>
         /// <param name="emailAddress">An email address to use when creating a Contact (#1 above).</param>
-        /// <param name="paymentProcessorToken">The one-time-use token given by the payment processor.</param>
-        /// <param name="setupDate">The date when the Donor is marked as setup - normally would be today's date.</param>
+        /// <param name="paymentProcessorToken">The one-time-use token given by the payment processor - if not set, a donor will still be potentially created or updated, but will not be setup in Stripe.</param>
+        /// <param name="setupDate">The date when the Donor is marked as setup, defaults to today's date.</param>
         /// <returns></returns>
-        public ContactDonor CreateOrUpdateContactDonor(ContactDonor contactDonor, string encryptedKey, string emailAddress, string paymentProcessorToken, DateTime setupDate)
+        public ContactDonor CreateOrUpdateContactDonor(ContactDonor contactDonor, string encryptedKey, string emailAddress, string paymentProcessorToken = null, DateTime? setupDate = null)
         {
+            setupDate = setupDate ?? DateTime.Now;
+
             var contactDonorResponse = new ContactDonor();
-            StripeCustomer stripeCustomer;
             if (contactDonor == null || !contactDonor.ExistingContact)
             {
                 var statementMethod = _statementMethodNone;
@@ -135,17 +136,20 @@ namespace crds_angular.Services
                     contactDonorResponse.ContactId = _mpContactService.CreateContactForGuestGiver(emailAddress, _guestGiverDisplayName);
                 }
 
-                stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
-
                 var donorAccount = contactDonor != null ? contactDonor.Account : null;
-                if (donorAccount != null)
+                if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    donorAccount.ProcessorAccountId = stripeCustomer.sources.data[0].id;
-                }
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
 
-                contactDonorResponse.ProcessorId = stripeCustomer.id;
+                    if (donorAccount != null)
+                    {
+                        donorAccount.ProcessorAccountId = stripeCustomer.sources.data[0].id;
+                    }
+
+                    contactDonorResponse.ProcessorId = stripeCustomer.id;
+                }
            
-                contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonorResponse.ContactId, contactDonorResponse.ProcessorId, setupDate, 
+                contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonorResponse.ContactId, contactDonorResponse.ProcessorId, setupDate.Value, 
                     statementFrequency, _statementTypeIndividual, statementMethod, donorAccount);
                 contactDonorResponse.Email = emailAddress;
 
@@ -154,29 +158,37 @@ namespace crds_angular.Services
             else if (!contactDonor.HasPaymentProcessorRecord)
             {
                 contactDonorResponse.ContactId = contactDonor.ContactId;
-                stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
-                contactDonorResponse.ProcessorId = stripeCustomer.id;
+                if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
+                {
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
+                    contactDonorResponse.ProcessorId = stripeCustomer.id;
+                }
 
                 if (contactDonor.ExistingDonor)
                 {
                     contactDonorResponse.DonorId = _mpDonorService.UpdatePaymentProcessorCustomerId(contactDonor.DonorId, contactDonorResponse.ProcessorId);
+                    contactDonorResponse.Email = contactDonor.Email;
                 }
                 else
                 {
                     if (contactDonor.RegisteredUser)
                     {
-                        contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonor.ContactId, contactDonorResponse.ProcessorId, setupDate);
+                        contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonor.ContactId, contactDonorResponse.ProcessorId, setupDate.Value);
                         var contact = _mpDonorService.GetEmailViaDonorId(contactDonorResponse.DonorId);
                         contactDonorResponse.Email = contact.Email;
                     }
                     else
                     {
-                        contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonor.ContactId, contactDonorResponse.ProcessorId, setupDate,
+                        contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonor.ContactId, contactDonorResponse.ProcessorId, setupDate.Value,
                             _statementFrequencyNever, _statementTypeIndividual, _statementMethodNone);
+                        contactDonorResponse.Email = contactDonor.Email;
                     }
                 }
 
-                _paymentService.UpdateCustomerDescription(contactDonorResponse.ProcessorId, contactDonorResponse.DonorId);
+                if (contactDonorResponse.HasPaymentProcessorRecord)
+                {
+                    _paymentService.UpdateCustomerDescription(contactDonorResponse.ProcessorId, contactDonorResponse.DonorId);
+                }
                 contactDonorResponse.RegisteredUser = contactDonor.RegisteredUser;
             }
             else
@@ -319,7 +331,8 @@ namespace crds_angular.Services
                 }
 
                 var acctType = _mpDonorService.GetDonorAccountPymtType(recurringGift.DonorAccountId.GetValueOrDefault());
-                var paymentType = MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(acctType).name;
+                var acct = acctType != 3 ? 5 : acctType;
+                var paymentType = MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(acct).name;
                 var frequency = recurringGift.Recurrence;
                 var programName = recurringGift.ProgramName;
                 var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero) / Constants.StripeDecimalConversionValue;
@@ -417,7 +430,10 @@ namespace crds_angular.Services
                     {
                         // If we just changed the amount, we just need to update the Subscription to point to the new plan
                         oldSubscription = _paymentService.GetSubscription(existingGift.StripeCustomerId, stripeSubscription.Id);
-                        stripeSubscription = _paymentService.UpdateSubscriptionPlan(existingGift.StripeCustomerId, stripeSubscription.Id, plan.Id);
+                        stripeSubscription = _paymentService.UpdateSubscriptionPlan(existingGift.StripeCustomerId,
+                                                                                    stripeSubscription.Id,
+                                                                                    plan.Id,
+                                                                                    oldSubscription.TrialEnd);
                     }
                     else
                     {
@@ -490,7 +506,10 @@ namespace crds_angular.Services
         public List<PledgeDto> GetCapitalCampaignPledgesForAuthenticatedUser(string userToken)
         {
             var pledges = _pledgeService.GetPledgesForAuthUser(userToken, new [] {_capitalCampaignPledgeTypeId});
-            return pledges.Select(Mapper.Map<Pledge, PledgeDto>).ToList();
+            return pledges
+                .Where(o=>o.PledgeStatus == "Active" || o.PledgeStatus == "Completed")
+                .OrderByDescending(o=>o.CampaignStartDate)
+                .Select(Mapper.Map<Pledge, PledgeDto>).ToList();
         } 
 
         private void PopulateStripeInfoOnRecurringGiftSource(DonationSourceDTO donationSource)

@@ -585,9 +585,9 @@ namespace crds_angular.test.Services
 
             const string plan = "Take over the world.";
             const string customer = "cus_123";
-            var trialEndDate = DateTime.Today.AddDays(1);
+            var trialEndDate = DateTime.Now.AddDays(1);
 
-            var expectedEpochTime = trialEndDate.ConvertDateTimeToEpoch();
+            var expectedEpochTime = trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch();
 
             var response = _fixture.CreateSubscription(plan, customer, trialEndDate);
             _restClient.Verify(
@@ -668,13 +668,45 @@ namespace crds_angular.test.Services
             const string sub = "sub_123";
             const string customer = "cus_123";
             const string plan = "plan_123";
+            var trialDateTime = DateTime.Now.AddDays(2);
+            var expectedTrialEndDate = trialDateTime.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch();
+
+            var response = _fixture.UpdateSubscriptionPlan(customer, sub, plan, trialDateTime);
+            _restClient.Verify(
+                mocked =>
+                    mocked.Execute<StripeSubscription>(
+                        It.Is<IRestRequest>(
+                            o =>
+                                o.Method == Method.POST && o.Resource.Equals("customers/" + customer + "/subscriptions/" + sub) && o.Parameters.Matches("plan", plan) &&
+                                o.Parameters.Matches("prorate", false) && o.Parameters.Matches("trial_end", expectedTrialEndDate))));
+
+            Assert.AreSame(stripeSubscription, response);
+        }
+
+        [Test]
+        public void TestUpdateSubscriptionPlanWithNoTrial()
+        {
+            var stripeSubscription = new StripeSubscription();
+
+            var stripeResponse = new Mock<IRestResponse<StripeSubscription>>(MockBehavior.Strict);
+            stripeResponse.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.OK).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.Data).Returns(stripeSubscription).Verifiable();
+
+            _restClient.Setup(mocked => mocked.Execute<StripeSubscription>(It.IsAny<IRestRequest>())).Returns(stripeResponse.Object);
+
+            const string sub = "sub_123";
+            const string customer = "cus_123";
+            const string plan = "plan_123";
 
             var response = _fixture.UpdateSubscriptionPlan(customer, sub, plan);
             _restClient.Verify(
                 mocked =>
                     mocked.Execute<StripeSubscription>(
                         It.Is<IRestRequest>(
-                            o => o.Method == Method.POST && o.Resource.Equals("customers/" + customer + "/subscriptions/" + sub) && o.Parameters.Matches("plan", plan) && o.Parameters.Matches("prorate", false))));
+                            o =>
+                                o.Method == Method.POST && o.Resource.Equals("customers/" + customer + "/subscriptions/" + sub) && o.Parameters.Matches("plan", plan) &&
+                                o.Parameters.Matches("prorate", false) && !o.Parameters.Contains("trial_end"))));
 
             Assert.AreSame(stripeSubscription, response);
         }

@@ -34,11 +34,24 @@
           }).$promise;
         },
 
+        Locations: function(SignupService, Lookup) {
+          return Lookup.query({
+            table: 'crossroadslocations'
+          }, function(data) {
+            SignupService.locations = data;
+          }).promise;
+        },
+
         CmsInfo: function($q, Page, SignupService, Group, $stateParams) {
           var deferred = $q.defer();
+          var link = addTrailingSlashIfNecessary($stateParams.link);
+          Page.get({url: link}).$promise.then(function(data) {
+            if (data.pages.length === 0) {
+              deferred.reject();
+            }
 
-          Page.get({link: $stateParams.link}).$promise.then(function(data) {
             SignupService.cmsInfo = data;
+
             Group.Detail.get({groupId: data.pages[0].group}).$promise.then(function(group) {
                 SignupService.group = group;
                 deferred.resolve();
@@ -54,9 +67,18 @@
           });
 
           return deferred.promise;
-        }
+        },
+
       }
     });
+  }
+
+  function addTrailingSlashIfNecessary(link) {
+    if (_.endsWith(link, '/') === false) {
+      return link + '/';
+    }
+
+    return link;
   }
 
 })();

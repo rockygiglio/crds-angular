@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
@@ -41,8 +43,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Can_Impersonate", true},
                     {"User_GUID", Guid.NewGuid()},
-                    {"User_Name", "me@here.com"}
-                        
+                    {"User_Name", "me@here.com"},
+                    {"User_Email", "me@here.com"},
+                    {"dp_RecordID", 1 }
+
                 }
             };
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(102030, "ABC", "\"me@here.com\",", string.Empty, 0)).Returns(mpResult);
@@ -57,6 +61,34 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestGetUserRoles()
+        {
+            var mpResult = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Role_ID", 123},
+                    {"Role_Name", "Role 123"}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Role_ID", 456},
+                    {"Role_Name", "Role 456"}
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("User_Roles_With_ID", 987, "ABC", string.Empty, string.Empty, 0)).Returns(mpResult);
+
+            var roles = _fixture.GetUserRoles(987);
+            Assert.IsNotNull(roles);
+            Assert.AreEqual(mpResult.Count, roles.Count);
+            foreach (var result in mpResult)
+            {
+                Assert.IsTrue(roles.Exists(role => role.Id == result.ToInt("Role_ID") && role.Name.Equals(result.ToString("Role_Name"))));
+            }
+        }
+
+        [Test]
         public void TestGetUserByAuthenticationToken()
         {
             var mpResult = new List<Dictionary<string, object>>
@@ -65,7 +97,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Can_Impersonate", true},
                     {"User_GUID", Guid.NewGuid()},
-                    {"User_Name", "me@here.com"}
+                    {"User_Name", "me@here.com"},
+                    {"User_Email", "me@here.com"},
+                    {"dp_RecordID", 1 }
                         
                 }
             };

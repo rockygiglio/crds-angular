@@ -30,7 +30,9 @@ namespace CrossroadsStripeOnboarding.Services
             var appender = VerifyOutput.Logger.Repository.GetAppenders().First(x => x.Name.Equals("VerifyOutputLog"));
 
             Logger.Info(string.Format("Starting verification process - CSV results will be written to {0}", ((FileAppender)appender).File));
-            var recurringGifts = _mpContext.RecurringGifts.ToList();
+            var markerDateTime = new DateTime(2001, 01, 01);
+            var migratedDateTime = new DateTime(2016, 01, 29);
+            var recurringGifts = _mpContext.RecurringGifts.ToList().Where(gift => !gift.End_Date.HasValue || gift.End_Date.Value.Date.Equals(markerDateTime.Date)).ToList();
             var giftsToProcess = recurringGifts.Count();
             Logger.Info(string.Format("Verifying {0} recurring gifts", giftsToProcess));
 

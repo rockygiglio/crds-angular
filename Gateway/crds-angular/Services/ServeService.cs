@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using crds_angular.Enum;
+using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
+using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
+using WebGrease.Css.Extensions;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
 namespace crds_angular.Services
@@ -34,6 +39,9 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly ICommunicationService _communicationService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IApiUserService _apiUserService;
+        private readonly IResponseService _responseService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -53,7 +61,10 @@ namespace crds_angular.Services
                             IGroupParticipantService groupParticipantService,
                             IGroupService groupService,
                             ICommunicationService communicationService,
-                            IAuthenticationService authenticationService)
+                            IAuthenticationService authenticationService,
+                            IConfigurationWrapper configurationWrapper,
+                            IApiUserService apiUserService,
+                            IResponseService responseService)
         {
             _contactService = contactService;
             _contactRelationshipService = contactRelationshipService;
@@ -64,6 +75,9 @@ namespace crds_angular.Services
             _groupService = groupService;
             _communicationService = communicationService;
             _authenticationService = authenticationService;
+            _configurationWrapper = configurationWrapper;
+            _apiUserService = apiUserService;
+            _responseService = responseService;
         }
 
         public List<FamilyMember> GetImmediateFamilyParticipants(string token)
@@ -100,7 +114,7 @@ namespace crds_angular.Services
 
             relationships.AddRange(family);
 
-            return relationships;
+            return relationships.OrderByDescending(s => s.Age).ToList();
         }
 
         public DateTime GetLastServingDate(int opportunityId, string token)
@@ -109,7 +123,7 @@ namespace crds_angular.Services
             return _opportunityService.GetLastOpportunityDate(opportunityId, token);
         }
 
-        public List<QualifiedServerDto> GetQualifiedServers(int groupId, string token)
+        public List<QualifiedServerDto> GetQualifiedServers(int groupId, int opportunityId, string token)
         {
             var qualifiedServers = new List<QualifiedServerDto>();
             var immediateFamilyParticipants = GetImmediateFamilyParticipants(token);
@@ -117,9 +131,9 @@ namespace crds_angular.Services
             foreach (var participant in immediateFamilyParticipants)
             {
                 var membership = _groupService.ParticipantQualifiedServerGroupMember(groupId, participant.ParticipantId);
+                
                 var opportunityResponse = _opportunityService.GetMyOpportunityResponses(participant.ContactId,
-                                                                                        115,
-                                                                                        token);
+                                                                                        opportunityId);
                 var qualifiedServer = new QualifiedServerDto();
                 qualifiedServer.ContactId = participant.ContactId;
                 qualifiedServer.Email = participant.Email;
@@ -206,9 +220,9 @@ namespace crds_angular.Services
             return servingDays;
         }
 
-        public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded, string token)
-        {
-            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, token);
+        public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded)
+        {               
+            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, _apiUserService.GetToken());
             var min = minNeeded;
             var max = maxNeeded;
             var signedUp = opportunity.Count(r => r.Event_ID == eventId);
@@ -304,18 +318,18 @@ namespace crds_angular.Services
             Opportunity previousOpportunity = null;
             try
             {
+                var fromDate = GetTimeStamp(opportunity.ShiftStart);
+                var toDate = GetTimeStamp(opportunity.ShiftEnd);
                 var updatedEvents = GetUpdatedOpportunities(token,
                                                             dto,
                                                             (participant, e) =>
                                                             {
-                                                                DateTime from = DateTime.Today.Add(opportunity.ShiftStart);
-                                                                DateTime to = DateTime.Today.Add(opportunity.ShiftEnd);
                                                                 mailRows.Add(new MailRow()
                                                                 {
                                                                     EventDate = e.EventStartDate.ToShortDateString(),
                                                                     Location = opportunity.Room,
                                                                     OpportunityName = opportunity.OpportunityName,
-                                                                    ShiftTime = from.ToString("hh:mm tt") + " - " + to.ToString("hh:mm tt")
+                                                                    ShiftTime = fromDate + " - " + toDate
                                                                 });
                                                                 var response = CreateRsvp(token, dto.OpportunityId, dto.OpportunityIds, dto.SignUp, participant, e, groupContact);
                                                                 previousOpportunity = PreviousOpportunity(response, previousOpportunity);
@@ -350,6 +364,126 @@ namespace crds_angular.Services
                 _communicationService.SendMessage(communication);
                 return new List<int>();
             }
+        }
+
+        private static string GetTimeStamp(TimeSpan? shiftTime)
+        {
+            if (shiftTime == null)
+            {
+                return null;
+            }
+            var ts = (TimeSpan)shiftTime;
+            var str = DateTime.Today.Add(ts).ToString("hh:mm tt");
+            return str;
+        }
+
+        public void SendReminderEmails()
+        {
+            var token = _apiUserService.GetToken();
+
+            var reminders = _responseService.GetServeReminders(token);
+            var serveReminders = reminders.Select(Mapper.Map<ServeReminder>);
+            
+            var fromId = AppSetting("DefaultContactEmailId");
+            var fromEmail = _contactService.GetContactById(fromId).Email_Address;
+
+            serveReminders.ForEach(reminder =>
+            {
+                var contact = _contactService.GetContactById(reminder.SignedupContactId);
+
+                // is there a template set?
+                var templateId = reminder.TemplateId ?? AppSetting("DefaultServeReminderTemplate");
+                var mergeData = new Dictionary<string, object>(){
+                    {"Opportunity_Title", reminder.OpportunityTitle},
+                    {"Nickname", contact.Nickname},
+                    {"Event_Start_Date", reminder.EventStartDate.ToShortDateString()},
+                    {"Event_End_Date", reminder.EventEndDate.ToShortDateString()},
+                    {"Shift_Start", reminder.ShiftStart.FormatAsString()},
+                    {"Shift_End", reminder.ShiftEnd.FormatAsString()}
+                 };
+                var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                     fromId,
+                                                                                     fromEmail,
+                                                                                     reminder.OpportunityContactId,
+                                                                                     reminder.OpportunityEmailAddress,
+                                                                                     reminder.SignedupContactId,
+                                                                                     reminder.SignedupEmailAddress,
+                                                                                     mergeData);
+                _communicationService.SendMessage(communication);
+
+            });
+
+        }
+
+        public List<GroupContactDTO> PotentialVolunteers(int groupId, Models.Crossroads.Events.Event evnt, List<GroupParticipant> groupMembers)
+        {
+            var responses = _opportunityService.GetContactsOpportunityResponseByGroupAndEvent(groupId, evnt.EventId).Select(res =>
+            {
+                var r = new OpportunityResponseDto()
+                {
+                    EventId = res.Event_ID,
+                    OpportunityEvent = evnt,
+                    ParticipantId = res.Participant_ID,
+                    ResponseResultId = res.Response_Result_ID,
+                    OpportunityId = -1,
+                    ResponseId = -1,
+                    Closed = false,
+                    ResponseDate = res.Response_Date,
+                    ContactId = res.Contact_ID
+                };
+                return r;
+            }).ToList();
+
+            //var filteredGroupMembers = new List<GroupContactDTO>();
+            return groupMembers.Where(gm =>
+            {
+                // did this person respond?
+                //var responded = responses.All(r => r.ContactId == gm.ContactId);
+                var responded = false;
+                responses.ForEach(r =>
+                {
+                    if (r.ContactId == gm.ContactId)
+                    {
+                        responded = true;
+                    }
+                });
+                if(responded)
+                {
+                    return false;
+                }
+                var respondedOnWeekend = RespondedOnWeekend(evnt, gm);
+                return !respondedOnWeekend;
+            }).ToList().Select( m => new GroupContactDTO()
+            {
+                ContactId = m.ContactId,
+                DisplayName = String.Format("{0}, {1}", m.LastName, m.NickName)
+            }).ToList();
+
+        }
+
+        private bool RespondedOnWeekend(Models.Crossroads.Events.Event evnt, GroupParticipant gm)
+        {
+
+            // this person did not respond, they are a potential contact so far
+            // now determine if this event is a weekend event...
+            if (evnt.StartDate.IsWeekend())
+            {   
+                // first look for other responses on the same day...
+                if (!SearchForResponsesByParticipantAndDate(gm.ParticipantId, evnt.StartDate.ToMinistryPlatformSearchFormat()))
+                {
+                    return SearchForResponsesByParticipantAndDate(gm.ParticipantId, evnt.StartDate.DayOfWeek == DayOfWeek.Saturday ? evnt.StartDate.AddDays(1).ToMinistryPlatformSearchFormat() : evnt.StartDate.AddDays(-1).ToMinistryPlatformSearchFormat());
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private bool SearchForResponsesByParticipantAndDate(int participantId, string dateToSearch)
+        {
+            // any response at all on Sunday?
+            var search = string.Format(",,{0},,,,{1}", participantId, dateToSearch);
+            var otherResponses = _opportunityService.SearchResponseByGroupAndEvent(search);
+            return otherResponses.Any();
         }
 
         private static DateTime IncrementSequenceDate(Event @event, DateTime sequenceDate, int increment)
@@ -536,13 +670,14 @@ namespace crds_angular.Services
         private Communication SetupCommunication(int templateId, MyContact groupContact, MyContact toContact, Dictionary<string, object> mergeData)
         {
             var template = _communicationService.GetTemplate(templateId);
+            var defaultContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             return new Communication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
+                FromContact = new Contact {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address},
                 ReplyToContact = new Contact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
                 ToContacts = new List<Contact> {new Contact {ContactId = toContact.Contact_ID, EmailAddress = toContact.Email_Address}},
                 MergeData = mergeData

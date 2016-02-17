@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
 
@@ -34,6 +35,12 @@ namespace MinistryPlatform.Translation.Services
             return (GetUser(searchString));
         }
 
+        public MinistryPlatformUser GetUserByResetToken(string resetToken)
+        {
+            var searchString = string.Format(",,,,,\"{0}\"", resetToken);
+            return (GetUser(searchString));
+        }
+
         private MinistryPlatformUser GetUser(string searchString)
         {
             var records = _ministryPlatformService.GetPageViewRecords(_usersApiLookupPageViewId, ApiLogin(), searchString);
@@ -47,10 +54,26 @@ namespace MinistryPlatform.Translation.Services
             {
                 CanImpersonate = record["Can_Impersonate"] as bool? ?? false,
                 Guid = record.ContainsKey("User_GUID") ? record["User_GUID"].ToString() : null,
-                UserId = record["User_Name"] as string
+                UserId = record["User_Name"] as string,
+                UserEmail = record["User_Email"] as string,
+                UserRecordId = Int32.Parse(record["dp_RecordID"].ToString())
             };
 
             return (user);
+        }
+
+        public List<RoleDto> GetUserRoles(int userId)
+        {
+            var records = _ministryPlatformService.GetSubpageViewRecords("User_Roles_With_ID", userId, ApiLogin());
+            if (records == null || !records.Any())
+            {
+                return (null);
+            }
+
+            return records.Select(record => new RoleDto
+            {
+                Id = record.ToInt("Role_ID"), Name = record.ToString("Role_Name")
+            }).ToList();
         }
 
         public void UpdateUser(Dictionary<string, object> userUpdateValues)
@@ -72,7 +95,7 @@ namespace MinistryPlatform.Translation.Services
 
         public int GetContactIdByUserId(int userId)
         {
-            var records = _ministryPlatformService.GetPageViewRecords(2194, ApiLogin(), (""+userId+","));//  GetRecordsDict(Convert.ToInt32(ConfigurationManager.AppSettings["Users"]), ApiLogin(), ("," + email));
+            var records = _ministryPlatformService.GetPageViewRecords(2194, ApiLogin(), ("\"" + userId + "\",")); //
             if (records.Count != 1)
             {
                 throw new Exception("User ID did not return exactly one user record");
@@ -81,5 +104,6 @@ namespace MinistryPlatform.Translation.Services
             var record = records[0];
             return record.ToInt("Contact ID");
         }
+
     }
 }

@@ -10,9 +10,9 @@
 <preloader full-screen='true' ng-show="!volunteer.viewReady"> </preloader>
 
 <div ng-show="volunteer.viewReady">
-  <h2 class="header noPspace" dynamic-content="volunteer.pageInfo.title | html"></h2>
+  <h1 class="page-header" dynamic-content="volunteer.pageInfo.title | html"></h1>
   <div>
-    <p id="content" class="noPspace" dir="ltr" dynamic-content="volunteer.pageInfo.content | html" ng-show="volunteer.showContent"></p>
+    <p id="content" dir="ltr" dynamic-content="volunteer.pageInfo.content | html" ng-show="volunteer.showContent"></p>
     <p id="existingMemberMessage" dynamic-content="volunteer.pageInfo.existingMember | html" ng-show="volunteer.showAllSignedUp"></p>
     <p id="successMessage" dynamic-content="volunteer.pageInfo.success | html" ng-show="volunteer.showSuccess"></p>
   </div>
@@ -23,7 +23,7 @@
       <p>
         <div class="checkbox" ng-repeat="participant in volunteer.participants as people">
           <label>
-            <span> 
+            <span>
               <input name="input" type="checkbox" ng-checked="volunteer.disableCheckbox(participant)" ng-disabled="volunteer.disableCheckbox(participant)" ng-model="participant.add">
             </span>
             <span ng-class="{'text-muted':volunteer.disableCheckbox(participant)}">
@@ -42,7 +42,11 @@
         </div>
       </p>
       <p>
-        <input type="submit" name="submit_group_signup" value="Request to Join {{ volunteer.pageInfo.title }}" id="submit_group_signup" class="btn btn-primary push-half-bottom">
+        <input type="submit"
+               name="submit_group_signup"
+               value="Request to Join"
+               id="submit_group_signup"
+               class="btn btn-primary push-half-bottom">
       </p>
     </form>
   </div>
