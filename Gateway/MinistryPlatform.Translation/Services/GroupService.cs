@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int GroupSignupRelationsPageId = Convert.ToInt32((AppSettings("GroupSignUpRelations")));
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
-
+        private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
 
@@ -378,5 +378,38 @@ namespace MinistryPlatform.Translation.Services
                 ContactId = rec.ToInt("Contact_ID"), NickName = rec.ToString("Nickname"), LastName = rec.ToString("Last_Name")
             }).ToList();
         }
+
+        public List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        {
+            var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
+            if (groupDetails == null || groupDetails.Count == 0)
+            {
+                return null;
+            }
+            return groupDetails.Select(details => new Group()
+            {
+                GroupId = details.ToInt("Group_ID"),
+                CongregationId = details.ToInt("Congregation_ID"),
+                Name = details.ToString("Group_Name"),
+                GroupRoleId = details.ToInt("Group_Role_ID"),
+                GroupDescription = details.ToString("Description"),
+                MinistryId = details.ToInt("Ministry_ID"),
+                ContactId = details.ToInt("Primary_Contact"),
+                GroupType = details.ToInt("Group_Type_ID"),
+                StartDate = details.ToDate("Start_Date"),
+                EndDate = details.ToDate("End_Date"),
+                MeetingDayId = details.ToInt("Meeting_Day_ID"),
+                MeetingTime = (TimeSpan) details.ToNullableTimeSpan("Meeting_Time"),
+                AvailableOnline = details.ToBool("Available_Online"),
+                Address = new Address()
+                {
+                    Address_Line_1 = details.ToString("Address_Line_1"),
+                    Address_Line_2 = details.ToString("Address_Line_2"),
+                    City = details.ToString("City"),
+                    State = details.ToString("State"),
+                    Postal_Code = details.ToString("Zip_Code")
+                }
+            }).ToList();
+        } 
     }
 }

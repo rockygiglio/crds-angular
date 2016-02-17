@@ -9,5 +9,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<Response> GetParticipantResponses(int participantId);
         Participant GetParticipantRecord(string token);
         void UpdateParticipant(Dictionary<string, object> getDictionary);
+        void GetGroupsForParticipant(int participantId);
     }
 }

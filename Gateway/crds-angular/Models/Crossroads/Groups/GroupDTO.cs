@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Groups
 {
-    
+
     public class GroupDTO
     {
         [JsonProperty(PropertyName = "groupName")]
@@ -61,18 +61,21 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "events")]
         public List<Event> Events { get; set; }
 
-        [JsonProperty(PropertyName = "addressId")]
-        public int AddressId { get; set; }
-
         [JsonProperty(PropertyName = "meetingDayId")]
         public int MeetingDayId { get; set; }
 
         [JsonProperty(PropertyName = "meetingTime")]
         public TimeSpan? MeetingTime { get; set; }
 
+        [JsonProperty(PropertyName = "groupRoleId")]
+        public int GroupRoleId { get; set; }
+
+        [JsonProperty(PropertyName = "addresss")]
+        public AddressDTO Address { get; set; }
+
         [JsonProperty(PropertyName = "attributes")]
         public List<crds_angular.Models.Crossroads.Profile.ContactAttributeDTO> Attributes { get; set; }
     }
 
-   
+
 }
