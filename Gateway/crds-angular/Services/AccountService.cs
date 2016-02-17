@@ -22,8 +22,17 @@ namespace crds_angular.Services
         private readonly ISubscriptionsService _subscriptionsService;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILookupService _lookupService;
+        private readonly IApiUserService _apiUserService;
+        private readonly IContactService _contactService;
 
-        public AccountService(IConfigurationWrapper configurationWrapper, ICommunicationService communicationService, IAuthenticationService authenticationService, ISubscriptionsService subscriptionService, IMinistryPlatformService ministryPlatformService, ILookupService lookupService)
+        public AccountService(IConfigurationWrapper configurationWrapper, 
+            ICommunicationService communicationService, 
+            IAuthenticationService authenticationService, 
+            ISubscriptionsService subscriptionService, 
+            IMinistryPlatformService ministryPlatformService, 
+            ILookupService lookupService,
+            IApiUserService apiUserService,
+            IContactService contactService)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
@@ -31,7 +40,8 @@ namespace crds_angular.Services
             _subscriptionsService = subscriptionService;
             _ministryPlatformService = ministryPlatformService;
             _lookupService = lookupService;
-
+            _apiUserService = apiUserService;
+            _contactService = contactService;
         }
         public bool ChangePassword(string token, string newPassword)
         {
@@ -173,36 +183,31 @@ namespace crds_angular.Services
             _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), contactDictionary, token);
         }
 
-        public Dictionary<string, string>RegisterPerson(User newUserData)
+        public User RegisterPerson(User newUserData)
         {
-            var apiUser = _configurationWrapper.GetEnvironmentVarAsString("API_USER");
-            var apiPassword = _configurationWrapper.GetEnvironmentVarAsString("API_PASSWORD");
-            var authData = _authenticationService.Authenticate(apiUser, apiPassword);
-            var token = authData["token"].ToString();
-
+            var token = _apiUserService.GetToken();
             var exists = _lookupService.EmailSearch(newUserData.email, token);
             if (exists != null && exists.Any())
             {
                 throw (new DuplicateUserException(newUserData.email));
             }
 
-            var householdRecordId = CreateHouseholdRecord(newUserData,token);
-            var contactRecordId = CreateContactRecord(newUserData,token,householdRecordId);
+            var contactId = _contactService.GetContactIdByEmail(newUserData.email);
+            if (contactId != 0)
+            {
+                throw new ContactEmailExistsException(contactId, newUserData.email);
+            }
+            var householdRecordId = CreateHouseholdRecord(newUserData, token);
+            var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);
-
             CreateContactHouseholdRecord(token, householdRecordId, contactRecordId);
             CreateUserRoleSubRecord(token, userRecordId);
             CreateParticipantRecord(token, contactRecordId);
-
             CreateNewUserSubscriptions(contactRecordId, token);
 
-            // TODO Contingent on cascading delete via contact
-            var returnValues = new Dictionary<string, string>();
-            returnValues["firstname"] = newUserData.firstName;
-            returnValues["lastname"] = newUserData.lastName;
-            returnValues["email"] = newUserData.email;
-            returnValues["password"] = newUserData.password; //TODO Conisder encrypting the password on the user model
-            return returnValues;
+            //TODO Contingent on cascading delete via contact
+            //TODO Conisder encrypting the password on the user model
+            return newUserData;
         }
 
         private void CreateNewUserSubscriptions(int contactRecordId, string token)
@@ -217,4 +222,6 @@ namespace crds_angular.Services
         }
 
     }
+
+    
 }

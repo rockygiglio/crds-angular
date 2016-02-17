@@ -28,17 +28,16 @@ namespace crds_angular.test.controllers
         public void ShouldRegisterNewUser()
         {
             var user = new User();
-            var newUser = new Dictionary<string, string>();
-            _accountService.Setup(mocked => mocked.RegisterPerson(user)).Returns(newUser);
+            _accountService.Setup(mocked => mocked.RegisterPerson(user)).Returns(user);
 
             var response = _fixture.Post(user);
             _accountService.VerifyAll();
 
             Assert.IsNotNull(response);
-            Assert.IsInstanceOf<OkNegotiatedContentResult<Dictionary<string, string>>>(response);
-            var responseData = ((OkNegotiatedContentResult<Dictionary<string, string>>) response).Content;
+            Assert.IsInstanceOf<OkNegotiatedContentResult<User>>(response);
+            var responseData = ((OkNegotiatedContentResult<User>) response).Content;
             Assert.IsNotNull(responseData);
-            Assert.AreSame(newUser, responseData);
+            Assert.AreSame(user, responseData);
         }
 
         [Test]
