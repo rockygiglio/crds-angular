@@ -11,7 +11,8 @@
     return {
       restrict: 'AE',
       scope: {
-        group: '='
+        group: '=',
+        headline: '@'
       },
       controller: require('./group_invitation.controller'),
       controllerAs: 'ctrl',
