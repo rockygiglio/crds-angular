@@ -7,21 +7,28 @@
 
   function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
 
-    var defaultGroup = {
-      groupTitle: 'Jon S',
-      description: 'Your description will go here...',
-      type: 0,
+    $scope.defaultGroup = {
+      groupTitle: 'Brian T',
+      type: 3,
       time: 'Fridays at 7pm',
-      attributes: ['kids welcome', 'has a cat'],
-      host: { contactId: 12345 }
+      imageUrl: 'https://s3.amazonaws.com/ample-useast/brian-tome.jpg',
+      attributes: ['kids welcome', 'has cats'],
+      host: { contactId: 12345 },
+      description: 'Hi, I\'m Brian, a 30 something father, husband and Bengals apologist.' +
+                   'This isn\'t my first rodeo, but it\'s my first time hosting a group.' +
+                   'We\'ll be meeting at my humble home in Hyde Park.'
     };
 
-    $scope.group = angular.isDefined($scope.group) ? $scope.group : defaultGroup;
-
+    $scope.displayDefaultGroup = !angular.isDefined($scope.group);
+    $scope.group = $scope.displayDefaultGroup ? $scope.defaultGroup : $scope.group;
     $scope.host = $scope.group.host;
 
     $scope.getProfileImage = function() {
-      return ImageService.ProfileImageBaseURL + $scope.host.contactId;
+      if($scope.displayDefaultGroup) {
+        return $scope.defaultGroup.imageUrl;
+      } else {
+        return ImageService.ProfileImageBaseURL + $scope.host.contactId;
+      }
     };
 
     $scope.getDefaultImage = function() {
@@ -48,7 +55,6 @@
         $scope.getGroupDistance = function() { return ''; };
       });
     }
-
 
     $scope.getGroupType = function() {
       return GROUP_TYPES[$scope.group.type];

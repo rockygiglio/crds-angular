@@ -2,11 +2,14 @@
   <div class="page-header">
     <h2>Are all your answers correct?</h2>
   </div>
-
   <group-profile group="host.group"></group-profile>
+  <p><a class="btn btn-next-question btn-block" href="#" ui-sref="group_finder.host.confirm">Publish This Group</a></p>
 
-  <div class="btns">
-    <a class="btn btn-primary" href="#" ui-sref="group_finder.host.confirm">Yes, this is correct</a>
-    <a class="btn btn-warning" href="#" ng-click="host.startOver()">No, I need to make some changes</a>
+  <p class="text-center">YO! This action is final, your information cannot be edited past this point.</p>
+
+  <br />
+  <div class="clearfix">
+    <a class="btn btn-previous-question pull-left" href="#" ng-click="host.goBack()">Back</a>
+    <a class="btn btn-next-question pull-right" href="#" ng-click="host.startOver()">Start Over</a>
   </div>
 </div>

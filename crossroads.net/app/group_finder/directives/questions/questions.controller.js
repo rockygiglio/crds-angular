@@ -3,11 +3,28 @@
 
   module.exports = QuestionsCtrl;
 
-  QuestionsCtrl.$inject = ['$timeout', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'Responses'];
+  QuestionsCtrl.$inject = [
+    '$location',
+    '$timeout',
+    '$rootScope',
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$window',
+    'Responses'
+  ];
 
-  function QuestionsCtrl($timeout, $rootScope, $scope, $state, $stateParams, $window, Responses) {
+  function QuestionsCtrl( $location,
+                          $timeout,
+                          $rootScope,
+                          $scope,
+                          $state,
+                          $stateParams,
+                          $window,
+                          Responses) {
 
     $scope.initialize = function() {
+      $scope.step = $location.hash() || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.getQuestions());
     };
@@ -134,6 +151,21 @@
       },100);
     };
 
+
+    // ----------------------------------- //
+
+    $scope.$watch('step', function(step) {
+      $location.hash(step);
+    });
+
+    $window.onhashchange = function(e) {
+      var hash = $location.hash();
+      if( hash &&
+          $.isNumeric(hash) &&
+          parseInt(hash) !== $scope.step) {
+        $scope.step = parseInt(hash);
+      }
+    };
 
     // ----------------------------------- //
 

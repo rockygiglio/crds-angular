@@ -12,6 +12,8 @@
       vm.responses = Responses.data;
       vm.group = {
         groupTitle: $scope.person.firstName + ' ' + $scope.person.lastName[0] + '.',
+        time: vm.getGroupTime(),
+        distance: '0 miles from you',
         description: vm.responses.description,
         type: vm.responses.group_type,
         attributes: vm.getGroupAttributes(),
@@ -38,6 +40,13 @@
         if(pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
       }
       return ret;
+    };
+
+    vm.getGroupTime = function() {
+      var dt = vm.responses.date_and_time;
+      if(dt) {
+        return dt['day'] + 's @ ' + dt['time'] + dt['ampm'];
+      }
     };
 
     // ------------------------------- //

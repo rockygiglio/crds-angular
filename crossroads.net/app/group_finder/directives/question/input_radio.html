@@ -2,7 +2,8 @@
 <div class="bordered">
   <div class="radio" ng-repeat="answer in definition.answers track by $index">
     <label>
-      <input type="radio" name="{{definition.key}}" value="{{$index}}" ng-model="responses[definition.key]" ng-change="checkError()" /> {{answer}}
+      <input type="radio" name="{{definition.key}}" value="{{$index}}" ng-model="responses[definition.key]" ng-change="checkError()" />
+      <span>{{answer}}</span>
     </label>
   </div>
 </div>

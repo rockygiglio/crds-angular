@@ -143,14 +143,14 @@
       "key": "profile_setup2",
       "header": "You'll end up with something like this...",
       "include": "templates/example_group.html",
-      "help": "FYI: Don't worry about the profile pic. It'll be your Crossroads.net profile picture. So what ever you load there, will appear here. Yay technology!"
+      "help": "<strong>FYI:</strong> Don't worry about the profile pic. It'll be your Crossroads.net profile picture. So what ever you load there, will appear here. Yay technology!"
     },
     {
       "key": "description",
       "header": "So let's make your's personal",
       "description": "Write a few highlights that tell people what you're all about.",
       "label": "Your message",
-      "help": "Example: Hi, I'm Kevin, a 30 something father, husband and Bengals apologist. This isn't my first rodeo, but it's my first time hosting a group. We’ll be meeting at my humble home in Hyde Park.",
+      "help": "<strong>Here's an example:</strong> Hi, I'm Kevin, a 30 something father, husband and Bengals apologist. This isn't my first rodeo, but it's my first time hosting a group. We’ll be meeting at my humble home in Hyde Park.",
       "input_type": "textarea",
       "required": true
     },
@@ -162,7 +162,8 @@
     {
       "key": "review_setup2",
       "header": "Ready to review?",
-      "description": "No pressure, this is only going to be viewable to thousands of people."
+      "description": "No pressure, this is only going to be viewable to thousands of people.",
+      "next": "Let's Review"
     }
   ]
 }
