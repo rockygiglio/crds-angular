@@ -18,21 +18,6 @@ namespace crds_angular.test.Services
 {
     internal class ListHandlerTest
     {
-        //private ILoginService _loginService;
-
-        //private Mock<ILog> _logger;
-
-        //private Mock<MPInterfaces.IAuthenticationService> _authenticationService;
-        //private Mock<IConfigurationWrapper> _configurationWrapper;
-        //private Mock<MPInterfaces.IContactService> _contactService;
-        //private Mock<IEmailCommunication> _emailCommunication;
-        //private Mock<MPInterfaces.IUserService> _userService;
-
-        //private readonly ILog _logger = LogManager.GetLogger(typeof(MailchimpListHandler));
-        //private readonly IConfigurationWrapper _configWrapper;
-        //private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
-        //private readonly IRestClient _restClient;
-
         private Mock<ILog> _logger;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<MPInterfaces.IBulkEmailRepository> _bulkEmailRepository;
