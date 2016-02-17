@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads
 {
@@ -9,6 +10,10 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "childCareNeeded")]
         public bool childCareNeeded { get; set; }
+
+        [JsonProperty(PropertyName = "groupRoleId")]
+        public int groupRoleId { get; set; }
+
     }
 
 }

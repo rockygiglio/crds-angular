@@ -48,13 +48,21 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
         }
 
-        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
+        //public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
+        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants, bool isCommunityGroup)
         {
             Group group;
-
+            //bool isCommunityGroup = false;
             try
             {
                 group = _mpGroupService.getGroupDetails(groupId);
+                //GroupType not always 8 for Community Group - also have GroupType_Waitlist
+                //TODO add GroupType_CommunityGroup to MinistryPlatform.config
+                /*if (group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_CommunityGroup"))
+                {
+                    isCommunityGroup = true;
+                }
+                */
             }
             catch (Exception e)
             {
@@ -63,23 +71,37 @@ namespace crds_angular.Services
                 throw (new ApplicationException(message, e));
             }
 
-            var numParticipantsToAdd = participants.Count;
-            var spaceRemaining = group.TargetSize - group.Participants.Count;
-            if (((group.TargetSize > 0) && (numParticipantsToAdd > spaceRemaining)) || (group.Full))
+            if (isCommunityGroup)
             {
-                throw (new GroupFullException(group));
+                checkSpaceRemaining(participants, group);
             }
 
             try
             {
                 foreach (var participant in participants)
                 {
-                    // First sign this user up for the community group
-                    int groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
-                                                                                   Convert.ToInt32(groupId),
-                                                                                   GroupRoleDefaultId,
-                                                                                   participant.childCareNeeded,
-                                                                                   DateTime.Now);
+                    int groupParticipantId;
+
+                    // Sign this user up for the community group
+                    if (isCommunityGroup)
+                    {
+                        groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
+                                                                                       Convert.ToInt32(groupId),
+                                                                                       GroupRoleDefaultId,
+                                                                                       participant.childCareNeeded,
+                                                                                       DateTime.Now);
+                    }
+                    //Sign this user up for a journey group/small group/etc
+                    //participant.groupRoleId needs to come from front end - member or leader
+                    else
+                    {
+                        groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
+                                                                                       Convert.ToInt32(groupId),
+                                                                                       participant.groupRoleId,
+                                                                                       participant.childCareNeeded,
+                                                                                       DateTime.Now);
+                    }
+
                     logger.Debug("Added user - group/participant id = " + groupParticipantId);
 
                     // Now see what future events are scheduled for this group, and register the user for those
@@ -94,7 +116,11 @@ namespace crds_angular.Services
                         }
                     }
                     var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
-                    _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
+
+                    if (isCommunityGroup)
+                    {
+                        _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
+                    }
                 }
 
                 return;
@@ -103,6 +129,16 @@ namespace crds_angular.Services
             {
                 logger.Error("Could not add user to group", e);
                 throw;
+            }
+        }
+
+        private void checkSpaceRemaining(List<ParticipantSignup> participants, Group group)
+        {
+            var numParticipantsToAdd = participants.Count;
+            var spaceRemaining = group.TargetSize - group.Participants.Count;
+            if (((group.TargetSize > 0) && (numParticipantsToAdd > spaceRemaining)) || (group.Full))
+            {
+                throw (new GroupFullException(group));
             }
         }
 
