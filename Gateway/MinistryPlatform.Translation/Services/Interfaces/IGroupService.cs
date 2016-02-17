@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Models.Groups;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
@@ -35,6 +34,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 
         IList<string> GetEventTypesForGroup(int groupId, string token = null);
 
-        List<GroupDetails> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
+        List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
     }
 }

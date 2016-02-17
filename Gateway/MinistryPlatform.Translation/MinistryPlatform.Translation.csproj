@@ -102,7 +102,6 @@
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
-    <Compile Include="Models\Groups\GroupDetails.cs" />
     <Compile Include="Models\MPServeReminders.cs" />
     <Compile Include="Models\Opportunities\MPResponse.cs" />
     <Compile Include="Models\People\MpParticipant.cs" />

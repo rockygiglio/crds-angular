@@ -259,6 +259,7 @@
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
+    <Compile Include="Models\Crossroads\AddressDTO.cs" />
     <Compile Include="Models\Crossroads\CommunicationDTO.cs" />
     <Compile Include="Models\Crossroads\Congregation.cs" />
     <Compile Include="Models\Crossroads\DonorStatementDTO.cs" />
@@ -274,7 +275,6 @@
     <Compile Include="Models\Crossroads\Events\Event.cs" />
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
     <Compile Include="Models\Crossroads\Events\EventRsvpDTO.cs" />
-    <Compile Include="Models\Crossroads\Groups\GroupDetailsDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />

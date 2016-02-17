@@ -9,7 +9,6 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Models.Groups;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -213,10 +212,10 @@ namespace crds_angular.Services
             return (detail);
         }
 
-        public List<GroupDetailsDto> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        public List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
-            var groupDetail = groupsByType.Select(Mapper.Map<GroupDetails, GroupDetailsDto>).ToList();
+            var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
             return groupDetail;
         }
     }
