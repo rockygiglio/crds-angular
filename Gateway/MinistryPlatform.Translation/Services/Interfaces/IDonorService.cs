@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
             DonorAccount donorAccount = null
             );
 
-        int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution);
+        int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true);
         ContactDonor GetContactDonor(int contactId);
         ContactDonor GetPossibleGuestContactDonor(string email);
         ContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber);

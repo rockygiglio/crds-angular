@@ -38,6 +38,7 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorStatementTypeFamily")).Returns(456);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorIdForBankErrorRefund")).Returns(987);
 
             _fixture = new DonationService(_mpDonationService.Object, _mpDonorService.Object, _paymentService.Object, _contactService.Object, _configurationWrapper.Object);
         }
@@ -1296,6 +1297,44 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestCreateDonationForBankAccountErrorRefundNoBalanceTransaction()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData()
+                }
+            };
+
+            Assert.IsNull(_fixture.CreateDonationForBankAccountErrorRefund(refund));
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForBankAccountErrorRefundWrongBalanceTransactionType()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData
+                    {
+                        BalanceTransaction = new StripeBalanceTransaction
+                        {
+                            Type = "not_payment_failure_refund"
+                        }
+                    }
+                }
+            };
+
+            Assert.IsNull(_fixture.CreateDonationForBankAccountErrorRefund(refund));
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+        }
+
+        [Test]
         public void TestCreateDonationForInvoiceNoAmount()
         {
             var invoice = new StripeInvoice
@@ -1426,7 +1465,7 @@ namespace crds_angular.test.Services
                                  d.DonorAcctId.Equals(donorAccountId + "") &&
                                  d.CheckScannerBatchName == null &&
                                  d.DonationStatus == donationStatus &&
-                                 d.CheckNumber == null))).Returns(123);
+                                 d.CheckNumber == null), true)).Returns(123);
 
             _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
