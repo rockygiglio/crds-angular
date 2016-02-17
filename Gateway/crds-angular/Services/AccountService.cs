@@ -193,10 +193,11 @@ namespace crds_angular.Services
             }
 
             var contactId = _contactService.GetContactIdByEmail(newUserData.email);
-            if (contactId != 0)
-            {
-                throw new ContactEmailExistsException(contactId, newUserData.email);
-            }
+            //if (contactId != 0)
+            //{
+
+            //    throw new ContactEmailExistsException(contactId, newUserData.email);
+            //}
             var householdRecordId = CreateHouseholdRecord(newUserData, token);
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);
