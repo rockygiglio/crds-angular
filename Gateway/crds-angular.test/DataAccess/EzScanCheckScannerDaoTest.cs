@@ -150,7 +150,7 @@ namespace crds_angular.test.DataAccess
             var dbCommand = new Mock<IDbCommand>();
             dbCommand.Setup(mocked => mocked.Dispose());
             dbCommand.SetupSet(mocked => mocked.CommandType = CommandType.Text).Verifiable();
-            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, DonorID, COALESCE(Exported, 0), ErrorMessage, EncryptAccount, Amount, CheckNo, DateScan, EncryptRoute, Payor, DateCheck, Payor2, Address, Address2, City, State, Zip FROM Items WHERE IDBatch = @IDBatch").Verifiable();
+            dbCommand.SetupSet(mocked => mocked.CommandText = "SELECT ID, DonorID, COALESCE(Exported, 0), ErrorMessage, EncryptAccount, Amount, CheckNo, DateScan, EncryptRoute, Payor, DateProcess, Payor2, Address, Address2, City, State, Zip FROM Items WHERE IDBatch = @IDBatch").Verifiable();
             dbCommand.Setup(mocked => mocked.ExecuteReader()).Returns(dataReader.Object);
 
             var idBatchParam = new Mock<IDbDataParameter>();
