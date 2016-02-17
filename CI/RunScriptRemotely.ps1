@@ -7,7 +7,7 @@ Param (
   [string]$DBServer = "216.68.184.202", # default to public IP of MPTEST02
   [string]$ScriptPath = $(throw "-ScriptPath (Path to powershell script to run) is required."),
   [string]$Username = "Administrator",
-  [string]$Password = $Env:MPTEST02_PASS;
+  [string]$Password = $Env:MPTEST02_PASS
 )
 
 $exitCode = 0;
