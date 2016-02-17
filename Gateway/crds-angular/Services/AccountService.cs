@@ -23,7 +23,6 @@ namespace crds_angular.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILookupService _lookupService;
         private readonly IApiUserService _apiUserService;
-        private readonly IContactService _contactService;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
             ICommunicationService communicationService, 
@@ -31,8 +30,7 @@ namespace crds_angular.Services
             ISubscriptionsService subscriptionService, 
             IMinistryPlatformService ministryPlatformService, 
             ILookupService lookupService,
-            IApiUserService apiUserService,
-            IContactService contactService)
+            IApiUserService apiUserService)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
@@ -41,7 +39,6 @@ namespace crds_angular.Services
             _ministryPlatformService = ministryPlatformService;
             _lookupService = lookupService;
             _apiUserService = apiUserService;
-            _contactService = contactService;
         }
         public bool ChangePassword(string token, string newPassword)
         {
@@ -191,13 +188,6 @@ namespace crds_angular.Services
             {
                 throw (new DuplicateUserException(newUserData.email));
             }
-
-            var contactId = _contactService.GetContactIdByEmail(newUserData.email);
-            //if (contactId != 0)
-            //{
-
-            //    throw new ContactEmailExistsException(contactId, newUserData.email);
-            //}
             var householdRecordId = CreateHouseholdRecord(newUserData, token);
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);

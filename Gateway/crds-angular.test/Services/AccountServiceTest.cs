@@ -19,7 +19,6 @@ namespace crds_angular.test.Services
         private Mock<ISubscriptionsService> _subscriptionService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IApiUserService> _apiUserService;
-        private Mock<IContactService> _contactService;
 
         private AccountService _fixture;
 
@@ -33,7 +32,6 @@ namespace crds_angular.test.Services
             _subscriptionService = new Mock<ISubscriptionsService>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _apiUserService = new Mock<IApiUserService>();
-            _contactService = new Mock<IContactService>();
 
             _fixture = new AccountService(_configurationWrapper.Object,
                                           _comunicationService.Object,
@@ -41,8 +39,7 @@ namespace crds_angular.test.Services
                                           _subscriptionService.Object,
                                           _ministryPlatformService.Object,
                                           _lookupService.Object,
-                                          _apiUserService.Object,
-                                          _contactService.Object);
+                                          _apiUserService.Object);
         }
 
         [Test]
@@ -60,8 +57,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("user");
             _configurationWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
             _apiUserService.Setup(mocked => mocked.GetToken()).Returns("1234567890");
-            //_authenticationService.Setup(mocked => mocked.Authenticate("user", "password")).Returns(new Dictionary<string, object> {{"token", "auth_token"}});
-
+            
             _lookupService.Setup(mocked => mocked.EmailSearch(newUserData.email, "1234567890")).Returns(new Dictionary<string, object> { {"dp_RecordID", 123}});
 
             _fixture.RegisterPerson(newUserData);
@@ -85,7 +81,6 @@ namespace crds_angular.test.Services
             
             _apiUserService.Setup(mocked => mocked.GetToken()).Returns("1234567890");
             _lookupService.Setup(mocked => mocked.EmailSearch(newUserData.email, "1234567890")).Returns(new Dictionary<string, object>());
-            _contactService.Setup(mocked => mocked.GetContactIdByEmail(newUserData.email)).Returns(0);
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Households")).Returns(123);
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(123, It.IsAny<Dictionary<string, object>>(), "1234567890", false)).Returns(321);
