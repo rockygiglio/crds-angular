@@ -3,35 +3,12 @@
     <div ui-view class="col-md-offset-3 col-md-6">
       <div class="summary" id="summary-1" ng-show="summary.showSlide(1)">
         <h3>Brave Groups</h3>
-        <p>BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>
-        <a class="btn btn-primary" ng-hide="summary.onLastSlide()" ng-click="summary.nextSlide()">Next</a>
-      </div>
-      <div class="summary" id="summary-2" ng-show="summary.showSlide(2)">
-        <h3>Host a group</h3>
-        <p>
-          Anyone can be a host. Anyone. We will give you the materials. You just have to supply the meeting space, and a little bit of guidance for your group. God will take care of the rest. <br><br>
-
-          You can do it! <br>
-          Hosting a BRAVE group is like hosting a dinner party. Only you don't have to supply food and we supply the dinner conversation. <br>
-          You'll tell us how many you can host.  <br>
-          You tell us where and when. <br>
-          We'll get people signed up for your group and can invite people if you like. <br>
-          We'll give you the material. You just need to follow the directions. <br>
-        </p>
-
-        <div class="text-center">
-          <a class="btn btn-warning" ui-sref="group_finder.host">Become a Host</a>
-          <a class="btn btn-primary" ui-sref="group_finder.join">Join a Group</a>
+        <p class="lead">BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>
+        <div class="btns text-center">
+          <p><a class="btn btn-next-question btn-block-mobile" ui-sref="group_finder.join">Join a Group</a></p>
+          <p><a class="btn btn-next-question btn-block-mobile" ui-sref="group_finder.host">Become a Host</a></p>
         </div>
       </div>
-      <div class="summary" id="summary-3" ng-show="summary.showSlide(3)">
-        <h3>Join a group</h3>
-        <p>Becoming a part of a group is a vital part of BRAVE. And that's why we want to help you find a group that fits you. So if you're ready, let's get started!</p>
-        <div class="text-center">
-          <a class="btn btn-primary" ui-sref="group_finder.join">Join a Group</a>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
