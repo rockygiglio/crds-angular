@@ -249,6 +249,68 @@
       "state": "OH",
       "postalCode": "45215",
       "time": "Mondays at 9pm"
+    },
+    {
+      "id": 4,
+      "type": 2,
+      "isHost": true,
+      "groupTitle": "Chris T",
+      "description": "Test group for Chris",
+      "members": [
+        {
+          "firstName": "Chris",
+          "lastName": "Tallent",
+          "emailAddress": "ctallent+groupfinder@gmail.com",
+          "genderId": 2,
+          "groupRoleId": 22,
+          "contactId": 7656921,
+          "addressLine1": "1313 Mockingbird Lane",
+          "city": "Cincinnati",
+          "state": "OH",
+          "postalCode": "45215",
+          "affinities": [
+            "Has never journeyed before",
+            "Is looking to meet new people"
+          ]
+        },
+        {
+          "firstName": "Joe",
+          "lastName": "Bing",
+          "emailAddress": "joe.bing@email.com",
+          "genderId": 1,
+          "groupRoleId": 15,
+          "contactId": 1234,
+          "addressLine1": "123 Main St",
+          "city": "Cincinnati",
+          "state": "OH",
+          "postalCode": "45215",
+          "affinities": [
+            "Has journeyed multiple times",
+            "Is looking to meet new people"
+          ]
+        },
+        {
+          "firstName": "Harry",
+          "lastName": "Chang",
+          "emailAddress": "joe.bing@email.com",
+          "genderId": 1,
+          "contactId": 12345,
+          "groupRoleId": 15,
+          "addressLine1": "123 Main St",
+          "city": "Cincinnati",
+          "state": "OH",
+          "postalCode": "45215",
+          "affinities": [
+            "Has journeyed once before",
+            "Is looking to find answers"
+          ]
+        }
+      ],
+      "addressLine1": "123 Main St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45215",
+      "time": "Mondays at 9pm"
     }
   ]
 }

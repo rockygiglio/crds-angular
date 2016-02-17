@@ -24,16 +24,7 @@
       <button class="btn btn-primary btn-block" ng-click="detail.emailGroup()">Email Your Group</button>
 
       <br />
-      <h4 class="text-center">Add someone to your group:</h4>
-      <form name="inviteForm" role="form" ng-submit="detail.inviteMember()" novalidate>
-        <div class="input-group">
-          <input type="email" placeholder="Enter email address" ng-model="detail.invitee" required class="form-control">
-          <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ng-disabled="inviteForm.$invalid">Send</button>
-          </span>
-        </div>
-        <p ng-show="inviteForm.invite.$invalid && inviteForm.$submitted" class="help-block">Valid email address required.</p>
-      </form>
+      <group-invitation group="detail.group"></group-invitation>
 
       <br />
       <div class="help">
