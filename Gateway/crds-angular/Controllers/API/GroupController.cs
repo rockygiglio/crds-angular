@@ -48,7 +48,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    groupService.addParticipantsToGroup(groupId, partId);
+                    groupService.addParticipantsToGroup(groupId, partId, true);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());
                 }

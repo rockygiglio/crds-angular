@@ -60,14 +60,14 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowExceptionWhenAddingToGroupIfGetGroupDetailsFails()
+        public void shouldThrowExceptionWhenAddingToCommunityGroupIfGetGroupDetailsFails()
         {
             Exception exception = new Exception("Oh no, Mr. Bill!");
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Throws(exception);
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -80,7 +80,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
             var g = new Group
             {
@@ -95,7 +95,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -107,7 +107,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
         {
             var g = new Group
             {
@@ -122,7 +122,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -134,7 +134,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldAddParticipantsToGroupAndEvents()
+        public void shouldAddParticipantsToCommunityGroupAndEvents()
         {
             var g = new Group
             {
@@ -164,7 +164,7 @@ namespace crds_angular.test.Services
             eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 555, 456, 888456)).Returns(888555);
             eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 444, 456, 888456)).Returns(888444);
 
-            fixture.addParticipantsToGroup(456, mockParticipantSignup);
+            fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
 
             groupService.VerifyAll();
             eventService.VerifyAll();
