@@ -9,7 +9,7 @@
         <ul class="list-unstyled">
           <li>{{getGroupType()}}</li>
           <li>{{group.time}}</li>
-          <li>{{getGroupDistance()}}</li>
+          <li>{{getGroupDistance() || group.distance}}</li>
         </ul>
       </div>
     </div>

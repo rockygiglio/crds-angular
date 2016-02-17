@@ -9,15 +9,14 @@
 
     $scope.defaultGroup = {
       groupTitle: 'Brian T',
-      description: 'Hi, I\'m Brian, a 30 something father, husband and Bengals apologist.' +
-                   'This isn\'t my first rodeo, but it\'s my first time hosting a group.' +
-                   'We\'ll be meeting at my humble home in Hyde Park.',
-
       type: 3,
       time: 'Fridays at 7pm',
       imageUrl: 'https://s3.amazonaws.com/ample-useast/brian-tome.jpg',
       attributes: ['kids welcome', 'has cats'],
-      host: { contactId: 12345 }
+      host: { contactId: 12345 },
+      description: 'Hi, I\'m Brian, a 30 something father, husband and Bengals apologist.' +
+                   'This isn\'t my first rodeo, but it\'s my first time hosting a group.' +
+                   'We\'ll be meeting at my humble home in Hyde Park.'
     };
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
@@ -56,7 +55,6 @@
         $scope.getGroupDistance = function() { return ''; };
       });
     }
-
 
     $scope.getGroupType = function() {
       return GROUP_TYPES[$scope.group.type];
