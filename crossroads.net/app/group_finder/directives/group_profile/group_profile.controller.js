@@ -8,7 +8,7 @@
   function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
 
     $scope.defaultGroup = {
-      groupTitle: 'Brian T',
+      groupTitle: 'Brian T.',
       type: 3,
       time: 'Fridays at 7pm',
       imageUrl: 'https://s3.amazonaws.com/ample-useast/brian-tome.jpg',
