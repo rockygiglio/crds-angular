@@ -35,7 +35,7 @@
     };
 
     $scope.onKeyUp = function(e) {
-      if(e.keyCode === 13) {
+      if(e.keyCode === 13 && $scope.definition.input_type !== 'textarea') {
         $scope.$parent.nextQuestion();
       }
     };
