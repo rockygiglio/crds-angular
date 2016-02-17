@@ -43,29 +43,37 @@ namespace crds_angular.Util
 
                 var subscriberStatusResponse = _restClient.Execute(subscriberStatusRequest);
 
-                BulkEmailSubscriberOptDTO subscriber = null;
-
-                // handle existing user, opt them in if they're not
                 if (subscriberStatusResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var responseContent = subscriberStatusResponse.Content;
                     var responseContentJson = JObject.Parse(responseContent);
 
-                    subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
-                }
-
-                if (subscriber != null && (subscriber.Status == "subscribed" || subscriber.Status == "pending"))
-                {
-                    return new OptInResponse
+                    var subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
+                    
+                    if (subscriber.Status == "unsubscribed")
                     {
-                        ErrorInSignupProcess = false,
-                        UserAlreadySubscribed = true
-                    };
-                }
+                        var signupSuccessful = SendSubscriberRequest(publicationId, email);
 
-                if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound || (subscriber != null && subscriber.Status == "unsubscribed"))
+                        if (signupSuccessful == true)
+                        {
+                            return new OptInResponse
+                            {
+                                ErrorInSignupProcess = false,
+                                UserAlreadySubscribed = false
+                            };
+                        }
+                    }
+                    else if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
+                    {
+                        return new OptInResponse
+                        {
+                            ErrorInSignupProcess = false,
+                            UserAlreadySubscribed = true
+                        };
+                    }
+                }
+                else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // send the signup request to mailchimp
                     var signupSuccessful = SendSubscriberRequest(publicationId, email);
 
                     if (signupSuccessful == true)
@@ -89,7 +97,6 @@ namespace crds_angular.Util
                 ErrorInSignupProcess = true,
                 UserAlreadySubscribed = false
             };
-
         }
 
         public bool SendSubscriberRequest(string publicationId, string email)
