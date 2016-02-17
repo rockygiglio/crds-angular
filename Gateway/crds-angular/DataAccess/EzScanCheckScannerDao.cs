@@ -69,7 +69,7 @@ namespace crds_angular.DataAccess
                 checks = WithDbCommand(dbCommand =>
                 {
                     dbCommand.CommandType = CommandType.Text;
-                    dbCommand.CommandText = "SELECT ID, DonorID, COALESCE(Exported, 0), ErrorMessage, EncryptAccount, Amount, CheckNo, DateScan, EncryptRoute, Payor, DateCheck, Payor2, Address, Address2, City, State, Zip FROM Items WHERE IDBatch = @IDBatch";
+                    dbCommand.CommandText = "SELECT ID, DonorID, COALESCE(Exported, 0), ErrorMessage, EncryptAccount, Amount, CheckNo, DateScan, EncryptRoute, Payor, DateProcess, Payor2, Address, Address2, City, State, Zip FROM Items WHERE IDBatch = @IDBatch";
                     var idBatchParam = dbCommand.CreateParameter();
                     idBatchParam.ParameterName = "IDBatch";
                     idBatchParam.DbType = DbType.String;
