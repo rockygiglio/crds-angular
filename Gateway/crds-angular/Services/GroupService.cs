@@ -124,10 +124,9 @@ namespace crds_angular.Services
 
         private void decrementCapacity(int capacityNeeded, Group group)
         {
-            logger.Debug("Remaining Capacity " + group.RemainingCapacity);
             group.RemainingCapacity = group.RemainingCapacity - capacityNeeded;
             logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
-            // TODO Save the group
+            _mpGroupService.UpdateGroup(group);
         }
 
         public List<Event> GetGroupEvents(int groupId, string token)

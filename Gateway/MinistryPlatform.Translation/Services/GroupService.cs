@@ -399,6 +399,53 @@ namespace MinistryPlatform.Translation.Services
                     Postal_Code = details.ToString("Zip_Code")
                 }
             }).ToList();
-        } 
+        }
+
+        public void UpdateGroup(Group group)
+        {
+            logger.Debug("Updating group: " + group.GroupId + " : " + group.Name);
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_ID", group.GroupId},
+                //{"Group_Name", group.Name},
+                //{"Group_Type_ID", group.GroupType },
+                //{"Ministry_ID", group.MinistryId },
+                //{"Congregation_ID", group.CongregationId },
+                //{"Primary_Contact", group.ContactId },
+                //{"Description", group.GroupDescription },
+                //{"Start_Date", group.StartDate },
+                //{"End_Date", group.EndDate },
+                //{"Target_Size", group.TargetSize },
+                //{"Offsite_Meeting_Address", group.Address?.Address_ID },
+                //{"Group_Is_Full", group.Full },
+                //{"Available_Online", group.AvailableOnline },
+                //{"Meeting_Time", group.MeetingTime },
+                //{"Meeting_Day_Id", group.MeetingDayId },
+                //{"Domain_ID", 1 },
+                //{"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                //{"Enable_Waiting_List", group.WaitList },
+                //{"Online_RSVP_Minimum_Age", group.MinimumAge },
+
+            };
+
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.UpdateRecord(GroupsPageId, values, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error updating group: " + e.Message);
+                }
+            });
+
+            logger.Debug("updated group " + group.GroupId);
+        }
+
+
     }
 }
