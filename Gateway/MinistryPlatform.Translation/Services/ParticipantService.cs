@@ -123,10 +123,5 @@ namespace MinistryPlatform.Translation.Services
                     string.Format("GetParticipantResponses failed.  Participant Id: {0}", participantId), ex);
             }
         }
-
-        public void GetGroupsForParticipant(int participantId)
-        {
-            
-        }  
     }
 }
