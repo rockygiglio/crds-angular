@@ -1,30 +1,29 @@
 (function(){
-    'use strict';
+  'use strict';
 
-    module.exports = GroupInvitationCtrl;
+  module.exports = GroupInvitationCtrl;
 
-    GroupInvitationCtrl.$inject = ['$scope', '$log'];
+  GroupInvitationCtrl.$inject = ['$scope', '$log'];
 
-    function GroupInvitationCtrl($scope, $log) {
-        var vm = this;
-        vm.inviteMember = inviteMember;
+  function GroupInvitationCtrl($scope, $log) {
+    var vm = this;
+    vm.inviteMember = inviteMember;
 
-        //
-        // Controller implementation
-        //
+    //
+    // Controller implementation
+    //
 
-        function inviteMember() {
-            // TODO add validation. Review how to send email without `toContactId`
-            $log.debug('Sending group invitation Email to: ' + vm.invitee);
-            var toSend = {
-                'fromContactId': $scope.group.host.contactId,
-                'fromUserId': 0,
-                'toContactId': 0,
-                'templateId': 0,
-                'mergeData': {}
-            };
-
-        };
+    function inviteMember() {
+      // TODO add validation. Review how to send email without `toContactId`
+      $log.debug('Sending group invitation Email to: ' + vm.invitee);
+      var toSend = {
+          'fromContactId': $scope.group.host.contactId,
+          'fromUserId': 0,
+          'toContactId': 0,
+          'templateId': 0,
+          'mergeData': {}
+      };
     }
+  }
 
 })();
