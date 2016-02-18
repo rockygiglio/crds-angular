@@ -22,9 +22,7 @@
       </p>
       <br />
       <div ng-switch="base.hasSession">
-        <p ng-switch-when="false"><a class="btn btn-next-question" ui-sref="group_finder.summary">Login to your crossroads account</a></p>
         <p ng-switch-when="true"><a class="btn btn-next-question" ui-sref="group_finder.summary">Let's Get Started</a></p>
-        <p ng-switch-when="true" ng-if="base.isHost"><a class="btn btn-previous-question" ui-sref="group_finder.dashboard">Go To Your Dashboard</a></p>
       </div>
     </div>
 
