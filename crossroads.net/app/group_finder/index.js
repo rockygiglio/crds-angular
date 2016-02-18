@@ -6,6 +6,7 @@
   require('./common/layout.html');
   require('./common/header.html');
   require('./summary/summary.html');
+  require('./invitation/invitation.html');
 
   angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])
     .config(require('./group_finder.routes'))
@@ -21,6 +22,7 @@
     .filter('humanize',             require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',  require('./group_finder.controller'))
     .controller('SummaryCtrl',      require('./summary/summary.controller'))
+    .controller('GroupInvitationCtrl',      require('./invitation/invitation.controller'))
     ;
 
   require('./services');

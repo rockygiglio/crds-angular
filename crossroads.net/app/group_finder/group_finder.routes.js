@@ -39,6 +39,20 @@
         }
       })
 
+      .state('group_finder.invitation', {
+        controller: 'GroupInvitationCtrl as invitation',
+        url: '/groups/:groupId',
+        templateUrl: 'invitation/invitation.html',
+        resolve: {},
+        data: {
+          isProtected: true,
+          meta: {
+            title: SERIES.title,
+            description: ''
+          }
+        }
+      })
+
     ;
 
   }
