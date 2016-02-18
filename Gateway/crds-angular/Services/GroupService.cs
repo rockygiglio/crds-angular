@@ -48,11 +48,12 @@ namespace crds_angular.Services
             MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
 
-        public GroupDTO createGroup(GroupDTO @group)
+        public GroupDTO CreateGroup(GroupDTO group)
         {
             try
             {
-                group.GroupId = _mpGroupService.createGroup(null);//TODO: convert GroupDTO to dictionary or Group?
+                var mpGroup = Mapper.Map<Group>(group);
+                group.GroupId = _mpGroupService.CreateGroup(mpGroup);
             }
             catch (Exception e)
             {

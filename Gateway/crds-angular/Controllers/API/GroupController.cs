@@ -47,9 +47,9 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    group = groupService.createGroup(group);
-                    _logger.Debug(String.Format("Successfully created group {0} ", group.GroupId));
-                    return (Created(String.Format("api/group/{0}", group.GroupId), group));
+                    group = groupService.CreateGroup(group);
+                    _logger.DebugFormat("Successfully created group {0} ", group.GroupId);
+                    return (Created(string.Format("api/group/{0}", group.GroupId), group));
                 }
                 catch (Exception e)
                 {
