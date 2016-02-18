@@ -1,21 +1,22 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    module.exports = GroupInvitationDirective;
+  module.exports = GroupInvitationDirective;
 
-    require('./group_invitation.html');
+  require('./group_invitation.html');
 
-    GroupInvitationDirective.$inject = ['$log'];
+  GroupInvitationDirective.$inject = ['$log'];
 
-    function GroupInvitationDirective($log) {
-        return {
-            restrict: 'AE',
-            scope: {
-                group: '='
-            },
-            controller: require('./group_invitation.controller'),
-            controllerAs: 'ctrl',
-            templateUrl: 'group_invitation/group_invitation.html'
-        };
-    }
+  function GroupInvitationDirective($log) {
+    return {
+      restrict: 'AE',
+      scope: {
+        group: '=',
+        headline: '@'
+      },
+      controller: require('./group_invitation.controller'),
+      controllerAs: 'ctrl',
+      templateUrl: 'group_invitation/group_invitation.html'
+    };
+  }
 })();

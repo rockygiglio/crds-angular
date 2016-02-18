@@ -28,7 +28,7 @@
         </ul>
       </div>
       <div class="col-xs-6">
-        <p><a ng-if="group.id" href="#{{group.id}}" class="pull-right btn btn-primary">Join Group</a></p>
+        <p><a ng-if="group.id" ui-sref="group_finder.invitation({groupId: group.id})" class="pull-right btn btn-primary">Join Group</a></p>
       </div>
     </div>
   </div>

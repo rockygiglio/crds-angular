@@ -3,16 +3,18 @@
 
   module.exports = GroupInvitationCtrl;
 
-  GroupInvitationCtrl.$inject = ['$cookies', '$stateParams', 'GroupInfo', 'GroupInvitationService', '$log'];
+  GroupInvitationCtrl.$inject = ['$cookies', '$stateParams', 'GroupInfo', 'GroupInvitationService', '$log', 'Responses'];
 
-  function GroupInvitationCtrl ($cookies, $stateParams, GroupInfo, GroupInvitationService, $log) {
-    $log.debug("GroupInvitationCtrl");
+  function GroupInvitationCtrl ($cookies, $stateParams, GroupInfo, GroupInvitationService, $log, Responses) {
+    $log.debug('GroupInvitationCtrl');
 
     var vm = this;
 
     vm.requestPending = true;
     vm.contactId = $cookies.get('userId');
     vm.group = null;
+    vm.showInvite = Responses.data.relationship_status = 2;
+    //vm.showInvite = true;
 
     GroupInfo.findGroupById($stateParams.groupId)
       .then(function(group) {
