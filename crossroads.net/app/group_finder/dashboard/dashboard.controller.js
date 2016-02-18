@@ -41,7 +41,6 @@
     };
 
     vm.emailGroup = function() {
-      // TODO popup with text block?
       $log.debug('Sending Email to group');
       var modalInstance = $modal.open({
         templateUrl: 'templates/group_contact_modal.html',
@@ -61,18 +60,6 @@
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
-    };
-
-    vm.inviteMember = function(email) {
-      // TODO add validation. Review how to send email without `toContactId`
-      $log.debug('Sending Email to: ' + email);
-      var toSend = {
-        'fromContactId': vm.person.contactId,
-        'fromUserId': 0,
-        'toContactId': 0,
-        'templateId': 0,
-        'mergeData': {}
-      };
     };
 
     vm.startOver = function() {

@@ -3,21 +3,24 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['$http', '$cookies'];
+  GroupInfoService.$inject = ['$http', '$cookies', '$q'];
 
-  function GroupInfoService($http, $cookies) {
+  function GroupInfoService($http, $cookies, $q) {
     var groupInfo = {};
     var groups = {
       hosting: [],
-      participating: []
+      participating: [],
+      byId: {}
     };
 
     // return $http.get('/app/group_finder/data/user.group.json')
-    $http.get('/app/group_finder/data/user.group.json')
-      .then(function(res) {
+    var requestComplete = false;
+    var dataPromise = $http.get('/app/group_finder/data/user.group.json');
+    dataPromise.then(function(res) {
         var cid = $cookies.get('userId');
         if (cid) {
           _.each(res.data.groups, function(group, i, list) {
+            groups.byId[group.id] = group;
             _.each(group.members, function(member, i, list) {
 
               if (member.groupRoleId === 22) {
@@ -35,6 +38,9 @@
           });
         }
         return groups;
+      })
+      .finally(function() {
+        requestComplete = true;
       });
 
     groupInfo.getHosting = function() {
@@ -49,6 +55,12 @@
       return _.find(groups.hosting, function(group) {
         return group.id === parseInt(id);
       });
+    };
+
+    groupInfo.findGroupById = function(id) {
+      return dataPromise.then(function() {
+        return groups.byId[id];
+      })
     };
 
     return groupInfo;

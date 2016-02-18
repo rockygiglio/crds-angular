@@ -5,6 +5,7 @@
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .factory('GroupInfo',           require('./group_info.service'))
+    .factory('GroupInvitationService',   require('./group_invitation.service.js'))
     .factory('Results',             require('./results.service'))
     .factory('Profile',             require('./profile.service'))
     .factory('Person',              require('./person.service'))
