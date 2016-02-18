@@ -218,7 +218,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[1].AccountNumber, checks[1].RoutingNumber)).Returns((ContactDonor) null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[1].AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[1].RoutingNumber)).Returns(decryptRout);
-            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout)).Returns("tok123");
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout)).Returns(new StripeToken { Id = "tok123"});
             _donorService.Setup(
                 mocked =>
                     mocked.CreateOrUpdateContactDonor(
@@ -448,7 +448,10 @@ namespace crds_angular.test.Services
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
             };
-            const string token = "12t4token";
+            var token = new StripeToken
+            {
+                Id = "12t4token"
+            };
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
@@ -468,7 +471,7 @@ namespace crds_angular.test.Services
                                 o.Account.RoutingNumber.Equals(decryptRout) && o.Account.AccountNumber.Equals(decrypAcct) && o.Account.Type == AccountType.Checking),
                         It.IsAny<string>(),
                         string.Empty,
-                        token,
+                        token.Id,
                         It.IsAny<DateTime>()))
                 .Returns(contactDonorNew);
             
@@ -517,7 +520,10 @@ namespace crds_angular.test.Services
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
             };
-            const string token = "12t4token";
+            var token = new StripeToken
+            {
+                Id = "12t4token"
+            };
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
@@ -538,7 +544,7 @@ namespace crds_angular.test.Services
                                 o.Account.RoutingNumber.Equals(decryptRout) && o.Account.AccountNumber.Equals(decrypAcct) && o.Account.Type == AccountType.Checking),
                         It.IsAny<string>(),
                         string.Empty,
-                        token,
+                        token.Id,
                         It.IsAny<DateTime>()))
                 .Returns(contactDonorNew);
 
