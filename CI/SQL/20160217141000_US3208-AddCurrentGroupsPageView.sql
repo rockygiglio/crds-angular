@@ -1,4 +1,4 @@
-USE MinitryPlatform
+USE MinistryPlatform
 GO
 
 SET IDENTITY_INSERT [dbo].[dp_Page_Views] ON
