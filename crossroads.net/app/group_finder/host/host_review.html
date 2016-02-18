@@ -5,7 +5,7 @@
   <group-profile group="host.group"></group-profile>
   <p><a class="btn btn-next-question btn-block" href="#" ui-sref="group_finder.host.confirm">Publish This Group</a></p>
 
-  <p class="text-center">YO! This action is final, your information cannot be edited past this point.</p>
+  <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderHostConfirmation.content | html"></div>
 
   <br />
   <div class="clearfix">

@@ -2,12 +2,7 @@
   <div class="row">
     <div ui-view class="col-md-offset-3 col-md-6">
 
-      <h3>Let the grouping begin!</h3>
-      <p>We’re gonna ask you 5 questions to help us connect you with the perfect traveling companions.</p>
-
-      <h3>And then...</h3>
-      <p>We’ll present you with several groups to choose from that will share similar goals, interests or wants. Doesn't that sound cool?? Great! Let’s roll. </p>
-
+      <div dynamic-content="$root.MESSAGES.groupFinderParticipantExpectations.content | html"></div>
       <p><a href="#" ui-sref="group_finder.join.questions" class="btn btn-primary">Let's Get Started</a>
 
     </div>

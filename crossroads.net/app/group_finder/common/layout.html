@@ -16,10 +16,7 @@
         </h1>
       </div>
       <hr />
-      <p>
-        <strong>Let's get you in a group.</strong><br>
-        We are so excited for you to try this. It's new. Which can be scary. But trust us. It will be awesome.
-      </p>
+      <div dynamic-content="$root.MESSAGES.groupFinderWelcome.content | html"></div>
       <br />
       <div ng-switch="base.hasSession">
         <p ng-switch-when="false"><a class="btn btn-next-question" ui-sref="group_finder.summary">Login to your crossroads account</a></p>
