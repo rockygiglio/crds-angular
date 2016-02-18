@@ -48,8 +48,10 @@
         participantAddress
       ]).then(function(result) {
         $scope.getGroupDistance = function() {
-          var distance = Math.round((result[0].distance.value / 1609.344) * 10) / 10;
-          return distance + ' miles away from you';
+          if(result[0].distance) {
+            var distance = Math.round((result[0].distance.value / 1609.344) * 10) / 10;
+            return distance + ' miles away from you';
+          }
         };
       }, function(error) {
         $scope.getGroupDistance = function() { return ''; };
