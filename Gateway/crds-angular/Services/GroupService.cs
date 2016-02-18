@@ -48,21 +48,12 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
         }
 
-        //public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
-        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants, bool isCommunityGroup)
+        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants, bool isCommunityGroup, int neededCapacity)
         {
             Group group;
-            //bool isCommunityGroup = false;
             try
             {
                 group = _mpGroupService.getGroupDetails(groupId);
-                //GroupType not always 8 for Community Group - also have GroupType_Waitlist
-                //TODO add GroupType_CommunityGroup to MinistryPlatform.config
-                /*if (group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_CommunityGroup"))
-                {
-                    isCommunityGroup = true;
-                }
-                */
             }
             catch (Exception e)
             {
@@ -82,24 +73,17 @@ namespace crds_angular.Services
                 {
                     int groupParticipantId;
 
-                    // Sign this user up for the community group
-                    if (isCommunityGroup)
-                    {
-                        groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
-                                                                                       Convert.ToInt32(groupId),
-                                                                                       GroupRoleDefaultId,
-                                                                                       participant.childCareNeeded,
-                                                                                       DateTime.Now);
-                    }
-                    //Sign this user up for a journey group/small group/etc
-                    //participant.groupRoleId needs to come from front end - member or leader
-                    else
-                    {
-                        groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
-                                                                                       Convert.ToInt32(groupId),
-                                                                                       participant.groupRoleId,
-                                                                                       participant.childCareNeeded,
-                                                                                       DateTime.Now);
+                    var roleId = participant.groupRoleId ?? GroupRoleDefaultId;
+
+                    groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
+                                                               Convert.ToInt32(groupId),
+                                                               roleId,
+                                                               participant.childCareNeeded,
+                                                               DateTime.Now);
+                    if (participant.capacityNeeded > 0)
+                    { 
+                        //TODO implement
+                        decrementCapacity(participant.capacityNeeded, group);
                     }
 
                     logger.Debug("Added user - group/participant id = " + groupParticipantId);
@@ -115,10 +99,10 @@ namespace crds_angular.Services
                             logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
-                    var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
 
-                    if (isCommunityGroup)
+                    if (participant.SendConfirmationEmail)
                     {
+                        var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
                         _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
                     }
                 }
@@ -140,6 +124,13 @@ namespace crds_angular.Services
             {
                 throw (new GroupFullException(group));
             }
+        }
+
+        private void decrementCapacity(int capacityNeeded, Group group)
+        {
+            //TODO need publicCapacity property added to Group object
+            //group.remainingCapacity = group.remainingCapacity - capacityNeeded;
+            // TODO Save the group
         }
 
         public List<Event> GetGroupEvents(int groupId, string token)

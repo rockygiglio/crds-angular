@@ -84,9 +84,8 @@ namespace crds_angular.test.controllers
                     {"abc", "def"}
                 },
             };
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true));
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0));
 
-            //does this need to add boolean flag for communityGroup?
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
 
             authenticationServiceMock.VerifyAll();
@@ -126,9 +125,9 @@ namespace crds_angular.test.controllers
                     {"abc", "def"}
                 },
             };
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd,false));
 
-            //does this need to add boolean flag for communityGroup?
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, false, 0));
+
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
 
             authenticationServiceMock.VerifyAll();
@@ -157,7 +156,7 @@ namespace crds_angular.test.controllers
                 }
             };
 
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true)).Throws(ex);
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0)).Throws(ex);
 
             //does this need to add boolean flag for communityGroup?
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
@@ -252,7 +251,7 @@ namespace crds_angular.test.controllers
                 }
             };
             var groupFull = new GroupFullException(g);
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true)).Throws(groupFull);
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0)).Throws(groupFull);
 
             try
             {

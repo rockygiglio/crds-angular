@@ -38,17 +38,20 @@ namespace crds_angular.Controllers.API
 
         /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
-        /// Also send email confirmation to user
+        /// Also send email confirmation to user if joining a CG
+        /// Add Journey/Small Group Participant to a Group
         /// </summary>
+        [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
         {
+            //TODO add parameters - bool is CommunityGroup, int capacityNeeded
             return Authorized(token =>
             {
                 try
                 {
-                    groupService.addParticipantsToGroup(groupId, partId, true);
+                    groupService.addParticipantsToGroup(groupId, partId, true, 0);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());
                 }

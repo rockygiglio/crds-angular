@@ -67,7 +67,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true, 0);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -95,7 +95,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true, 0);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -122,7 +122,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
+                fixture.addParticipantsToGroup(456, mockParticipantSignup, true, 0);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)
@@ -164,7 +164,7 @@ namespace crds_angular.test.Services
             eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 555, 456, 888456)).Returns(888555);
             eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 444, 456, 888456)).Returns(888444);
 
-            fixture.addParticipantsToGroup(456, mockParticipantSignup, true);
+            fixture.addParticipantsToGroup(456, mockParticipantSignup, true, 0);
 
             groupService.VerifyAll();
             eventService.VerifyAll();
