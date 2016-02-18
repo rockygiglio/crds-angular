@@ -90,8 +90,7 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
-            }
-                );
+            });
         }
 
         [ResponseType(typeof(List<Event>))]
@@ -138,9 +137,33 @@ namespace crds_angular.Controllers.API
             );
         }
 
-    }
-
-    public class ContactDTO
-    {
+        /// <summary>
+        /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
+        /// If one or more groups are found, then the group detail data is returned.
+        /// If no groups are found, then a 404 will be returned.
+        /// </summary>
+        /// <param name="groupTypeId">This is the Ministry Platform Group Type ID for the specific group being requested..</param>
+        /// <returns>A list of all groups for the given user based on the Group Type ID passed in.</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof (List<GroupContactDTO>))]
+        [Route("api/group/groupType/{groupTypeId}")]
+        public IHttpActionResult GetGroups(int groupTypeId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var participant = participantService.GetParticipantRecord(token);
+                    var groups = groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
+                    return Ok(groups);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting groups for group type ID " + groupTypeId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                
+            });
+        }
     }
 }

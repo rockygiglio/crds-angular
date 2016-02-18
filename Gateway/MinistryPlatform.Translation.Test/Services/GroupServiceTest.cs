@@ -348,5 +348,78 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
         }
+
+        [Test]
+        public void GetGroupsByTypeForParticipant()
+        {
+            const int pageViewId = 2206;
+            const string token = "jenny8675309";
+            const int participantId = 9876;
+            const int groupTypeId = 19;
+            string searchString = ",," + groupTypeId;
+
+            configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
+
+            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageViewId, It.IsAny<string>(), searchString, It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(MockMyGroups());
+
+            var myGroups = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+
+            Assert.IsNotNull(myGroups);
+            Assert.AreEqual(2, myGroups.Count);
+            Assert.AreEqual("Full Throttle", myGroups[0].Name);
+            Assert.AreEqual("Angels Unite", myGroups[1].Name);
+        }
+
+        private List<Dictionary<string, object>> MockMyGroups()
+        {
+            return new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Group_ID", 2121},
+                    {"Congregation_ID", 4},
+                    {"Group_Name", "Full Throttle"},
+                    {"Group_Role_ID", 16},
+                    {"Description", "Not The First"},
+                    {"Ministry_ID", 4},
+                    {"Primary_Contact", 3213},
+                    {"Primary_Contact_Name", "Jim Beam"},
+                    {"Group_Type_ID", 19},
+                    {"Start_Date", "2016-02-01"},
+                    {"End_Date", "2018-02-11"},
+                    {"Meeting_Day_ID", 5},
+                    {"Meeting_Time", "180000"},
+                    {"Available_Online", false},
+                    {"Address_Line_1", "98 Center St"},
+                    {"Address_Line_2", "Suite 1000"},
+                    {"City", "Cincinnati"},
+                    {"State", "OH"},
+                    {"Zip_Code", "42525"}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Group_ID", 54345},
+                    {"Congregation_ID", 5},
+                    {"Group_Name", "Angels Unite"},
+                    {"Group_Role_ID", 15},
+                    {"Description", "Girls Rule"},
+                    {"Ministry_ID", 6},
+                    {"Primary_Contact", 43212},
+                    {"Primary_Contact_Name", "Johnny Walker"},
+                    {"Group_Type_ID", 19},
+                    {"Start_Date", "2016-01-01"},
+                    {"End_Date", "2020-01-01"},
+                    {"Meeting_Day_ID", 4},
+                    {"Meeting_Time", "140000"},
+                    {"Available_Online", true},
+                    {"Address_Line_1", "86 Middle Rd"},
+                    {"Address_Line_2", ""},
+                    {"City", "Cincinnati"},
+                    {"State", "OH"},
+                    {"Zip_Code", "45010"}
+                }
+            };
+        }
     }
 }
