@@ -2,6 +2,6 @@
   <question definition="question" responses="responses"></question>
   <div class="btns">
     <a href="#" class="btn btn-previous-question pull-left" ng-hide="$index==0" ng-click="previousQuestion()">{{ question.previous || 'Back' }}</a>
-    <button type="submit" class="btn btn-next-question pull-right" ng-click="nextQuestion()">{{ question.next || 'Next' }}</button>
+    <button type="submit" class="btn btn-next-question pull-right" ng-click="nextQuestion()">{{ nextBtn }}</button>
   </div>
 </div>
