@@ -39,6 +39,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Create Group with provided details, returns created group with ID
         /// </summary>
+        [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
         [Route("api/group")]
         public IHttpActionResult PostGroup([FromBody] GroupDTO group)
@@ -63,6 +64,7 @@ namespace crds_angular.Controllers.API
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
         /// Also send email confirmation to user
         /// </summary>
+        [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
@@ -92,6 +94,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}")]
         public IHttpActionResult Get(int groupId)
@@ -116,6 +119,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof(List<Event>))]
         [Route("api/group/{groupId}/events")]
         public IHttpActionResult GetEvents(int groupId)
@@ -136,6 +140,7 @@ namespace crds_angular.Controllers.API
             );
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof(List<GroupContactDTO>))]
         [Route("api/group/{groupId}/event/{eventId}")]
         public IHttpActionResult GetParticipants(int groupId, int eventId, string recipients)
