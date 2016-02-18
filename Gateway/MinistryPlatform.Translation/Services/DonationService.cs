@@ -481,7 +481,7 @@ namespace MinistryPlatform.Translation.Services
                 ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
-            _communicationService.SendMessage(comm);
+            _communicationService.SendMessage(comm, true);
         }
     }
 }

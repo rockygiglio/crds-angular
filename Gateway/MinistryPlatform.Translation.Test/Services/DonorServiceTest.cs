@@ -185,7 +185,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
 
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>()));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
             var expectedDonationValues = new Dictionary<string, object>
             {
@@ -269,7 +269,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>()));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -316,7 +316,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>()));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
 
             var expectedDonationValues = new Dictionary<string, object>
             {
@@ -397,7 +397,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var response = _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>()));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -631,7 +631,7 @@ namespace MinistryPlatform.Translation.Test.Services
                                 c.MergeData["Payment_Method"].Equals(expectedCommunication.MergeData["Payment_Method"]) &&
                                 c.MergeData["Decline_Reason"].Equals(expectedCommunication.MergeData["Decline_Reason"]) &&
                                 c.MergeData["Frequency"].Equals(expectedCommunication.MergeData["Frequency"])
-                            )));
+                            ), false));
 
             _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, program,
                 emailReason, frequency);
@@ -720,7 +720,7 @@ namespace MinistryPlatform.Translation.Test.Services
                                 c.MergeData["Payment_Method"].Equals(expectedCommunication.MergeData["Payment_Method"]) &&
                                 c.MergeData["Decline_Reason"].Equals(expectedCommunication.MergeData["Decline_Reason"]) &&
                                 !c.MergeData.ContainsKey("Frequency")
-                            )));
+                            ), false));
 
             _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, program,
                 emailReason, null);
