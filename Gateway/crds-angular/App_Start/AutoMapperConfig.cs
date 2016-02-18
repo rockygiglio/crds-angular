@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
@@ -12,6 +13,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using Address = MinistryPlatform.Models.Address;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Group = MinistryPlatform.Models.Group;
 using Response = MinistryPlatform.Models.Response;
@@ -224,6 +226,17 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, BulkEmailSubscriberOpt>();
             Mapper.CreateMap<BulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
+
+            Mapper.CreateMap<Group, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
+
+            Mapper.CreateMap<Address, AddressDTO>()
+                .ForMember(dest => dest.AddressLine1, opts => opts.MapFrom(src => src.Address_Line_1))
+                .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
+                .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
+                .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
+                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
         }
     }
 }

@@ -33,5 +33,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<GroupParticipant> getEventParticipantsForGroup(int groupId, int eventId);
 
         IList<string> GetEventTypesForGroup(int groupId, string token = null);
+
+        List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
     }
 }

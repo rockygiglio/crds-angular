@@ -108,8 +108,7 @@ DELETE FROM households WHERE household_id = 100000020;
 DELETE FROM contact_relationships WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
 
 ---delete donor accounts
-DELETE FROM Donor_Accounts WHERE Donor_ID = @fatherDonorId;
-DELETE FROM Donor_Accounts WHERE Donor_ID = @motherDonorId;
+delete from donor_accounts where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%'));
 
 --delete donation distributions
 delete donation_distributions where donation_id in (select donation_id from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%')));
