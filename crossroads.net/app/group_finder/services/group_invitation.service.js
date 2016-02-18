@@ -10,14 +10,14 @@
     service.acceptInvitation = acceptInvitation;
 
     function acceptInvitation(groupId, contactId) {
-      $log.debug("Accepting invitation to", groupId);
+      $log.debug('Accepting invitation to', groupId);
 
       // TODO this is a temporary promise that would be replaced by the actual HTTP call
       var deferred = $q.defer();
 
       // TODO remove fake API all delay
       $timeout(function() {
-        $log.debug("InvitationService fake API call completed");
+        $log.debug('InvitationService fake API call completed');
         deferred.resolve(true);
       }, 2000);
 

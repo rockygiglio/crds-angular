@@ -3,9 +3,9 @@
 
   module.exports = JoinResultsCtrl;
 
-  JoinResultsCtrl.$inject = ['$log', 'Results', '$scope', '$anchorScroll'];
+  JoinResultsCtrl.$inject = ['Results', '$scope', '$anchorScroll'];
 
-  function JoinResultsCtrl($log, Results, $scope, $anchorScroll) {
+  function JoinResultsCtrl(Results, $scope, $anchorScroll) {
     var vm = this;
 
     vm.results = Results.data.groups;
