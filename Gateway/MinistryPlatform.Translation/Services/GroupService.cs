@@ -419,7 +419,7 @@ namespace MinistryPlatform.Translation.Services
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = (TimeSpan) details.ToNullableTimeSpan("Meeting_Time"),
+                MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
                 Address = new Address()
                 {
