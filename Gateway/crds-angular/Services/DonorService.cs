@@ -191,6 +191,21 @@ namespace crds_angular.Services
                 }
                 contactDonorResponse.RegisteredUser = contactDonor.RegisteredUser;
             }
+            else if (contactDonor.HasAccount && contactDonor.Account.HasToken && AccountType.Checking == contactDonor.Account.Type)
+            {
+                var source = _paymentService.AddSourceToCustomer(contactDonor.ProcessorId, contactDonor.Account.Token);
+                _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   contactDonor.Account.RoutingNumber,
+                                                   contactDonor.Account.AccountNumber,
+                                                   contactDonor.Account.EncryptedAccount,
+                                                   contactDonor.DonorId,
+                                                   source.id,
+                                                   contactDonor.ProcessorId);
+
+                contactDonorResponse = contactDonor;
+                contactDonorResponse.Account.ProcessorAccountId = source.id;
+                contactDonorResponse.Account.ProcessorId = contactDonor.ProcessorId;
+            }
             else
             {
                 contactDonorResponse = contactDonor;

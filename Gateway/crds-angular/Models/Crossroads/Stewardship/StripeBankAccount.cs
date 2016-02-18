@@ -15,5 +15,11 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("routing_number")]
         public string RoutingNumber { get; set; }
+
+        [JsonProperty("fingerprint")]
+        public string Fingerprint { get; set; }
+
+        [JsonProperty("last4")]
+        public string Last4 { get; set; }
     }
 }

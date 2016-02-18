@@ -129,7 +129,7 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public string CreateToken(string accountNumber, string routingNumber)
+        public StripeToken CreateToken(string accountNumber, string routingNumber)
         {
             var request = new RestRequest("tokens", Method.POST);
             request.AddParameter("bank_account[account_number]", accountNumber);
@@ -149,7 +149,7 @@ namespace crds_angular.Services
             var response = _stripeRestClient.Execute<StripeToken>(request);
             CheckStripeResponse("Token creation failed", response);
 
-            return (response.Data.Id);
+            return (response.Data);
         }
 
         public SourceData UpdateCustomerSource(string customerToken, string cardToken)
