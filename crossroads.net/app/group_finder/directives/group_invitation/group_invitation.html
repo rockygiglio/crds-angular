@@ -1,12 +1,12 @@
 <div class="group-invitation">
-    <h4 class="text-center">Invite someone to your group:</h4>
-    <form name="ctrl.inviteForm" role="form" ng-submit="ctrl.inviteMember()" novalidate>
-        <div class="input-group">
-            <input type="email" placeholder="Enter email address" ng-model="ctrl.invitee" required class="form-control">
-          <span class="input-group-btn">
-            <button class="btn btn-primary" type="submit" ng-disabled="ctrl.inviteForm.$invalid">Send</button>
-          </span>
-        </div>
-        <p ng-show="ctrl.inviteForm.invite.$invalid && ctrl.inviteForm.$submitted" class="help-block">Valid email address required.</p>
-    </form>
+  <h4 class="text-center">{{headline}}</h4>
+  <form name="ctrl.inviteForm" role="form" ng-submit="ctrl.inviteMember()" novalidate>
+    <div class="input-group">
+      <input type="email" placeholder="Enter email address" ng-model="ctrl.invitee" required class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit" ng-disabled="ctrl.inviteForm.$invalid">Send</button>
+      </span>
+    </div>
+    <p ng-show="ctrl.inviteForm.invite.$invalid && ctrl.inviteForm.$submitted" class="help-block">Valid email address required.</p>
+  </form>
 </div>
