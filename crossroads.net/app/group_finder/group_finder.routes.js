@@ -41,7 +41,7 @@
 
       .state('group_finder.invitation', {
         controller: 'GroupInvitationCtrl as invitation',
-        url: '/groups/:groupId',
+        url: '/group/join/:groupId',
         templateUrl: 'invitation/invitation.html',
         resolve: {},
         data: {
