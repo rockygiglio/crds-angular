@@ -13,11 +13,6 @@
       $anchorScroll();
     });
 
-    var vm = this;
-        vm.hasSession = AuthService.isAuthenticated();
-        // TODO
-        vm.isHost = true;
-
   }
 
 })();

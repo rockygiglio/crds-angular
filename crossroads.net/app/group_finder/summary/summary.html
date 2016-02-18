@@ -6,6 +6,7 @@
         <div class="btns text-center">
           <p><a class="btn btn-next-question btn-block-mobile" ui-sref="group_finder.join">Join a Group</a></p>
           <p><a class="btn btn-next-question btn-block-mobile" ui-sref="group_finder.host">Become a Host</a></p>
+          <p ng-if="summary.isHost"><a class="btn btn-previous-question" ui-sref="group_finder.dashboard">Go To Your Dashboard</a></p>
         </div>
       </div>
     </div>

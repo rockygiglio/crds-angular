@@ -13,6 +13,9 @@
     vm.currentSlide = 1;
     vm.nextButton = 'Next';
 
+    // TODO implement check to determine if user is member/host of a group
+    vm.isHost = true;
+
     vm.nextSlide = function() {
       if (vm.currentSlide < vm.totalSlides) {
         vm.currentSlide++;
