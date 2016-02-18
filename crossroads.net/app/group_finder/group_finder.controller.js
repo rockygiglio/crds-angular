@@ -13,10 +13,9 @@
       $anchorScroll();
     });
 
-    var vm = this;
-        vm.hasSession = AuthService.isAuthenticated();
-        // TODO
-        vm.isHost = true;
+    if (AuthService.isAuthenticated()) {
+      $state.go('group_finder.summary');
+    }
 
   }
 
