@@ -48,7 +48,7 @@ namespace crds_angular.Services
             MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
 
-        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants, bool isCommunityGroup, int neededCapacity)
+        public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
             Group group;
             try
@@ -62,11 +62,8 @@ namespace crds_angular.Services
                 throw (new ApplicationException(message, e));
             }
 
-            if (isCommunityGroup)
-            {
-                checkSpaceRemaining(participants, group);
-            }
-
+            checkSpaceRemaining(participants, group);
+            
             try
             {
                 foreach (var participant in participants)
@@ -82,7 +79,6 @@ namespace crds_angular.Services
                                                                DateTime.Now);
                     if (participant.capacityNeeded > 0)
                     { 
-                        //TODO implement
                         decrementCapacity(participant.capacityNeeded, group);
                     }
 
@@ -128,8 +124,9 @@ namespace crds_angular.Services
 
         private void decrementCapacity(int capacityNeeded, Group group)
         {
-            //TODO need publicCapacity property added to Group object
-            //group.remainingCapacity = group.remainingCapacity - capacityNeeded;
+            logger.Debug("Remaining Capacity " + group.RemainingCapacity);
+            group.RemainingCapacity = group.RemainingCapacity - capacityNeeded;
+            logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
             // TODO Save the group
         }
 

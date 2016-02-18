@@ -17,7 +17,6 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "capacityNeeded")]
         public int capacityNeeded { get; set; }
 
-        // TODO: Will have 
         [JsonProperty(PropertyName = "sendConfirmationEmail")]
         public bool SendConfirmationEmail { get; set; }
     }

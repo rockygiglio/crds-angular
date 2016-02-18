@@ -84,7 +84,7 @@ namespace crds_angular.test.controllers
                     {"abc", "def"}
                 },
             };
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0));
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd));
 
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
 
@@ -126,7 +126,7 @@ namespace crds_angular.test.controllers
                 },
             };
 
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, false, 0));
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd));
 
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
 
@@ -156,7 +156,7 @@ namespace crds_angular.test.controllers
                 }
             };
 
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0)).Throws(ex);
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd)).Throws(ex);
 
             //does this need to add boolean flag for communityGroup?
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
@@ -251,7 +251,7 @@ namespace crds_angular.test.controllers
                 }
             };
             var groupFull = new GroupFullException(g);
-            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd, true, 0)).Throws(groupFull);
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd)).Throws(groupFull);
 
             try
             {

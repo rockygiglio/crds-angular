@@ -154,6 +154,13 @@ namespace MinistryPlatform.Translation.Services
                     g.MinimumAge = (int) ma;
                 }
 
+                object rc = null;
+                groupDetails.TryGetValue("Remaining_Capacity", out rc);
+                if (rc != null)
+                {
+                    g.RemainingCapacity = (short)rc;
+                }
+
                 if (g.WaitList)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,

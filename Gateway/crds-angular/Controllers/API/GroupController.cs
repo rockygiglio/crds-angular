@@ -46,12 +46,11 @@ namespace crds_angular.Controllers.API
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
         {
-            //TODO add parameters - bool is CommunityGroup, int capacityNeeded
             return Authorized(token =>
             {
                 try
                 {
-                    groupService.addParticipantsToGroup(groupId, partId, true, 0);
+                    groupService.addParticipantsToGroup(groupId, partId);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());
                 }
