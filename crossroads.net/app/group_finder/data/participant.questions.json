@@ -34,8 +34,7 @@
       "required": false
     },
     {
-      "body": "<h3>Next we're gonna ask some meeting time questions</h3><p>Keep in mind, BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>",
-      "next": "Let's get started!"
+      "body": "<h3>Next we're gonna ask some meeting time questions</h3><p>Keep in mind, BRAVE groups meet once a week for 5 weeks, starting the week of April 3rd and ending the week of May 1st. Most groups take less than 90 minutes from start to finish.</p>"
     },
     {
       "key": "date_time_week",
@@ -63,8 +62,9 @@
       "required": false
     },
     {
+      "key": "success",
       "body": "<h3>You did it. And now the science is happenning. </h3><p>The data you entered will be crunched, blended and matched. Creating an output of groups that will fit you perfectly. Stand by.</p>",
-      "next": "Let's get started!"
+      "next": "See Results"
     }
   ]
 }

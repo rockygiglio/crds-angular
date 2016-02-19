@@ -3,9 +3,22 @@
 
   module.exports = GroupInvitationCtrl;
 
-  GroupInvitationCtrl.$inject = ['$cookies', '$stateParams', 'GroupInfo', 'GroupInvitationService', '$log', 'Responses'];
+  GroupInvitationCtrl.$inject = [
+    '$cookies',
+    '$stateParams',
+    'GroupInfo',
+    'GroupInvitationService',
+    '$log',
+    'Responses'
+  ];
 
-  function GroupInvitationCtrl ($cookies, $stateParams, GroupInfo, GroupInvitationService, $log, Responses) {
+  function GroupInvitationCtrl ($cookies,
+                                $stateParams,
+                                GroupInfo,
+                                GroupInvitationService,
+                                $log,
+                                Responses) {
+
     $log.debug('GroupInvitationCtrl');
 
     var vm = this;
