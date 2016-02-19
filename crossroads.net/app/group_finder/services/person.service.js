@@ -3,15 +3,24 @@
 
   module.exports = PersonService;
 
-  PersonService.$inject = ['Profile', '$cookies'];
+  PersonService.$inject = ['Profile'];
 
-  function PersonService(Profile, $cookies) {
-    var resource = Profile.Person;
-    var cid = $cookies.get('userId');
-    if (cid) {
-      resource = resource.get({contactId: cid}).$promise;
-    }
+  function PersonService(Profile) {
+    var person = {};
 
-    return resource;
+    person.loadProfile = function(cid) {
+      if (cid) {
+        Profile.Person.get({contactId: cid}, function(data) {
+          console.log('PersonService', data);
+          person = data;
+        });
+      }
+    };
+
+    person.getProfile = function() {
+      return person;
+    };
+
+    return person;
   }
 })();
