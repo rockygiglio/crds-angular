@@ -467,7 +467,7 @@ namespace crds_angular.Services
 
             var donationAndDistribution = new DonationAndDistributionRecord
             {
-                DonationAmt = (int)amount,
+                DonationAmt = amount,
                 FeeAmt = fee,
                 DonorId = createDonation.DonorId,
                 ProgramId = createDonation.ProgramId,

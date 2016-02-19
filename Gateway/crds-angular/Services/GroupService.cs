@@ -4,9 +4,7 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
@@ -27,12 +25,12 @@ namespace crds_angular.Services
         private readonly IEventService _eventService;
         private readonly IContactRelationshipService _contactRelationshipService;
         private readonly IServeService _serveService;
-        
 
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
+        private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -46,6 +44,7 @@ namespace crds_angular.Services
             _contactRelationshipService = contactRelationshipService;
             _serveService = serveService;
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
+            MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
@@ -138,11 +137,17 @@ namespace crds_angular.Services
         {
             try
             {
-                var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p => 
-                    new GroupParticipant {ContactId = p.ContactId, LastName = p.LastName, NickName = p.NickName, ParticipantId = p.ParticipantId}
+                var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p =>
+                                                                                                    new GroupParticipant
+                                                                                                    {
+                                                                                                        ContactId = p.ContactId,
+                                                                                                        LastName = p.LastName,
+                                                                                                        NickName = p.NickName,
+                                                                                                        ParticipantId = p.ParticipantId
+                                                                                                    }
                     ).ToList();
                 var evt = Mapper.Map<crds_angular.Models.Crossroads.Events.Event>(_eventService.GetEvent(eventId));
-                return _serveService.PotentialVolunteers(groupId, evt, groupMembers);                                
+                return _serveService.PotentialVolunteers(groupId, evt, groupMembers);
             }
             catch (Exception e)
             {
@@ -210,6 +215,17 @@ namespace crds_angular.Services
             }
 
             return (detail);
+        }
+
+        public List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        {
+            var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+            if (groupsByType.Count == 0)
+            {
+                return null;
+            }
+            var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
+            return groupDetail;
         }
     }
 }
