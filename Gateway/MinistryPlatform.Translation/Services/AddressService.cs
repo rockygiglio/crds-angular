@@ -75,7 +75,7 @@ namespace MinistryPlatform.Translation.Services
                 return input;
             }
 
-            return $"\"{input}\"";
+            return string.Format("\"{0}\"", input);
         }
     }
 }
