@@ -3,9 +3,9 @@
 
   module.exports = HostReviewCtrl;
 
-  HostReviewCtrl.$inject = ['$scope', '$state', 'Responses'];
+  HostReviewCtrl.$inject = ['$window', '$scope', '$state', 'Responses'];
 
-  function HostReviewCtrl($scope, $state, Responses) {
+  function HostReviewCtrl($window, $scope, $state, Responses) {
     var vm = this;
 
     vm.initialize = function() {
@@ -22,7 +22,6 @@
         }
       };
     };
-
 
     vm.startOver = function() {
       $scope.$parent.currentStep = 1;
@@ -47,6 +46,10 @@
       if(dt) {
         return dt['day'] + 's @ ' + dt['time'] + dt['ampm'];
       }
+    };
+
+    vm.goBack = function() {
+      $window.history.back();
     };
 
     // ------------------------------- //

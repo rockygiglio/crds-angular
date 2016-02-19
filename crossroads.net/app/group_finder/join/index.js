@@ -9,7 +9,6 @@
   require('./join_questions.html');
   require('./join_contact.html');
   require('./templates/upsell.html');
-  require('./templates/results.html');
   require('./templates/contact.html');
   require('./templates/empty_results.html');
   require('./templates/pager.html');
