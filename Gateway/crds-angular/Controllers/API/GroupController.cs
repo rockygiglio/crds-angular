@@ -52,7 +52,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    if (group.Address != null)
+                    if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
                         _addressService.FindOrCreateAddress(group.Address);
                     }

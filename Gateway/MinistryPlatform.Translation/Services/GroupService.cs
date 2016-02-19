@@ -56,7 +56,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Start_Date", group.StartDate },
                 {"End_Date", group.EndDate },
                 {"Target_Size", group.TargetSize },
-                {"Offsite_Meeting_Address", group.Address.Address_ID },
+                {"Offsite_Meeting_Address", group.Address?.Address_ID },
                 {"Group_Is_Full", group.Full },
                 {"Available_Online", group.AvailableOnline },
                 {"Meeting_Time", group.MeetingTime },
