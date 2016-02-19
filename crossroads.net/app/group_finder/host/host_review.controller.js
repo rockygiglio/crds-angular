@@ -10,6 +10,11 @@
 
     vm.initialize = function() {
       vm.responses = Responses.data;
+
+      if(vm.isPrivate()) {
+        return $state.go('group_finder.host.confirm');
+      }
+
       vm.group = {
         groupTitle: $scope.person.firstName + ' ' + $scope.person.lastName[0] + '.',
         time: vm.getGroupTime(),
@@ -50,6 +55,10 @@
 
     vm.goBack = function() {
       $window.history.back();
+    };
+
+    vm.isPrivate = function() {
+      return vm.responses && vm.responses.open_spots <= 0;
     };
 
     // ------------------------------- //
