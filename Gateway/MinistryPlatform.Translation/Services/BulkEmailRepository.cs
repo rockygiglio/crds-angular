@@ -165,7 +165,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void SetSubscriberStatus(string token, BulkEmailSubscriberOpt subscriberOpt)
+        public bool SetSubscriberStatus(string token, BulkEmailSubscriberOpt subscriberOpt)
         {
             var searchString = string.Format(",\"{0}\",,,,,,,\"{1}\"", subscriberOpt.PublicationID, subscriberOpt.EmailAddress);
             var contactPublications = _ministryPlatformService.GetPageViewRecords(_segmentationBasePageViewId, token, searchString);
@@ -173,19 +173,23 @@ namespace MinistryPlatform.Translation.Services
             // do not update if there is no corresponding subscriber -- this may be handled in a future story
             if (contactPublications.Count == 0)
             {
-                return;
+                return true;
             }
 
             var contactPublication = contactPublications.SingleOrDefault();
             var contactPublicationID = contactPublication.ToString("Contact_Publication_ID");
 
+            bool isUnsubscribed = (subscriberOpt.Status == "unsubscribed" ? true : false);
+
             Dictionary<string, object> subscriberOptDict = new Dictionary<string, object>
             {
                 {"Contact_Publication_ID", contactPublicationID},
-                {"Unsubscribed", (subscriberOpt.Status == "subscribed" ? false : true)}
+                {"Unsubscribed", isUnsubscribed}
             };
 
             _ministryPlatformService.UpdateRecord(_subscribersBasePageViewId, subscriberOptDict, token);
+
+            return isUnsubscribed;
         }
     }
 }

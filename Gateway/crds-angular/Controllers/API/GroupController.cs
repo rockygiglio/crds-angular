@@ -71,7 +71,8 @@ namespace crds_angular.Controllers.API
 
         /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
-        /// Also send email confirmation to user
+        /// Also send email confirmation to user if joining a CG
+        /// Or Add Journey/Small Group Participant to a Group 
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
