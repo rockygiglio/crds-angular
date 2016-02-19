@@ -393,11 +393,13 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Time", "180000"},
                     {"Available_Online", false},
+                    {"Address_ID", 42934 },
                     {"Address_Line_1", "98 Center St"},
                     {"Address_Line_2", "Suite 1000"},
                     {"City", "Cincinnati"},
                     {"State", "OH"},
-                    {"Zip_Code", "42525"}
+                    {"Zip_Code", "42525"},
+                    {"Foreign_Country", "United States"},
                 },
                 new Dictionary<string, object>
                 {
@@ -416,11 +418,13 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Time", "140000"},
                     {"Available_Online", true},
+                    {"Address_ID", 42934 },
                     {"Address_Line_1", "86 Middle Rd"},
                     {"Address_Line_2", ""},
                     {"City", "Cincinnati"},
                     {"State", "OH"},
-                    {"Zip_Code", "45010"}
+                    {"Zip_Code", "45010"},
+                    {"Foreign_Country", "United States"},
                 }
             };
         }

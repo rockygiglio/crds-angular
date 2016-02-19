@@ -19,11 +19,14 @@ Groups.End_Date,
 Meeting_Day_ID_Table.[Meeting_Day_ID],
 Groups.[Meeting_Time],
 Groups.Available_Online,
+Offsite_Meeting_Address_Table.[Address_ID],
 Offsite_Meeting_Address_Table.[Address_Line_1],
 Offsite_Meeting_Address_Table.[Address_Line_2],
 Offsite_Meeting_Address_Table.[City],
 Offsite_Meeting_Address_Table.[State/Region] AS [State],
-Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code]','((Groups.End_Date IS NULL OR Groups.End_Date >= GetDate()) AND Groups.Group_ID in 
+Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code],
+Offsite_Meeting_Address_Table.[Foreign_Country]',
+'((Groups.End_Date IS NULL OR Groups.End_Date >= GetDate()) AND Groups.Group_ID in 
 (Select Group_ID 
 from dbo.Group_Participants
 inner join dbo.Participants on dbo.Group_Participants.Participant_ID = dbo.Participants.Participant_ID
