@@ -9,6 +9,7 @@ using AutoMapper;
 using crds_angular.Models.Crossroads.Stewardship;
 using MinistryPlatform.Models.DTO;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Services;
 using log4net;
 using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
@@ -159,7 +160,7 @@ namespace crds_angular.Services
                 {
                     _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
                                                    donorAccount.RoutingNumber,
-                                                   donorAccount.AccountNumber,
+                                                   donorAccount.AccountNumber.Right(4),
                                                    donorAccount.EncryptedAccount,
                                                    contactDonorResponse.DonorId,
                                                    donorAccount.ProcessorAccountId,
@@ -200,7 +201,7 @@ namespace crds_angular.Services
                 {
                     _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
                                                    contactDonor.Account.RoutingNumber,
-                                                   contactDonor.Account.AccountNumber,
+                                                   contactDonor.Account.AccountNumber.Right(4),
                                                    contactDonor.Account.EncryptedAccount,
                                                    contactDonor.DonorId,
                                                    contactDonor.Account.ProcessorAccountId,
@@ -218,7 +219,7 @@ namespace crds_angular.Services
                 var source = _paymentService.AddSourceToCustomer(contactDonor.ProcessorId, contactDonor.Account.Token);
                 _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
                                                    contactDonor.Account.RoutingNumber,
-                                                   contactDonor.Account.AccountNumber,
+                                                   contactDonor.Account.AccountNumber.Right(4),
                                                    contactDonor.Account.EncryptedAccount,
                                                    contactDonor.DonorId,
                                                    source.id,
