@@ -220,7 +220,7 @@ namespace crds_angular.Services
         public List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
-            if (groupsByType.Count == 0)
+            if (groupsByType == null)
             {
                 return null;
             }
