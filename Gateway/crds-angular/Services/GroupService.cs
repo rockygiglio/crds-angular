@@ -26,12 +26,10 @@ namespace crds_angular.Services
         private readonly IContactRelationshipService _contactRelationshipService;
         private readonly IServeService _serveService;
 
-
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
-
         private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
