@@ -50,7 +50,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void testPostParticipantToGroupIsSuccessful()
+        public void testPostParticipantToCommunityGroupIsSuccessful()
         {
             const int groupId = 456;
 
@@ -58,12 +58,14 @@ namespace crds_angular.test.controllers
             {
                 new ParticipantSignup(){
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 },
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
 
@@ -96,7 +98,42 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void testPostParticipantToGroupFails()
+        public void testPostParticipantToJourneyGroupIsSuccessful()
+        {
+            const int groupId = 456;
+
+            List<ParticipantSignup> particpantIdToAdd = new List<ParticipantSignup>
+            {
+                new ParticipantSignup(){
+                    particpantId = 90210,
+                    childCareNeeded = false,
+                    groupRoleId = 22,
+                    SendConfirmationEmail = false,
+                    capacityNeeded = 0
+                },
+                new ParticipantSignup()
+                {
+                    particpantId = 41001,
+                    childCareNeeded = false,
+                    groupRoleId = 16,
+                    SendConfirmationEmail = false,
+                    capacityNeeded = 1
+                }
+            };
+
+            groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd));
+
+            IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
+
+            authenticationServiceMock.VerifyAll();
+            groupServiceMock.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkResult), result);
+        }
+
+        [Test]
+        public void testPostParticipantToCommunityGroupFails()
         {
             Exception ex = new Exception();
             int groupId = 456;
@@ -105,12 +142,14 @@ namespace crds_angular.test.controllers
                 new ParticipantSignup()
                 {
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }, 
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
 
@@ -137,6 +176,7 @@ namespace crds_angular.test.controllers
             g.TargetSize = 5;
             g.WaitList = true;
             g.WaitListGroupId = 888;
+            g.RemainingCapacity = 10;
 
             Participant participant = new Participant();
             participant.ParticipantId = 90210;
@@ -182,7 +222,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void testAddParticipantToGroupWhenGroupFull()
+        public void testAddParticipantToCommunityGroupWhenGroupFull()
         {
             int groupId = 333;
             Group g = new Group();
@@ -199,12 +239,14 @@ namespace crds_angular.test.controllers
                 new ParticipantSignup()
                 {
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }, 
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
             var groupFull = new GroupFullException(g);

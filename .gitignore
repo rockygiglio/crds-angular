@@ -16,6 +16,7 @@ crds-angular/logs/
 *.user
 *.userosscache
 *.sln.docstates
+.vs/
 
 # Build results
 [Dd]ebug/
@@ -197,3 +198,4 @@ crossroads.net/crossroads.net - Shortcut.lnk
 crossroads.net/protractor-result/
 crossroads.net/corkboard/
 .idea/
+

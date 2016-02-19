@@ -154,6 +154,13 @@ namespace MinistryPlatform.Translation.Services
                     g.MinimumAge = (int) ma;
                 }
 
+                object rc = null;
+                groupDetails.TryGetValue("Remaining_Capacity", out rc);
+                if (rc != null)
+                {
+                    g.RemainingCapacity = (short)rc;
+                }
+
                 if (g.WaitList)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,
@@ -393,6 +400,34 @@ namespace MinistryPlatform.Translation.Services
                     Postal_Code = details.ToString("Zip_Code")
                 }
             }).ToList();
-        } 
+        }
+
+        public void UpdateGroupRemainingCapacity(Group group)
+        {
+            logger.Debug("Updating group: " + group.GroupId + " : " + group.Name);
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_ID", group.GroupId},
+                {"Remaining_Capacity", group.RemainingCapacity },
+            };
+
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.UpdateRecord(GroupsPageId, values, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error updating group: " + e.Message);
+                }
+            });
+
+            logger.Debug("updated group: " + group.GroupId);
+        }
+
+
     }
 }
