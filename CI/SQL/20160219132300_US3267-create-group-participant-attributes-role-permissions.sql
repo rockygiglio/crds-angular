@@ -65,3 +65,11 @@ INSERT INTO [dbo].[dp_Role_Sub_Pages] (
     ,557
     ,3
 );
+
+-- Migrate down
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 62 AND Sub_Page_ID = 557;
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 107 AND Sub_Page_ID = 557;
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 94 AND Sub_Page_ID = 557;
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 96 AND Sub_Page_ID = 557;
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 100 AND Sub_Page_ID = 557;
+--DELETE FROM [dbo].[dp_Role_Sub_Pages] WHERE Role_ID = 97 AND Sub_Page_ID = 557;

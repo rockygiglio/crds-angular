@@ -23,6 +23,10 @@ INSERT INTO [dbo].[dp_Sub_Page_Views](
     ,NULL
 );
 
+SET IDENTITY_INSERT [dbo].[dp_Sub_Page_Views] OFF;
+
 UPDATE [dbo].[dp_Sub_Pages] SET [Default_View] = 136 WHERE [Sub_Page_ID] = 557;
 
-SET IDENTITY_INSERT [dbo].[dp_Sub_Page_Views] OFF;
+-- Migrate down...
+--UPDATE [dbo].[dp_Sub_Pages] SET [Default_View] = NULL WHERE [Sub_Page_ID] = 557;
+--DELETE FROM [dbo].[dp_Sub_Page_Views] WHERE [Sub_Page_View_ID] = 136;

@@ -29,3 +29,6 @@ ALTER TABLE [dbo].[Group_Participant_Attributes]  WITH CHECK ADD  CONSTRAINT [FK
 REFERENCES [dbo].[Group_Participants] ([Group_Participant_ID]);
 
 ALTER TABLE [dbo].[Group_Participant_Attributes] CHECK CONSTRAINT [FK_Group_Participant_Attributes_Group_Participants];
+
+--Migrate down
+--DROP TABLE [dbo].[Group_Participant_Attributes];

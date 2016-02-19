@@ -54,3 +54,6 @@ INSERT INTO [dbo].[dp_Sub_Pages] (
 );
 
 SET IDENTITY_INSERT [dbo].[dp_Sub_Pages] OFF;
+
+--Migrate down
+--DELETE FROM [dbo].[dp_Sub_Pages] WHERE [Sub_Page_ID] = 557;
