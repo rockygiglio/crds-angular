@@ -23,4 +23,6 @@ INSERT INTO [dbo].[dp_Sub_Page_Views](
     ,NULL
 );
 
+UPDATE [dbo].[dp_Sub_Pages] SET [Default_View] = 136 WHERE [Sub_Page_ID] = 557;
+
 SET IDENTITY_INSERT [dbo].[dp_Sub_Page_Views] OFF;
