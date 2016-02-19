@@ -63,6 +63,9 @@ namespace MinistryPlatform.Models
         public string ProcessorAccountId { get; set; }
         public string ProcessorId { get; set; }
         public string EncryptedAccount { get; set; }
+        public string Token { get; set; }
+
+        public bool HasToken { get { return !string.IsNullOrWhiteSpace(Token); } }
     }
 
     public enum AccountType
