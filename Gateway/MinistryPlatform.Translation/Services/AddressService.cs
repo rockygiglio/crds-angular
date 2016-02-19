@@ -11,10 +11,10 @@ namespace MinistryPlatform.Translation.Services
     public class AddressService : IAddressService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ApiUserService _apiUserService;
+        private readonly IApiUserService _apiUserService;
         private readonly int AddressPageId;
 
-        public AddressService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, ApiUserService apiUserService)
+        public AddressService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
