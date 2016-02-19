@@ -223,5 +223,58 @@ namespace crds_angular.test.controllers
                 Assert.AreEqual((HttpStatusCode)422, ex.Response.StatusCode);
             }
         }
+
+        [Test]
+        public void GetGroupsByTypeForParticipantNoGroups()
+        {
+            const string token = "1234frd32";
+            const int groupTypeId = 19;
+          
+            Participant participant = new Participant() 
+            { 
+                ParticipantId = 90210
+            };
+
+            var groups = new List<GroupDTO>();
+        
+            participantServiceMock.Setup(
+               mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
+               .Returns(participant);
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId)).Returns(groups);
+          
+            IHttpActionResult result = fixture.GetGroups(groupTypeId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(NotFoundResult), result);
+        }
+
+        [Test]
+        public void GetGroupsByTypeForParticipanGroupsFound()
+        {
+            const int groupTypeId = 19;
+
+            Participant participant = new Participant()
+            {
+                ParticipantId = 90210
+            };
+            
+            var groups = new List<GroupDTO>()
+            {
+                new GroupDTO()
+                {
+                    GroupName = "This will work"
+                }
+            };
+
+            participantServiceMock.Setup(
+               mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
+               .Returns(participant);
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForParticipant(fixture.Request.Headers.Authorization.ToString(), participant.ParticipantId, groupTypeId)).Returns(groups);
+
+            IHttpActionResult result = fixture.GetGroups(groupTypeId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
+        }
       }
    }

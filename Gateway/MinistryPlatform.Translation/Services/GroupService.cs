@@ -377,6 +377,7 @@ namespace MinistryPlatform.Translation.Services
                 MinistryId = details.ToInt("Ministry_ID"),
                 ContactId = details.ToInt("Primary_Contact"),
                 PrimaryContactName = details.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
                 GroupType = details.ToInt("Group_Type_ID"),
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
