@@ -1,4 +1,4 @@
-<div ng-include="'templates/empty_results.html'" ng-if="result.results.length <= 0"></div>
+<div dynamic-content="$root.MESSAGES.groupFinderEmptyResults.content | html" ng-if="result.results.length <= 0"></div>
 <div class="results" ng-if="result.results.length > 0">
   <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
   <pager

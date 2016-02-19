@@ -6,7 +6,7 @@
   <div ng-if="!invitation.requestPending">
     <div ng-if="invitation.group">
       <div ng-if="invitation.accepted">
-        <p>Your request has been accepted</p>
+        <p dynamic-content="$root.MESSAGES.groupFinderJoinedSuccess.content | html"></p>
         <group-invitation group="detail.group" header="Invite your Spouses:" ng-if="invitation.showInvite"></group-invitation>
         <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.dashboard">Go to Dashboard</a></p>
       </div>
