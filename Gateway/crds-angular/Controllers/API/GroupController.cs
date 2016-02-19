@@ -14,26 +14,30 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private crds_angular.Services.Interfaces.IGroupService groupService;
-        private IAuthenticationService authenticationService;
-        private IParticipantService participantService;
+        private readonly Services.Interfaces.IGroupService groupService;
+        private readonly IAuthenticationService authenticationService;
+        private readonly IParticipantService participantService;
+        private readonly Services.Interfaces.IAddressService _addressService;
 
         private readonly int GroupRoleDefaultId =
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
 
-        public GroupController(crds_angular.Services.Interfaces.IGroupService groupService,
+        public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationService authenticationService,
-                               IParticipantService participantService)
+                               IParticipantService participantService,
+                               Services.Interfaces.IAddressService addressService)
         {
             this.groupService = groupService;
             this.authenticationService = authenticationService;
             this.participantService = participantService;
+            _addressService = addressService;
         }
 
         /// <summary>
@@ -48,6 +52,11 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    if (group.Address != null)
+                    {
+                        _addressService.FindOrCreateAddress(group.Address);
+                    }
+
                     group = groupService.CreateGroup(group);
                     _logger.DebugFormat("Successfully created group {0} ", group.GroupId);
                     return (Created(string.Format("api/group/{0}", group.GroupId), group));

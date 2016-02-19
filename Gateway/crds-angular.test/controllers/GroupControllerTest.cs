@@ -29,6 +29,7 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IGroupService> groupServiceMock;
         private Mock<IAuthenticationService> authenticationServiceMock;
         private Mock<IParticipantService> participantServiceMock;
+        private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;
         private string authType;
         private string authToken;
         private const int GroupRoleId = 16;
@@ -39,8 +40,9 @@ namespace crds_angular.test.controllers
             groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
             authenticationServiceMock = new Mock<IAuthenticationService>();
             participantServiceMock = new Mock<IParticipantService>();
+            addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();
 
-            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object);
+            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object, addressServiceMock.Object);
 
             authType = "auth_type";
             authToken = "auth_token";
