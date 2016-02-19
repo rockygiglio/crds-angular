@@ -83,12 +83,13 @@ namespace MinistryPlatform.Translation.Services
         /// </summary>
         /// <param name="communication">The message properties </param>     
         /// <param name="isDraft"> Is this message a draft? Defaults to false </param>   
-        public void SendMessage(Communication communication, bool isDraft = false)
+        public int SendMessage(Communication communication, bool isDraft = false)
         {
             var token = ApiLogin();
             var communicationStatus = isDraft ? _communicationDraftStatus : _communicationStatusId;
             var communicationId = AddCommunication(communication, token, communicationStatus);
             AddCommunicationMessages(communication, communicationId, token);
+            return communicationId;
         }
 
         private int AddCommunication(Communication communication, string token, int communicationStatus)
