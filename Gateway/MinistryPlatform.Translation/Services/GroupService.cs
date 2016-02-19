@@ -44,7 +44,9 @@ namespace MinistryPlatform.Translation.Services
         public int CreateGroup(Group group)
         {
             logger.Debug("Adding group");
-            
+
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+
             var values = new Dictionary<string, object>
             {
                 {"Group_Name", group.Name},
@@ -56,7 +58,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Start_Date", group.StartDate },
                 {"End_Date", group.EndDate },
                 {"Target_Size", group.TargetSize },
-                {"Offsite_Meeting_Address", group.Address.Address_ID },
+                {"Offsite_Meeting_Address", addressId },
                 {"Group_Is_Full", group.Full },
                 {"Available_Online", group.AvailableOnline },
                 {"Meeting_Time", group.MeetingTime },
@@ -65,8 +67,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Child_Care_Available", group.ChildCareAvailable },
                 {"Remaining_Capacity", group.RemainingCapacity },
                 {"Enable_Waiting_List", group.WaitList },
-                {"Online_RSVP_Minimum_Age", group.MinimumAge },                
-
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
             };
 
             var groupId =
