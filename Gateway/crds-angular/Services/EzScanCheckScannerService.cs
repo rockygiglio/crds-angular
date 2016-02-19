@@ -97,7 +97,7 @@ namespace crds_angular.Services
                         CheckNumber = (check.CheckNumber ?? string.Empty).TrimStart(' ', '0').Right(MinistryPlatformCheckNumberMaxLength)
                     };
 
-                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
+                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false);
 
                     check.DonationId = donationId;
 
