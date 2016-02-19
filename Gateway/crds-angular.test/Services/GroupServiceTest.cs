@@ -36,12 +36,14 @@ namespace crds_angular.test.Services
             new ParticipantSignup()
             {
                 particpantId = 999,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             },
             new ParticipantSignup()
             {
                 particpantId = 888,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             }
         };
 
@@ -67,7 +69,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowExceptionWhenAddingToGroupIfGetGroupDetailsFails()
+        public void shouldThrowExceptionWhenAddingToCommunityGroupIfGetGroupDetailsFails()
         {
             Exception exception = new Exception("Oh no, Mr. Bill!");
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Throws(exception);
@@ -87,7 +89,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
             var g = new Group
             {
@@ -114,7 +116,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
         {
             var g = new Group
             {
@@ -141,7 +143,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldAddParticipantsToGroupAndEvents()
+        public void shouldAddParticipantsToCommunityGroupAndEvents()
         {
             var g = new Group
             {
