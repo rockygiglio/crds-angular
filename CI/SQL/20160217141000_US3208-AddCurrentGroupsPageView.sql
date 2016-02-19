@@ -19,17 +19,20 @@ Groups.End_Date,
 Meeting_Day_ID_Table.[Meeting_Day_ID],
 Groups.[Meeting_Time],
 Groups.Available_Online,
+Offsite_Meeting_Address_Table.[Address_ID],
 Offsite_Meeting_Address_Table.[Address_Line_1],
 Offsite_Meeting_Address_Table.[Address_Line_2],
 Offsite_Meeting_Address_Table.[City],
 Offsite_Meeting_Address_Table.[State/Region] AS [State],
-Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code]','((Groups.End_Date IS NULL OR Groups.End_Date >= GetDate()) AND Groups.Group_ID in 
+Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code],
+Offsite_Meeting_Address_Table.[Foreign_Country]',
+'((Groups.End_Date IS NULL OR Groups.End_Date >= GetDate()) AND Groups.Group_ID in 
 (Select Group_ID 
 from dbo.Group_Participants
 inner join dbo.Participants on dbo.Group_Participants.Participant_ID = dbo.Participants.Participant_ID
 inner join dbo.Contacts on dbo.Participants.Contact_ID = dbo.Contacts.Contact_ID
 inner join dbo.dp_Users on dbo.Contacts.Contact_ID = dbo.dp_Users.Contact_ID
-where dbo.dp_Users.User_ID = dp_UserID)
+where dbo.dp_Users.User_ID = dp_UserID AND (dbo.Group_Participants.End_date IS NULL OR dbo.Group_Participants.End_Date >= GetDate() ))
 )',NULL,NULL,NULL)
 
 SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF

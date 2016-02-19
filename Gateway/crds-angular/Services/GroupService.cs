@@ -47,6 +47,23 @@ namespace crds_angular.Services
             MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
 
+        public GroupDTO CreateGroup(GroupDTO group)
+        {
+            try
+            {
+                var mpGroup = Mapper.Map<Group>(group);
+                group.GroupId = _mpGroupService.CreateGroup(mpGroup);
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not create group {0}", group.GroupName, e.Message);
+                logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            return group;
+        }
+
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
             Group group;

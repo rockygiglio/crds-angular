@@ -29,6 +29,7 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IGroupService> groupServiceMock;
         private Mock<IAuthenticationService> authenticationServiceMock;
         private Mock<IParticipantService> participantServiceMock;
+        private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;
         private string authType;
         private string authToken;
         private const int GroupRoleId = 16;
@@ -39,8 +40,9 @@ namespace crds_angular.test.controllers
             groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
             authenticationServiceMock = new Mock<IAuthenticationService>();
             participantServiceMock = new Mock<IParticipantService>();
+            addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();
 
-            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object);
+            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object, addressServiceMock.Object);
 
             authType = "auth_type";
             authToken = "auth_token";
@@ -56,7 +58,8 @@ namespace crds_angular.test.controllers
 
             List<ParticipantSignup> particpantIdToAdd = new List<ParticipantSignup>
             {
-                new ParticipantSignup(){
+                new ParticipantSignup()
+                {
                     particpantId = 90210,
                     childCareNeeded = false,
                     SendConfirmationEmail = true
@@ -79,10 +82,12 @@ namespace crds_angular.test.controllers
 
             var participantsAdded = new List<Dictionary<string, object>>
             {
-                new Dictionary<string, object> {
+                new Dictionary<string, object>
+                {
                     {"123", "456"}
                 },
-                new Dictionary<string, object> {
+                new Dictionary<string, object>
+                {
                     {"abc", "def"}
                 },
             };
@@ -94,7 +99,7 @@ namespace crds_angular.test.controllers
             groupServiceMock.VerifyAll();
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(OkResult), result);
+            Assert.IsInstanceOf(typeof (OkResult), result);
         }
 
         [Test]
@@ -144,7 +149,7 @@ namespace crds_angular.test.controllers
                     particpantId = 90210,
                     childCareNeeded = false,
                     SendConfirmationEmail = true
-                }, 
+                },
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
@@ -158,7 +163,7 @@ namespace crds_angular.test.controllers
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
             authenticationServiceMock.VerifyAll();
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+            Assert.IsInstanceOf(typeof (BadRequestResult), result);
         }
 
         [Test]
@@ -187,11 +192,11 @@ namespace crds_angular.test.controllers
             authenticationServiceMock.Setup(mocked => mocked.GetContactId(fixture.Request.Headers.Authorization.ToString())).Returns(contactId);
 
             var relationRecord = new GroupSignupRelationships
-              {
-                  RelationshipId = 1,
-                  RelationshipMinAge = 00,
-                  RelationshipMaxAge = 100
-              };
+            {
+                RelationshipId = 1,
+                RelationshipMinAge = 00,
+                RelationshipMaxAge = 100
+            };
 
             var groupDto = new GroupDTO
             {
@@ -202,10 +207,10 @@ namespace crds_angular.test.controllers
 
             IHttpActionResult result = fixture.Get(groupId);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<GroupDTO>), result);
+            Assert.IsInstanceOf(typeof (OkNegotiatedContentResult<GroupDTO>), result);
             groupServiceMock.VerifyAll();
 
-            var groupDtoResponse = ((OkNegotiatedContentResult<GroupDTO>)result).Content;
+            var groupDtoResponse = ((OkNegotiatedContentResult<GroupDTO>) result).Content;
 
             Assert.NotNull(result);
             Assert.AreSame(groupDto, groupDtoResponse);
@@ -217,7 +222,7 @@ namespace crds_angular.test.controllers
             fixture.Request.Headers.Authorization = null;
             IHttpActionResult result = fixture.Post(3, new List<ParticipantSignup>());
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(UnauthorizedResult), result);
+            Assert.IsInstanceOf(typeof (UnauthorizedResult), result);
             groupServiceMock.VerifyAll();
         }
 
@@ -241,7 +246,7 @@ namespace crds_angular.test.controllers
                     particpantId = 90210,
                     childCareNeeded = false,
                     SendConfirmationEmail = true
-                }, 
+                },
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
@@ -259,10 +264,10 @@ namespace crds_angular.test.controllers
             }
             catch (Exception e)
             {
-                Assert.AreEqual(typeof(HttpResponseException), e.GetType());
-                var ex = (HttpResponseException)e;
+                Assert.AreEqual(typeof (HttpResponseException), e.GetType());
+                var ex = (HttpResponseException) e;
                 Assert.IsNotNull(ex.Response);
-                Assert.AreEqual((HttpStatusCode)422, ex.Response.StatusCode);
+                Assert.AreEqual((HttpStatusCode) 422, ex.Response.StatusCode);
             }
         }
 
@@ -317,6 +322,96 @@ namespace crds_angular.test.controllers
             IHttpActionResult result = fixture.GetGroups(groupTypeId);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
-        }
       }
-   }
+
+        [Test]
+        public void PostGroupSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof (CreatedNegotiatedContentResult<GroupDTO>), result);
+        }
+
+        [Test]
+        public void PostGroupFailed()
+        {
+            Exception ex = new Exception();
+
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Throws(ex);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof (BadRequestResult), result);
+        }
+
+
+        [Test]
+        public void PostGroupWithAddressSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = new AddressDTO()
+                {
+                    AddressLine1 = "123 Abc St.",
+                    AddressLine2 = "Apt. 2",
+                    City = "Cincinnati",
+                    State = "OH",
+                    County = "Hamilton",
+                    ForeignCountry = "United States",
+                    PostalCode = "45213"
+                }
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+            
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);            
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x=> x.FindOrCreateAddress(group.Address), Times.Once);
+            groupServiceMock.VerifyAll();            
+        }
+
+        [Test]
+        public void PostGroupWithoutAddressSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = null
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
+            groupServiceMock.VerifyAll();
+        }
+    }
+}

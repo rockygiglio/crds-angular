@@ -41,6 +41,45 @@ namespace MinistryPlatform.Translation.Services
             this._contentBlockService = contentBlockService;
         }
 
+        public int CreateGroup(Group group)
+        {
+            logger.Debug("Adding group");
+            
+            var values = new Dictionary<string, object>
+            {
+                {"Group_Name", group.Name},
+                {"Group_Type_ID", group.GroupType },
+                {"Ministry_ID", group.MinistryId },
+                {"Congregation_ID", group.CongregationId },
+                {"Primary_Contact", group.ContactId },
+                {"Description", group.GroupDescription },
+                {"Start_Date", group.StartDate },
+                {"End_Date", group.EndDate },
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", group.Address.Address_ID },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },                
+
+            };
+
+            var groupId =
+                WithApiLogin<int>(
+                    apiToken =>
+                    {
+                        return (ministryPlatformService.CreateRecord(GroupsPageId, values, apiToken, true));
+                    });
+
+            logger.Debug("Added group " + groupId);
+            return (groupId);
+        }
+
         public int addParticipantToGroup(int participantId,
                                          int groupId,
                                          int groupRoleId,
@@ -389,15 +428,17 @@ namespace MinistryPlatform.Translation.Services
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = (TimeSpan) details.ToNullableTimeSpan("Meeting_Time"),
+                MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
                 Address = new Address()
                 {
+                    Address_ID = details.ToInt("Address_ID"),
                     Address_Line_1 = details.ToString("Address_Line_1"),
                     Address_Line_2 = details.ToString("Address_Line_2"),
                     City = details.ToString("City"),
                     State = details.ToString("State"),
-                    Postal_Code = details.ToString("Zip_Code")
+                    Postal_Code = details.ToString("Zip_Code"),
+                    Foreign_Country = details.ToString("Foreign_Country")
                 }
             }).ToList();
         }

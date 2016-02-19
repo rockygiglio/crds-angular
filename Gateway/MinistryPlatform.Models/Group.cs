@@ -23,7 +23,7 @@ namespace MinistryPlatform.Models
         public int MinimumAge { get; set; }
         public string GroupDescription { get; set; }
         public int MinistryId { get; set; }
-        public TimeSpan MeetingTime { get; set; }
+        public string MeetingTime { get; set; }
         public int MeetingDayId { get; set; }
         public int CongregationId { get; set; }
         public DateTime StartDate { get; set; }
