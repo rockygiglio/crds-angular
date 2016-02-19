@@ -21,13 +21,13 @@ namespace MinistryPlatform.Models
         public int MinimumAge { get; set; }
         public string GroupDescription { get; set; }
         public int MinistryId { get; set; }
-        public TimeSpan MeetingTime { get; set; }
+        public string MeetingTime { get; set; }
         public int MeetingDayId { get; set; }
         public int CongregationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool AvailableOnline { get; set; }
-        public int RemainingCapcity { get; set; }
+        public int RemainingCapacity { get; set; }
         public int ContactId { get; set; }
         public int GroupRoleId { get; set; }
         public Address Address { get; set; }

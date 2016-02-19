@@ -56,14 +56,14 @@ namespace MinistryPlatform.Translation.Services
                 {"Start_Date", group.StartDate },
                 {"End_Date", group.EndDate },
                 {"Target_Size", group.TargetSize },
-                {"Offsite_Meeting_Address", group.Address?.Address_ID },
+                {"Offsite_Meeting_Address", group.Address.Address_ID },
                 {"Group_Is_Full", group.Full },
                 {"Available_Online", group.AvailableOnline },
                 {"Meeting_Time", group.MeetingTime },
                 {"Meeting_Day_Id", group.MeetingDayId },
                 {"Domain_ID", 1 },
                 {"Child_Care_Available", group.ChildCareAvailable },
-                {"Remaining_Capacity", group.RemainingCapcity },
+                {"Remaining_Capacity", group.RemainingCapacity },
                 {"Enable_Waiting_List", group.WaitList },
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },                
 
@@ -419,7 +419,7 @@ namespace MinistryPlatform.Translation.Services
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = (TimeSpan) details.ToNullableTimeSpan("Meeting_Time"),
+                MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
                 Address = new Address()
                 {

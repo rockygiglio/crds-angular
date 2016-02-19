@@ -65,12 +65,12 @@ namespace crds_angular.Models.Crossroads.Groups
         public int MeetingDayId { get; set; }
 
         [JsonProperty(PropertyName = "meetingTime")]
-        public TimeSpan? MeetingTime { get; set; }
+        public string MeetingTime { get; set; }
 
         [JsonProperty(PropertyName = "groupRoleId")]
         public int GroupRoleId { get; set; }
 
-        [JsonProperty(PropertyName = "addresss")]
+        [JsonProperty(PropertyName = "address")]
         public AddressDTO Address { get; set; }
 
         [JsonProperty(PropertyName = "attributes")]

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
@@ -13,17 +15,19 @@ using Moq;
 using NUnit.Framework;
 using Event = MinistryPlatform.Models.Event;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
+using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
 namespace crds_angular.test.Services
 {
-    public class GroupServiceTest
+    public class GroupServiceTest 
     {
         private GroupService fixture;
         private Mock<MPServices.IAuthenticationService> authenticationService;
         private Mock<MPServices.IGroupService> groupService;
         private Mock<MPServices.IEventService> eventService;
-        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;
+        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
         private Mock<IServeService> serveService;
+        private Mock<IGroupService> _groupService; 
         private Mock<IConfigurationWrapper> config;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
@@ -46,12 +50,14 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
+            AutoMapperConfig.RegisterMappings();
 
             authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<MPServices.IGroupService>(MockBehavior.Strict);
+            groupService = new Mock<MPServices.IGroupService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
-            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();
+            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
+            _groupService = new Mock<IGroupService>();
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
@@ -228,6 +234,58 @@ namespace crds_angular.test.Services
             Assert.AreEqual(2, response.SignUpFamilyMembers.Count);
             Assert.AreEqual(g.WaitListGroupId, response.WaitListGroupId);
             Assert.AreEqual(g.WaitList, response.WaitListInd);
+        }
+
+        [Test]
+        public void TestCreateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var newGroup = new Group()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupType = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+            
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupId = 145,
+                GroupDescription = "The best group ever created for testing stuff and things",                
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+
+            groupService.Setup(mocked => mocked.CreateGroup(newGroup)).Returns(14);
+            var groupResp =  fixture.CreateGroup(group);
+     
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);           
         }
     }
 }
