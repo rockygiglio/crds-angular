@@ -139,34 +139,39 @@ namespace crds_angular.Services
                 var donorAccount = contactDonor != null ? contactDonor.Account : null;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(donorAccount == null ? paymentProcessorToken : null);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
 
                     if (donorAccount != null)
                     {
-                        var source = _paymentService.AddSourceToCustomer(stripeCustomer.id, paymentProcessorToken);
-                        donorAccount.ProcessorAccountId = source.id;
+                        donorAccount.ProcessorAccountId = stripeCustomer.sources.data[0].id;
                     }
 
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                 }
-           
+
                 contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonorResponse.ContactId, contactDonorResponse.ProcessorId, setupDate.Value, 
                     statementFrequency, _statementTypeIndividual, statementMethod, donorAccount);
                 contactDonorResponse.Email = emailAddress;
 
                 _paymentService.UpdateCustomerDescription(contactDonorResponse.ProcessorId, contactDonorResponse.DonorId);
+
+                if (donorAccount != null)
+                {
+                    _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   donorAccount.RoutingNumber,
+                                                   donorAccount.AccountNumber,
+                                                   donorAccount.EncryptedAccount,
+                                                   contactDonorResponse.DonorId,
+                                                   donorAccount.ProcessorAccountId,
+                                                   contactDonorResponse.ProcessorId);
+                }
             }
             else if (!contactDonor.HasPaymentProcessorRecord)
             {
                 contactDonorResponse.ContactId = contactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(contactDonor.HasAccount ? null : paymentProcessorToken);
-                    if (contactDonor.HasAccount)
-                    {
-                        var source = _paymentService.AddSourceToCustomer(stripeCustomer.id, paymentProcessorToken);
-                        contactDonor.Account.ProcessorAccountId = source.id;
-                    }
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                 }
 
@@ -189,6 +194,17 @@ namespace crds_angular.Services
                             _statementFrequencyNever, _statementTypeIndividual, _statementMethodNone);
                         contactDonorResponse.Email = contactDonor.Email;
                     }
+                }
+
+                if (contactDonor.HasAccount)
+                {
+                    _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   contactDonor.Account.RoutingNumber,
+                                                   contactDonor.Account.AccountNumber,
+                                                   contactDonor.Account.EncryptedAccount,
+                                                   contactDonor.DonorId,
+                                                   contactDonor.Account.ProcessorAccountId,
+                                                   contactDonor.ProcessorId);
                 }
 
                 if (contactDonorResponse.HasPaymentProcessorRecord)

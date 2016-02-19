@@ -263,6 +263,36 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldCreateCustomerWithoutToken()
+        {
+            var customer = new StripeCustomer
+            {
+                id = "856",
+                default_source = "123",
+            };
+
+            var stripeResponse = new Mock<IRestResponse<StripeCustomer>>(MockBehavior.Strict);
+            stripeResponse.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.OK).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.Data).Returns(customer).Verifiable();
+
+            _restClient.Setup(mocked => mocked.Execute<StripeCustomer>(It.IsAny<IRestRequest>())).Returns(stripeResponse.Object);
+
+            var response = _fixture.CreateCustomer(null);
+            _restClient.Verify(mocked => mocked.Execute<StripeCustomer>(
+                It.Is<IRestRequest>(o =>
+                    o.Method == Method.POST
+                    && o.Resource.Equals("customers")
+                    && o.Parameters.Matches("description", "Crossroads Donor #pending")
+                    && !o.Parameters.Contains("source")
+                    )));
+            _restClient.VerifyAll();
+            stripeResponse.VerifyAll();
+
+            Assert.AreEqual(customer, response);
+        }
+
+        [Test]
         public void ShouldUpdateCustomerDescription()
         {
             var customer = new StripeCustomer
