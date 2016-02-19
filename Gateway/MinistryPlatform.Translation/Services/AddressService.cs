@@ -41,7 +41,7 @@ namespace MinistryPlatform.Translation.Services
             return addressId;
         }
 
-        public List<Address> FindMatchingAddresses(Address address)
+        public List<Address> FindMatches(Address address)
         {
             var apiToken = _apiUserService.GetToken();
             var search = string.Format("{0}, {1}, {2}, {3}, {4}, {5}",

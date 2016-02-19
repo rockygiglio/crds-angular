@@ -102,7 +102,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(m => m.GetRecordsDict(271, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(addrRecords);
 
-            var records = _fixture.FindMatchingAddresses(addr);
+            var records = _fixture.FindMatches(addr);
 
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(records);

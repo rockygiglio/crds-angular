@@ -36,7 +36,7 @@ namespace crds_angular.Services
 
         private bool FindExistingAddress(AddressDTO address, Address mpAddress)
         {
-            var result = _mpAddressService.FindMatchingAddresses(mpAddress);
+            var result = _mpAddressService.FindMatches(mpAddress);
             if (result.Count > 0)
             {
                 var addressId = result.First(x => x.Address_ID.HasValue).Address_ID;

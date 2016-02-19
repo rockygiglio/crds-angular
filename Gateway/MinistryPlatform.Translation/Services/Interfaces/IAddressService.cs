@@ -6,6 +6,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     public interface IAddressService
     {
         int Create(Address address);
-        List<Address> FindMatchingAddresses(Address address);
+        List<Address> FindMatches(Address address);
     }
 }
