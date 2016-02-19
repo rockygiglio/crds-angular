@@ -3,7 +3,6 @@ GO
 
 DECLARE @Domain_ID AS INT = 1
 DECLARE @Attribute_ID_Base AS INT = 7011
-DECLARE @Domain_ID AS INT = 1
 
 -- Add / Update the Attribute Type
 DECLARE @Attribute_Type_ID INT
