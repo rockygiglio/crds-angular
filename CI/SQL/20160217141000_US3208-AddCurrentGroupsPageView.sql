@@ -32,7 +32,7 @@ from dbo.Group_Participants
 inner join dbo.Participants on dbo.Group_Participants.Participant_ID = dbo.Participants.Participant_ID
 inner join dbo.Contacts on dbo.Participants.Contact_ID = dbo.Contacts.Contact_ID
 inner join dbo.dp_Users on dbo.Contacts.Contact_ID = dbo.dp_Users.Contact_ID
-where dbo.dp_Users.User_ID = dp_UserID)
+where dbo.dp_Users.User_ID = dp_UserID AND (dbo.Group_Participants.End_date IS NULL OR dbo.Group_Participants.End_Date >= GetDate() ))
 )',NULL,NULL,NULL)
 
 SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF
