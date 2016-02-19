@@ -7,7 +7,7 @@
 
   function JoinCtrl ($scope, Person) {
     $scope.currentStep = 1;
-    $scope.person = Person
+    $scope.person = Person;
   }
 
 })();

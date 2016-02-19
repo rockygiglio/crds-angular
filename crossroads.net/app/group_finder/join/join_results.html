@@ -1,4 +1,10 @@
-<div dynamic-content="$root.MESSAGES.groupFinderEmptyResults.content | html" ng-if="result.results.length <= 0"></div>
+<div ng-if="result.results.length <= 0">
+  <div dynamic-content="$root.MESSAGES.groupFinderParticipantNoResults.content | html"></div>
+  <p class="btns text-center">
+    <a class="btn btn-next-question btn-block-mobile" href="#" ui-sref="group_finder.join.questions">Start Over</a>
+  </p>
+</div>
+
 <div class="results" ng-if="result.results.length > 0">
   <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
   <pager ng-model="result.currentPage"
