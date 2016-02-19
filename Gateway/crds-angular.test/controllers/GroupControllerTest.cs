@@ -58,12 +58,14 @@ namespace crds_angular.test.controllers
             {
                 new ParticipantSignup(){
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 },
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
 
@@ -98,7 +100,6 @@ namespace crds_angular.test.controllers
         [Test]
         public void testPostParticipantToJourneyGroupIsSuccessful()
         {
-            //170656
             const int groupId = 456;
 
             List<ParticipantSignup> particpantIdToAdd = new List<ParticipantSignup>
@@ -106,24 +107,18 @@ namespace crds_angular.test.controllers
                 new ParticipantSignup(){
                     particpantId = 90210,
                     childCareNeeded = false,
-                    groupRoleId = 22
+                    groupRoleId = 22,
+                    SendConfirmationEmail = false,
+                    capacityNeeded = 0
                 },
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
                     childCareNeeded = false,
-                    groupRoleId = 16
+                    groupRoleId = 16,
+                    SendConfirmationEmail = false,
+                    capacityNeeded = 1
                 }
-            };
-
-            var participantsAdded = new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object> {
-                    {"123", "456"}
-                },
-                new Dictionary<string, object> {
-                    {"abc", "def"}
-                },
             };
 
             groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd));
@@ -147,18 +142,19 @@ namespace crds_angular.test.controllers
                 new ParticipantSignup()
                 {
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }, 
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
 
             groupServiceMock.Setup(mocked => mocked.addParticipantsToGroup(groupId, particpantIdToAdd)).Throws(ex);
 
-            //does this need to add boolean flag for communityGroup?
             IHttpActionResult result = fixture.Post(groupId, particpantIdToAdd);
             authenticationServiceMock.VerifyAll();
             Assert.IsNotNull(result);
@@ -180,6 +176,7 @@ namespace crds_angular.test.controllers
             g.TargetSize = 5;
             g.WaitList = true;
             g.WaitListGroupId = 888;
+            g.RemainingCapacity = 10;
 
             Participant participant = new Participant();
             participant.ParticipantId = 90210;
@@ -242,12 +239,14 @@ namespace crds_angular.test.controllers
                 new ParticipantSignup()
                 {
                     particpantId = 90210,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }, 
                 new ParticipantSignup()
                 {
                     particpantId = 41001,
-                    childCareNeeded = false
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
                 }
             };
             var groupFull = new GroupFullException(g);

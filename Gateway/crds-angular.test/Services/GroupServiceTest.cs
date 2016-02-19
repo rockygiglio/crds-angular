@@ -34,12 +34,14 @@ namespace crds_angular.test.Services
             new ParticipantSignup()
             {
                 particpantId = 999,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             },
             new ParticipantSignup()
             {
                 particpantId = 888,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             }
         };
 

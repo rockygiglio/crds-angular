@@ -36,6 +36,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 
         List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
-        void UpdateGroup(Group group);
+        void UpdateGroupRemainingCapacity(Group group);
     }
 }
