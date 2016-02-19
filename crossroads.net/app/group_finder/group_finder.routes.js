@@ -13,10 +13,7 @@
         parent: 'noHeaderOrFooter',
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
-        resolve: {
-          Profile: 'Profile',
-          Person: 'Person'
-        },
+        resolve: {},
         data: {
           meta: {
             title: SERIES.title,
@@ -29,7 +26,10 @@
         controller: 'SummaryCtrl as summary',
         url: '/summary',
         templateUrl: 'summary/summary.html',
-        resolve: {},
+        resolve: {
+          Profile: 'Profile',
+          Person: 'Person'
+        },
         data: {
           isProtected: true,
           meta: {
