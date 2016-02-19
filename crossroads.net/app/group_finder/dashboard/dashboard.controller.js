@@ -29,8 +29,7 @@
 
     var vm = this;
 
-    vm.profileData = { person: Person };
-    vm.person = Person;
+    vm.person = Person.getProfile();
     vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
     vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
