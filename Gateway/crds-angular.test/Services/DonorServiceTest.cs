@@ -246,6 +246,45 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldAddNewDonorAccountToExistingDonor()
+        {
+            var donor = new ContactDonor
+            {
+                ContactId = 12345,
+                DonorId = 456,
+                Email = "me@here.com",
+                Account = new DonorAccount
+                {
+                    AccountNumber = "123456789",
+                    EncryptedAccount = "enc12345",
+                    RoutingNumber = "110000000",
+                    Token = "stripe_token",
+                    Type = AccountType.Checking
+                },
+                ProcessorId = "cus_90210"
+            };
+
+            var stripeSource = new StripeCustomer
+            {
+                id = "src_123"
+            };
+
+            _paymentService.Setup(mocked => mocked.AddSourceToCustomer("cus_90210", "stripe_token")).Returns(stripeSource);
+            _mpDonorService.Setup(mocked => mocked.CreateDonorAccount(null, "110000000", "123456789", "enc12345", 456, "src_123", "cus_90210")).Returns(987);
+
+            var response = _fixture.CreateOrUpdateContactDonor(donor, EncryptedKey, "me@here.com", "stripe_token", DateTime.Now);
+
+            _mpDonorService.VerifyAll();
+            _mpContactService.VerifyAll();
+            _paymentService.VerifyAll();
+
+            Assert.AreEqual(12345, response.ContactId);
+            Assert.AreEqual(456, response.DonorId);
+            Assert.AreEqual(donor.ProcessorId, response.ProcessorId);
+            Assert.AreEqual("me@here.com", response.Email);
+        }
+
+        [Test]
         public void TestCreateRecurringGift()
         {
             var recurringGiftDto = new RecurringGiftDto

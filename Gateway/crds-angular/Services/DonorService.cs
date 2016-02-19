@@ -139,11 +139,12 @@ namespace crds_angular.Services
                 var donorAccount = contactDonor != null ? contactDonor.Account : null;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
+                    var stripeCustomer = _paymentService.CreateCustomer(donorAccount == null ? paymentProcessorToken : null);
 
                     if (donorAccount != null)
                     {
-                        donorAccount.ProcessorAccountId = stripeCustomer.sources.data[0].id;
+                        var source = _paymentService.AddSourceToCustomer(stripeCustomer.id, paymentProcessorToken);
+                        donorAccount.ProcessorAccountId = source.id;
                     }
 
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
@@ -160,7 +161,12 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = contactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
+                    var stripeCustomer = _paymentService.CreateCustomer(contactDonor.HasAccount ? null : paymentProcessorToken);
+                    if (contactDonor.HasAccount)
+                    {
+                        var source = _paymentService.AddSourceToCustomer(stripeCustomer.id, paymentProcessorToken);
+                        contactDonor.Account.ProcessorAccountId = source.id;
+                    }
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                 }
 

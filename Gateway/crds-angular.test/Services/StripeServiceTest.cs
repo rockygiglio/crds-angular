@@ -835,6 +835,37 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.AreSame(customer, result);
         }
+
+        [Test]
+        public void TestCreateToken()
+        {
+            var token = new StripeToken();
+
+            var response = new Mock<IRestResponse<StripeToken>>();
+
+            response.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
+            response.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.OK).Verifiable();
+            response.SetupGet(mocked => mocked.Data).Returns(token).Verifiable();
+
+            _restClient.Setup(mocked => mocked.Execute<StripeToken>(It.IsAny<IRestRequest>())).Returns(response.Object);
+
+            var result = _fixture.CreateToken("123", "456");
+
+            _restClient.Verify(mocked => mocked.Execute<StripeToken>(
+                It.Is<RestRequest>(o =>
+                    o.Method == Method.POST
+                    && o.Resource.Equals("tokens")
+                    && o.Parameters.Matches("bank_account[account_number]", "123")
+                    && o.Parameters.Matches("bank_account[routing_number]", "456")
+                    && o.Parameters.Matches("bank_account[country]", "US")
+                    && o.Parameters.Matches("bank_account[currency]", "USD")
+            )));
+
+            _restClient.VerifyAll();
+            response.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.AreSame(token, result);
+        }
     }
 
     internal static class ParameterExtension

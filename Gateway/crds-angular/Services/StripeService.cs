@@ -101,7 +101,10 @@ namespace crds_angular.Services
         {
             var request = new RestRequest("customers", Method.POST);
             request.AddParameter("description", string.Format(StripeCustomerDescription, string.IsNullOrWhiteSpace(donorDescription) ? "pending" : donorDescription));
-            request.AddParameter("source", customerToken);
+            if (!string.IsNullOrWhiteSpace(customerToken))
+            {
+                request.AddParameter("source", customerToken);
+            }
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
