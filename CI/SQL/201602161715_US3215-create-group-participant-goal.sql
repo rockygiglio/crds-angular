@@ -12,7 +12,7 @@ DECLARE @Available_Online BIT
 
 SELECT 
 	@Attribute_Type_ID = 72,	
-	@Attribute_Type_Name = 'GroupParticipantGoal',
+	@Attribute_Type_Name = 'Group Participant Goal',
 	@Attribute_Type_Description = 'What are you hoping to get out of your BRAVE group experience?',
 	@Prevent_Multiple_Selection = 1,
 	@Available_Online = 1
@@ -74,13 +74,14 @@ WHEN MATCHED THEN
 	UPDATE
 	SET
 		Attribute_Name = tmp.Attribute_Name,
+		[Description] = tmp.[Description],
 		Attribute_Type_ID = @Attribute_Type_ID,
 		Domain_ID = @Domain_ID,
 		Sort_Order = tmp.Sort_Order
 WHEN NOT MATCHED THEN
 	INSERT
-		(Attribute_ID, Attribute_Name, Attribute_Type_ID, Domain_ID, Sort_Order)
+		(Attribute_ID, Attribute_Name, [Description], Attribute_Type_ID, Domain_ID, Sort_Order)
 		VALUES
-		(tmp.Attribute_ID, tmp.Attribute_Name, @Attribute_Type_ID, @Domain_ID, tmp.Sort_Order);
+		(tmp.Attribute_ID, tmp.Attribute_Name, tmp.[Description], @Attribute_Type_ID, @Domain_ID, tmp.Sort_Order);
 
 SET IDENTITY_INSERT [dbo].[Attributes] OFF
