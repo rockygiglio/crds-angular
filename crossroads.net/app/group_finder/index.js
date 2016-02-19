@@ -8,7 +8,7 @@
   require('./summary/summary.html');
   require('./invitation/invitation.html');
 
-  angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON])
+  angular.module(MODULES.GROUP_FINDER, [MODULES.CORE, MODULES.COMMON, 'rzModule'])
     .config(require('./group_finder.routes'))
     .constant('SERIES',             require('./group_finder.constants').SERIES)
     .constant('GROUP_TYPES',        require('./group_finder.constants').GROUP_TYPES)
