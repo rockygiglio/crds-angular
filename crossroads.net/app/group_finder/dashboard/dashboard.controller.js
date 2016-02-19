@@ -76,7 +76,16 @@
     };
 
     vm.displayName = function() {
-      return vm.person.firstName + ' ' + vm.person.lastName[0] + '.';
+      var name;
+      if (vm.person) {
+        name = vm.person.firstName || '';
+
+        if (vm.person.lastName) {
+          name = name + ' ' + vm.person.lastName[0] + '.';
+        }
+      }
+
+      return name;
     };
 
     $scope.setGroup = function(group) {

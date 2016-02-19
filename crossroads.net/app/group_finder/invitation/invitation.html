@@ -9,9 +9,7 @@
   <div ng-if="!invitation.requestPending">
     <div ng-if="invitation.group">
       <div ng-if="invitation.accepted">
-
         <div dynamic-content="$root.MESSAGES.groupFinderParticipantConfirmation.content | html"></div>
-
         <div ng-if="invitation.showInvite">
           <div dynamic-content="$root.MESSAGES.groupFinderParticipantInviteSpouse.content | html"></div>
           <group-invitation group="detail.group"></group-invitation>

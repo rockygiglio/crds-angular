@@ -30,20 +30,20 @@
 
     vm.getGroupAttributes = function() {
       var ret = [];
-      if(vm.responses.kids === '1') { ret.push('kids welcome'); }
-      if(vm.responses.pets) {
+      if (vm.responses.kids === '1') { ret.push('kids welcome'); }
+      if (vm.responses.pets) {
         var pet_selections = _.map(Object.keys(vm.responses.pets), function(el) {
           return parseInt(el);
         });
-        if(pet_selections.indexOf(0) !== -1) { ret.push('has a cat'); }
-        if(pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
+        if (pet_selections.indexOf(0) !== -1) { ret.push('has a cat'); }
+        if (pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
       }
       return ret;
     };
 
     vm.getGroupTime = function() {
       var dt = vm.responses.date_and_time;
-      if(dt) {
+      if (dt) {
         return dt['day'] + 's @ ' + dt['time'] + dt['ampm'];
       }
     };
