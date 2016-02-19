@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
@@ -234,6 +235,49 @@ namespace crds_angular.test.Services
             Assert.AreEqual(2, response.SignUpFamilyMembers.Count);
             Assert.AreEqual(g.WaitListGroupId, response.WaitListGroupId);
             Assert.AreEqual(g.WaitList, response.WaitListInd);
+        }
+
+        [Test]
+        public void GetGroupsByTypeForParticipant()
+        {
+            const string token = "1234frd32";
+            const int participantId = 54;
+            const int groupTypeId = 19;
+
+            var groups = new List<Group>()
+            {
+                new Group
+                {
+                    GroupId = 321,
+                    CongregationId = 5,
+                    Name = "Test Journey Group 2016",
+                    GroupRoleId = 16,
+                    GroupDescription = "The group will test some new code",
+                    MinistryId = 8,
+                    ContactId = 4321,
+                    GroupType = 19,
+                    StartDate = Convert.ToDateTime("2016-02-12"),
+                    EndDate = Convert.ToDateTime("2018-02-12"),
+                    MeetingDayId = 3,
+                    MeetingTime = "10 AM",
+                    AvailableOnline = false,
+                    Address = new Address()
+                    {
+                        Address_Line_1 = "123 Sesame St",
+                        Address_Line_2 = "",
+                        City = "South Side",
+                        State = "OH",
+                        Postal_Code = "12312"
+                    }
+                }
+            };
+            
+            groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
+
+            var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+           
+            groupService.VerifyAll();
+            Assert.IsNotNull(grps);
         }
 
         [Test]

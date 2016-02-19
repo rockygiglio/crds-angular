@@ -1,7 +1,7 @@
 <div class="serve-signup-wrapper">
   <h1 class="page-header">Sign Up To Serve </h1>
 
-  <p>
+  <p data-ng-show="!serve.showNoOpportunitiesMsg() || !serve.showNoOpportunitiesMsg()">
     <svg viewBox="0 0 32 32" class="icon icon-check-circle">
       <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#check-circle">
       </use>
@@ -11,6 +11,7 @@
       </use>
     </svg>Signed Up No
   </p>
+
   <refine-list last-date="serve.lastDate" serving-days="serve.groups" original="serve.original"> </refine-list>
 
   <div class="serve-signup-cont clearfix col-sm-9 col-sm-pull-3 soft-ends">

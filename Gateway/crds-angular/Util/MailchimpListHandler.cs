@@ -22,37 +22,48 @@ namespace crds_angular.Util
         private readonly ILog _logger = LogManager.GetLogger(typeof(MailchimpListHandler));
         private readonly IConfigurationWrapper _configWrapper;
         private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
+        private readonly IRestClient _restClient;
 
-        public MailchimpListHandler(IConfigurationWrapper configWrapper, MPInterfaces.IBulkEmailRepository bulkEmailRepository)
+        public MailchimpListHandler(IConfigurationWrapper configWrapper, MPInterfaces.IBulkEmailRepository bulkEmailRepository, IRestClient mailchimpRestClient)
         {
             _configWrapper = configWrapper;
             _bulkEmailRepository = bulkEmailRepository;
+            _restClient = mailchimpRestClient;
         }
 
         public OptInResponse AddListSubscriber(string email, string listName, string token)
         {
             try
             {
-                var publications = _bulkEmailRepository.GetPublications(token);
-                string publicationId = publications.First(r => r.Title == listName).ThirdPartyPublicationId;
-
-                var client = GetEmailClient();
+                var publicationId = GetPublicationId(token, listName);
 
                 // query mailchimp to see if the subscriber is present on the list
                 var subscriberStatusRequest = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email), Method.GET);
                 subscriberStatusRequest.AddHeader("Content-Type", "application/json");
 
-                var subscriberStatusResponse = client.Execute(subscriberStatusRequest);
+                var subscriberStatusResponse = _restClient.Execute(subscriberStatusRequest);
 
-                // handle existing user, opt them in if they're not
                 if (subscriberStatusResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var responseContent = subscriberStatusResponse.Content;
                     var responseContentJson = JObject.Parse(responseContent);
 
-                    BulkEmailSubscriberOptDTO subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
+                    var subscriber = JsonConvert.DeserializeObject<BulkEmailSubscriberOptDTO>(responseContentJson.ToString());
+                    
+                    if (subscriber.Status == "unsubscribed")
+                    {
+                        var signupSuccessful = SendSubscriberRequest(publicationId, email);
 
-                    if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
+                        if (signupSuccessful == true)
+                        {
+                            return new OptInResponse
+                            {
+                                ErrorInSignupProcess = false,
+                                UserAlreadySubscribed = false
+                            };
+                        }
+                    }
+                    else if (subscriber.Status == "subscribed" || subscriber.Status == "pending")
                     {
                         return new OptInResponse
                         {
@@ -63,22 +74,9 @@ namespace crds_angular.Util
                 }
                 else if (subscriberStatusResponse.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // create opt in request, if the person isn't already subscribed
-                    var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
-                    request.AddHeader("Content-Type", "application/json");
+                    var signupSuccessful = SendSubscriberRequest(publicationId, email);
 
-                    request.JsonSerializer = new RestsharpJsonNetSerializer();
-                    request.RequestFormat = DataFormat.Json;
-                    request.Method = Method.PUT;
-
-                    Dictionary<string, string> requestBody = new Dictionary<string, string>();
-                    requestBody.Add("email_address", email);
-                    requestBody.Add("status", "pending");
-                    request.AddBody(requestBody);
-
-                    var response = client.Execute(request);
-
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (signupSuccessful == true)
                     {
                         return new OptInResponse
                         {
@@ -99,18 +97,38 @@ namespace crds_angular.Util
                 ErrorInSignupProcess = true,
                 UserAlreadySubscribed = false
             };
-
         }
 
-        private RestClient GetEmailClient()
+        public bool SendSubscriberRequest(string publicationId, string email)
         {
-            var apiUrl = _configWrapper.GetConfigValue("BulkEmailApiUrl");
-            var apiKey = _configWrapper.GetEnvironmentVarAsString("BULK_EMAIL_API_KEY");
+            // create opt in request, if the person isn't already subscribed
+            var request = new RestRequest("lists/" + publicationId + "/members/" + CalculateMD5Hash(email));
+            request.AddHeader("Content-Type", "application/json");
 
-            var client = new RestClient(apiUrl);
-            client.Authenticator = new HttpBasicAuthenticator("noname", apiKey);
+            request.JsonSerializer = new RestsharpJsonNetSerializer();
+            request.RequestFormat = DataFormat.Json;
+            request.Method = Method.PUT;
 
-            return client;
+            Dictionary<string, string> requestBody = new Dictionary<string, string>();
+            requestBody.Add("email_address", email);
+            requestBody.Add("status", "pending");
+            request.AddBody(requestBody);
+
+            var response = _restClient.Execute(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private string GetPublicationId(string token, string publicationName)
+        {
+            var publications = _bulkEmailRepository.GetPublications(token);
+            string publicationId = publications.First(r => r.Title == publicationName).ThirdPartyPublicationId;
+            return publicationId;
         }
 
         private string CalculateMD5Hash(string input)

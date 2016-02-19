@@ -29,6 +29,12 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
 
+        [JsonProperty(PropertyName = "contactName")]
+        public string PrimaryContactName { get; set; }
+
+        [JsonProperty(PropertyName = "primaryContactEmail")]
+        public string PrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "startDate")]
         public DateTime StartDate { get; set; }
 
