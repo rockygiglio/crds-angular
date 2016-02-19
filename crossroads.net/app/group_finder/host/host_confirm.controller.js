@@ -20,7 +20,7 @@
         message = $rootScope.MESSAGES.groupFinderHostPrivateGroup.content;
       }
       return message;
-    }
+    };
   }
 
 })();
