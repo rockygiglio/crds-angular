@@ -415,6 +415,8 @@ namespace MinistryPlatform.Translation.Services
                 GroupDescription = details.ToString("Description"),
                 MinistryId = details.ToInt("Ministry_ID"),
                 ContactId = details.ToInt("Primary_Contact"),
+                PrimaryContactName = details.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
                 GroupType = details.ToInt("Group_Type_ID"),
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
@@ -423,11 +425,13 @@ namespace MinistryPlatform.Translation.Services
                 AvailableOnline = details.ToBool("Available_Online"),
                 Address = new Address()
                 {
+                    Address_ID = details.ToInt("Address_ID"),
                     Address_Line_1 = details.ToString("Address_Line_1"),
                     Address_Line_2 = details.ToString("Address_Line_2"),
                     City = details.ToString("City"),
                     State = details.ToString("State"),
-                    Postal_Code = details.ToString("Zip_Code")
+                    Postal_Code = details.ToString("Zip_Code"),
+                    Foreign_Country = details.ToString("Foreign_Country")
                 }
             }).ToList();
         } 

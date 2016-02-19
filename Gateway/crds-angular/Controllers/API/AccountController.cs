@@ -1,18 +1,11 @@
-﻿using crds_angular.Models.Crossroads;
-using crds_angular.Models.Json;
-using crds_angular.Security;
-using crds_angular.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Diagnostics;
+using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads;
+using crds_angular.Models.Json;
+using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -29,18 +22,20 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (AccountInfo))]
         public IHttpActionResult Get()
         {
-
+            
             return Authorized( token =>
             {
                 try
                 {
-                    AccountInfo info = _accountService.getAccountInfo(token);
-                    Debug.WriteLine("in the account controller");
+                    var info = _accountService.getAccountInfo(token);                    
                     return Ok(info);
                 }
-                catch (Exception )
+                catch (Exception e)
                 {
-                    return BadRequest();
+                    const string msg = "AccountController: GET account Info -- ";
+                    logger.Error(msg, e);
+                    var apiError = new ApiErrorDto(msg, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
             });

@@ -230,6 +230,59 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
+        public void GetGroupsByTypeForParticipantNoGroups()
+        {
+            const string token = "1234frd32";
+            const int groupTypeId = 19;
+          
+            Participant participant = new Participant() 
+            { 
+                ParticipantId = 90210
+            };
+
+            var groups = new List<GroupDTO>();
+        
+            participantServiceMock.Setup(
+               mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
+               .Returns(participant);
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId)).Returns(groups);
+          
+            IHttpActionResult result = fixture.GetGroups(groupTypeId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(NotFoundResult), result);
+        }
+
+        [Test]
+        public void GetGroupsByTypeForParticipanGroupsFound()
+        {
+            const int groupTypeId = 19;
+
+            Participant participant = new Participant()
+            {
+                ParticipantId = 90210
+            };
+            
+            var groups = new List<GroupDTO>()
+            {
+                new GroupDTO()
+                {
+                    GroupName = "This will work"
+                }
+            };
+
+            participantServiceMock.Setup(
+               mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
+               .Returns(participant);
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForParticipant(fixture.Request.Headers.Authorization.ToString(), participant.ParticipantId, groupTypeId)).Returns(groups);
+
+            IHttpActionResult result = fixture.GetGroups(groupTypeId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
+      }
+
+        [Test]
         public void PostGroupSuccessfully()
         {
             var group = new GroupDTO()
@@ -265,6 +318,58 @@ namespace crds_angular.test.controllers
             groupServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof (BadRequestResult), result);
+        }
+
+
+        [Test]
+        public void PostGroupWithAddressSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = new AddressDTO()
+                {
+                    AddressLine1 = "123 Abc St.",
+                    AddressLine2 = "Apt. 2",
+                    City = "Cincinnati",
+                    State = "OH",
+                    County = "Hamilton",
+                    ForeignCountry = "United States",
+                    PostalCode = "45213"
+                }
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+            
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);            
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x=> x.FindOrCreateAddress(group.Address), Times.Once);
+            groupServiceMock.VerifyAll();            
+        }
+
+        [Test]
+        public void PostGroupWithoutAddressSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = null
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
+            groupServiceMock.VerifyAll();
         }
     }
 }

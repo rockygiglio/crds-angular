@@ -25,7 +25,6 @@ namespace crds_angular.Services
         private readonly IEventService _eventService;
         private readonly IContactRelationshipService _contactRelationshipService;
         private readonly IServeService _serveService;
-        
 
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
@@ -155,11 +154,17 @@ namespace crds_angular.Services
         {
             try
             {
-                var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p => 
-                    new GroupParticipant {ContactId = p.ContactId, LastName = p.LastName, NickName = p.NickName, ParticipantId = p.ParticipantId}
+                var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p =>
+                                                                                                    new GroupParticipant
+                                                                                                    {
+                                                                                                        ContactId = p.ContactId,
+                                                                                                        LastName = p.LastName,
+                                                                                                        NickName = p.NickName,
+                                                                                                        ParticipantId = p.ParticipantId
+                                                                                                    }
                     ).ToList();
                 var evt = Mapper.Map<crds_angular.Models.Crossroads.Events.Event>(_eventService.GetEvent(eventId));
-                return _serveService.PotentialVolunteers(groupId, evt, groupMembers);                                
+                return _serveService.PotentialVolunteers(groupId, evt, groupMembers);
             }
             catch (Exception e)
             {
@@ -232,6 +237,10 @@ namespace crds_angular.Services
         public List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+            if (groupsByType.Count == 0)
+            {
+                return null;
+            }
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
             return groupDetail;
         }
