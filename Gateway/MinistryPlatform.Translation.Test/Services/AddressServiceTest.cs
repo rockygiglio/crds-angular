@@ -71,7 +71,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void FindMatchingAddresses()
+        public void FindMatches()
         {
            var addrRecords = new List<Dictionary<string, object>>()
             {

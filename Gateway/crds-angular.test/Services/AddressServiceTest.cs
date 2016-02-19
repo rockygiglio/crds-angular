@@ -49,11 +49,11 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _mpAddressServiceMock.Setup(mocked => mocked.FindMatchingAddresses(It.IsAny<Address>())).Returns(addressResults);
+            _mpAddressServiceMock.Setup(mocked => mocked.FindMatches(It.IsAny<Address>())).Returns(addressResults);
 
             _fixture.FindOrCreateAddress(address);
 
-            _mpAddressServiceMock.Verify(x => x.FindMatchingAddresses(It.IsAny<Address>()), Times.Once);
+            _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<Address>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Create(It.IsAny<Address>()), Times.Never);
             Assert.AreEqual(address.AddressID, 12345);
         }
@@ -72,12 +72,12 @@ namespace crds_angular.test.Services
 
             var addressResults = new List<Address>();
 
-            _mpAddressServiceMock.Setup(mocked => mocked.FindMatchingAddresses(It.IsAny<Address>())).Returns(addressResults);
+            _mpAddressServiceMock.Setup(mocked => mocked.FindMatches(It.IsAny<Address>())).Returns(addressResults);
             _mpAddressServiceMock.Setup(mocked => mocked.Create(It.IsAny<Address>())).Returns(12345);
 
             _fixture.FindOrCreateAddress(address);
 
-            _mpAddressServiceMock.Verify(x => x.FindMatchingAddresses(It.IsAny<Address>()), Times.Once);
+            _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<Address>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Create(It.IsAny<Address>()), Times.Once);
             
             Assert.AreEqual(address.AddressID, 12345);
