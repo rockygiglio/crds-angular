@@ -13,6 +13,8 @@
         url: '/host',
         templateUrl: 'host/host.html',
         resolve: {
+          Profile: 'Profile',
+          Person: 'Person',
           GroupQuestionService: 'GroupQuestionService',
           QuestionDefinitions: function(GroupQuestionService) {
             return GroupQuestionService.get().$promise;

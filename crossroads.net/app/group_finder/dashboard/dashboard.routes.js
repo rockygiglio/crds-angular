@@ -14,6 +14,8 @@
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
         resolve: {
+          Profile: 'Profile',
+          Person: 'Person',
           GroupInfo: 'GroupInfo'
         },
         data: {

@@ -13,6 +13,8 @@
         url: '/join',
         templateUrl: 'join/join.html',
         resolve: {
+          Profile: 'Profile',
+          Person: 'Person',
           ParticipantQuestionService: 'ParticipantQuestionService',
           QuestionDefinitions: function(ParticipantQuestionService) {
             return ParticipantQuestionService.get().$promise;
