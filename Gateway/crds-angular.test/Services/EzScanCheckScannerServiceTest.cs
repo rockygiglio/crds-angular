@@ -192,7 +192,7 @@ namespace crds_angular.test.Services
                                                                  d.RegisteredDonor &&
                                                                  d.DonorAcctId == donorAcctId &&
                                                                  d.CheckScannerBatchName.Equals("batch123") &&
-                                                                 d.CheckNumber.Equals("111111111111111"))))
+                                                                 d.CheckNumber.Equals("111111111111111")), false))
                 .Returns(321);
 
             var contactDonorNew = new ContactDonor
@@ -252,7 +252,7 @@ namespace crds_angular.test.Services
                                                                  !d.RegisteredDonor &&
                                                                  d.DonorAcctId == donorAcctId &&
                                                                  d.CheckScannerBatchName.Equals("batch123") &&
-                                                                 d.CheckNumber.Equals("22222"))))
+                                                                 d.CheckNumber.Equals("22222")), false))
                 .Returns(654);
 
 
