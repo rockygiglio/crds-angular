@@ -15,8 +15,12 @@
         return $state.go('group_finder.host.confirm');
       }
 
+      var groupTitle = $scope.person.firstName || '';
+      if($scope.person.lastName) {
+        groupTitle += $scope.person.lastName[0];
+      }
       vm.group = {
-        groupTitle: $scope.person.firstName + ' ' + $scope.person.lastName[0] + '.',
+        groupTitle: groupTitle,
         time: vm.getGroupTime(),
         distance: '0 miles from you',
         description: vm.responses.description,
