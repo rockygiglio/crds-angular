@@ -13,7 +13,15 @@
         parent: 'noHeaderOrFooter',
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
-        resolve: {},
+        resolve: {
+          First: ['Person', '$cookies', function(Person, $cookies) {
+            console.log('GroupFinder resolve');
+            var cid = $cookies.get('userId');
+            if (cid) {
+              Person.loadProfile(cid);
+            }
+          }]
+        },
         data: {
           meta: {
             title: SERIES.title,

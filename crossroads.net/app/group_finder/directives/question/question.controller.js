@@ -16,11 +16,9 @@
     $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
     $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
 
-    Person.then(function(payload){
-      $scope.person = payload;
-      $scope.profileImage = ImageService.ProfileImageBaseURL + $scope.person.contactId;
-      $scope.defaultImage = ImageService.DefaultProfileImage;
-    });
+    $scope.person = Person.getProfile();
+    $scope.profileImage = ImageService.ProfileImageBaseURL + $scope.person.contactId;
+    $scope.defaultImage = ImageService.DefaultProfileImage;
 
     $scope.getTemplateUrl = function () {
       return 'question/input_'+ $scope.definition.input_type +'.html';
