@@ -147,12 +147,7 @@
     {
       "key": "review_setup1",
       "header": "Now for the most important part.",
-      "description": "You're about to see your completed profile. Check and double check your info. Seriously — once you hit, \"publish,\" there are no takebacks. "
-    },
-    {
-      "key": "review_setup2",
-      "header": "Ready to review?",
-      "description": "No pressure, this is only going to be viewable to thousands of people.",
+      "description": "You're about to see your completed profile. Check and double check your info. Seriously — once you hit, \"publish,\" there are no takebacks. ",
       "next": "Let's Review"
     }
   ]
