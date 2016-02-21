@@ -3,9 +3,9 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', '$log', 'ZipcodeService'];
+  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', 'ZipcodeService'];
 
-  function JoinReviewCtrl($scope, $state, Responses, $log, ZipcodeService) {
+  function JoinReviewCtrl($scope, $state, Responses, ZipcodeService) {
     var vm = this;
 
     vm.responses = Responses;
@@ -27,7 +27,6 @@
     }
 
     if (parseInt(vm.responses.data.relationship_status) === 2) {
-      $log.debug('married');
       $scope.showInvite = true;
     }
 

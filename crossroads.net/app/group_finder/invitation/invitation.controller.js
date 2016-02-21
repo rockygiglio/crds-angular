@@ -8,7 +8,6 @@
     '$stateParams',
     'GroupInfo',
     'GroupInvitationService',
-    '$log',
     'Responses'
   ];
 
@@ -16,10 +15,7 @@
                                 $stateParams,
                                 GroupInfo,
                                 GroupInvitationService,
-                                $log,
                                 Responses) {
-
-    $log.debug('GroupInvitationCtrl');
 
     var vm = this;
 
@@ -33,7 +29,6 @@
       .then(function(group) {
         vm.group = group;
         if (group) {
-          // TODO - Do we need to validate the this particular user was invited to the group?
           var promise = GroupInvitationService.acceptInvitation($stateParams.groupId, vm.contactId);
           promise.then(function() {
             // Invitation acceptance was successful

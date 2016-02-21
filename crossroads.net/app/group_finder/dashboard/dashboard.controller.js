@@ -6,10 +6,6 @@
   DashboardCtrl.$inject = [
     '$rootScope',
     '$scope',
-    '$log',
-    '$state',
-    'Email',
-    '$modal',
     'ImageService',
     'GroupInfo',
     'AuthenticatedPerson'
@@ -18,10 +14,6 @@
   function DashboardCtrl(
     $rootScope,
     $scope,
-    $log,
-    $state,
-    Email,
-    $modal,
     ImageService,
     GroupInfo,
     AuthenticatedPerson

@@ -14,7 +14,6 @@
         templateUrl: 'join/join.html',
         resolve: {
           AuthenticatedPerson: ['Person', function(Person) {
-            console.log("Dashboard Person Resolve");
             return Person.getProfile();
           }],
           QuestionDefinitions: function(ParticipantQuestionService) {

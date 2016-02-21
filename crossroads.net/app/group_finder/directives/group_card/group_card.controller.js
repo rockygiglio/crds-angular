@@ -3,9 +3,9 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', '$state', '$modal', '$log'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', '$modal'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, $state, $modal, $log) {
+  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, $modal) {
 
     $scope.defaultImage = ImageService.DefaultProfileImage;
 
@@ -40,7 +40,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'group_card/join_modal.html',
         controller: 'JoinModalCtrl as modal',
-        scope: $scope,
+        scope: $scope
       });
     };
 

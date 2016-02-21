@@ -3,9 +3,9 @@
 
   module.exports = PersonService;
 
-  PersonService.$inject = ['$rootScope', '$cookies', 'Profile', 'AUTH_EVENTS', '$log'];
+  PersonService.$inject = ['$rootScope', '$cookies', 'Profile', 'AUTH_EVENTS'];
 
-  function PersonService($rootScope, $cookies, Profile, AUTH_EVENTS, $log) {
+  function PersonService($rootScope, $cookies, Profile, AUTH_EVENTS) {
     var promise = null;
 
     //
@@ -30,11 +30,9 @@
       if (!promise) {
         var cid = $cookies.get('userId');
         if (cid) {
-          $log.debug('PersonService - load profile for', cid);
           promise = Profile.Person.get({contactId: cid}).$promise;
 
           promise.then(function(data) {
-            $log.debug('PersonService - profile loaded', data);
             service.profile = data;
           });
         }
@@ -46,13 +44,11 @@
     function getProfile() {
       var loadPromise = loadProfile();
       return loadPromise.then(function() {
-        $log.debug('PersonService.getProfile() return authenticated profile');
         return service.profile;
       });
     }
 
     function clearData() {
-      $log.debug('Clear Group Profile data for logged in user');
       promise = null;
       delete service.profile;
     }
