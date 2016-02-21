@@ -1,5 +1,6 @@
+/* globals google */
 (function () {
-  'use strict()';
+  'use strict';
 
   /*
     API Reference:  https://developers.google.com/maps/documentation/javascript/3.exp/reference#DistanceMatrixService
