@@ -8,11 +8,11 @@
     '$scope',
     '$log',
     '$state',
-    'Person',
     'Email',
     '$modal',
     'ImageService',
-    'GroupInfo'
+    'GroupInfo',
+    'AuthenticatedPerson'
   ];
 
   function DashboardCtrl(
@@ -20,16 +20,16 @@
     $scope,
     $log,
     $state,
-    Person,
     Email,
     $modal,
     ImageService,
-    GroupInfo
+    GroupInfo,
+    AuthenticatedPerson
   ) {
 
     var vm = this;
 
-    vm.person = Person.getProfile();
+    vm.person = AuthenticatedPerson;
     vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
     vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
@@ -59,7 +59,6 @@
     $rootScope.$on('$viewContentLoading', function(event){
       vm.group = undefined;
     });
-
   }
 
 })();

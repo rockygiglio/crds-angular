@@ -14,12 +14,8 @@
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
-          First: ['Person', '$cookies', function(Person, $cookies) {
-            console.log('GroupFinder resolve');
-            var cid = $cookies.get('userId');
-            if (cid) {
-              Person.loadProfile(cid);
-            }
+          StartProfileLoad: ['Person', function(Person) {
+            Person.loadProfile();
           }]
         },
         data: {

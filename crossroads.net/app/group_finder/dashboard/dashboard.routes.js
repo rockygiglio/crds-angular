@@ -14,7 +14,10 @@
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
         resolve: {
-          GroupInfo: 'GroupInfo'
+          AuthenticatedPerson: ['Person', function(Person) {
+            console.log("Dashboard Person Resolve");
+            return Person.getProfile();
+          }]
         },
         data: {
           isProtected: true,

@@ -13,9 +13,10 @@
         url: '/join',
         templateUrl: 'join/join.html',
         resolve: {
-          Profile: 'Profile',
-          Person: 'Person',
-          ParticipantQuestionService: 'ParticipantQuestionService',
+          AuthenticatedPerson: ['Person', function(Person) {
+            console.log("Dashboard Person Resolve");
+            return Person.getProfile();
+          }],
           QuestionDefinitions: function(ParticipantQuestionService) {
             return ParticipantQuestionService.get().$promise;
           }

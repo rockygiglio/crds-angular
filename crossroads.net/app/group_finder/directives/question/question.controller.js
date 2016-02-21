@@ -17,11 +17,17 @@
       $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
       $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
 
-      $scope.person = Person.getProfile();
-      $scope.profileImage = ImageService.ProfileImageBaseURL + $scope.person.contactId;
+      $scope.person = null;
+      $scope.profileImage = ImageService.DefaultProfileImage;
       $scope.defaultImage = ImageService.DefaultProfileImage;
 
       $scope.setupSlider();
+
+      // Load the person data
+      Person.getProfile().then(function(profile) {
+        $scope.profileImage = ImageService.ProfileImageBaseURL + $scope.person.contactId;
+        $scope.person = profile;
+      })
     };
 
     $scope.setupSlider = function() {
