@@ -3,9 +3,9 @@
 
   module.exports = HostReviewCtrl;
 
-  HostReviewCtrl.$inject = ['$window', '$scope', '$state', 'Responses', 'Group', 'AuthenticatedPerson', '$log'];
+  HostReviewCtrl.$inject = ['$window', '$scope', '$state', 'Responses', 'Group', 'AuthenticatedPerson', 'GROUP_API_CONSTANTS', '$log'];
 
-  function HostReviewCtrl($window, $scope, $state, Responses, Group, AuthenticatedPerson, $log) {
+  function HostReviewCtrl($window, $scope, $state, Responses, Group, AuthenticatedPerson, GROUP_API_CONSTANTS, $log) {
     var vm = this;
 
     vm.initialize = function() {
@@ -68,26 +68,35 @@
         }
       }
      */
+    var days = [ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ];
     vm.publish = function() {
       vm.rejected = false;
 
-      var group = new Group.Group();
+      // Create the Group detail resource
+      var group = new Group.Detail();
+
+      // Set constants
+      group.groupTypeId = GROUP_API_CONSTANTS.GROUP_TYPE_ID;
+      group.ministryId = GROUP_API_CONSTANTS.MINISTRY_ID;
+      group.startDate = GROUP_API_CONSTANTS.START_DATE;
+      group.endDate = GROUP_API_CONSTANTS.END_DATE;
+
+      // Group owner, name and description
+      group.contactId = AuthenticatedPerson.contactId;
       group.groupName = AuthenticatedPerson.displayName();
       group.groupDescription = Responses.data.description;
-      group.groupTypeId = 19;
-      group.ministryId = 8;
       group.congregationId = AuthenticatedPerson.congregationId;
-      group.contactId = AuthenticatedPerson.contactId;
-      group.startDate = "2016-04-01T10:00:00.000Z";
-      group.endDate = "2016-05-15T10:00:00.000Z";
+
+      // Group size and availability
       group.availableOnline = true;
       group.remainingCapacity = Responses.data.open_spots;
       group.groupFullInd = Responses.data.open_spots <= 0;
       group.waitListInd = false;
       group.childCareInd = Responses.data.kids === 1;
 
+      // When and where does the group meet
       // TODO Handle this as ordinal in Responses instead of day name string
-      group.meetingDayId = 1;
+      group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
 
       group.meetingTime = Responses.data.date_and_time.time + " " + Responses.data.date_and_time.ampm;
       group.address = {
@@ -97,16 +106,17 @@
         zip: Responses.data.location.zip
       };
 
+      // Publish the group to the API and handle the response
       $log.debug("Publishing group:", group);
-      Group.Group.save(group).$promise.then(function success(group) {
+      Group.Detail.save(group).$promise.then(function success(group) {
         $log.debug("Group was published successfully:", group);
+
+        // Created group successfully, go to confirmation page
+        $state.go('group_finder.host.confirm');
       }, function error() {
         vm.rejected = true;
         $log.debug("An error occurred while publishing");
       });
-      $log.debug("Group publish call initiated");
-
-      //$state.go('group_finder.host.confirm');
     };
 
     vm.getGroupAttributes = function() {

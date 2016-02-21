@@ -6,7 +6,6 @@
 
   function GroupService($resource, $log) {
     return {
-      Group: $resource(__API_ENDPOINT__ +  'api/group'),
       Participant: $resource(__API_ENDPOINT__ +  'api/group/:groupId/participants', {groupId: '@groupId'},
         {save: {method:'POST', isArray:true}}),
       Detail: $resource(__API_ENDPOINT__ +  'api/group/:groupId', {groupId: '@groupId'}),
