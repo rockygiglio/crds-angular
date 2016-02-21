@@ -13,6 +13,12 @@
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
+        resolve: {
+          AuthenticatedPerson: ['Person', function(Person) {
+            console.log("Dashboard Person Resolve");
+            return Person.getProfile();
+          }]
+        },
         data: {
           isProtected: true,
           meta: {

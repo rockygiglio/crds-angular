@@ -14,9 +14,8 @@
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
-          AuthenticatedPerson: ['Person', function(Person) {
-            console.log("Dashboard Person Resolve");
-            return Person.getProfile();
+          StartProfileLoad: ['Person', function(Person) {
+            Person.loadProfile();
           }]
         },
         data: {

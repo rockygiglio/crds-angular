@@ -13,6 +13,7 @@
     //
 
     var service = {};
+    service.loadProfile = loadProfile;
     service.getProfile = getProfile;
 
     //

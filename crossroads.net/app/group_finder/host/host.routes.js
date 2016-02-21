@@ -13,9 +13,10 @@
         url: '/host',
         templateUrl: 'host/host.html',
         resolve: {
-          Profile: 'Profile',
-          Person: 'Person',
-          GroupQuestionService: 'GroupQuestionService',
+          AuthenticatedPerson: ['Person', function(Person) {
+            console.log("Dashboard Person Resolve");
+            return Person.getProfile();
+          }],
           QuestionDefinitions: function(GroupQuestionService) {
             return GroupQuestionService.get().$promise;
           }
