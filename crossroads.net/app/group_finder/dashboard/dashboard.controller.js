@@ -41,7 +41,7 @@
 
     vm.displayName = function() {
       var name;
-      if (vm.person && vm.person) {
+      if (vm.person) {
         name = vm.person.firstName || '';
 
         if (vm.person.lastName) {
