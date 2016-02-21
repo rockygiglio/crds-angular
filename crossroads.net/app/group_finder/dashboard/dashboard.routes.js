@@ -13,9 +13,6 @@
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
-        resolve: {
-          GroupInfo: 'GroupInfo'
-        },
         data: {
           isProtected: true,
           meta: {
