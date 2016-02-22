@@ -30,6 +30,7 @@ namespace crds_angular.test.Services
         private Mock<IServeService> serveService;
         private Mock<IGroupService> _groupService; 
         private Mock<IConfigurationWrapper> config;
+        private Mock<MPServices.IParticipantService> participantService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -57,6 +58,7 @@ namespace crds_angular.test.Services
 
             authenticationService = new Mock<MPServices.IAuthenticationService>();
             groupService = new Mock<MPServices.IGroupService>();
+            participantService = new Mock<MPServices.IParticipantService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
@@ -65,7 +67,7 @@ namespace crds_angular.test.Services
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
-            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object);
+            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object, participantService.Object);
         }
 
         [Test]
@@ -331,7 +333,37 @@ namespace crds_angular.test.Services
             var groupResp =  fixture.CreateGroup(group);
      
             _groupService.VerifyAll();
-            Assert.IsNotNull(groupResp);           
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithAllParticipantIdSpecified_ShouldNotLookupParticipant()
+        {
+            fixture.LookupParticipantIfEmpty("123", mockParticipantSignup);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithoutParticipantIdSpecified_ShouldLookupParticipantAndSetParticipantId()
+        {
+            var token = "123";
+            var participant = new Participant() {ParticipantId = 100};            
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            var participants = new List<ParticipantSignup>
+            {
+                new ParticipantSignup()
+                {                
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
+                },
+            };
+            fixture.LookupParticipantIfEmpty(token, participants);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Once);
+
+            Assert.AreEqual(100, participants[0].particpantId);           
         }
     }
 }
