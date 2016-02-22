@@ -250,7 +250,7 @@ namespace crds_angular.test.controllers
                                                     d.DonorAcctId == null &&
                                                     d.CheckScannerBatchName == null &&
                                                     d.DonationStatus == null &&
-                                                    d.CheckNumber == null)))
+                                                    d.CheckNumber == null), true))
                 .Returns(donationId);
 
             IHttpActionResult result = fixture.Post(createDonationDTO);
@@ -347,7 +347,7 @@ namespace crds_angular.test.controllers
                                                     d.DonorAcctId == null &&
                                                     d.CheckScannerBatchName == null &&
                                                     d.DonationStatus == null &&
-                                                    d.CheckNumber == null)))
+                                                    d.CheckNumber == null), true))
                     .Returns(donationId);
 
             IHttpActionResult result = fixture.Post(createDonationDTO);
@@ -444,7 +444,7 @@ namespace crds_angular.test.controllers
                                                 d.DonorAcctId == null &&
                                                 d.CheckScannerBatchName == null &&
                                                 d.DonationStatus == null &&
-                                                d.CheckNumber == null)))
+                                                d.CheckNumber == null), true))
                     .Returns(donationId);
 
 
@@ -528,7 +528,7 @@ namespace crds_angular.test.controllers
                                                 d.DonorAcctId == null &&
                                                 d.CheckScannerBatchName == null &&
                                                 d.DonationStatus == null &&
-                                                d.CheckNumber == null)))
+                                                d.CheckNumber == null), true))
                 .Returns(donationId);
 
             IHttpActionResult result = fixture.Post(createDonationDTO);

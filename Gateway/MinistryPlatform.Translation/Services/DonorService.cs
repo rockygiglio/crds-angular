@@ -257,8 +257,8 @@ namespace MinistryPlatform.Translation.Services
             }
             
         }
-        
-        public int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution)
+
+        public int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true)
         {
             var pymtId = PaymentType.GetPaymentType(donationAndDistribution.PymtType).id;
             var fee = donationAndDistribution.FeeAmt.HasValue ? donationAndDistribution.FeeAmt / Constants.StripeDecimalConversionValue : null;
@@ -329,13 +329,16 @@ namespace MinistryPlatform.Translation.Services
                     string.Format("CreateDonationDistributionRecord failed.  Donation Id: {0}", donationId), e);
             }
 
-            try
+            if (sendConfirmationEmail)
             {
-                SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
-            }
-            catch (Exception)
-            {
-                _logger.Error(string.Format("Failed when processing the template for Donation Id: {0}", donationId));
+                try
+                {
+                    SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
+                }
+                catch (Exception)
+                {
+                    _logger.Error(string.Format("Failed when processing the template for Donation Id: {0}", donationId));
+                }
             }
 
             return donationId;
@@ -442,7 +445,21 @@ namespace MinistryPlatform.Translation.Services
             }
 
             var contactId = accounts[0]["Contact_ID"] as int? ?? -1;
-            return contactId == -1 ? (null) : (GetContactDonor(contactId));
+
+            if (contactId == -1)
+            {
+                return (null); 
+            }
+
+            var contactDonor = GetContactDonor(contactId);
+
+            contactDonor.Account = new DonorAccount
+            {
+                ProcessorAccountId = accounts[0]["Processor_Account_ID"].ToString(),
+                ProcessorId = accounts[0]["Processor_ID"].ToString()
+            };
+
+            return contactDonor;
         }
 
         public ContactDonor GetContactDonorForCheckAccount(string encrptedKey)

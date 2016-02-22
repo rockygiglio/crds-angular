@@ -5,6 +5,7 @@ using crds_angular.App_Start;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
@@ -242,6 +243,46 @@ namespace crds_angular.test.Services
             Assert.AreEqual(12345, response.ContactId);
             Assert.AreEqual(456, response.DonorId);
             Assert.AreEqual(stripeCust.id, response.ProcessorId);
+            Assert.AreEqual("me@here.com", response.Email);
+        }
+
+        [Test]
+        public void ShouldAddNewDonorAccountToExistingDonor()
+        {
+            var donor = new ContactDonor
+            {
+                ContactId = 12345,
+                DonorId = 456,
+                Email = "me@here.com",
+                Account = new DonorAccount
+                {
+                    AccountNumber = "123456789",
+                    EncryptedAccount = "enc12345",
+                    RoutingNumber = "110000000",
+                    Token = "stripe_token",
+                    Type = AccountType.Checking
+                },
+                ProcessorId = "cus_90210"
+            };
+
+            var stripeSource = new StripeCustomer
+            {
+                id = "src_123"
+            };
+
+            _paymentService.Setup(mocked => mocked.AddSourceToCustomer("cus_90210", "stripe_token")).Returns(stripeSource);
+            _mpDonorService.Setup(
+                mocked => mocked.CreateDonorAccount(null, donor.Account.RoutingNumber, donor.Account.AccountNumber.Right(4), "enc12345", 456, "src_123", "cus_90210")).Returns(987);
+
+            var response = _fixture.CreateOrUpdateContactDonor(donor, EncryptedKey, "me@here.com", "stripe_token", DateTime.Now);
+
+            _mpDonorService.VerifyAll();
+            _mpContactService.VerifyAll();
+            _paymentService.VerifyAll();
+
+            Assert.AreEqual(12345, response.ContactId);
+            Assert.AreEqual(456, response.DonorId);
+            Assert.AreEqual(donor.ProcessorId, response.ProcessorId);
             Assert.AreEqual("me@here.com", response.Email);
         }
 

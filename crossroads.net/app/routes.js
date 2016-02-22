@@ -119,7 +119,6 @@
           parent: 'noHeaderOrFooter',
           url: '/register',
           templateUrl: 'register/register_page.html',
-          controller: 'RegisterCtrl',
           data: {
             meta: {
               title: 'Register',
@@ -438,12 +437,12 @@
           controller: 'GPExportController as gpExport',
           templateUrl: 'gp_export/gpExport.html'
         })
-        //.state('thedaily', {
-        //  parent: 'noSideBar',
-        //  url: '/thedaily',
-        //  controller: 'TheDailyController as dailyCtrl',
-        //  templateUrl: 'thedaily/thedaily.html'
-        //})
+        .state('thedaily', {
+          parent: 'noSideBar',
+          url: '/thedaily',
+          controller: 'TheDailyController as dailyCtrl',
+          templateUrl: 'thedaily/thedaily.html'
+        })
         .state('content', {
           // This url will match a slash followed by anything (including additional slashes).
           url: '{link:contentRouteType}',

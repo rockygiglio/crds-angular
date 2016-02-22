@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
+using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
@@ -13,30 +16,35 @@ using Moq;
 using NUnit.Framework;
 using Event = MinistryPlatform.Models.Event;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
+using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
 namespace crds_angular.test.Services
 {
-    public class GroupServiceTest
+    public class GroupServiceTest 
     {
         private GroupService fixture;
         private Mock<MPServices.IAuthenticationService> authenticationService;
         private Mock<MPServices.IGroupService> groupService;
         private Mock<MPServices.IEventService> eventService;
-        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;
+        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
         private Mock<IServeService> serveService;
+        private Mock<IGroupService> _groupService; 
         private Mock<IConfigurationWrapper> config;
+        private Mock<MPServices.IParticipantService> participantService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
             new ParticipantSignup()
             {
                 particpantId = 999,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             },
             new ParticipantSignup()
             {
                 particpantId = 888,
-                childCareNeeded = false
+                childCareNeeded = false,
+                SendConfirmationEmail = true
             }
         };
 
@@ -46,21 +54,24 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
+            AutoMapperConfig.RegisterMappings();
 
             authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<MPServices.IGroupService>(MockBehavior.Strict);
+            groupService = new Mock<MPServices.IGroupService>();
+            participantService = new Mock<MPServices.IParticipantService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
-            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();
+            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
+            _groupService = new Mock<IGroupService>();
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
-            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object);
+            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object, participantService.Object);
         }
 
         [Test]
-        public void shouldThrowExceptionWhenAddingToGroupIfGetGroupDetailsFails()
+        public void shouldThrowExceptionWhenAddingToCommunityGroupIfGetGroupDetailsFails()
         {
             Exception exception = new Exception("Oh no, Mr. Bill!");
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Throws(exception);
@@ -80,7 +91,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
             var g = new Group
             {
@@ -107,7 +118,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldThrowGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
+        public void shouldThrowCommunityGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
         {
             var g = new Group
             {
@@ -134,7 +145,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldAddParticipantsToGroupAndEvents()
+        public void shouldAddParticipantsToCommunityGroupAndEvents()
         {
             var g = new Group
             {
@@ -228,6 +239,131 @@ namespace crds_angular.test.Services
             Assert.AreEqual(2, response.SignUpFamilyMembers.Count);
             Assert.AreEqual(g.WaitListGroupId, response.WaitListGroupId);
             Assert.AreEqual(g.WaitList, response.WaitListInd);
+        }
+
+        [Test]
+        public void GetGroupsByTypeForParticipant()
+        {
+            const string token = "1234frd32";
+            const int participantId = 54;
+            const int groupTypeId = 19;
+
+            var groups = new List<Group>()
+            {
+                new Group
+                {
+                    GroupId = 321,
+                    CongregationId = 5,
+                    Name = "Test Journey Group 2016",
+                    GroupRoleId = 16,
+                    GroupDescription = "The group will test some new code",
+                    MinistryId = 8,
+                    ContactId = 4321,
+                    GroupType = 19,
+                    StartDate = Convert.ToDateTime("2016-02-12"),
+                    EndDate = Convert.ToDateTime("2018-02-12"),
+                    MeetingDayId = 3,
+                    MeetingTime = "10 AM",
+                    AvailableOnline = false,
+                    Address = new Address()
+                    {
+                        Address_Line_1 = "123 Sesame St",
+                        Address_Line_2 = "",
+                        City = "South Side",
+                        State = "OH",
+                        Postal_Code = "12312"
+                    }
+                }
+            };
+            
+            groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
+
+            var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+           
+            groupService.VerifyAll();
+            Assert.IsNotNull(grps);
+        }
+
+        [Test]
+        public void TestCreateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var newGroup = new Group()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupType = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+            
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupId = 145,
+                GroupDescription = "The best group ever created for testing stuff and things",                
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+
+            groupService.Setup(mocked => mocked.CreateGroup(newGroup)).Returns(14);
+            var groupResp =  fixture.CreateGroup(group);
+     
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithAllParticipantIdSpecified_ShouldNotLookupParticipant()
+        {
+            fixture.LookupParticipantIfEmpty("123", mockParticipantSignup);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithoutParticipantIdSpecified_ShouldLookupParticipantAndSetParticipantId()
+        {
+            var token = "123";
+            var participant = new Participant() {ParticipantId = 100};            
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            var participants = new List<ParticipantSignup>
+            {
+                new ParticipantSignup()
+                {                
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
+                },
+            };
+            fixture.LookupParticipantIfEmpty(token, participants);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Once);
+
+            Assert.AreEqual(100, participants[0].particpantId);           
         }
     }
 }

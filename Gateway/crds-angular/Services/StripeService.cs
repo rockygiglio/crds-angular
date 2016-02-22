@@ -101,7 +101,10 @@ namespace crds_angular.Services
         {
             var request = new RestRequest("customers", Method.POST);
             request.AddParameter("description", string.Format(StripeCustomerDescription, string.IsNullOrWhiteSpace(donorDescription) ? "pending" : donorDescription));
-            request.AddParameter("source", customerToken);
+            if (!string.IsNullOrWhiteSpace(customerToken))
+            {
+                request.AddParameter("source", customerToken);
+            }
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
@@ -129,7 +132,7 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public string CreateToken(string accountNumber, string routingNumber)
+        public StripeToken CreateToken(string accountNumber, string routingNumber)
         {
             var request = new RestRequest("tokens", Method.POST);
             request.AddParameter("bank_account[account_number]", accountNumber);
@@ -149,7 +152,7 @@ namespace crds_angular.Services
             var response = _stripeRestClient.Execute<StripeToken>(request);
             CheckStripeResponse("Token creation failed", response);
 
-            return (response.Data.Id);
+            return (response.Data);
         }
 
         public SourceData UpdateCustomerSource(string customerToken, string cardToken)
@@ -415,6 +418,25 @@ namespace crds_angular.Services
             if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
             {
                 request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
+            }
+
+            var response = _stripeRestClient.Execute<StripeSubscription>(request);
+            CheckStripeResponse("Invalid subscription update request", response);
+
+            return response.Data;
+        }
+
+        public StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate)
+        {
+            var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.POST);
+            request.AddParameter("prorate", false);
+            if (trialEndDate != null && trialEndDate.Value.ToUniversalTime().Date > DateTime.UtcNow.Date)
+            {
+                request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
+            }
+            else
+            {
+                request.AddParameter("trial_end", "now");
             }
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
