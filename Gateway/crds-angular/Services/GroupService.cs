@@ -30,6 +30,7 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
+
         private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
@@ -79,7 +80,7 @@ namespace crds_angular.Services
             }
 
             checkSpaceRemaining(participants, group);
-            
+
             try
             {
                 foreach (var participant in participants)
@@ -89,12 +90,12 @@ namespace crds_angular.Services
                     var roleId = participant.groupRoleId ?? GroupRoleDefaultId;
 
                     groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
-                                                               Convert.ToInt32(groupId),
-                                                               roleId,
-                                                               participant.childCareNeeded,
-                                                               DateTime.Now);
+                                                                               Convert.ToInt32(groupId),
+                                                                               roleId,
+                                                                               participant.childCareNeeded,
+                                                                               DateTime.Now);
                     if (participant.capacityNeeded > 0)
-                    { 
+                    {
                         decrementCapacity(participant.capacityNeeded, group);
                     }
 
@@ -267,5 +268,18 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
             return groupDetail;
         }
+
+        public List<GroupParticipantDTO> GetGroupParticipants(int groupId)
+        {
+            var groupParticipants = _mpGroupService.GetGroupParticipants(groupId);       
+            if (groupParticipants == null)
+            {
+                return null;
+            }
+            var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+            return participants;
+
+        }
+
     }
 }

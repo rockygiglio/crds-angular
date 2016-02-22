@@ -277,6 +277,7 @@
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
     <Compile Include="Models\Crossroads\Events\EventRsvpDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
+    <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
