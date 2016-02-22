@@ -33,6 +33,7 @@
           promise = Profile.Person.get({contactId: cid}).$promise;
 
           promise.then(function(data) {
+            console.log('person:', data);
             service.profile = data;
           });
         }

@@ -3,25 +3,35 @@
 
   module.exports = GroupInvitationService;
 
-  GroupInvitationService.$inject = ['$log', '$q', '$timeout'];
+  GroupInvitationService.$inject = ['$log', 'Group', 'Responses'];
 
-  function GroupInvitationService($log, $q, $timeout) {
+  function GroupInvitationService($log, Group, Responses) {
     var service = {};
     service.acceptInvitation = acceptInvitation;
 
-    function acceptInvitation(groupId, contactId) {
-      $log.debug('Accepting invitation to', groupId);
+    function acceptInvitation(groupId) {
 
-      // TODO this is a temporary promise that would be replaced by the actual HTTP call
-      var deferred = $q.defer();
+      // Default capacity to 0 for those who were invited
+      var capacity = 0;
 
-      // TODO remove fake API all delay
-      $timeout(function() {
-        $log.debug('InvitationService fake API call completed');
-        deferred.resolve(true);
-      }, 2000);
+      // if there are responses, then the user came through QA flow
+      if (_.has(Responses.data , 'completedQa')) {
+        capacity = 1;
 
-      return deferred.promise;
+        // Set capacity to account for invited spouse
+        if (parseInt(Responses.data.relationship_status) === 2) {
+          capacity = 2;
+        }
+      }
+      var data = {
+        'childCareNeeded': false,
+        'groupRoleId': 16,
+        'capacityNeeded': capacity,
+        'sendConfirmationEmail': false
+      };
+      return Group.Participant.save({
+        groupId: groupId
+      }, [data]).$promise;
     }
 
     return service;
