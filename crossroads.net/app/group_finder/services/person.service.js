@@ -33,7 +33,7 @@
           promise = Profile.Person.get({contactId: cid}).$promise;
 
           promise.then(function(data) {
-            service.profile = data;
+            service.profile = decorateProfile(data);
           });
         }
       }
@@ -51,6 +51,26 @@
     function clearData() {
       promise = null;
       delete service.profile;
+    }
+
+    //
+    // Decorate the Profile with convenience methods
+    //
+
+    function decorateProfile(profile) {
+      profile.displayName = displayName;
+
+      return profile;
+    }
+
+    function displayName() {
+      var name = this.firstName || '';
+
+      if (this.lastName) {
+        name = name + ' ' + this.lastName[0] + '.';
+      }
+
+      return name;
     }
 
     // Return the service instance
