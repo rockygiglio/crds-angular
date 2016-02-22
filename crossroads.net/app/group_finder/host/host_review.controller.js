@@ -11,7 +11,7 @@
     vm.initialize = function() {
       vm.responses = Responses.data;
       vm.host = AuthenticatedPerson;
-      $log.debug("Host profile: ", vm.host);
+      $log.debug('Host profile: ', vm.host);
 
       if(vm.isPrivate()) {
         return $state.go('group_finder.host.confirm');
@@ -39,36 +39,36 @@
 
     /*
       {
-        "groupName": "Sample Group",
-        "groupDescription": "Sample Group Description",
-        "groupTypeId": 19,
-        "ministryId": 8,
-        "congregationId": 1,
-        "contactId": 2399608,
-        "startDate": "2016-02-01T10:00:00.000Z",
-        "endDate": "2016-03-01T10:00:00.000Z",
-        "availableOnline": true,
-        "remainingCapacity": 10,
-        "groupFullInd": false,
-        "waitListInd": false,
-        "waitListGroupId": 0,
-        "childCareInd": false,
-        "minAge": 0,
-        "meetingDayId": 1,
-        "meetingTime": "10:00 AM",
-        "groupRoleId": ,
-        "address": {
-          "addressLine1": "5766 Pandora Ave",
-          "addressLine2": "",
-          "city": "Cincinnati",
-          "state": "Oh",
-          "zip": "45213",
-          "foreignCountry": "United States",
-          "county": "",
+        'groupName': 'Sample Group',
+        'groupDescription': 'Sample Group Description',
+        'groupTypeId': 19,
+        'ministryId': 8,
+        'congregationId': 1,
+        'contactId': 2399608,
+        'startDate': '2016-02-01T10:00:00.000Z',
+        'endDate': '2016-03-01T10:00:00.000Z',
+        'availableOnline': true,
+        'remainingCapacity': 10,
+        'groupFullInd': false,
+        'waitListInd': false,
+        'waitListGroupId': 0,
+        'childCareInd': false,
+        'minAge': 0,
+        'meetingDayId': 1,
+        'meetingTime': '10:00 AM',
+        'groupRoleId': ,
+        'address': {
+          'addressLine1': '5766 Pandora Ave',
+          'addressLine2': '',
+          'city': 'Cincinnati',
+          'state': 'Oh',
+          'zip': '45213',
+          'foreignCountry': 'United States',
+          'county': '',
         }
       }
      */
-    var days = [ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ];
+    var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
     vm.publish = function() {
       vm.rejected = false;
 
@@ -98,7 +98,7 @@
       // TODO Handle this as ordinal in Responses instead of day name string
       group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
 
-      group.meetingTime = Responses.data.date_and_time.time + " " + Responses.data.date_and_time.ampm;
+      group.meetingTime = Responses.data.date_and_time.time + ' ' + Responses.data.date_and_time.ampm;
       group.address = {
         addressLine1: Responses.data.location.street,
         city: Responses.data.location.city,
@@ -107,15 +107,15 @@
       };
 
       // Publish the group to the API and handle the response
-      $log.debug("Publishing group:", group);
+      $log.debug('Publishing group:', group);
       Group.Detail.save(group).$promise.then(function success(group) {
-        $log.debug("Group was published successfully:", group);
+        $log.debug('Group was published successfully:', group);
 
         // Created group successfully, go to confirmation page
         $state.go('group_finder.host.confirm');
       }, function error() {
         vm.rejected = true;
-        $log.debug("An error occurred while publishing");
+        $log.debug('An error occurred while publishing');
       });
     };
 

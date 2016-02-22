@@ -33,6 +33,7 @@
           promise = Profile.Person.get({contactId: cid}).$promise;
 
           promise.then(function(data) {
+            console.log('profile:', data);
             service.profile = decorateProfile(data);
           });
         }
@@ -64,10 +65,11 @@
     }
 
     function displayName() {
-      var name = this.firstName || '';
+      var profile = service.profile;
+      var name = profile.firstName || '';
 
-      if (this.lastName) {
-        name = name + ' ' + this.lastName[0] + '.';
+      if (profile.lastName) {
+        name = name + ' ' + profile.lastName[0] + '.';
       }
 
       return name;
