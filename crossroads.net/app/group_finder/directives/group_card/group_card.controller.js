@@ -32,18 +32,6 @@
     $scope.getTemplateUrl = function() {
       return 'group_card/group_' + $scope.template + '.html';
     };
-
-    $scope.joinGroup = function(groupId) {
-
-      $scope.groupId = groupId;
-
-      var modalInstance = $modal.open({
-        templateUrl: 'group_card/join_modal.html',
-        controller: 'JoinModalCtrl as modal',
-        scope: $scope
-      });
-    };
-
   }
 
 })();

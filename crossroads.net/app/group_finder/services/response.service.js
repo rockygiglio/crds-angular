@@ -6,7 +6,6 @@
   ResponseService.$inject = [];
 
   function ResponseService() {
-
     this.data = {};
 
     this.clear = function(){

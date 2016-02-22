@@ -31,19 +31,6 @@
       participating: GroupInfo.getParticipating()
     };
 
-    vm.displayName = function() {
-      var name;
-      if (vm.person) {
-        name = vm.person.firstName || '';
-
-        if (vm.person.lastName) {
-          name = name + ' ' + vm.person.lastName[0] + '.';
-        }
-      }
-
-      return name;
-    };
-
     $scope.setGroup = function(group) {
       vm.group = group;
     };

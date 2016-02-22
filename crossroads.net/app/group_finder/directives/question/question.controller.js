@@ -25,8 +25,8 @@
 
       // Load the person data
       Person.getProfile().then(function(profile) {
-        $scope.profileImage = ImageService.ProfileImageBaseURL + $scope.person.contactId;
         $scope.person = profile;
+        $scope.profileImage = ImageService.ProfileImageBaseURL + profile.contactId;
       })
     };
 
