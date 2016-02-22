@@ -130,7 +130,7 @@
 
         $log.debug('Group was published successfully:', group);
         // User invitation service to add person to that group
-        var promise = GroupInvitationService.acceptInvitation(group.groupId, 1);
+        var promise = GroupInvitationService.acceptInvitation(group.groupId, {capacity: 1, groupRoleId: 22});
         promise.then(function() {
           // Invitation acceptance was successful
           vm.accepted = true;

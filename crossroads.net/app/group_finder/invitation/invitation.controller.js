@@ -30,7 +30,9 @@
       }
     }
 
-    var promise = GroupInvitationService.acceptInvitation($stateParams.groupId, vm.capacity);
+    var promise = GroupInvitationService.acceptInvitation($stateParams.groupId,
+                                                          {capacity: vm.capacity, groupRoleId: 16}
+    );
     promise.then(function() {
       // Invitation acceptance was successful
       vm.accepted = true;

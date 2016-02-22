@@ -9,13 +9,12 @@
     var service = {};
     service.acceptInvitation = acceptInvitation;
 
-    function acceptInvitation(groupId, capacity) {
-      var data = {
+    function acceptInvitation(groupId, options) {
+
+      var data = _.defaults(options, {
         'childCareNeeded': false,
-        'groupRoleId': 16,
-        'capacityNeeded': capacity,
         'sendConfirmationEmail': false
-      };
+      });
       return Group.Participant.save({
         groupId: groupId
       }, [data]).$promise;
