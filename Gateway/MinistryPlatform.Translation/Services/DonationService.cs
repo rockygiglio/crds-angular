@@ -502,7 +502,7 @@ namespace MinistryPlatform.Translation.Services
         private void SendMessageFromDonor(int donationId )
         {
             // Get communications that are in draft mode and are tied to this donationId
-            
+            //_ministryPlatformService.GetRecords()
         }
 
         public void AddCommunicationDonation(int donationId, int communicationId)
