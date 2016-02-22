@@ -389,27 +389,35 @@ namespace crds_angular.Services
 
             serveReminders.ForEach(reminder =>
             {
-                var contact = _contactService.GetContactById(reminder.SignedupContactId);
+                try
+                {
+                    var contact = _contactService.GetContactById(reminder.SignedupContactId);
 
-                // is there a template set?
-                var templateId = reminder.TemplateId ?? AppSetting("DefaultServeReminderTemplate");
-                var mergeData = new Dictionary<string, object>(){
-                    {"Opportunity_Title", reminder.OpportunityTitle},
-                    {"Nickname", contact.Nickname},
-                    {"Event_Start_Date", reminder.EventStartDate.ToShortDateString()},
-                    {"Event_End_Date", reminder.EventEndDate.ToShortDateString()},
-                    {"Shift_Start", reminder.ShiftStart.FormatAsString()},
-                    {"Shift_End", reminder.ShiftEnd.FormatAsString()}
-                 };
-                var communication = _communicationService.GetTemplateAsCommunication(templateId,
-                                                                                     fromId,
-                                                                                     fromEmail,
-                                                                                     reminder.OpportunityContactId,
-                                                                                     reminder.OpportunityEmailAddress,
-                                                                                     reminder.SignedupContactId,
-                                                                                     reminder.SignedupEmailAddress,
-                                                                                     mergeData);
-                _communicationService.SendMessage(communication);
+                    // is there a template set?
+                    var templateId = reminder.TemplateId ?? AppSetting("DefaultServeReminderTemplate");
+                    var mergeData = new Dictionary<string, object>()
+                    {
+                        {"Opportunity_Title", reminder.OpportunityTitle},
+                        {"Nickname", contact.Nickname},
+                        {"Event_Start_Date", reminder.EventStartDate.ToShortDateString()},
+                        {"Event_End_Date", reminder.EventEndDate.ToShortDateString()},
+                        {"Shift_Start", reminder.ShiftStart.FormatAsString()},
+                        {"Shift_End", reminder.ShiftEnd.FormatAsString()}
+                    };
+                    var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                         fromId,
+                                                                                         fromEmail,
+                                                                                         reminder.OpportunityContactId,
+                                                                                         reminder.OpportunityEmailAddress,
+                                                                                         reminder.SignedupContactId,
+                                                                                         reminder.SignedupEmailAddress,
+                                                                                         mergeData);
+                    _communicationService.SendMessage(communication);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error sending Serve Reminder.", ex);
+                }
 
             });
 
