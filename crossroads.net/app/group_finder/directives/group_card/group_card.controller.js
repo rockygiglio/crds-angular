@@ -22,11 +22,11 @@
     };
 
     $scope.getGroupType = function() {
-      return GROUP_TYPES[$scope.group.type];
+      return GROUP_TYPES[$scope.group.type] || 'Co-ed';
     };
 
     $scope.groupDescription = function() {
-      return 'A ' + $scope.getGroupType() + ' group meeting on ' + $scope.group.time;
+      return 'A ' + $scope.getGroupType() + ' group meeting on ' + $scope.groupTime();
     };
 
     $scope.getTemplateUrl = function() {
