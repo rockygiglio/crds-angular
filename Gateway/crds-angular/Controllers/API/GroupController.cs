@@ -13,8 +13,9 @@ using crds_angular.Security;
 using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
-using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Models;
+using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
 {
@@ -203,6 +204,32 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
+            });
+        }
+
+        /// <summary>
+        /// Takes in a Group ID and retrieves all active participants for the group id.
+        /// </summary>
+        /// <param name="groupId">GroupId of the group.</param>
+        /// <returns>A list of active participants for the group id passed in.</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupParticipantDTO>))]
+        [Route("api/group/{groupId}/participants")]
+        public IHttpActionResult GetGroupParticipants(int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var participants = groupService.GetGroupParticipants(groupId);
+                    return participants == null ? (IHttpActionResult)NotFound() : Ok(participants);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting participants for group ID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
             });
         }
     }

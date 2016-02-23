@@ -31,6 +31,7 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
+
         private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
@@ -82,7 +83,7 @@ namespace crds_angular.Services
             }
 
             checkSpaceRemaining(participants, group);
-            
+
             try
             {
                 foreach (var participant in participants)
@@ -97,8 +98,9 @@ namespace crds_angular.Services
                                                                roleId,
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
+
                     if (participant.capacityNeeded > 0)
-                    { 
+                    {
                         decrementCapacity(participant.capacityNeeded, group);
                     }
 
@@ -272,6 +274,17 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
+        public List<GroupParticipantDTO> GetGroupParticipants(int groupId)
+        {
+            var groupParticipants = _mpGroupService.GetGroupParticipants(groupId);       
+            if (groupParticipants == null)
+            {
+                return null;
+            }
+            var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+            return participants;
+
+        }
 
         public void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId)
         {

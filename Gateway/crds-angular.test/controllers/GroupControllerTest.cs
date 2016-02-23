@@ -473,5 +473,37 @@ namespace crds_angular.test.controllers
             addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
             groupServiceMock.VerifyAll();
         }
+
+        [Test]
+        public void testGetGroupParticipantsFound()
+        {
+            const string token = "1234frd32";
+            const int groupId = 170656;
+
+            var participant = new List<GroupParticipantDTO>();
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId)).Returns(participant);
+
+            IHttpActionResult result = fixture.GetGroupParticipants(groupId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupParticipantDTO>>), result);
+        }
+
+        [Test]
+        public void testGetGroupParticipantsEmptyGroup()
+        {
+            const string token = "1234frd32";
+            const int groupId = 1234;
+
+            var participant = new List<GroupParticipantDTO>();
+
+            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId)).Returns(participant);
+
+            IHttpActionResult result = fixture.GetGroupParticipants(groupId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupParticipantDTO>>), result);
+            Assert.AreEqual(0, participant.Count);
+        }
     }
 }

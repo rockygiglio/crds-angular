@@ -225,8 +225,26 @@ namespace MinistryPlatform.Translation.Services
                     }
                 }
 
+                g.Participants = LoadGroupParticipants(groupId, apiToken);
+
+                logger.Debug("Group details: " + g);
+                return (g);
+            }));
+        }
+
+        public List<GroupParticipant> GetGroupParticipants(int groupId)
+        {
+            return (WithApiLogin(apiToken =>
+            {
+                return LoadGroupParticipants(groupId, apiToken);
+            }));
+        }
+
+        private List<GroupParticipant> LoadGroupParticipants(int groupId, string token)
+        {
+                var groupParticipants = new List<GroupParticipant>();
                 logger.Debug("Getting participants for group " + groupId);
-                var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, apiToken);
+                var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
                 if (participants != null && participants.Count > 0)
                 {
                     foreach (Dictionary<string, object> p in participants)
@@ -235,14 +253,15 @@ namespace MinistryPlatform.Translation.Services
                         p.TryGetValue("Participant_ID", out pid);
                         if (pid != null)
                         {
-                            g.Participants.Add(new GroupParticipant
+                            groupParticipants.Add(new GroupParticipant
                             {
                                 ContactId = p.ToInt("Contact_ID"),
                                 ParticipantId = p.ToInt("Participant_ID"),
                                 GroupRoleId = p.ToInt("Group_Role_ID"),
                                 GroupRoleTitle = p.ToString("Role_Title"),
                                 LastName = p.ToString("Last_Name"),
-                                NickName = p.ToString("Nickname")
+                                NickName = p.ToString("Nickname"),
+                                Email = p.ToString("Email")
                             });
                         }
                     }
@@ -251,10 +270,7 @@ namespace MinistryPlatform.Translation.Services
                 {
                     logger.Debug("No participants found for group id " + groupId);
                 }
-
-                logger.Debug("Group details: " + g);
-                return (g);
-            }));
+                return groupParticipants;
         }
 
         public IList<Event> getAllEventsForGroup(int groupId)
@@ -469,7 +485,5 @@ namespace MinistryPlatform.Translation.Services
 
             logger.Debug("updated group: " + group.GroupId);
         }
-
-
     }
 }
