@@ -392,6 +392,66 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
+        public void PostGroupWithNullAddressLine1_WillNotAddAddressToGroup_Successfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = new AddressDTO()
+                {
+                    AddressLine1 = null,
+                    AddressLine2 = "Apt. 2",
+                    City = "Cincinnati",
+                    State = "OH",
+                    County = "Hamilton",
+                    ForeignCountry = "United States",
+                    PostalCode = "45213"
+                }
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);
+            groupServiceMock.VerifyAll();
+        }
+
+        [Test]
+        public void PostGroupWithWithEmptyAddressLine1_WillNotAddAddressToGroup_Successfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work",
+                Address = new AddressDTO()
+                {
+                    AddressLine1 = string.Empty,
+                    AddressLine2 = "Apt. 2",
+                    City = "Cincinnati",
+                    State = "OH",
+                    County = "Hamilton",
+                    ForeignCountry = "United States",
+                    PostalCode = "45213"
+                }
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = fixture.PostGroup(group);
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);
+            groupServiceMock.VerifyAll();
+        }
+
+        [Test]
         public void PostGroupWithoutAddressSuccessfully()
         {
             var group = new GroupDTO()

@@ -29,6 +29,7 @@ namespace crds_angular.Services
         private readonly ICommunicationService _communicationService;
         private readonly IContactService _contactService;
 
+
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
@@ -44,6 +45,7 @@ namespace crds_angular.Services
                             IParticipantService participantService,
                             ICommunicationService communicationService,
                             IContactService contactService)
+
         {
             _mpGroupService = mpGroupService;
             _configurationWrapper = configurationWrapper;
@@ -53,6 +55,7 @@ namespace crds_angular.Services
             _participantService = participantService;
             _communicationService = communicationService;
             _contactService = contactService;
+
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -99,7 +102,8 @@ namespace crds_angular.Services
 
                     var roleId = participant.groupRoleId ?? GroupRoleDefaultId;
 
-                    groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
+                    var participantId = participant.particpantId.Value;
+                    groupParticipantId = _mpGroupService.addParticipantToGroup(participantId,
                                                                Convert.ToInt32(groupId),
                                                                roleId,
                                                                participant.childCareNeeded,
@@ -118,7 +122,7 @@ namespace crds_angular.Services
                     {
                         foreach (var e in events)
                         {
-                            _eventService.RegisterParticipantForEvent(participant.particpantId, e.EventId, groupId, groupParticipantId);
+                            _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
                             logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
@@ -126,7 +130,7 @@ namespace crds_angular.Services
                     if (participant.SendConfirmationEmail)
                     {
                         var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
-                        _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
+                        _mpGroupService.SendCommunityGroupConfirmationEmail(participantId, groupId, waitlist, participant.childCareNeeded);
                     }
                 }
 
@@ -327,6 +331,22 @@ namespace crds_angular.Services
                 {"PreferredName", preferredName},
             };
             return mergeData;
+        }
+
+        public void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId)
+        {
+            var participantsToLookup = partId.Where(x => x.particpantId == null).ToList();
+            if (participantsToLookup.Count <= 0)
+            {
+                return;
+            }
+
+            var participant = _participantService.GetParticipantRecord(token);
+
+            foreach (var currentParticpant in participantsToLookup)
+            {
+                currentParticpant.particpantId = participant.ParticipantId;
+            }
         }
     }
 }

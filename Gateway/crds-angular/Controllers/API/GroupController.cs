@@ -52,7 +52,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    if (group.Address != null)
+                    if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
                         _addressService.FindOrCreateAddress(group.Address);
                     }
@@ -83,6 +83,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    groupService.LookupParticipantIfEmpty(token, partId);
+
                     groupService.addParticipantsToGroup(groupId, partId);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());

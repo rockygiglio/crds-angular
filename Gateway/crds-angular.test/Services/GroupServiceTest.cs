@@ -29,7 +29,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
         private Mock<IServeService> serveService;
         private Mock<IGroupService> _groupService;
-        private Mock<MPServices.IParticipantService> _participantService;
+        private Mock<MPServices.IParticipantService> participantService;
         private Mock<MPServices.ICommunicationService> _communicationService;
         private Mock<MPServices.IContactService> _contactService;
         private Mock<IConfigurationWrapper> config;
@@ -63,8 +63,8 @@ namespace crds_angular.test.Services
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
+            participantService = new Mock<MPServices.IParticipantService>();
             _groupService = new Mock<IGroupService>();
-            _participantService = new Mock<MPServices.IParticipantService>();
             _communicationService = new Mock<MPServices.ICommunicationService>();
             _contactService = new Mock<MPServices.IContactService>();
             config = new Mock<IConfigurationWrapper>();
@@ -72,7 +72,7 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
             fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
-                        serveService.Object, _participantService.Object, _communicationService.Object, _contactService.Object);
+                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object);
         }
 
         [Test]
@@ -338,7 +338,37 @@ namespace crds_angular.test.Services
             var groupResp =  fixture.CreateGroup(group);
      
             _groupService.VerifyAll();
-            Assert.IsNotNull(groupResp);           
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithAllParticipantIdSpecified_ShouldNotLookupParticipant()
+        {
+            fixture.LookupParticipantIfEmpty("123", mockParticipantSignup);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void WhenLookupParticipantIsCalledWithoutParticipantIdSpecified_ShouldLookupParticipantAndSetParticipantId()
+        {
+            var token = "123";
+            var participant = new Participant() {ParticipantId = 100};            
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            var participants = new List<ParticipantSignup>
+            {
+                new ParticipantSignup()
+                {                
+                    childCareNeeded = false,
+                    SendConfirmationEmail = true
+                },
+            };
+            fixture.LookupParticipantIfEmpty(token, participants);
+
+            participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Once);
+
+            Assert.AreEqual(100, participants[0].particpantId);           
         }
     }
 }
