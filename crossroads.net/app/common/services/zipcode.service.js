@@ -1,8 +1,6 @@
 (function () {
   'use strict()';
 
-  var _ = require('lodash');
-
   module.exports = ZipcodeService;
 
   //
@@ -26,10 +24,7 @@
     //
 
     function isLocalZipcode(zipcode) {
-      var found = _.contains(zipcodeArray, zipcode);
-      $log.debug('Zipcode', zipcode, 'found?', found);
-
-      return found;
+      return  _.contains(zipcodeArray, zipcode);
     }
 
     // Return the service instance
