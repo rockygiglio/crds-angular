@@ -3,14 +3,21 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS'];
+  GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
 
-  function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS) {
+  function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
     var groupInfo = {};
     var groups = {
       hosting: [],
       participating: []
     };
+
+    function clearData() {
+      groups.hosting = [];
+      groups.participating = [];
+    }
+
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
     var requestComplete = false;
     var GroupType = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, function(data) {
