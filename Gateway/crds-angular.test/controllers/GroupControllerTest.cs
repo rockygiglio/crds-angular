@@ -500,6 +500,7 @@ namespace crds_angular.test.controllers
             IHttpActionResult result = fixture.PostInvitation(communication);
             groupServiceMock.VerifyAll();
             Assert.IsNotNull(result);
+
             Assert.IsInstanceOf(typeof(NotFoundResult), result);
         }
     }
