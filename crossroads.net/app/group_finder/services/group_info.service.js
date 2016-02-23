@@ -6,62 +6,75 @@
   GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
 
   function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
+    var requestComplete = false;
+
+    //
+    // Group Info service definition
+    //
     var groupInfo = {};
     var groups = {
       hosting: [],
       participating: []
     };
 
-    function clearData() {
-      groups.hosting = [];
-      groups.participating = [];
-    }
+    groupInfo.loadGroupInfo = loadGroupInfo;
+    groupInfo.getHosting = getHosting;
+    groupInfo.getParticipating = getParticipating;
+    groupInfo.findHosting = findHosting;
 
+    // Clear the group info cache when the user logs out
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
-    var requestComplete = false;
-    var GroupType = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, function(data) {
-      var cid = $cookies.get('userId');
-      if (cid) {
-        _.each(data, function(group) {
-          if (group.contactId === parseInt(cid)) {
-            group.isHost = true;
-            groups.hosting.push(group);
+    //
+    // Initialize the data
+    //
+    function loadGroupInfo() {
+      var promise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
+      promise.then(function(data) {
+        var cid = $cookies.get('userId');
+        if (cid) {
+          _.each(data, function(group) {
+            if (group.contactId === parseInt(cid)) {
+              group.isHost = true;
+              groups.hosting.push(group);
 
-            // Query the other participants of the group
-            queryParticipants(group);
-          } else {
-            group.isHost = false;
-            groups.participating.push(group);
-          }
+              // Query the other participants of the group
+              queryParticipants(group);
+            } else {
+              group.isHost = false;
+              groups.participating.push(group);
+            }
 
-          // Determine if group is private
-          if (!group.meetingTime || !group.meetingDayId || !group.address) {
-            group.isPrivate = true;
-          }
-        });
-      }
-      requestComplete = true;
-      return groups;
-    });
-
-    groupInfo.getHosting = function() {
-      return groups.hosting;
-    };
-
-    groupInfo.getParticipating = function() {
-      return groups.participating;
-    };
-
-    groupInfo.findHosting = function(id) {
-      return _.find(groups.hosting, function(group) {
-        return group.id === parseInt(id);
+            // Determine if group is private
+            if (!group.meetingTime || !group.meetingDayId || !group.address) {
+              group.isPrivate = true;
+            }
+          });
+        }
+        requestComplete = true;
+        return groups;
       });
-    };
+
+      return promise;
+    }
 
     //
     // Service implementation
     //
+
+    function getHosting() {
+      return groups.hosting;
+    }
+
+    function getParticipating() {
+      return groups.participating;
+    }
+
+    function findHosting(id) {
+      return _.find(groups.hosting, function(group) {
+        return group.id === parseInt(id);
+      });
+    }
 
     function queryParticipants(group) {
       Group.Participant.query({ groupId: group.groupId }).$promise.then(function(data) {
@@ -84,6 +97,16 @@
         group.members = members;
       });
     }
+
+    function clearData() {
+      requestComplete = false;
+      groups.hosting = [];
+      groups.participating = [];
+    }
+
+    //
+    // Return the service
+    //
 
     return groupInfo;
   }
