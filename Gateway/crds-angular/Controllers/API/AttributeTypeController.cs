@@ -20,23 +20,16 @@ namespace crds_angular.Controllers.API
         [Route("api/attributetype")]
         public IHttpActionResult Get()
         {
-            return Authorized(token =>
-            {                
-                var attributeTypes = _attributeService.GetAttributeTypes(null);
-
-                return this.Ok(attributeTypes);
-            });
+            var attributeTypes = _attributeService.GetAttributeTypes(null);
+            return this.Ok(attributeTypes);
         }
 
         [ResponseType(typeof(AttributeTypeDTO))]
         [Route("api/attributetype/{attributeTypeId}")]
         public IHttpActionResult Get(int attributeTypeId)
-        {
-            return Authorized(token =>
-            {
-                var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
-                return this.Ok(attributeTypes[0]);
-            });
+        {   
+            var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
+            return this.Ok(attributeTypes[0]);
         }
     }
 }

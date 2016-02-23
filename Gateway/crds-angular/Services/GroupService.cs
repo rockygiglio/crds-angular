@@ -25,6 +25,7 @@ namespace crds_angular.Services
         private readonly IEventService _eventService;
         private readonly IContactRelationshipService _contactRelationshipService;
         private readonly IServeService _serveService;
+        private readonly IParticipantService _participantService;
 
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
@@ -37,13 +38,15 @@ namespace crds_angular.Services
                             IConfigurationWrapper configurationWrapper,
                             IEventService eventService,
                             IContactRelationshipService contactRelationshipService,
-                            IServeService serveService)
+                            IServeService serveService, 
+                            IParticipantService participantService)
         {
             _mpGroupService = mpGroupService;
             _configurationWrapper = configurationWrapper;
             _eventService = eventService;
             _contactRelationshipService = contactRelationshipService;
             _serveService = serveService;
+            _participantService = participantService;
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
         }
@@ -89,11 +92,13 @@ namespace crds_angular.Services
 
                     var roleId = participant.groupRoleId ?? GroupRoleDefaultId;
 
-                    groupParticipantId = _mpGroupService.addParticipantToGroup(participant.particpantId,
-                                                                               Convert.ToInt32(groupId),
-                                                                               roleId,
-                                                                               participant.childCareNeeded,
-                                                                               DateTime.Now);
+                    var participantId = participant.particpantId.Value;
+                    groupParticipantId = _mpGroupService.addParticipantToGroup(participantId,
+                                                               Convert.ToInt32(groupId),
+                                                               roleId,
+                                                               participant.childCareNeeded,
+                                                               DateTime.Now);
+
                     if (participant.capacityNeeded > 0)
                     {
                         decrementCapacity(participant.capacityNeeded, group);
@@ -108,7 +113,7 @@ namespace crds_angular.Services
                     {
                         foreach (var e in events)
                         {
-                            _eventService.RegisterParticipantForEvent(participant.particpantId, e.EventId, groupId, groupParticipantId);
+                            _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
                             logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
@@ -116,7 +121,7 @@ namespace crds_angular.Services
                     if (participant.SendConfirmationEmail)
                     {
                         var waitlist = group.GroupType == _configurationWrapper.GetConfigIntValue("GroupType_Waitlist");
-                        _mpGroupService.SendCommunityGroupConfirmationEmail(participant.particpantId, groupId, waitlist, participant.childCareNeeded);
+                        _mpGroupService.SendCommunityGroupConfirmationEmail(participantId, groupId, waitlist, participant.childCareNeeded);
                     }
                 }
 
@@ -281,5 +286,20 @@ namespace crds_angular.Services
 
         }
 
+        public void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId)
+        {
+            var participantsToLookup = partId.Where(x => x.particpantId == null).ToList();
+            if (participantsToLookup.Count <= 0)
+            {
+                return;
+            }
+
+            var participant = _participantService.GetParticipantRecord(token);
+
+            foreach (var currentParticpant in participantsToLookup)
+            {
+                currentParticpant.particpantId = participant.ParticipantId;
+            }
+        }
     }
 }
