@@ -13,9 +13,9 @@
   require('./input_address.html');
   require('./input_day_time.html');
 
-  QuestionDirective.$inject = ['$log'];
+  QuestionDirective.$inject = [];
 
-  function QuestionDirective($log) {
+  function QuestionDirective() {
     return {
       restrict: 'AE',
       scope: {

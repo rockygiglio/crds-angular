@@ -5,9 +5,9 @@
 
   require('./group_profile.html');
 
-  GroupProfileDirective.$inject = ['$log'];
+  GroupProfileDirective.$inject = [];
 
-  function GroupProfileDirective($log) {
+  function GroupProfileDirective() {
     return {
       restrict: 'AE',
       scope: {

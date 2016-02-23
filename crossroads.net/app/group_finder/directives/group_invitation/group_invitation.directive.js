@@ -5,9 +5,9 @@
 
   require('./group_invitation.html');
 
-  GroupInvitationDirective.$inject = ['$log'];
+  GroupInvitationDirective.$inject = [];
 
-  function GroupInvitationDirective($log) {
+  function GroupInvitationDirective() {
     return {
       restrict: 'AE',
       scope: {
