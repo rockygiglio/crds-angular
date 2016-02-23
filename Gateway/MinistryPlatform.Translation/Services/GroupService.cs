@@ -225,35 +225,6 @@ namespace MinistryPlatform.Translation.Services
                     }
                 }
 
-                //*****************
-                //logger.Debug("Getting participants for group " + groupId);
-                //var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, apiToken);
-                //if (participants != null && participants.Count > 0)
-                //{
-                //    foreach (Dictionary<string, object> p in participants)
-                //    {
-                //        object pid = null;
-                //        p.TryGetValue("Participant_ID", out pid);
-                //        if (pid != null)
-                //        {
-                //            g.Participants.Add(new GroupParticipant
-                //            {
-                //                ContactId = p.ToInt("Contact_ID"),
-                //                ParticipantId = p.ToInt("Participant_ID"),
-                //                GroupRoleId = p.ToInt("Group_Role_ID"),
-                //                GroupRoleTitle = p.ToString("Role_Title"),
-                //                LastName = p.ToString("Last_Name"),
-                //                NickName = p.ToString("Nickname")
-                //            });
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    logger.Debug("No participants found for group id " + groupId);
-                //}
-                //***********
-
                 g.Participants = LoadGroupParticipants(groupId, apiToken);
 
                 logger.Debug("Group details: " + g);
