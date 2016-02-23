@@ -245,7 +245,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-
                     var invite = groupService.SendJourneyEmailInvite(communication, token);
                     return invite == 1 ? (IHttpActionResult) NotFound() : Ok();
                 }
