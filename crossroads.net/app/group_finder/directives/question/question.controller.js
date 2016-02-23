@@ -27,7 +27,7 @@
       Person.getProfile().then(function(profile) {
         $scope.person = profile;
         $scope.profileImage = ImageService.ProfileImageBaseURL + profile.contactId;
-      })
+      });
     };
 
     $scope.setupSlider = function() {
