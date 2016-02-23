@@ -304,7 +304,7 @@ namespace crds_angular.Services
             return 0;
         }
 
-        private Communication CreateJourneyInvitation(EmailCommunicationDTO email, Participant particpant)
+        private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(JourneyGroupInvitationTemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
@@ -318,7 +318,7 @@ namespace crds_angular.Services
                 EmailSubject = template.Subject,
                 FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
                 ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = email.emailAddress } },
+                ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
         }

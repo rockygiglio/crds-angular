@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,11 +8,8 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
-using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Services;
-using crds_angular.Services.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -29,6 +27,7 @@ namespace crds_angular.test.controllers
         private Mock<IAuthenticationService> authenticationServiceMock;
         private Mock<IParticipantService> participantServiceMock;
         private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;
+        private Mock<ICommunicationService> communicationServiceMock; 
         private string authType;
         private string authToken;
 
@@ -39,6 +38,7 @@ namespace crds_angular.test.controllers
             authenticationServiceMock = new Mock<IAuthenticationService>();
             participantServiceMock = new Mock<IParticipantService>();
             addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();
+            communicationServiceMock = new Mock<ICommunicationService>();
 
             fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object, addressServiceMock.Object);
 
@@ -468,8 +468,39 @@ namespace crds_angular.test.controllers
             groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
 
             IHttpActionResult result = fixture.PostGroup(group);
-            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Once);            
             groupServiceMock.VerifyAll();
+        }
+
+        [Test]
+        public void PostInvitationWhenRequesterIsMemberOfGoup()
+        {
+           var communication = new EmailCommunicationDTO()
+            {
+                emailAddress  = "wonderwoman@marvel.com"
+            };
+
+           groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString())).Returns(0);
+
+            IHttpActionResult result = fixture.PostInvitation(communication);
+            groupServiceMock.Verify(x => x.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString()), Times.Once);
+            groupServiceMock.VerifyAll();
+        }
+
+        [Test]
+        public void DoNotPostInvitationWhenRequesterIsNotMemberOfGoup()
+        {
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "wonderwoman@marvel.com"
+            };
+
+            groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString())).Returns(1);           
+
+            IHttpActionResult result = fixture.PostInvitation(communication);
+            groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(NotFoundResult), result);
         }
     }
 }
