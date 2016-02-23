@@ -1,0 +1,143 @@
+{
+  "questions": [
+    {
+      "key": "setup",
+      "header": "Answer ten quick questions for us.",
+      "description": "Your answers will help us define your group’s style and will (in the end) connect you with the perfect BRAVE group. If you already have some friends who want to join your group, hang tight—you’ll have a chance to invite them later."
+    },
+    {
+      "key": "total_capacity",
+      "header": "How much room do you have?",
+      "description": "Think about your space. How many people fit comfortably in your living room? How many chairs fit around your dining room table.",
+      "label": "I have room for:",
+      "input_type": "number",
+      "required": true
+    },
+    {
+      "key": "open_spots",
+      "header": "Of those ({{responses.total_capacity}} spots) how many are open to anyone?",
+      "description": "For example: If you can lead {{responses.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.total_capacity - 1}}.",
+      "label": "My group is open to:",
+      "input_type": "number",
+      "footer": "<p ng-if='responses.open_spots === 0'><strong>Did you mean to select ZERO?</strong><br>By selecting zero, you are creating a private group. And you could be missing out on meeting someone awesome.</p>",
+      "required": true
+    },
+    {
+      "key": "goals",
+      "header": "Why do you want to host a BRAVE group?",
+      "description": "Pick one that most represents how you feel.",
+      "answers": [
+        "I want to help others connect with a community.",
+        "I want to make some new friends.",
+        "I want to learn and grow.",
+        "I want to mentor and build into others."
+      ],
+      "input_type": "radio",
+      "required": true
+    },
+    {
+      "key": "gender",
+      "header": "What’s your gender?",
+      "description": "Because it’s important for others joining your group to know.",
+      "answers": [
+        "I'm a man",
+        "I'm a woman"
+      ],
+      "input_type": "radio",
+      "required": true
+    },
+    {
+      "key": "marital_status",
+      "header": "What's your Relationship status?",
+      "description": "This helps us make sure to save room for your spouse or to join a couples group, if you want.",
+      "answers": [
+        "I'm not married.",
+        "I'm married but we're going through the journey seperately.",
+        "I’m married and I want to be in the same group with my spouse."
+      ],
+      "input_type": "radio",
+      "required": true
+    },
+    {
+      "key": "group_type",
+      "header": "What kind of group would you like to host?",
+      "description": "Some groups like to roll with just guys or strictly married couples. We’re not trying to recreate a scene from your school lunchroom.",
+      "label": "I will host a:",
+      "answers": [
+        "Men and women together (like God intended).",
+        "Men only (no girls allowed).",
+        "Women only (don’t be a creeper, dude).",
+        "Married couples only (because you put a ring on it)."
+      ],
+      "input_type": "radio",
+      "required": true
+    },
+    {
+      "key": "kids",
+      "header": "Is your group kid-friendly?",
+      "description": "This doesn’t mean you have to run a daycare. Just that you’re open to people bringing their kids along with them. And kids won’t count in your overall group size.",
+      "answers": [
+        "Adults only",
+        "Kid friendly (We will supply a tips sheet for this at the end.)"
+      ],
+      "input_type": "radio",
+      "required": true
+    },
+    {
+      "key": "pets",
+      "header": "Do you have pets?",
+      "description": "Do you have cats, dogs, alpacas or any other type of animal to which someone may be allergic and/or terrified?",
+      "label": "Select all that apply:",
+      "answers": [
+        "I have a dog",
+        "I have a cat",
+        "I have an alpaca",
+        "I have rodents (by choice)",
+        "I have rodents (not by choice)",
+        "My home is pet free"
+      ],
+      "input_type": "checkbox",
+      "required": false
+    },
+    {
+      "key": "date_and_time",
+      "header": "When do you want to meet? ",
+      "description": "Remember, BRAVE groups meet once a week for five weeks (starting the week of April 3 and ending the week of May 1). Groups usually take less than 90 minutes from start to finish.",
+      "input_type": "day_time",
+      "required": true
+    },
+    {
+      "key": "location",
+      "header": "Where do you plan to meet?",
+      "description": "We want to make sure people choose groups they can get to. (A home address may have auto-filled below if you logged in to your Crossroads account. Please update it if we got it wrong.)",
+      "input_type": "address",
+      "required": true
+    },
+    {
+      "key": "profile_setup1",
+      "header": "Way to go!",
+      "description": "You're almost finished. Now’s the time to add a little of your own personality."
+    },
+    {
+      "key": "profile_setup2",
+      "header": "Your group profile will look something like this:",
+      "include": "templates/example_group.html",
+      "help": "<strong>Don't worry about the profile pic.</strong>Whatever you’ve uploaded to your Crossroads account will appear here. Technology is cool."
+    },
+    {
+      "key": "description",
+      "header": "Make your group personal.",
+      "description": "Write a few, short sentences that tell people what you’re all about.",
+      "label": "Your message",
+      "help": "<strong>Example:</strong> Example: Hi, I’m Kevin. I’m a 35-year-old dad, husband and Bengals appologist. This is my first time hosting a group and I’m pumped to meet some new people. We’ll meet in my home in Walnut Hills. ",
+      "input_type": "textarea",
+      "required": true
+    },
+    {
+      "key": "review_setup1",
+      "header": "Now for the most important part.",
+      "description": "You're about to see your completed profile. Check and double check your info. Seriously — once you hit, \"publish,\" there are no takebacks. ",
+      "next": "Let's Review"
+    }
+  ]
+}

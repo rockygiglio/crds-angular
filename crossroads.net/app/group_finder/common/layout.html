@@ -1,0 +1,26 @@
+<div class="group-finder">
+  <header ng-include="'common/header.html'"></header>
+  <ui-view>
+
+    <div class="welcome container">
+      <div class="page-header">
+        <h1>
+          <small>the</small>
+          <span class="cr-logo-svg">
+            <svg viewBox="0 0 800.416 115.217" class="icon-logo">
+              <use xlink:href="#logo"></use>
+            </svg>
+          </span>
+          <span>Group</span>
+          <span>Finder</span>
+        </h1>
+      </div>
+      <hr />
+      <div dynamic-content="$root.MESSAGES.groupFinderWelcome.content | html"></div>
+      <p class="btns">
+        <a class="btn btn-next-question btn-block-mobile" ui-sref="group_finder.summary">Let's Get Started</a>
+      </p>
+    </div>
+
+  </ui-view>
+</div>
