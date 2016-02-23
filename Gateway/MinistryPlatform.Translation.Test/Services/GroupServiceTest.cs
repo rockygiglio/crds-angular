@@ -186,7 +186,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Group_Role_ID", 42},
                     {"Role_Title", "Boss"},
                     {"Last_Name", "Anderson"},
-                    {"Nickname", "Neo"}
+                    {"Nickname", "Neo"},
+                    {"Email", "Neo@fun.com"}
+
                 });
             }
             ministryPlatformService.Setup(

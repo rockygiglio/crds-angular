@@ -24,6 +24,8 @@ namespace crds_angular.Services.Interfaces
 
         int SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
 
+        List<GroupParticipantDTO> GetGroupParticipants(int groupId);
+
         void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId);
     }
 }

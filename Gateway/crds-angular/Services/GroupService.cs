@@ -36,7 +36,8 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int JourneyGroupInvitationTemplateId;
         private readonly int DefaultContactEmailId;
-      
+        private readonly int MyCurrentGroupsPageView;
+
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
                             IEventService eventService,
@@ -93,7 +94,7 @@ namespace crds_angular.Services
             }
 
             checkSpaceRemaining(participants, group);
-            
+
             try
             {
                 foreach (var participant in participants)
@@ -108,8 +109,9 @@ namespace crds_angular.Services
                                                                roleId,
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
+
                     if (participant.capacityNeeded > 0)
-                    { 
+                    {
                         decrementCapacity(participant.capacityNeeded, group);
                     }
 
@@ -282,7 +284,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
             return groupDetail;
         }
-
+        
         public Participant GetParticipantRecord(string token) 
         {
             var participant = _participantService.GetParticipantRecord(token);
@@ -331,6 +333,17 @@ namespace crds_angular.Services
                 {"PreferredName", preferredName},
             };
             return mergeData;
+        }
+
+        public List<GroupParticipantDTO> GetGroupParticipants(int groupId)
+        {
+            var groupParticipants = _mpGroupService.GetGroupParticipants(groupId);       
+            if (groupParticipants == null)
+            {
+                return null;
+            }
+            var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+            return participants;
         }
 
         public void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId)

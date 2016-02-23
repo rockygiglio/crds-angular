@@ -13,8 +13,9 @@ using crds_angular.Security;
 using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
-using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Models;
+using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
 {
@@ -44,7 +45,7 @@ namespace crds_angular.Controllers.API
         /// Create Group with provided details, returns created group with ID
         /// </summary>
         [RequiresAuthorization]
-        [ResponseType(typeof(GroupDTO))]
+        [ResponseType(typeof (GroupDTO))]
         [Route("api/group")]
         public IHttpActionResult PostGroup([FromBody] GroupDTO group)
         {
@@ -127,54 +128,54 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Get Group", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
             });
         }
 
         [RequiresAuthorization]
-        [ResponseType(typeof(List<Event>))]
+        [ResponseType(typeof (List<Event>))]
         [Route("api/group/{groupId}/events")]
         public IHttpActionResult GetEvents(int groupId)
         {
             return Authorized(token =>
+            {
+                try
                 {
-                    try
-                    {
-                        var eventList = groupService.GetGroupEvents(groupId, token);
-                        return Ok(eventList);
-                    }
-                    catch (Exception e)
-                    {
-                        var apiError = new ApiErrorDto("Error getting events ", e);
-                        throw new HttpResponseException(apiError.HttpResponseMessage);
-                    }
+                    var eventList = groupService.GetGroupEvents(groupId, token);
+                    return Ok(eventList);
                 }
-            );
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Error getting events ", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            }
+                );
         }
 
         [RequiresAuthorization]
-        [ResponseType(typeof(List<GroupContactDTO>))]
+        [ResponseType(typeof (List<GroupContactDTO>))]
         [Route("api/group/{groupId}/event/{eventId}")]
         public IHttpActionResult GetParticipants(int groupId, int eventId, string recipients)
         {
             return Authorized(token =>
+            {
+                try
                 {
-                    try
+                    if (recipients != "current" && recipients != "potential")
                     {
-                        if (recipients != "current" && recipients != "potential")
-                        {
-                            throw new ApplicationException("Recipients should be 'current' or 'potential'");
-                        }
-                        var memberList = groupService.GetGroupMembersByEvent(groupId, eventId, recipients);
-                        return Ok(memberList);
+                        throw new ApplicationException("Recipients should be 'current' or 'potential'");
                     }
-                    catch (Exception e)
-                    {
-                        var apiError = new ApiErrorDto("Error getting participating group members ", e);
-                        throw new HttpResponseException(apiError.HttpResponseMessage);
-                    }
+                    var memberList = groupService.GetGroupMembersByEvent(groupId, eventId, recipients);
+                    return Ok(memberList);
                 }
-            );
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Error getting participating group members ", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            }
+                );
         }
 
         /// <summary>
@@ -202,7 +203,32 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Error getting groups for group type ID " + groupTypeId, ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
+            });
+        }
+
+        /// Takes in a Group ID and retrieves all active participants for the group id.
+        /// </summary>
+        /// <param name="groupId">GroupId of the group.</param>
+        /// <returns>A list of active participants for the group id passed in.</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof (List<GroupParticipantDTO>))]
+        [Route("api/group/{groupId}/participants")]
+        public IHttpActionResult GetGroupParticipants(int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var participants = groupService.GetGroupParticipants(groupId);
+                    return participants == null ? (IHttpActionResult) NotFound() : Ok(participants);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting participants for group ID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
             });
         }
 
@@ -219,8 +245,9 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+
                     var invite = groupService.SendJourneyEmailInvite(communication, token);
-                    return invite == 1 ? (IHttpActionResult)NotFound() : Ok();
+                    return invite == 1 ? (IHttpActionResult) NotFound() : Ok();
                 }
                 catch (Exception ex)
                 {
