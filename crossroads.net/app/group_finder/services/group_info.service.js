@@ -27,9 +27,17 @@
           if (group.contactId === parseInt(cid)) {
             group.isHost = true;
             groups.hosting.push(group);
+
+            // Query the other participants of the group
+            queryParticipants(group);
           } else {
             group.isHost = false;
             groups.participating.push(group);
+          }
+
+          // Determine if group is private
+          if (!group.meetingTime || !group.meetingDayId || !group.address) {
+            group.isPrivate = true;
           }
         });
       }
@@ -51,8 +59,33 @@
       });
     };
 
-    return groupInfo;
+    //
+    // Service implementation
+    //
 
+    function queryParticipants(group) {
+      Group.Participant.query({ groupId: group.groupId }).$promise.then(function(data) {
+        console.log("Group participants:", data);
+        var members = [];
+
+        _.each(data.slice(0,3), function(person) {
+          members.push({
+            contactId: person.contactId,
+            participantId: person.participantId,
+            groupRoleId: person.groupRoleId,
+            groupRoleTitle: person.groupRoleTitle,
+            emailAddress: person.email,
+            firstName: person.nickName,
+            lastName: person.lastName,
+            affinities: person.attributes
+          });
+        });
+
+        group.members = members;
+      });
+    }
+
+    return groupInfo;
   }
 
 })();
