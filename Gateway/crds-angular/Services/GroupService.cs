@@ -310,7 +310,7 @@ namespace crds_angular.Services
         {
             var template = _communicationService.GetTemplate(JourneyGroupInvitationTemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            var mergeData = SetupMergeData(particpant.PreferredName);
+            var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
             return new Communication
             {
@@ -325,11 +325,12 @@ namespace crds_angular.Services
             };
         }
 
-        private Dictionary<string, object> SetupMergeData(string preferredName)
+        private Dictionary<string, object> SetupMergeData(string preferredName, int groupId)
         {
             var mergeData = new Dictionary<string, object>
             {
                 {"BaseUrl", _configurationWrapper.GetConfigValue("BaseUrl")},
+                {"GroupId", groupId},
                 {"PreferredName", preferredName},
             };
             return mergeData;
