@@ -468,7 +468,7 @@ namespace crds_angular.test.controllers
             groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
 
             IHttpActionResult result = fixture.PostGroup(group);
-            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Once);            
+            addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
             groupServiceMock.VerifyAll();
         }
 

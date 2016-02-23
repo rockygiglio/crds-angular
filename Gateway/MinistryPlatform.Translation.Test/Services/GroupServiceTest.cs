@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
@@ -9,6 +10,7 @@ using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using Communication = MinistryPlatform.Models.Communication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -493,7 +495,6 @@ namespace MinistryPlatform.Translation.Test.Services
          
             Assert.IsNotNull(resp);  
             Assert.AreEqual(groupId, resp);
-        }
-    
+        }        
     }
 }

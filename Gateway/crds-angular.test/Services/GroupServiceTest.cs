@@ -51,6 +51,7 @@ namespace crds_angular.test.Services
         };
 
         private const int GROUP_ROLE_DEFAULT_ID = 123;
+        private const int JourneyGroupInvitationTemplateId = 123;         
 
         [SetUp]
         public void SetUp()
@@ -369,6 +370,65 @@ namespace crds_angular.test.Services
             participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Once);
 
             Assert.AreEqual(100, participants[0].particpantId);           
+        }
+
+        [Test]
+        public void SendJourneyEmailInviteNoGroupMembershipFound()
+        {
+            var groupId = 98765;
+
+            var groups = new List<Group>()
+            {
+               new Group(){}
+            };
+
+            var membership = groups.Where(group => group.GroupId == groupId).ToList();
+            Assert.AreEqual(membership.Count, 0);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+        }
+
+        [Test]
+        public void SendJourneyEmailInviteGroupMembershipIsFound()
+        {
+
+            const string token = "doit";
+            const int groupId = 98765;
+            var participant = new Participant() { ParticipantId = 100 };
+           
+            var groups = new List<Group>()
+            {
+               new Group()
+               {
+                   GroupId = 98765
+               }
+            };
+            
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
+
+            var template = new MessageTemplate()
+            {
+                Subject = "You Can Join My Group",
+                Body = "This is a journey group."
+            };
+            var contact = new MyContact()
+            {
+                Contact_ID = 7689
+            };
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19)).Returns(groups);
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);            
+            _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();
+
+            var membership = groups.Where(group => group.GroupId == groupId).ToList();
+            fixture.SendJourneyEmailInvite(communication, token);
+            Assert.AreEqual(membership.Count, 1);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>()), Times.Once);
         }
     }
 }
