@@ -10,7 +10,6 @@
       "header": "How much room do you have?",
       "description": "Think about your space. How many people fit comfortably in your living room? How many chairs fit around your dining room table.",
       "label": "I have room for:",
-      "model": "group",
       "input_type": "number",
       "required": true
     },
@@ -19,7 +18,6 @@
       "header": "Of those ({{responses.total_capacity}} spots) how many are open to anyone?",
       "description": "For example: If you can lead {{responses.total_capacity}}, but you already know that your brother will be in your group &mdash; then your answer here would be {{responses.total_capacity - 1}}.",
       "label": "My group is open to:",
-      "model": "group",
       "input_type": "number",
       "footer": "<p ng-if='responses.open_spots === 0'><strong>Did you mean to select ZERO?</strong><br>By selecting zero, you are creating a private group. And you could be missing out on meeting someone awesome.</p>",
       "required": true
@@ -35,7 +33,6 @@
         "I want to mentor and build into others."
       ],
       "input_type": "radio",
-      "model": "member",
       "required": true
     },
     {
@@ -47,14 +44,12 @@
         "I'm a woman"
       ],
       "input_type": "radio",
-      "model": "member",
       "required": true
     },
     {
       "key": "marital_status",
       "header": "What's your Relationship status?",
       "description": "This helps us make sure to save room for your spouse or to join a couples group, if you want.",
-      "model": "member",
       "answers": [
         "I'm not married.",
         "I'm married but we're going through the journey seperately.",
@@ -67,7 +62,6 @@
       "key": "group_type",
       "header": "What kind of group would you like to host?",
       "description": "Some groups like to roll with just guys or strictly married couples. We’re not trying to recreate a scene from your school lunchroom.",
-      "model": "member",
       "label": "I will host a:",
       "answers": [
         "Men and women together (like God intended).",
@@ -82,7 +76,6 @@
       "key": "kids",
       "header": "Is your group kid-friendly?",
       "description": "This doesn’t mean you have to run a daycare. Just that you’re open to people bringing their kids along with them. And kids won’t count in your overall group size.",
-      "model": "member",
       "answers": [
         "Adults only",
         "Kid friendly (We will supply a tips sheet for this at the end.)"
@@ -95,7 +88,6 @@
       "header": "Do you have pets?",
       "description": "Do you have cats, dogs, alpacas or any other type of animal to which someone may be allergic and/or terrified?",
       "label": "Select all that apply:",
-      "model": "member",
       "answers": [
         "I have a dog",
         "I have a cat",
@@ -110,9 +102,7 @@
     {
       "key": "date_and_time",
       "header": "When do you want to meet? ",
-      "description": "When do you want to meet?",
       "description": "Remember, BRAVE groups meet once a week for five weeks (starting the week of April 3 and ending the week of May 1). Groups usually take less than 90 minutes from start to finish.",
-      "model": "member",
       "input_type": "day_time",
       "required": true
     },
@@ -120,7 +110,6 @@
       "key": "location",
       "header": "Where do you plan to meet?",
       "description": "We want to make sure people choose groups they can get to. (A home address may have auto-filled below if you logged in to your Crossroads account. Please update it if we got it wrong.)",
-      "model": "member",
       "input_type": "address",
       "required": true
     },
