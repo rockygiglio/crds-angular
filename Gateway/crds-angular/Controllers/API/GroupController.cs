@@ -191,7 +191,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var participant = participantService.GetParticipantRecord(token);
+                    var participant = groupService.GetParticipantRecord(token);
                     var groups = groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
                     return groups == null ? (IHttpActionResult) NotFound() : Ok(groups);
                 }
@@ -201,6 +201,30 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
+            });
+        }
+
+        /// <summary>
+        /// Send an email invitation to an email address for a Journey Group
+        /// Requires the user to be a member or leader of the Journey Group
+        /// Will return a 404 if the user is not a Member or Leader of the group
+        /// </summary>
+        [RequiresAuthorization]
+        [Route("api/journey/emailinvite")]
+        public IHttpActionResult PostInvitation([FromBody] EmailCommunicationDTO communication)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var invite = groupService.SendJourneyEmailInvite(communication, token);
+                    return invite == 1 ? (IHttpActionResult)NotFound() : Ok();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending a Journey Group invitation for groupID " + communication.groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
     }

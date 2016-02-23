@@ -113,7 +113,6 @@ namespace crds_angular.test.Services
         public void ShouldHandleNewSubscribe()
         {
             string email = "test@test.com";
-            string status = "unsubscribed";
 
             string listName = "test";
             string token = "testToken";

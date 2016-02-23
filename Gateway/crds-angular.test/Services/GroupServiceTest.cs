@@ -28,7 +28,10 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IEventService> eventService;
         private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
         private Mock<IServeService> serveService;
-        private Mock<IGroupService> _groupService; 
+        private Mock<IGroupService> _groupService;
+        private Mock<MPServices.IParticipantService> _participantService;
+        private Mock<MPServices.ICommunicationService> _communicationService;
+        private Mock<MPServices.IContactService> _contactService;
         private Mock<IConfigurationWrapper> config;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
@@ -56,16 +59,20 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<MPServices.IGroupService>();
+            groupService = new Mock<IGroupService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
             _groupService = new Mock<IGroupService>();
+            _participantService = new Mock<MPServices.IParticipantService>();
+            _communicationService = new Mock<MPServices.ICommunicationService>();
+            _contactService = new Mock<MPServices.IContactService>();
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
-            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object);
+            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
+                        serveService.Object, _participantService.Object, _communicationService.Object, _contactService.Object);
         }
 
         [Test]

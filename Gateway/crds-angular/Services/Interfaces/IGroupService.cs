@@ -19,5 +19,9 @@ namespace crds_angular.Services.Interfaces
         GroupDTO CreateGroup(GroupDTO group);
 		
         List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
+
+        Participant GetParticipantRecord(string token);
+
+        int SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
     }
 }

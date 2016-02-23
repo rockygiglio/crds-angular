@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models;
@@ -32,7 +31,6 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;
         private string authType;
         private string authToken;
-        private const int GroupRoleId = 16;
 
         [SetUp]
         public void SetUp()
@@ -283,10 +281,10 @@ namespace crds_angular.test.controllers
             };
 
             var groups = new List<GroupDTO>();
-        
-            participantServiceMock.Setup(
-               mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
-               .Returns(participant);
+
+            groupServiceMock.Setup(
+                mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
+                .Returns(participant);
 
             groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId)).Returns(groups);
           
@@ -313,7 +311,7 @@ namespace crds_angular.test.controllers
                 }
             };
 
-            participantServiceMock.Setup(
+           groupServiceMock.Setup(
                mocked => mocked.GetParticipantRecord(fixture.Request.Headers.Authorization.ToString()))
                .Returns(participant);
 
