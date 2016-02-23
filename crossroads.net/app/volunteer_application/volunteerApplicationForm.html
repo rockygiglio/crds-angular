@@ -11,16 +11,16 @@
   <preloader full-screen='true' ng-show="!volunteer.viewReady"> </preloader>
 
   <div ng-show="volunteer.viewReady">
-    <h2 class="header noPspace" dynamic-content="volunteer.pageInfo.title | html"></h2>
+    <h1 class="page-header" dynamic-content="volunteer.pageInfo.title | html"></h1>
     <div>
-      <p id="content" class="noPspace" dir="ltr" dynamic-content="volunteer.pageInfo.content | html" ng-show="volunteer.showContent"></p>
+      <p id="content" dir="ltr" dynamic-content="volunteer.pageInfo.content | html" ng-show="volunteer.showContent"></p>
       <p id="successMessage" dynamic-content="volunteer.pageInfo.success | html" ng-show="volunteer.showSuccess"></p>
     </div>
 
     <div id="adult-application" ng-if="volunteer.showBlock('adult') && !volunteer.showSuccess">
       <kids-club-adult-application volunteer="volunteer.person"
                                    contact-id="volunteer.contactId"
-                                   page-info="volunteer.pageInfo" 
+                                   page-info="volunteer.pageInfo"
                                    opportunity-id="volunteer.pageInfo.opportunity"
                                    response-id="volunteer.responseId"
                                    show-success="volunteer.showSuccess" />

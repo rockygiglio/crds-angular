@@ -97,7 +97,7 @@ namespace crds_angular.Services
                         CheckNumber = (check.CheckNumber ?? string.Empty).TrimStart(' ', '0').Right(MinistryPlatformCheckNumberMaxLength)
                     };
 
-                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
+                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false);
 
                     check.DonationId = donationId;
 
@@ -132,29 +132,38 @@ namespace crds_angular.Services
 
         public ContactDonor CreateDonor(CheckScannerCheck checkDetails)
         {
-            ContactDonor contactDonor = null;
+            ContactDonor contactDonorById = null;
             // If scanned check has a donor id, try to use it to lookup the donor
             if (checkDetails.DonorId != null && checkDetails.DonorId > 0)
             {
-                contactDonor = _donorService.GetContactDonorForDonorId(checkDetails.DonorId.Value);
+                contactDonorById = _donorService.GetContactDonorForDonorId(checkDetails.DonorId.Value);
             }
 
-            // Fallback to lookup by account & routing number if no donor id, or lookup by donor id failed
-            if (contactDonor == null || !contactDonor.ExistingContact)
+            // Get the contactDonor and info based off of the account and routing number to see if we need to create a new one
+            var contactDonorByAccount = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new ContactDonor();
+
+            // if find by contact donor id is used then contact donor found by id matches contact donor 
+            // found by account and account has stripe token
+            if (contactDonorById != null && contactDonorById.ContactId == contactDonorByAccount.ContactId &&
+                contactDonorByAccount.Account.ProcessorId != null)
             {
-                contactDonor = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new ContactDonor();
+                return contactDonorByAccount;
+            }
+            // if find by contact donor id is not used then contact donor 
+            // found by account has stripe token
+            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.ProcessorId != null)
+            {
+                return contactDonorByAccount;
             }
 
-            if (contactDonor.HasPaymentProcessorRecord)
-            {
-                return contactDonor;
-            }
+            var contactDonor = (contactDonorById == null) ? contactDonorByAccount : contactDonorById;
+
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
 
             var token = _paymentService.CreateToken(account, routing);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-            
+
             contactDonor.Details = new ContactDetails
             {
                 DisplayName = checkDetails.Name1,
@@ -173,10 +182,12 @@ namespace crds_angular.Services
                 AccountNumber = account,
                 RoutingNumber = routing,
                 Type = AccountType.Checking,
-                EncryptedAccount = encryptedKey
+                EncryptedAccount = encryptedKey,
+                ProcessorId = contactDonor.ProcessorId,
+                Token = token.Id
             };
-           
-            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token, DateTime.Now);
+
+            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token.Id, DateTime.Now);
         }
     }
 }

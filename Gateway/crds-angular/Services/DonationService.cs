@@ -162,8 +162,8 @@ namespace crds_angular.Services
             var donationsResponse = new DonationsDTO();
 
             donationsResponse.Donations.AddRange(donations);
-            donationsResponse.BeginningDonationDate = donationsResponse.Donations.Last().DonationDate;
-            donationsResponse.EndingDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.BeginningDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.EndingDonationDate = donationsResponse.Donations.Last().DonationDate;
 
             return donationsResponse;
         }
@@ -467,7 +467,7 @@ namespace crds_angular.Services
 
             var donationAndDistribution = new DonationAndDistributionRecord
             {
-                DonationAmt = (int)amount,
+                DonationAmt = amount,
                 FeeAmt = fee,
                 DonorId = createDonation.DonorId,
                 ProgramId = createDonation.ProgramId,
@@ -482,7 +482,7 @@ namespace crds_angular.Services
                 DonationStatus = (int)donationStatus
             };
 
-            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution));
+            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false));
         }
         
     }

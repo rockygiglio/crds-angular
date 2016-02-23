@@ -9,6 +9,7 @@ using AutoMapper;
 using crds_angular.Models.Crossroads.Stewardship;
 using MinistryPlatform.Models.DTO;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Services;
 using log4net;
 using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
@@ -148,12 +149,23 @@ namespace crds_angular.Services
 
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                 }
-           
+
                 contactDonorResponse.DonorId = _mpDonorService.CreateDonorRecord(contactDonorResponse.ContactId, contactDonorResponse.ProcessorId, setupDate.Value, 
                     statementFrequency, _statementTypeIndividual, statementMethod, donorAccount);
                 contactDonorResponse.Email = emailAddress;
 
                 _paymentService.UpdateCustomerDescription(contactDonorResponse.ProcessorId, contactDonorResponse.DonorId);
+
+                if (donorAccount != null)
+                {
+                    _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   donorAccount.RoutingNumber,
+                                                   donorAccount.AccountNumber.Right(4),
+                                                   donorAccount.EncryptedAccount,
+                                                   contactDonorResponse.DonorId,
+                                                   donorAccount.ProcessorAccountId,
+                                                   contactDonorResponse.ProcessorId);
+                }
             }
             else if (!contactDonor.HasPaymentProcessorRecord)
             {
@@ -162,6 +174,10 @@ namespace crds_angular.Services
                 {
                     var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
+                    if (contactDonor.HasAccount)
+                    {
+                        contactDonor.Account.ProcessorAccountId = stripeCustomer.sources.data[0].id;
+                    }
                 }
 
                 if (contactDonor.ExistingDonor)
@@ -185,11 +201,37 @@ namespace crds_angular.Services
                     }
                 }
 
+                if (contactDonor.HasAccount)
+                {
+                    _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   contactDonor.Account.RoutingNumber,
+                                                   contactDonor.Account.AccountNumber.Right(4),
+                                                   contactDonor.Account.EncryptedAccount,
+                                                   contactDonor.DonorId,
+                                                   contactDonor.Account.ProcessorAccountId,
+                                                   contactDonor.ProcessorId);
+                }
+
                 if (contactDonorResponse.HasPaymentProcessorRecord)
                 {
                     _paymentService.UpdateCustomerDescription(contactDonorResponse.ProcessorId, contactDonorResponse.DonorId);
                 }
                 contactDonorResponse.RegisteredUser = contactDonor.RegisteredUser;
+            }
+            else if (contactDonor.HasAccount && contactDonor.Account.HasToken && AccountType.Checking == contactDonor.Account.Type)
+            {
+                var source = _paymentService.AddSourceToCustomer(contactDonor.ProcessorId, contactDonor.Account.Token);
+                _mpDonorService.CreateDonorAccount(null /* gift type, not needed here */,
+                                                   contactDonor.Account.RoutingNumber,
+                                                   contactDonor.Account.AccountNumber.Right(4),
+                                                   contactDonor.Account.EncryptedAccount,
+                                                   contactDonor.DonorId,
+                                                   source.id,
+                                                   contactDonor.ProcessorId);
+
+                contactDonorResponse = contactDonor;
+                contactDonorResponse.Account.ProcessorAccountId = source.id;
+                contactDonorResponse.Account.ProcessorId = contactDonor.ProcessorId;
             }
             else
             {

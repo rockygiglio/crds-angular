@@ -14,32 +14,67 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private crds_angular.Services.Interfaces.IGroupService groupService;
-        private IAuthenticationService authenticationService;
-        private IParticipantService participantService;
+        private readonly Services.Interfaces.IGroupService groupService;
+        private readonly IAuthenticationService authenticationService;
+        private readonly IParticipantService participantService;
+        private readonly Services.Interfaces.IAddressService _addressService;
 
         private readonly int GroupRoleDefaultId =
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
 
-        public GroupController(crds_angular.Services.Interfaces.IGroupService groupService,
+        public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationService authenticationService,
-                               IParticipantService participantService)
+                               IParticipantService participantService,
+                               Services.Interfaces.IAddressService addressService)
         {
             this.groupService = groupService;
             this.authenticationService = authenticationService;
             this.participantService = participantService;
+            _addressService = addressService;
         }
 
-        /**
-         * Enroll the currently logged-in user into a Community Group, and also register this user for all events for the CG.
-         */
+        /// <summary>
+        /// Create Group with provided details, returns created group with ID
+        /// </summary>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [Route("api/group")]
+        public IHttpActionResult PostGroup([FromBody] GroupDTO group)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
+                    {
+                        _addressService.FindOrCreateAddress(group.Address);
+                    }
 
+                    group = groupService.CreateGroup(group);
+                    _logger.DebugFormat("Successfully created group {0} ", group.GroupId);
+                    return (Created(string.Format("api/group/{0}", group.GroupId), group));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not create group", e);
+                    return BadRequest();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
+        /// Also send email confirmation to user if joining a CG
+        /// Or Add Journey/Small Group Participant to a Group 
+        /// </summary>
+        [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}/participants")]
         public IHttpActionResult Post(int groupId, [FromBody] List<ParticipantSignup> partId)
@@ -48,6 +83,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    groupService.LookupParticipantIfEmpty(token, partId);
+
                     groupService.addParticipantsToGroup(groupId, partId);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());
@@ -69,14 +106,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        // TODO: implement later
-        [ResponseType(typeof (GroupDTO))]
-        [Route("api/group/{groupId}/users")]
-        public IHttpActionResult Post(String groupId, [FromBody] List<ContactDTO> contact)
-        {
-            throw new NotImplementedException();
-        }
-
+        [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
         [Route("api/group/{groupId}")]
         public IHttpActionResult Get(int groupId)
@@ -98,10 +128,10 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
-            }
-                );
+            });
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof(List<Event>))]
         [Route("api/group/{groupId}/events")]
         public IHttpActionResult GetEvents(int groupId)
@@ -122,6 +152,7 @@ namespace crds_angular.Controllers.API
             );
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof(List<GroupContactDTO>))]
         [Route("api/group/{groupId}/event/{eventId}")]
         public IHttpActionResult GetParticipants(int groupId, int eventId, string recipients)
@@ -146,24 +177,33 @@ namespace crds_angular.Controllers.API
             );
         }
 
-        // TODO: implement later
-        [ResponseType(typeof (ContactDTO))]
-        [Route("api/group/{groupId}/user/{userId}")]
-        public IHttpActionResult Get(String groupId, String userId)
+        /// <summary>
+        /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
+        /// If one or more groups are found, then the group detail data is returned.
+        /// If no groups are found, then a 404 will be returned.
+        /// </summary>
+        /// <param name="groupTypeId">This is the Ministry Platform Group Type ID for the specific group being requested..</param>
+        /// <returns>A list of all groups for the given user based on the Group Type ID passed in.</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof (List<GroupContactDTO>))]
+        [Route("api/group/groupType/{groupTypeId}")]
+        public IHttpActionResult GetGroups(int groupTypeId)
         {
-            throw new NotImplementedException();
+            return Authorized(token =>
+            {
+                try
+                {
+                    var participant = participantService.GetParticipantRecord(token);
+                    var groups = groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
+                    return groups == null ? (IHttpActionResult) NotFound() : Ok(groups);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting groups for group type ID " + groupTypeId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                
+            });
         }
-
-        // TODO: implement later
-        [ResponseType(typeof (GroupDTO))]
-        [Route("api/group/{groupId}/user/{userId}")]
-        public IHttpActionResult Delete(String groupId, String userId)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class ContactDTO
-    {
     }
 }

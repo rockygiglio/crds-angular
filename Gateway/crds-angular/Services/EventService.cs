@@ -357,15 +357,22 @@ namespace crds_angular.Services
 
             eventList.ForEach(evt =>
             {
-                // get the participants...
-                var participants = EventParticpants(evt.EventId, token);
+                try
+                {
+                    // get the participants...
+                    var participants = EventParticpants(evt.EventId, token);
 
-                // does the event have a childcare event?
-                var childcare = GetChildcareEvent(evt.EventId);
-                var childcareParticipants = childcare != null ? EventParticpants(childcare.EventId, token) : new List<Participant>();
+                    // does the event have a childcare event?
+                    var childcare = GetChildcareEvent(evt.EventId);
+                    var childcareParticipants = childcare != null ? EventParticpants(childcare.EventId, token) : new List<Participant>();
 
-                participants.ForEach(participant => SendEventReminderEmail(evt, participant, childcare, childcareParticipants, token));
-                _eventService.SetReminderFlag(evt.EventId, token);
+                    participants.ForEach(participant => SendEventReminderEmail(evt, participant, childcare, childcareParticipants, token));
+                    _eventService.SetReminderFlag(evt.EventId, token);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("Error sending Event Reminder email.", ex);
+                }
             });
         }
 
@@ -379,65 +386,79 @@ namespace crds_angular.Services
 
         private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, Event childcareEvent, IList<Participant> children, string token)
         {
-            var mergeData = new Dictionary<string, object>
+            try
             {
-                {"Nickname", participant.Nickname},
-                {"Event_Title", evt.name},
-                {"Event_Start_Date", evt.StartDate.ToShortDateString()},
-                {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
-                {"cmsChildcareEventReminder", string.Empty},
-                {"Childcare_Children", string.Empty},
-                {"Childcare_Contact", string.Empty} // Set these three parameters no matter what...
-            };
-
-            if (children.Any())
-            {
-                // determine if any of the children are related to the participant
-                var mine = MyChildrenParticipants(participant.ContactId, children, token);
-                // build the HTML for the [Childcare] data
-                if (mine.Any())
+                var mergeData = new Dictionary<string, object>
                 {
-                    mergeData["cmsChildcareEventReminder"] = _contentBlockService["cmsChildcareEventReminder"].Content;
-                    var childcareString = ChildcareData(mine);
-                    mergeData["Childcare_Children"] = childcareString;
-                    mergeData["Childcare_Contact"] = new HtmlElement("span", "If you need to cancel, please email " + childcareEvent.PrimaryContact.EmailAddress).Build();
+                    {"Nickname", participant.Nickname},
+                    {"Event_Title", evt.name},
+                    {"Event_Start_Date", evt.StartDate.ToShortDateString()},
+                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
+                    {"cmsChildcareEventReminder", string.Empty},
+                    {"Childcare_Children", string.Empty},
+                    {"Childcare_Contact", string.Empty} // Set these three parameters no matter what...
+                };
+
+                if (children.Any())
+                {
+                    // determine if any of the children are related to the participant
+                    var mine = MyChildrenParticipants(participant.ContactId, children, token);
+                    // build the HTML for the [Childcare] data
+                    if (mine.Any())
+                    {
+                        mergeData["cmsChildcareEventReminder"] = _contentBlockService["cmsChildcareEventReminder"].Content;
+                        var childcareString = ChildcareData(mine);
+                        mergeData["Childcare_Children"] = childcareString;
+                        mergeData["Childcare_Contact"] = new HtmlElement("span", "If you need to cancel, please email " + childcareEvent.PrimaryContact.EmailAddress).Build();
+                    }
                 }
+                var defaultContact = _contactService.GetContactById(AppSetting("DefaultContactEmailId"));
+                var comm = _communicationService.GetTemplateAsCommunication(
+                    AppSetting("EventReminderTemplateId"),
+                    defaultContact.Contact_ID,
+                    defaultContact.Email_Address,
+                    evt.PrimaryContactId,
+                    evt.PrimaryContactEmailAddress,
+                    participant.ContactId,
+                    participant.EmailAddress,
+                    mergeData);
+                _communicationService.SendMessage(comm);
             }
-            var defaultContact = _contactService.GetContactById(AppSetting("DefaultContactEmailId"));
-            var comm = _communicationService.GetTemplateAsCommunication(
-                AppSetting("EventReminderTemplateId"),
-                defaultContact.Contact_ID,
-                defaultContact.Email_Address,
-                evt.PrimaryContactId,
-                evt.PrimaryContactEmailAddress,
-                participant.ContactId,
-                participant.EmailAddress,
-                mergeData);
-            _communicationService.SendMessage(comm);
+            catch (Exception ex)
+            {
+                _logger.Error("Error sending Event Reminder email.", ex);
+            }
         }
 
         private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string token)
         {
-            var mergeData = new Dictionary<string, object>
+            try
             {
-                {"Event_ID", evt.EventId},
-                {"Event_Title", evt.name},
-                {"Event_Start_Date", evt.StartDate.ToShortDateString()},
-                {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
-                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
-            };
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"Event_ID", evt.EventId},
+                    {"Event_Title", evt.name},
+                    {"Event_Start_Date", evt.StartDate.ToShortDateString()},
+                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
+                    {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+                };
 
-            var defaultContact = _contactService.GetContactById(AppSetting("DefaultContactEmailId"));
-            var comm = _communicationService.GetTemplateAsCommunication(
-                AppSetting("EventPrimaryContactReminderTemplateId"),
-                defaultContact.Contact_ID,
-                defaultContact.Email_Address,
-                evt.PrimaryContactId,
-                evt.PrimaryContactEmailAddress,
-                evt.PrimaryContactId,
-                evt.PrimaryContactEmailAddress,
-                mergeData);
-            _communicationService.SendMessage(comm);
+                var defaultContact = _contactService.GetContactById(AppSetting("DefaultContactEmailId"));
+                var comm = _communicationService.GetTemplateAsCommunication(
+                    AppSetting("EventPrimaryContactReminderTemplateId"),
+                    defaultContact.Contact_ID,
+                    defaultContact.Email_Address,
+                    evt.PrimaryContactId,
+                    evt.PrimaryContactEmailAddress,
+                    evt.PrimaryContactId,
+                    evt.PrimaryContactEmailAddress,
+                    mergeData);
+                _communicationService.SendMessage(comm);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error sending Event Reminder email.", ex);
+            }
         }
 
         public List<Participant> MyChildrenParticipants(int contactId, IList<Participant> children, string token)

@@ -10,7 +10,7 @@ namespace crds_angular.Services.Interfaces
         StripeCustomer CreateCustomer(string customerToken, string donorDescription = null);
         StripeCustomer GetCustomer(string customerId);
         StripeCustomer DeleteCustomer(string customerId);
-        string CreateToken(string accountNumber, string routingNumber);
+        StripeToken CreateToken(string accountNumber, string routingNumber);
         StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId);
         StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId);
         string UpdateCustomerDescription(string customerToken, int donorId);
@@ -25,6 +25,7 @@ namespace crds_angular.Services.Interfaces
         StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, ContactDonor contactDonor);
         StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate);
         StripeSubscription UpdateSubscriptionPlan(string customerId, string subscriptionId, string planId, DateTime? trialEndDate = null);
+        StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate);
         StripeSubscription GetSubscription(string customerId, string subscriptionId);
         StripeCustomer AddSourceToCustomer(string customerToken, string cardToken);
         StripeSubscription CancelSubscription(string customerId, string subscriptionId);

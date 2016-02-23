@@ -438,9 +438,13 @@ namespace MinistryPlatform.Translation.Services
         public int GetContactIdByEmail(string email)
         {
             var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
-            if (records.Count != 1)
+            if (records.Count > 1)
             {
                 throw new Exception("User email did not return exactly one user record");
+            }
+            if (records.Count < 1)
+            {
+                return 0;
             }
 
             var record = records[0];

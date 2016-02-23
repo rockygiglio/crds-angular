@@ -55,7 +55,9 @@
         }).map(function(member) {
           return {
             participantId: member.participantId,
-            childcareRequested: (vm.childcareRequested) && (member.age >= 18)
+            childcareRequested: (vm.childcareRequested) && (member.age >= 18),
+            capacityNeeded: 0,
+            sendConfirmationEmail: true            
           };
         }).value();
 

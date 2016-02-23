@@ -99,7 +99,7 @@ describe('Onetime Signup Event Block', function() {
         groupId: isolated.onetimeEventBlock.group.groupId,
         participants: [
           {participantId: isolated.onetimeEventBlock.thisFamily[0].participantId,
-            childcareRequested: false}]
+            childcareRequested: false, capacityNeeded: 0, sendConfirmationEmail: true}]
       };
 
     $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event', toPost).respond(500);
@@ -116,7 +116,7 @@ describe('Onetime Signup Event Block', function() {
         groupId: isolated.onetimeEventBlock.group.groupId,
         participants: [
           {participantId: isolated.onetimeEventBlock.thisFamily[0].participantId,
-            childcareRequested: false}]
+            childcareRequested: false, capacityNeeded: 0, sendConfirmationEmail: true}]
       };
 
     $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event', toPost)
