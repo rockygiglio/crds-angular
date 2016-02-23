@@ -7,7 +7,7 @@
     .factory('GroupInfo',           require('./group_info.service'))
     .factory('GroupInvitationService',   require('./group_invitation.service.js'))
     .factory('Results',             require('./results.service'))
-    .factory('Profile',             require('./profile.service'))
+    //.factory('Profile',             require('./profile.service'))
     .factory('Person',              require('./person.service'))
     .factory('Email',               require('./email.service'))
     .service('Responses',           require('./response.service'))
