@@ -3,7 +3,7 @@
 
   module.exports = ProfilePictureController;
 
-  ProfilePictureController.$inject = ['$rootScope', 'ImageService', '$modal'];
+  ProfilePictureController.$inject = ['$rootScope', '$scope', 'ImageService', '$modal'];
 
   /**
    * Controller for the ProfilePictureDirective
@@ -12,18 +12,23 @@
    *    ...
    *    ...
    */
-  function ProfilePictureController($rootScope, ImageService, $modal) {
+  function ProfilePictureController($rootScope, $scope, ImageService, $modal) {
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
     vm.openModal = openModal;
+
+    // Manage directive style and text defaults
+    vm.wrapperClass = $scope.wrapperClass || 'col-xs-3 col-sm-2';
+    vm.imageClass = $scope.imageClass || 'pull-left img-square img-responsive';
+    vm.buttonText = $scope.buttonText || 'Change Photo';
 
     function openModal() {
       var changeProfileImage = $modal.open({
         templateUrl: 'picture/profileImageUpload.html',
         controller: 'ChangeProfileImageController as modal',
         backdrop: true,
-        show: false,
+        show: false
       });
 
       changeProfileImage.result.then(function(croppedImage) {

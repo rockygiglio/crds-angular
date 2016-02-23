@@ -2,7 +2,12 @@
   <header>
     <div class="media">
       <div class="media-left">
-        <img class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
+        <img ng-if="displayDefaultGroup" class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
+        <profile-picture ng-if="!displayDefaultGroup && group.host.contactId"
+                         contact-id="group.host.contactId"
+                         wrapper-class="group-profile-picture"
+                         image-class="pull-left img-responsive img-circle"
+                         button-text="Change"></profile-picture>
       </div>
       <div class="media-body">
         <p class="group-type text-uppercase"><strong>{{getGroupType()}}</strong></p>
