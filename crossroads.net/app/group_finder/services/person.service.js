@@ -33,7 +33,6 @@
           promise = Profile.Person.get({contactId: cid}).$promise;
 
           promise.then(function(data) {
-            console.log('profile:', data);
             service.profile = decorateProfile(data);
           });
         }

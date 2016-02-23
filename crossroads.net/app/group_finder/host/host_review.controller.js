@@ -3,9 +3,29 @@
 
   module.exports = HostReviewCtrl;
 
-  HostReviewCtrl.$inject = ['$window', '$scope', '$state', 'Responses', 'Group', 'AuthenticatedPerson', 'GROUP_API_CONSTANTS', '$log'];
+  HostReviewCtrl.$inject = [
+    '$window',
+    '$scope',
+    '$state',
+    'Responses',
+    'Group',
+    'AuthenticatedPerson',
+    'GROUP_API_CONSTANTS',
+    '$log',
+    'GroupInvitationService',
+    'GROUP_ROLE_ID_HOST'
+  ];
 
-  function HostReviewCtrl($window, $scope, $state, Responses, Group, AuthenticatedPerson, GROUP_API_CONSTANTS, $log) {
+  function HostReviewCtrl($window,
+                          $scope,
+                          $state,
+                          Responses,
+                          Group,
+                          AuthenticatedPerson,
+                          GROUP_API_CONSTANTS,
+                          $log,
+                          GroupInvitationService,
+                          GROUP_ROLE_ID_HOST) {
     var vm = this;
 
     vm.initialize = function() {
@@ -109,7 +129,20 @@
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
       Group.Detail.save(group).$promise.then(function success(group) {
+
         $log.debug('Group was published successfully:', group);
+        // User invitation service to add person to that group
+        var promise = GroupInvitationService.acceptInvitation(group.groupId,
+                                                              {capacity: 1, groupRoleId: GROUP_ROLE_ID_HOST});
+        promise.then(function() {
+          // Invitation acceptance was successful
+          vm.accepted = true;
+        }, function(error) {
+          // An error happened accepting the invitation
+          vm.rejected = true;
+        }).finally(function() {
+          vm.requestPending = false;
+        });
 
         // Created group successfully, go to confirmation page
         $state.go('group_finder.host.confirm');

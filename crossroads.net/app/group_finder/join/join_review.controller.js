@@ -12,6 +12,7 @@
     vm.showUpsell = parseInt(vm.responses.data.prior_participation) > 2;
     vm.showResults = vm.showUpsell === false;
     vm.contactCrds = false;
+    Responses.data.completedQa = true;
 
     if (vm.responses.data.location && vm.responses.data.location.zip) {
       vm.zipcode = parseInt(vm.responses.data.location.zip);
