@@ -14,6 +14,8 @@
     .constant('GROUP_TYPES',          require('./group_finder.constants').GROUP_TYPES)
     .constant('GROUP_API_CONSTANTS',  require('./group_finder.constants').GROUP_API_CONSTANTS)
     .constant('GOOGLE_API_KEY',       require('./group_finder.constants').GOOGLE_API_KEY)
+    .constant('GROUP_ROLE_ID_PARTICIPANT',       require('./group_finder.constants').GROUP_ROLE_ID_PARTICIPANT)
+    .constant('GROUP_ROLE_ID_HOST',       require('./group_finder.constants').GROUP_ROLE_ID_HOST)
     .directive('questions',           require('./directives/questions/questions.directive'))
     .directive('question',            require('./directives/question/question.directive'))
     .directive('groupProfile',        require('./directives/group_profile/group_profile.directive'))

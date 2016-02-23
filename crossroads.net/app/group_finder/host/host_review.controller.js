@@ -12,7 +12,8 @@
     'AuthenticatedPerson',
     'GROUP_API_CONSTANTS',
     '$log',
-    'GroupInvitationService'
+    'GroupInvitationService',
+    'GROUP_ROLE_ID_HOST'
   ];
 
   function HostReviewCtrl($window,
@@ -23,7 +24,8 @@
                           AuthenticatedPerson,
                           GROUP_API_CONSTANTS,
                           $log,
-                          GroupInvitationService) {
+                          GroupInvitationService,
+                          GROUP_ROLE_ID_HOST) {
     var vm = this;
 
     vm.initialize = function() {
@@ -130,7 +132,8 @@
 
         $log.debug('Group was published successfully:', group);
         // User invitation service to add person to that group
-        var promise = GroupInvitationService.acceptInvitation(group.groupId, {capacity: 1, groupRoleId: 22});
+        var promise = GroupInvitationService.acceptInvitation(group.groupId,
+                                                              {capacity: 1, groupRoleId: GROUP_ROLE_ID_HOST});
         promise.then(function() {
           // Invitation acceptance was successful
           vm.accepted = true;

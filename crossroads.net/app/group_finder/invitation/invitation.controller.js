@@ -6,12 +6,14 @@
   GroupInvitationCtrl.$inject = [
     '$stateParams',
     'GroupInvitationService',
-    'Responses'
+    'Responses',
+    'GROUP_ROLE_ID_PARTICIPANT'
   ];
 
   function GroupInvitationCtrl ($stateParams,
                                 GroupInvitationService,
-                                Responses) {
+                                Responses,
+                                GROUP_ROLE_ID_PARTICIPANT) {
 
     var vm = this;
 
@@ -31,7 +33,7 @@
     }
 
     var promise = GroupInvitationService.acceptInvitation($stateParams.groupId,
-                                                          {capacity: vm.capacity, groupRoleId: 16}
+                                                          {capacity: vm.capacity, groupRoleId: GROUP_ROLE_ID_PARTICIPANT}
     );
     promise.then(function() {
       // Invitation acceptance was successful

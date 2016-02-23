@@ -18,7 +18,9 @@
       START_DATE: moment().format(),
       END_DATE: '2017-02-1T10:00:00.000Z'
     },
-    GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg'
+    GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg',
+    GROUP_ROLE_ID_HOST: 22,
+    GROUP_ROLE_ID_PARTICIPANT: 16
   };
 
 })();
