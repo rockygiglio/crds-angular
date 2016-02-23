@@ -248,6 +248,8 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))
                 .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
+
+            Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
         }
     }
 }
