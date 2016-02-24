@@ -65,7 +65,7 @@ INSERT INTO @Attribute_Names
 	(7003, 'Not really sure. You said I should join a group, so here I am!', NULL, 1),
 	(7004, 'I want to grow spiritually', NULL, 2),
 	(7005, 'I''m looking for someone I can learn from', NULL, 3),
-	(7006, 'I want to make some new friends"', NULL, 4)
+	(7006, 'I want to make some new friends', NULL, 4)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
