@@ -26,23 +26,13 @@
     $scope.initialize = function() {
       $scope.step = $location.hash() || $scope.step;
       $scope.responses = Responses.data;
-      $scope.totalQuestions = _.size($scope.getQuestions());
+      $scope.totalQuestions = _.size($scope.questions);
 
       Object.defineProperty($scope, 'nextBtn', {
         get: function() {
           return $scope.isPrivateGroup() ? 'Make My Group Private' : ($scope.currentQuestion().next || 'Next');
         }
       });
-
-    };
-
-    $scope.getQuestions = function() {
-      if(!$scope._questions) {
-        $scope._questions = _.reject($scope.questions, function(q) {
-          return q.hidden !== undefined && q.hidden === true;
-        });
-      }
-      return $scope._questions;
     };
 
     $scope.previousQuestion = function() {
@@ -51,7 +41,7 @@
     };
 
     $scope.nextQuestion = function() {
-      if($scope.isRequired() && _.any($scope.currentErrorFields())) {
+      if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
       } else {
@@ -80,11 +70,11 @@
     };
 
     $scope.currentKey = function() {
-      return _.pluck($scope.getQuestions(), 'key')[$scope.step - 1];
+      return _.pluck($scope.questions, 'key')[$scope.step - 1];
     };
 
     $scope.currentQuestion = function() {
-      return _.find($scope.getQuestions(), function(obj){
+      return _.find($scope.questions, function(obj){
         return obj['key'] === $scope.currentKey();
       });
     };
@@ -95,10 +85,6 @@
 
     $scope.startOver = function() {
       $scope.step = 1;
-    };
-
-    $scope.isRequired = function() {
-      return $scope.currentQuestion().required === true;
     };
 
     $scope.requiredFields = function() {

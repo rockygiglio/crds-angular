@@ -15,7 +15,7 @@
   require('./question/input_checkbox.html');
   require('./question/input_select.html');
   require('./question/input_address.html');
-  require('./question/input_day_time.html');
+  require('./question/input_date_and_time.html');
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .directive('questions',           require('./questions/questions.directive'))

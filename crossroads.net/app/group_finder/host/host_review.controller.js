@@ -162,7 +162,8 @@
 
     vm.getGroupAttributes = function() {
       var ret = [];
-      if (vm.responses.kids === '1') { ret.push('kids welcome'); }
+      // TODO need a way to ensure this isn't hard coded
+      if (vm.responses.kids === '7017') { ret.push('kids welcome'); }
       if (vm.responses.pets) {
         var pet_selections = _.map(Object.keys(vm.responses.pets), function(el) {
           return parseInt(el);

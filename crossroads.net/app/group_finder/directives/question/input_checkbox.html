@@ -2,8 +2,8 @@
 <div class="bordered">
   <div class="checkbox" ng-repeat="answer in definition.answers track by $index">
     <label>
-      <input type="checkbox" name="{{definition.key}}" value="{{$index}}" checklist-value="$index" ng-model="responses[definition.key][$index]" ng-change="checkError()" />
-      <span>{{answer}}</span>
+      <input type="checkbox" name="{{definition.key}}" value="{{answer.id}}" checklist-value="$index" ng-model="responses[definition.key][$index]" ng-change="checkError()" />
+      <span>{{answer.name}}</span>
     </label>
   </div>
 </div>
