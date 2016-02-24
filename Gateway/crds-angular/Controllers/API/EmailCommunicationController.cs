@@ -16,6 +16,7 @@ namespace crds_angular.Controllers.API
             _emailCommunication = emailCommunication;
         }
 
+        [RequiresAuthorization]
         [Route("api/sendemail")]
         public IHttpActionResult Post(EmailCommunicationDTO email)
         {
