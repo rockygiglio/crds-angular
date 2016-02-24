@@ -41,6 +41,46 @@ namespace MinistryPlatform.Translation.Services
             this._contentBlockService = contentBlockService;
         }
 
+        public int CreateGroup(Group group)
+        {
+            logger.Debug("Adding group");
+
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;            
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_Name", group.Name},
+                {"Group_Type_ID", group.GroupType },
+                {"Ministry_ID", group.MinistryId },
+                {"Congregation_ID", group.CongregationId },
+                {"Primary_Contact", group.ContactId },
+                {"Description", group.GroupDescription },
+                {"Start_Date", group.StartDate },
+                {"End_Date", group.EndDate },
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+            };
+
+            var groupId =
+                WithApiLogin<int>(
+                    apiToken =>
+                    {
+                        return (ministryPlatformService.CreateRecord(GroupsPageId, values, apiToken, true));
+                    });
+
+            logger.Debug("Added group " + groupId);
+            return (groupId);
+        }
+
         public int addParticipantToGroup(int participantId,
                                          int groupId,
                                          int groupRoleId,
@@ -154,6 +194,13 @@ namespace MinistryPlatform.Translation.Services
                     g.MinimumAge = (int) ma;
                 }
 
+                object rc = null;
+                groupDetails.TryGetValue("Remaining_Capacity", out rc);
+                if (rc != null)
+                {
+                    g.RemainingCapacity = (short)rc;
+                }
+
                 if (g.WaitList)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,
@@ -178,8 +225,26 @@ namespace MinistryPlatform.Translation.Services
                     }
                 }
 
+                g.Participants = LoadGroupParticipants(groupId, apiToken);
+
+                logger.Debug("Group details: " + g);
+                return (g);
+            }));
+        }
+
+        public List<GroupParticipant> GetGroupParticipants(int groupId)
+        {
+            return (WithApiLogin(apiToken =>
+            {
+                return LoadGroupParticipants(groupId, apiToken);
+            }));
+        }
+
+        private List<GroupParticipant> LoadGroupParticipants(int groupId, string token)
+        {
+                var groupParticipants = new List<GroupParticipant>();
                 logger.Debug("Getting participants for group " + groupId);
-                var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, apiToken);
+                var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
                 if (participants != null && participants.Count > 0)
                 {
                     foreach (Dictionary<string, object> p in participants)
@@ -188,14 +253,15 @@ namespace MinistryPlatform.Translation.Services
                         p.TryGetValue("Participant_ID", out pid);
                         if (pid != null)
                         {
-                            g.Participants.Add(new GroupParticipant
+                            groupParticipants.Add(new GroupParticipant
                             {
                                 ContactId = p.ToInt("Contact_ID"),
                                 ParticipantId = p.ToInt("Participant_ID"),
                                 GroupRoleId = p.ToInt("Group_Role_ID"),
                                 GroupRoleTitle = p.ToString("Role_Title"),
                                 LastName = p.ToString("Last_Name"),
-                                NickName = p.ToString("Nickname")
+                                NickName = p.ToString("Nickname"),
+                                Email = p.ToString("Email")
                             });
                         }
                     }
@@ -204,10 +270,7 @@ namespace MinistryPlatform.Translation.Services
                 {
                     logger.Debug("No participants found for group id " + groupId);
                 }
-
-                logger.Debug("Group details: " + g);
-                return (g);
-            }));
+                return groupParticipants;
         }
 
         public IList<Event> getAllEventsForGroup(int groupId)
@@ -377,21 +440,50 @@ namespace MinistryPlatform.Translation.Services
                 MinistryId = details.ToInt("Ministry_ID"),
                 ContactId = details.ToInt("Primary_Contact"),
                 PrimaryContactName = details.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
                 GroupType = details.ToInt("Group_Type_ID"),
                 StartDate = details.ToDate("Start_Date"),
                 EndDate = details.ToDate("End_Date"),
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = (TimeSpan) details.ToNullableTimeSpan("Meeting_Time"),
+                MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
                 Address = new Address()
                 {
+                    Address_ID = details.ToInt("Address_ID"),
                     Address_Line_1 = details.ToString("Address_Line_1"),
                     Address_Line_2 = details.ToString("Address_Line_2"),
                     City = details.ToString("City"),
                     State = details.ToString("State"),
-                    Postal_Code = details.ToString("Zip_Code")
+                    Postal_Code = details.ToString("Zip_Code"),
+                    Foreign_Country = details.ToString("Foreign_Country")
                 }
             }).ToList();
-        } 
+        }
+
+        public void UpdateGroupRemainingCapacity(Group group)
+        {
+            logger.Debug("Updating group: " + group.GroupId + " : " + group.Name);
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_ID", group.GroupId},
+                {"Remaining_Capacity", group.RemainingCapacity },
+            };
+
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.UpdateRecord(GroupsPageId, values, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error updating group: " + e.Message);
+                }
+            });
+
+            logger.Debug("updated group: " + group.GroupId);
+        }
     }
 }

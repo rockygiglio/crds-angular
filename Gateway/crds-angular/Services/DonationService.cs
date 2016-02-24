@@ -482,7 +482,7 @@ namespace crds_angular.Services
                 DonationStatus = (int)donationStatus
             };
 
-            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution));
+            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false));
         }
         
     }

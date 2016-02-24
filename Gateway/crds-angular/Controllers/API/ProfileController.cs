@@ -39,6 +39,7 @@ namespace crds_angular.Controllers.API
             _allowedAdminGetProfileRoles = config.GetConfigValue("AdminGetProfileRoles").Split(',').Select(int.Parse).ToList();
         }
 
+        [RequiresAuthorization]
         [ResponseType(typeof (Person))]
         [Route("api/profile")]
         [HttpGet]

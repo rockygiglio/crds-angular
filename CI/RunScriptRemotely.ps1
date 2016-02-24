@@ -5,16 +5,16 @@
 
 Param (
   [string]$DBServer = "216.68.184.202", # default to public IP of MPTEST02
-  [string]$ScriptPath = $(throw "-ScriptPath (Path to powershell script to run) is required.")
+  [string]$ScriptPath = $(throw "-ScriptPath (Path to powershell script to run) is required."),
+  [string]$Username = "Administrator",
+  [string]$Password = $Env:MPTEST02_PASS
 )
 
 $exitCode = 0;
 $exitMessage = "Success";
 
-$Password = $Env:MPTEST02_PASS;
 $Pass = ConvertTo-SecureString -AsPlainText $Password -Force
-
-$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList 'Administrator',$Pass;
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Username,$Pass;
 
 try
 {

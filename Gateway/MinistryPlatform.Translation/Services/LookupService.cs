@@ -64,5 +64,10 @@ namespace MinistryPlatform.Translation.Services
         {
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("WorkTeams"), token);
         }
+
+        public List<Dictionary<string, object>> MeetingDays(string token)
+        {
+            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("MeetingDay"), token);
+        }
     }
 }

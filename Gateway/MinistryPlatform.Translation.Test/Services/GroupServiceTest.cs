@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
@@ -8,6 +10,7 @@ using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using Communication = MinistryPlatform.Models.Communication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -183,7 +186,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Group_Role_ID", 42},
                     {"Role_Title", "Boss"},
                     {"Last_Name", "Anderson"},
-                    {"Nickname", "Neo"}
+                    {"Nickname", "Neo"},
+                    {"Email", "Neo@fun.com"}
+
                 });
             }
             ministryPlatformService.Setup(
@@ -385,17 +390,20 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Ministry_ID", 4},
                     {"Primary_Contact", 3213},
                     {"Primary_Contact_Name", "Jim Beam"},
+                    {"Primary_Contact_Email", "JimBeam@test.com"},
                     {"Group_Type_ID", 19},
                     {"Start_Date", "2016-02-01"},
                     {"End_Date", "2018-02-11"},
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Time", "180000"},
                     {"Available_Online", false},
+                    {"Address_ID", 42934 },
                     {"Address_Line_1", "98 Center St"},
                     {"Address_Line_2", "Suite 1000"},
                     {"City", "Cincinnati"},
                     {"State", "OH"},
-                    {"Zip_Code", "42525"}
+                    {"Zip_Code", "42525"},
+                    {"Foreign_Country", "United States"},
                 },
                 new Dictionary<string, object>
                 {
@@ -407,19 +415,88 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Ministry_ID", 6},
                     {"Primary_Contact", 43212},
                     {"Primary_Contact_Name", "Johnny Walker"},
+                    {"Primary_Contact_Email", "Johnny Walker@test.com"},
                     {"Group_Type_ID", 19},
                     {"Start_Date", "2016-01-01"},
                     {"End_Date", "2020-01-01"},
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Time", "140000"},
                     {"Available_Online", true},
+                    {"Address_ID", 42934 },
                     {"Address_Line_1", "86 Middle Rd"},
                     {"Address_Line_2", ""},
                     {"City", "Cincinnati"},
                     {"State", "OH"},
-                    {"Zip_Code", "45010"}
+                    {"Zip_Code", "45010"},
+                    {"Foreign_Country", "United States"},
                 }
             };
         }
+
+		[Test]
+        public void TestCreateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+            const int groupId = 854725;
+
+            var newGroup = new Group()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",              
+                GroupType = 19,
+                MinistryId = 8,
+                ContactId = 74657,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinimumAge = 0,
+                Address = new Address()
+                {
+                    Address_ID = 43567
+                }
+            };
+           
+            var values = new Dictionary<string, object>
+            {
+                {"Group_Name", "New Testing Group"},
+                {"Group_Type_ID", 19 },
+                {"Ministry_ID", 8 },
+                {"Congregation_ID", 1 },
+                {"Primary_Contact", 74657},
+                {"Description", "The best group ever created for testing stuff and things" },
+                {"Start_Date", start},
+                {"End_Date", end },
+                {"Target_Size", 0 },
+                {"Offsite_Meeting_Address", 43567 },
+                {"Group_Is_Full", false },
+                {"Available_Online", true },
+                {"Meeting_Time", "18000" },
+                {"Meeting_Day_Id", 2},
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", false },
+                {"Remaining_Capacity", 8 },
+                {"Enable_Waiting_List", false },
+                {"Online_RSVP_Minimum_Age", 0 },                
+
+            };
+           
+            ministryPlatformService.Setup(mocked => mocked.CreateRecord(322, It.IsAny<Dictionary<string, object>>(), "ABC", true)).Returns(groupId);
+
+            int resp =  fixture.CreateGroup(newGroup);
+
+            ministryPlatformService.Verify(mocked => mocked.CreateRecord(322, values, "ABC", true));
+         
+            Assert.IsNotNull(resp);  
+            Assert.AreEqual(groupId, resp);
+        }        
     }
 }

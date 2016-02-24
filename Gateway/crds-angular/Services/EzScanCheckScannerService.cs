@@ -97,7 +97,7 @@ namespace crds_angular.Services
                         CheckNumber = (check.CheckNumber ?? string.Empty).TrimStart(' ', '0').Right(MinistryPlatformCheckNumberMaxLength)
                     };
 
-                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
+                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false);
 
                     check.DonationId = donationId;
 
@@ -163,7 +163,7 @@ namespace crds_angular.Services
 
             var token = _paymentService.CreateToken(account, routing);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-            
+
             contactDonor.Details = new ContactDetails
             {
                 DisplayName = checkDetails.Name1,
@@ -182,10 +182,12 @@ namespace crds_angular.Services
                 AccountNumber = account,
                 RoutingNumber = routing,
                 Type = AccountType.Checking,
-                EncryptedAccount = encryptedKey
+                EncryptedAccount = encryptedKey,
+                ProcessorId = contactDonor.ProcessorId,
+                Token = token.Id
             };
-           
-            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token, DateTime.Now);
+
+            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token.Id, DateTime.Now);
         }
     }
 }

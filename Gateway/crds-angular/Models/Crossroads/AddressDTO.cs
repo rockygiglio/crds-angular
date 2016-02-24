@@ -9,7 +9,7 @@ namespace crds_angular.Models.Crossroads
     public class AddressDTO
     {
         [JsonProperty(PropertyName = "addressId")]
-        public int AddressID { get; set; }
+        public int? AddressID { get; set; }
 
         [JsonProperty(PropertyName = "addressLine1")]
         public string AddressLine1 { get; set; }

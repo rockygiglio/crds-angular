@@ -1,8 +1,8 @@
-<div class="col-xs-3 col-sm-2">
+<div ng-class="picture.wrapperClass">
   <label for="fileInputModal" class="profile-pic" ng-click="picture.openModal()">
-      <img class="profile-image pull-left img-square img-responsive"
+      <img class="profile-image" ng-class="picture.imageClass"
         ng-src="{{picture.path}}" alt="Profile Photo"
         err-src="{{picture.defaultImage}}"/>
-      <span class="change-photo">Change Photo</span>
+      <span class="change-photo">{{picture.buttonText}}</span>
   </label>
 </div>

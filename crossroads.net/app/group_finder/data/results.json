@@ -1,0 +1,484 @@
+{
+  "groups": [
+    {
+      "id": 1,
+      "type": 2,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "1600 Broadway",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 2,
+      "type": 2,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "27 W 7th Street",
+      "city": "Covington",
+      "state": "KY",
+      "postalCode": "41011",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 3,
+      "type": 3,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "5164 Kennedy Ave",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45213",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 4,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "1910 Elm Street",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 5,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "18 Distillery Way",
+      "city": "Newport",
+      "state": "Ky",
+      "postalCode": "41071",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 6,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "4233 Airport Rd.",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45226",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 7,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 8,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 9,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 10,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 11,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 12,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 13,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 14,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    },
+    {
+      "id": 15,
+      "type": 1,
+      "groupTitle": "Gabe S",
+      "description": "Maecenas sed diam eget risus varius blandit sit amet non magna.",
+      "addressLine1": "200 W 4th St",
+      "city": "Cincinnati",
+      "state": "OH",
+      "postalCode": "45202",
+      "time": "Mondays at 9pm",
+      "host": {
+        "firstName": "Gabe",
+        "lastName": "Smith",
+        "emailAddress": "jane.smith@email.com",
+        "genderId": 2,
+        "groupRoleId": 22,
+        "contactId": 7656822,
+        "addressLine1": "200 W 4th St",
+        "city": "Cincinnati",
+        "state": "OH",
+        "postalCode": "45202",
+        "affinities": [
+          "Has never journeyed before",
+          "Is looking to meet new people"
+        ]
+      },
+      "attributes": [
+        "kids welcome",
+        "has a cat",
+        "has a dog"
+      ]
+    }
+  ]
+}
