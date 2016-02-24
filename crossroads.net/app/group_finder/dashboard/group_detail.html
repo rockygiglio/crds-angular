@@ -11,7 +11,7 @@
 
     <hr />
 
-    <div ng-repeat="member in detail.group.members track by $index" ng-if="member.groupRoleId == 16">
+    <div ng-repeat="member in detail.group.members track by $index" ng-if="member.groupRoleId == detail.GROUP_ROLE_ID_PARTICIPANT">
       <hr ng-if="$index > 0" />
       <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
