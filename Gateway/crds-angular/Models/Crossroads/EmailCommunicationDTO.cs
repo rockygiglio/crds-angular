@@ -19,5 +19,11 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "mergeData")]
         public Dictionary<string, object> MergeData { get; set; }
+
+        [JsonProperty(PropertyName = "groupId", NullValueHandling = NullValueHandling.Ignore)]
+        public int? groupId { get; set; }
+
+        [JsonProperty(PropertyName = "emailAddress")]
+        public string emailAddress { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
@@ -26,20 +27,27 @@ namespace crds_angular.Services
         private readonly IContactRelationshipService _contactRelationshipService;
         private readonly IServeService _serveService;
         private readonly IParticipantService _participantService;
+        private readonly ICommunicationService _communicationService;
+        private readonly IContactService _contactService;
+
 
         /// <summary>
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
-
+        private readonly int JourneyGroupInvitationTemplateId;
+        private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
                             IEventService eventService,
                             IContactRelationshipService contactRelationshipService,
-                            IServeService serveService, 
-                            IParticipantService participantService)
+                            IServeService serveService,
+                            IParticipantService participantService,
+                            ICommunicationService communicationService,
+                            IContactService contactService)
+
         {
             _mpGroupService = mpGroupService;
             _configurationWrapper = configurationWrapper;
@@ -47,8 +55,12 @@ namespace crds_angular.Services
             _contactRelationshipService = contactRelationshipService;
             _serveService = serveService;
             _participantService = participantService;
+            _communicationService = communicationService;
+            _contactService = contactService;
+
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
-            MyCurrentGroupsPageView = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("MyCurrentGroupsPageView"));
+            JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
+            DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -273,6 +285,56 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
             return groupDetail;
         }
+        
+        public Participant GetParticipantRecord(string token) 
+        {
+            var participant = _participantService.GetParticipantRecord(token);
+            return participant;
+        }
+
+        public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
+        {
+            var participant = GetParticipantRecord(token);
+            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
+            var membership = groups.Where(group => group.GroupId == communication.groupId).ToList();
+            if (membership.Count <= 0)
+            {
+                //notfound, don't send invite
+                throw new InvalidOperationException();
+            }
+            var invitation = CreateJourneyInvitation(communication, participant);
+            _communicationService.SendMessage(invitation);
+        }
+
+        private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
+        {
+            var template = _communicationService.GetTemplate(JourneyGroupInvitationTemplateId);
+            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
+
+            return new Communication
+            {
+                AuthorUserId = 5,
+                DomainId = 1,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
+                MergeData = mergeData
+            };
+        }
+
+        private Dictionary<string, object> SetupMergeData(string preferredName, int groupId)
+        {
+            var mergeData = new Dictionary<string, object>
+            {
+                {"BaseUrl", _configurationWrapper.GetConfigValue("BaseUrl")},
+                {"GroupId", groupId},
+                {"PreferredName", preferredName},
+            };
+            return mergeData;
+        }
 
         public List<GroupParticipantDTO> GetGroupParticipants(int groupId)
         {
@@ -283,7 +345,6 @@ namespace crds_angular.Services
             }
             var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
             return participants;
-
         }
 
         public void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId)
