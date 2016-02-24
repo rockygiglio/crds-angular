@@ -76,16 +76,15 @@
 
     function findHosting(id) {
       return _.find(groups.hosting, function(group) {
-        return group.id === parseInt(id);
+        return group.groupId === parseInt(id);
       });
     }
 
     function queryParticipants(group) {
       Group.Participant.query({ groupId: group.groupId }).$promise.then(function(data) {
-        console.log("Group participants:", data);
         var members = [];
 
-        _.each(data.slice(0,3), function(person) {
+        _.each(data, function(person) {
           members.push({
             contactId: person.contactId,
             participantId: person.participantId,
