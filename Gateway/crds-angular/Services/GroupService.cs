@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
@@ -291,7 +292,7 @@ namespace crds_angular.Services
             return participant;
         }
 
-        public int SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
+        public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
         {
             var participant = GetParticipantRecord(token);
             var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
@@ -299,11 +300,10 @@ namespace crds_angular.Services
             if (membership.Count <= 0)
             {
                 //notfound, don't send invite
-                return 1;
+                throw new InvalidOperationException();
             }
             var invitation = CreateJourneyInvitation(communication, participant);
             _communicationService.SendMessage(invitation);
-            return 0;
         }
 
         private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
