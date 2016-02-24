@@ -76,6 +76,7 @@ WHEN MATCHED THEN
 	SET
 		Attribute_Name = tmp.Attribute_Name,
 		Attribute_Type_ID = @Attribute_Type_ID,
+		Description = tmp.[Description],
 		Domain_ID = @Domain_ID,
 		Sort_Order = tmp.Sort_Order
 WHEN NOT MATCHED THEN
