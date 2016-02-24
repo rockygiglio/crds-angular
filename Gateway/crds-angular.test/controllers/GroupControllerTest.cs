@@ -15,6 +15,7 @@ using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Event = MinistryPlatform.Models.Event;
 
 namespace crds_angular.test.controllers
@@ -480,7 +481,7 @@ namespace crds_angular.test.controllers
                 emailAddress  = "wonderwoman@marvel.com"
             };
 
-           groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString())).Returns(0);
+           groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString()));
 
             IHttpActionResult result = fixture.PostInvitation(communication);
             groupServiceMock.Verify(x => x.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString()), Times.Once);
@@ -494,8 +495,8 @@ namespace crds_angular.test.controllers
             {
                 emailAddress = "wonderwoman@marvel.com"
             };
-
-            groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString())).Returns(1);
+            
+            groupServiceMock.Setup(mocked => mocked.SendJourneyEmailInvite(communication, fixture.Request.Headers.Authorization.ToString())).Throws<InvalidOperationException>();
 
             IHttpActionResult result = fixture.PostInvitation(communication);
             groupServiceMock.VerifyAll();

@@ -22,7 +22,7 @@ namespace crds_angular.Services.Interfaces
 
         Participant GetParticipantRecord(string token);
 
-        int SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
+        void SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
 
         List<GroupParticipantDTO> GetGroupParticipants(int groupId);
 
