@@ -44,7 +44,6 @@
           vm.accepted = true;
         }, function(error) {
           // An error happened accepting the invitation
-          // TODO added error message on review.html
           vm.rejected = true;
         });
       }
