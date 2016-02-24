@@ -23,6 +23,7 @@
     };
 
     $scope.getGroupType = function() {
+      // TODO - The 'Co-ed' default value should be removed once the API is completed
       return GROUP_TYPES[$scope.group.type] || 'Co-ed';
     };
 
