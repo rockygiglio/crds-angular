@@ -36,10 +36,7 @@
                 return { id: attribute.attributeId, name: attribute.name };
               });
             }
-
-
           });
-          console.log(service.questions);
         });
       }
 

@@ -29,9 +29,12 @@
     var vm = this;
 
     vm.initialize = function() {
+      if (Responses.data.completed_flow !== true) {
+        $state.go('group_finder.host.questions');
+      }
+
       vm.responses = Responses.data;
       vm.host = AuthenticatedPerson;
-      $log.debug('Host profile: ', vm.host);
 
       if(vm.isPrivate()) {
         vm.publish();
@@ -120,7 +123,6 @@
       group.meetingTime = '';
       group.address = {};
 
-
       if (vm.isPrivate() === false) {
         group.groupDescription = Responses.data.description;
         group.childCareInd = Responses.data.kids === 1;
@@ -134,14 +136,36 @@
         };
       }
 
+      var attributes = [];
+      if (_.has(Responses.data, 'goals')) {
+        attributes.push(Responses.data.goals);
+      }
+      if (_.has(Responses.data, 'kids')) {
+        attributes.push(Responses.data.kids);
+      }
+
+      if (_.has(Responses.data, 'pets')) {
+        _.each(Responses.data.pets, function(value, pet) {
+          attributes.push(pet);
+        });
+      }
+
+      group.attributes = _.map(attributes, function(data) {
+        return {selected: true, startDate: GROUP_API_CONSTANTS.START_DATE, attributeId: data};
+      });
+
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
       Group.Detail.save(group).$promise.then(function success(group) {
 
         $log.debug('Group was published successfully:', group);
+        var capacity = 1;
+        if (Responses.data.marital_status === '7022') {
+          capacity = 2;
+        }
         // User invitation service to add person to that group
         var promise = GroupInvitationService.acceptInvitation(group.groupId,
-                                                              {capacity: 1, groupRoleId: GROUP_ROLE_ID_HOST});
+                      {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
         promise.then(function() {
           // Invitation acceptance was successful
           vm.accepted = true;
@@ -165,11 +189,8 @@
       // TODO need a way to ensure this isn't hard coded
       if (vm.responses.kids === '7017') { ret.push('kids welcome'); }
       if (vm.responses.pets) {
-        var pet_selections = _.map(Object.keys(vm.responses.pets), function(el) {
-          return parseInt(el);
-        });
-        if (pet_selections.indexOf(0) !== -1) { ret.push('has a cat'); }
-        if (pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
+        if (_.has(vm.responses.pets, 7011)) { ret.push('has a cat'); }
+        if (_.has(vm.responses.pets, 7012)) { ret.push('has a dog'); }
       }
       return ret;
     };

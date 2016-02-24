@@ -6,20 +6,16 @@
   QuestionsCtrl.$inject = [
     '$location',
     '$timeout',
-    '$rootScope',
     '$scope',
     '$state',
-    '$stateParams',
     '$window',
     'Responses'
   ];
 
   function QuestionsCtrl( $location,
                           $timeout,
-                          $rootScope,
                           $scope,
                           $state,
-                          $stateParams,
                           $window,
                           Responses) {
 
@@ -50,12 +46,14 @@
     };
 
     $scope.go = function() {
+      Responses.data.completed_flow = true;
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
         // TODO if private group skip review, save and show confirmation page.
         $state.go('group_finder.' + $scope.mode + '.review');
       } else if($scope.step === $scope.totalQuestions) {
         $state.go('group_finder.' + $scope.mode + '.review');
       } else {
+        Responses.data.completed_flow = false;
         $scope.step++;
         $scope.provideFocus();
       }
