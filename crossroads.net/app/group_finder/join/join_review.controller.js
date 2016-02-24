@@ -3,9 +3,25 @@
 
   module.exports = JoinReviewCtrl;
 
-  JoinReviewCtrl.$inject = ['$scope', '$state', 'Responses', 'ZipcodeService'];
+  JoinReviewCtrl.$inject = [
+    '$scope',
+    '$state',
+    'Responses',
+    'ZipcodeService',
+    'GroupInvitationService',
+    'ANYWHERE_GROUP_ID',
+    'GROUP_ROLE_ID_PARTICIPANT'
+  ];
 
-  function JoinReviewCtrl($scope, $state, Responses, ZipcodeService) {
+  function JoinReviewCtrl(
+    $scope,
+    $state,
+    Responses,
+    ZipcodeService,
+    GroupInvitationService,
+    ANYWHERE_GROUP_ID,
+    GROUP_ROLE_ID_PARTICIPANT
+  ) {
     var vm = this;
 
     vm.responses = Responses;
@@ -20,6 +36,17 @@
         vm.showUpsell = false;
         vm.showResults = false;
         vm.contactCrds = true;
+
+        var promise = GroupInvitationService.acceptInvitation(ANYWHERE_GROUP_ID,
+          {capacity: 1, groupRoleId: GROUP_ROLE_ID_PARTICIPANT});
+        promise.then(function() {
+          // Invitation acceptance was successful
+          vm.accepted = true;
+        }, function(error) {
+          // An error happened accepting the invitation
+          // TODO added error message on review.html
+          vm.rejected = true;
+        });
       }
     }
 
