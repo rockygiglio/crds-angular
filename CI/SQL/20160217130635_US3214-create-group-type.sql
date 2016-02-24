@@ -63,10 +63,10 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Men and women together', 'like God intended', 1),
-	(@Attribute_ID_Base+1, 'Men only', 'no girls allowed', 2),
-	(@Attribute_ID_Base+2, 'Women only', 'don''t be a creeper, dude', 3),
-	(@Attribute_ID_Base+3, 'Married couples only','because you put a ring on it', 4)
+	(@Attribute_ID_Base, 'Men and women together (like God intended)', 'Co-ed', 1),
+	(@Attribute_ID_Base+1, 'Men only (no girls allowed)', 'Men only', 2),
+	(@Attribute_ID_Base+2, 'Women only (don''t be a creeper, dude)', 'Women Only', 3),
+	(@Attribute_ID_Base+3, 'Married couples only (because you put a ring on it)','Married Couples', 4)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp

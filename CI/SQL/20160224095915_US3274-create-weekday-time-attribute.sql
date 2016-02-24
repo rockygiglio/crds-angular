@@ -63,11 +63,11 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Early mornings', 'before 9am', 1),
-	(@Attribute_ID_Base+1, 'Mornings', 'between 9am and noon', 2),
-	(@Attribute_ID_Base+2, 'Afternoons', 'between noon and 5pm', 3),
-	(@Attribute_ID_Base+3, 'Evenings after work', 'between 5pm and 8pm', 4),
-	(@Attribute_ID_Base+4, 'Late evenings', 'after 8pm', 5),
+	(@Attribute_ID_Base, 'Early mornings (before 9am)', NULL, 1),
+	(@Attribute_ID_Base+1, 'Mornings (between 9am and noon)', NULL, 2),
+	(@Attribute_ID_Base+2, 'Afternoons (between noon and 5pm)', NULL, 3),
+	(@Attribute_ID_Base+3, 'Evenings after work (between 5pm and 8pm)', NULL, 4),
+	(@Attribute_ID_Base+4, 'Late evenings (after 8pm)', NULL, 5),
 	(@Attribute_ID_Base+5, 'I can''t meet on weekdays', NULL, 6)
 
 MERGE [dbo].[Attributes] AS a

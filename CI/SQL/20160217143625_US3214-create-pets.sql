@@ -66,8 +66,8 @@ INSERT INTO @Attribute_Names
 	(@Attribute_ID_Base, 'I have a dog', NULL, 1),
 	(@Attribute_ID_Base+1, 'I have a cat', NULL, 2),
 	(@Attribute_ID_Base+2, 'I have an alpaca', NULL, 3),
-	(@Attribute_ID_Base+3, 'I have rodents', 'by choice', 4),
-	(@Attribute_ID_Base+4, 'I have rodents', 'not by choice', 5)
+	(@Attribute_ID_Base+3, 'I have rodents (by choice)', NULL, 4),
+	(@Attribute_ID_Base+4, 'I have rodents (not by choice)', NULL, 5)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
