@@ -16,6 +16,11 @@ namespace crds_angular.Controllers.API
             _emailCommunication = emailCommunication;
         }
 
+
+        /// <summary>
+        /// Send an email to a specific contactId
+        /// </summary>
+        [RequiresAuthorization]
         [Route("api/sendemail")]
         public IHttpActionResult Post(EmailCommunicationDTO email)
         {
@@ -34,6 +39,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Send an email to a group, takes in a list of contactId's
+        /// </summary>
+        [RequiresAuthorization]
         [Route("api/sendgroupemail")]
         public IHttpActionResult Post([FromBody] CommunicationDTO communication)
         {

@@ -136,8 +136,7 @@ namespace crds_angular.test.Services
         //Legal ward 10+
         public void LegalWardOver14ThatICanSubmitFor()
         {
-            const int contactId = 1111;
-            var mockFamily = MockFamilyLegalWard();
+           var mockFamily = MockFamilyLegalWard();
 
             _serveService.Setup(m => m.GetImmediateFamilyParticipants(It.IsAny<string>()))
                 .Returns(mockFamily);
