@@ -6,7 +6,7 @@
   GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
 
   function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
-    var requestComplete = false;
+    var requestPromise = null;
 
     //
     // Group Info service definition
@@ -29,33 +29,37 @@
     // Initialize the data
     //
     function loadGroupInfo() {
-      var promise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
-      promise.then(function(data) {
-        var cid = $cookies.get('userId');
-        if (cid) {
-          _.each(data, function(group) {
-            if (group.contactId === parseInt(cid)) {
-              group.isHost = true;
-              groups.hosting.push(group);
+      if (!requestPromise) {
+        requestPromise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
+        requestPromise.then(function(data) {
+          var cid = $cookies.get('userId');
+          if (cid) {
+            _.each(data, function(group) {
+              if (group.contactId === parseInt(cid)) {
+                group.isHost = true;
+                groups.hosting.push(group);
 
-              // Query the other participants of the group
-              queryParticipants(group);
-            } else {
-              group.isHost = false;
-              groups.participating.push(group);
-            }
+                // Query the other participants of the group
+                queryParticipants(group);
+              } else {
+                group.isHost = false;
+                groups.participating.push(group);
+              }
 
-            // Determine if group is private
-            if (!group.meetingTime || !group.meetingDayId || !group.address) {
-              group.isPrivate = true;
-            }
-          });
-        }
-        requestComplete = true;
-        return groups;
-      });
+              // Determine if group is private
+              if (!group.meetingTime || !group.meetingDayId || !group.address) {
+                group.isPrivate = true;
+              }
+            });
+          }
+          return groups;
+        }, function error() {
+          // An error occurred, clear the promise so another attempt can be made
+          requestPromise = null;
+        });
+      }
 
-      return promise;
+      return requestPromise;
     }
 
     //
@@ -99,7 +103,7 @@
     }
 
     function clearData() {
-      requestComplete = false;
+      requestPromise = null;
       groups.hosting = [];
       groups.participating = [];
     }
