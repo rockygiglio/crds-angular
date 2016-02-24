@@ -34,7 +34,7 @@
       $log.debug('Host profile: ', vm.host);
 
       if(vm.isPrivate()) {
-        return $state.go('group_finder.host.confirm');
+        vm.publish();
       }
 
       var groupTitle = AuthenticatedPerson.displayName();
@@ -104,7 +104,7 @@
       // Group owner, name and description
       group.contactId = AuthenticatedPerson.contactId;
       group.groupName = AuthenticatedPerson.displayName();
-      group.groupDescription = Responses.data.description;
+      group.groupDescription = '';
       group.congregationId = AuthenticatedPerson.congregationId;
 
       // Group size and availability
@@ -112,19 +112,27 @@
       group.remainingCapacity = Responses.data.open_spots;
       group.groupFullInd = Responses.data.open_spots <= 0;
       group.waitListInd = false;
-      group.childCareInd = Responses.data.kids === 1;
+      group.childCareInd = false;
 
       // When and where does the group meet
-      // TODO Handle this as ordinal in Responses instead of day name string
-      group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
+      group.meetingDayId = 1;
 
-      group.meetingTime = Responses.data.date_and_time.time + ' ' + Responses.data.date_and_time.ampm;
-      group.address = {
-        addressLine1: Responses.data.location.street,
-        city: Responses.data.location.city,
-        state: Responses.data.location.state,
-        zip: Responses.data.location.zip
-      };
+      group.meetingTime = '';
+      group.address = {};
+
+
+      if (vm.isPrivate() === false) {
+        group.groupDescription = Responses.data.description;
+        group.childCareInd = Responses.data.kids === 1;
+        group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
+        group.meetingTime = Responses.data.date_and_time.time + ' ' + Responses.data.date_and_time.ampm;
+        group.address = {
+          addressLine1: Responses.data.location.street,
+          city: Responses.data.location.city,
+          state: Responses.data.location.state,
+          zip: Responses.data.location.zip
+        };
+      }
 
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
