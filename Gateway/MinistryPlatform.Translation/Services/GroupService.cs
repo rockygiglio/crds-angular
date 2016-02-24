@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Services
         {
             logger.Debug("Adding group");
 
-            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;            
 
             var values = new Dictionary<string, object>
             {
