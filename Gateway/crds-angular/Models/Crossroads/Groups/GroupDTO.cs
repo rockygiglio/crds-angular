@@ -68,7 +68,7 @@ namespace crds_angular.Models.Crossroads.Groups
         public List<Event> Events { get; set; }
 
         [JsonProperty(PropertyName = "meetingDayId")]
-        public int MeetingDayId { get; set; }
+        public int? MeetingDayId { get; set; }
 
         [JsonProperty(PropertyName = "meetingTime")]
         public string MeetingTime { get; set; }
