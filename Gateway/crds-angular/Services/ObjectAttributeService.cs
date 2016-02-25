@@ -29,11 +29,10 @@ namespace crds_angular.Services
             _mpAttributeService = mpAttributeService;
         }
 
-        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId)
+        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration)
         {
-            var mpAttributes = _mpAttributeService.GetAttributes(null);
-            var mpConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
-            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, mpConfiguration);
+            var mpAttributes = _mpAttributeService.GetAttributes(null);            
+            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
 
             var allAttributes = new ObjectAllAttributesDTO();
 
@@ -125,7 +124,7 @@ namespace crds_angular.Services
 
         public void SaveObjectAttributes(int objectId,
                                          Dictionary<int, ObjectAttributeTypeDTO> objectAttributes,
-                                         Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes)
+                                         Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes, ObjectAttributeConfiguration configuration)
         {
             var currentAttributes = TranslateMultiToMPAttributes(objectAttributes);
             currentAttributes.AddRange(TranslateSingleToMPAttribute(objectSingleAttributes));
@@ -135,19 +134,18 @@ namespace crds_angular.Services
                 return;
             }
 
-            var apiUserToken = _apiUserService.GetToken();
-            var mpConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var apiUserToken = _apiUserService.GetToken();            
 
-            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(apiUserToken, objectId, mpConfiguration);
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(apiUserToken, objectId, configuration);
             var attributesToSave = GetDataToSave(currentAttributes, persistedAttributes);
 
             foreach (var attribute in attributesToSave)
             {
-                SaveAttribute(objectId, attribute, apiUserToken, mpConfiguration);
+                SaveAttribute(objectId, attribute, apiUserToken, configuration);
             }
         }
 
-        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute)
+        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration)
         {
             objectAttribute.StartDate = ConvertToServerDate(objectAttribute.StartDate);
             if (objectAttribute.EndDate != null)
@@ -155,16 +153,15 @@ namespace crds_angular.Services
                 objectAttribute.EndDate = ConvertToServerDate(objectAttribute.EndDate.Value);
             }
 
-            var mpObjectAttribute = TranslateMultiToMPAttribute(objectAttribute, null);
-            var myContactConfiguration = ObjectAttributeConfigurationFactory.MyContactAttributeConfiguration();
-            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, myContactConfiguration, objectAttribute.AttributeId);
+            var mpObjectAttribute = TranslateMultiToMPAttribute(objectAttribute, null);            
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration, objectAttribute.AttributeId);
 
             if (persistedAttributes.Count >= 1)
             {
                 mpObjectAttribute.ObjectAttributeId = persistedAttributes[0].ObjectAttributeId;
             }
 
-            SaveAttribute(objectId, mpObjectAttribute, token, myContactConfiguration);
+            SaveAttribute(objectId, mpObjectAttribute, token, configuration);
         }
 
         private DateTime ConvertToServerDate(DateTime source)

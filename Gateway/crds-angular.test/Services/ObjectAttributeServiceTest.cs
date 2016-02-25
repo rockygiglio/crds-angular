@@ -82,15 +82,18 @@ namespace crds_angular.test.Services
                     } 
                 }
             };
-            
-            _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, It.IsAny<ObjectAttributeConfiguration>(), null)).Returns(_currentAttributes);
+
+            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+
+            _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, configuration, null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);
-            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>())).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
+            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), configuration)).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
             {
                 Assert.AreEqual(actual.Notes, _updatedNote);  
                 Assert.AreEqual(actual.ObjectAttributeId, 123456);
+                Assert.AreEqual(configuration, objectConfiguration);
             });
-            _fixture.SaveObjectAttributes(_fakeContactId, contactAttributes, contactSingleAttributes);
+            _fixture.SaveObjectAttributes(_fakeContactId, contactAttributes, contactSingleAttributes, configuration);
             _apiUserService.VerifyAll();
             _attributeService.VerifyAll();
             _mpAttributeService.VerifyAll();

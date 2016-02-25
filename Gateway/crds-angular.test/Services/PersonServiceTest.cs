@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Services;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -31,7 +32,7 @@ namespace crds_angular.test.Services
         {
             _objectAttributeService = new Mock<IObjectAttributeService>();
             var allAttributesDto = new ObjectAllAttributesDTO();
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>())).Returns(allAttributesDto);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(allAttributesDto);
             _contactService = new Mock<MPInterfaces.IContactService>();
             _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
             _participantService = new Mock<MPInterfaces.IParticipantService>();
