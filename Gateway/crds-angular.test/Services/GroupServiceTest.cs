@@ -373,28 +373,55 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void SendJourneyEmailInviteNoGroupsFound()
+        {
+            var groupId = 98765;
+            const string token = "doit";
+            var participant = new Participant() { ParticipantId = 100 };
+
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+
+            Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+        }
+
+        [Test]
         public void SendJourneyEmailInviteNoGroupMembershipFound()
         {
             var groupId = 98765;
+            const string token = "doit";
+            var participant = new Participant() { ParticipantId = 100 };
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
 
             var groups = new List<Group>()
             {
                new Group(){}
             };
 
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
+            Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
             _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
         }
 
         [Test]
         public void SendJourneyEmailInviteGroupMembershipIsFound()
         {
-
             const string token = "doit";
             const int groupId = 98765;
             var participant = new Participant() { ParticipantId = 100 };
-           
+
             var groups = new List<Group>()
             {
                new Group()
@@ -402,7 +429,7 @@ namespace crds_angular.test.Services
                    GroupId = 98765
                }
             };
-            
+
             var communication = new EmailCommunicationDTO()
             {
                 emailAddress = "BlackWidow@marvel.com",
@@ -421,7 +448,7 @@ namespace crds_angular.test.Services
 
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
             groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19)).Returns(groups);
-            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);            
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();
 
