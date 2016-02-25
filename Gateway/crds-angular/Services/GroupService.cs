@@ -296,15 +296,20 @@ namespace crds_angular.Services
         {
             var participant = GetParticipantRecord(token);
             var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
-            var membership = groups.Where(group => group.GroupId == communication.groupId).ToList();
-            if (membership.Count <= 0)
+
+            if (groups != null)
             {
-                //notfound, don't send invite
-                throw new InvalidOperationException();
+                var membership = groups.Where(group => group.GroupId == communication.groupId).ToList();
+                if (membership.Count > 0)
+                {
+                    var invitation = CreateJourneyInvitation(communication, participant);
+                    _communicationService.SendMessage(invitation);
+                    return;
+                }
             }
-            var invitation = CreateJourneyInvitation(communication, participant);
-            _communicationService.SendMessage(invitation);
+            throw new InvalidOperationException();
         }
+
 
         private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
