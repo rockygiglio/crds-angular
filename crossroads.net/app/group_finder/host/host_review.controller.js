@@ -80,6 +80,7 @@
 
     function publish() {
       var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      vm.requestPending = true;
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -168,7 +169,6 @@
         }, function(error) {
           // An error happened accepting the invitation
           vm.rejected = true;
-        }).finally(function() {
           vm.requestPending = false;
         });
 
@@ -176,6 +176,7 @@
         $state.go('group_finder.host.confirm');
       }, function error() {
         vm.rejected = true;
+        vm.requestPending = false;
         $log.debug('An error occurred while publishing');
       })
       .finally(function() {
