@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Services;
@@ -37,6 +38,8 @@ namespace MinistryPlatform.Translation.Test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("PaymentProcessorEventErrors")).Returns(6060);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GPExportView")).Returns(92198);
             configuration.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("DonationCommunications")).Returns(540);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("MessagePageId")).Returns(341);
 
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -452,6 +455,31 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mocked => mocked.RemoveSelection(selectionId, new [] {depositId}, It.IsAny<string>()));
 
             _fixture.UpdateDepositToExported(selectionId, depositId, "afasdfasdf");
+            _ministryPlatformService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCompleteSendMessageFromDonor()
+        {
+            var pageId = 341;
+
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"Record_Id", 123},
+                {"Communication_Status_Id", 2}
+            };
+
+            List<Dictionary<string, object>> resultsDict = new List<Dictionary<string, object>>();
+            var getResult = new Dictionary<string, object>
+                {
+                    { "dp_RecordID", 123 },
+                    { "Communication_ID", 123 }
+            };
+            resultsDict.Add(getResult);
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(540, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(resultsDict);
+            _ministryPlatformService.Setup(mocked => mocked.UpdateRecord(341, expectedParams, It.IsAny<string>()));
+            _fixture.FinishSendMessageFromDonor(123,true);
             _ministryPlatformService.VerifyAll();
         }
     }
