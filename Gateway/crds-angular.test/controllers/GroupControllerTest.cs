@@ -291,7 +291,7 @@ namespace crds_angular.test.controllers
           
             IHttpActionResult result = fixture.GetGroups(groupTypeId);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(NotFoundResult), result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
         }
 
         [Test]
