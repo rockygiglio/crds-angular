@@ -12,9 +12,11 @@ using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Services;
 using Moq;
 using NUnit.Framework;
 using Event = MinistryPlatform.Models.Event;
+using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
@@ -33,6 +35,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.ICommunicationService> _communicationService;
         private Mock<MPServices.IContactService> _contactService;
         private Mock<IConfigurationWrapper> config;
+        private Mock<IObjectAttributeService> _attributeConfiguration;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -62,18 +65,24 @@ namespace crds_angular.test.Services
             authenticationService = new Mock<MPServices.IAuthenticationService>();
             groupService = new Mock<IGroupService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
-            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
+            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();
             serveService = new Mock<IServeService>();
             participantService = new Mock<MPServices.IParticipantService>();
             _groupService = new Mock<IGroupService>();
             _communicationService = new Mock<MPServices.ICommunicationService>();
             _contactService = new Mock<MPServices.IContactService>();
-            config = new Mock<IConfigurationWrapper>();
+
+            _attributeConfiguration = new Mock<IObjectAttributeService>();
+
+
+        config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
+            var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+
             fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
-                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object);
+                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object, _attributeConfiguration.Object);
         }
 
         [Test]

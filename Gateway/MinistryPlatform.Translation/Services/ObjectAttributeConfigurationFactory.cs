@@ -25,5 +25,25 @@ namespace MinistryPlatform.Translation.Services
                 TableName = "Contact"
             };
         }
+
+        public static ObjectAttributeConfiguration GroupAttributeConfiguration()
+        {
+            return new ObjectAttributeConfiguration()
+            {
+                SubPage = int.Parse(ConfigurationManager.AppSettings["GroupAttributesSubPage"]),
+                SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedGroupAttributesAttributes"]),
+                TableName = "Group"
+            };
+        }
+
+        public static ObjectAttributeConfiguration GroupParticipantsAttributeConfiguration()
+        {
+            return new ObjectAttributeConfiguration()
+            {
+                SubPage = int.Parse(ConfigurationManager.AppSettings["GroupParticipantAttributesSubPage"]),
+                SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedGroupPartAttributes"]),
+                TableName = "Group"
+            };
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Profile;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Groups
@@ -79,9 +80,14 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "address")]
         public AddressDTO Address { get; set; }
 
+        // TODO: Remove Attributes
         [JsonProperty(PropertyName = "attributes")]
         public List<crds_angular.Models.Crossroads.Profile.ObjectAttributeDTO> Attributes { get; set; }
+
+        [JsonProperty(PropertyName = "attributeTypes")]
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
+
+        [JsonProperty(PropertyName = "singleAttributes")]
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
     }
-
-
 }

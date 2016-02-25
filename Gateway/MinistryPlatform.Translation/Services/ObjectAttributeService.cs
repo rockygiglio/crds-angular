@@ -30,7 +30,8 @@ namespace MinistryPlatform.Translation.Services
             var searchString = attributeTypeIdFilter.HasValue ? string.Format(",,,,\"{0}\"", attributeTypeIdFilter.Value) : "";
             var records = _ministryPlatformService.GetSubpageViewRecords(subPageViewId, objectId, token, searchString);
 
-            var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
+            //var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
+            var keyColumn = "dp_RecordID";
 
             var objectAttributes = records.Select(record => new ObjectAttribute
             {
@@ -86,7 +87,8 @@ namespace MinistryPlatform.Translation.Services
 
         private Dictionary<string, object> TranslateAttributeToDictionary(ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
         {
-            var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
+            //var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
+            var keyColumn = "dp_RecordID";
 
             var attributeDictionary = new Dictionary<string, object>
             {

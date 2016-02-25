@@ -10,10 +10,12 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
 {
@@ -29,6 +31,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly ICommunicationService _communicationService;
         private readonly IContactService _contactService;
+        private readonly IObjectAttributeService _objectAttributeService;
 
 
         /// <summary>
@@ -46,7 +49,8 @@ namespace crds_angular.Services
                             IServeService serveService,
                             IParticipantService participantService,
                             ICommunicationService communicationService,
-                            IContactService contactService)
+                            IContactService contactService, 
+                            IObjectAttributeService objectAttributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -57,6 +61,7 @@ namespace crds_angular.Services
             _participantService = participantService;
             _communicationService = communicationService;
             _contactService = contactService;
+            _objectAttributeService = objectAttributeService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
@@ -69,6 +74,10 @@ namespace crds_angular.Services
             {
                 var mpGroup = Mapper.Map<Group>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
+
+                // TODO: Need to revisit and finish
+                //var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+                //_objectAttributeService.SaveObjectAttributes(group.GroupId,, , configuration);
             }
             catch (Exception e)
             {
@@ -282,7 +291,18 @@ namespace crds_angular.Services
             {
                 return null;
             }
+
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
+
+            var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+            foreach (var group in groupDetail)
+            {               
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration);
+                group.AttributeTypes = attributesTypes.MultiSelect;
+                group.SingleAttributes = attributesTypes.SingleSelect;
+            }
+
+
             return groupDetail;
         }
         
