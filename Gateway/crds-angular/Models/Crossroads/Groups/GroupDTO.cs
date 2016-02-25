@@ -80,7 +80,7 @@ namespace crds_angular.Models.Crossroads.Groups
         public AddressDTO Address { get; set; }
 
         [JsonProperty(PropertyName = "attributes")]
-        public List<crds_angular.Models.Crossroads.Profile.ContactAttributeDTO> Attributes { get; set; }
+        public List<crds_angular.Models.Crossroads.Profile.ObjectAttributeDTO> Attributes { get; set; }
     }
 
 

@@ -7,19 +7,19 @@ namespace crds_angular.Controllers.API
 {
     public class ContactAttributeController : MPAuth
     {
-        private readonly IContactAttributeService _contactAttributeService;
+        private readonly IObjectAttributeService _objectAttributeService;
 
-        public ContactAttributeController(IPersonService personService, IContactAttributeService contactAttributeService)
+        public ContactAttributeController(IPersonService personService, IObjectAttributeService objectAttributeService)
         {
-            _contactAttributeService = contactAttributeService;
+            _objectAttributeService = objectAttributeService;
         }
         
         [Route("api/contact/attribute/{contactId}")]
-        public IHttpActionResult Post(int contactId, [FromBody] ContactAttributeDTO contactAttribute)
+        public IHttpActionResult Post(int contactId, [FromBody] ObjectAttributeDTO objectAttribute)
         {
             return Authorized(token =>
             {                
-                _contactAttributeService.SaveContactMultiAttribute(token , contactId, contactAttribute);                
+                _objectAttributeService.SaveObjectMultiAttribute(token , contactId, objectAttribute);                
                 return this.Ok();
             });
         }

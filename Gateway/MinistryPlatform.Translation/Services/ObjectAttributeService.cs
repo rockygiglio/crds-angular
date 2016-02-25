@@ -24,15 +24,15 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<ObjectAttribute> GetCurrentContactAttributes(string token, int contactId, ObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
+        public List<ObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
         {
             var subPageViewId = configuration.SelectedSubPage;
             var searchString = attributeTypeIdFilter.HasValue ? string.Format(",,,,\"{0}\"", attributeTypeIdFilter.Value) : "";
-            var records = _ministryPlatformService.GetSubpageViewRecords(subPageViewId, contactId, token, searchString);
+            var records = _ministryPlatformService.GetSubpageViewRecords(subPageViewId, objectId, token, searchString);
 
             var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
 
-            var contactAttributes = records.Select(record => new ObjectAttribute
+            var objectAttributes = records.Select(record => new ObjectAttribute
             {
                 ObjectAttributeId = record.ToInt(keyColumn),
 
@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Services
                 AttributeTypeName = record.ToString("Attribute_Type")
             }).ToList();
 
-            return contactAttributes;
+            return objectAttributes;
         }
 
         public int CreateAttribute(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)

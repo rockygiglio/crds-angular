@@ -15,21 +15,21 @@ namespace crds_angular.Services
     public class PersonService : MinistryPlatformBaseService, IPersonService
     {
         private readonly MPServices.IContactService _contactService;
-        private readonly IContactAttributeService _contactAttributeService;
+        private readonly IObjectAttributeService _objectAttributeService;
         private readonly MPServices.IApiUserService _apiUserService;
         private readonly MPServices.IParticipantService _participantService;
         private readonly MPServices.IUserService _userService;
         private readonly MPServices.IAuthenticationService _authenticationService;
 
         public PersonService(MPServices.IContactService contactService, 
-            IContactAttributeService contactAttributeService, 
+            IObjectAttributeService objectAttributeService, 
             MPServices.IApiUserService apiUserService,
             MPServices.IParticipantService participantService,
             MPServices.IUserService userService,
             MPServices.IAuthenticationService authenticationService)
         {
             _contactService = contactService;
-            _contactAttributeService = contactAttributeService;
+            _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
             _participantService = participantService;
             _userService = userService;
@@ -43,7 +43,7 @@ namespace crds_angular.Services
             var addressDictionary = getDictionary(person.GetAddress());
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
-            _contactAttributeService.SaveContactAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes);
+            _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes);
 
             Participant participant = _participantService.GetParticipant(person.ContactId);
             if (participant.AttendanceStart != person.AttendanceStartDate)
@@ -86,7 +86,7 @@ namespace crds_angular.Services
 
             // TODO: Should this move to _contactService or should update move it's call out to this service?
             var apiUser = _apiUserService.GetToken();
-            var attributesTypes = _contactAttributeService.GetContactAttributes(apiUser, contactId);
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiUser, contactId);
             person.AttributeTypes = attributesTypes.MultiSelect;
             person.SingleAttributes = attributesTypes.SingleSelect;
 

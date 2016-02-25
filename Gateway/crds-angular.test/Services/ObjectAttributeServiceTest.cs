@@ -10,18 +10,19 @@ using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using ObjectAttributeService = crds_angular.Services.ObjectAttributeService;
 
 namespace crds_angular.test.Services
 {
     public class ContactAttributeServiceTest
     {
 
-        private ContactAttributeService _fixture;
+        private ObjectAttributeService _fixture;
         private Mock<MPInterfaces.IApiUserService> _apiUserService;
         private Mock<MPInterfaces.IObjectAttributeService> _contactAttributeService;
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
         private Mock<MPInterfaces.IAttributeService> _mpAttributeService;
-        private List<ContactSingleAttributeDTO> _updatedAttributes = new List<ContactSingleAttributeDTO>();
+        private List<ObjectSingleAttributeDTO> _updatedAttributes = new List<ObjectSingleAttributeDTO>();
         private List<ObjectAttribute> _currentAttributes = new List<ObjectAttribute>();
 
         private int _fakeContactId = 2186211;
@@ -38,8 +39,8 @@ namespace crds_angular.test.Services
             _apiUserService = new Mock<MPInterfaces.IApiUserService>();
             _mpAttributeService = new Mock<MPInterfaces.IAttributeService>();
 
-            _fixture = new ContactAttributeService(_contactAttributeService.Object, _attributeService.Object, _apiUserService.Object, _mpAttributeService.Object);
-            _updatedAttributes.Add(new ContactSingleAttributeDTO
+            _fixture = new ObjectAttributeService(_contactAttributeService.Object, _attributeService.Object, _apiUserService.Object, _mpAttributeService.Object);
+            _updatedAttributes.Add(new ObjectSingleAttributeDTO
             {
                 Value = new AttributeDTO
                 {
@@ -64,11 +65,11 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldUpdatePreviouslySavedAttributeNotes()
         {
-            var contactAttributes = new Dictionary<int, ContactAttributeTypeDTO>();
+            var contactAttributes = new Dictionary<int, ObjectAttributeTypeDTO>();
 
-            var contactSingleAttributes = new Dictionary<int, ContactSingleAttributeDTO>
+            var contactSingleAttributes = new Dictionary<int, ObjectSingleAttributeDTO>
             {
-                {1, new ContactSingleAttributeDTO
+                {1, new ObjectSingleAttributeDTO
                     {
                         Value = new AttributeDTO
                         {
@@ -82,14 +83,14 @@ namespace crds_angular.test.Services
                 }
             };
             
-            _contactAttributeService.Setup(x => x.GetCurrentContactAttributes(_fakeToken, _fakeContactId, It.IsAny<ObjectAttributeConfiguration>(), null)).Returns(_currentAttributes);
+            _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, It.IsAny<ObjectAttributeConfiguration>(), null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);
             _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>())).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
             {
                 Assert.AreEqual(actual.Notes, _updatedNote);  
                 Assert.AreEqual(actual.ObjectAttributeId, 123456);
             });
-            _fixture.SaveContactAttributes(_fakeContactId, contactAttributes, contactSingleAttributes);
+            _fixture.SaveObjectAttributes(_fakeContactId, contactAttributes, contactSingleAttributes);
             _apiUserService.VerifyAll();
             _attributeService.VerifyAll();
             _mpAttributeService.VerifyAll();

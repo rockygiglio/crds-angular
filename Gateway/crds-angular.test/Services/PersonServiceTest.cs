@@ -13,7 +13,7 @@ namespace crds_angular.test.Services
 {
     internal class PersonServiceTest_opportunityService
     {
-        private Mock<IContactAttributeService> _contactAttributeService;
+        private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPInterfaces.IContactService> _contactService;
         private Mock<MPInterfaces.IAuthenticationService> _authenticationService;
         private Mock<MPInterfaces.IApiUserService> _apiUserService;
@@ -29,9 +29,9 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _contactAttributeService = new Mock<IContactAttributeService>();
-            var contactAllAttributesDto = new ContactAllAttributesDTO();
-            _contactAttributeService.Setup(mocked => mocked.GetContactAttributes(It.IsAny<string>(), It.IsAny<int>())).Returns(contactAllAttributesDto);
+            _objectAttributeService = new Mock<IObjectAttributeService>();
+            var allAttributesDto = new ObjectAllAttributesDTO();
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>())).Returns(allAttributesDto);
             _contactService = new Mock<MPInterfaces.IContactService>();
             _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
             _participantService = new Mock<MPInterfaces.IParticipantService>();
@@ -71,7 +71,7 @@ namespace crds_angular.test.Services
             };
             _householdMembers = new List<HouseholdMember>();
 
-            _fixture = new PersonService(_contactService.Object, _contactAttributeService.Object, _apiUserService.Object, _participantService.Object, _userService.Object, _authenticationService.Object);
+            _fixture = new PersonService(_contactService.Object, _objectAttributeService.Object, _apiUserService.Object, _participantService.Object, _userService.Object, _authenticationService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

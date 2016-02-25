@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Profile
 {
-    public class ContactAttributeDTO
+    public class ObjectAttributeDTO
     {        
         [JsonProperty(PropertyName = "attributeId")]
         public int AttributeId { get; set; }

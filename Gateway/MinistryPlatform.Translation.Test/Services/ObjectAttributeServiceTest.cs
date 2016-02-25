@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace MinistryPlatform.Translation.Test.Services
 {
     [TestFixture]
-    public class ContactAttributeServiceTest
+    public class ObjectAttributeServiceTest
     {
         private ObjectAttributeService _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void GetContactAttributes()
+        public void GetObjectAttributes()
         {
             const int contactId = 123456;
 
@@ -64,8 +64,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.GetSubpageViewRecords(It.IsAny<int>(), contactId, It.IsAny<string>(), "", "", 0))
                 .Returns(getSubpageViewRecordsResponse);
 
-            var contactConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
-            var attributes = _fixture.GetCurrentContactAttributes("fakeToken", contactId, contactConfiguration, null).ToList();
+            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var attributes = _fixture.GetCurrentObjectAttributes("fakeToken", contactId, configuration, null).ToList();
 
             _ministryPlatformService.VerifyAll();
 

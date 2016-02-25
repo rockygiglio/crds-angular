@@ -123,10 +123,10 @@ namespace crds_angular.Models.Crossroads.Profile
         public List<HouseholdMember> HouseholdMembers { get; set; }
 
         [JsonProperty(PropertyName = "attributeTypes")]
-        public Dictionary<int, ContactAttributeTypeDTO> AttributeTypes { get; set; }
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
 
         [JsonProperty(PropertyName = "singleAttributes")]
-        public Dictionary<int, ContactSingleAttributeDTO> SingleAttributes { get; set; }
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
 
         [JsonProperty(PropertyName = "participantStartDate")]
         public DateTime? ParticipantStartDate { get; set; }
