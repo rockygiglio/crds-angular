@@ -4,6 +4,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Services;
 using GateWayInterfaces = crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -17,11 +18,11 @@ namespace crds_angular.test.Services
 
         private ContactAttributeService _fixture;
         private Mock<MPInterfaces.IApiUserService> _apiUserService;
-        private Mock<MPInterfaces.IContactAttributeService> _contactAttributeService;
+        private Mock<MPInterfaces.IObjectAttributeService> _contactAttributeService;
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
         private Mock<MPInterfaces.IAttributeService> _mpAttributeService;
         private List<ContactSingleAttributeDTO> _updatedAttributes = new List<ContactSingleAttributeDTO>();
-        private List<ContactAttribute> _currentAttributes = new List<ContactAttribute>();
+        private List<ObjectAttribute> _currentAttributes = new List<ObjectAttribute>();
 
         private int _fakeContactId = 2186211;
         private string _fakeToken = "afaketoken";
@@ -32,7 +33,7 @@ namespace crds_angular.test.Services
         public void Setup()
         {
             _mpAttributeService = new Mock<MPInterfaces.IAttributeService>(MockBehavior.Strict);
-            _contactAttributeService = new Mock<MPInterfaces.IContactAttributeService>();
+            _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeService>();
             _attributeService = new Mock<GateWayInterfaces.IAttributeService>();
             _apiUserService = new Mock<MPInterfaces.IApiUserService>();
             _mpAttributeService = new Mock<MPInterfaces.IAttributeService>();
@@ -49,12 +50,12 @@ namespace crds_angular.test.Services
                 Notes = "New and Updated Notes"
  
             });  
-            _currentAttributes.Add(new ContactAttribute
+            _currentAttributes.Add(new ObjectAttribute
             {
                 AttributeTypeId = 2,
                 AttributeId = 23,
                 AttributeTypeName = "Allergies",
-                ContactAttributeId = 123456,
+                ObjectAttributeId = 123456,
                 StartDate = _startDate,
                 Notes = "original notes"
             });
@@ -80,20 +81,19 @@ namespace crds_angular.test.Services
                     } 
                 }
             };
-
-            var useMyProfile = false;
-            _contactAttributeService.Setup(x => x.GetCurrentContactAttributes(_fakeToken, _fakeContactId, useMyProfile, null)).Returns(_currentAttributes);
+            
+            _contactAttributeService.Setup(x => x.GetCurrentContactAttributes(_fakeToken, _fakeContactId, It.IsAny<ObjectAttributeConfiguration>(), null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);
-            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ContactAttribute>(), useMyProfile)).Callback<string, ContactAttribute, bool>((id, actual, useMyProfileParam) =>
+            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>())).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
             {
                 Assert.AreEqual(actual.Notes, _updatedNote);  
-                Assert.AreEqual(actual.ContactAttributeId, 123456);
+                Assert.AreEqual(actual.ObjectAttributeId, 123456);
             });
             _fixture.SaveContactAttributes(_fakeContactId, contactAttributes, contactSingleAttributes);
             _apiUserService.VerifyAll();
             _attributeService.VerifyAll();
             _mpAttributeService.VerifyAll();
-            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<ContactAttribute>(), useMyProfile), Times.Once);
+            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>()), Times.Once);
             
 
         }

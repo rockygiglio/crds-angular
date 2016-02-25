@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ContactAttributeServiceTest
     {
-        private ContactAttributeService _fixture;
+        private ObjectAttributeService _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -24,12 +24,9 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationService>();
             _configWrapper = new Mock<IConfigurationWrapper>();            
-            _apiUserService = new Mock<IApiUserService>();            
-            _apiUserService.Setup(m => m.GetToken()).Returns("something");
-        
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new ContactAttributeService(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object, _apiUserService.Object);
+            _fixture = new ObjectAttributeService(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
         }
 
         [Test]
@@ -66,8 +63,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 mocked =>
                     mocked.GetSubpageViewRecords(It.IsAny<int>(), contactId, It.IsAny<string>(), "", "", 0))
                 .Returns(getSubpageViewRecordsResponse);
-            
-            var attributes = _fixture.GetCurrentContactAttributes("fakeToken", contactId, false, null).ToList();
+
+            var contactConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var attributes = _fixture.GetCurrentContactAttributes("fakeToken", contactId, contactConfiguration, null).ToList();
 
             _ministryPlatformService.VerifyAll();
 
@@ -75,7 +73,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(2, attributes.Count());
 
             var attribute = attributes[0];
-            Assert.AreEqual(1, attribute.ContactAttributeId);
+            Assert.AreEqual(1, attribute.ObjectAttributeId);
             Assert.AreEqual(new DateTime(2014, 10, 10), attribute.StartDate);
             Assert.AreEqual(null, attribute.EndDate);
             Assert.AreEqual("These are my notes", attribute.Notes);
@@ -83,7 +81,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(3, attribute.AttributeTypeId);
 
             attribute = attributes[1];
-            Assert.AreEqual(4, attribute.ContactAttributeId);
+            Assert.AreEqual(4, attribute.ObjectAttributeId);
             Assert.AreEqual(new DateTime(2015, 11, 11), attribute.StartDate);
             Assert.AreEqual(null, attribute.EndDate);
             Assert.AreEqual(string.Empty, attribute.Notes);

@@ -4,6 +4,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Services;
 using Attribute = MinistryPlatform.Models.Attribute;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
@@ -11,18 +12,18 @@ namespace crds_angular.Services
 {
     public class ContactAttributeService : IContactAttributeService
     {
-        private readonly MPInterfaces.IContactAttributeService _mpContactAttributeService;
+        private readonly MPInterfaces.IObjectAttributeService _mpObjectAttributeService;
         private readonly IAttributeService _attributeService;
         private readonly MPInterfaces.IApiUserService _apiUserService;
         private readonly MPInterfaces.IAttributeService _mpAttributeService;
 
         public ContactAttributeService(
-            MPInterfaces.IContactAttributeService mpContactAttributeService,
+            MPInterfaces.IObjectAttributeService mpObjectAttributeService,
             IAttributeService attributeService,
             MPInterfaces.IApiUserService apiUserService,
             MPInterfaces.IAttributeService mpAttributeService)
         {
-            _mpContactAttributeService = mpContactAttributeService;
+            _mpObjectAttributeService = mpObjectAttributeService;
             _attributeService = attributeService;
             _apiUserService = apiUserService;
             _mpAttributeService = mpAttributeService;
@@ -31,7 +32,8 @@ namespace crds_angular.Services
         public ContactAllAttributesDTO GetContactAttributes(string token, int contactId)
         {
             var mpAttributes = _mpAttributeService.GetAttributes(null);
-            var mpContactAttributes = _mpContactAttributeService.GetCurrentContactAttributes(token, contactId, false);
+            var mpConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var mpContactAttributes = _mpObjectAttributeService.GetCurrentContactAttributes(token, contactId, mpConfiguration);
 
             var allAttributes = new ContactAllAttributesDTO();
 
@@ -42,7 +44,7 @@ namespace crds_angular.Services
         }
 
 
-        private Dictionary<int, ContactAttributeTypeDTO> TranslateToAttributeTypeDtos(List<ContactAttribute> mpContactAttributes, List<Attribute> mpAttributes)
+        private Dictionary<int, ContactAttributeTypeDTO> TranslateToAttributeTypeDtos(List<ObjectAttribute> mpContactAttributes, List<Attribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == false).ToList();
 
@@ -91,7 +93,7 @@ namespace crds_angular.Services
         }
 
         private Dictionary<int, ContactSingleAttributeDTO> TranslateToSingleAttributeTypeDtos(
-            List<ContactAttribute> mpContactAttributes,
+            List<ObjectAttribute> mpContactAttributes,
             List<Attribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == true).ToList();
@@ -134,12 +136,15 @@ namespace crds_angular.Services
             }
 
             var apiUserToken = _apiUserService.GetToken();
-            var persistedAttributes = _mpContactAttributeService.GetCurrentContactAttributes(apiUserToken, contactId, false);
+            var mpConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentContactAttributes(apiUserToken, contactId, mpConfiguration);
             var attributesToSave = GetDataToSave(currentAttributes, persistedAttributes);
 
             foreach (var attribute in attributesToSave)
             {
-                SaveAttribute(contactId, attribute, apiUserToken, false);
+                var contactConfiguration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+                SaveAttribute(contactId, attribute, apiUserToken, contactConfiguration);
             }
         }
 
@@ -152,15 +157,15 @@ namespace crds_angular.Services
             }
 
             var mpContactAttribute = TranslateMultiToMPAttribute(contactAttribute, null);
-            var persistedAttributes = _mpContactAttributeService.GetCurrentContactAttributes(token, contactId, true, contactAttribute.AttributeId);
+            var myContactConfiguration = ObjectAttributeConfigurationFactory.MyContactAttributeConfiguration();
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentContactAttributes(token, contactId, myContactConfiguration, contactAttribute.AttributeId);
 
             if (persistedAttributes.Count >= 1)
             {
-                mpContactAttribute.ContactAttributeId = persistedAttributes[0].ContactAttributeId;
+                mpContactAttribute.ObjectAttributeId = persistedAttributes[0].ObjectAttributeId;
             }
 
-
-            SaveAttribute(contactId, mpContactAttribute, token, true);
+            SaveAttribute(contactId, mpContactAttribute, token, myContactConfiguration);
         }
 
         private DateTime ConvertToServerDate(DateTime source)
@@ -178,23 +183,23 @@ namespace crds_angular.Services
             return result;
         }
 
-        private void SaveAttribute(int contactId, ContactAttribute attribute, string token, bool useMyProfile)
+        private void SaveAttribute(int contactId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration)
         {
-            if (attribute.ContactAttributeId == 0)
+            if (attribute.ObjectAttributeId == 0)
             {
                 // These are new so add them
-                _mpContactAttributeService.CreateAttribute(token, contactId, attribute, useMyProfile);
+                _mpObjectAttributeService.CreateAttribute(token, contactId, attribute, configuration);
             }
             else
             {
                 // These are existing so update them
-                _mpContactAttributeService.UpdateAttribute(token, attribute, useMyProfile);
+                _mpObjectAttributeService.UpdateAttribute(token, attribute, configuration);
             }
         }
 
-        private List<ContactAttribute> TranslateMultiToMPAttributes(Dictionary<int, ContactAttributeTypeDTO> contactAttributesTypes)
+        private List<ObjectAttribute> TranslateMultiToMPAttributes(Dictionary<int, ContactAttributeTypeDTO> contactAttributesTypes)
         {
-            var results = new List<ContactAttribute>();
+            var results = new List<ObjectAttribute>();
 
             if (contactAttributesTypes == null)
             {
@@ -207,9 +212,9 @@ namespace crds_angular.Services
             return results;
         }
 
-        private static ContactAttribute TranslateMultiToMPAttribute(ContactAttributeDTO contactAttribute, ContactAttributeTypeDTO contactAttributeType)
+        private static ObjectAttribute TranslateMultiToMPAttribute(ContactAttributeDTO contactAttribute, ContactAttributeTypeDTO contactAttributeType)
         {
-            var mpContactAttribute = new ContactAttribute();
+            var mpContactAttribute = new ObjectAttribute();
             if (contactAttribute == null)
             {
                 return mpContactAttribute;
@@ -224,9 +229,9 @@ namespace crds_angular.Services
             return mpContactAttribute;
         }
 
-        private List<ContactAttribute> TranslateSingleToMPAttribute(Dictionary<int, ContactSingleAttributeDTO> contactSingleAttributes)
+        private List<ObjectAttribute> TranslateSingleToMPAttribute(Dictionary<int, ContactSingleAttributeDTO> contactSingleAttributes)
         {
-            var results = new List<ContactAttribute>();
+            var results = new List<ObjectAttribute>();
 
             if (contactSingleAttributes == null)
             {
@@ -242,7 +247,7 @@ namespace crds_angular.Services
                     continue;
                 }
 
-                var mpContactAttribute = new ContactAttribute()
+                var mpContactAttribute = new ObjectAttribute()
                 {
                     AttributeId = contactAttribute.Value.AttributeId,
                     AttributeTypeId = contactSingleAttribute.Key,
@@ -254,11 +259,11 @@ namespace crds_angular.Services
             return results;
         }
 
-        private List<ContactAttribute> GetDataToSave(List<ContactAttribute> currentAttributes, List<ContactAttribute> persistedAttributes)
+        private List<ObjectAttribute> GetDataToSave(List<ObjectAttribute> currentAttributes, List<ObjectAttribute> persistedAttributes)
         {
             // prevent side effects by cloning lists
-            currentAttributes = new List<ContactAttribute>(currentAttributes);
-            persistedAttributes = new List<ContactAttribute>(persistedAttributes);
+            currentAttributes = new List<ObjectAttribute>(currentAttributes);
+            persistedAttributes = new List<ObjectAttribute>(persistedAttributes);
 
             for (int index = currentAttributes.Count - 1; index >= 0; index--)
             {
@@ -282,7 +287,7 @@ namespace crds_angular.Services
                         {
                             persistedAttributes.RemoveAt(currentIndex);
                             attributeToSave.StartDate = currentAttribute.StartDate;
-                            attributeToSave.ContactAttributeId = currentAttribute.ContactAttributeId;
+                            attributeToSave.ObjectAttributeId = currentAttribute.ObjectAttributeId;
                         }
                         else
                         {
@@ -305,7 +310,7 @@ namespace crds_angular.Services
                 persisted.EndDate = DateTime.Today;
             }
 
-            var dataToSave = new List<ContactAttribute>(currentAttributes);
+            var dataToSave = new List<ObjectAttribute>(currentAttributes);
             dataToSave.AddRange(persistedAttributes);
             return dataToSave;
         }
