@@ -297,17 +297,19 @@ namespace crds_angular.Services
             var participant = GetParticipantRecord(token);
             var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
 
-            if (groups != null)
+            if (groups == null ||  groups.Count == 0)
             {
-                var membership = groups.Where(group => group.GroupId == communication.groupId).ToList();
-                if (membership.Count > 0)
-                {
-                    var invitation = CreateJourneyInvitation(communication, participant);
-                    _communicationService.SendMessage(invitation);
-                    return;
-                }
+                throw new InvalidOperationException();
             }
-            throw new InvalidOperationException();
+
+            var membership = groups.Where(group => @group.GroupId == communication.groupId).ToList();
+            if (membership.Count <= 0)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var invitation = CreateJourneyInvitation(communication, participant);
+            _communicationService.SendMessage(invitation);
         }
 
 
