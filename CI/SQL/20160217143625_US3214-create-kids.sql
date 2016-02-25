@@ -64,7 +64,7 @@ INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
 	(@Attribute_ID_Base, 'Adults only', NULL, 1),
-	(@Attribute_ID_Base+1, 'Kid friendly', 'We will supply a tips sheet for this at the end.', 2)
+	(@Attribute_ID_Base+1, 'Kid friendly (We will supply a tips sheet for this at the end)', NULL, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp

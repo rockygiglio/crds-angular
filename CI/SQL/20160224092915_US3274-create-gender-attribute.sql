@@ -2,7 +2,7 @@ USE [MinistryPlatform]
 GO
 
 DECLARE @Domain_ID AS INT = 1
-DECLARE @Attribute_ID_Base AS INT = 7007
+DECLARE @Attribute_ID_Base AS INT = 7018
 
 -- Add / Update the Attribute Type
 DECLARE @Attribute_Type_ID INT
@@ -12,10 +12,10 @@ DECLARE @Prevent_Multiple_Selection BIT
 DECLARE @Available_Online BIT
 
 SELECT
-	@Attribute_Type_ID = 73,
-	@Attribute_Type_Name = 'Group Type',
-	@Attribute_Type_Description = 'What kind of group would you like to host',
-	@Prevent_Multiple_Selection = 1,
+	@Attribute_Type_ID = 76,
+	@Attribute_Type_Name = 'Gender',
+	@Attribute_Type_Description = 'Answer for ''What''s your gender''',
+	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 
 SET IDENTITY_INSERT [dbo].[Attribute_Types] ON
@@ -63,10 +63,8 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Men and women together (like God intended)', 'Co-ed', 1),
-	(@Attribute_ID_Base+1, 'Men only (no girls allowed)', 'Men only', 2),
-	(@Attribute_ID_Base+2, 'Women only (don''t be a creeper, dude)', 'Women Only', 3),
-	(@Attribute_ID_Base+3, 'Married couples only (because you put a ring on it)','Married Couples', 4)
+	(@Attribute_ID_Base, 'I''m a man', NULL, 1),
+	(@Attribute_ID_Base+1, 'I''m a woman', NULL, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
@@ -75,14 +73,14 @@ WHEN MATCHED THEN
 	UPDATE
 	SET
 		Attribute_Name = tmp.Attribute_Name,
+		[Description] = tmp.[Description],
 		Attribute_Type_ID = @Attribute_Type_ID,
-		Description = tmp.[Description],
 		Domain_ID = @Domain_ID,
 		Sort_Order = tmp.Sort_Order
 WHEN NOT MATCHED THEN
 	INSERT
-		(Attribute_ID, Attribute_Name, Attribute_Type_ID, Domain_ID, Sort_Order)
+		(Attribute_ID, Attribute_Name, [Description], Attribute_Type_ID, Domain_ID, Sort_Order)
 		VALUES
-		(tmp.Attribute_ID, tmp.Attribute_Name, @Attribute_Type_ID, @Domain_ID, tmp.Sort_Order);
+		(tmp.Attribute_ID, tmp.Attribute_Name, tmp.[Description], @Attribute_Type_ID, @Domain_ID, tmp.Sort_Order);
 
 SET IDENTITY_INSERT [dbo].[Attributes] OFF

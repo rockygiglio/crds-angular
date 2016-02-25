@@ -63,9 +63,9 @@ INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
 	(6999, 'I want to help others feel connected to the community', NULL, 1),
-	(7000, 'I want to learn & grow', NULL, 2),
-	(7001, 'I want to find people to disciple', NULL, 3),
-	(7002, 'I want to make some new friends', NULL, 4)
+	(7000, 'I want to learn & grow', NULL, 3),
+	(7001, 'I want to mentor and build into others', NULL, 4),
+	(7002, 'I want to make some new friends', NULL, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
