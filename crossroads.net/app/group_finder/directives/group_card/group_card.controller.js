@@ -3,10 +3,11 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', '$modal'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', 'GROUP_ROLE_ID_PARTICIPANT', '$modal'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, $modal) {
+  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, GROUP_ROLE_ID_PARTICIPANT, $modal) {
 
+    $scope.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
     $scope.defaultImage = ImageService.DefaultProfileImage;
 
     $scope.getMemberImage = function(member) {
@@ -22,11 +23,12 @@
     };
 
     $scope.getGroupType = function() {
-      return GROUP_TYPES[$scope.group.type];
+      // TODO - The 'Co-ed' default value should be removed once the API is completed
+      return GROUP_TYPES[$scope.group.type] || 'Co-ed';
     };
 
     $scope.groupDescription = function() {
-      return 'A ' + $scope.getGroupType() + ' group meeting on ' + $scope.group.time;
+      return 'A ' + $scope.getGroupType() + ' group meeting on ' + $scope.groupTime();
     };
 
     $scope.getTemplateUrl = function() {

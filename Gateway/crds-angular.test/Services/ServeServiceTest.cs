@@ -168,7 +168,6 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldSendReminderEmails()
         {
-            const int pageId = 2203;
             const string apiToken = "1234";
             const int defaultEmailTemplate = 14567;
 

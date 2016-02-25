@@ -31,8 +31,9 @@
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {
-          Profile: 'Profile',
-          Person: 'Person'
+          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
+            return GroupInfo.loadGroupInfo();
+          }]
         },
         data: {
           isProtected: true,
