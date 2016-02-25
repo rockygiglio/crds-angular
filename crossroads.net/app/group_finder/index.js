@@ -15,14 +15,7 @@
     .constant('GROUP_API_CONSTANTS',  require('./group_finder.constants').GROUP_API_CONSTANTS)
     .constant('GOOGLE_API_KEY',       require('./group_finder.constants').GOOGLE_API_KEY)
     .constant('GROUP_ROLE_ID_PARTICIPANT',       require('./group_finder.constants').GROUP_ROLE_ID_PARTICIPANT)
-    .constant('GROUP_ROLE_ID_HOST',   require('./group_finder.constants').GROUP_ROLE_ID_HOST)
-    .constant('ANYWHERE_GROUP_ID',    require('./group_finder.constants').ANYWHERE_GROUP_ID)
-    .directive('questions',           require('./directives/questions/questions.directive'))
-    .directive('question',            require('./directives/question/question.directive'))
-    .directive('groupProfile',        require('./directives/group_profile/group_profile.directive'))
-    .directive('groupCard',           require('./directives/group_card/group_card.directive'))
-    .directive('groupInvitation',     require('./directives/group_invitation/group_invitation.directive'))
-    .directive('memberCard',          require('./directives/member_card/member_card.directive'))
+    .constant('GROUP_ROLE_ID_HOST',       require('./group_finder.constants').GROUP_ROLE_ID_HOST)
     .filter('humanize',               require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',    require('./group_finder.controller'))
     .controller('SummaryCtrl',        require('./summary/summary.controller'))
@@ -33,5 +26,6 @@
   require('./dashboard');
   require('./host');
   require('./join');
+  require('./directives');
 
 })();
