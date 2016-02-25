@@ -19,11 +19,17 @@
         </div>
       </div>
     </div>
+    <div ng-if="!detail.group.members.length">
+      <div class="help text-center">No one has joined your group yet.</div>
+    </div>
 
     <div class="col-sm-6 col-sm-offset-3">
       <br />
       <br />
-      <button class="btn btn-primary btn-block" ng-click="detail.emailGroup()">Email Your Group</button>
+
+      <div ng-if="detail.group.members.length > 0">
+        <button class="btn btn-primary btn-block" ng-click="detail.emailGroup()">Email Your Group</button>
+      </div>
 
       <br />
       <div class="help text-center" dynamic-content="$root.MESSAGES.groupFinderHostDashboardInvitation.content | html"></div>
