@@ -181,7 +181,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
         /// If one or more groups are found, then the group detail data is returned.
-        /// If no groups are found, then a 404 will be returned.
+        /// If no groups are found, then an empty list will be returned.
         /// </summary>
         /// <param name="groupTypeId">This is the Ministry Platform Group Type ID for the specific group being requested..</param>
         /// <returns>A list of all groups for the given user based on the Group Type ID passed in.</returns>
