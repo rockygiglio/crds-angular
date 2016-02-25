@@ -196,7 +196,7 @@ namespace crds_angular.Controllers.API
                 {
                     var participant = groupService.GetParticipantRecord(token);
                     var groups = groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
-                    return groups == null ? (IHttpActionResult) NotFound() : Ok(groups);
+                    return Ok(groups);
                 }
                 catch (Exception ex)
                 {
