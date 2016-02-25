@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Services
         {
             logger.Debug("Adding group");
 
-            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;            
 
             var values = new Dictionary<string, object>
             {
@@ -428,7 +428,7 @@ namespace MinistryPlatform.Translation.Services
             var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
-                return null;
+                return new List<Group>();
             }
             return groupDetails.Select(details => new Group()
             {

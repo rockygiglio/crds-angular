@@ -16,7 +16,8 @@
       SIGNUP: 'crossroads.signup',
       COMMUNITY_GROUPS: 'crossroads.community',
       ONETIME_SIGNUP: 'crossroads.onetime',
-      CHILDCARE: 'crossroads.childcare'
+      CHILDCARE: 'crossroads.childcare',
+      GROUP_FINDER: 'crossroads.group_finder'
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,

@@ -24,7 +24,7 @@ namespace MinistryPlatform.Models
         public string GroupDescription { get; set; }
         public int MinistryId { get; set; }
         public string MeetingTime { get; set; }
-        public int MeetingDayId { get; set; }
+        public int? MeetingDayId { get; set; }
         public int CongregationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

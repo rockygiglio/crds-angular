@@ -1,0 +1,40 @@
+<tabset class="group-detail">
+  <tab heading="My Group" active="tab[1].active" ng-click="detail.goToTab(tab)" class="{{tab.class}}" >
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <h3 class="text-center group-description">{{detail.group.description}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div ng-repeat="member in detail.group.members track by $index" ng-if="member.groupRoleId == detail.GROUP_ROLE_ID_PARTICIPANT">
+      <hr ng-if="$index > 0" />
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <member-card member="member"></member-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-3">
+      <br />
+      <br />
+      <button class="btn btn-primary btn-block" ng-click="detail.emailGroup()">Email Your Group</button>
+
+      <br />
+      <div class="help text-center" dynamic-content="$root.MESSAGES.groupFinderHostDashboardInvitation.content | html"></div>
+      <group-invitation group="detail.group"></group-invitation>
+
+      <br />
+      <div class="help text-center" dynamic-content="$root.MESSAGES.groupFinderHostDashboardHelp.content | html"></div>
+    </div>
+
+  </tab>
+  <tab heading="Host Resources" active="tab[0].active" ng-click="detail.goToTab(tab)" class="{{tab.class}}" >
+    <ng-include src="'templates/group_resources.html'"></ng-include>
+  </tab>
+</tabset>

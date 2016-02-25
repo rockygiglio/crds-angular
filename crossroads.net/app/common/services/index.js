@@ -6,6 +6,7 @@
   angular.module(MODULE)
     .factory('StaffContact', require('./staffContact.service'))
     .factory('Room', require('./room.service'))
+    .service('ZipcodeService', require('./zipcode.service'))
     ;
 
 })();

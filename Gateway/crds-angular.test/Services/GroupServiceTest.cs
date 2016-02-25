@@ -28,9 +28,11 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IEventService> eventService;
         private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
         private Mock<IServeService> serveService;
-        private Mock<IGroupService> _groupService; 
-        private Mock<IConfigurationWrapper> config;
+        private Mock<IGroupService> _groupService;
         private Mock<MPServices.IParticipantService> participantService;
+        private Mock<MPServices.ICommunicationService> _communicationService;
+        private Mock<MPServices.IContactService> _contactService;
+        private Mock<IConfigurationWrapper> config;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -49,6 +51,7 @@ namespace crds_angular.test.Services
         };
 
         private const int GROUP_ROLE_DEFAULT_ID = 123;
+        private const int JourneyGroupInvitationTemplateId = 123;         
 
         [SetUp]
         public void SetUp()
@@ -57,17 +60,20 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<MPServices.IGroupService>();
-            participantService = new Mock<MPServices.IParticipantService>();
+            groupService = new Mock<IGroupService>();
             eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();           
             serveService = new Mock<IServeService>();
+            participantService = new Mock<MPServices.IParticipantService>();
             _groupService = new Mock<IGroupService>();
+            _communicationService = new Mock<MPServices.ICommunicationService>();
+            _contactService = new Mock<MPServices.IContactService>();
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
 
-            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object, serveService.Object, participantService.Object);
+            fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
+                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object);
         }
 
         [Test]
@@ -364,6 +370,92 @@ namespace crds_angular.test.Services
             participantService.Verify(x => x.GetParticipantRecord(It.IsAny<string>()), Times.Once);
 
             Assert.AreEqual(100, participants[0].particpantId);           
+        }
+
+        [Test]
+        public void SendJourneyEmailInviteNoGroupsFound()
+        {
+            var groupId = 98765;
+            const string token = "doit";
+            var participant = new Participant() { ParticipantId = 100 };
+
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+
+            Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+        }
+
+        [Test]
+        public void SendJourneyEmailInviteNoGroupMembershipFound()
+        {
+            var groupId = 98765;
+            const string token = "doit";
+            var participant = new Participant() { ParticipantId = 100 };
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
+
+            var groups = new List<Group>()
+            {
+               new Group(){}
+            };
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            var membership = groups.Where(group => group.GroupId == groupId).ToList();
+            Assert.AreEqual(membership.Count, 0);
+            Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+        }
+
+        [Test]
+        public void SendJourneyEmailInviteGroupMembershipIsFound()
+        {
+            const string token = "doit";
+            const int groupId = 98765;
+            var participant = new Participant() { ParticipantId = 100 };
+
+            var groups = new List<Group>()
+            {
+               new Group()
+               {
+                   GroupId = 98765
+               }
+            };
+
+            var communication = new EmailCommunicationDTO()
+            {
+                emailAddress = "BlackWidow@marvel.com",
+                groupId = 98765
+            };
+
+            var template = new MessageTemplate()
+            {
+                Subject = "You Can Join My Group",
+                Body = "This is a journey group."
+            };
+            var contact = new MyContact()
+            {
+                Contact_ID = 7689
+            };
+
+            participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
+            groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19)).Returns(groups);
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+            _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();
+
+            var membership = groups.Where(group => group.GroupId == groupId).ToList();
+            fixture.SendJourneyEmailInvite(communication, token);
+            Assert.AreEqual(membership.Count, 1);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>()), Times.Once);
         }
     }
 }
