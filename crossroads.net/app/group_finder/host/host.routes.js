@@ -17,7 +17,7 @@
             return Person.getProfile();
           }],
           QuestionDefinitions: function(GroupQuestionService) {
-            return GroupQuestionService.get().$promise;
+            return GroupQuestionService.getQuestions();
           }
         },
         data: {

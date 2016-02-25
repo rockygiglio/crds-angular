@@ -33,6 +33,9 @@
         resolve: {
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
+          }],
+          StartQuestionLoad: ['GroupQuestionService', function(GroupQuestionService) {
+            GroupQuestionService.loadQuestions();
           }]
         },
         data: {
