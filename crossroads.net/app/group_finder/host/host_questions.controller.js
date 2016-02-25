@@ -8,7 +8,7 @@
   function HostQuestionsCtrl($scope, Responses, QuestionDefinitions, GROUP_TYPES) {
 
     var vm = this;
-        vm.questions = QuestionDefinitions.questions;
+        vm.questions = QuestionDefinitions;
         vm.currentStep = $scope.$parent.currentStep;
         vm.responses = $scope.responses = Responses.data;
 

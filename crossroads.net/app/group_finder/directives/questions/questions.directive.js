@@ -3,8 +3,6 @@
 
   module.exports = QuestionsDirective;
 
-  require('./questions.html');
-
   QuestionsDirective.$inject = [];
 
   function QuestionsDirective() {
@@ -18,7 +16,7 @@
         responses: '='
       },
       templateUrl: 'questions/questions.html',
-      controller: require('./questions.controller')
+      controller: 'QuestionsCtrl'
     };
 
   }
