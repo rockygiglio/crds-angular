@@ -176,7 +176,7 @@
           }
         })
         .state('easter', {
-          parent: 'screenWidth',
+          parent: 'noHeaderOrFooter',
           url: '/easter',
           controller: 'EasterCtrl as easter',
           templateUrl: 'easter/easter.html',

@@ -1,17 +1,50 @@
-<div class="header-video">
-    <img src="http://zerosixthree.se/labs/video-header/img/masthead.jpg"
-         class="header-video__media"
-         data-video-URL="https://www.youtube.com/embed/Scxs7L0vhZ4"
-         data-teaser="http://zerosixthree.se/labs/video-header/video/teaser-video"
-         data-video-width="560"
-         data-video-height="315">
-    <a href="https://www.youtube.com/embed/Scxs7L0vhZ4" class="header-video__play-trigger btn btn-primary" id="header-video__play-trigger">Play video</a>
-    <button type="button" class="header-video__close-trigger btn btn-primary" id="header-video__close-trigger ">Close video</button>
-</div>
+<div class="easter-container">
+  <div class="header-video easter-header-video">
+      <img src="http://zerosixthree.se/labs/video-header/img/masthead.jpg"
+           class="header-video-media"
+           data-video-URL="https://www.youtube.com/embed/2KyzscIo4gQ"
+           data-teaser="http://zerosixthree.se/labs/video-header/video/teaser-video"
+           data-video-width="560"
+           data-video-height="315">
+      <div class="container">
+          <div class="col-sm-12 text-center">
+            <h2 class="white flush-top">Experience Easter Like Never Before</h2>
+            <a href="https://www.youtube.com/embed/2KyzscIo4gQ" class="header-video-play-trigger btn btn-standard-dark btn-labeled" id="header-video-play-trigger">Watch the preview
+              <span class="btn-label"> <svg viewBox="0 0 32 32" class="icon icon-play4"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#play4"></use></svg> </span>
+            </a>
+          </div>
+      </div>
+
+      <button type="button" class="header-video-close-trigger btn btn-standard-dark btn-labeled" id="header-video-close-trigger">Close video
+        <span class="btn-label"> <svg viewBox="0 0 32 32" class="icon icon-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#close"></use></svg> </span>
+      </button>
+
+  </div> <!--/header-video-->
+
+  <div class="container push-top">
+    <div class="row">
+      <div class="col-sm-4">
+        <h4>
+          You’ve probably heard the basics about the Easter story: Jewish guy dies 2,000 years ago and comes back to life.
+        </h4>
+        <p>
+          But what does that have to do with you? Bring the family (and some friends!) together this Easter for experience that connects you personally to the Easter story in a fresh new way. You’re gonna love this.
+        </p>
+      </div>
+      <div class="col-sm-4">
+        Lorem
+      </div>
+      <div class="col-sm-4">
+        Lorem
+      </div>
+    </div>
+  </div>
+
+</div><!--/easter-container-->
+<ng-include src="'templates/footer.html'"></ng-include>
 
 <script>
   $(document).ready(function() {
-
     var HeaderVideo = function(settings) {
         if (settings.element.length === 0) {
             return;
@@ -60,7 +93,7 @@
 
     HeaderVideo.prototype.appendTeaserVideo = function() {
         var source = this.videoDetails.teaser;
-        var html = '<video autoplay="true" loop="true" muted id="header-video__teaser-video" class="header-video__teaser-video"><source src="'+source+'.webm" type="video/mp4"><source src="'+source+'.mp4" type="video/mp4"></video>';
+        var html = '<video autoplay="true" loop="true" muted id="header-video-teaser-video" class="header-video-teaser-video"><source src="'+source+'.webm" type="video/mp4"><source src="'+source+'.mp4" type="video/mp4"></video>';
         this.$element.append(html);
     };
 
@@ -97,9 +130,9 @@
 
         headerVideo = new HeaderVideo({
           element: elem,
-          media: '.header-video__media',
-          playTrigger: '.header-video__play-trigger',
-          closeTrigger: '.header-video__close-trigger'
+          media: '.header-video-media',
+          playTrigger: '.header-video-play-trigger',
+          closeTrigger: '.header-video-close-trigger'
         });
     });
   });
