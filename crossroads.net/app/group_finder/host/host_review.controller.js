@@ -13,7 +13,8 @@
     'GROUP_API_CONSTANTS',
     '$log',
     'GroupInvitationService',
-    'GROUP_ROLE_ID_HOST'
+    'GROUP_ROLE_ID_HOST',
+    'LookupDefinitions'
   ];
 
   function HostReviewCtrl($window,
@@ -25,7 +26,8 @@
                           GROUP_API_CONSTANTS,
                           $log,
                           GroupInvitationService,
-                          GROUP_ROLE_ID_HOST) {
+                          GROUP_ROLE_ID_HOST,
+                          LookupDefinitions) {
     var vm = this;
 
     vm.initialize = function() {
@@ -35,6 +37,7 @@
 
       vm.responses = Responses.data;
       vm.host = AuthenticatedPerson;
+      vm.lookup = LookupDefinitions;
 
       if(vm.isPrivate()) {
         vm.publish();
@@ -60,37 +63,6 @@
       $state.go('group_finder.host.questions');
     };
 
-    /*
-      {
-        'groupName': 'Sample Group',
-        'groupDescription': 'Sample Group Description',
-        'groupTypeId': 19,
-        'ministryId': 8,
-        'congregationId': 1,
-        'contactId': 2399608,
-        'startDate': '2016-02-01T10:00:00.000Z',
-        'endDate': '2016-03-01T10:00:00.000Z',
-        'availableOnline': true,
-        'remainingCapacity': 10,
-        'groupFullInd': false,
-        'waitListInd': false,
-        'waitListGroupId': 0,
-        'childCareInd': false,
-        'minAge': 0,
-        'meetingDayId': 1,
-        'meetingTime': '10:00 AM',
-        'groupRoleId': ,
-        'address': {
-          'addressLine1': '5766 Pandora Ave',
-          'addressLine2': '',
-          'city': 'Cincinnati',
-          'state': 'Oh',
-          'zip': '45213',
-          'foreignCountry': 'United States',
-          'county': '',
-        }
-      }
-     */
     var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
     vm.publish = function() {
       vm.rejected = false;
@@ -184,13 +156,21 @@
       });
     };
 
+    vm.lookupContains = function(id, keyword) {
+      return vm.lookup[id].toLowerCase().indexOf(keyword) > -1;
+    };
+
     vm.getGroupAttributes = function() {
       var ret = [];
-      // TODO need a way to ensure this isn't hard coded
-      if (vm.responses.kids === '7017') { ret.push('kids welcome'); }
+      if (vm.lookupContains(vm.responses.kids, 'kid')) { ret.push('kids welcome'); }
+
       if (vm.responses.pets) {
-        if (_.has(vm.responses.pets, 7011)) { ret.push('has a cat'); }
-        if (_.has(vm.responses.pets, 7012)) { ret.push('has a dog'); }
+        _.each(vm.responses.pets, function(value, id) {
+          if (value) {
+            if (vm.lookupContains(id, 'dog')) { ret.push('has a dog'); }
+            if (vm.lookupContains(id, 'cat')) { ret.push('has a cat'); }
+          }
+        });
       }
       return ret;
     };
