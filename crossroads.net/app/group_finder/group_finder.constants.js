@@ -9,7 +9,7 @@
       3: 'Married couples only'
     },
     SERIES: {
-      permalink: 'brave',
+      permalink: 'bravegrouptool',
       title: 'Brave'
     },
     GROUP_API_CONSTANTS: {

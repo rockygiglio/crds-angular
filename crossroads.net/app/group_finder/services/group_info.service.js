@@ -35,8 +35,13 @@
           var cid = $cookies.get('userId');
           if (cid) {
             _.each(data, function(group) {
+
+              // default to something
               if (group.contactId === parseInt(cid)) {
                 group.isHost = true;
+                if (_.has(group.singleAttributes[73].attribute, 'description')) {
+                  group.type = group.singleAttributes[73].attribute.description;
+                }
                 groups.hosting.push(group);
 
                 // Query the other participants of the group
@@ -106,6 +111,8 @@
       groups.hosting = [];
       groups.participating = [];
     }
+
+    $rootScope.$on('reloadGroups', clearData);
 
     //
     // Return the service
