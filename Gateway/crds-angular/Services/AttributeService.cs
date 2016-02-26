@@ -40,6 +40,7 @@ namespace crds_angular.Services
             {
                 AttributeId = attribute.AttributeId,
                 Name = attribute.Name,
+                Description = attribute.Description,
                 SortOrder = attribute.SortOrder,
                 CategoryId = attribute.CategoryId,
                 Category = attribute.Category,
