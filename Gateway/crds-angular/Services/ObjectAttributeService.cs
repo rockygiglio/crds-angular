@@ -65,6 +65,7 @@ namespace crds_angular.Services
                 {
                     AttributeId = mpAttribute.AttributeId,
                     Name = mpAttribute.Name,
+                    Description = mpAttribute.Description,
                     SortOrder = mpAttribute.SortOrder,
                     Selected = false,
                     Category = mpAttribute.Category,

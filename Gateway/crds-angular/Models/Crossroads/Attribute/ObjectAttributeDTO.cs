@@ -9,6 +9,8 @@ namespace crds_angular.Models.Crossroads.Attribute
         public int AttributeId { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
         [JsonProperty(PropertyName = "selected")]
         public bool Selected { get; set; }
         [JsonProperty(PropertyName = "startDate")]
@@ -22,6 +24,6 @@ namespace crds_angular.Models.Crossroads.Attribute
         [JsonProperty(PropertyName = "category")]
         public string Category { get; set; }
         [JsonProperty(PropertyName = "categoryDescription")]
-        public string CategoryDescription { get; set; }
+        public string CategoryDescription { get; set; }        
     }
 }
