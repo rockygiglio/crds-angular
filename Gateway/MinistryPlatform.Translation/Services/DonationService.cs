@@ -499,7 +499,7 @@ namespace MinistryPlatform.Translation.Services
                 ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
-            var communicationId = _communicationService.SendMessage(comm);
+            var communicationId = _communicationService.SendMessage(comm, true);
             AddCommunicationDonation(donationId, communicationId);
         }
 
