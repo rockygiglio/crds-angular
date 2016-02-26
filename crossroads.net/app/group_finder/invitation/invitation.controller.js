@@ -17,6 +17,7 @@
 
     var vm = this;
 
+    vm.groupId = $stateParams.groupId;
     vm.requestPending = true;
     vm.showInvite = false;
     vm.capacity = 0;

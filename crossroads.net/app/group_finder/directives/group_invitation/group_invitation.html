@@ -8,5 +8,7 @@
       </span>
     </div>
     <p ng-show="ctrl.inviteForm.invite.$invalid && ctrl.inviteForm.$submitted" class="help-block">Valid email address required.</p>
+    <p ng-show="ctrl.inviteSuccess">Your email has been sent</p>
+    <p ng-show="ctrl.inviteError">Your email could not be sent.</p>
   </form>
 </div>

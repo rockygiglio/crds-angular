@@ -11,7 +11,8 @@
       Type: $resource(__API_ENDPOINT__ +  'api/group/groupType/:groupTypeId', {groupTypeId: '@groupTypeId'}),
       Detail: $resource(__API_ENDPOINT__ +  'api/group/:groupId', {groupId: '@groupId'}),
       Events: $resource(__API_ENDPOINT__ + 'api/group/:groupId/events'),
-      Participants: $resource(__API_ENDPOINT__ + 'api/group/:groupId/event/:eventId')
+      Participants: $resource(__API_ENDPOINT__ + 'api/group/:groupId/event/:eventId'),
+      EmailInvite: $resource(__API_ENDPOINT__ + '/api/journey/emailinvite')
     };
   }
 
