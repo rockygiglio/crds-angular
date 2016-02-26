@@ -3,26 +3,36 @@
 
   module.exports = GroupInvitationCtrl;
 
-  GroupInvitationCtrl.$inject = ['$scope', '$log'];
+  GroupInvitationCtrl.$inject = ['$scope', '$log', '$cookies', 'Group', 'INVITE_EMAIL_ID'];
 
-  function GroupInvitationCtrl($scope, $log) {
+  function GroupInvitationCtrl($scope, $log, $cookies, Group, INVITE_EMAIL_ID) {
     var vm = this;
     vm.inviteMember = inviteMember;
+    vm.inviteSuccess = false;
+    vm.inviteError = false;
 
     //
     // Controller implementation
     //
 
     function inviteMember() {
-      // TODO add validation. Review how to send email without `toContactId`
-      $log.debug('Sending group invitation Email to: ' + vm.invitee);
+      vm.inviteSuccess = false;
+      vm.inviteError = false;
+
+      var contactId =  $cookies.get('userId');
       var toSend = {
-          'fromContactId': $scope.group.host.contactId,
-          'fromUserId': 0,
-          'toContactId': 0,
-          'templateId': 0,
-          'mergeData': {}
+        groupId: $scope.groupId,
+        fromContactId: contactId,
+        templateId: INVITE_EMAIL_ID,
+        emailAddress: vm.invitee
       };
+
+      Group.EmailInvite.save(toSend).$promise.then(function inviteEmailSuccess() {
+        vm.inviteSuccess = true;
+        vm.invitee = null;
+      }, function inviteEmailError(error) {
+        vm.inviteError = true;
+      });
     }
   }
 
