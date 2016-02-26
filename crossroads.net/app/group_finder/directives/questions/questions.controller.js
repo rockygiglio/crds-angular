@@ -20,6 +20,7 @@
                           Responses) {
 
     $scope.initialize = function() {
+
       $scope.step = $location.hash() || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
@@ -42,7 +43,6 @@
         $scope.provideFocus();
         $scope.$broadcast('groupFinderShowError');
       } else {
-        $scope.$broadcast('groupFinderClearError');
         $scope.go();
       }
     };
@@ -96,11 +96,14 @@
       if ($scope.currentQuestion().required === true) {
         var visibleFields = $('input:visible, select:visible, textarea:visible');
         required = _.map(visibleFields, function(el,i) {
-          return $(el).attr('name');
+          var name = $(el).attr('name');
+          if (name !== undefined){
+            return name;
+          }
         });
       }
 
-      return required;
+      return _.compact(required);
     };
 
     $scope.currentErrorFields = function() {
@@ -137,6 +140,7 @@
 
     $scope.applyErrors = function() {
       $('div.has-error:visible').removeClass('has-error');
+      $scope.$broadcast('groupFinderClearError');
 
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {

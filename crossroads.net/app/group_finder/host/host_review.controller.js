@@ -99,7 +99,7 @@
         group.groupDescription = Responses.data.description;
         group.childCareInd = Responses.data.kids === 1;
         group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
-        group.meetingTime = Responses.data.date_and_time.time + ' ' + Responses.data.date_and_time.ampm;
+        group.meetingTime = vm.formatTime(Responses.data.date_and_time.time);
         group.address = {
           addressLine1: Responses.data.location.street,
           city: Responses.data.location.city,
@@ -178,8 +178,12 @@
     vm.getGroupTime = function() {
       var dt = vm.responses.date_and_time;
       if (dt) {
-        return dt['day'] + 's @ ' + dt['time'] + dt['ampm'];
+        return dt['day'] + 's @ ' + vm.formatTime(dt['time']);
       }
+    };
+
+    vm.formatTime = function(time) {
+      return  moment(time).format('h:mm a');
     };
 
     vm.goBack = function() {
