@@ -16,6 +16,12 @@
       $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
       $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
       $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
+      $scope.required = $scope.definition.required;
+      $scope.errorMessage = 'All Fields are Required';
+
+      if ($scope.definition.customErrorMessage) {
+        $scope.errorMessage = $scope.definition.customErrorMessage;
+      }
 
       $scope.person = null;
       $scope.profileImage = ImageService.DefaultProfileImage;
@@ -47,7 +53,9 @@
     };
 
     $scope.checkError = function() {
-      $scope.$parent.applyErrors();
+      if ($scope.required) {
+        $scope.$parent.applyErrors();
+      }
     };
 
     $scope.render = function(el) {
@@ -70,6 +78,13 @@
       if($scope.definition.input_type === 'number' && $scope.$parent.step === step) {
         $scope.setupSlider();
       }
+    });
+
+    $scope.$on('groupFinderShowError', function(event) {
+      $scope.showError = true;
+    });
+    $scope.$on('groupFinderClearError', function(event) {
+      $scope.showError = false;
     });
 
     // ----------------------------------- //

@@ -18,6 +18,9 @@
           }],
           QuestionDefinitions: function(GroupQuestionService) {
             return GroupQuestionService.getQuestions();
+          },
+          LookupDefinitions: function(GroupQuestionService) {
+            return GroupQuestionService.getLookup();
           }
         },
         data: {

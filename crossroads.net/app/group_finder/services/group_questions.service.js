@@ -9,7 +9,9 @@
     var promise = null;
     var service = {};
     service.questions = [];
+    service.lookup = {};
     service.loadQuestions = loadQuestions;
+    service.getLookup = getLookup;
     service.getQuestions = getQuestions;
 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
@@ -20,6 +22,7 @@
         promise.then(function(data) {
           service.questions = _.each(data.pages[0].fields, function(question) {
             question.key = question.name;
+            question.required = parseInt(question.required) === 1;
             delete question.name;
 
             switch (question.className) {
@@ -32,7 +35,8 @@
             }
 
             if (_.has(question, 'attributeType') && question.attributeType) {
-              question.answers = _.map(question.attributeType.attributes, function(attribute){
+              question.answers = _.map(question.attributeType.attributes, function(attribute) {
+                service.lookup[attribute.attributeId] = attribute.name;
                 return { id: attribute.attributeId, name: attribute.name };
               });
             }
@@ -50,9 +54,17 @@
       });
     }
 
+    function getLookup() {
+      var loadPromise = loadQuestions();
+      return loadPromise.then(function() {
+        return service.lookup;
+      });
+    }
+
     function clearData() {
       promise = null;
       delete service.questions;
+      delete service.lookup;
     }
 
     return service;

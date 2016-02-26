@@ -1,8 +1,8 @@
 <label ng-show="definition.label">{{definition.label}}</label>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <label>Day</label>
-    <select name="{{definition.key}}[day]" ng-model="responses[definition.key].day" ng-change="checkError()" class="form-control">
+    <select name="{{definition.key}}[day]" ng-model="responses[definition.key].day" ng-change="checkError()" class="form-control group-qa-day">
       <option>Monday</option>
       <option>Tuesday</option>
       <option>Wednesday</option>
@@ -13,21 +13,17 @@
     </select>
   </div>
 </div>
-
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <label>Time</label>
-  </div>
+    <timepicker
+      name="{{definition.key}}[time]"
+      ng-model="responses[definition.key].time"
+      hour-set="1"
+      minute-step="15"
+      ng-change="checkError()"
+      show-meridian="true">
 
-  <div class="col-xs-6">
-    <input placeholder="HH:MM" type="text" name="{{definition.key}}[time]" ng-model="responses[definition.key].time" class="form-control" ng-change="checkError()" ng-keyup="onKeyUp($event)" />
-  </div>
-
-  <div class="col-xs-6">
-    <select name="{{definition.key}}[ampm]" ng-model="responses[definition.key].ampm" ng-change="checkError()" class="form-control">
-      <option>AM</option>
-      <option>PM</option>
-    </select>
+    </timepicker>
   </div>
 </div>
-
