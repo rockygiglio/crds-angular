@@ -3,9 +3,22 @@
 
   module.exports = HostQuestionsCtrl;
 
-  HostQuestionsCtrl.$inject = ['$scope', 'Responses', 'QuestionDefinitions', 'GROUP_TYPES'];
+  HostQuestionsCtrl.$inject = ['$scope', 'Responses', 'QuestionDefinitions', 'GROUP_TYPES', 'AuthenticatedPerson'];
 
-  function HostQuestionsCtrl($scope, Responses, QuestionDefinitions, GROUP_TYPES) {
+  function HostQuestionsCtrl($scope, Responses, QuestionDefinitions, GROUP_TYPES, AuthenticatedPerson) {
+
+    if (_.has(Responses.data, 'location') === false) {
+      Responses.data.location = {
+        city:   AuthenticatedPerson.city,
+        state:  AuthenticatedPerson.state,
+        zip:    AuthenticatedPerson.postalCode,
+        street: AuthenticatedPerson.addressLine1
+      };
+    }
+    if (_.has(Responses.data, 'date_and_time') === false) {
+      Responses.data.date_and_time = {};
+      Responses.data.date_and_time.time = moment().hours(moment().hour()).minute(0)._d;
+    }
 
     var vm = this;
         vm.questions = QuestionDefinitions;
