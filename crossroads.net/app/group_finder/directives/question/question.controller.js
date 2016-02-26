@@ -16,6 +16,7 @@
       $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
       $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
       $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
+      $scope.required = $scope.definition.required;
 
       $scope.person = null;
       $scope.profileImage = ImageService.DefaultProfileImage;
@@ -47,7 +48,9 @@
     };
 
     $scope.checkError = function() {
-      $scope.$parent.applyErrors();
+      if ($scope.required) {
+        $scope.$parent.applyErrors();
+      }
     };
 
     $scope.render = function(el) {

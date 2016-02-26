@@ -86,10 +86,15 @@
     };
 
     $scope.requiredFields = function() {
-      var visibleFields = $('input:visible, select:visible, textarea:visible');
-      return _.map(visibleFields, function(el,i) {
-        return $(el).attr('name');
-      });
+      var required = [];
+      if ($scope.currentQuestion().required === true) {
+        var visibleFields = $('input:visible, select:visible, textarea:visible');
+        required = _.map(visibleFields, function(el,i) {
+          return $(el).attr('name');
+        });
+      }
+
+      return required;
     };
 
     $scope.currentErrorFields = function() {

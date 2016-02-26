@@ -20,6 +20,7 @@
         promise.then(function(data) {
           service.questions = _.each(data.pages[0].fields, function(question) {
             question.key = question.name;
+            question.required = parseInt(question.required) === 1;
             delete question.name;
 
             switch (question.className) {
