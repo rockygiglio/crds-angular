@@ -119,7 +119,7 @@ namespace crds_angular.Services
                                                                DateTime.Now);
 
                     var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
-                    _objectAttributeService.SaveObjectAttributes(group.GroupId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
+                    _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
                     {
