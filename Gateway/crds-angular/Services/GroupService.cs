@@ -78,9 +78,8 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<Group>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
-                // TODO: Need to revisit and finish
-                //var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
-                //_objectAttributeService.SaveObjectAttributes(group.GroupId,, , configuration);
+                var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+                _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)
             {
@@ -122,6 +121,9 @@ namespace crds_angular.Services
                                                                roleId,
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
+
+                    var configuration = ObjectAttributeConfigurationFactory.GroupParticipantsAttributeConfiguration();
+                    _objectAttributeService.SaveObjectAttributes(group.GroupId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
                     {
