@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Services
             _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
-            _messagesPageId = configuration.GetConfigIntValue("MessagesPageId");
+            _messagesPageId = configuration.GetConfigIntValue("Messages");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -477,17 +477,16 @@ namespace MinistryPlatform.Translation.Services
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
             var template = _communicationService.GetTemplate(_tripDonationMessageTemplateId);
 
-            var toContacts = new List<Contact> {new Contact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
-
-            var defaultContactId = AppSetting("DefaultContactEmailId");
-            var defaultUserId = AppSetting("DefaultUserAuthorId");
-            var defaultContactEmail = _communicationService.GetEmailFromContactId(defaultContactId);
+            var toContacts = new List<Contact> { new Contact { ContactId = donorContact.ContactId, EmailAddress = donorContact.Email } };
 
             var from = new Contact()
             {
-                ContactId = 1519180,
+                ContactId = 5,
                 EmailAddress = "updates@crossroads.net"
             };
+
+            var defaultContactId = AppSetting("DefaultContactEmailId");
+            var defaultContactEmail = _communicationService.GetEmailFromContactId(defaultContactId);
 
             var comm = new Communication
             {
@@ -500,27 +499,44 @@ namespace MinistryPlatform.Translation.Services
                 ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
-            var communicationId = _communicationService.SendMessage(comm, true);
+            var communicationId = _communicationService.SendMessage(comm);
             AddCommunicationDonation(donationId, communicationId);
         }
 
         public void FinishSendMessageFromDonor(int donationId, bool succeeded)
         {
+            // this code sets the status of a pending message to donor to ready to send, once there's a successful donation
+            // stripe webhook returned - JPC 2/25/2016
             var donationCommunicationRecords = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format("\"{0}\"",donationId), "");
             var donationCommunicationRecord = donationCommunicationRecords.FirstOrDefault();
-            var communicationRecordId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
+            var communicationId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
+            var recordId = Int32.Parse(donationCommunicationRecord["dp_RecordID"].ToString());
 
-            // update the communications table
             Dictionary<string, object> communicationUpdateValues = new Dictionary<string, object>();
-            communicationUpdateValues.Add("Communication_ID", communicationRecordId);
+            communicationUpdateValues.Add("Communication_ID", communicationId);
 
             if (succeeded == true)
             {
                 communicationUpdateValues.Add("Communication_Status_ID", 3);
-                _ministryPlatformService.UpdateRecord(Convert.ToInt32(ConfigurationManager.AppSettings["MessagesPageId"]), communicationUpdateValues, ApiLogin());
+                _ministryPlatformService.UpdateRecord(_messagesPageId, communicationUpdateValues, ApiLogin());
             }
 
-            RemoveCommunicationDonation(donationId, communicationRecordId);
+            DeleteOption[] deleteOptions = new DeleteOption[]
+            {
+                new DeleteOption
+                {
+                    Action = DeleteAction.Delete
+                }
+            };
+
+            try
+            {
+                _ministryPlatformService.DeleteRecord(_donationCommunicationsPageId, recordId, deleteOptions, ApiLogin());
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(string.Format("RemoveDonationCommunication failed.  DonationCommunicationId: {0}", recordId), e);
+            }
         }
 
         public void AddCommunicationDonation(int donationId, int communicationId)
@@ -535,27 +551,5 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.CreateRecord(pageId, communication, ApiLogin(), true);
         }
 
-        public void RemoveCommunicationDonation(int donationId, int communicationId)
-        {
-            // clean up extraneous records
-            var records = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format(",{0},{1}", donationId, communicationId));
-            var record = records.FirstOrDefault();
-            var recordId = Int32.Parse(record["dp_RecordID"].ToString());
-
-            try
-            {
-                _ministryPlatformService.DeleteRecord(_donationCommunicationsPageId, recordId, new[]
-                    {
-                    new DeleteOption
-                    {
-                        Action = DeleteAction.Delete
-                    }
-                }, ApiLogin());
-            }
-            catch (Exception e)
-            {
-                throw new ApplicationException(string.Format("RemoveDonationCommunication failed.  DonationCommunicationId: {0}", recordId), e);
-            }
-        }
     }
 }

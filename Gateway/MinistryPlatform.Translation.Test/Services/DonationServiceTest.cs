@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
@@ -39,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("GPExportView")).Returns(92198);
             configuration.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DonationCommunications")).Returns(540);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("MessagePageId")).Returns(341);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("Messages")).Returns(341);
 
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -465,8 +466,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var expectedParams = new Dictionary<string, object>
             {
-                {"Record_Id", 123},
-                {"Communication_Status_Id", 2}
+                {"Communication_ID", 123},
+                {"Communication_Status_ID", 3}
             };
 
             List<Dictionary<string, object>> resultsDict = new List<Dictionary<string, object>>();
@@ -479,6 +480,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(540, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(resultsDict);
             _ministryPlatformService.Setup(mocked => mocked.UpdateRecord(341, expectedParams, It.IsAny<string>()));
+            _ministryPlatformService.Setup(mocked => mocked.DeleteRecord(540, It.IsAny<int>(), It.IsAny<DeleteOption[]>(), It.IsAny<string>())).Returns(1);
             _fixture.FinishSendMessageFromDonor(123,true);
             _ministryPlatformService.VerifyAll();
         }
