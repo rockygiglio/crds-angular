@@ -107,6 +107,8 @@
       groups.participating = [];
     }
 
+    $rootScope.$on('reloadGroups', clearData);
+
     //
     // Return the service
     //
