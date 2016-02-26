@@ -16,13 +16,13 @@ INSERT INTO [dbo].[dp_Sub_Page_Views](
     ,'Current Selected'
     ,303
     ,'Currently selected group participant attributes with AttributeType'
-    ,'Group_Attributes.[Group_Attribute_ID] AS [Group Attribute ID]
-         , Group_Attributes.[Start_Date] AS [Start Date]
-         , Group_Attributes.[End_Date] AS [End Date]
-         , Group_Attributes.[Notes] AS [Notes]
-         , Attribute_ID_Table.[Attribute_ID] AS [Attribute ID]
-         , Attribute_ID_Table_Attribute_Type_ID_Table.[Attribute_Type_ID] AS [Attribute Type ID]
-         , Attribute_ID_Table_Attribute_Type_ID_Table.[Attribute_Type] AS [Attribute Type]'
+    ,'Group_Attributes.[Group_Attribute_ID]
+          , Group_Attributes.[Start_Date]
+          , Group_Attributes.[End_Date]
+          , Group_Attributes.[Notes]
+          , Attribute_ID_Table.[Attribute_ID]
+          , Attribute_ID_Table_Attribute_Type_ID_Table.[Attribute_Type_ID]
+          , Attribute_ID_Table_Attribute_Type_ID_Table.[Attribute_Type]'
     ,'GetDate() BETWEEN Group_Attributes.Start_Date AND ISNULL(Group_Attributes.End_Date, GetDate())'
     ,NULL
     ,NULL
