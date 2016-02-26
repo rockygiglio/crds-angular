@@ -14,7 +14,7 @@ DECLARE @Available_Online BIT
 SELECT
 	@Attribute_Type_ID = 76,
 	@Attribute_Type_Name = 'Gender',
-	@Attribute_Type_Description = 'Answer for ''What''s your gender''',
+	@Attribute_Type_Description = 'Answers for ''What''s your gender''',
 	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 
@@ -63,8 +63,8 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'I''m a man', NULL, 1),
-	(@Attribute_ID_Base+1, 'I''m a woman', NULL, 2)
+	(@Attribute_ID_Base, 'Man', NULL, 1),
+	(@Attribute_ID_Base+1, 'Woman', NULL, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp

@@ -14,7 +14,7 @@ DECLARE @Available_Online BIT
 SELECT
 	@Attribute_Type_ID = 75,
 	@Attribute_Type_Name = 'Kids',
-	@Attribute_Type_Description = 'Answers for ''are kids welcome''',
+	@Attribute_Type_Description = 'Answers for ''Is your group kid-friendly?''',
 	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 
@@ -64,7 +64,7 @@ INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
 	(@Attribute_ID_Base, 'Adults only', NULL, 1),
-	(@Attribute_ID_Base+1, 'Kid friendly (We will supply a tips sheet for this at the end)', NULL, 2)
+	(@Attribute_ID_Base+1, 'Kid friendly', NULL, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp

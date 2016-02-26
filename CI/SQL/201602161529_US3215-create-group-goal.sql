@@ -1,7 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-DECLARE @Domain_ID AS INT = 1 
+DECLARE @Domain_ID AS INT = 1
 
 -- Add / Update the Attribute Type
 DECLARE @Attribute_Type_ID INT
@@ -10,17 +10,17 @@ DECLARE @Attribute_Type_Description VARCHAR(255)
 DECLARE @Prevent_Multiple_Selection BIT
 DECLARE @Available_Online BIT
 
-SELECT 
-	@Attribute_Type_ID = 71,	
+SELECT
+	@Attribute_Type_ID = 71,
 	@Attribute_Type_Name = 'Group Goal',
-	@Attribute_Type_Description = 'What made you want to host a BRAVE group?',
+	@Attribute_Type_Description = 'Why do you want to host a BRAVE group? ',
 	@Prevent_Multiple_Selection = 1,
 	@Available_Online = 1
 
 SET IDENTITY_INSERT [dbo].[Attribute_Types] ON
 IF NOT EXISTS (SELECT * FROM Attribute_Types WHERE Attribute_Type_ID = @Attribute_Type_ID)
-BEGIN   	 
-	INSERT INTO [dbo].[Attribute_Types] 
+BEGIN
+	INSERT INTO [dbo].[Attribute_Types]
 		(
 			[Attribute_Type_ID],
 			[Attribute_Type],
@@ -29,7 +29,7 @@ BEGIN
 			[Prevent_Multiple_Selection],
 			[Available_Online]
 		)
-		VALUES 
+		VALUES
 		(
 			@Attribute_Type_ID,
 			@Attribute_Type_Name,
@@ -41,14 +41,14 @@ BEGIN
 END
 ELSE
 BEGIN
-	UPDATE [dbo].[Attribute_Types] 
-		SET 
+	UPDATE [dbo].[Attribute_Types]
+		SET
 			Attribute_Type = @Attribute_Type_Name,
 			[Description] = @Attribute_Type_Description,
 			Domain_ID = @Domain_ID,
 			Prevent_Multiple_Selection = @Prevent_Multiple_Selection,
 			Available_Online = @Available_Online
-		WHERE 
+		WHERE
 			Attribute_Type_ID = @Attribute_Type_ID
 END
 
@@ -62,8 +62,8 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(6999, 'I want to help others feel connected to the community', NULL, 1),
-	(7000, 'I want to learn & grow', NULL, 3),
+	(6999, 'I want to help others connect with a community.', NULL, 1),
+	(7000, 'I want to learn and grow', NULL, 3),
 	(7001, 'I want to mentor and build into others', NULL, 4),
 	(7002, 'I want to make some new friends', NULL, 2)
 
