@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.GetSubpageViewRecords(It.IsAny<int>(), contactId, It.IsAny<string>(), "", "", 0))
                 .Returns(getSubpageViewRecordsResponse);
 
-            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
             var attributes = _fixture.GetCurrentObjectAttributes("fakeToken", contactId, configuration, null).ToList();
 
             _ministryPlatformService.VerifyAll();

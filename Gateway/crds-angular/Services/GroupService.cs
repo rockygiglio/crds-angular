@@ -78,7 +78,7 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<Group>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
-                var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+                var configuration = ObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)
@@ -122,7 +122,7 @@ namespace crds_angular.Services
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
 
-                    var configuration = ObjectAttributeConfigurationFactory.GroupParticipantsAttributeConfiguration();
+                    var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
                     _objectAttributeService.SaveObjectAttributes(group.GroupId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
@@ -299,7 +299,7 @@ namespace crds_angular.Services
 
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.Group();
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration);
@@ -370,7 +370,7 @@ namespace crds_angular.Services
             }
             var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.GroupParticipantsAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();            
                         

@@ -45,7 +45,7 @@ namespace crds_angular.Services
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
 
-            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
 
             Participant participant = _participantService.GetParticipant(person.ContactId);
@@ -89,7 +89,7 @@ namespace crds_angular.Services
 
             // TODO: Should this move to _contactService or should update move it's call out to this service?
             var apiUser = _apiUserService.GetToken();
-            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiUser, contactId, configuration);
             person.AttributeTypes = attributesTypes.MultiSelect;
             person.SingleAttributes = attributesTypes.SingleSelect;

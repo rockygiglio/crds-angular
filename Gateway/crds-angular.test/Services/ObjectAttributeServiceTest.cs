@@ -83,7 +83,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var configuration = ObjectAttributeConfigurationFactory.ContactAttributeConfiguration();
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
 
             _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, configuration, null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);

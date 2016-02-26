@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(token =>
             {
-                var configuration = ObjectAttributeConfigurationFactory.MyContactAttributeConfiguration();
+                var configuration = ObjectAttributeConfigurationFactory.MyContact();
                 _objectAttributeService.SaveObjectMultiAttribute(token, contactId, objectAttribute, configuration);
                 return this.Ok();
             });

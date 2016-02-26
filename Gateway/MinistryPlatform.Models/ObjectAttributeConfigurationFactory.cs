@@ -4,7 +4,7 @@ namespace MinistryPlatform.Models
 {
     public static class ObjectAttributeConfigurationFactory
     {
-        public static ObjectAttributeConfiguration ContactAttributeConfiguration()
+        public static ObjectAttributeConfiguration Contact()
         {
             return new ObjectAttributeConfiguration()
             {
@@ -13,7 +13,7 @@ namespace MinistryPlatform.Models
                 TableName = "Contact"
             };
         }
-        public static ObjectAttributeConfiguration MyContactAttributeConfiguration()
+        public static ObjectAttributeConfiguration MyContact()
         {
             return new ObjectAttributeConfiguration()
             {
@@ -23,7 +23,7 @@ namespace MinistryPlatform.Models
             };
         }
 
-        public static ObjectAttributeConfiguration GroupAttributeConfiguration()
+        public static ObjectAttributeConfiguration Group()
         {
             return new ObjectAttributeConfiguration()
             {
@@ -33,7 +33,7 @@ namespace MinistryPlatform.Models
             };
         }
 
-        public static ObjectAttributeConfiguration GroupParticipantsAttributeConfiguration()
+        public static ObjectAttributeConfiguration GroupParticipant()
         {
             return new ObjectAttributeConfiguration()
             {
