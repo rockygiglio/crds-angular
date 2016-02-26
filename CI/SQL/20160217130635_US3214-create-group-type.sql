@@ -65,7 +65,7 @@ INSERT INTO @Attribute_Names
 	VALUES
 	(@Attribute_ID_Base, 'Men and women together (like God intended)', 'men and women together', 1),
 	(@Attribute_ID_Base+1, 'Men only (no girls allowed)', 'men only', 2),
-	(@Attribute_ID_Base+2, 'Women only (don''t be a creeper, dude)', 'women Only', 3),
+	(@Attribute_ID_Base+2, 'Women only (don''t be a creeper, dude)', 'women only', 3),
 	(@Attribute_ID_Base+3, 'Married couples only (because you put a ring on it)','married couples', 4)
 
 MERGE [dbo].[Attributes] AS a
