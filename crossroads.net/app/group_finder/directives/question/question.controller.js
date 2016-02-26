@@ -16,6 +16,11 @@
       $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
       $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
       $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
+      $scope.errorMessage = 'All Fields are Required';
+
+      if ($scope.definition.customErrorMessage) {
+        $scope.errorMessage = $scope.definition.customErrorMessage;
+      }
 
       $scope.person = null;
       $scope.profileImage = ImageService.DefaultProfileImage;
