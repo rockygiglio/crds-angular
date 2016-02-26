@@ -32,6 +32,7 @@ namespace crds_angular.Services
         private readonly ICommunicationService _communicationService;
         private readonly IContactService _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
+        private readonly IApiUserService _apiUserService;
 
 
         /// <summary>
@@ -50,7 +51,8 @@ namespace crds_angular.Services
                             IParticipantService participantService,
                             ICommunicationService communicationService,
                             IContactService contactService, 
-                            IObjectAttributeService objectAttributeService)
+                            IObjectAttributeService objectAttributeService, 
+                            IApiUserService apiUserService)
 
         {
             _mpGroupService = mpGroupService;
@@ -62,6 +64,7 @@ namespace crds_angular.Services
             _communicationService = communicationService;
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
+            _apiUserService = apiUserService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
@@ -308,7 +311,7 @@ namespace crds_angular.Services
         
         public Participant GetParticipantRecord(string token) 
         {
-            var participant = _participantService.GetParticipantRecord(token);
+            var participant = _participantService.GetParticipantRecord(token);            
             return participant;
         }
 
@@ -364,6 +367,18 @@ namespace crds_angular.Services
                 return null;
             }
             var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+
+            var configuration = ObjectAttributeConfigurationFactory.GroupParticipantsAttributeConfiguration();
+
+            var apiToken = _apiUserService.GetToken();            
+                        
+            foreach (var participant in participants)
+            {
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.ParticipantId, configuration);
+                participant.AttributeTypes = attributesTypes.MultiSelect;
+                participant.SingleAttributes = attributesTypes.SingleSelect;
+            }
+
             return participants;
         }
 

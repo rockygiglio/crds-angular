@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services;
 using MinistryPlatform.Models;
 using Newtonsoft.Json;

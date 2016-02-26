@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using crds_angular.App_Start;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;

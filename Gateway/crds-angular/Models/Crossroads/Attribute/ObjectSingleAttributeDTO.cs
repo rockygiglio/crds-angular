@@ -1,13 +1,12 @@
-using crds_angular.Models.Crossroads.Attribute;
 using Newtonsoft.Json;
 
-namespace crds_angular.Models.Crossroads.Profile
+namespace crds_angular.Models.Crossroads.Attribute
 {
     public class ObjectSingleAttributeDTO
     {
         [JsonProperty(PropertyName = "attribute")]
         public AttributeDTO Value { get; set; }
         [JsonProperty(PropertyName = "notes")]
-        public string Notes { get; set; }        
+        public string Notes { get; set; }
     }
 }

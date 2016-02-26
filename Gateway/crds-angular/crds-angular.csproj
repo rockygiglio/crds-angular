@@ -337,8 +337,8 @@
     <Compile Include="Filters\UnhandledExceptionFilter.cs" />
     <Compile Include="Models\Crossroads\Attribute\AttributeDTO.cs" />
     <Compile Include="Models\Crossroads\Attribute\AttributeTypeDTO.cs" />
-    <Compile Include="Models\Crossroads\Profile\ObjectAttributeDTO.cs" />
-    <Compile Include="Models\Crossroads\Profile\ObjectAttributeTypeDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAttributeDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAttributeTypeDTO.cs" />
     <Compile Include="Models\Crossroads\Stewardship\StripeInvoice.cs" />
     <Compile Include="Models\Crossroads\Stewardship\RecurringGiftDto.cs" />
     <Compile Include="Models\Crossroads\Stewardship\UpdateDonorDTO.cs" />
@@ -459,10 +459,10 @@
     <Compile Include="Security\MPAuth.cs" />
     <Compile Include="Security\CustomAuthorize.cs" />
     <Compile Include="Services\AccountService.cs" />
-    <Compile Include="Models\Crossroads\Profile\ObjectAllAttributesDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAllAttributesDTO.cs" />
     <Compile Include="Services\AttributeService.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
-    <Compile Include="Models\Crossroads\Profile\ObjectSingleAttributeDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectSingleAttributeDTO.cs" />
     <Compile Include="Services\DonationService.cs" />
     <Compile Include="Services\DonorService.cs" />
     <Compile Include="Services\EmailCommunication.cs" />

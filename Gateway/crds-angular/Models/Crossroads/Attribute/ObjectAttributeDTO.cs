@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace crds_angular.Models.Crossroads.Profile
+namespace crds_angular.Models.Crossroads.Attribute
 {
     public class ObjectAttributeDTO
     {        

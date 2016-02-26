@@ -4,8 +4,10 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
@@ -19,6 +21,7 @@ using Event = MinistryPlatform.Models.Event;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using Participant = MinistryPlatform.Models.Participant;
 
 namespace crds_angular.test.Services
 {
@@ -35,7 +38,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.ICommunicationService> _communicationService;
         private Mock<MPServices.IContactService> _contactService;
         private Mock<IConfigurationWrapper> config;
-        private Mock<IObjectAttributeService> _attributeConfiguration;
+        private Mock<IObjectAttributeService> _objectAttributeService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -52,6 +55,8 @@ namespace crds_angular.test.Services
                 SendConfirmationEmail = true
             }
         };
+
+        private Mock<MPServices.IApiUserService> _apiUserService;
 
         private const int GROUP_ROLE_DEFAULT_ID = 123;
         private const int JourneyGroupInvitationTemplateId = 123;         
@@ -72,17 +77,16 @@ namespace crds_angular.test.Services
             _communicationService = new Mock<MPServices.ICommunicationService>();
             _contactService = new Mock<MPServices.IContactService>();
 
-            _attributeConfiguration = new Mock<IObjectAttributeService>();
+            _objectAttributeService = new Mock<IObjectAttributeService>();
+            _apiUserService = new Mock<MPServices.IApiUserService>();
 
 
-        config = new Mock<IConfigurationWrapper>();
+            config = new Mock<IConfigurationWrapper>();
 
-            config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
-
-            var configuration = ObjectAttributeConfigurationFactory.GroupAttributeConfiguration();
+            config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);            
 
             fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
-                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object, _attributeConfiguration.Object);
+                        serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object, _objectAttributeService.Object, _apiUserService.Object);
         }
 
         [Test]
@@ -290,8 +294,11 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            
+
+            var attributes = new ObjectAllAttributesDTO();
+
             groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
 
             var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
            
@@ -428,11 +435,14 @@ namespace crds_angular.test.Services
                 Contact_ID = 7689
             };
 
+            var attributes = new ObjectAllAttributesDTO();
+
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
             groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19)).Returns(groups);
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);            
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
