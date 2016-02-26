@@ -1,0 +1,9 @@
+<label ng-show="definition.label">{{definition.label}}</label>
+<div class="bordered">
+  <div class="radio" ng-repeat="answer in definition.answers track by $index">
+    <label>
+      <input type="radio" name="{{definition.key}}" value="{{answer.id}}" ng-model="responses[definition.key]" ng-change="checkError()" />
+      <span>{{answer.name}}</span>
+    </label>
+  </div>
+</div>

@@ -10,7 +10,7 @@ namespace crds_angular.Services.Interfaces
         StripeCustomer CreateCustomer(string customerToken, string donorDescription = null);
         StripeCustomer GetCustomer(string customerId);
         StripeCustomer DeleteCustomer(string customerId);
-        string CreateToken(string accountNumber, string routingNumber);
+        StripeToken CreateToken(string accountNumber, string routingNumber);
         StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId);
         StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId);
         string UpdateCustomerDescription(string customerToken, int donorId);
