@@ -40,7 +40,9 @@
       if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
+        $scope.$broadcast('groupFinderShowError');
       } else {
+        $scope.$broadcast('groupFinderClearError');
         $scope.go();
       }
     };
