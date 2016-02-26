@@ -24,11 +24,11 @@
 
     $scope.getGroupType = function() {
       // TODO - The 'Co-ed' default value should be removed once the API is completed
-      return GROUP_TYPES[$scope.group.type] || 'Co-ed';
+      return $scope.group.type ? 'A group of ' + $scope.group.type : 'A group';
     };
 
     $scope.groupDescription = function() {
-      return 'A ' + $scope.getGroupType() + ' group meeting on ' + $scope.groupTime();
+      return $scope.getGroupType() + ' meeting on ' + $scope.groupTime();
     };
 
     $scope.getTemplateUrl = function() {

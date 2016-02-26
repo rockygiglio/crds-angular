@@ -11,6 +11,7 @@
     vm.responses = Responses;
 
     vm.showDashboard = function() {
+      $rootScope.$broadcast('reloadGroups');
       $state.go('group_finder.dashboard');
     };
 

@@ -13,7 +13,7 @@
     <p>
       Private group
       <span ng-if="group.isHost === true">
-        <br/>Currently has {{group.members.length - 1 || 0}} member<span ng-if="group.members.length > 2">s</span>.
+        <br/>Currently has {{group.members.length - 1 || 'no'}} member<span ng-if="group.members.length > 2 || group.members.length <= 1">s</span>.
         <a ui-sref="group_finder.dashboard.group({groupId: group.groupId})">Invite Someone</a>
       </span>
     </p>
