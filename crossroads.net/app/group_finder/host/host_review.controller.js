@@ -9,6 +9,7 @@
     '$state',
     'Responses',
     'Group',
+    'GroupInfo',
     'AuthenticatedPerson',
     'GROUP_API_CONSTANTS',
     '$log',
@@ -23,6 +24,7 @@
                           $state,
                           Responses,
                           Group,
+                          GroupInfo,
                           AuthenticatedPerson,
                           GROUP_API_CONSTANTS,
                           $log,
@@ -153,36 +155,34 @@
 
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
-      Group.Detail.save(group).$promise.then(function success(group) {
+      Group.Detail.save(group).$promise
+        .then(function groupPublishSuccess(group) {
+          $log.debug('Group was published successfully:', group);
+          var capacity = 1;
+          if (Responses.data.marital_status === '7022') {
+            capacity = 2;
+          }
 
-        $log.debug('Group was published successfully:', group);
-        var capacity = 1;
-        if (vm.responses.marital_status === '7022') {
-          capacity = 2;
-        }
-        // User invitation service to add person to that group
-        var promise = GroupInvitationService.acceptInvitation(group.groupId,
-                      {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
-        promise.then(function() {
-          // Invitation acceptance was successful
-          vm.accepted = true;
-        }, function(error) {
-          // An error happened accepting the invitation
-          vm.rejected = true;
-          vm.requestPending = false;
-        });
+          // User invitation service to add person to that group
+          return GroupInvitationService.acceptInvitation(group.groupId,
+            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+        })
+        .then(function hostInviteSuccess() {
+          $log.debug("Host was added to new group, force group info reload");
+          return GroupInfo.loadGroupInfo(true);
+        })
+        .then(function reloadGroupSuccess() {
+            // Invitation acceptance was successful
+            vm.accepted = true;
 
-        // Created group successfully, go to confirmation page
-        $state.go('group_finder.host.confirm');
-      }, function error() {
-        vm.rejected = true;
-        vm.requestPending = false;
-        $log.debug('An error occurred while publishing');
-      })
-      .finally(function() {
-        vm.pending = false;
-      });
-    }
+            // Created group successfully, go to confirmation page
+            $state.go('group_finder.host.confirm');
+          },
+          function chainError() {
+            vm.rejected = true;
+            vm.requestPending = false;
+            $log.debug('An error occurred while publishing');
+          });
 
     function lookupContains(id, keyword) {
       return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;

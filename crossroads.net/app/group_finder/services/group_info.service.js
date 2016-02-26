@@ -23,15 +23,22 @@
     groupInfo.findHosting = findHosting;
 
     // Clear the group info cache when the user logs out
-    $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, reset);
 
     //
     // Initialize the data
     //
-    function loadGroupInfo() {
-      if (!requestPromise) {
+    function loadGroupInfo(forceReload) {
+      if (!requestPromise || forceReload) {
         requestPromise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
         requestPromise.then(function(data) {
+
+          // Reload and clear existing groups
+          if (forceReload) {
+            clearData();
+          }
+
+          // Process the database groups
           var cid = $cookies.get('userId');
           if (cid) {
             _.each(data, function(group) {
@@ -106,8 +113,12 @@
       });
     }
 
-    function clearData() {
+    function reset() {
       requestPromise = null;
+      clearData();
+    }
+
+    function clearData() {
       groups.hosting = [];
       groups.participating = [];
     }
