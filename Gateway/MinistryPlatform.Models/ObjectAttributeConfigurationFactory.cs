@@ -39,7 +39,7 @@ namespace MinistryPlatform.Models
             {
                 SubPage = int.Parse(ConfigurationManager.AppSettings["GroupParticipantAttributesSubPage"]),
                 SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedGroupPartAttributes"]),
-                TableName = "Group"
+                TableName = "Group_Participant"
             };
         }
     }
