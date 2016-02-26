@@ -72,6 +72,13 @@
       }
     });
 
+    $scope.$on('groupFinderShowError', function(event) {
+      $scope.showError = true;
+    });
+    $scope.$on('groupFinderClearError', function(event) {
+      $scope.showError = false;
+    });
+
     // ----------------------------------- //
 
     $scope.initialize();

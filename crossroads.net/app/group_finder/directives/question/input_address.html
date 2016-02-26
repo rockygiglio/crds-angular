@@ -19,3 +19,4 @@
     <input type="text" name="{{definition.key}}[zip]" class="form-control" ng-model="responses[definition.key].zip" ng-change="checkError()" ng-keyup="onKeyUp($event)" />
   </div>
 </div>
+<div class="error" ng-if="showError">Required</div>
