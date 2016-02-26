@@ -2,6 +2,7 @@
 {
     public class GroupParticipant
     {
+        public int GroupParticipantId { get; set; }
         public int ParticipantId { get; set; }
         public int ContactId { get; set; }
         public string NickName { get; set; }
