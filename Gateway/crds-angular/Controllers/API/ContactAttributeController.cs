@@ -1,9 +1,8 @@
 ﻿using System.Web.Http;
 using crds_angular.Models.Crossroads.Attribute;
-using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Models;
 
 namespace crds_angular.Controllers.API
 {

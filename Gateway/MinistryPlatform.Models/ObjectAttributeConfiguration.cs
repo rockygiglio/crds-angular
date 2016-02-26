@@ -1,4 +1,4 @@
-namespace MinistryPlatform.Translation.Services
+namespace MinistryPlatform.Models
 {
     public class ObjectAttributeConfiguration
     {

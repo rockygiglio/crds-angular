@@ -1,9 +1,6 @@
-using System;
 using System.Configuration;
-using System.Web.Compilation;
-using Crossroads.Utilities.Interfaces;
 
-namespace MinistryPlatform.Translation.Services
+namespace MinistryPlatform.Models
 {
     public static class ObjectAttributeConfigurationFactory
     {

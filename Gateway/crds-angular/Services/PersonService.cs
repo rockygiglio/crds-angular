@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Models;
 using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Services;
