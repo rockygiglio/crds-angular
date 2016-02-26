@@ -121,7 +121,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
-    <Compile Include="Services\ContactAttributeService.cs" />
+    <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />
     <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\CreatePageRecordService.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="Services\Interfaces\IBulkEmailRepository.cs" />
     <Compile Include="Services\Interfaces\IApiUserService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
-    <Compile Include="Services\Interfaces\IContactAttributeService.cs" />
+    <Compile Include="Services\Interfaces\IObjectAttributeService.cs" />
     <Compile Include="Services\Interfaces\IAttributeService.cs" />
     <Compile Include="Services\Interfaces\ICampaignService.cs" />
     <Compile Include="Services\Interfaces\IAuthenticationService.cs" />

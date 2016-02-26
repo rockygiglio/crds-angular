@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Attribute;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads
@@ -19,6 +21,12 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "sendConfirmationEmail")]
         public bool SendConfirmationEmail { get; set; }
+
+        [JsonProperty(PropertyName = "attributeTypes")]
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
+
+        [JsonProperty(PropertyName = "singleAttributes")]
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
     }
 
 }

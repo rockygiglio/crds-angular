@@ -2,9 +2,9 @@ using System;
 
 namespace MinistryPlatform.Models
 {
-    public class ContactAttribute
+    public class ObjectAttribute
     {
-        public int ContactAttributeId { get; set; }
+        public int ObjectAttributeId { get; set; }
         public int AttributeId { get; set; }
         public int AttributeTypeId { get; set; }
         public DateTime StartDate { get; set; }

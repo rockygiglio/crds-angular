@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace crds_angular.Models.Crossroads.Profile
+namespace crds_angular.Models.Crossroads.Attribute
 {
-    public class ContactAttributeDTO
+    public class ObjectAttributeDTO
     {        
         [JsonProperty(PropertyName = "attributeId")]
         public int AttributeId { get; set; }

@@ -2,7 +2,7 @@ USE [MinistryPlatform]
 GO
 
 DECLARE @Domain_ID AS INT = 1
-DECLARE @Attribute_ID_Base AS INT = 7016
+DECLARE @Attribute_ID_Base AS INT = 7029
 
 -- Add / Update the Attribute Type
 DECLARE @Attribute_Type_ID INT
@@ -12,9 +12,9 @@ DECLARE @Prevent_Multiple_Selection BIT
 DECLARE @Available_Online BIT
 
 SELECT
-	@Attribute_Type_ID = 75,
-	@Attribute_Type_Name = 'Kids',
-	@Attribute_Type_Description = 'Answers for ''Is your group kid-friendly?''',
+	@Attribute_Type_ID = 79,
+	@Attribute_Type_Name = 'Weekend Times',
+	@Attribute_Type_Description = 'Answer for ''Are you free on SATURDAYS and SUNDAYS''',
 	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 
@@ -63,8 +63,12 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Adults only', NULL, 1),
-	(@Attribute_ID_Base+1, 'Kid friendly', NULL, 2)
+	(@Attribute_ID_Base, 'Early mornings (before 9am)', NULL, 1),
+	(@Attribute_ID_Base+1, 'Mornings (between 9am and noon)', NULL, 2),
+	(@Attribute_ID_Base+2, 'Afternoons (between noon and 5pm)', NULL, 3),
+	(@Attribute_ID_Base+3, 'Evenings after work (between 5pm and 8pm)', NULL, 4),
+	(@Attribute_ID_Base+4, 'Late evenings (after 8pm)', NULL, 5),
+	(@Attribute_ID_Base+5, 'I can''t meet on weekends', NULL, 6)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
