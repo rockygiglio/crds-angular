@@ -35,7 +35,6 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
-        private readonly int JourneyGroupInvitationTemplateId;
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
 
@@ -59,7 +58,6 @@ namespace crds_angular.Services
             _contactService = contactService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
-            JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
         }
 
@@ -315,7 +313,7 @@ namespace crds_angular.Services
 
         private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
-            var template = _communicationService.GetTemplate(JourneyGroupInvitationTemplateId);
+            var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
