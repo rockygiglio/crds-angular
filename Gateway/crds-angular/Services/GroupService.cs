@@ -386,7 +386,7 @@ namespace crds_angular.Services
                         
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.ParticipantId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }
