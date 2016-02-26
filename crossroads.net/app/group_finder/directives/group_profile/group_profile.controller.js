@@ -8,15 +8,16 @@
   function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
 
     $scope.defaultGroup = {
-      groupTitle: 'Brian T.',
+      groupTitle: 'Chuck M.',
       type: 3,
       time: 'Fridays at 7pm',
       imageUrl: 'https://s3.amazonaws.com/ample-useast/brian-tome.jpg',
       attributes: ['kids welcome', 'has cats'],
       host: { contactId: 12345 },
-      description: 'Hi, I\'m Brian, a 30 something father, husband and Bengals apologist.' +
-                   'This isn\'t my first rodeo, but it\'s my first time hosting a group.' +
-                   'We\'ll be meeting at my humble home in Hyde Park.'
+      description: 'Hi, I\'m Chuck. I’m 37 years old, married and a dad to three adventurous kids. ' +
+        'I like to run marathons, watch the Philadelphia Eagles (when they’re good) and I really like to smile. ' +
+        'This is my fourth time hosting a group and I’m looking forward to connecting with some new people and getting BRAVE. ' +
+        'We\'ll meet at my house in Pleasant Ridge.'
     };
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
