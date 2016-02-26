@@ -35,10 +35,10 @@
       $scope.sliderOptions = {
         hideLimitLabels: true,
         showSelectionBar: true,
-        floor: (key === 'open_spots' ? 0 : 3),
-        ceil: (key === 'open_spots' ? 10 : 12)
+        floor: (key === 'filled_spots' ? 0 : 3),
+        ceil: (key === 'filled_spots' ? $scope.responses.total_capacity - 1 : 12)
       };
-      $scope.sliderDefault = (key === 'open_spots' ? 5 : 7);
+      $scope.sliderDefault = (key === 'filled_spots' ? 0 : 7);
       $scope.refreshSlider();
     };
 
