@@ -468,7 +468,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();            
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
