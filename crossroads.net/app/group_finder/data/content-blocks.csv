@@ -52,3 +52,4 @@
 "groupFinderParticipantAnywhereError","<p>There was an error sending your information. <span>Contact us at </span><a href=""mailto:journeys@crossroads.net"">journeys@crossroads.net</a><span> and we'll help find the perfect group for you.</span></p>","info","corkboard"
 "groupFinderContactCrdsSuccess","<p>Thanks, your information has been sent and someone will contact you shortly.</p><p>Return to <a href=""/"">Crossroads.net</a></p>","info","corkboard"
 "groupFinderContactCrdsError","<p>Sorry, there was an error</p>","info","corkboard"
+"groupFinderInvitationAlreadyJoined","<p>Looks like you've already joined this group.</p><p></p><p>Visit your dashboard for more information.</p>","info","corkboard"
