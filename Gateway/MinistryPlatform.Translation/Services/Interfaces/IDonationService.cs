@@ -26,6 +26,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
         void SendMessageFromDonor(int pledgeId, int donationId, string message);
         void FinishSendMessageFromDonor(int donationId, bool success);
-        void AddCommunicationDonation(int donationId, int communicationId);
+        void AddDonationCommunication(int donationId, int communicationId);
     }
 }

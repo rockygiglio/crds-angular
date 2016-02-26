@@ -500,7 +500,7 @@ namespace MinistryPlatform.Translation.Services
                 MergeData = new Dictionary<string, object>()
             };
             var communicationId = _communicationService.SendMessage(comm, true);
-            AddCommunicationDonation(donationId, communicationId);
+            AddDonationCommunication(donationId, communicationId);
         }
 
         public void FinishSendMessageFromDonor(int donationId, bool succeeded)
@@ -539,7 +539,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void AddCommunicationDonation(int donationId, int communicationId)
+        public void AddDonationCommunication(int donationId, int communicationId)
         {
             var communication = new Dictionary<string, object>
             {
