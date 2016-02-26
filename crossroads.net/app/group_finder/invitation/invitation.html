@@ -10,7 +10,7 @@
       <div dynamic-content="$root.MESSAGES.groupFinderParticipantConfirmation.content | html"></div>
       <div ng-if="invitation.showInvite">
         <div dynamic-content="$root.MESSAGES.groupFinderParticipantInviteSpouse.content | html"></div>
-        <group-invitation group="detail.group"></group-invitation>
+        <group-invitation group-id="invitation.groupId"></group-invitation>
       </div>
       <p class="btns text-center">
         <a class="btn btn-next-question" ui-sref="group_finder.dashboard">Go to Your Dashboard</a>

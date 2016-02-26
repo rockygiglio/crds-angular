@@ -50,7 +50,6 @@
     $scope.go = function() {
       Responses.data.completed_flow = true;
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
-        // TODO if private group skip review, save and show confirmation page.
         $state.go('group_finder.' + $scope.mode + '.review');
       } else if($scope.step === $scope.totalQuestions) {
         $state.go('group_finder.' + $scope.mode + '.review');
@@ -62,7 +61,12 @@
     };
 
     $scope.isPrivateGroup = function() {
-      return ($scope.currentKey() === 'open_spots' && $scope.currentResponse() === 0);
+      var isPrivate = false;
+      if ($scope.currentKey() === 'filled_spots') {
+        isPrivate = $scope.currentResponse() === $scope.responses['total_capacity'] - 1;
+        $scope.responses['open_spots'] = $scope.responses['total_capacity'] - ($scope.currentResponse() + 1);
+      }
+      return isPrivate;
     };
 
     $scope.currentResponse = function() {

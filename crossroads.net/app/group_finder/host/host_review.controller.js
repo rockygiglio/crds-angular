@@ -84,8 +84,8 @@
 
       // Group size and availability
       group.availableOnline = true;
-      group.remainingCapacity = Responses.data.open_spots;
-      group.groupFullInd = Responses.data.open_spots <= 0;
+      group.remainingCapacity = vm.capacity();
+      group.groupFullInd = vm.capacity() <= 0;
       group.waitListInd = false;
       group.childCareInd = false;
 
@@ -186,8 +186,13 @@
       $window.history.back();
     };
 
+    vm.capacity = function() {
+      // capacity is total - filled + 1 to include the host
+      return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots) + 1);
+    };
+
     vm.isPrivate = function() {
-      return vm.responses && vm.responses.open_spots <= 0;
+      return vm.responses && vm.capacity() <= 0;
     };
 
     // ------------------------------- //
