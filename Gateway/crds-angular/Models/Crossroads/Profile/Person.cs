@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services;
 using MinistryPlatform.Models;
 using Newtonsoft.Json;
@@ -123,10 +124,10 @@ namespace crds_angular.Models.Crossroads.Profile
         public List<HouseholdMember> HouseholdMembers { get; set; }
 
         [JsonProperty(PropertyName = "attributeTypes")]
-        public Dictionary<int, ContactAttributeTypeDTO> AttributeTypes { get; set; }
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
 
         [JsonProperty(PropertyName = "singleAttributes")]
-        public Dictionary<int, ContactSingleAttributeDTO> SingleAttributes { get; set; }
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
 
         [JsonProperty(PropertyName = "participantStartDate")]
         public DateTime? ParticipantStartDate { get; set; }

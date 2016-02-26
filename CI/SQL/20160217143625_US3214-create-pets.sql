@@ -14,7 +14,7 @@ DECLARE @Available_Online BIT
 SELECT
 	@Attribute_Type_ID = 74,
 	@Attribute_Type_Name = 'Pets',
-	@Attribute_Type_Description = 'Answers for ''do you have pets''',
+	@Attribute_Type_Description = 'Answers for ''What about pets?''',
 	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 

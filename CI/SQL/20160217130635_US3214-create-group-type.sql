@@ -14,7 +14,7 @@ DECLARE @Available_Online BIT
 SELECT
 	@Attribute_Type_ID = 73,
 	@Attribute_Type_Name = 'Group Type',
-	@Attribute_Type_Description = 'My group is open to: ',
+	@Attribute_Type_Description = 'What kind of group would you like to host',
 	@Prevent_Multiple_Selection = 1,
 	@Available_Online = 1
 
@@ -63,10 +63,10 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Coed group', NULL, 1),
-	(@Attribute_ID_Base+1, 'Men only group', 'Don''t pick this if you''re a woman please', 2),
-	(@Attribute_ID_Base+2, 'Women only group', 'Don''t pick this if you''re a man... that''s creepy', 3),
-	(@Attribute_ID_Base+3, 'Married couples group', NULL, 4)
+	(@Attribute_ID_Base, 'Men and women together (like God intended)', 'men and women together', 1),
+	(@Attribute_ID_Base+1, 'Men only (no girls allowed)', 'men only', 2),
+	(@Attribute_ID_Base+2, 'Women only (don''t be a creeper, dude)', 'women only', 3),
+	(@Attribute_ID_Base+3, 'Married couples only (because you put a ring on it)','married couples', 4)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
@@ -76,6 +76,7 @@ WHEN MATCHED THEN
 	SET
 		Attribute_Name = tmp.Attribute_Name,
 		Attribute_Type_ID = @Attribute_Type_ID,
+		Description = tmp.[Description],
 		Domain_ID = @Domain_ID,
 		Sort_Order = tmp.Sort_Order
 WHEN NOT MATCHED THEN

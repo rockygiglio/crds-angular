@@ -2,7 +2,7 @@ USE [MinistryPlatform]
 GO
 
 DECLARE @Domain_ID AS INT = 1
-DECLARE @Attribute_ID_Base AS INT = 7016
+DECLARE @Attribute_ID_Base AS INT = 7020
 
 -- Add / Update the Attribute Type
 DECLARE @Attribute_Type_ID INT
@@ -12,9 +12,9 @@ DECLARE @Prevent_Multiple_Selection BIT
 DECLARE @Available_Online BIT
 
 SELECT
-	@Attribute_Type_ID = 75,
-	@Attribute_Type_Name = 'Kids',
-	@Attribute_Type_Description = 'Answers for ''Is your group kid-friendly?''',
+	@Attribute_Type_ID = 77,
+	@Attribute_Type_Name = 'Marital Status',
+	@Attribute_Type_Description = 'Answers for ''What''s your Relationship status''',
 	@Prevent_Multiple_Selection = 0,
 	@Available_Online = 1
 
@@ -63,8 +63,9 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'Adults only', NULL, 1),
-	(@Attribute_ID_Base+1, 'Kid friendly', NULL, 2)
+	(@Attribute_ID_Base, 'I''m not married', NULL, 1),
+	(@Attribute_ID_Base+1, 'I''m married but we''re going through the journey seperately', NULL, 2),
+	(@Attribute_ID_Base+2, 'I''m married and I want to be in the same group with my spouse', NULL, 3)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
