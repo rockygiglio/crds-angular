@@ -244,6 +244,9 @@ namespace crds_angular.test.Services
             groupService.Setup(mocked => mocked.checkIfUserInGroup(555, It.IsAny<List<GroupParticipant>>())).Returns(false);
             groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<GroupParticipant>>())).Returns(false);
 
+            var attributes = new ObjectAllAttributesDTO();            
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
+
             var response = fixture.getGroupDetails(456, 777, participant, "auth token");
 
             groupService.VerifyAll();

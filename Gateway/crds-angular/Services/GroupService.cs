@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
@@ -10,7 +9,6 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -246,6 +244,10 @@ namespace crds_angular.Services
                     c => signupRelations.Select(s => s.RelationshipId).Contains(c.Relationship_Id)).ToArray();
             }
 
+            var apiToken = _apiUserService.GetToken();
+            var configuration = ObjectAttributeConfigurationFactory.Group();
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, groupId, configuration);
+
             var detail = new GroupDTO();
             {
                 detail.GroupName = g.Name;
@@ -284,6 +286,9 @@ namespace crds_angular.Services
                         detail.SignUpFamilyMembers.Add(fm);
                     }
                 }
+
+                detail.AttributeTypes = attributesTypes.MultiSelect;
+                detail.SingleAttributes = attributesTypes.SingleSelect;
             }
 
             return (detail);
