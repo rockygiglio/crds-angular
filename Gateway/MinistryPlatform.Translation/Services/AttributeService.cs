@@ -22,13 +22,14 @@ namespace MinistryPlatform.Translation.Services
         {
             var token = base.ApiLogin();
 
-            var filter = attributeTypeId.HasValue ? string.Format(",,\"{0}\"", attributeTypeId) : string.Empty;
+            var filter = attributeTypeId.HasValue ? string.Format(",,,\"{0}\"", attributeTypeId) : string.Empty;
             var records = _ministryPlatformService.GetPageViewRecords("AttributesPageView", token, filter);
 
             return records.Select(record => new Attribute
             {
                 AttributeId = record.ToInt("Attribute_ID"), 
-                Name = record.ToString("Attribute_Name"), 
+                Name = record.ToString("Attribute_Name"),
+                Description = record.ToString("Attribute_Description"),
                 CategoryId = record.ToNullableInt("Attribute_Category_ID"), 
                 Category = record.ToString("Attribute_Category"),
                 CategoryDescription = record.ToString("Attribute_Category_Description"), 
