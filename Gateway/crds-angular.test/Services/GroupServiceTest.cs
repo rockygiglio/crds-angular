@@ -51,7 +51,6 @@ namespace crds_angular.test.Services
         };
 
         private const int GROUP_ROLE_DEFAULT_ID = 123;
-        private const int JourneyGroupInvitationTemplateId = 123;         
 
         [SetUp]
         public void SetUp()
