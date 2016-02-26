@@ -11,7 +11,7 @@
       groupTitle: 'Chuck M.',
       type: 3,
       time: 'Fridays at 7pm',
-      imageUrl: 'https://s3.amazonaws.com/ample-useast/chuck-mingo.jpg',
+      imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/chuck-mingo.jpg',
       attributes: ['kids welcome', 'has cats'],
       host: { contactId: 12345 },
       description: 'Hi, I\'m Chuck. I’m 37 years old, married and a dad to three adventurous kids. ' +
