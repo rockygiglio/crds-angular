@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,11 +64,13 @@
     <Compile Include="DonorStatement.cs" />
     <Compile Include="EventParticipant.cs" />
     <Compile Include="GroupServingResponses.cs" />
+    <Compile Include="ObjectAttributeConfiguration.cs" />
+    <Compile Include="ObjectAttributeConfigurationFactory.cs" />
     <Compile Include="Pledge.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CommunicationPreferences.cs" />
     <Compile Include="ContactDonor.cs" />
-    <Compile Include="ContactAttribute.cs" />
+    <Compile Include="ObjectAttribute.cs" />
     <Compile Include="Deposit.cs" />
     <Compile Include="DonationBatch.cs" />
     <Compile Include="DonationDistribution.cs" />
