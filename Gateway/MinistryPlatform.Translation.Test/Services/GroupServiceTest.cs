@@ -181,6 +181,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 groupParticipantsPageResponse.Add(new Dictionary<string, object>()
                 {
+                    {"dp_RecordID", 23434234 },
                     {"Participant_ID", i},
                     {"Contact_ID", i + 10},
                     {"Group_Role_ID", 42},
