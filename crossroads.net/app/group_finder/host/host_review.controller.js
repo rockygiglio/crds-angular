@@ -53,7 +53,7 @@
         type: vm.responses.group_type,
         attributes: vm.getGroupAttributes(),
         host: {
-          contactId: $scope.person.contactId
+          contactId: AuthenticatedPerson.contactId
         }
       };
     };

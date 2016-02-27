@@ -3,7 +3,14 @@
 
   module.exports = HostQuestionsCtrl;
 
-  HostQuestionsCtrl.$inject = ['$scope', 'Responses', 'QuestionDefinitions', 'GROUP_TYPES', 'AuthenticatedPerson', '$state'];
+  HostQuestionsCtrl.$inject = [
+    '$scope',
+    'Responses',
+    'QuestionDefinitions',
+    'GROUP_TYPES',
+    'AuthenticatedPerson',
+    '$state'
+  ];
 
   function HostQuestionsCtrl($scope, Responses, QuestionDefinitions, GROUP_TYPES, AuthenticatedPerson, $state) {
 
