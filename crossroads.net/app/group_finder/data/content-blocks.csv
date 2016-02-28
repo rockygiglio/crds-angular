@@ -48,7 +48,7 @@
 "groupFinderHostDashboardInvitation","<h4>Invite someone else.</h4><p>Drop your friend’s email address below to invite them to your group.</p>","info","corkboard"
 "groupFinderContactCrds","<p>Need Help?</p>","info","corkboard"
 "groupFinderParticipantResultsHeader","<h3>Your hand-picked* groups</h3><p class=""lead"">Hand picked by SCIENCE</p>","info","corkboard"
-"groupFinderHostReviewHeader","<h3>Review &amp; Approve</h3><p class=""lead"">Double check your info before you hit publish. Seriously—you can’t go back after publishing your group.</p>","info","corkboard"
+"groupFinderHostReviewHeader","<h3>Review &amp; Approve</h3><p class=""lead"">Double check your info before you hit publish. Seriously—you can’t go back after publishing your group.</p><p class=""help-block"">Click on the image to change your profile picture</p>","info","corkboard"
 "groupFinderParticipantAnywhereError","<p>There was an error sending your information. <span>Contact us at </span><a href=""mailto:journeys@crossroads.net"">journeys@crossroads.net</a><span> and we'll help find the perfect group for you.</span></p>","info","corkboard"
 "groupFinderContactCrdsSuccess","<p>Thanks, your information has been sent and someone will contact you shortly.</p><p>Return to <a href=""/"">Crossroads.net</a></p>","info","corkboard"
 "groupFinderContactCrdsError","<p>Sorry, there was an error</p>","info","corkboard"

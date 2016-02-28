@@ -67,6 +67,8 @@
           contactId: AuthenticatedPerson.contactId
         }
       };
+
+      vm.pending = false;
     }
 
     function startOver() {
