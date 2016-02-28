@@ -1,4 +1,4 @@
-<div class="review with-padding">
+<div class="review with-padding" ng-if="!host.pending">
   <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderHostReviewHeader.content | html"></div>
 
   <group-profile group="host.group"></group-profile>

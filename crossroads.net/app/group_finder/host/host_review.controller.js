@@ -30,14 +30,25 @@
                           LookupDefinitions) {
     var vm = this;
 
-    vm.initialize = function() {
+    vm.pending = true;
+    vm.responses = Responses.data;
+    vm.host = AuthenticatedPerson;
+    vm.lookup = LookupDefinitions;
+    vm.startOver = startOver;
+    vm.publish = publish;
+    vm.lookupContains = lookupContains;
+    vm.getGroupAttributes = getGroupAttributes;
+    vm.getGroupTime = getGroupTime;
+    vm.formatTime = formatTime;
+    vm.goBack = goBack;
+    vm.capacity = capacity;
+    vm.isPrivate = isPrivate;
+    vm.initialize = initialize;
+
+    function initialize() {
       if (Responses.data.completed_flow !== true) {
         $state.go('group_finder.host.questions');
       }
-
-      vm.responses = Responses.data;
-      vm.host = AuthenticatedPerson;
-      vm.lookup = LookupDefinitions;
 
       if(vm.isPrivate()) {
         vm.publish();
@@ -56,15 +67,15 @@
           contactId: AuthenticatedPerson.contactId
         }
       };
-    };
+    }
 
-    vm.startOver = function() {
+    function startOver() {
       $scope.$parent.currentStep = 1;
       $state.go('group_finder.host.questions');
-    };
+    }
 
-    var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
-    vm.publish = function() {
+    function publish() {
+      var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -153,14 +164,17 @@
       }, function error() {
         vm.rejected = true;
         $log.debug('An error occurred while publishing');
+      })
+      .finally(function() {
+        vm.pending = false;
       });
-    };
+    }
 
-    vm.lookupContains = function(id, keyword) {
+    function lookupContains(id, keyword) {
       return vm.lookup[id].toLowerCase().indexOf(keyword) > -1;
-    };
+    }
 
-    vm.getGroupAttributes = function() {
+    function getGroupAttributes() {
       var ret = [];
       if (vm.lookupContains(vm.responses.kids, 'kid')) { ret.push('kids welcome'); }
 
@@ -173,31 +187,31 @@
         });
       }
       return ret;
-    };
+    }
 
-    vm.getGroupTime = function() {
+    function getGroupTime() {
       var dt = vm.responses.date_and_time;
       if (dt) {
         return dt['day'] + 's @ ' + vm.formatTime(dt['time']);
       }
-    };
+    }
 
-    vm.formatTime = function(time) {
+    function formatTime(time) {
       return  moment(time).format('h:mm a');
-    };
+    }
 
-    vm.goBack = function() {
+    function goBack() {
       $window.history.back();
-    };
+    }
 
-    vm.capacity = function() {
+    function capacity() {
       // capacity is total - filled + 1 to include the host
       return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots) + 1);
-    };
+    }
 
-    vm.isPrivate = function() {
+    function isPrivate() {
       return vm.responses && vm.capacity() <= 0;
-    };
+    }
 
     // ------------------------------- //
 
