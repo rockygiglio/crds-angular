@@ -79,7 +79,7 @@
     }
 
     function publish() {
-      var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
+      var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -113,7 +113,9 @@
       if (vm.isPrivate() === false) {
         group.groupDescription = vm.responses.description;
         group.childCareInd = vm.responses.kids === 1;
-        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase());
+
+        // meetingDayId is not zero based
+        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
         group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
         group.address = {
           addressLine1: vm.responses.location.street,
