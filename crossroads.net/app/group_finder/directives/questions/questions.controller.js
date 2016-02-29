@@ -63,8 +63,8 @@
     $scope.isPrivateGroup = function() {
       var isPrivate = false;
       if ($scope.currentKey() === 'filled_spots') {
-        isPrivate = $scope.currentResponse() === $scope.responses['total_capacity'] - 1;
-        $scope.responses['open_spots'] = $scope.responses['total_capacity'] - ($scope.currentResponse() + 1);
+        isPrivate = $scope.currentResponse() === $scope.responses['total_capacity'];
+        $scope.responses['open_spots'] = $scope.responses['total_capacity'] - $scope.currentResponse();
       }
       return isPrivate;
     };
