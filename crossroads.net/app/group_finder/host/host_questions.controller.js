@@ -37,12 +37,17 @@
       }
 
       if (_.has(Responses.data, 'location') === false) {
-        Responses.data.location = {
-          city:   AuthenticatedPerson.city,
-          state:  AuthenticatedPerson.state,
-          zip:    AuthenticatedPerson.postalCode,
-          street: AuthenticatedPerson.addressLine1
-        };
+        if (AuthenticatedPerson.city !== null &&
+            AuthenticatedPerson.state !== null &&
+            AuthenticatedPerson.postalCode !== null &&
+            AuthenticatedPerson.addressLine1 !== null) {
+          Responses.data.location = {
+            city:   AuthenticatedPerson.city,
+            state:  AuthenticatedPerson.state,
+            zip:    AuthenticatedPerson.postalCode,
+            street: AuthenticatedPerson.addressLine1
+          };
+        }
       }
       if (_.has(Responses.data, 'date_and_time') === false) {
         Responses.data.date_and_time = {};
