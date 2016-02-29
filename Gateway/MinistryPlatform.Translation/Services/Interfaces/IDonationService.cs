@@ -24,6 +24,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<GPExportDatum> GetGPExport(int depositId, string token);
         void UpdateDepositToExported(int selectionId, int depositId, string token);
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
-        void SendMessageFromDonor(int pledgeId, string message);
+        void SendMessageFromDonor(int pledgeId, int donationId, string message);
+        void FinishSendMessageFromDonor(int donationId, bool success);
+        void AddDonationCommunication(int donationId, int communicationId);
     }
 }

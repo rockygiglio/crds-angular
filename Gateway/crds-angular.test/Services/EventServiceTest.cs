@@ -156,7 +156,7 @@ namespace crds_angular.test.Services
                                                                               evt.PrimaryContactId,
                                                                               evt.PrimaryContactEmailAddress,
                                                                               mergeData)).Returns(fakeCommunication);
-                _communicationService.Setup(m => m.SendMessage(fakeCommunication));
+                _communicationService.Setup(m => m.SendMessage(fakeCommunication, false));
                 _communicationService.Verify();
 
             });

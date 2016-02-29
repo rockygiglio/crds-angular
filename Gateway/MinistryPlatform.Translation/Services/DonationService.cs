@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
@@ -8,7 +9,9 @@ using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
+using Communication = MinistryPlatform.Models.Communication;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -26,11 +29,17 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _processingProgramId;
         private readonly int _scholarshipPaymentTypeId;
         private readonly int _tripDonationMessageTemplateId;
+        private readonly int _donationCommunicationsPageId;
+        private readonly int _messagesPageId;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IDonorService _donorService;
         private readonly ICommunicationService _communicationService;
         private readonly IPledgeService _pledgeService;
+
+        private readonly int _donationStatusDeclined;
+        private readonly int _donationStatusDeposited;
+        private readonly int _donationStatusSucceeded;
 
         public DonationService(IMinistryPlatformService ministryPlatformService, IDonorService donorService, ICommunicationService communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
@@ -51,6 +60,11 @@ namespace MinistryPlatform.Translation.Services
             _processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
+            _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
+            _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
+            _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
+            _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
+            _messagesPageId = configuration.GetConfigIntValue("Messages");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -68,6 +82,10 @@ namespace MinistryPlatform.Translation.Services
                 var result = GetDonationByProcessorPaymentId(processorPaymentId, token);
 
                 UpdateDonationStatus(token, result.donationId, statusId, statusDate, statusNote);
+                if (statusId == _donationStatusSucceeded)
+                {
+                    FinishSendMessageFromDonor(result.donationId, true);
+                }
                 return (result.donationId);
             }));
         }
@@ -453,7 +471,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.UpdateRecord(_donationDistributionPageId, distributionData, ApiLogin());
         }
 
-        public void SendMessageFromDonor(int pledgeId, string message)
+        public void SendMessageFromDonor(int pledgeId, int donationId, string message)
         {
             var toDonor = _pledgeService.GetDonorForPledge(pledgeId);
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
@@ -481,7 +499,57 @@ namespace MinistryPlatform.Translation.Services
                 ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
-            _communicationService.SendMessage(comm);
+            var communicationId = _communicationService.SendMessage(comm, true);
+            AddDonationCommunication(donationId, communicationId);
         }
+
+        public void FinishSendMessageFromDonor(int donationId, bool succeeded)
+        {
+            // this code sets the status of a pending message to donor to ready to send, once there's a successful donation
+            // stripe webhook returned - JPC 2/25/2016
+            var donationCommunicationRecords = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format("\"{0}\"",donationId), "");
+            var donationCommunicationRecord = donationCommunicationRecords.FirstOrDefault();
+            var communicationId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
+            var recordId = Int32.Parse(donationCommunicationRecord["dp_RecordID"].ToString());
+
+            Dictionary<string, object> communicationUpdateValues = new Dictionary<string, object>();
+            communicationUpdateValues.Add("Communication_ID", communicationId);
+
+            if (succeeded == true)
+            {
+                communicationUpdateValues.Add("Communication_Status_ID", 3);
+                _ministryPlatformService.UpdateRecord(_messagesPageId, communicationUpdateValues, ApiLogin());
+            }
+
+            DeleteOption[] deleteOptions = new DeleteOption[]
+            {
+                new DeleteOption
+                {
+                    Action = DeleteAction.Delete
+                }
+            };
+
+            try
+            {
+                _ministryPlatformService.DeleteRecord(_donationCommunicationsPageId, recordId, deleteOptions, ApiLogin());
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(string.Format("RemoveDonationCommunication failed.  DonationCommunicationId: {0}", recordId), e);
+            }
+        }
+
+        public void AddDonationCommunication(int donationId, int communicationId)
+        {
+            var communication = new Dictionary<string, object>
+            {
+                {"Donation_ID", donationId},
+                {"Communication_ID", communicationId},
+                {"Domain_ID", 1 }
+            };
+            var pageId = AppSetting("DonationCommunication");
+            _ministryPlatformService.CreateRecord(pageId, communication, ApiLogin(), true);
+        }
+
     }
 }

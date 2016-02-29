@@ -403,7 +403,7 @@ namespace crds_angular.test.Services
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
 
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
         }
 
         [Test]
@@ -427,7 +427,7 @@ namespace crds_angular.test.Services
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>()), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
         }
 
         [Test]
@@ -468,12 +468,12 @@ namespace crds_angular.test.Services
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();            
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>()), Times.Once);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Once);
         }
     }
 }
