@@ -477,7 +477,7 @@ namespace MinistryPlatform.Translation.Services
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
             var template = _communicationService.GetTemplate(_tripDonationMessageTemplateId);
 
-            var toContacts = new List<Contact> { new Contact { ContactId = donorContact.ContactId, EmailAddress = donorContact.Email } };
+            var toContacts = new List<Contact> {new Contact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
 
             var from = new Contact()
             {
