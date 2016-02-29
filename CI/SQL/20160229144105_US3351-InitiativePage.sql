@@ -19,7 +19,7 @@ INSERT INTO [dbo].[dp_Pages]
 		(11,
            'Initiatives',
            'Initiative',
-           'An occurance of a volunteer event.',
+           'An occurance of a volunteer program.',
            100,
            'cr_Initiatives',
            'Initiative_ID',
