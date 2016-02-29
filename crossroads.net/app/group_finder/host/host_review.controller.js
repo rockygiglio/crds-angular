@@ -215,7 +215,7 @@
 
     function capacity() {
       // capacity is total - filled + 1 to include the host
-      return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots) + 1);
+      return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots));
     }
 
     function isPrivate() {
