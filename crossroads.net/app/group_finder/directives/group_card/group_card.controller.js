@@ -43,7 +43,7 @@
 
     $scope.groupTime = function() {
       var meetingTime = moment().format('YYYY-MM-DD') + ' ' + $scope.group.meetingTime;
-      return moment().isoWeekday($scope.group.meetingDayId).format('dddd') + ', ' + moment(meetingTime).format('h a');
+      return moment().isoWeekday($scope.group.meetingDayId - 1).format('dddd') + ', ' + moment(meetingTime).format('h a');
     };
 
   }
