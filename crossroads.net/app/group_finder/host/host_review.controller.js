@@ -109,35 +109,42 @@
       group.address = {};
 
       if (vm.isPrivate() === false) {
-        group.groupDescription = Responses.data.description;
-        group.childCareInd = Responses.data.kids === 1;
-        group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
-        group.meetingTime = vm.formatTime(Responses.data.date_and_time.time);
+        group.groupDescription = vm.responses.description;
+        group.childCareInd = vm.responses.kids === 1;
+        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase());
+        group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
         group.address = {
-          addressLine1: Responses.data.location.street,
-          city: Responses.data.location.city,
-          state: Responses.data.location.state,
-          zip: Responses.data.location.zip
+          addressLine1: vm.responses.location.street,
+          city: vm.responses.location.city,
+          state: vm.responses.location.state,
+          zip: vm.responses.location.zip
         };
       }
 
+      var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
+      group.singleAttributes = {};
+      _.each(singleAttributes, function(index) {
+         var answer = this.data[index];
+         var attributeTypeId = this.lookup[answer].attributeTypeId;
+         group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+      }, {data: vm.responses, lookup: vm.lookup});
+
       var attributes = [];
-      if (_.has(Responses.data, 'goals')) {
-        attributes.push(Responses.data.goals);
-      }
-      if (_.has(Responses.data, 'kids')) {
-        attributes.push(Responses.data.kids);
-      }
+      var petAttributeTypeId = null;
+      _.each(vm.responses.pets, function(hasPet, id) {
+        if (!petAttributeTypeId) {
+          petAttributeTypeId = this.lookup[id].attributeTypeId;
+        }
+        if (hasPet) {
+          attributes.push({'attributeId': id, 'selected': true});
+        }
+      }, {lookup: vm.lookup});
 
-      if (_.has(Responses.data, 'pets')) {
-        _.each(Responses.data.pets, function(value, pet) {
-          attributes.push(pet);
-        });
-      }
-
-      group.attributes = _.map(attributes, function(data) {
-        return {selected: true, startDate: GROUP_API_CONSTANTS.START_DATE, attributeId: data};
-      });
+      group.attributeTypes = {};
+      group.attributeTypes[petAttributeTypeId] = {
+        attributeTypeId: petAttributeTypeId,
+        attributes: attributes
+      };
 
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
@@ -145,7 +152,7 @@
 
         $log.debug('Group was published successfully:', group);
         var capacity = 1;
-        if (Responses.data.marital_status === '7022') {
+        if (vm.responses.marital_status === '7022') {
           capacity = 2;
         }
         // User invitation service to add person to that group
@@ -162,7 +169,7 @@
         });
 
         // Created group successfully, go to confirmation page
-        $state.go('group_finder.host.confirm');
+        //$state.go('group_finder.host.confirm');
       }, function error() {
         vm.rejected = true;
         $log.debug('An error occurred while publishing');
@@ -173,7 +180,7 @@
     }
 
     function lookupContains(id, keyword) {
-      return vm.lookup[id].toLowerCase().indexOf(keyword) > -1;
+      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function getGroupAttributes() {
