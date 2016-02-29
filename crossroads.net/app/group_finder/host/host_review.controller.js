@@ -14,7 +14,8 @@
     '$log',
     'GroupInvitationService',
     'GROUP_ROLE_ID_HOST',
-    'LookupDefinitions'
+    'LookupDefinitions',
+    'SERIES'
   ];
 
   function HostReviewCtrl($window,
@@ -27,7 +28,8 @@
                           $log,
                           GroupInvitationService,
                           GROUP_ROLE_ID_HOST,
-                          LookupDefinitions) {
+                          LookupDefinitions,
+                          SERIES) {
     var vm = this;
 
     vm.pending = true;
@@ -91,7 +93,7 @@
 
       // Group owner, name and description
       group.contactId = AuthenticatedPerson.contactId;
-      group.groupName = AuthenticatedPerson.displayName();
+      group.groupName = moment().year() + ' ' + SERIES.title + ' ' + AuthenticatedPerson.lastName;
       group.groupDescription = '';
       group.congregationId = AuthenticatedPerson.congregationId;
 
