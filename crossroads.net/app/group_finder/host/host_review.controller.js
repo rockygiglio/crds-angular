@@ -91,7 +91,7 @@
 
       // Group owner, name and description
       group.contactId = AuthenticatedPerson.contactId;
-      group.groupName = AuthenticatedPerson.displayName();
+      group.groupName = moment().year() + ' ' + SERIES.title + ' ' + AuthenticatedPerson.lastName;
       group.groupDescription = '';
       group.congregationId = AuthenticatedPerson.congregationId;
 
