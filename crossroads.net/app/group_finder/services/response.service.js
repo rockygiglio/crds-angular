@@ -3,9 +3,9 @@
 
   module.exports = ResponseService;
 
-  ResponseService.$inject = [];
+  ResponseService.$inject = ['$rootScope'];
 
-  function ResponseService() {
+  function ResponseService($rootScope) {
     this.data = {};
 
     this.clear = function(){
@@ -14,6 +14,17 @@
 
     this.getResponse = function(definition) {
       return this.data[definition.key];
+    };
+
+    this.SaveState = function () {
+      sessionStorage.userService = angular.toJson(this.data);
+    };
+
+    this.RestoreState = function () {
+      var data = angular.fromJson(sessionStorage.userService);
+      if (data) {
+        this.data = data;
+      }
     };
 
   }

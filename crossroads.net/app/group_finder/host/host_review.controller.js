@@ -30,14 +30,25 @@
                           LookupDefinitions) {
     var vm = this;
 
-    vm.initialize = function() {
+    vm.pending = true;
+    vm.responses = Responses.data;
+    vm.host = AuthenticatedPerson;
+    vm.lookup = LookupDefinitions;
+    vm.startOver = startOver;
+    vm.publish = publish;
+    vm.lookupContains = lookupContains;
+    vm.getGroupAttributes = getGroupAttributes;
+    vm.getGroupTime = getGroupTime;
+    vm.formatTime = formatTime;
+    vm.goBack = goBack;
+    vm.capacity = capacity;
+    vm.isPrivate = isPrivate;
+    vm.initialize = initialize;
+
+    function initialize() {
       if (Responses.data.completed_flow !== true) {
         $state.go('group_finder.host.questions');
       }
-
-      vm.responses = Responses.data;
-      vm.host = AuthenticatedPerson;
-      vm.lookup = LookupDefinitions;
 
       if(vm.isPrivate()) {
         vm.publish();
@@ -53,18 +64,20 @@
         type: vm.responses.group_type,
         attributes: vm.getGroupAttributes(),
         host: {
-          contactId: $scope.person.contactId
+          contactId: AuthenticatedPerson.contactId
         }
       };
-    };
 
-    vm.startOver = function() {
+      vm.pending = false;
+    }
+
+    function startOver() {
       $scope.$parent.currentStep = 1;
       $state.go('group_finder.host.questions');
-    };
+    }
 
-    var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
-    vm.publish = function() {
+    function publish() {
+      var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -96,35 +109,42 @@
       group.address = {};
 
       if (vm.isPrivate() === false) {
-        group.groupDescription = Responses.data.description;
-        group.childCareInd = Responses.data.kids === 1;
-        group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
-        group.meetingTime = vm.formatTime(Responses.data.date_and_time.time);
+        group.groupDescription = vm.responses.description;
+        group.childCareInd = vm.responses.kids === 1;
+        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase());
+        group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
         group.address = {
-          addressLine1: Responses.data.location.street,
-          city: Responses.data.location.city,
-          state: Responses.data.location.state,
-          zip: Responses.data.location.zip
+          addressLine1: vm.responses.location.street,
+          city: vm.responses.location.city,
+          state: vm.responses.location.state,
+          zip: vm.responses.location.zip
         };
       }
 
+      var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
+      group.singleAttributes = {};
+      _.each(singleAttributes, function(index) {
+         var answer = this.data[index];
+         var attributeTypeId = this.lookup[answer].attributeTypeId;
+         group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+      }, {data: vm.responses, lookup: vm.lookup});
+
       var attributes = [];
-      if (_.has(Responses.data, 'goals')) {
-        attributes.push(Responses.data.goals);
-      }
-      if (_.has(Responses.data, 'kids')) {
-        attributes.push(Responses.data.kids);
-      }
+      var petAttributeTypeId = null;
+      _.each(vm.responses.pets, function(hasPet, id) {
+        if (!petAttributeTypeId) {
+          petAttributeTypeId = this.lookup[id].attributeTypeId;
+        }
+        if (hasPet) {
+          attributes.push({'attributeId': id, 'selected': true});
+        }
+      }, {lookup: vm.lookup});
 
-      if (_.has(Responses.data, 'pets')) {
-        _.each(Responses.data.pets, function(value, pet) {
-          attributes.push(pet);
-        });
-      }
-
-      group.attributes = _.map(attributes, function(data) {
-        return {selected: true, startDate: GROUP_API_CONSTANTS.START_DATE, attributeId: data};
-      });
+      group.attributeTypes = {};
+      group.attributeTypes[petAttributeTypeId] = {
+        attributeTypeId: petAttributeTypeId,
+        attributes: attributes
+      };
 
       // Publish the group to the API and handle the response
       $log.debug('Publishing group:', group);
@@ -132,7 +152,7 @@
 
         $log.debug('Group was published successfully:', group);
         var capacity = 1;
-        if (Responses.data.marital_status === '7022') {
+        if (vm.responses.marital_status === '7022') {
           capacity = 2;
         }
         // User invitation service to add person to that group
@@ -153,14 +173,17 @@
       }, function error() {
         vm.rejected = true;
         $log.debug('An error occurred while publishing');
+      })
+      .finally(function() {
+        vm.pending = false;
       });
-    };
+    }
 
-    vm.lookupContains = function(id, keyword) {
-      return vm.lookup[id].toLowerCase().indexOf(keyword) > -1;
-    };
+    function lookupContains(id, keyword) {
+      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
+    }
 
-    vm.getGroupAttributes = function() {
+    function getGroupAttributes() {
       var ret = [];
       if (vm.lookupContains(vm.responses.kids, 'kid')) { ret.push('kids welcome'); }
 
@@ -173,31 +196,31 @@
         });
       }
       return ret;
-    };
+    }
 
-    vm.getGroupTime = function() {
+    function getGroupTime() {
       var dt = vm.responses.date_and_time;
       if (dt) {
         return dt['day'] + 's @ ' + vm.formatTime(dt['time']);
       }
-    };
+    }
 
-    vm.formatTime = function(time) {
+    function formatTime(time) {
       return  moment(time).format('h:mm a');
-    };
+    }
 
-    vm.goBack = function() {
+    function goBack() {
       $window.history.back();
-    };
+    }
 
-    vm.capacity = function() {
+    function capacity() {
       // capacity is total - filled + 1 to include the host
       return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots) + 1);
-    };
+    }
 
-    vm.isPrivate = function() {
+    function isPrivate() {
       return vm.responses && vm.capacity() <= 0;
-    };
+    }
 
     // ------------------------------- //
 
