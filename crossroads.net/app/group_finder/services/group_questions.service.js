@@ -36,9 +36,12 @@
 
             if (_.has(question, 'attributeType') && question.attributeType) {
               question.answers = _.map(question.attributeType.attributes, function(attribute) {
-                service.lookup[attribute.attributeId] = attribute.name;
+                service.lookup[attribute.attributeId] = {
+                  name: attribute.name,
+                  attributeTypeId: this.attributeTypeId
+                };
                 return { id: attribute.attributeId, name: attribute.name };
-              });
+              }, {attributeTypeId: question.attributeType.attributeTypeId});
             }
           });
         });
