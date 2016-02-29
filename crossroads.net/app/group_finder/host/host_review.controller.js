@@ -169,7 +169,7 @@
         });
 
         // Created group successfully, go to confirmation page
-        //$state.go('group_finder.host.confirm');
+        $state.go('group_finder.host.confirm');
       }, function error() {
         vm.rejected = true;
         $log.debug('An error occurred while publishing');
