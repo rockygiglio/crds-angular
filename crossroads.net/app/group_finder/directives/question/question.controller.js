@@ -5,9 +5,9 @@
 
   var constants = require('./constants');
 
-  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'ImageService', 'Person', 'GROUP_TYPES'];
+  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'ImageService', 'Person'];
 
-  function QuestionCtrl($timeout, $scope, $compile, ImageService, Person, GROUP_TYPES) {
+  function QuestionCtrl($timeout, $scope, $compile, ImageService, Person) {
 
     $scope.initialize = function() {
       $scope.states = constants.US_STATES;
@@ -41,10 +41,10 @@
       $scope.sliderOptions = {
         hideLimitLabels: true,
         showSelectionBar: true,
-        floor: (key === 'filled_spots' ? 0 : 3),
-        ceil: (key === 'filled_spots' ? $scope.responses.total_capacity - 1 : 12)
+        floor: (key === 'filled_spots' ? 1 : 3),
+        ceil: (key === 'filled_spots' ? $scope.responses.total_capacity : 12)
       };
-      $scope.sliderDefault = (key === 'filled_spots' ? 0 : 7);
+      $scope.sliderDefault = (key === 'filled_spots' ? 1 : 7);
       $scope.refreshSlider();
     };
 
