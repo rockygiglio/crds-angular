@@ -14,7 +14,8 @@
     '$log',
     'GroupInvitationService',
     'GROUP_ROLE_ID_HOST',
-    'LookupDefinitions'
+    'LookupDefinitions',
+    'SERIES'
   ];
 
   function HostReviewCtrl($window,
@@ -27,7 +28,8 @@
                           $log,
                           GroupInvitationService,
                           GROUP_ROLE_ID_HOST,
-                          LookupDefinitions) {
+                          LookupDefinitions,
+                          SERIES) {
     var vm = this;
 
     vm.pending = true;
