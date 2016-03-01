@@ -72,7 +72,7 @@
         time: vm.getGroupTime(),
         distance: '0 miles from you',
         description: vm.responses.description,
-        type: vm.responses.group_type,
+        type: vm.lookup[vm.responses.group_type].description,
         attributes: vm.getGroupAttributes(),
         host: {
           contactId: AuthenticatedPerson.contactId

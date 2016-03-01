@@ -38,7 +38,8 @@
               question.answers = _.map(question.attributeType.attributes, function(attribute) {
                 service.lookup[attribute.attributeId] = {
                   name: attribute.name,
-                  attributeTypeId: this.attributeTypeId
+                  attributeTypeId: this.attributeTypeId,
+                  description: attribute.description
                 };
                 return { id: attribute.attributeId, name: attribute.name };
               }, {attributeTypeId: question.attributeType.attributeTypeId});
