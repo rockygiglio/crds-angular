@@ -19,6 +19,7 @@
     'GroupInvitationService',
     'GROUP_ROLE_ID_HOST',
     'LookupDefinitions',
+    'DAYS',
     'SERIES'
   ];
 
@@ -37,6 +38,7 @@
                           GroupInvitationService,
                           GROUP_ROLE_ID_HOST,
                           LookupDefinitions,
+                          DAYS,
                           SERIES) {
     var vm = this;
 
@@ -88,7 +90,6 @@
     }
 
     function publish() {
-      var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       vm.requestPending = true;
       vm.rejected = false;
 
@@ -125,7 +126,7 @@
         group.childCareInd = vm.responses.kids === 1;
 
         // meetingDayId is not zero based
-        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
+        group.meetingDayId = DAYS.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
         group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
         group.address = {
           addressLine1: vm.responses.location.street,
@@ -188,9 +189,9 @@
             email.templateId = EMAIL_TEMPLATES.HOST_PUBLIC_CONFIRM_EMAIL_ID;
             email.mergeData = {
               PreferredName: AuthenticatedPerson.nickName,
-              Address_Line_1: vm.responses.location.street,
-              Meeting_Day: vm.responses.date_and_time.day,
-              Meeting_Time: vm.formatTime(vm.responses.date_and_time.time)
+              AddressLine1: vm.responses.location.street,
+              MeetingDay: vm.responses.date_and_time.day,
+              MeetingTime: vm.formatTime(vm.responses.date_and_time.time)
             };
           } else {
             email.templateId = EMAIL_TEMPLATES.HOST_PRIVATE_CONFIRM_EMAIL_ID;

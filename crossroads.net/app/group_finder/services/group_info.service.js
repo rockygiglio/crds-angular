@@ -21,6 +21,9 @@
     groupInfo.getHosting = getHosting;
     groupInfo.getParticipating = getParticipating;
     groupInfo.findHosting = findHosting;
+    groupInfo.findParticipating = findParticipating;
+    groupInfo.findParticipatingOrHost = findParticipatingOrHost;
+    groupInfo.isParticipatingOrHost = isParticipatingOrHost;
 
     // Clear the group info cache when the user logs out
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, reset);
@@ -31,8 +34,8 @@
     //
     // Initialize the data
     //
-    function loadGroupInfo() {
-      if (!requestPromise) {
+    function loadGroupInfo(forceReload) {
+      if (!requestPromise || forceReload) {
         requestPromise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
         requestPromise.then(function(data) {
           // Clear existing data before reloading to avoid duplicates
@@ -62,6 +65,12 @@
               if (!group.meetingTime || !group.meetingDayId || !group.address) {
                 group.isPrivate = true;
               }
+
+              // Parse the host's name
+              parseContactName(group);
+
+              // Convert the meetingDayId and the meetingTime into the client formats
+              processMeetingDayAndTime(group);
             });
           }
           return groups;
@@ -86,10 +95,30 @@
       return groups.participating;
     }
 
-    function findHosting(id) {
+    function findHosting(groupId) {
       return _.find(groups.hosting, function(group) {
-        return group.groupId === parseInt(id);
+        return group.groupId === parseInt(groupId);
       });
+    }
+
+    function findParticipating(groupId) {
+      return _.find(groups.participating, function(group) {
+        return group.groupId === parseInt(groupId);
+      });
+    }
+
+    function findParticipatingOrHost(groupId) {
+      var group = findParticipating(groupId);
+      if (!group) {
+        group = findHosting(groupId);
+      }
+
+      return group;
+    }
+
+    function isParticipatingOrHost(groupId) {
+      var group = findParticipatingOrHost(groupId);
+      return !!group;
     }
 
     function queryParticipants(group) {
@@ -111,6 +140,25 @@
 
         group.members = members;
       });
+    }
+
+    function parseContactName(group) {
+      if (group.contactName) {
+        group.contact = {};
+
+        var tokens = group.contactName.split(/ *, */);
+        group.contact.lastName = tokens[0];
+        if (tokens.length > 1) {
+          group.contact.firstName = tokens[1];
+        }
+      }
+    }
+
+    function processMeetingDayAndTime(group) {
+      var meetingTime = moment().format('YYYY-MM-DD') + ' ' + group.meetingTime;
+
+      group.meetingDay = moment().isoWeekday(group.meetingDayId - 1).format('dddd');
+      group.meetingHour = moment(meetingTime).format('h a');
     }
 
     function reset() {
