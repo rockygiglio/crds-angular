@@ -13,5 +13,6 @@
 
 <span class="help-block" ng-if="definition.help" ng-bind-html="render('help')"></span>
 <div class="has-error" ng-if="showError"><span>{{errorMessage}}</span></div>
+<div class="has-error" ng-if="showZipError"><span>Invalid Zipcode</span></div>
 
 <div ng-bind-html="render('footer')" ng-if="definition.footer"></div>
