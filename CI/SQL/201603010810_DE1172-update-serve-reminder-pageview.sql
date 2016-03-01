@@ -105,8 +105,7 @@ END
 --		, Opportunity_ID_Table.[Shift_End]'
 --		,N'Opportunity_ID_Table.[Send_Reminder] = 1 
 --		AND Event_ID_Table.[Event_Start_Date] >= GETDATE()
---		AND Opportunity_ID_Table.[Reminder_Days_Prior] = DATEDIFF(DAY, GETDATE(), Event_ID_Table.[Event_Start_Date])
---		AND Response_Result_ID_Table.[Response_Result_ID]=1'
+--		AND Opportunity_ID_Table.[Reminder_Days_Prior] = DATEDIFF(DAY, GETDATE(), Event_ID_Table.[Event_Start_Date])'
 --	)
 
 --	SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF
@@ -130,8 +129,7 @@ END
 --		, Opportunity_ID_Table.[Shift_End]'
 --		,[View_Clause] = N'Opportunity_ID_Table.[Send_Reminder] = 1 
 --		AND Event_ID_Table.[Event_Start_Date] >= GETDATE()
---		AND Opportunity_ID_Table.[Reminder_Days_Prior] = DATEDIFF(DAY, GETDATE(), Event_ID_Table.[Event_Start_Date])
---		AND Response_Result_ID_Table.[Response_Result_ID]=1'
+--		AND Opportunity_ID_Table.[Reminder_Days_Prior] = DATEDIFF(DAY, GETDATE(), Event_ID_Table.[Event_Start_Date])'
 --		,[View_Title] = @VIEW_TITLE
 --	WHERE [Page_View_ID] = @VIEW_ID
 --END
