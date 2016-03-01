@@ -344,7 +344,8 @@ namespace crds_angular.Services
         private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
-            var fromContact = _contactService.GetContactById(particpant.ContactId);
+            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
             return new Communication
@@ -354,7 +355,7 @@ namespace crds_angular.Services
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
                 FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
                 ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
