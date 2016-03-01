@@ -42,10 +42,10 @@
 
     // if there are responses, then the user came through QA flow
     function initialize() {
-      //if (GroupInfo.isParticipatingOrHost(vm.groupId)) {
-      //  vm.requestPending = false;
-      //  vm.alreadyJoined = true;
-      //}
+      if (GroupInfo.isParticipatingOrHost(vm.groupId)) {
+        vm.requestPending = false;
+        vm.alreadyJoined = true;
+      }
 
       if (vm.alreadyJoined === false) {
         if (_.has(Responses.data , 'completedQa')) {
