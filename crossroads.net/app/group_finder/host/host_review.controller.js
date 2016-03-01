@@ -8,10 +8,13 @@
     '$rootScope',
     '$scope',
     '$state',
+    '$timeout',
     'Responses',
     'Group',
     'AuthenticatedPerson',
     'GROUP_API_CONSTANTS',
+    'EMAIL_TEMPLATES',
+    'Email',
     '$log',
     'GroupInvitationService',
     'GROUP_ROLE_ID_HOST',
@@ -23,10 +26,13 @@
                           $rootScope,
                           $scope,
                           $state,
+                          $timeout,
                           Responses,
                           Group,
                           AuthenticatedPerson,
                           GROUP_API_CONSTANTS,
+                          EMAIL_TEMPLATES,
+                          Email,
                           $log,
                           GroupInvitationService,
                           GROUP_ROLE_ID_HOST,
@@ -162,25 +168,55 @@
             capacity = 2;
           }
 
+          // Reload the groups now that the group info has been published, in case an error happens
+          // later in promise chain
+          $rootScope.$broadcast('reloadGroups');
+
+          // Created group successfully, go to confirmation page allowing the current execution to complete
+          $timeout(function() {
+            $state.go('group_finder.host.confirm');
+          }, 0);
+
+          // Send host confirmation emails
+          var email = {
+            groupId: group.groupId,
+            fromContactId: AuthenticatedPerson.contactId,
+            toContactId: AuthenticatedPerson.contactId
+          };
+
+          if (!vm.isPrivate()) {
+            email.templateId = EMAIL_TEMPLATES.HOST_PUBLIC_CONFIRM_EMAIL_ID;
+            email.mergeData = {
+              PreferredName: AuthenticatedPerson.nickName,
+              Address_Line_1: vm.responses.location.street,
+              Meeting_Day: vm.responses.date_and_time.day,
+              Meeting_Time: vm.formatTime(vm.responses.date_and_time.time)
+            };
+          } else {
+            email.templateId = EMAIL_TEMPLATES.HOST_PRIVATE_CONFIRM_EMAIL_ID;
+          }
+
+          Email.Mail.save(email).$promise.catch(function hostEmailError(error) {
+            $log.error("Host email confirmation failed", error);
+          });
+
           // User invitation service to add person to that group
           return GroupInvitationService.acceptInvitation(group.groupId,
             {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
         })
-        .then(function reloadGroupSuccess() {
+        .then(function hostInviteSuccess() {
+            // Reload group to pick up host as member
             $rootScope.$broadcast('reloadGroups');
 
             // Invitation acceptance was successful
             vm.accepted = true;
-
-            // Created group successfully, go to confirmation page
-            $state.go('group_finder.host.confirm');
           })
         .catch(
-          function chainError() {
+          function chainError(error) {
             vm.rejected = true;
             vm.requestPending = false;
             vm.showPublish = false;
-            $log.debug('An error occurred while publishing');
+            $log.debug('An error occurred while publishing', error);
           });
     }
 

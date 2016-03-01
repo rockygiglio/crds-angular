@@ -16,7 +16,7 @@
     .constant('GOOGLE_API_KEY',       require('./group_finder.constants').GOOGLE_API_KEY)
     .constant('GROUP_ROLE_ID_PARTICIPANT',       require('./group_finder.constants').GROUP_ROLE_ID_PARTICIPANT)
     .constant('GROUP_ROLE_ID_HOST',       require('./group_finder.constants').GROUP_ROLE_ID_HOST)
-    .constant('INVITE_EMAIL_ID',      require('./group_finder.constants').INVITE_EMAIL_ID)
+    .constant('EMAIL_TEMPLATES',      require('./group_finder.constants').EMAIL_TEMPLATES)
     .filter('humanize',               require('./filters/humanize.filter.js'))
     .controller('GroupFinderCtrl',    require('./group_finder.controller'))
     .controller('SummaryCtrl',        require('./summary/summary.controller'))
