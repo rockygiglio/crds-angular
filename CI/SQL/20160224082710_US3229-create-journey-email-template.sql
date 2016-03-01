@@ -28,11 +28,8 @@ INSERT INTO @Email_Templates
 	(17546
 	     , @Author_User_ID
 	     , 'You’re hosting a BRAVE group!'
-		 , '<span style="font-family: Arial; font-size: 13px;"><b>So what happens next? </b></span><div><br /></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;">First the Review:  
-			</span><span style="font-family: Arial; font-size: 13px;">[PreferredName] is hosting a BRAVE group @ [Address_Line_1] On [Meeting_Day] @ [Meeting_Time].
-			If any of that is wrong, contact us. </span><br /></div><div><span style="font-family: Arial; font-size: 13px;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;">Next
-			</span><span style="font-family: Arial; font-size: 13px;">You kick back, wait and watch your group fill grow. We’ll email you updates as new members join. </span></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px;"></span><span style="font-family: Arial; font-size: 13px; font-weight: bold;">Then, it’s on to your Dashboard
-			</span><span style="font-family: Arial; font-size: 13px;">Your dashboard is your host command center. 
+		 , '<span style="font-family: Arial; font-size: 13px;"><b>So what happens next? </b></span><div><br /></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;">First the Review</span></div><div><span style="font-family: Arial; font-size: 13px;">[PreferredName] is hosting a BRAVE group @ [Address_Line_1] On [Meeting_Day] @ [Meeting_Time].
+			If any of that is wrong, contact us. </span><br /></div><div><span style="font-family: Arial; font-size: 13px;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;">Next</span></div><div><span style="font-family: Arial; font-size: 13px;">You kick back, wait and watch your group grow.</span></div><div><span style="font-family: Arial; font-size: 13px; font-weight: bold;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px;"></span><span style="font-family: Arial; font-size: 13px; font-weight: bold;">Then, it’s on to your Dashboard</span></div><div><span style="font-family: Arial; font-size: 13px;">Your dashboard is your host command center. 
 			There you can:</span></div><div><span style="font-family: Arial; font-size: 13px;"> * Invite specific people to your group </span></div><div><span style="font-family: Arial; font-size: 13px;"> * Send notes to your group. </span></div><div><span style="font-family: Arial; font-size: 13px;"> * Access all of your BRAVE materials. 
 			</span></div><div><span style="font-family: Arial; font-size: 13px;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px;">That sounds awesome, right? Why not go check out </span><span style="font-family: Arial; font-size: 13px; text-decoration: underline;"><a href="https://[BaseUrl]/bravegrouptool/dashboard">Your Dashboard</a></span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"> now. </span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><br /></span></div>'
 		 , @Domain_ID, @Start_Date, @Communication_Status_ID, @From_Contact, @Reply_to_Contact, @Template, @Active),
@@ -65,9 +62,7 @@ Thanks for being BRAVE!</span><br /></div><div><br /></div>'
 	(17549
 	     , @Author_User_ID
 	     , 'You’ve joined a BRAVE group'
-		 , '<div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><b>Welcome to [HostPreferredName]’s group. </b></span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">			</span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">Your host will reach out to you with details around where and when your group will be meeting. So hang tight. 
-
-           Thanks for being BRAVE!</span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><br /></span></div>'
+		 , '<div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><b>Welcome to [HostPreferredName]’s group. </b></span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">			</span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">Your host will reach out to you with details around where and when your group will be meeting. So hang tight.</span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><br /></span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">Thanks for being BRAVE!</span></div><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;"><br /></span></div>'
 		 , @Domain_ID, @Start_Date, @Communication_Status_ID, @From_Contact, @Reply_to_Contact, @Template, @Active),
 	(17550
 	     , @Author_User_ID
