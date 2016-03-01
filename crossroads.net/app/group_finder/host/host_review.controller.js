@@ -133,32 +133,32 @@
           state: vm.responses.location.state,
           zip: vm.responses.location.zip
         };
+
+        var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
+        group.singleAttributes = {};
+        _.each(singleAttributes, function (index) {
+          var answer = this.data[index];
+          var attributeTypeId = this.lookup[answer].attributeTypeId;
+          group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+        }, {data: vm.responses, lookup: vm.lookup});
+
+        var attributes = [];
+        var petAttributeTypeId = null;
+        _.each(vm.responses.pets, function (hasPet, id) {
+          if (!petAttributeTypeId) {
+            petAttributeTypeId = this.lookup[id].attributeTypeId;
+          }
+          if (hasPet) {
+            attributes.push({'attributeId': id, 'selected': true});
+          }
+        }, {lookup: vm.lookup});
+
+        group.attributeTypes = {};
+        group.attributeTypes[petAttributeTypeId] = {
+          attributeTypeId: petAttributeTypeId,
+          attributes: attributes
+        };
       }
-
-      var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
-      group.singleAttributes = {};
-      _.each(singleAttributes, function (index) {
-        var answer = this.data[index];
-        var attributeTypeId = this.lookup[answer].attributeTypeId;
-        group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
-      }, {data: vm.responses, lookup: vm.lookup});
-
-      var attributes = [];
-      var petAttributeTypeId = null;
-      _.each(vm.responses.pets, function (hasPet, id) {
-        if (!petAttributeTypeId) {
-          petAttributeTypeId = this.lookup[id].attributeTypeId;
-        }
-        if (hasPet) {
-          attributes.push({'attributeId': id, 'selected': true});
-        }
-      }, {lookup: vm.lookup});
-
-      group.attributeTypes = {};
-      group.attributeTypes[petAttributeTypeId] = {
-        attributeTypeId: petAttributeTypeId,
-        attributes: attributes
-      };
 
       // Publish the group to the API and handle the response
       Group.Detail.save(group).$promise
