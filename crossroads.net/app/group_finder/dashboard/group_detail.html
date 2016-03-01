@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="!detail.group.members.length">
+    <div ng-if="detail.group.members.length <= 1">
       <div class="help text-center">No one has joined your group yet.</div>
     </div>
 
@@ -27,7 +27,7 @@
       <br />
       <br />
 
-      <div ng-if="detail.group.members.length > 0">
+      <div ng-if="detail.group.members.length > 1">
         <button class="btn btn-primary btn-block" ng-click="detail.emailGroup()">Email Your Group</button>
       </div>
 
