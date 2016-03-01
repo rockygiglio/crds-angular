@@ -11,6 +11,11 @@
     vm.showDashboard = showDashboard;
     vm.successMessage = successMessage;
     vm.responses = Responses;
+
+    if (vm.responses.data.completed_flow !== true) {
+      $state.go('group_finder.host.questions');
+    }
+
     Responses.clear();
 
     function showDashboard() {
