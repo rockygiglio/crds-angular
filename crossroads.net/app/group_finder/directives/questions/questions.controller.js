@@ -21,7 +21,7 @@
 
     $scope.initialize = function() {
 
-      $scope.step = $location.hash() || $scope.step;
+      $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
 
@@ -33,6 +33,7 @@
     };
 
     $scope.previousQuestion = function() {
+      $scope.applyErrors();
       $scope.step--;
       $scope.provideFocus();
     };
