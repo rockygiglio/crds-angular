@@ -21,6 +21,10 @@
 
     $scope.initialize = function() {
 
+      $scope.questions = _.reject($scope.questions, function(q) {
+        return q.hidden !== undefined && q.hidden === true;
+      });
+
       $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
@@ -130,6 +134,15 @@
                     response = response[controlName];
                   }
                 }
+                //
+                if (el.data('input-type') !== undefined) {
+                  switch (el.data('input-type')) {
+                    case 'zip':
+                      if ($scope.validZip(el.val()) === false) {
+                        response = '';
+                      }
+                  }
+                }
 
                 var hasError = (response === undefined || response === '');
 
@@ -147,9 +160,26 @@
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
         }
+        if (el.data('input-type') !== undefined) {
+          switch (el.data('input-type')) {
+            case 'zip':
+              if ($scope.validZip(el.val()) === false) {
+                $scope.$broadcast('groupFinderZipError');
+                el.closest('div').addClass('has-error');
+              }
+          }
+        }
       });
     };
 
+    $scope.validZip = function(zip) {
+      var pattern = /^\d{5}(?:[-\s]\d{4})?$/;
+      var result = true;
+      if (zip.match(pattern) === null) {
+        result = false;
+      }
+      return result;
+    };
 
     $scope.provideFocus = function() {
       $timeout(function() {
