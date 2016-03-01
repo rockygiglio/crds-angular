@@ -5,6 +5,7 @@
 
   HostReviewCtrl.$inject = [
     '$window',
+    '$rootScope',
     '$scope',
     '$state',
     'Responses',
@@ -19,6 +20,7 @@
   ];
 
   function HostReviewCtrl($window,
+                          $rootScope,
                           $scope,
                           $state,
                           Responses,
@@ -33,6 +35,7 @@
     var vm = this;
 
     vm.pending = true;
+    vm.showPublish = true;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
     vm.lookup = LookupDefinitions;
@@ -80,6 +83,7 @@
 
     function publish() {
       var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      vm.requestPending = true;
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -127,15 +131,15 @@
 
       var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
       group.singleAttributes = {};
-      _.each(singleAttributes, function(index) {
-         var answer = this.data[index];
-         var attributeTypeId = this.lookup[answer].attributeTypeId;
-         group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+      _.each(singleAttributes, function (index) {
+        var answer = this.data[index];
+        var attributeTypeId = this.lookup[answer].attributeTypeId;
+        group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
       }, {data: vm.responses, lookup: vm.lookup});
 
       var attributes = [];
       var petAttributeTypeId = null;
-      _.each(vm.responses.pets, function(hasPet, id) {
+      _.each(vm.responses.pets, function (hasPet, id) {
         if (!petAttributeTypeId) {
           petAttributeTypeId = this.lookup[id].attributeTypeId;
         }
@@ -151,36 +155,33 @@
       };
 
       // Publish the group to the API and handle the response
-      $log.debug('Publishing group:', group);
-      Group.Detail.save(group).$promise.then(function success(group) {
+      Group.Detail.save(group).$promise
+        .then(function groupPublishSuccess(group) {
+          var capacity = 1;
+          if (Responses.data.marital_status === '7022') {
+            capacity = 2;
+          }
 
-        $log.debug('Group was published successfully:', group);
-        var capacity = 1;
-        if (vm.responses.marital_status === '7022') {
-          capacity = 2;
-        }
-        // User invitation service to add person to that group
-        var promise = GroupInvitationService.acceptInvitation(group.groupId,
-                      {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
-        promise.then(function() {
-          // Invitation acceptance was successful
-          vm.accepted = true;
-        }, function(error) {
-          // An error happened accepting the invitation
-          vm.rejected = true;
-        }).finally(function() {
-          vm.requestPending = false;
-        });
+          // User invitation service to add person to that group
+          return GroupInvitationService.acceptInvitation(group.groupId,
+            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+        })
+        .then(function reloadGroupSuccess() {
+            $rootScope.$broadcast('reloadGroups');
 
-        // Created group successfully, go to confirmation page
-        $state.go('group_finder.host.confirm');
-      }, function error() {
-        vm.rejected = true;
-        $log.debug('An error occurred while publishing');
-      })
-      .finally(function() {
-        vm.pending = false;
-      });
+            // Invitation acceptance was successful
+            vm.accepted = true;
+
+            // Created group successfully, go to confirmation page
+            $state.go('group_finder.host.confirm');
+          })
+        .catch(
+          function chainError() {
+            vm.rejected = true;
+            vm.requestPending = false;
+            vm.showPublish = false;
+            $log.debug('An error occurred while publishing');
+          });
     }
 
     function lookupContains(id, keyword) {

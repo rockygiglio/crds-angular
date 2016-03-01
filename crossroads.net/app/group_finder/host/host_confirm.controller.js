@@ -14,7 +14,6 @@
     Responses.clear();
 
     function showDashboard() {
-      $rootScope.$broadcast('reloadGroups');
       $state.go('group_finder.dashboard');
     }
 
