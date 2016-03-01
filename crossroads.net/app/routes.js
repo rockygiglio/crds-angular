@@ -119,7 +119,6 @@
           parent: 'noHeaderOrFooter',
           url: '/register',
           templateUrl: 'register/register_page.html',
-          controller: 'RegisterCtrl',
           data: {
             meta: {
               title: 'Register',

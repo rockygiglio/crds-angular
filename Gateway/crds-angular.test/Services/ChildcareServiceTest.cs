@@ -172,7 +172,6 @@ namespace crds_angular.test.Services
         {
             const int daysBefore = 999;
             const int emailTemplateId = 77;
-            const int unassignedContact = 7386594;
             var participants = new List<EventParticipant>
             {
                 new EventParticipant

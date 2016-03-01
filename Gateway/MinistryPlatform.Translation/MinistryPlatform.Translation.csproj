@@ -107,6 +107,7 @@
     <Compile Include="Models\People\MpParticipant.cs" />
     <Compile Include="Models\People\Participant.cs" />
     <Compile Include="Models\Room.cs" />
+    <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailRepository.cs" />
     <Compile Include="Enum\NumericDayOfWeek.cs" />
     <Compile Include="Enum\PaymentType.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
-    <Compile Include="Services\ContactAttributeService.cs" />
+    <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />
     <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\CreatePageRecordService.cs" />
@@ -136,10 +137,11 @@
     <Compile Include="Services\GetMyRecords.cs" />
     <Compile Include="Services\GroupParticipantService.cs" />
     <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\IBulkEmailRepository.cs" />
     <Compile Include="Services\Interfaces\IApiUserService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
-    <Compile Include="Services\Interfaces\IContactAttributeService.cs" />
+    <Compile Include="Services\Interfaces\IObjectAttributeService.cs" />
     <Compile Include="Services\Interfaces\IAttributeService.cs" />
     <Compile Include="Services\Interfaces\ICampaignService.cs" />
     <Compile Include="Services\Interfaces\IAuthenticationService.cs" />

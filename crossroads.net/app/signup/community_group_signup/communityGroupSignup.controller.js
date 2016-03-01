@@ -198,14 +198,18 @@
           if (array[i].newAdd !== undefined && array[i].newAdd !== '') {
             result.partId[result.partId.length] = {
               participantId: array[i].newAdd,
-              childCareNeeded: array[i].childCareNeeded
+              childCareNeeded: array[i].childCareNeeded,
+              capacityNeeded: 0,
+              sendConfirmationEmail: true
             };
           }
         }
       } else if (array.length === 1) {
         result.partId[0] = {
           participantId: array[0].participantId,
-          childCareNeeded: array[0].childCareNeeded
+          childCareNeeded: array[0].childCareNeeded,
+          capacityNeeded: 0,
+          sendConfirmationEmail: true
         };
       }
 

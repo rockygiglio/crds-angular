@@ -8,12 +8,15 @@ namespace crds_angular.Exceptions.Models
 {
     public class ApiErrorDto
     {
+        private readonly HttpStatusCode code;
+
         public ApiErrorDto()
         {
         }
 
-        public ApiErrorDto(string message, Exception exception = null)
+        public ApiErrorDto(string message, Exception exception = null, HttpStatusCode code = HttpStatusCode.BadRequest)
         {
+            this.code = code;
             this.Message = message;
 
             if (exception != null)
@@ -36,10 +39,11 @@ namespace crds_angular.Exceptions.Models
         [JsonIgnore]
         public HttpResponseMessage HttpResponseMessage
         {
+            
             get
             {
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest) {Content = new StringContent(json)};
+                var resp = new HttpResponseMessage(code) {Content = new StringContent(json)};
                 return resp;
             }
         }

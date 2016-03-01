@@ -14,6 +14,9 @@
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
         resolve: {
+          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
+            return GroupInfo.loadGroupInfo();
+          }],
           AuthenticatedPerson: ['Person', function(Person) {
             return Person.getProfile();
           }]

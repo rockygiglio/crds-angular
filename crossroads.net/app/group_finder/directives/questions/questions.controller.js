@@ -6,73 +6,68 @@
   QuestionsCtrl.$inject = [
     '$location',
     '$timeout',
-    '$rootScope',
     '$scope',
     '$state',
-    '$stateParams',
     '$window',
     'Responses'
   ];
 
   function QuestionsCtrl( $location,
                           $timeout,
-                          $rootScope,
                           $scope,
                           $state,
-                          $stateParams,
                           $window,
                           Responses) {
 
     $scope.initialize = function() {
-      $scope.step = $location.hash() || $scope.step;
+
+      $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
-      $scope.totalQuestions = _.size($scope.getQuestions());
+      $scope.totalQuestions = _.size($scope.questions);
 
       Object.defineProperty($scope, 'nextBtn', {
         get: function() {
           return $scope.isPrivateGroup() ? 'Make My Group Private' : ($scope.currentQuestion().next || 'Next');
         }
       });
-
-    };
-
-    $scope.getQuestions = function() {
-      if(!$scope._questions) {
-        $scope._questions = _.reject($scope.questions, function(q) {
-          return q.hidden !== undefined && q.hidden === true;
-        });
-      }
-      return $scope._questions;
     };
 
     $scope.previousQuestion = function() {
+      $scope.applyErrors();
       $scope.step--;
       $scope.provideFocus();
     };
 
     $scope.nextQuestion = function() {
-      if($scope.isRequired() && _.any($scope.currentErrorFields())) {
+      if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
+        $scope.$broadcast('groupFinderShowError');
       } else {
         $scope.go();
       }
     };
 
     $scope.go = function() {
+      Responses.data.completed_flow = true;
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
-        // TODO if private group skip review, save and show confirmation page.
         $state.go('group_finder.' + $scope.mode + '.review');
       } else if($scope.step === $scope.totalQuestions) {
         $state.go('group_finder.' + $scope.mode + '.review');
       } else {
+        Responses.data.completed_flow = false;
         $scope.step++;
         $scope.provideFocus();
       }
     };
 
     $scope.isPrivateGroup = function() {
-      return ($scope.currentKey() === 'open_spots' && $scope.currentResponse() === 0);
+      var isPrivate = false;
+      if ($scope.currentKey() === 'filled_spots') {
+        isPrivate = $scope.currentResponse() === $scope.responses['total_capacity'];
+        $scope.responses['open_spots'] = $scope.responses['total_capacity'] - $scope.currentResponse();
+      }
+      return isPrivate;
     };
 
     $scope.currentResponse = function() {
@@ -80,11 +75,11 @@
     };
 
     $scope.currentKey = function() {
-      return _.pluck($scope.getQuestions(), 'key')[$scope.step - 1];
+      return _.pluck($scope.questions, 'key')[$scope.step - 1];
     };
 
     $scope.currentQuestion = function() {
-      return _.find($scope.getQuestions(), function(obj){
+      return _.find($scope.questions, function(obj){
         return obj['key'] === $scope.currentKey();
       });
     };
@@ -97,15 +92,19 @@
       $scope.step = 1;
     };
 
-    $scope.isRequired = function() {
-      return $scope.currentQuestion().required === true;
-    };
-
     $scope.requiredFields = function() {
-      var visibleFields = $('input:visible, select:visible, textarea:visible');
-      return _.map(visibleFields, function(el,i) {
-        return $(el).attr('name');
-      });
+      var required = [];
+      if ($scope.currentQuestion().required === true) {
+        var visibleFields = $('input:visible, select:visible, textarea:visible');
+        required = _.map(visibleFields, function(el,i) {
+          var name = $(el).attr('name');
+          if (name !== undefined){
+            return name;
+          }
+        });
+      }
+
+      return _.compact(required);
     };
 
     $scope.currentErrorFields = function() {
@@ -142,6 +141,7 @@
 
     $scope.applyErrors = function() {
       $('div.has-error:visible').removeClass('has-error');
+      $scope.$broadcast('groupFinderClearError');
 
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {

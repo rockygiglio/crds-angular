@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
@@ -18,16 +21,22 @@ namespace crds_angular.Controllers.API
             _accountService = accountService;
         }
 
+        [ResponseType(typeof(User))]
         public IHttpActionResult Post([FromBody] User user)
         {
             try
             {
-                var returnvalue = _accountService.RegisterPerson(user);
-                return Ok(returnvalue);
+                var userRecord = _accountService.RegisterPerson(user);
+                return Ok(userRecord);
             }
             catch (DuplicateUserException e)
             {
                 var apiError = new ApiErrorDto(DUPLICATE_USER_MESSAGE, e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+            catch (ContactEmailExistsException contactException)
+            {
+                var apiError = new ApiErrorDto(string.Format("{0}", contactException.ContactId()), contactException, HttpStatusCode.Conflict);
                 throw new HttpResponseException(apiError.HttpResponseMessage);                
             }
         }

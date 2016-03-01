@@ -3,11 +3,19 @@
 
   module.exports = HostCtrl;
 
-  HostCtrl.$inject = ['$timeout', '$scope', '$state', 'AuthenticatedPerson'];
+  HostCtrl.$inject = ['Responses', '$scope', '$state'];
 
-  function HostCtrl ($timeout, $scope, $state, AuthenticatedPerson) {
+  function HostCtrl (Responses, $scope, $state) {
     $scope.currentStep = 1;
-    $scope.person = AuthenticatedPerson;
+
+    var vm = this;
+
+    vm.start = start;
+
+    function start() {
+      Responses.started = true;
+      $state.go('group_finder.host.questions');
+    }
   }
 
 })();

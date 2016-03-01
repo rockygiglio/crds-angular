@@ -17,7 +17,10 @@
             return Person.getProfile();
           }],
           QuestionDefinitions: function(GroupQuestionService) {
-            return GroupQuestionService.get().$promise;
+            return GroupQuestionService.getQuestions();
+          },
+          LookupDefinitions: function(GroupQuestionService) {
+            return GroupQuestionService.getLookup();
           }
         },
         data: {
@@ -29,18 +32,21 @@
         controller: 'HostQuestionsCtrl as host',
         url: '/questions',
         templateUrl: 'host/host_questions.html',
+        resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.host.review', {
         controller: 'HostReviewCtrl as host',
         url: '/review',
         templateUrl: 'host/host_review.html',
+        resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.host.confirm', {
         controller: 'HostConfirmCtrl as host',
         url: '/success',
         templateUrl: 'host/host_confirm.html',
+        resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })
       ;

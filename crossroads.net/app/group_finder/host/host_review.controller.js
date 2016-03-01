@@ -13,7 +13,9 @@
     'GROUP_API_CONSTANTS',
     '$log',
     'GroupInvitationService',
-    'GROUP_ROLE_ID_HOST'
+    'GROUP_ROLE_ID_HOST',
+    'LookupDefinitions',
+    'SERIES'
   ];
 
   function HostReviewCtrl($window,
@@ -25,16 +27,33 @@
                           GROUP_API_CONSTANTS,
                           $log,
                           GroupInvitationService,
-                          GROUP_ROLE_ID_HOST) {
+                          GROUP_ROLE_ID_HOST,
+                          LookupDefinitions,
+                          SERIES) {
     var vm = this;
 
-    vm.initialize = function() {
-      vm.responses = Responses.data;
-      vm.host = AuthenticatedPerson;
-      $log.debug('Host profile: ', vm.host);
+    vm.pending = true;
+    vm.responses = Responses.data;
+    vm.host = AuthenticatedPerson;
+    vm.lookup = LookupDefinitions;
+    vm.startOver = startOver;
+    vm.publish = publish;
+    vm.lookupContains = lookupContains;
+    vm.getGroupAttributes = getGroupAttributes;
+    vm.getGroupTime = getGroupTime;
+    vm.formatTime = formatTime;
+    vm.goBack = goBack;
+    vm.capacity = capacity;
+    vm.isPrivate = isPrivate;
+    vm.initialize = initialize;
+
+    function initialize() {
+      if (Responses.data.completed_flow !== true) {
+        $state.go('group_finder.host.questions');
+      }
 
       if(vm.isPrivate()) {
-        return $state.go('group_finder.host.confirm');
+        vm.publish();
       }
 
       var groupTitle = AuthenticatedPerson.displayName();
@@ -47,49 +66,20 @@
         type: vm.responses.group_type,
         attributes: vm.getGroupAttributes(),
         host: {
-          contactId: $scope.person.contactId
+          contactId: AuthenticatedPerson.contactId
         }
       };
-    };
 
-    vm.startOver = function() {
+      vm.pending = false;
+    }
+
+    function startOver() {
       $scope.$parent.currentStep = 1;
       $state.go('group_finder.host.questions');
-    };
+    }
 
-    /*
-      {
-        'groupName': 'Sample Group',
-        'groupDescription': 'Sample Group Description',
-        'groupTypeId': 19,
-        'ministryId': 8,
-        'congregationId': 1,
-        'contactId': 2399608,
-        'startDate': '2016-02-01T10:00:00.000Z',
-        'endDate': '2016-03-01T10:00:00.000Z',
-        'availableOnline': true,
-        'remainingCapacity': 10,
-        'groupFullInd': false,
-        'waitListInd': false,
-        'waitListGroupId': 0,
-        'childCareInd': false,
-        'minAge': 0,
-        'meetingDayId': 1,
-        'meetingTime': '10:00 AM',
-        'groupRoleId': ,
-        'address': {
-          'addressLine1': '5766 Pandora Ave',
-          'addressLine2': '',
-          'city': 'Cincinnati',
-          'state': 'Oh',
-          'zip': '45213',
-          'foreignCountry': 'United States',
-          'county': '',
-        }
-      }
-     */
-    var days = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
-    vm.publish = function() {
+    function publish() {
+      var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -103,27 +93,61 @@
 
       // Group owner, name and description
       group.contactId = AuthenticatedPerson.contactId;
-      group.groupName = AuthenticatedPerson.displayName();
-      group.groupDescription = Responses.data.description;
+      group.groupName = moment().year() + ' ' + SERIES.title + ' ' + AuthenticatedPerson.lastName;
+      group.groupDescription = '';
       group.congregationId = AuthenticatedPerson.congregationId;
 
       // Group size and availability
       group.availableOnline = true;
-      group.remainingCapacity = Responses.data.open_spots;
-      group.groupFullInd = Responses.data.open_spots <= 0;
+      group.remainingCapacity = vm.capacity();
+      group.groupFullInd = vm.capacity() <= 0;
       group.waitListInd = false;
-      group.childCareInd = Responses.data.kids === 1;
+      group.childCareInd = false;
 
       // When and where does the group meet
-      // TODO Handle this as ordinal in Responses instead of day name string
-      group.meetingDayId = days.indexOf(Responses.data.date_and_time.day.toLowerCase());
+      group.meetingDayId = 1;
 
-      group.meetingTime = Responses.data.date_and_time.time + ' ' + Responses.data.date_and_time.ampm;
-      group.address = {
-        addressLine1: Responses.data.location.street,
-        city: Responses.data.location.city,
-        state: Responses.data.location.state,
-        zip: Responses.data.location.zip
+      group.meetingTime = '';
+      group.address = {};
+
+      if (vm.isPrivate() === false) {
+        group.groupDescription = vm.responses.description;
+        group.childCareInd = vm.responses.kids === 1;
+
+        // meetingDayId is not zero based
+        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
+        group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
+        group.address = {
+          addressLine1: vm.responses.location.street,
+          city: vm.responses.location.city,
+          state: vm.responses.location.state,
+          zip: vm.responses.location.zip
+        };
+      }
+
+      var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
+      group.singleAttributes = {};
+      _.each(singleAttributes, function(index) {
+         var answer = this.data[index];
+         var attributeTypeId = this.lookup[answer].attributeTypeId;
+         group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+      }, {data: vm.responses, lookup: vm.lookup});
+
+      var attributes = [];
+      var petAttributeTypeId = null;
+      _.each(vm.responses.pets, function(hasPet, id) {
+        if (!petAttributeTypeId) {
+          petAttributeTypeId = this.lookup[id].attributeTypeId;
+        }
+        if (hasPet) {
+          attributes.push({'attributeId': id, 'selected': true});
+        }
+      }, {lookup: vm.lookup});
+
+      group.attributeTypes = {};
+      group.attributeTypes[petAttributeTypeId] = {
+        attributeTypeId: petAttributeTypeId,
+        attributes: attributes
       };
 
       // Publish the group to the API and handle the response
@@ -131,9 +155,13 @@
       Group.Detail.save(group).$promise.then(function success(group) {
 
         $log.debug('Group was published successfully:', group);
+        var capacity = 1;
+        if (vm.responses.marital_status === '7022') {
+          capacity = 2;
+        }
         // User invitation service to add person to that group
         var promise = GroupInvitationService.acceptInvitation(group.groupId,
-                                                              {capacity: 1, groupRoleId: GROUP_ROLE_ID_HOST});
+                      {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
         promise.then(function() {
           // Invitation acceptance was successful
           vm.accepted = true;
@@ -149,36 +177,54 @@
       }, function error() {
         vm.rejected = true;
         $log.debug('An error occurred while publishing');
+      })
+      .finally(function() {
+        vm.pending = false;
       });
-    };
+    }
 
-    vm.getGroupAttributes = function() {
+    function lookupContains(id, keyword) {
+      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
+    }
+
+    function getGroupAttributes() {
       var ret = [];
-      if (vm.responses.kids === '1') { ret.push('kids welcome'); }
+      if (vm.lookupContains(vm.responses.kids, 'kid')) { ret.push('kids welcome'); }
+
       if (vm.responses.pets) {
-        var pet_selections = _.map(Object.keys(vm.responses.pets), function(el) {
-          return parseInt(el);
+        _.each(vm.responses.pets, function(value, id) {
+          if (value) {
+            if (vm.lookupContains(id, 'dog')) { ret.push('has a dog'); }
+            if (vm.lookupContains(id, 'cat')) { ret.push('has a cat'); }
+          }
         });
-        if (pet_selections.indexOf(0) !== -1) { ret.push('has a cat'); }
-        if (pet_selections.indexOf(1) !== -1) { ret.push('has a dog'); }
       }
       return ret;
-    };
+    }
 
-    vm.getGroupTime = function() {
+    function getGroupTime() {
       var dt = vm.responses.date_and_time;
       if (dt) {
-        return dt['day'] + 's @ ' + dt['time'] + dt['ampm'];
+        return dt['day'] + 's @ ' + vm.formatTime(dt['time']);
       }
-    };
+    }
 
-    vm.goBack = function() {
+    function formatTime(time) {
+      return  moment(time).format('h:mm a');
+    }
+
+    function goBack() {
       $window.history.back();
-    };
+    }
 
-    vm.isPrivate = function() {
-      return vm.responses && vm.responses.open_spots <= 0;
-    };
+    function capacity() {
+      // capacity is total - filled + 1 to include the host
+      return parseInt(vm.responses.total_capacity) - (parseInt(vm.responses.filled_spots));
+    }
+
+    function isPrivate() {
+      return vm.responses && vm.capacity() <= 0;
+    }
 
     // ------------------------------- //
 

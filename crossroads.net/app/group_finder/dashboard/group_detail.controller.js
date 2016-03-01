@@ -3,14 +3,27 @@
 
   module.exports = GroupDetailCtrl;
 
-  GroupDetailCtrl.$inject = ['$scope', '$stateParams', '$modal', 'GroupInfo'];
+  GroupDetailCtrl.$inject = ['$scope', '$stateParams', '$modal', 'GroupInfo', 'GROUP_ROLE_ID_PARTICIPANT'];
 
-  function GroupDetailCtrl($scope, $stateParams, $modal, GroupInfo) {
+  function GroupDetailCtrl($scope, $stateParams, $modal, GroupInfo, GROUP_ROLE_ID_PARTICIPANT) {
     var vm = this;
 
+    vm.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
     vm.group = GroupInfo.findHosting($stateParams.groupId);
 
-    vm.emailGroup = function() {
+    vm.emailGroup = emailGroup;
+
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
+
+    //
+    // Implementation
+    //
+
+    function viewContentLoaded(event){
+      $scope.$parent.setGroup(vm.group);
+    }
+
+    function emailGroup() {
       var modalInstance = $modal.open({
         templateUrl: 'templates/group_contact_modal.html',
         controller: 'GroupContactCtrl as contactModal',
@@ -27,11 +40,8 @@
       modalInstance.result.then(function (selectedItem) {
         $scope.selected = selectedItem;
       });
-    };
+    }
 
-    $scope.$on('$viewContentLoaded', function(event){
-      $scope.$parent.setGroup(vm.group);
-    });
   }
 
 })();
