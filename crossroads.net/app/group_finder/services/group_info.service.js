@@ -25,6 +25,9 @@
     // Clear the group info cache when the user logs out
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
+    // Clear and reload
+    $rootScope.$on('reloadGroups', reloadGroups);
+
     //
     // Initialize the data
     //
@@ -32,6 +35,8 @@
       if (!requestPromise) {
         requestPromise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
         requestPromise.then(function(data) {
+
+          // Process the database groups
           var cid = $cookies.get('userId');
           if (cid) {
             _.each(data, function(group) {
@@ -112,7 +117,10 @@
       groups.participating = [];
     }
 
-    $rootScope.$on('reloadGroups', clearData);
+    function reloadGroups() {
+      clearData();
+      loadGroupInfo();
+    }
 
     //
     // Return the service
