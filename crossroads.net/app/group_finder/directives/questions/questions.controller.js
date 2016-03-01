@@ -21,10 +21,6 @@
 
     $scope.initialize = function() {
 
-      $scope.questions = _.reject($scope.questions, function(q) {
-        return q.hidden !== undefined && q.hidden === true;
-      });
-
       $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
@@ -153,7 +149,6 @@
     };
 
     $scope.applyErrors = function() {
-      $('div.has-error:visible').removeClass('has-error');
       $scope.$broadcast('groupFinderClearError');
 
       _.each($scope.currentErrorFields(), function(el){
