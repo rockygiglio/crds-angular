@@ -76,17 +76,18 @@
               var email = {
                 groupId: group.groupId,
                 fromContactId: cid,
-                toContactId: cid
+                toContactId: cid,
+                mergeData: {
+                  HostName: group.contact ? group.contact.firstName : null,
+                  HostPreferredName: group.contact ? group.contact.firstName : null
+                }
               };
 
               if (!group.isPrivate) {
                 email.templateId = EMAIL_TEMPLATES.PARTICIPANT_PUBLIC_CONFIRM_EMAIL_ID;
-                email.mergeData = {
-                  HostName: group.contact ? group.contact.firstName : null,
-                  AddressLine1: group.address.addressLine1,
-                  MeetingDay: group.meetingDay,
-                  MeetingTime: group.meetingHour
-                };
+                email.mergeData.AddressLine1 = group.address.addressLine1;
+                email.mergeData.MeetingDay = group.meetingDay;
+                email.mergeData.MeetingTime = group.meetingHour;
               } else {
                 email.templateId = EMAIL_TEMPLATES.PARTICIPANT_PRIVATE_CONFIRM_EMAIL_ID;
               }
