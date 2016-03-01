@@ -63,9 +63,9 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'I''m not married', NULL, 1),
+	(@Attribute_ID_Base, 'I''m not married', NULL, 3),
 	(@Attribute_ID_Base+1, 'I''m married but we''re going through the journey seperately', NULL, 2),
-	(@Attribute_ID_Base+2, 'I''m married and I want to be in the same group with my spouse', NULL, 3)
+	(@Attribute_ID_Base+2, 'I''m married and I want to be in the same group with my spouse', NULL, 1)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
