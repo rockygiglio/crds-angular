@@ -63,6 +63,7 @@
         promise.then(function() {
           // Invitation acceptance was successful
           vm.accepted = true;
+          $rootScope.$broadcast('reloadGroups');
         }, function(error) {
           // An error happened accepting the invitation
           vm.rejected = true;
@@ -73,7 +74,6 @@
     }
 
     function goToDashboard() {
-      $rootScope.$broadcast('reloadGroups');
       $state.go('group_finder.dashboard');
     }
 
