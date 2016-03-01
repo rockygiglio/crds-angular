@@ -257,6 +257,7 @@ namespace MinistryPlatform.Translation.Services
                             {
                                 ContactId = p.ToInt("Contact_ID"),
                                 ParticipantId = p.ToInt("Participant_ID"),
+                                GroupParticipantId = p.ToInt("dp_RecordID"),
                                 GroupRoleId = p.ToInt("Group_Role_ID"),
                                 GroupRoleTitle = p.ToString("Role_Title"),
                                 LastName = p.ToString("Last_Name"),
@@ -428,7 +429,7 @@ namespace MinistryPlatform.Translation.Services
             var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
-                return null;
+                return new List<Group>();
             }
             return groupDetails.Select(details => new Group()
             {

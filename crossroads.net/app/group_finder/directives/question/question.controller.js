@@ -5,9 +5,9 @@
 
   var constants = require('./constants');
 
-  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'ImageService', 'Person', 'GROUP_TYPES'];
+  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'ImageService', 'Person'];
 
-  function QuestionCtrl($timeout, $scope, $compile, ImageService, Person, GROUP_TYPES) {
+  function QuestionCtrl($timeout, $scope, $compile, ImageService, Person) {
 
     $scope.initialize = function() {
       $scope.states = constants.US_STATES;
@@ -16,6 +16,12 @@
       $scope.body = $compile('<span>' + $scope.definition.body + '<span>')($scope);
       $scope.help = $compile('<span>' + $scope.definition.help + '<span>')($scope);
       $scope.footer = $compile('<span>' + $scope.definition.footer + '<span>')($scope);
+      $scope.required = $scope.definition.required;
+      $scope.errorMessage = 'All Fields are Required';
+
+      if ($scope.definition.customErrorMessage) {
+        $scope.errorMessage = $scope.definition.customErrorMessage;
+      }
 
       $scope.person = null;
       $scope.profileImage = ImageService.DefaultProfileImage;
@@ -35,10 +41,10 @@
       $scope.sliderOptions = {
         hideLimitLabels: true,
         showSelectionBar: true,
-        floor: (key === 'open_spots' ? 0 : 3),
-        ceil: (key === 'open_spots' ? 10 : 12)
+        floor: (key === 'filled_spots' ? 1 : 3),
+        ceil: (key === 'filled_spots' ? $scope.responses.total_capacity : 12)
       };
-      $scope.sliderDefault = (key === 'open_spots' ? 5 : 7);
+      $scope.sliderDefault = (key === 'filled_spots' ? 1 : 7);
       $scope.refreshSlider();
     };
 
@@ -47,7 +53,9 @@
     };
 
     $scope.checkError = function() {
-      $scope.$parent.applyErrors();
+      if ($scope.required) {
+        $scope.$parent.applyErrors();
+      }
     };
 
     $scope.render = function(el) {
@@ -70,6 +78,17 @@
       if($scope.definition.input_type === 'number' && $scope.$parent.step === step) {
         $scope.setupSlider();
       }
+    });
+
+    $scope.$on('groupFinderShowError', function(event) {
+      $scope.showError = true;
+    });
+    $scope.$on('groupFinderClearError', function(event) {
+      $scope.showError = false;
+      $scope.showZipError = false;
+    });
+    $scope.$on('groupFinderZipError', function(event) {
+      $scope.showZipError = true;
     });
 
     // ----------------------------------- //

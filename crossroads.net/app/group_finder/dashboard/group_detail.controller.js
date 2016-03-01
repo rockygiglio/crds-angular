@@ -29,7 +29,7 @@
         controller: 'GroupContactCtrl as contactModal',
         resolve: {
           fromContactId: function() {
-            return vm.group.host.contactId;
+            return vm.group.contactId;
           },
           toContactIds: function() {
             return _.map(vm.group.members, function(member) {return member.contactId;});

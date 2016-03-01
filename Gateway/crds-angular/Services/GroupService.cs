@@ -37,7 +37,6 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int GroupRoleDefaultId;
-        private readonly int JourneyGroupInvitationTemplateId;
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
 
@@ -65,7 +64,6 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
-            JourneyGroupInvitationTemplateId = _configurationWrapper.GetConfigIntValue("JourneyGroupInvitationTemplateId");
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
         }
 
@@ -121,7 +119,7 @@ namespace crds_angular.Services
                                                                DateTime.Now);
 
                     var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
-                    _objectAttributeService.SaveObjectAttributes(group.GroupId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
+                    _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
                     {
@@ -326,20 +324,28 @@ namespace crds_angular.Services
         {
             var participant = GetParticipantRecord(token);
             var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
-            var membership = groups.Where(group => group.GroupId == communication.groupId).ToList();
-            if (membership.Count <= 0)
+
+            if (groups == null ||  groups.Count == 0)
             {
-                //notfound, don't send invite
                 throw new InvalidOperationException();
             }
+
+            var membership = groups.Where(group => @group.GroupId == communication.groupId).ToList();
+            if (membership.Count <= 0)
+            {
+                throw new InvalidOperationException();
+            }
+
             var invitation = CreateJourneyInvitation(communication, participant);
             _communicationService.SendMessage(invitation);
         }
 
+
         private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
-            var template = _communicationService.GetTemplate(JourneyGroupInvitationTemplateId);
+            var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
             return new Communication
@@ -349,7 +355,7 @@ namespace crds_angular.Services
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
                 FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
                 ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
@@ -381,7 +387,7 @@ namespace crds_angular.Services
                         
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.ParticipantId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }

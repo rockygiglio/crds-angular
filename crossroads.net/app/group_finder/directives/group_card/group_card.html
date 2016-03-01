@@ -13,13 +13,13 @@
     <p>
       Private group
       <span ng-if="group.isHost === true">
-        <br/>Currently has {{group.members.length - 1 || 0}} member<span ng-if="group.members.length > 2">s</span>.
+        <br/>Currently has {{group.members.length - 1 || 'no'}} member<span ng-if="group.members.length > 2 || group.members.length <= 1">s</span>.
         <a ui-sref="group_finder.dashboard.group({groupId: group.groupId})">Invite Someone</a>
       </span>
     </p>
   </div>
   <div class="footer">
     <a class="select btn btn-primary" ng-if="group.isHost === true" ui-sref="group_finder.dashboard.group({groupId: group.groupId})">Select</a>
-    <a class="select btn btn-primary" href="mailto:{{group.host.email}}" ng-if="group.isHost === false">Email Host</a>
+    <a class="select btn btn-primary" href="mailto:{{group.primaryContactEmail}}" ng-if="group.isHost === false">Email Host</a>
   </div>
 </div>

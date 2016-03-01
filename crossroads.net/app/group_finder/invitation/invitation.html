@@ -10,7 +10,7 @@
       <div dynamic-content="$root.MESSAGES.groupFinderParticipantConfirmation.content | html"></div>
       <div ng-if="invitation.showInvite">
         <div dynamic-content="$root.MESSAGES.groupFinderParticipantInviteSpouse.content | html"></div>
-        <group-invitation group="detail.group"></group-invitation>
+        <group-invitation group-id="invitation.groupId"></group-invitation>
       </div>
       <p class="btns text-center">
         <a class="btn btn-next-question" ui-sref="group_finder.dashboard">Go to Your Dashboard</a>
@@ -19,6 +19,12 @@
 
     <div ng-if="invitation.rejected">
       <p>Your request could not be completed at this time</p>
+    </div>
+    <div ng-if="invitation.alreadyJoined" >
+      <div dynamic-content="$root.MESSAGES.groupFinderInvitationAlreadyJoined.content | html"></div>
+      <p class="btns text-center">
+        <a class="btn btn-next-question" ui-sref="group_finder.dashboard">Go to Your Dashboard</a>
+      </p>
     </div>
   </div>
 </div>

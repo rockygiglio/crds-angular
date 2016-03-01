@@ -8,19 +8,22 @@
   function HostConfirmCtrl($state, Responses, $rootScope) {
 
     var vm = this;
+    vm.showDashboard = showDashboard;
+    vm.successMessage = successMessage;
     vm.responses = Responses;
+    Responses.clear();
 
-    vm.showDashboard = function() {
+    function showDashboard() {
       $state.go('group_finder.dashboard');
-    };
+    }
 
-    vm.successMessage = function() {
+    function successMessage() {
       var message = $rootScope.MESSAGES.groupFinderHostPublicGroup.content;
       if (vm.responses.data.open_spots <= 0) {
         message = $rootScope.MESSAGES.groupFinderHostPrivateGroup.content;
       }
       return message;
-    };
+    }
   }
 
 })();
