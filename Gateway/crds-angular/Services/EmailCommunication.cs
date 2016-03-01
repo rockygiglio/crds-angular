@@ -57,6 +57,11 @@ namespace crds_angular.Services
 
             communication.MergeData = email.MergeData;
 
+            if (!communication.MergeData.ContainsKey("BaseUrl"))
+            {
+                communication.MergeData.Add("BaseUrl", _configurationWrapper.GetConfigValue("BaseUrl"));
+            }
+
             _communicationService.SendMessage(communication);
         }
 
