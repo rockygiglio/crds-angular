@@ -35,6 +35,7 @@
     var vm = this;
 
     vm.pending = true;
+    vm.showPublish = true;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
     vm.lookup = LookupDefinitions;
@@ -173,10 +174,12 @@
 
             // Created group successfully, go to confirmation page
             $state.go('group_finder.host.confirm');
-          },
+          })
+        .catch(
           function chainError() {
             vm.rejected = true;
             vm.requestPending = false;
+            vm.showPublish = false;
             $log.debug('An error occurred while publishing');
           });
     }
