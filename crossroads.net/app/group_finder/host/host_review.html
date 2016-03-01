@@ -2,7 +2,7 @@
   <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderHostReviewHeader.content | html"></div>
 
   <group-profile group="host.group"></group-profile>
-  <p><a class="btn btn-next-question btn-block" ng-class="{ 'disabled': host.requestPending }" ng-disabled="host.requestPending" ng-if="host.showPublish" href="#" ng-click="host.publish()">Publish This Group</a></p>
+  <p><a class="btn btn-next-question btn-block" btn-loading="host.requestPending" data-loading-text="Publishing..."  ng-if="host.showPublish" href="#" ng-click="host.publish()">Publish This Group</a></p>
 
   <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderHostConfirmation.content | html"></div>
 
