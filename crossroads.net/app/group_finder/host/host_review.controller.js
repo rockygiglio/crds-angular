@@ -5,11 +5,11 @@
 
   HostReviewCtrl.$inject = [
     '$window',
+    '$rootScope',
     '$scope',
     '$state',
     'Responses',
     'Group',
-    'GroupInfo',
     'AuthenticatedPerson',
     'GROUP_API_CONSTANTS',
     '$log',
@@ -20,11 +20,11 @@
   ];
 
   function HostReviewCtrl($window,
+                          $rootScope,
                           $scope,
                           $state,
                           Responses,
                           Group,
-                          GroupInfo,
                           AuthenticatedPerson,
                           GROUP_API_CONSTANTS,
                           $log,
@@ -154,10 +154,8 @@
       };
 
       // Publish the group to the API and handle the response
-      $log.debug('Publishing group:', group);
       Group.Detail.save(group).$promise
         .then(function groupPublishSuccess(group) {
-          $log.debug('Group was published successfully:', group);
           var capacity = 1;
           if (Responses.data.marital_status === '7022') {
             capacity = 2;
@@ -167,11 +165,9 @@
           return GroupInvitationService.acceptInvitation(group.groupId,
             {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
         })
-        .then(function hostInviteSuccess() {
-          $log.debug("Host was added to new group, force group info reload");
-          return GroupInfo.loadGroupInfo(true);
-        })
         .then(function reloadGroupSuccess() {
+            $rootScope.$broadcast('reloadGroups');
+
             // Invitation acceptance was successful
             vm.accepted = true;
 
