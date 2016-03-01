@@ -3,9 +3,9 @@
 
   module.exports = GroupInvitationCtrl;
 
-  GroupInvitationCtrl.$inject = ['$scope', '$log', '$cookies', 'Group', 'INVITE_EMAIL_ID'];
+  GroupInvitationCtrl.$inject = ['$scope', '$log', '$cookies', 'Group', 'EMAIL_TEMPLATES'];
 
-  function GroupInvitationCtrl($scope, $log, $cookies, Group, INVITE_EMAIL_ID) {
+  function GroupInvitationCtrl($scope, $log, $cookies, Group, EMAIL_TEMPLATES) {
     var vm = this;
     vm.inviteMember = inviteMember;
     vm.inviteSuccess = false;
@@ -23,7 +23,7 @@
       var toSend = {
         groupId: $scope.groupId,
         fromContactId: contactId,
-        templateId: INVITE_EMAIL_ID,
+        templateId: EMAIL_TEMPLATES.INVITE_EMAIL_ID,
         emailAddress: vm.invitee
       };
 
