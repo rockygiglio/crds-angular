@@ -85,6 +85,10 @@
     });
     $scope.$on('groupFinderClearError', function(event) {
       $scope.showError = false;
+      $scope.showZipError = false;
+    });
+    $scope.$on('groupFinderZipError', function(event) {
+      $scope.showZipError = true;
     });
 
     // ----------------------------------- //
