@@ -10,6 +10,8 @@
       <div class="group-cards">
         <group-card group="group" ng-repeat="group in dashboard.groups.hosting"></group-card>
       </div>
+      <div class="help text-center" dynamic-content="$root.MESSAGES.groupFinderHostDashboardHelp.content | html"></div>
+      <br />
       <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.host({ step: 1 })">Host Another Group</a></p>
     </div>
 
