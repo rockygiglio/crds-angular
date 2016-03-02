@@ -4,7 +4,7 @@
   module.exports = GroupInvitationCtrl;
 
   GroupInvitationCtrl.$inject = [
-    '$cookies',
+    'Session',
     '$log',
     '$state',
     '$stateParams',
@@ -17,7 +17,7 @@
     'Responses'
   ];
 
-  function GroupInvitationCtrl ($cookies,
+  function GroupInvitationCtrl (Session,
                                 $log,
                                 $state,
                                 $stateParams,
@@ -70,7 +70,7 @@
           })
           .then(function groupInfoLoadCompleted() {
             // Send a public or private invitation complete email
-            var cid = $cookies.get('userId');
+            var cid = Session.exists('userId');
             var group = GroupInfo.findParticipatingOrHost(vm.groupId);
             if (cid && group) {
               var email = {
@@ -93,11 +93,11 @@
               }
 
               Email.Mail.save(email).$promise.catch(function emailError(error) {
-                $log.error("Email confirmation failed", error);
+                $log.error('Email confirmation failed', error);
               });
 
             } else {
-              $log.error("Could not find the participant's group to send confirmation email");
+              $log.error('Could not find the participant\'s group to send confirmation email');
             }
           })
           .catch(function(error) {
