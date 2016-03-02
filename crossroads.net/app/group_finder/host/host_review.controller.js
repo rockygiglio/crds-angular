@@ -254,7 +254,12 @@
     }
 
     function formatTime(time) {
-      return  moment(time).format('h:mm a');
+      var meetingTime = moment(time);
+      var format = 'h a';
+      if (meetingTime.minutes() !== 0) {
+        format = 'h:mm a';
+      }
+      return  meetingTime.format(format);
     }
 
     function goBack() {
