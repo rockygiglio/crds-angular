@@ -41,10 +41,13 @@
       $scope.sliderOptions = {
         hideLimitLabels: true,
         showSelectionBar: true,
-        floor: (key === 'filled_spots' ? 1 : 3),
+        floor: (key === 'filled_spots' ? 0 : 3),
         ceil: (key === 'filled_spots' ? $scope.responses.total_capacity : 12)
       };
       $scope.sliderDefault = (key === 'filled_spots' ? 0 : 7);
+      if (key === 'filled_spots' && $scope.responses.filled_spots > $scope.responses.total_capacity) {
+        $scope.responses.filled_spots = null;
+      }
       $scope.refreshSlider();
     };
 
