@@ -21,6 +21,10 @@
 
     $scope.initialize = function() {
 
+      $scope.questions = _.reject($scope.questions, function(q) {
+        return q.hidden !== undefined && q.hidden === true;
+      });
+
       $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
@@ -130,7 +134,7 @@
                     response = response[controlName];
                   }
                 }
-                //
+
                 if (el.data('input-type') !== undefined) {
                   switch (el.data('input-type')) {
                     case 'zip':

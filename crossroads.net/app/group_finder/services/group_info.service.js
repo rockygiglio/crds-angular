@@ -3,9 +3,9 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
+  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
 
-  function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
+  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
     var requestPromise = null;
 
     //
@@ -42,7 +42,7 @@
           clearData();
 
           // Process the database groups
-          var cid = $cookies.get('userId');
+          var cid = Session.exists('userId');
           if (cid) {
             _.each(data, function(group) {
 
