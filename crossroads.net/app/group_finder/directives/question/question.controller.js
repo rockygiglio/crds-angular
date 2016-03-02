@@ -86,9 +86,13 @@
     $scope.$on('groupFinderClearError', function(event) {
       $scope.showError = false;
       $scope.showZipError = false;
+      $scope.showTimeError = false;
     });
     $scope.$on('groupFinderZipError', function(event) {
       $scope.showZipError = true;
+    });
+    $scope.$on('groupFinderTimeError', function(event) {
+      $scope.showTimeError = true;
     });
 
     // ----------------------------------- //
