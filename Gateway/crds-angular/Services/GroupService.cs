@@ -32,7 +32,7 @@ namespace crds_angular.Services
         private readonly IContactService _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserService _apiUserService;
-        private readonly IAttributeService _attributrService;
+        private readonly IAttributeService _attributeService;
 
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace crds_angular.Services
                             IContactService contactService, 
                             IObjectAttributeService objectAttributeService, 
                             IApiUserService apiUserService, 
-                            IAttributeService attributrService)
+                            IAttributeService attributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -66,7 +66,7 @@ namespace crds_angular.Services
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
-            _attributrService = attributrService;
+            _attributeService = attributeService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -309,7 +309,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
 
             var configuration = ObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributrService.GetAttributes(null);
+            var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);

@@ -58,6 +58,7 @@ namespace crds_angular.test.Services
         };
 
         private const int GROUP_ROLE_DEFAULT_ID = 123;
+        private const int JOURNEY_GROUP_ID = 19;
 
         [SetUp]
         public void SetUp()
@@ -82,6 +83,7 @@ namespace crds_angular.test.Services
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
+            config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupId")).Returns(JOURNEY_GROUP_ID);
 
             fixture = new GroupService(groupService.Object, config.Object, eventService.Object, contactRelationshipService.Object,
                         serveService.Object, participantService.Object, _communicationService.Object, _contactService.Object, _objectAttributeService.Object, _apiUserService.Object, _attributeService.Object);
@@ -466,7 +468,7 @@ namespace crds_angular.test.Services
             var attributes = new ObjectAllAttributesDTO();
 
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
-            groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19)).Returns(groups);
+            groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, JOURNEY_GROUP_ID)).Returns(groups);
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<Attribute>>())).Returns(attributes);
