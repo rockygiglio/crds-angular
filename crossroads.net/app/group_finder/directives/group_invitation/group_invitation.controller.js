@@ -10,12 +10,14 @@
     vm.inviteMember = inviteMember;
     vm.inviteSuccess = false;
     vm.inviteError = false;
+    vm.sending = false;
 
     //
     // Controller implementation
     //
 
     function inviteMember() {
+      vm.sending = true;
       vm.inviteSuccess = false;
       vm.inviteError = false;
 
@@ -30,8 +32,10 @@
       Group.EmailInvite.save(toSend).$promise.then(function inviteEmailSuccess() {
         vm.inviteSuccess = true;
         vm.invitee = null;
+        vm.sending = false;
       }, function inviteEmailError(error) {
         vm.inviteError = true;
+        vm.sending = false;
       });
     }
   }
