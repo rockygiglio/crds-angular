@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class MPServeReminders
+    public class MPServeReminder
     {
         public string Opportunity_Title { get; set; }
         public int Signedup_Contact_Id { get; set; }
