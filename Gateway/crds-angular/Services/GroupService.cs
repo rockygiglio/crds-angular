@@ -41,6 +41,7 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
+        private readonly int JourneyGroupId;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -69,6 +70,7 @@ namespace crds_angular.Services
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
+            JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -327,7 +329,7 @@ namespace crds_angular.Services
         public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
         {
             var participant = GetParticipantRecord(token);
-            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
+            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, JourneyGroupId);
 
             if (groups == null ||  groups.Count == 0)
             {
