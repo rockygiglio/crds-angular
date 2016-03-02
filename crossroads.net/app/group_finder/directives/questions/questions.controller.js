@@ -140,6 +140,12 @@
                   }
                 }
 
+                if (el.attr('name') === 'date_and_time[day]') {
+                  if (Responses.data.date_and_time.time === null) {
+                    response = '';
+                  }
+                }
+
                 var hasError = (response === undefined || response === '');
 
                 return hasError ? el : false;
@@ -154,6 +160,11 @@
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
+        }
+        if (el.attr('name') === 'date_and_time[day]') {
+          if (Responses.data.date_and_time.time === null) {
+            $scope.$broadcast('groupFinderTimeError');
+          }
         }
         if (el.data('input-type') !== undefined) {
           switch (el.data('input-type')) {

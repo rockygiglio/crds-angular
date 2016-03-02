@@ -44,6 +44,7 @@
 
     vm.pending = true;
     vm.showPublish = true;
+    vm.invalidTime = false;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
     vm.lookup = LookupDefinitions;
@@ -82,6 +83,11 @@
       };
 
       vm.pending = false;
+
+      if (vm.responses.date_and_time.time === null) {
+        vm.invalidTime = true;
+        vm.showPublish = false;
+      }
     }
 
     function startOver() {
