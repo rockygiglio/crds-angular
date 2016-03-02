@@ -201,10 +201,11 @@
             };
           } else {
             email.templateId = EMAIL_TEMPLATES.HOST_PRIVATE_CONFIRM_EMAIL_ID;
+            email.mergeData = {};
           }
 
           Email.Mail.save(email).$promise.catch(function hostEmailError(error) {
-            $log.error("Host email confirmation failed", error);
+            $log.error('Host email confirmation failed', error);
           });
 
           // User invitation service to add person to that group
