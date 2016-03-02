@@ -27,7 +27,6 @@
   require('./services');
   require('./dashboard');
   require('./host');
-  require('./join');
   require('./directives');
 
 })();
