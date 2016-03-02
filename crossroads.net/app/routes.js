@@ -175,6 +175,18 @@
             }
           }
         })
+        .state('easter', {
+          parent: 'noHeaderOrFooter',
+          url: '/easter',
+          controller: 'EasterCtrl as easter',
+          templateUrl: 'easter/easter.html',
+          data: {
+            meta: {
+              title: 'Crossroads Easter',
+              description: ''
+            }
+          }
+        })
         .state('adbox', {
           parent: 'noSideBar',
           url: '/adbox',

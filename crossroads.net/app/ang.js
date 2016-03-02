@@ -7,6 +7,7 @@
   require('angular-resource');
   require('angular-sanitize');
   require('angular-messages');
+  require('angular-number-picker');
   require('angular-cookies');
   require('angular-toggle-switch');
   require('angular-scroll');

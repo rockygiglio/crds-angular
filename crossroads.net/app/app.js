@@ -26,6 +26,7 @@ require('../lib/select.css');
 
   angular.module(constants.MODULES.CROSSROADS).config(require('./routes'));
 
+  require('./easter');
   require('./signup');
   require('./styleguide');
   require('./superbowl');
