@@ -8,6 +8,7 @@
       2: 'Co-ed',
       3: 'Married couples only'
     },
+    DAYS: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     SERIES: {
       permalink: 'bravegrouptool',
       title: 'Brave'
@@ -21,6 +22,8 @@
     EMAIL_TEMPLATES: {
       HOST_PUBLIC_CONFIRM_EMAIL_ID: 17546,
       HOST_PRIVATE_CONFIRM_EMAIL_ID: 17547,
+      PARTICIPANT_PUBLIC_CONFIRM_EMAIL_ID: 17548,
+      PARTICIPANT_PRIVATE_CONFIRM_EMAIL_ID: 17549,
       INVITE_EMAIL_ID: 17462
     },
     ANYWHERE_GROUP_ID: 166574,
