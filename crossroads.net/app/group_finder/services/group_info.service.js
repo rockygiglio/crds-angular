@@ -158,7 +158,12 @@
       var meetingTime = moment().format('YYYY-MM-DD') + ' ' + group.meetingTime;
 
       group.meetingDay = moment().isoWeekday(group.meetingDayId - 1).format('dddd');
-      group.meetingHour = moment(meetingTime).format('h a');
+      var time = moment(meetingTime);
+      var format = 'h a';
+      if (time.minutes() !== 0) {
+        format = 'h:mm a';
+      }
+      group.meetingHour = time.format(format);
     }
 
     function reset() {
