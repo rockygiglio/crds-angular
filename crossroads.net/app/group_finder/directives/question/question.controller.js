@@ -5,9 +5,9 @@
 
   var constants = require('./constants');
 
-  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'ImageService', 'Person'];
+  QuestionCtrl.$inject = ['$timeout', '$scope', '$compile', 'Responses'];
 
-  function QuestionCtrl($timeout, $scope, $compile, ImageService, Person) {
+  function QuestionCtrl($timeout, $scope, $compile, Responses) {
 
     $scope.initialize = function() {
       $scope.states = constants.US_STATES;
@@ -23,17 +23,7 @@
         $scope.errorMessage = $scope.definition.customErrorMessage;
       }
 
-      $scope.person = null;
-      $scope.profileImage = ImageService.DefaultProfileImage;
-      $scope.defaultImage = ImageService.DefaultProfileImage;
-
       $scope.setupSlider();
-
-      // Load the person data
-      Person.getProfile().then(function(profile) {
-        $scope.person = profile;
-        $scope.profileImage = ImageService.ProfileImageBaseURL + profile.contactId;
-      });
     };
 
     $scope.setupSlider = function() {
@@ -41,10 +31,13 @@
       $scope.sliderOptions = {
         hideLimitLabels: true,
         showSelectionBar: true,
-        floor: (key === 'filled_spots' ? 1 : 3),
+        floor: (key === 'filled_spots' ? 0 : 3),
         ceil: (key === 'filled_spots' ? $scope.responses.total_capacity : 12)
       };
       $scope.sliderDefault = (key === 'filled_spots' ? 0 : 7);
+      if (key === 'filled_spots' && $scope.responses.filled_spots > $scope.responses.total_capacity) {
+        $scope.responses.filled_spots = null;
+      }
       $scope.refreshSlider();
     };
 
@@ -60,12 +53,6 @@
 
     $scope.render = function(el) {
       return $scope[el].html();
-    };
-
-    $scope.onKeyUp = function(e) {
-      if(e.keyCode === 13 && $scope.definition.input_type !== 'textarea') {
-        $scope.$parent.nextQuestion();
-      }
     };
 
     $scope.refreshSlider = function () {
