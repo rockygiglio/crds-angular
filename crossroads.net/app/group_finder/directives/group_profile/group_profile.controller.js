@@ -9,7 +9,7 @@
 
     $scope.defaultGroup = {
       groupTitle: 'Chuck M.',
-      type: 3,
+      type: 'Men only',
       time: 'Fridays at 7pm',
       imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/chuck-mingo.jpg',
       attributes: ['kids welcome', 'has cats'],
@@ -60,7 +60,7 @@
     }
 
     $scope.getGroupType = function() {
-      return GROUP_TYPES[$scope.group.type];
+      return $scope.group.type;
     };
 
   }
