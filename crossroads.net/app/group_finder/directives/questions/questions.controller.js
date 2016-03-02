@@ -130,7 +130,7 @@
                     response = response[controlName];
                   }
                 }
-                //
+
                 if (el.data('input-type') !== undefined) {
                   switch (el.data('input-type')) {
                     case 'zip':
