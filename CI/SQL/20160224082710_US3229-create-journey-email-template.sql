@@ -11,7 +11,6 @@ DECLARE @Reply_to_Contact AS INT = 1519180
 DECLARE @Template AS INT = 1
 DECLARE @Active AS INT = 1
 
-
 -- Add / Update the Email Templates for Journey Groups
 SET IDENTITY_INSERT [dbo].[dp_Communications] ON 
 
@@ -44,7 +43,7 @@ INSERT INTO @Email_Templates
 </span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap; font-weight: bold;">Just go to your dashboard
 </span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap;">From here you can send out invites to your people. And they’ll get a direct link to your specific group. 
 
-</span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap; text-decoration: underline;"><a href="[BaseUrl]/bravegrouptool/dashboard">Your dashboard</a>
+</span><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap; text-decoration: underline;"><a href="https://[BaseUrl]/bravegrouptool/dashboard">Your dashboard</a>
 </span><div><span style="font-family: Arial; font-size: 13px; white-space: pre-wrap; text-decoration: underline;"><br /></span></div>'
 		 , @Domain_ID, @Start_Date, @Communication_Status_ID, @From_Contact, @Reply_to_Contact, @Template, @Active),
 	(17548
