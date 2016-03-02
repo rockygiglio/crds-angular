@@ -4,7 +4,7 @@
   var MODULE = require('crds-constants').MODULES.GO_VOLUNTEER;
 
   require('./goVolunteerPage.template.html');
-  require('./page1/');
+  require('./select_church/');
 
   angular.module(MODULE)
     .directive('goVolunteerPage', require('./goVolunteerPage.component'));

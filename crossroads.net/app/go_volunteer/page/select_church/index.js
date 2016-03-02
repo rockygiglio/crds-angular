@@ -3,10 +3,10 @@
 
   var MODULE = require('crds-constants').MODULES.GO_VOLUNTEER;
 
-  require('./goVolunteerPage1.template.html');
+  require('./selectChurch.template.html');
 
   angular.module(MODULE)
-    .directive('goVolunteerPage1', require('./goVolunteerPage1.component'));
+    .directive('selectChurch', require('./selectChurch.component'));
 
 
 })();
