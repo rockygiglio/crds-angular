@@ -10,7 +10,7 @@
     $scope.defaultGroup = {
       groupTitle: 'Chuck M.',
       type: 'Men only',
-      time: 'Fridays at 7pm',
+      time: 'Fridays @ 7 pm',
       imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/chuck-mingo.jpg',
       attributes: ['kids welcome', 'has cats'],
       host: { contactId: 12345 },
