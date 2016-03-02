@@ -11,6 +11,7 @@ using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
+using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
@@ -31,6 +32,7 @@ namespace crds_angular.Services
         private readonly IContactService _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserService _apiUserService;
+        private readonly IAttributeService _attributrService;
 
 
         /// <summary>
@@ -49,7 +51,8 @@ namespace crds_angular.Services
                             ICommunicationService communicationService,
                             IContactService contactService, 
                             IObjectAttributeService objectAttributeService, 
-                            IApiUserService apiUserService)
+                            IApiUserService apiUserService, 
+                            IAttributeService attributrService)
 
         {
             _mpGroupService = mpGroupService;
@@ -62,6 +65,7 @@ namespace crds_angular.Services
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
+            _attributrService = attributrService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -303,13 +307,13 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
 
             var configuration = ObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributrService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
                 group.AttributeTypes = attributesTypes.MultiSelect;
                 group.SingleAttributes = attributesTypes.SingleSelect;
             }
-
 
             return groupDetail;
         }

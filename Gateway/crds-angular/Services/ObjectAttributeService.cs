@@ -32,7 +32,12 @@ namespace crds_angular.Services
 
         public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration)
         {
-            var mpAttributes = _mpAttributeService.GetAttributes(null);            
+            var mpAttributes = _mpAttributeService.GetAttributes(null);
+            return GetObjectAttributes(token, objectId, configuration, mpAttributes);
+        }
+
+        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, List<Attribute> mpAttributes)
+        {
             var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
 
             var allAttributes = new ObjectAllAttributesDTO();
