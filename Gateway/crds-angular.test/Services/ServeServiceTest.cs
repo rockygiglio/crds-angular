@@ -187,7 +187,7 @@ namespace crds_angular.test.Services
                 SignedupEmailAddress = fakeMyContact.Email_Address
             };
 
-            var fakePageView = new MPServeReminders()
+            var fakePageView = new MPServeReminder()
             {
                 Opportunity_Title = fakeServeReminder.OpportunityTitle,               
                 Opportunity_Contact_Id = fakeServeReminder.OpportunityContactId,
@@ -202,7 +202,7 @@ namespace crds_angular.test.Services
                 Shift_End = fakeServeReminder.ShiftEnd
             };
 
-            var fakeList = new List<MPServeReminders> ()
+            var fakeList = new List<MPServeReminder> ()
             {
                 fakePageView
             };

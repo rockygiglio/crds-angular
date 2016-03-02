@@ -11,7 +11,7 @@ namespace crds_angular.Models.Crossroads.Serve
         protected override void Configure()
         {
             
-            AutoMapper.Mapper.CreateMap<MPServeReminders, ServeReminder>()
+            AutoMapper.Mapper.CreateMap<MPServeReminder, ServeReminder>()
                  .ForMember(dest => dest.OpportunityTitle, opts => opts.MapFrom(src => src.Opportunity_Title))
                 .ForMember(dest => dest.OpportunityContactId, opts => opts.MapFrom(src => src.Opportunity_Contact_Id))
                 .ForMember(dest => dest.OpportunityEmailAddress, opts => opts.MapFrom(src => src.Opportunity_Email_Address))
