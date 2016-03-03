@@ -3,20 +3,31 @@
 
   module.exports = GoVolunteerPage;
 
-  GoVolunteerPage.$inject = [];
+  GoVolunteerPage.$inject = ['$stateParams'];
 
-  function GoVolunteerPage() {
+  function GoVolunteerPage($stateParams) {
     return {
       restrict: 'E',
       scope: {},
       bindToController: true,
       controller: GoVolunteerPageController,
-      controllerAs: 'page',
+      controllerAs: 'goVolunteerPage',
       templateUrl: 'page/goVolunteerPage.template.html'
     };
 
     function GoVolunteerPageController() {
       var vm = this;
+
+      vm.showProfile = showProfile;
+      vm.showSignin = showSignin;
+
+      function showProfile() {
+        return $stateParams.page === 'profile'; 
+      }
+
+      function showSignin() {
+        return $stateParams.page === 'signin'; 
+      }
     }
   }
 

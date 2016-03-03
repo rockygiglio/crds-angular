@@ -8,7 +8,8 @@
   function GoVolunteerService() {
     var volunteerService =  {
       // private, don't use these
-      cmsInfo: {}
+      cmsInfo: {},
+      person: {}
     };
 
     return volunteerService;

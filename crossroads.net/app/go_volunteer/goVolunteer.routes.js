@@ -50,6 +50,62 @@
           Meta: Meta
         }
       })
+      .state('go-volunteer.signinpage', { 
+        parent: 'go-volunteer',
+        url: '/go-volunteer/cincinnati/crossroads/signin',
+        template: '<go-volunteer-signin> </go-volunteer-signin>',
+        data: {
+          meta: {
+            title: 'Some Title', 
+            description: ''
+          }
+        },
+        resolve: {
+          CmsInfo: CmsInfo,
+          Meta: Meta
+        }
+      })
+      .state('go-volunteer.crossroadspage', { 
+        parent: 'go-volunteer',
+        url: '/go-volunteer/cincinnati/crossroads/:page',
+        template: '<go-volunteer-page></go-volunteer-page>',
+        data: {
+          meta: {
+            title: 'Some Title', 
+            description: ''
+          },
+          isProtected: true
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+          Profile: 'Profile',
+          $cookies: '$cookies',
+          $stateParams: '$stateParams',
+          $q: '$q',
+          GoVolunteerService: 'GoVolunteerService',
+          Person: function(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+            var deferred = $q.defer();
+             
+            if ($stateParams.page === 'profile') {
+              var cid = $cookies.get('userId');
+              if (!cid) {
+                deferred.reject();
+              } else {
+                Profile.Person.get({contactId: cid}, function(data) {
+                  GoVolunteerService.person = data;
+                  deferred.resolve();
+                }, function(err) {
+                  console.log(err);
+                  deferred.reject();
+                });
+              }
+            } else {
+              deferred.resolve();
+            }
+            return deferred.promise;
+          }
+        }
+      })
       .state('go-volunteer.page', {
         parent: 'go-volunteer',
         url: '/go-volunteer/:city/:organization/:page',
@@ -61,6 +117,8 @@
           }
         },
         resolve: {
+          $stateParams: '$stateParams',
+          $q: '$q',
           CmsInfo: CmsInfo,
           Meta: Meta
         }
@@ -77,7 +135,8 @@
   }
   
   function CmsInfo(Page, $stateParams, GoVolunteerService, $q) {
-    var link = '/go-volunteer/' + addTrailingSlashIfNecessary($stateParams.city);
+    var city = $stateParams.city || 'cincinnati';
+    var link = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     var deferred = $q.defer();
     var page = Page.get({ url: link });
     page.$promise.then(function(data) {
@@ -93,7 +152,8 @@
   }
 
   function Meta($state, $stateParams) {
-    $state.next.data.meta.title = 'GO ' + $stateParams.city;
+    var city = $stateParams.city || 'cincinnati';
+    $state.next.data.meta.title = 'GO ' + city;
   }
 
 
