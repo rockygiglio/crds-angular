@@ -4,6 +4,8 @@ GO
 SET IDENTITY_INSERT [dbo].[dp_Pages] ON
 GO
 
+IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Pages] WHERE Page_ID = 14)
+BEGIN
 INSERT INTO [dbo].[dp_Pages]
 			([Page_ID]
            ,[Display_Name]
@@ -28,4 +30,4 @@ INSERT INTO [dbo].[dp_Pages]
            1)
 
 SET IDENTITY_INSERT [dbo].[dp_Pages] OFF
-GO
+END
