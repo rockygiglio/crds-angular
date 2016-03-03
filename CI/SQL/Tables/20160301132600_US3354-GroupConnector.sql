@@ -21,6 +21,14 @@ CREATE TABLE [dbo].[cr_GroupConnectors](
 	CONSTRAINT [FK_GroupConnector_Initiative] FOREIGN KEY ([Initiative_ID]) REFERENCES [cr_Initiatives]([Initiative_ID]), 
 	CONSTRAINT [FK_GroupConnector_Organization] FOREIGN KEY (Organization_ID) REFERENCES cr_Organizations(Organization_ID), 
 	CONSTRAINT [FK_GroupConnector_Contacts] FOREIGN KEY ([Primary_Contact]) REFERENCES [Contacts]([Contact_ID]),
+	CONSTRAINT [FK_GroupConnector_Domains] FOREIGN KEY ([Domain_ID]) REFERENCES [dp_Domains]([Domain_ID]),
 	CONSTRAINT [PK_GroupConnector] PRIMARY KEY CLUSTERED([GroupConnector_ID] ASC)
 )
 END
+
+--USE [MinistryPlatform]
+--GO
+
+--DROP TABLE [dbo].[cr_GroupConnectors]
+--GO
+
