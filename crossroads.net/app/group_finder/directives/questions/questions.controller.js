@@ -38,6 +38,7 @@
 
     $scope.previousQuestion = function() {
       $scope.applyErrors();
+      $scope.$broadcast('groupFinderClearError');
       $scope.step--;
       $scope.provideFocus();
     };
