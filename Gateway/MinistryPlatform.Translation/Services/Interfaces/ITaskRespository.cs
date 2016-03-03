@@ -11,6 +11,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         List<MPTask> GetRecurringEventTasks();
 
-        void UpdateTask(MPTask task);
+        void CompleteTask(string token, int taskId, bool rejected, string comments);
     }
 }
