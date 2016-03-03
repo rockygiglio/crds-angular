@@ -12,12 +12,14 @@ BEGIN
 CREATE TABLE [dbo].[cr_Projects](
 	[Project_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Project_Name] nvarchar(100) NOT NULL,
+	[Project_Status_ID] [int] NOT NULL,
 	[Location_ID] [int] NOT NULL,
-	[ProjectType_ID] [int] NOT NULL,
+	[Project_Type_ID] [int] NOT NULL,
 	[Organization_ID] [int] NOT NULL,
 	[Initiative_ID] [int] NOT NULL,
 	[Minimum_Volunteers] [int] NOT NULL,
 	[Maximum_Volunteers] [int] NOT NULL,
+	[Absolute_Maximum_Volunteers] [int] NOT NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_Projects] PRIMARY KEY CLUSTERED 
 (
@@ -25,6 +27,16 @@ CREATE TABLE [dbo].[cr_Projects](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 END
+GO
+
+--Project Status 
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_Project_Statuses]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
+ALTER TABLE [dbo].[cr_Projects]  WITH CHECK ADD  CONSTRAINT [FK_Projects_Project_Statuses] FOREIGN KEY([Project_Status_ID])
+REFERENCES [dbo].[cr_Project_Statuses] ([Project_Status_ID])
+GO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_Project_Statuses]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
+ALTER TABLE [dbo].[cr_Projects] CHECK CONSTRAINT [FK_Projects_Project_Statuses]
 GO
 
 --Locations 
@@ -38,13 +50,13 @@ ALTER TABLE [dbo].[cr_Projects] CHECK CONSTRAINT [FK_Projects_Locations]
 GO
 
 --ProjectTypes
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_ProjectTypes]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
-ALTER TABLE [dbo].[cr_Projects]  WITH CHECK ADD  CONSTRAINT [FK_Projects_ProjectTypes] FOREIGN KEY([ProjectType_ID])
-REFERENCES [dbo].[cr_ProjectTypes] ([ProjectType_ID])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_Project_Types]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
+ALTER TABLE [dbo].[cr_Projects]  WITH CHECK ADD  CONSTRAINT [FK_Projects_Project_Types] FOREIGN KEY([Project_Type_ID])
+REFERENCES [dbo].[cr_Project_Types] ([Project_Type_ID])
 GO
 
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_ProjectTypes]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
-ALTER TABLE [dbo].[cr_Projects] CHECK CONSTRAINT [FK_Projects_ProjectTypes]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Projects_Project_Types]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Projects]'))
+ALTER TABLE [dbo].[cr_Projects] CHECK CONSTRAINT [FK_Projects_Project_Types]
 GO
 
 --Organizations

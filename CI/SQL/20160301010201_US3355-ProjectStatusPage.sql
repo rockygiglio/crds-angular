@@ -16,15 +16,15 @@ INSERT INTO [dbo].[dp_Pages]
            ,[Selected_Record_Expression]
            ,[Display_Copy])
      VALUES
-		(14,
-           'Projects',
-           'Project',
-           'A volunteer project.',
+		(15,
+           'Project Statuses',
+           'Project Status',
+           'The status of a volunteer project.',
            100,
-           'cr_Projects',
-           'Project_ID',
-           'Project_Name, Location_ID_Table.Location_Name, Project_Type_ID_Table.Description AS [Project_Type], Project_Status_ID_Table.Description AS [Project_Status], Organization_ID_Table.Name, Initiative_ID_Table.Initiative_Name, Minimum_Volunteers, Maximum_Volunteers',
-           'Project_Name',
+           'cr_Project_Statuses',
+           'Project_Status_ID',
+           'Description',
+           'Description',
            1)
 
 SET IDENTITY_INSERT [dbo].[dp_Pages] OFF
