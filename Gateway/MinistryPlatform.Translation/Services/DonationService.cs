@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
@@ -376,14 +375,50 @@ namespace MinistryPlatform.Translation.Services
             return trips;
         }
 
+        public List<GPExportDatum> GetGPExportAndProcessorFees(int depositId, string token)
+        {
+            var gpExport = GetGPExport(depositId, token);
+            var donationIds = new List<int>();
+
+            //loops through and adds a processor fee record for each Donation
+            foreach (var datum in gpExport.Where(datum => !donationIds.Contains(datum.DonationId)))
+            {
+                donationIds.Add(datum.DonationId);
+
+                gpExport.Add(new GPExportDatum
+                {
+                    ProccessFeeProgramId = _processingProgramId,
+                    ProgramId = _processingProgramId,
+                    DocumentType = datum.DocumentType,
+                    DonationId = datum.DonationId,
+                    BatchName = datum.BatchName,
+                    DonationDate = datum.DonationDate,
+                    DepositDate = datum.DepositDate,
+                    CustomerId = datum.CustomerId,
+                    DonationAmount = datum.DonationAmount,
+                    CheckbookId = datum.CheckbookId,
+                    CashAccount = datum.CashAccount,
+                    ReceivableAccount = datum.ReceivableAccount,
+                    DistributionAccount = datum.DistributionAccount,
+                    ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
+                    Amount = datum.ProcessorFeeAmount,
+                    ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
+                    PaymentTypeId = datum.PaymentTypeId,
+                    ProcessorFeeAmount = datum.ProcessorFeeAmount
+                });
+            }
+
+            return gpExport;
+        }
+
         public List<GPExportDatum> GetGPExport(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
-            var gpExport = new List<GPExportDatum>();
 
-            foreach (var result in results)
-            {
-                var gp = new GPExportDatum
+            return (from result in results
+                let fee = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+
+                select new GPExportDatum
                 {
                     ProccessFeeProgramId = _processingProgramId,
                     ProgramId = result.ToInt("Program_ID"),
@@ -399,15 +434,11 @@ namespace MinistryPlatform.Translation.Services
                     ReceivableAccount = result.ToString("Receivable_Account"),
                     DistributionAccount = result.ToString("Distribution_Account"),
                     ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
-                    Amount = result.ToString("Amount"),
+                    Amount = Convert.ToDecimal(result.ToString("Amount")) - fee,
                     ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
-                    PaymentTypeId = result.ToInt("Payment_Type_ID")
-                };
-
-                gpExport.Add(gp);
-            }
-
-            return gpExport;
+                    PaymentTypeId = result.ToInt("Payment_Type_ID"),
+                    ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+                }).ToList();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
