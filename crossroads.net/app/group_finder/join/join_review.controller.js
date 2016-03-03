@@ -10,8 +10,8 @@
     'ZipcodeService',
     'GroupInvitationService',
     'LookupDefinitions',
-    'ANYWHERE_GROUP_ID',
-    'GROUP_ROLE_ID_PARTICIPANT',
+    'GROUP_ID',
+    'GROUP_ROLE',
     '$window'
   ];
 
@@ -22,8 +22,8 @@
     ZipcodeService,
     GroupInvitationService,
     LookupDefinitions,
-    ANYWHERE_GROUP_ID,
-    GROUP_ROLE_ID_PARTICIPANT,
+    GROUP_ID,
+    GROUP_ROLE,
     $window
   ) {
     var vm = this;
@@ -68,8 +68,8 @@
           vm.showResults = false;
           vm.contactCrds = true;
 
-          var promise = GroupInvitationService.acceptInvitation(ANYWHERE_GROUP_ID,
-            {capacity: 1, groupRoleId: GROUP_ROLE_ID_PARTICIPANT});
+          var promise = GroupInvitationService.acceptInvitation(GROUP_ID.ANYWHERE,
+            {capacity: 1, groupRoleId: GROUP_ROLE.PARTICIPANT});
           promise.then(function() {
             // Invitation acceptance was successful
             vm.accepted = true;

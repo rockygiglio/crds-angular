@@ -17,7 +17,7 @@
     'Email',
     '$log',
     'GroupInvitationService',
-    'GROUP_ROLE_ID_HOST',
+    'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
     'SERIES'
@@ -36,7 +36,7 @@
                           Email,
                           $log,
                           GroupInvitationService,
-                          GROUP_ROLE_ID_HOST,
+                          GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
                           SERIES) {
@@ -203,7 +203,7 @@
 
           // User invitation service to add person to that group
           return GroupInvitationService.acceptInvitation(group.groupId,
-            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+            {capacity: capacity, groupRoleId: GROUP_ROLE.HOST, attributes: group.attributes});
         })
         .then(function hostInviteSuccess() {
             // Reload group to pick up host as member
