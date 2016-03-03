@@ -389,11 +389,11 @@ namespace crds_angular.Services
 
             var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
 
-            var apiToken = _apiUserService.GetToken();            
-                        
+            var apiToken = _apiUserService.GetToken();
+            var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }
