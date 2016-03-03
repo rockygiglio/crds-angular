@@ -41,11 +41,19 @@ namespace crds_angular.Services
 
             communication.AuthorUserId = email.FromUserId ?? _communicationService.GetUserIdFromContactId(token, email.FromContactId);
 
+            //TODO: GetPerson call has overhead of loading attributes, family, and other stuff, may want to refactor to simpler calls
+            //possibly something like this
+            //contact.ContactId = DefaultContactEmailId;
+            //contact.EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId);
             var sender = _personService.GetPerson(DefaultContactEmailId);
             var from = new Contact { ContactId = sender.ContactId, EmailAddress = sender.EmailAddress };
             communication.FromContact = from;
             communication.ReplyToContact = from;
 
+            //TODO: GetPerson call has overhead of loading attributes, family, and other stuff, may want to refactor to simpler calls
+            //possibly something like this
+            //contact.ContactId = email.ToContactId;
+            //contact.EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId);
             var receiver = _personService.GetPerson(email.ToContactId);
             var recipient = new Contact {ContactId = receiver.ContactId, EmailAddress = receiver.EmailAddress};
             communication.ToContacts.Add(recipient);
