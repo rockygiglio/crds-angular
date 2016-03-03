@@ -6,6 +6,8 @@ USE [MinistryPlatform]
  
  SET QUOTED_IDENTIFIER ON
  GO
+
+ DROP TABLE [dbo].[cr_Registrations]
  
  IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr_Registrations]') AND type in (N'U'))
  BEGIN
@@ -27,4 +29,9 @@ USE [MinistryPlatform]
 	CONSTRAINT [FK_Registrations_Role] FOREIGN KEY ([Group_Role_ID]) REFERENCES [Group_Roles]([Group_Role_ID]),
  	CONSTRAINT [PK_Registrations] PRIMARY KEY CLUSTERED([Registration_ID] ASC)
  )
- END 
+
+ ALTER TABLE dbo.cr_Registrations ADD CONSTRAINT
+	FK_cr_Registrations_dp_Domains FOREIGN KEY
+	(Domain_ID) REFERENCES dbo.dp_Domains (Domain_ID) 
+
+END
