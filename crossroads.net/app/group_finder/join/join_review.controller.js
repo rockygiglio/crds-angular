@@ -11,7 +11,8 @@
     'GroupInvitationService',
     'LookupDefinitions',
     'ANYWHERE_GROUP_ID',
-    'GROUP_ROLE_ID_PARTICIPANT'
+    'GROUP_ROLE_ID_PARTICIPANT',
+    '$window'
   ];
 
   function JoinReviewCtrl(
@@ -22,7 +23,8 @@
     GroupInvitationService,
     LookupDefinitions,
     ANYWHERE_GROUP_ID,
-    GROUP_ROLE_ID_PARTICIPANT
+    GROUP_ROLE_ID_PARTICIPANT,
+    $window
   ) {
     var vm = this;
     vm.initialize = initialize;
@@ -30,6 +32,8 @@
     vm.goToResults = goToResults;
     vm.lookup = LookupDefinitions;
     vm.lookupContains = lookupContains;
+    vm.goBack = goBack;
+    vm.autoJoinNoGroup = autoJoinNoGroup;
 
     function initialize() {
 
@@ -109,7 +113,15 @@
     function lookupContains(id, keyword) {
       return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
-    
+
+    function goBack() {
+      $window.history.back();
+    }
+
+    function autoJoinNoGroup() {
+      console.log('join no group group');
+    }
+
     vm.initialize();
 
   }

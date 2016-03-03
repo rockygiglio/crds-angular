@@ -22,3 +22,4 @@
 "groupFinderContactCrdsSuccess","<p>Thanks, your information has been sent and someone will contact you shortly.</p><p>Return to <a href=""/"">Crossroads.net</a></p>","info","corkboard"
 "groupFinderContactCrdsError","<p>Sorry, there was an error</p>","info","corkboard"
 "groupFinderInvitationAlreadyJoined","<p>Looks like you've already joined this group.</p><p></p><p>Visit your dashboard for more information.</p>","info","corkboard"
+"groupFinderInvalidTime","<h2>Looks like you didn't select any times.</h2><p></p><p>We can't match you with a group without any times. Go back and change it or click below to join a remote group.</p>","info","corkboard"
