@@ -22,7 +22,7 @@
       vm.showSignin = showSignin;
       vm.showSpouse = showSpouse;
       vm.showOrgName = showOrgName;
-
+      vm.showChildren = showChildren;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -38,6 +38,10 @@
 
       function showOrgName() {
         return $stateParams.page === 'name';
+      }
+
+      function showChildren() {
+        return $stateParams.page === 'children';
       }
 
     }

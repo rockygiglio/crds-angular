@@ -12,4 +12,5 @@
   require('./profilePage');
   require('./spouse');
   require('./orgName');
+  require('./children');
 })();
