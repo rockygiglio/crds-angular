@@ -29,7 +29,7 @@
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, reset);
 
     // Clear and reload
-    $rootScope.$on('reloadGroups', reloadGroups);
+    $rootScope.$on('groupFinderReloadGroups', reloadGroups);
 
     //
     // Initialize the data
@@ -73,6 +73,7 @@
               processMeetingDayAndTime(group);
             });
           }
+          $rootScope.$emit('groupFinderInfoLoaded');
           return groups;
         }, function error() {
           // An error occurred, clear the promise so another attempt can be made

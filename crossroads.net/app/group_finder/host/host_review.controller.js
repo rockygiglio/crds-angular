@@ -170,19 +170,16 @@
       // Publish the group to the API and handle the response
       Group.Detail.save(group).$promise
         .then(function groupPublishSuccess(group) {
+          $rootScope.$emit('groupFinderReloadGroups');
           var capacity = 1;
           if (Responses.data.marital_status === '7022') {
             capacity = 2;
           }
 
-          // Reload the groups now that the group info has been published, in case an error happens
-          // later in promise chain
-          $rootScope.$broadcast('reloadGroups');
-
           // Created group successfully, go to confirmation page allowing the current execution to complete
           $timeout(function() {
             $state.go('group_finder.host.confirm');
-          }, 0);
+          }, 100);
 
           // Send host confirmation emails
           var email = {
@@ -214,13 +211,12 @@
         })
         .then(function hostInviteSuccess() {
             // Reload group to pick up host as member
-            $rootScope.$broadcast('reloadGroups');
+            $rootScope.$emit('groupFinderReloadGroups');
 
             // Invitation acceptance was successful
             vm.accepted = true;
           })
-        .catch(
-          function chainError(error) {
+        .catch(function chainError(error) {
             vm.rejected = true;
             vm.requestPending = false;
             vm.showPublish = false;
