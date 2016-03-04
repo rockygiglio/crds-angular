@@ -21,18 +21,23 @@
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
       vm.showSpouse = showSpouse;
+      vm.showOrgName = showOrgName;
 
 
       function showProfile() {
-        return $stateParams.page === 'profile'; 
+        return $stateParams.page === 'profile';
       }
 
       function showSignin() {
-        return $stateParams.page === 'signin'; 
+        return $stateParams.page === 'signin';
       }
-      
+
       function showSpouse() {
         return $stateParams.page === 'spouse';
+      }
+
+      function showOrgName() {
+        return $stateParams.page === 'name';
       }
 
     }
