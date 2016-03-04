@@ -4,12 +4,6 @@ GO
 DECLARE @PAGE_ID int = 13;
 DECLARE @PAGE_NAME nvarchar(100) = N'Group Connectors';
 
-DELETE FROM dp_Page_Section_Pages WHERE Page_Section_ID = 21 AND Page_ID = @PAGE_ID
-
-DELETE FROM dp_Role_Pages WHERE PAGE_ID = @PAGE_ID
-
-DELETE FROM [dbo].[dp_Pages] where Page_ID = @PAGE_ID
-
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Pages] where [Display_Name] = @PAGE_NAME)
 BEGIN
 
