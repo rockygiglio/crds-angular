@@ -1,7 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-/****** Object:  Table [dbo].[Contact_Attributes]    Script Date: 3/4/2016 10:55:35 AM ******/
+/****** Object:  Table [dbo].[cr_Registration_Children_Attributes]    Script Date: 3/4/2016 2:45:03 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -14,9 +14,14 @@ CREATE TABLE [dbo].[cr_Registration_Children_Attributes](
 	[Attribute_ID] [int] NOT NULL,
 	[Count] [int] NOT NULL,
 	[Domain_ID] [int] NOT NULL,
- CONSTRAINT [PK_Registration_Children_Attributes] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_cr_Registration_Children_Attributes_1] PRIMARY KEY CLUSTERED 
 (
 	[Registration_Children_Attribute_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [cr_Registration_Children_Attributes_UNIQUE] UNIQUE NONCLUSTERED 
+(
+	[Registration_ID] ASC,
+	[Attribute_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -29,18 +34,18 @@ GO
 ALTER TABLE [dbo].[cr_Registration_Children_Attributes] CHECK CONSTRAINT [FK_Registration_Children_Attributes_Attributes]
 GO
 
-ALTER TABLE [dbo].[cr_Registration_Children_Attributes]  WITH CHECK ADD  CONSTRAINT [FK_Registration_Children_Attributes_Registration] FOREIGN KEY([Registration_ID])
-REFERENCES [dbo].[cr_Registrations] ([Registration_ID])
-GO
-
-ALTER TABLE [dbo].[cr_Registration_Children_Attributes] CHECK CONSTRAINT [FK_Registration_Children_Attributes_Registration]
-GO
-
 ALTER TABLE [dbo].[cr_Registration_Children_Attributes]  WITH CHECK ADD  CONSTRAINT [FK_Registration_Children_Attributes_dp_Domains] FOREIGN KEY([Domain_ID])
 REFERENCES [dbo].[dp_Domains] ([Domain_ID])
 GO
 
 ALTER TABLE [dbo].[cr_Registration_Children_Attributes] CHECK CONSTRAINT [FK_Registration_Children_Attributes_dp_Domains]
+GO
+
+ALTER TABLE [dbo].[cr_Registration_Children_Attributes]  WITH CHECK ADD  CONSTRAINT [FK_Registration_Children_Attributes_Registration] FOREIGN KEY([Registration_ID])
+REFERENCES [dbo].[cr_Registrations] ([Registration_ID])
+GO
+
+ALTER TABLE [dbo].[cr_Registration_Children_Attributes] CHECK CONSTRAINT [FK_Registration_Children_Attributes_Registration]
 GO
 
 
