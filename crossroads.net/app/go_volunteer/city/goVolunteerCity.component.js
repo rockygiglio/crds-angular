@@ -17,20 +17,21 @@
 
     function GoCityController() {
       var vm = this;
-  
-      // this has to be set first 
+
+      // this has to be set first
       vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0];
-     
+
       vm.city = $stateParams.city;
       vm.content = content;
       vm.title = title;
 
       function content() {
-        return vm.cmsInfo.content; 
+        return vm.cmsInfo.content;
       }
 
       function title() {
-        return 'GO ' + vm.cmsInfo.title; 
+        //TODO: needs proper case
+        return 'GO ' + vm.cmsInfo.title;
       }
 
     }

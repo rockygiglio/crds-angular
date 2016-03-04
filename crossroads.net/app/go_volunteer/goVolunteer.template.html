@@ -1,18 +1,9 @@
-<script>
-(function () {
-	$('.hamburger-menu').on('click', function() {
-		$('.bar').toggleClass('animate');
-    $('.gv-nav').toggleClass('show');
-	})
-})();
-</script>
+<div class="go-volunteer dark-bg imgix-fluid-bg img-background" data-src="//crds-cms-uploads.imgix.net/content/images/go-bg-desk.jpg">
 
-
-<div class="go-volunteer dark-bg">
-  <div class="gv-nav animated zoomInRight">
-    <div class="container">
+  <div class="gv-nav" ng-show="gvMenu">
+    <div class="container animated zoomInRight">
       <div class="row">
-        <div class="col-xs-10 col-xs-offset-1">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3">
           <ul class="list-unstyled">
             <li><a href="#">What</a></li>
             <li><a href="#" ui-sref="#">Why</a></li>
@@ -26,24 +17,23 @@
       </div>
     </div>
   </div>
-
-  <div class="container-fluid imgix-fluid-bg img-background-100" data-src="https://crds-cms-uploads.imgix.net/content/images/go-vol-bg.jpg" >
+  <div class="container-fluid" >
     <header>
       <nav class="navbar navbar-static-top">
         <div class="container">
           <div class="row">
             <div class="col-sm-8 col-sm-offset-2 clearfix">
-              <a class="back-btn pull-left" href="#" ui-sref="#" >
+              <a class="back-btn pull-left" href="#" ui-sref="#">
                 <svg viewBox="0 0 32 32" class="icon icon-xlarge icon-angle-left ng-hide">
-                	<use xlink:href="#angle-left"></use>
+                  <use xlink:href="#angle-left"></use>
                 </svg>
               </a>
-              <a class="logo center-block" ui-sref="go-volunteer ({city: 'cincinnati'})" href="#">
-                <img class="imgix-fluid" data-src="https://crds-cms-uploads.imgix.net/content/images/go.png" >
+              <a class="logo center-block" ui-sref="go-volunteer.city({city: 'cincinnati'})" href="#">
+                <img class="imgix-fluid" data-src="//crds-cms-uploads.imgix.net/content/images/go.png" alt="GO Cincinnati Logo">
               </a>
-              <div class="hamburger-menu">
-            		  <div class="bar"></div>
-            	</div>
+              <div class="hamburger-menu" ng-click=gvMenu=!gvMenu>
+                <div class="bar" ng-class="{'animate': gvMenu}"></div>
+              </div>
             </div>
           </div>
         </div>
