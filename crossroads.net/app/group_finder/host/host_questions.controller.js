@@ -68,7 +68,6 @@
       }
     }
 
-    // TODO Populate with actual affinities based on user responses.
     function getGroupAffinities() {
       return [
         'Kids welcome',
@@ -77,7 +76,6 @@
       ];
     }
 
-    // TODO Implement distance.
     function getGroupDistance() {
       return '0 miles from you';
     }
