@@ -1,8 +1,6 @@
 USE [MinistryPlatform]
 GO
 
---delete from dp_Page_Section_Pages WHERE Page_Section_ID = 21 AND Page_ID = 13
-
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Page_Section_Pages] WHERE Page_Section_ID = 21 AND Page_ID = 13)
 BEGIN
 INSERT INTO [dbo].[dp_Page_Section_Pages]
