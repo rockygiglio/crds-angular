@@ -23,7 +23,6 @@
     };
 
     $scope.getGroupType = function() {
-      // TODO - The 'Co-ed' default value should be removed once the API is completed
       return $scope.group.type ? 'A group of ' + $scope.group.type : 'A group';
     };
 
@@ -42,8 +41,7 @@
     };
 
     $scope.groupTime = function() {
-      var meetingTime = moment().format('YYYY-MM-DD') + ' ' + $scope.group.meetingTime;
-      return moment().isoWeekday($scope.group.meetingDayId - 1).format('dddd') + ', ' + moment(meetingTime).format('h a');
+      return $scope.group.meetingDay + ', ' + $scope.group.meetingHour;
     };
 
   }

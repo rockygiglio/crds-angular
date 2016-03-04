@@ -11,6 +11,7 @@ using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
+using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
@@ -31,6 +32,7 @@ namespace crds_angular.Services
         private readonly IContactService _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserService _apiUserService;
+        private readonly IAttributeService _attributeService;
 
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
+        private readonly int JourneyGroupId;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -49,7 +52,8 @@ namespace crds_angular.Services
                             ICommunicationService communicationService,
                             IContactService contactService, 
                             IObjectAttributeService objectAttributeService, 
-                            IApiUserService apiUserService)
+                            IApiUserService apiUserService, 
+                            IAttributeService attributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -62,9 +66,11 @@ namespace crds_angular.Services
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
+            _attributeService = attributeService;
 
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
+            JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -303,13 +309,13 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
 
             var configuration = ObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
                 group.AttributeTypes = attributesTypes.MultiSelect;
                 group.SingleAttributes = attributesTypes.SingleSelect;
             }
-
 
             return groupDetail;
         }
@@ -323,7 +329,7 @@ namespace crds_angular.Services
         public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
         {
             var participant = GetParticipantRecord(token);
-            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, 19);
+            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, JourneyGroupId);
 
             if (groups == null ||  groups.Count == 0)
             {
@@ -345,6 +351,7 @@ namespace crds_angular.Services
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
             return new Communication
@@ -354,7 +361,7 @@ namespace crds_angular.Services
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
                 FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
                 ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
@@ -382,11 +389,11 @@ namespace crds_angular.Services
 
             var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
 
-            var apiToken = _apiUserService.GetToken();            
-                        
+            var apiToken = _apiUserService.GetToken();
+            var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }

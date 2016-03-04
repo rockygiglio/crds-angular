@@ -21,6 +21,10 @@
 
     $scope.initialize = function() {
 
+      $scope.questions = _.reject($scope.questions, function(q) {
+        return q.hidden !== undefined && q.hidden === true;
+      });
+
       $scope.step = parseInt($location.hash()) || $scope.step;
       $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
@@ -34,6 +38,7 @@
 
     $scope.previousQuestion = function() {
       $scope.applyErrors();
+      $scope.$broadcast('groupFinderClearError');
       $scope.step--;
       $scope.provideFocus();
     };
@@ -131,6 +136,21 @@
                   }
                 }
 
+                if (el.data('input-type') !== undefined) {
+                  switch (el.data('input-type')) {
+                    case 'zip':
+                      if ($scope.validZip(el.val()) === false) {
+                        response = '';
+                      }
+                  }
+                }
+
+                if (el.attr('name') === 'date_and_time[day]') {
+                  if (Responses.data.date_and_time.time === null) {
+                    response = '';
+                  }
+                }
+
                 var hasError = (response === undefined || response === '');
 
                 return hasError ? el : false;
@@ -140,16 +160,37 @@
     };
 
     $scope.applyErrors = function() {
-      $('div.has-error:visible').removeClass('has-error');
       $scope.$broadcast('groupFinderClearError');
 
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
         }
+        if (el.attr('name') === 'date_and_time[day]') {
+          if (Responses.data.date_and_time.time === null) {
+            $scope.$broadcast('groupFinderTimeError');
+          }
+        }
+        if (el.data('input-type') !== undefined) {
+          switch (el.data('input-type')) {
+            case 'zip':
+              if ($scope.validZip(el.val()) === false) {
+                $scope.$broadcast('groupFinderZipError');
+                el.closest('div').addClass('has-error');
+              }
+          }
+        }
       });
     };
 
+    $scope.validZip = function(zip) {
+      var pattern = /^\d{5}(?:[-\s]\d{4})?$/;
+      var result = true;
+      if (zip.match(pattern) === null) {
+        result = false;
+      }
+      return result;
+    };
 
     $scope.provideFocus = function() {
       $timeout(function() {

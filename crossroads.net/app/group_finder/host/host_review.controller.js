@@ -5,34 +5,46 @@
 
   HostReviewCtrl.$inject = [
     '$window',
+    '$rootScope',
     '$scope',
     '$state',
+    '$timeout',
     'Responses',
     'Group',
     'AuthenticatedPerson',
     'GROUP_API_CONSTANTS',
+    'EMAIL_TEMPLATES',
+    'Email',
     '$log',
     'GroupInvitationService',
     'GROUP_ROLE_ID_HOST',
     'LookupDefinitions',
+    'DAYS',
     'SERIES'
   ];
 
   function HostReviewCtrl($window,
+                          $rootScope,
                           $scope,
                           $state,
+                          $timeout,
                           Responses,
                           Group,
                           AuthenticatedPerson,
                           GROUP_API_CONSTANTS,
+                          EMAIL_TEMPLATES,
+                          Email,
                           $log,
                           GroupInvitationService,
                           GROUP_ROLE_ID_HOST,
                           LookupDefinitions,
+                          DAYS,
                           SERIES) {
     var vm = this;
 
     vm.pending = true;
+    vm.showPublish = true;
+    vm.invalidTime = false;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
     vm.lookup = LookupDefinitions;
@@ -63,7 +75,7 @@
         time: vm.getGroupTime(),
         distance: '0 miles from you',
         description: vm.responses.description,
-        type: vm.responses.group_type,
+        type: vm.lookup[vm.responses.group_type].description,
         attributes: vm.getGroupAttributes(),
         host: {
           contactId: AuthenticatedPerson.contactId
@@ -71,6 +83,11 @@
       };
 
       vm.pending = false;
+
+      if (vm.responses.date_and_time.time === null) {
+        vm.invalidTime = true;
+        vm.showPublish = false;
+      }
     }
 
     function startOver() {
@@ -79,7 +96,7 @@
     }
 
     function publish() {
-      var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      vm.requestPending = true;
       vm.rejected = false;
 
       // Create the Group detail resource
@@ -115,7 +132,7 @@
         group.childCareInd = vm.responses.kids === 1;
 
         // meetingDayId is not zero based
-        group.meetingDayId = days.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
+        group.meetingDayId = DAYS.indexOf(vm.responses.date_and_time.day.toLowerCase()) + 1;
         group.meetingTime = vm.formatTime(vm.responses.date_and_time.time);
         group.address = {
           addressLine1: vm.responses.location.street,
@@ -123,64 +140,88 @@
           state: vm.responses.location.state,
           zip: vm.responses.location.zip
         };
+
+        var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
+        group.singleAttributes = {};
+        _.each(singleAttributes, function (index) {
+          var answer = this.data[index];
+          var attributeTypeId = this.lookup[answer].attributeTypeId;
+          group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
+        }, {data: vm.responses, lookup: vm.lookup});
+
+        var attributes = [];
+        var petAttributeTypeId = null;
+        _.each(vm.responses.pets, function (hasPet, id) {
+          if (!petAttributeTypeId) {
+            petAttributeTypeId = this.lookup[id].attributeTypeId;
+          }
+          if (hasPet) {
+            attributes.push({'attributeId': id, 'selected': true});
+          }
+        }, {lookup: vm.lookup});
+
+        group.attributeTypes = {};
+        group.attributeTypes[petAttributeTypeId] = {
+          attributeTypeId: petAttributeTypeId,
+          attributes: attributes
+        };
       }
 
-      var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
-      group.singleAttributes = {};
-      _.each(singleAttributes, function(index) {
-         var answer = this.data[index];
-         var attributeTypeId = this.lookup[answer].attributeTypeId;
-         group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
-      }, {data: vm.responses, lookup: vm.lookup});
-
-      var attributes = [];
-      var petAttributeTypeId = null;
-      _.each(vm.responses.pets, function(hasPet, id) {
-        if (!petAttributeTypeId) {
-          petAttributeTypeId = this.lookup[id].attributeTypeId;
-        }
-        if (hasPet) {
-          attributes.push({'attributeId': id, 'selected': true});
-        }
-      }, {lookup: vm.lookup});
-
-      group.attributeTypes = {};
-      group.attributeTypes[petAttributeTypeId] = {
-        attributeTypeId: petAttributeTypeId,
-        attributes: attributes
-      };
-
       // Publish the group to the API and handle the response
-      $log.debug('Publishing group:', group);
-      Group.Detail.save(group).$promise.then(function success(group) {
+      Group.Detail.save(group).$promise
+        .then(function groupPublishSuccess(group) {
+          $rootScope.$emit('groupFinderReloadGroups');
+          var capacity = 1;
+          if (Responses.data.marital_status === '7022') {
+            capacity = 2;
+          }
 
-        $log.debug('Group was published successfully:', group);
-        var capacity = 1;
-        if (vm.responses.marital_status === '7022') {
-          capacity = 2;
-        }
-        // User invitation service to add person to that group
-        var promise = GroupInvitationService.acceptInvitation(group.groupId,
-                      {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
-        promise.then(function() {
-          // Invitation acceptance was successful
-          vm.accepted = true;
-        }, function(error) {
-          // An error happened accepting the invitation
-          vm.rejected = true;
-        }).finally(function() {
-          vm.requestPending = false;
-        });
+          // Created group successfully, go to confirmation page allowing the current execution to complete
+          $timeout(function() {
+            $state.go('group_finder.host.confirm');
+          }, 100);
 
-        // Created group successfully, go to confirmation page
-        $state.go('group_finder.host.confirm');
-      }, function error() {
-        vm.rejected = true;
-        $log.debug('An error occurred while publishing');
-      })
-      .finally(function() {
-        vm.pending = false;
-      });
+          // Send host confirmation emails
+          var email = {
+            groupId: group.groupId,
+            fromContactId: AuthenticatedPerson.contactId,
+            toContactId: AuthenticatedPerson.contactId
+          };
+
+          if (!vm.isPrivate()) {
+            email.templateId = EMAIL_TEMPLATES.HOST_PUBLIC_CONFIRM_EMAIL_ID;
+            email.mergeData = {
+              PreferredName: AuthenticatedPerson.nickName,
+              AddressLine1: vm.responses.location.street,
+              MeetingDay: vm.responses.date_and_time.day,
+              MeetingTime: vm.formatTime(vm.responses.date_and_time.time)
+            };
+          } else {
+            email.templateId = EMAIL_TEMPLATES.HOST_PRIVATE_CONFIRM_EMAIL_ID;
+            email.mergeData = {};
+          }
+
+          Email.Mail.save(email).$promise.catch(function hostEmailError(error) {
+            $log.error('Host email confirmation failed', error);
+          });
+
+          // User invitation service to add person to that group
+          return GroupInvitationService.acceptInvitation(group.groupId,
+            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+        })
+        .then(function hostInviteSuccess() {
+            // Reload group to pick up host as member
+            $rootScope.$emit('groupFinderReloadGroups');
+
+            // Invitation acceptance was successful
+            vm.accepted = true;
+          })
+        .catch(function chainError(error) {
+            vm.rejected = true;
+            vm.requestPending = false;
+            vm.showPublish = false;
+            $log.debug('An error occurred while publishing', error);
+          });
     }
 
     function lookupContains(id, keyword) {
@@ -210,7 +251,12 @@
     }
 
     function formatTime(time) {
-      return  moment(time).format('h:mm a');
+      var meetingTime = moment(time);
+      var format = 'h a';
+      if (meetingTime.minutes() !== 0) {
+        format = 'h:mm a';
+      }
+      return  meetingTime.format(format);
     }
 
     function goBack() {
