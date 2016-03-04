@@ -25,7 +25,7 @@ INSERT INTO [dbo].[dp_Pages]
            100,
            'cr_Project_Types',
            'ProjectType_ID',
-           'Description, Minimum_Age',
+           'Description, Minimum_Age, Inactive',
            'Description',
            1)
 
