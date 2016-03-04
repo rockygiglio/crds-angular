@@ -31,9 +31,8 @@
     vm.goToHost = goToHost;
     vm.goToResults = goToResults;
     vm.lookup = LookupDefinitions;
-    vm.lookupContains = lookupContains;
     vm.goBack = goBack;
-    vm.autoJoinNoGroup = autoJoinNoGroup;
+    vm.lookupContains = lookupContains;
 
     function initialize() {
 
@@ -41,7 +40,6 @@
       vm.showUpsell = parseInt(vm.responses.prior_participation) > 2;
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
-      Responses.data.completedQa = true;
       var meetTime = {
         week: true,
         weekend: true
@@ -116,10 +114,6 @@
 
     function goBack() {
       $window.history.back();
-    }
-
-    function autoJoinNoGroup() {
-      console.log('join no group group');
     }
 
     vm.initialize();
