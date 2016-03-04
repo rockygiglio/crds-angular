@@ -7,9 +7,9 @@ using MinistryPlatform.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    interface ITaskRespository
+    public interface ITaskRepository
     {
-        List<MPTask> GetRecurringEventTasks();
+        List<MPTask> GetTasksToAutostart();
 
         void CompleteTask(string token, int taskId, bool rejected, string comments);
     }

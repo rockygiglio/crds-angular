@@ -85,9 +85,8 @@
     <None Include="..\crds-angular\MinistryPlatform.config">
       <Link>MinistryPlatform.config</Link>
     </None>
-    <None Include="..\Crossroads.AsyncJobs\Unity.config">
+    <None Include="..\crds-angular\Unity.config">
       <Link>Unity.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />

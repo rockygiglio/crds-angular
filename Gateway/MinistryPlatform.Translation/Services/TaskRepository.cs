@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper.Internal;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
@@ -11,44 +7,40 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class TaskRepository : BaseService, ITaskRespository
+    public class TaskRepository : BaseService, ITaskRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-
-        private readonly int _recurringEventTaskPageViewId;
-        private readonly int _tasksPageId;
+        private readonly int _autoStartedTaskPageViewId;
 
         public TaskRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
             base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
 
-            _recurringEventTaskPageViewId = _configurationWrapper.GetConfigIntValue("RecurringEventSetup");
-            _tasksPageId = _configurationWrapper.GetConfigIntValue("TasksPageId");
+            _autoStartedTaskPageViewId = _configurationWrapper.GetConfigIntValue("TasksNeedingAutoStarted");
         }
 
-        public List<MPTask> GetRecurringEventTasks()
+        public List<MPTask> GetTasksToAutostart()
         {
-            var records = _ministryPlatformService.GetPageViewRecords(_recurringEventTaskPageViewId, ApiLogin());
+            var records = _ministryPlatformService.GetPageViewRecords(_autoStartedTaskPageViewId, ApiLogin());
 
             var tasks = records.Select(record => new MPTask
             {
-                Task_ID = record.ToInt("Task_ID"),
+                Task_ID = record.ToInt("Task ID"),
                 Title = record.ToString("Title"),
-                Author_User_ID = record.ToInt("Author_User_ID"),
-                Assigned_User_ID = record.ToInt("Assigned_User_ID"),
-                StartDate = record.ToNullableDate("Start_Date"),
-                EndDate = record.ToNullableDate("End_Date"),
+                Author_User_ID = record.ToInt("Author User ID"),
+                Assigned_User_ID = record.ToInt("Assigned User ID"),
+                StartDate = record.ToNullableDate("Start Date"),
+                EndDate = record.ToNullableDate("End Date"),
                 Completed = record.ToBool("Completed"),
                 Description = record.ToString("Description"),
-                Domain_ID = record.ToInt("Domain_ID"),
-                Record_ID = record.ToNullableInt("_Record_ID"),
-                Page_ID = record.ToNullableInt("_Page_ID"),
-                Process_Submission_ID = record.ToNullableInt("_Process_Submission_ID"),
-                Process_Step_ID = record.ToNullableInt("_Process_Step_ID"),
-                Rejected = record.ToBool("_Rejected"),
-                Escalated = record.ToBool("_Escalated"),
-                Record_Description = record.ToString("_Record_Description")
+                Record_ID = record.ToNullableInt("Record ID"),
+                Page_ID = record.ToNullableInt("Page ID"),
+                Process_Submission_ID = record.ToNullableInt("Process Submission ID"),
+                Process_Step_ID = record.ToNullableInt("Process Step ID"),
+                Rejected = record.ToBool("Rejected"),
+                Escalated = record.ToBool("Escalated"),
+                Record_Description = record.ToString("Record Description")
             }).ToList();
 
             return tasks;

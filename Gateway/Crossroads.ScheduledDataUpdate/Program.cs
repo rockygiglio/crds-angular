@@ -22,16 +22,16 @@ namespace Crossroads.ScheduledDataUpdate
 
             try
             {
-                Log.Info("Starting Bulk Email Synchronization");
+                Log.Info("Starting Auto Complete Tasks");
 
-                var syncService = container.Resolve<IBulkEmailSyncService>();
-                //syncService.RunService();
+                var taskService = container.Resolve<ITaskService>();
+                taskService.AutoCompleteTasks();
 
-                Log.Info("Finished Bulk Email Synchronization successfully");
+                Log.Info("Finished Auto Complete Tasks successfully");
             }
             catch (Exception ex)
             {
-                Log.Error("Bulk Email Synchronization Process failed.", ex);
+                Log.Error("Auto Complete Tasks failed.", ex);
                 Environment.Exit(9999);
             }
         }
