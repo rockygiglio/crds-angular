@@ -51,6 +51,18 @@
     vm.groupHelp = vm.groupId === GROUP_ID.NO_GROUP;
     vm.dateTimeString = dateTimesString;
 
+    // Left in place for debugging purposes. Will remove at a later date
+    // TODO remove before deploy
+    function getResponses() {
+      if (Responses.data.completed_flow === true) {
+        sessionStorage.setItem('participant', angular.toJson(Responses.data));
+      } else {
+        Responses.data = angular.fromJson(sessionStorage.getItem('participant'));
+      }
+
+      return Responses.data;
+    }
+
     // if there are responses, then the user came through QA flow
     function initialize() {
       if (GroupInfo.isParticipatingOrHost(vm.groupId)) {
