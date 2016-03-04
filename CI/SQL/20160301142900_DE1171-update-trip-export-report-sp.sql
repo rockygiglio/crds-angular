@@ -10,9 +10,9 @@ GO
 IF NOT EXISTS
   (SELECT *
    FROM sys.objects
-   WHERE object_id = object_id(n'[dbo].[report_CRDS_Trip_Export]')
-     AND TYPE IN (n'P',
-                   n'PC')) BEGIN EXEC dbo.sp_executesql @statement = n'CREATE PROCEDURE [dbo].[report_CRDS_Trip_Export] AS';
+   WHERE object_id = object_id(N'[dbo].[report_CRDS_Trip_Export]')
+     AND TYPE IN (N'P',
+                   N'PC')) BEGIN EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Trip_Export] AS';
 
 END 
 GO
