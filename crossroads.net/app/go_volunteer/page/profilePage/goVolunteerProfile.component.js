@@ -18,7 +18,7 @@
     
     function VolunteerProfileController() {
       var vm = this;
-
+      vm.person = GoVolunteerService.person;
       console.log(GoVolunteerService.person);
     }
   }

@@ -66,29 +66,29 @@
           Meta: Meta
         }
       })
-      .state('go-volunteer.crossroadsprofile', { 
-        parent: 'go-volunteer',
-        url: '/go-volunteer/cincinnati/crossroads/profile',
-        template: '<go-volunteer-page></go-volunteer-page>',
-        data: {
-          meta: {
-            title: 'Some Title', 
-            description: ''
-          },
-          isProtected: true
-        },
-        resolve: {
-          Meta: Meta,
-          loggedin: crds_utilities.checkLoggedin,
-          Profile: 'Profile',
-          $cookies: '$cookies',
-          $stateParams: '$stateParams',
-          $state: '$state',
-          $q: '$q',
-          GoVolunteerService: 'GoVolunteerService',
-          Person: Person
-        }
-      })
+     /* .state('go-volunteer.crossroadsprofile', { */
+        //parent: 'go-volunteer',
+        //url: '/go-volunteer/cincinnati/crossroads/profile',
+        //template: '<go-volunteer-page></go-volunteer-page>',
+        //data: {
+          //meta: {
+            //title: 'Some Title', 
+            //description: ''
+          //},
+          //isProtected: true
+        //},
+        //resolve: {
+          //Meta: Meta,
+          //loggedin: crds_utilities.checkLoggedin,
+          //Profile: 'Profile',
+          //$cookies: '$cookies',
+          //$stateParams: '$stateParams',
+          //$state: '$state',
+          //$q: '$q',
+          //GoVolunteerService: 'GoVolunteerService',
+          //Person: Person
+        //}
+      /*})*/
       .state('go-volunteer.crossroadspage', {
         parent: 'go-volunteer',
         url: '/go-volunteer/cincinnati/crossroads/:page',
@@ -102,11 +102,13 @@
         },
         resolve: {
           Meta: Meta,
-          loggedin: crds_utilities.checkLoggedin,
+          Profile: 'Profile',
+          $cookies: '$cookies',
           $stateParams: '$stateParams',
+          loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
-           
+          Person: Person  
         }
       })
       .state('go-volunteer.page', {

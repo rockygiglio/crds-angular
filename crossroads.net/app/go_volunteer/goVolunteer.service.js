@@ -9,7 +9,13 @@
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
-      person: {}
+      person: {
+        nickName: '',
+        lastName: '',
+        emailAddress: '',
+        dateOfBirth: null,
+        mobilePhone: null
+      }
     };
 
     return volunteerService;
