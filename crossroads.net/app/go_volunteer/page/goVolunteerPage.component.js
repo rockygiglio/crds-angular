@@ -20,6 +20,8 @@
 
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
+      vm.showSpouse = showSpouse;
+
 
       function showProfile() {
         return $stateParams.page === 'profile'; 
@@ -28,6 +30,11 @@
       function showSignin() {
         return $stateParams.page === 'signin'; 
       }
+      
+      function showSpouse() {
+        return $stateParams.page === 'spouse';
+      }
+
     }
   }
 

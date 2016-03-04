@@ -11,5 +11,5 @@
   require('./select_church/');
   require('./signin');
   require('./profilePage');
-
+  require('./spouse');
 })();

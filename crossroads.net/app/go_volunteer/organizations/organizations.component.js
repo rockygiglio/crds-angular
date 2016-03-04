@@ -3,9 +3,9 @@
   
   module.exports = Organizations;
 
-  Organizations.$inject = ['GoVolunteerService'];
+  Organizations.$inject = ['$stateParams', 'GoVolunteerService'];
 
-  function Organizations(GoVolunteerService) {
+  function Organizations($stateParams, GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -17,6 +17,9 @@
     
     function OrganizationsController() { 
       var vm = this;
+      
+      vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0];
+      vm.content = vm.cmsInfo.content;   
     }
   }
 
