@@ -17,14 +17,14 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid" >
+  <div class="container" >
     <header>
       <nav class="navbar navbar-static-top">
         <div class="container">
           <div class="row">
-            <div class="col-sm-8 col-sm-offset-2 clearfix">
+            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 clearfix">
               <a class="back-btn pull-left" href="#" ui-sref="#">
-                <svg viewBox="0 0 32 32" class="icon icon-xlarge icon-angle-left ng-hide">
+                <svg viewBox="0 0 32 32" class="icon icon-xlarge icon-angle-left">
                   <use xlink:href="#angle-left"></use>
                 </svg>
               </a>
@@ -40,12 +40,11 @@
       </nav>
     </header>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
-          <div ui-view ng-if="!app.resolving"> </div>
-        </div>
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <div ui-view ng-if="!app.resolving"> </div>
       </div>
     </div>
+
   </div>
 </div>
