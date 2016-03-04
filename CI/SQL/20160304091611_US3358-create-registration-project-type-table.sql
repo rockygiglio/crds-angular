@@ -9,11 +9,11 @@ CREATE TABLE [dbo].[cr_Registration_Project_Type]
     [Domain_ID] INT NOT NULL, 
 	[Registration_ID] INT NOT NULL,
 	[Project_Type_ID] INT NOT NULL,
-	[Order] Int NOT NULL,
+	[Priority] Int NOT NULL,
 
     CONSTRAINT [FK_Registration_Project_Type_Domains] FOREIGN KEY ([Domain_ID]) REFERENCES [dp_Domains]([Domain_ID]), 
-    CONSTRAINT [FK_Registration_Project_Type] FOREIGN KEY ([Registration_ID]) REFERENCES [cr_Registrations]([Registration_ID]),
-	CONSTRAINT [FK_Registration_Project_Type] FOREIGN KEY ([Registration_ID]) REFERENCES [cr_Project_Types]([Project_Type_ID]),
+    CONSTRAINT [FK_Registration_Project_Type_Registration] FOREIGN KEY ([Registration_ID]) REFERENCES [cr_Registrations]([Registration_ID]),
+	CONSTRAINT [FK_Registration_Project_Type_Project_Type] FOREIGN KEY ([Project_Type_ID]) REFERENCES [cr_Project_Types]([Project_Type_ID]),
 	CONSTRAINT [PK_Registration_Project_Type] PRIMARY KEY CLUSTERED([Registration_Project_Type_ID] ASC)
 )
 END
