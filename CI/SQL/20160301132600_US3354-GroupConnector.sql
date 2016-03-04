@@ -25,10 +25,3 @@ CREATE TABLE [dbo].[cr_GroupConnectors](
 	CONSTRAINT [PK_GroupConnector] PRIMARY KEY CLUSTERED([GroupConnector_ID] ASC)
 )
 END
-
---USE [MinistryPlatform]
---GO
-
---DROP TABLE [dbo].[cr_GroupConnectors]
---GO
-
