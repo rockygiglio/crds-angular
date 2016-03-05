@@ -391,7 +391,7 @@ namespace MinistryPlatform.Translation.Services
                 {
                     var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDict.Value.Count, indx);
                     gpExport.Add(AdjustedGpExportDatum(datum, processorFee));
-                    gpExport.Add(CreateProcessorFee(datum));
+                    gpExport.Add(CreateProcessorFee(datum, processorFee));
 
                     //set this as we will use this to help determine how much of a processor fee is on the
                     //next distribution of this donation
@@ -415,7 +415,7 @@ namespace MinistryPlatform.Translation.Services
             return datum;
         }
 
-        private GPExportDatum CreateProcessorFee(GPExportDatum datum)
+        private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee)
         {
             return new GPExportDatum
             {
@@ -433,7 +433,7 @@ namespace MinistryPlatform.Translation.Services
                 ReceivableAccount = datum.ReceivableAccount,
                 DistributionAccount = datum.DistributionAccount,
                 ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
-                Amount = datum.ProcessorFeeAmount,
+                Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
                 PaymentTypeId = datum.PaymentTypeId,
                 ProcessorFeeAmount = datum.ProcessorFeeAmount
