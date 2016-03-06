@@ -30,6 +30,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _tripDonationMessageTemplateId;
         private readonly int _donationCommunicationsPageId;
         private readonly int _messagesPageId;
+        private readonly int _glAccountMappingByProgramPageView;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IDonorService _donorService;
@@ -64,6 +65,7 @@ namespace MinistryPlatform.Translation.Services
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
             _messagesPageId = configuration.GetConfigIntValue("Messages");
+            _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -377,6 +379,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<GPExportDatum> GetGPExportAndProcessorFees(int depositId, string token)
         {
+            var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
             var gpExportDictList = GetGPExport(depositId, token);
             var gpExport = new List<GPExportDatum>();
 
@@ -391,7 +394,7 @@ namespace MinistryPlatform.Translation.Services
                 {
                     var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDict.Value.Count, indx);
                     gpExport.Add(AdjustedGpExportDatum(datum, processorFee));
-                    gpExport.Add(CreateProcessorFee(datum, processorFee));
+                    gpExport.Add(CreateProcessorFee(datum, processorFee, processingFeeGLMapping));
 
                     //set this as we will use this to help determine how much of a processor fee is on the
                     //next distribution of this donation
@@ -415,24 +418,24 @@ namespace MinistryPlatform.Translation.Services
             return datum;
         }
 
-        private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee)
+        private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
                 ProgramId = _processingProgramId,
-                DocumentType = datum.DocumentType,
+                DocumentType = processingFeeGLMapping.ToString("Document_Type"),
                 DonationId = datum.DonationId,
                 BatchName = datum.BatchName,
                 DonationDate = datum.DonationDate,
                 DepositDate = datum.DepositDate,
-                CustomerId = datum.CustomerId,
+                CustomerId = processingFeeGLMapping.ToString("Customer_ID"),
                 DonationAmount = datum.DonationAmount,
-                CheckbookId = datum.CheckbookId,
-                CashAccount = datum.CashAccount,
-                ReceivableAccount = datum.ReceivableAccount,
-                DistributionAccount = datum.DistributionAccount,
-                ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
+                CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
+                CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
+                ReceivableAccount = processingFeeGLMapping.ToString("Receivable_Account"),
+                DistributionAccount = processingFeeGLMapping.ToString("Distribution_Account"),
+                ScholarshipExpenseAccount = processingFeeGLMapping.ToString("Scholarship_Expense_Account"),
                 Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
                 PaymentTypeId = datum.PaymentTypeId,
@@ -480,6 +483,11 @@ namespace MinistryPlatform.Translation.Services
             }
 
             return gpExport;
+        }
+
+        private Dictionary<string, object> GetProcessingFeeGLMapping(string token)
+        {
+            return _ministryPlatformService.GetPageViewRecords(_glAccountMappingByProgramPageView, token, _processingProgramId.ToString()).First();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
