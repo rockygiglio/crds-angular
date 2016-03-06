@@ -1,1 +1,43 @@
+<!--Commenting out until CMS is fixed. CMS is stripping out the anchor tags that are around DIVS
 <div dynamic-content="organizations.content | html"> </div>
+-->
+
+
+<h2>What church or organization are you participanting with?</h2>
+<form class="row">
+  <div class="form-group col-xs-12">
+    <a href="#" ui-sref="go-volunteer.crossroadspage({page: 'profile'})">
+      <div class="media card-item media-card-link active">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" data-src="//crds-cms-uploads.imgix.net/content/images/gc-crossroads.jpg" alt="Demo" src="https://contentint.crossroads.net/" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h2 class="media-heading flush-bottom">Crossroads</h2>
+          <p class="flush-bottom">community church</p>
+        </div>
+      </div>
+    </a>
+    <a href="#" ui-sref="go-volunteer.page({page: 'orgName'})">
+      <div class="media card-item media-card-link active">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" src="https://crds-cms-uploads.imgix.net/content/images/gc-archdiocese.jpg" alt="Demo" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h2 class="media-heading flush-bottom">Archdiocese</h2>
+          <p class="flush-bottom">of Cincinnati</p>
+        </div>
+      </div>
+    </a>
+    <a href="#" ui-sref="go-volunteer.page({page: 'orgName'})">
+      <div class="media card-item media-card-link active">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" src="https://crds-cms-uploads.imgix.net/content/images/gc-other.jpg" alt="Demo" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h2 class="media-heading flush-bottom">Other</h2>
+          <p class="flush-bottom">affiliation or independent</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</form>

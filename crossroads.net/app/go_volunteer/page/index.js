@@ -13,4 +13,5 @@
   require('./spouse');
   require('./orgName');
   require('./children');
+  require('./spouseName');
 })();

@@ -1,46 +1,46 @@
-  <div class="row">
+<div class="row">
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
-<h2>Please double check your contact information.</h2>
+<h2>What is your spouse’s contact information?</h2>
 <form class="row">
 
   <div class="form-group col-xs-6">
     <input type="text"
            class="form-control"
-           placeholder="First Name"
-           ng-model="volunteerProfile.person.nickName" >
+           placeholder="First Name*"
+           ng-model="volunteerProfile.spouse.nickName" >
   </div>
 
   <div class="form-group col-xs-6">
     <input type="text"
            class="form-control"
-           placeholder="Last Name"
-           ng-model="volunteerProfile.person.lastName" >
+           placeholder="Last Name*"
+           ng-model="volunteerProfile.spouse.lastName" >
   </div>
 
   <div class="form-group col-xs-12">
     <input type="text"
            class="form-control"
-           placeholder="Email Address"
-           ng-model="volunteerProfile.person.emailAddress">
+           placeholder="Spouse's Email Address*"
+           ng-model="volunteerProfile.spouse.emailAddress">
   </div>
 
   <div class="form-group col-xs-6">
     <input type="text"
            class="form-control"
            placeholder="Date of Birth"
-           ng-model="volunteerProfile.person.dateOfBirth">
+           ng-model="volunteerProfile.spouse.dateOfBirth">
   </div>
 
   <div class="form-group col-xs-6">
     <input type="text"
            class="form-control"
            placeholder="Mobile Phone"
-           ng-model="volunteerProfile.person.mobilePhone">
+           ng-model="volunteerProfile.spouse.mobilePhone">
   </div>
 
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc pull-right" ui-sref="go-volunteer.crossroadspage({page: 'spouse'})">Looks good, let's go
+    <button type="submit" class="btn btn-block btn-primary-gc pull-right" ui-sref="go-volunteer.crossroadspage({page: 'spouse'})">Next
       <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
       	<use xlink:href="#arrow-right9"></use>
       </svg>

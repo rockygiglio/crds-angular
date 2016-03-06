@@ -23,6 +23,7 @@
       vm.showSpouse = showSpouse;
       vm.showOrgName = showOrgName;
       vm.showChildren = showChildren;
+      vm.showSpouseName = showSpouseName;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -42,6 +43,10 @@
 
       function showChildren() {
         return $stateParams.page === 'children';
+      }
+      
+      function showSpouseName() {
+        return $stateParams.page === 'spouse-name';
       }
 
     }
