@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
-<<<<<<< db4d02452c5f3114f007b371760f4a707464c8e0
 using MinistryPlatform.Translation.PlatformService;
-=======
 using MinistryPlatform.Models;
->>>>>>> Fix and add new tests.
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
