@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Services
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
             _messagesPageId = configuration.GetConfigIntValue("Messages");
-            _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
+            _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("GLAccountMappingByProgramPageView");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -453,7 +453,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 var donationID = result.ToInt("Donation_ID");
 
-                if (gpExport.ContainsKey(donationID))
+                if (!gpExport.ContainsKey(donationID))
                 {
                     gpExport.Add(donationID, new List<GPExportDatum>());
                 }
