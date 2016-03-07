@@ -21,9 +21,7 @@
   ) {
     var vm = this;
 
-    vm.responses = Results.data;
-
-    vm.results = Results.data.groups;
+    vm.results = Results.data.groups.slice(0,12);
     vm.currentPage = 1;
     vm.numPerPage = 6;
     vm.noResultsHelp = noResultsHelp;
