@@ -121,10 +121,6 @@
       group.waitListInd = false;
       group.childCareInd = false;
 
-      // When and where does the group meet
-      group.meetingDayId = 1;
-
-      group.meetingTime = '';
       group.address = {};
 
       if (vm.isPrivate() === false) {

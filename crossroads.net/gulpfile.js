@@ -150,7 +150,8 @@ gulp.task('browser-sync-dev', ['build-browser-sync'], function() {
       middleware: [
         connectHistory(fallbackOptions)
       ]
-    }
+    },
+    port: 3000
   });
 });
 
