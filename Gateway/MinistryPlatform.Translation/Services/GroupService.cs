@@ -280,8 +280,8 @@ namespace MinistryPlatform.Translation.Services
                     GoalId = record.ToInt("Group_Goal"),
                     KidsId = record.ToInt("Kids"),
                     // TODO: Ensure these handle nulls as falses
-                    HasDog = record.ToBool("Has_Dog", false),
-                    HasCat = record.ToBool("Has_Cat", false),
+                    DogId = record.ToNullableInt("Has_Dog"),
+                    CatId = record.ToNullableInt("Has_Cat"),
                     MeetingRangeId = record.ToInt("Meeting_Range")
                 }
             }).ToList();

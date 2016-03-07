@@ -12,8 +12,8 @@ namespace MinistryPlatform.Models
         public int GoalId { get; set; }
         public int KidsId { get; set; }
         public int MeetingRangeId { get; set; }
-        public bool HasDog { get; set; }
-        public bool HasCat { get; set; }
+        public int? DogId { get; set; }
+        public int? CatId { get; set; }
 
     }
 }

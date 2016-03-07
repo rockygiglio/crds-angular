@@ -462,26 +462,27 @@ namespace crds_angular.Services
 
         private ObjectAttributeTypeDTO GetPetAttributes(List<Attribute> mpAttributes, GroupSearchResult mpGroup, GroupSearchAttributes searchAttributes)
         {
-            var groupPets = new ObjectAttributeTypeDTO();
-                
             // TODO: Add to configuration value
             var petsAttributeTypeId = 74;
-            var catAttributeTypeId = 7012;
-            var dogAttributeTypeId = 7011;
 
             var petsAttributeType = mpAttributes.First(x => x.AttributeTypeId == petsAttributeTypeId);
 
-            groupPets = new ObjectAttributeTypeDTO()
+            var groupPets = new ObjectAttributeTypeDTO()
             {
                 AttributeTypeId = petsAttributeType.AttributeTypeId,
                 Name = petsAttributeType.AttributeTypeName,
                 Attributes = new List<ObjectAttributeDTO>()
             };
-            
-            var cat = ConvertToMultiAttribute(mpAttributes, catAttributeTypeId, searchAttributes.HasCat);
+
+            // TODO: Determine if we can loop over the attributes and lookup if attribute type is a searchAttrbitues.CatId or DogId
+            // To remove need to hardcode/lookup catAttributeTypeId            
+            var catAttributeId = 7012;
+            var dogAttributeId = 7011;
+
+            var cat = ConvertToMultiAttribute(mpAttributes, catAttributeId, searchAttributes.CatId.HasValue);
             groupPets.Attributes.Add(cat);
 
-            var dog = ConvertToMultiAttribute(mpAttributes, dogAttributeTypeId, searchAttributes.HasDog);
+            var dog = ConvertToMultiAttribute(mpAttributes, dogAttributeId, searchAttributes.DogId.HasValue);
             groupPets.Attributes.Add(dog);
 
             return groupPets;
