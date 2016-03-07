@@ -224,7 +224,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    return Ok();
+                    var matches = groupService.FindMatches(groupTypeId, participant);
+                    return Ok(matches);
                 }
                 catch (Exception ex)
                 {

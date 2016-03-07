@@ -26,6 +26,9 @@ namespace MinistryPlatform.Translation.Services
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
+        private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
+        private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
+
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
 
@@ -45,7 +48,8 @@ namespace MinistryPlatform.Translation.Services
         {
             logger.Debug("Adding group");
 
-            var addressId = (group.Address != null) ? group.Address.Address_ID : null;            
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+            var endDate = group.EndDate.HasValue ? (object) group.EndDate.Value : null;
 
             var values = new Dictionary<string, object>
             {
@@ -56,7 +60,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Primary_Contact", group.ContactId },
                 {"Description", group.GroupDescription },
                 {"Start_Date", group.StartDate },
-                {"End_Date", group.EndDate },
+                {"End_Date", endDate},
                 {"Target_Size", group.TargetSize },
                 {"Offsite_Meeting_Address", addressId },
                 {"Group_Is_Full", group.Full },
@@ -238,6 +242,59 @@ namespace MinistryPlatform.Translation.Services
             {
                 return LoadGroupParticipants(groupId, apiToken);
             }));
+        }
+
+        public List<GroupSearchResult> GetSearchResults(int groupTypeId)
+        {
+            var apiToken = ApiLogin();
+            var pageId = GetSearchPageViewId(groupTypeId);
+            var records = ministryPlatformService.GetPageViewRecords(pageId, apiToken);
+
+            return records.Select(record => new GroupSearchResult()
+            {
+                GroupId = record.ToInt("Group_ID"),
+                Name = record.ToString("Group_Name"),
+                GroupDescription = record.ToString("Description"),
+                StartDate = record.ToDate("Start_Date"),
+                EndDate = record.ToNullableDate("End_Date"),
+                MeetingTime = record.ToString("Meeting_Time"),
+                MeetingDayId = record.ToInt("Meeting_Day_ID"),
+
+                Address = new Address()
+                {
+                    Address_ID = record.ToInt("Address_ID"),
+                    Address_Line_1 = record.ToString("Address_Line_1"),
+                    Address_Line_2 = record.ToString("Address_Line_2"),
+                    City = record.ToString("City"),
+                    State = record.ToString("State/Region"),
+                    Postal_Code = record.ToString("Postal_Code")
+                },
+                RemainingCapacity = record.ToInt("Remaining_Capacity"),
+                PrimaryContactName = record.ToString("Last_Name") + ", " + record.ToString("Nickname"),
+                // TODO: Do we need email address?
+                //PrimaryContactEmail = record.ToString("PrimaryEmail")
+
+                SearchAttributes = new GroupSearchAttributes()
+                {
+                    TypeId = record.ToInt("Group_Type"),
+                    GoalId = record.ToInt("Group_Goal"),
+                    KidsId = record.ToInt("Kids"),
+                    // TODO: Ensure these handle nulls as falses
+                    HasDog = record.ToBool("Has_Dog", false),
+                    HasCat = record.ToBool("Has_Cat", false),
+                    MeetingRangeId = record.ToInt("Meeting_Range")
+                }
+            }).ToList();
+        }
+        private int GetSearchPageViewId(int groupTypeId)
+        {
+            if (groupTypeId == JourneyGroupId)
+            {
+                return JourneyGroupSearchPageViewId;
+            }
+
+            var message = string.Format("Could not find matching search page for group type {0}", groupTypeId);
+            throw new ArgumentException(message);
         }
 
         private List<GroupParticipant> LoadGroupParticipants(int groupId, string token)
@@ -444,7 +501,7 @@ namespace MinistryPlatform.Translation.Services
                 PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
                 GroupType = details.ToInt("Group_Type_ID"),
                 StartDate = details.ToDate("Start_Date"),
-                EndDate = details.ToDate("End_Date"),
+                EndDate = details.ToNullableDate("End_Date"),
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
                 MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),

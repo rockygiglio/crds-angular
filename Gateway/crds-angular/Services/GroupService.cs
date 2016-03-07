@@ -42,6 +42,7 @@ namespace crds_angular.Services
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
+        private readonly int JourneyGroupSearchPageViewId;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -71,6 +72,7 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
+            JourneyGroupSearchPageViewId = configurationWrapper.GetConfigIntValue("JourneyGroupSearchPageViewId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -416,5 +418,18 @@ namespace crds_angular.Services
                 currentParticpant.particpantId = participant.ParticipantId;
             }
         }
+
+        public List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
+        {
+            // Load all groups for potential match
+            var allPotentialMatches = _mpGroupService.GetSearchResults(groupTypeId);
+
+            // Filter list to remove non-matches
+
+            // convert to GroupDTO
+            return null;
+
+        }
+
     }
 }
