@@ -3,9 +3,9 @@
 
   module.exports = GroupProfileCtrl;
 
-  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', 'GoogleDistanceMatrixService', 'Responses'];
+  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GoogleDistanceMatrixService', 'Responses', 'Address'];
 
-  function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
+  function GroupProfileCtrl($scope, ImageService, GoogleDistanceMatrixService, Responses, Address) {
 
     $scope.defaultGroup = {
       groupTitle: 'Chuck M.',
@@ -36,15 +36,18 @@
       return ImageService.DefaultProfileImage;
     };
 
-    if ($scope.group && Responses.data.location) {
-      var hostAddress = $scope.group.addressLine1 + ', ' +
-          $scope.group.city + ', ' +
-          $scope.group.state + ', ' +
-          $scope.group.postalCode;
-      var participantAddress = Responses.data.location.street + ', ' +
-          Responses.data.location.city + ', ' +
-          Responses.data.location.state + ', ' +
-          Responses.data.location.zip;
+    $scope.mapAddress = Address.mapLink;
+
+
+    if ($scope.group && responses.location) {
+      var hostAddress = $scope.group.address.addressLine1 + ', ' +
+          $scope.group.address.city + ', ' +
+          $scope.group.address.state + ', ' +
+          $scope.group.address.postalCode;
+      var participantAddress = responses.location.street + ', ' +
+          responses.location.city + ', ' +
+          responses.location.state + ', ' +
+          responses.location.zip;
       GoogleDistanceMatrixService.distanceFromAddress(hostAddress, [
         participantAddress
       ]).then(function(result) {

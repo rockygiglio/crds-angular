@@ -3,9 +3,9 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', 'GROUP_ROLE_ID_PARTICIPANT', '$modal'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE_ID_PARTICIPANT', 'Address'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, GROUP_ROLE_ID_PARTICIPANT, $modal) {
+  function GroupCardCtrl($scope, ImageService, GROUP_ROLE_ID_PARTICIPANT, Address) {
 
     $scope.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
     $scope.defaultImage = ImageService.DefaultProfileImage;
@@ -34,11 +34,7 @@
       return 'group_card/group_' + $scope.template + '.html';
     };
 
-    $scope.mapAddress = function() {
-      var address = $scope.group.address;
-      var searchAddress = address.addressLine1 + ', ' + address.city + ', ' + address.state + ', ' + address.zip;
-      return 'https://maps.google.com/?q=' + searchAddress.replace(/\s/g, '+');
-    };
+    $scope.mapAddress = Address.mapLink;
 
     $scope.groupTime = function() {
       return $scope.group.meetingDay + ', ' + $scope.group.meetingHour;
