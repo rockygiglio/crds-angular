@@ -54,6 +54,10 @@
         return $stateParams.page === 'children-count';
       }
 
+      function showSpouseName() {
+        return $stateParams.page === 'spouse-name';
+      }
+
     }
   }
 
