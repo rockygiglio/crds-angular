@@ -45,7 +45,9 @@
         url: '/results',
         templateUrl: 'join/join_results.html',
         resolve: {
-          Results: 'Results'
+          LoadResults: ['Results', function(Results) {
+            return Results.loadResults();
+          }]
         },
         data: {meta: {title: SERIES.title,description: ''}}
       })
