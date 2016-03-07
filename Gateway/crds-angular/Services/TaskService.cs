@@ -39,9 +39,16 @@ namespace crds_angular.Services
                 var apiUserToken = _apiUserService.GetToken();
                 var tasksToComplete = _taskRepository.GetTasksToAutostart();
 
+                _logger.InfoFormat("Number of tasks to autocomplete: {0} ", tasksToComplete.Count);
+
                 foreach (var task in tasksToComplete)
                 {
+                    _logger.InfoFormat("Inside of tasks to complete Loop");
+
                     var user = _userService.GetUserByRecordId(task.Assigned_User_ID);
+
+                    _logger.InfoFormat("User Record ID for task to complete: {0}", user.UserRecordId);
+                    _logger.InfoFormat("Task ID for task to complete: {0}", task.Task_ID);
 
                     try
                     {
