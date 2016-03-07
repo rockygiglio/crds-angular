@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -10,6 +11,7 @@ using log4net;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
+using Attribute = MinistryPlatform.Models.Attribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -42,7 +44,6 @@ namespace crds_angular.Services
         private readonly int DefaultContactEmailId;
         private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
-        private readonly int JourneyGroupSearchPageViewId;
 
         public GroupService(IGroupService mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -72,7 +73,6 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
-            JourneyGroupSearchPageViewId = configurationWrapper.GetConfigIntValue("JourneyGroupSearchPageViewId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -421,15 +421,110 @@ namespace crds_angular.Services
 
         public List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
         {
-            // Load all groups for potential match
-            var allPotentialMatches = _mpGroupService.GetSearchResults(groupTypeId);
+            // Load all groups for potential match            
+            var mpGroups = _mpGroupService.GetSearchResults(groupTypeId);
+            var mpAttributes = _attributeService.GetAttributes(null);
 
             // Filter list to remove non-matches
+            //MeetingRangeId;
 
-            // convert to GroupDTO
-            return null;
-
+            return ConvertToGroupDto(mpGroups, mpAttributes);
         }
 
+        private List<GroupDTO> ConvertToGroupDto(List<GroupSearchResult> mpGroups, List<Attribute> mpAttributes)
+        {
+            var groups = new List<GroupDTO>();
+
+            foreach (var mpGroup in mpGroups)
+            {
+                var group = Mapper.Map<GroupDTO>(mpGroup);
+
+                var searchAttributes = mpGroup.SearchAttributes;
+
+                var groupPets = GetPetAttributes(mpAttributes, mpGroup, searchAttributes);
+                group.AttributeTypes.Add(groupPets.AttributeTypeId, groupPets);
+
+                // Single-Attributes
+                var goal = ConvertToSingleAttribute(mpAttributes, searchAttributes.GoalId);
+                group.SingleAttributes.Add(goal.Key, goal.Value);
+
+                var kids = ConvertToSingleAttribute(mpAttributes, searchAttributes.KidsId);
+                group.SingleAttributes.Add(kids.Key, kids.Value);
+
+                var groupType = ConvertToSingleAttribute(mpAttributes, searchAttributes.TypeId);
+                group.SingleAttributes.Add(groupType.Key, groupType.Value);
+
+                groups.Add(group);
+            }
+
+            return groups;
+        }
+
+        private ObjectAttributeTypeDTO GetPetAttributes(List<Attribute> mpAttributes, GroupSearchResult mpGroup, GroupSearchAttributes searchAttributes)
+        {
+            var groupPets = new ObjectAttributeTypeDTO();
+                
+            // TODO: Add to configuration value
+            var petsAttributeTypeId = 74;
+            var catAttributeTypeId = 7012;
+            var dogAttributeTypeId = 7011;
+
+            var petsAttributeType = mpAttributes.First(x => x.AttributeTypeId == petsAttributeTypeId);
+
+            groupPets = new ObjectAttributeTypeDTO()
+            {
+                AttributeTypeId = petsAttributeType.AttributeTypeId,
+                Name = petsAttributeType.AttributeTypeName,
+                Attributes = new List<ObjectAttributeDTO>()
+            };
+            
+            var cat = ConvertToMultiAttribute(mpAttributes, catAttributeTypeId, searchAttributes.HasCat);
+            groupPets.Attributes.Add(cat);
+
+            var dog = ConvertToMultiAttribute(mpAttributes, dogAttributeTypeId, searchAttributes.HasDog);
+            groupPets.Attributes.Add(dog);
+
+            return groupPets;
+        }
+
+        private KeyValuePair<int, ObjectSingleAttributeDTO> ConvertToSingleAttribute(List<Attribute> mpAttributes, int attributeId)
+        {
+            var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeId);
+            var groupSingleAttribute = new ObjectSingleAttributeDTO()
+            {
+                Notes = string.Empty,
+                Value = new AttributeDTO()
+                {
+                    AttributeId = mpAttribute.AttributeId,
+                    Category = mpAttribute.Category,
+                    CategoryDescription = mpAttribute.CategoryDescription,
+                    CategoryId = mpAttribute.CategoryId,
+                    Description = mpAttribute.Description,
+                    Name = mpAttribute.Name,
+                    SortOrder = mpAttribute.SortOrder
+                }
+            };
+
+            return new KeyValuePair<int, ObjectSingleAttributeDTO>(mpAttribute.AttributeTypeId, groupSingleAttribute);            
+        }
+
+        private ObjectAttributeDTO ConvertToMultiAttribute(List<Attribute> mpAttributes, int attributeTypeId, bool selected)
+        {
+            var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeTypeId);
+
+            var groupAttribute = new ObjectAttributeDTO()
+            {
+                AttributeId = mpAttribute.AttributeId,
+                Category = mpAttribute.Category,
+                CategoryDescription = mpAttribute.CategoryDescription,
+                Description = mpAttribute.Description,
+                Selected = selected,
+                StartDate = DateTime.Today,
+                EndDate = null,
+                Notes = string.Empty
+            };
+
+            return groupAttribute;
+        }
     }
 }
