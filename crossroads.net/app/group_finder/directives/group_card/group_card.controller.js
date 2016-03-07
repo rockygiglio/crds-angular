@@ -3,9 +3,9 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE_ID_PARTICIPANT', 'Address'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE_ID_PARTICIPANT'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_ROLE_ID_PARTICIPANT, Address) {
+  function GroupCardCtrl($scope, ImageService, GROUP_ROLE_ID_PARTICIPANT) {
 
     $scope.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
     $scope.defaultImage = ImageService.DefaultProfileImage;
@@ -33,8 +33,6 @@
     $scope.getTemplateUrl = function() {
       return 'group_card/group_' + $scope.template + '.html';
     };
-
-    $scope.mapAddress = Address.mapLink;
 
     $scope.groupTime = function() {
       return $scope.group.meetingDay + ', ' + $scope.group.meetingHour;

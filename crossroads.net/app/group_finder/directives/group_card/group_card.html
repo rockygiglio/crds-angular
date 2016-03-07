@@ -7,7 +7,7 @@
     <img ng-src="{{getMemberImage(member)}}" err-src="{{defaultImage}}" alt="" ng-repeat="member in group.members | filter: { groupRoleId: GROUP_ROLE_ID_PARTICIPANT } | limitTo: 3">
   </div>
   <div class="group-description" ng-if="!group.isPrivate">
-    <p>{{groupDescription()}}. This group meets at <a target="_blank" href="{{mapAddress(group.address)}}">{{group.address.addressLine1}}, {{group.address.zip}}</a></p>
+    <p>{{groupDescription()}}. This group meets at <a target="_blank" href="{{group.mapLink}}">{{group.address.addressLine1}}, {{group.address.zip}}</a></p>
   </div>
   <div class="group-description" ng-if="group.isPrivate">
     <p>

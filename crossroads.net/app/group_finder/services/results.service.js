@@ -3,9 +3,9 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['$http'];
+  ResultsService.$inject = ['$http', 'Address'];
 
-  function ResultsService($http) {
+  function ResultsService($http, Address) {
     var requestPromise = null;
     var results = {};
     var groups = [];
@@ -27,6 +27,7 @@
             group.description = group.groupDescription;
             group.id = group.groupId;
             group.groupTitle = groupTitle(group.contactName);
+            group.mapLink = Address.mapLink(group.address);
           });
 
           console.log(groups);
