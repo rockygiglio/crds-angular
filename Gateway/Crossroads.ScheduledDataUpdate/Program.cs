@@ -16,6 +16,7 @@ namespace Crossroads.ScheduledDataUpdate
 
         private static void Main()
         {
+            log4net.Config.XmlConfigurator.Configure();
             var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
             var container = new UnityContainer();
             section.Configure(container);
