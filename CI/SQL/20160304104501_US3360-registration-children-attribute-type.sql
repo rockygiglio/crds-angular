@@ -1,17 +1,19 @@
 USE [MinistryPlatform]
 GO
 
+SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+
 INSERT INTO [dbo].[Attribute_Types]
-           ([Attribute_Type]
+           (Attribute_Type_ID
+		 ,[Attribute_Type]
            ,[Description]
            ,[Domain_ID]
-           ,[Available_Online]
-           ,[__ExternalAttributeTypeID]
-           ,[Prevent_Multiple_Selection]
-           ,[Online_Sort_Order])
+           ,[Prevent_Multiple_Selection])
      VALUES
-           ('GO Cincinnati - Registration Children'
-           ,0)
+           (80,
+		 'GO Cincinnati - Registration Children'
+           ,0, 1, 0)
 GO
 
+SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
 
