@@ -276,13 +276,12 @@ namespace MinistryPlatform.Translation.Services
 
                 SearchAttributes = new GroupSearchAttributes()
                 {
-                    TypeId = record.ToInt("Group_Type"),
-                    GoalId = record.ToInt("Group_Goal"),
-                    KidsId = record.ToInt("Kids"),
-                    // TODO: Ensure these handle nulls as falses
+                    TypeId = record.ToNullableInt("Group_Type"),
+                    GoalId = record.ToNullableInt("Group_Goal"),
+                    KidsId = record.ToNullableInt("Kids"),
                     DogId = record.ToNullableInt("Has_Dog"),
                     CatId = record.ToNullableInt("Has_Cat"),
-                    MeetingRangeId = record.ToInt("Meeting_Range")
+                    MeetingRangeId = record.ToNullableInt("Meeting_Range")
                 }
             }).ToList();
         }
