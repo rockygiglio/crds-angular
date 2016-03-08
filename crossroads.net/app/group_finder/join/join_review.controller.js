@@ -10,9 +10,10 @@
     'ZipcodeService',
     'GroupInvitationService',
     'LookupDefinitions',
-    'ANYWHERE_GROUP_ID',
-    'GROUP_ROLE_ID_PARTICIPANT',
-    '$window'
+    'GROUP_ID',
+    'GROUP_ROLE',
+    '$window',
+    'Session'
   ];
 
   function JoinReviewCtrl(
@@ -22,9 +23,10 @@
     ZipcodeService,
     GroupInvitationService,
     LookupDefinitions,
-    ANYWHERE_GROUP_ID,
-    GROUP_ROLE_ID_PARTICIPANT,
-    $window
+    GROUP_ID,
+    GROUP_ROLE,
+    $window,
+    Session
   ) {
     var vm = this;
     vm.initialize = initialize;
@@ -40,6 +42,7 @@
       vm.showUpsell = parseInt(vm.responses.prior_participation) > 2;
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
+      vm.rejected = false;
       var meetTime = {
         week: true,
         weekend: true
@@ -68,8 +71,22 @@
           vm.showResults = false;
           vm.contactCrds = true;
 
-          var promise = GroupInvitationService.acceptInvitation(ANYWHERE_GROUP_ID,
-            {capacity: 1, groupRoleId: GROUP_ROLE_ID_PARTICIPANT});
+          var participant = {
+            capacity: 1,
+            contactId: parseInt(Session.exists('userId')),
+            groupRoleId: GROUP_ROLE.PARTICIPANT,
+            address: {
+              addressLine1: vm.responses.location.street,
+              city: vm.responses.location.city,
+              state: vm.responses.location.state,
+              zip: vm.responses.location.zip
+            },
+            singleAttributes: Responses.getSingleAttributes(vm.lookup)
+          };
+
+          vm.invalidTime = false; // set as an override
+
+          var promise = GroupInvitationService.acceptInvitation(GROUP_ID.ANYWHERE, participant);
           promise.then(function() {
             // Invitation acceptance was successful
             vm.accepted = true;
@@ -90,14 +107,13 @@
     }
     
     function getResponses() {
-      var responses = Responses.data;
-      if (responses.completed_flow === true) {
-        sessionStorage.setItem('participant', angular.toJson(responses));
+      if (Responses.data.completed_flow === true) {
+        sessionStorage.setItem('participant', angular.toJson(Responses.data));
       } else {
-        responses = angular.fromJson(sessionStorage.getItem('participant'));
+        Responses.data = angular.fromJson(sessionStorage.getItem('participant'));
       }
 
-      return responses;
+      return Responses.data;
     }
 
     function goToHost() {

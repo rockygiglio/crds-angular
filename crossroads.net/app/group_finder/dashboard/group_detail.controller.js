@@ -3,12 +3,12 @@
 
   module.exports = GroupDetailCtrl;
 
-  GroupDetailCtrl.$inject = ['$scope', '$stateParams', '$modal', 'AuthenticatedPerson', 'GroupInfo', 'GROUP_ROLE_ID_PARTICIPANT'];
+  GroupDetailCtrl.$inject = ['$scope', '$stateParams', '$modal', 'AuthenticatedPerson', 'GroupInfo', 'GROUP_ROLE'];
 
-  function GroupDetailCtrl($scope, $stateParams, $modal, AuthenticatedPerson, GroupInfo, GROUP_ROLE_ID_PARTICIPANT) {
+  function GroupDetailCtrl($scope, $stateParams, $modal, AuthenticatedPerson, GroupInfo, GROUP_ROLE) {
     var vm = this;
 
-    vm.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
+    vm.participant_role_id = GROUP_ROLE.PARTICIPANT;
     vm.group = GroupInfo.findHosting($stateParams.groupId);
     vm.hostName = AuthenticatedPerson.nickName;
 
