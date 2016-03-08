@@ -29,7 +29,12 @@
     ANYWHERE_GROUP_ID: 166574,
     GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg',
     GROUP_ROLE_ID_HOST: 22,
-    GROUP_ROLE_ID_PARTICIPANT: 16
+    GROUP_ROLE_ID_PARTICIPANT: 16,
+    QA_PAGES: {
+      HOST: '/bravehost/',
+      JOIN: '/braveparticipant/'
+    }
+
   };
 
 })();

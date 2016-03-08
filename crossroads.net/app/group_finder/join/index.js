@@ -9,6 +9,7 @@
   require('./join_questions.html');
   require('./templates/upsell.html');
   require('./templates/pager.html');
+  require('./templates/invalid-time.html');
 
   angular.module(constants.MODULES.GROUP_FINDER)
     .config(require('./join.routes'))
