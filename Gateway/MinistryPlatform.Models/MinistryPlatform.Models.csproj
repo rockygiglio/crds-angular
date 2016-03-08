@@ -63,7 +63,10 @@
     <Compile Include="DonationAndDistributionRecord.cs" />
     <Compile Include="DonorStatement.cs" />
     <Compile Include="EventParticipant.cs" />
+    <Compile Include="GroupSearchResult.cs" />
+    <Compile Include="GroupSearchAttributes.cs" />
     <Compile Include="GroupServingResponses.cs" />
+    <Compile Include="MPTask.cs" />
     <Compile Include="ObjectAttributeConfiguration.cs" />
     <Compile Include="ObjectAttributeConfigurationFactory.cs" />
     <Compile Include="Pledge.cs" />

@@ -4,7 +4,12 @@
     <div class="input-group">
       <input type="email" placeholder="Enter email address" ng-model="ctrl.invitee" required class="form-control">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" ng-disabled="ctrl.inviteForm.$invalid">Send</button>
+        <button class="btn btn-next-question btn-block" type="submit"
+                btn-loading="ctrl.sending"
+                data-loading-text="Sending..."
+                ng-disabled="ctrl.inviteForm.$invalid || ctrl.sending === true">
+          Send
+        </button>
       </span>
     </div>
     <p ng-show="ctrl.inviteForm.invite.$invalid && ctrl.inviteForm.$submitted" class="help-block">Valid email address required.</p>

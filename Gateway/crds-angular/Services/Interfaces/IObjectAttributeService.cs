@@ -7,6 +7,7 @@ namespace crds_angular.Services.Interfaces
     public interface IObjectAttributeService
     {
         ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration);
+        ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, List<Attribute> mpAttributes);
 
         void SaveObjectAttributes(int objectId,
                                   Dictionary<int, ObjectAttributeTypeDTO> objectAttributes,

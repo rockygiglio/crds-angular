@@ -28,11 +28,20 @@ CREATE TABLE [dbo].[cr_Initiatives](
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiative_Program]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
-ALTER TABLE [dbo].[cr_Initiatives]  WITH CHECK ADD  CONSTRAINT [FK_Initiative_Program] FOREIGN KEY([Program_ID])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiatives_Program]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
+ALTER TABLE [dbo].[cr_Initiatives]  WITH CHECK ADD  CONSTRAINT [FK_Initiatives_Program] FOREIGN KEY([Program_ID])
 REFERENCES [dbo].[Programs] ([Program_ID])
 GO
 
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiative_Program]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
-ALTER TABLE [dbo].[cr_Initiatives] CHECK CONSTRAINT [FK_Initiative_Program]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiatives_Program]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
+ALTER TABLE [dbo].[cr_Initiatives] CHECK CONSTRAINT [FK_Initiatives_Program]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiatives_Domains]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
+ALTER TABLE [dbo].[cr_Initiatives]  WITH CHECK ADD  CONSTRAINT [FK_Initiatives_Domains] FOREIGN KEY([Domain_ID])
+REFERENCES [dbo].[dp_Domains] ([Domain_ID])
+GO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Initiatives_Domains]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Initiatives]'))
+ALTER TABLE [dbo].[cr_Initiatives] CHECK CONSTRAINT [FK_Initiatives_Domains]
 GO

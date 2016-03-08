@@ -9,6 +9,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IResponseService
     {
-        List<MPServeReminders> GetServeReminders(string token);
+        List<MPServeReminder> GetServeReminders(string token);
     }
 }

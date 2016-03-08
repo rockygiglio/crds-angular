@@ -3,9 +3,9 @@
 
   module.exports = GroupFinderRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES' ];
+  GroupFinderRoutes.$inject = ['$stateProvider', 'SERIES'];
 
-  function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
+  function GroupFinderRoutes($stateProvider, SERIES) {
 
     $stateProvider
       .state('group_finder', {
@@ -34,9 +34,12 @@
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
           }],
-          StartQuestionLoad: ['GroupQuestionService', function(GroupQuestionService) {
-            GroupQuestionService.loadQuestions();
-          }]
+          StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
+            function(GroupQuestionService, ParticipantQuestionService) {
+              GroupQuestionService.loadQuestions();
+              ParticipantQuestionService.loadQuestions();
+            }
+          ]
         },
         data: {
           isProtected: true,
@@ -54,6 +57,12 @@
         resolve: {
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
+          }],
+          AuthenticatedPerson: ['Person', function(Person) {
+            return Person.getProfile();
+          }],
+          LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
+            return ParticipantQuestionService.getLookup();
           }]
         },
         data: {

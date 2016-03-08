@@ -296,10 +296,13 @@
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
+    <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
+    <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
+    <Compile Include="Services\Interfaces\ITaskService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\StaffContactService.cs" />
     <Compile Include="Services\EventService.cs" />
@@ -318,6 +321,7 @@
     <Compile Include="Models\MailChimp\SubscriberBatchDTO.cs" />
     <Compile Include="Services\SubscriptionsService.cs" />
     <Compile Include="Services\Interfaces\ISubscriptionsService.cs" />
+    <Compile Include="Services\TaskService.cs" />
     <Compile Include="Util\MailchimpListHandler.cs" />
     <Compile Include="Util\HttpAuthResult.cs" />
     <Compile Include="Util\FileResult.cs" />
@@ -506,26 +510,32 @@
     <None Include="MinistryPlatform.Debug.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Demo.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Integration.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.local test.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.MPTest01.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Release.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\PublishProfiles\local test.pubxml" />
     <None Include="Properties\PublishProfiles\MPTest01.pubxml" />
@@ -541,10 +551,12 @@
     </Content>
     <Content Include="Unity.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="MinistryPlatform.config">
       <TransformOnBuild>true</TransformOnBuild>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Web.Demo.config">
       <DependentUpon>Web.config</DependentUpon>
