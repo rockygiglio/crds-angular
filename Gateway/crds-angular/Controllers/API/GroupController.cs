@@ -22,10 +22,11 @@ namespace crds_angular.Controllers.API
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupService groupService;
+        private readonly Services.Interfaces.IGroupService groupService;        
         private readonly IAuthenticationService authenticationService;
         private readonly IParticipantService participantService;
         private readonly Services.Interfaces.IAddressService _addressService;
+        private readonly IGroupSearchService _groupSearchService;
 
         private readonly int GroupRoleDefaultId =
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
@@ -33,12 +34,14 @@ namespace crds_angular.Controllers.API
         public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationService authenticationService,
                                IParticipantService participantService,
-                               Services.Interfaces.IAddressService addressService)
+                               Services.Interfaces.IAddressService addressService,
+                               Services.Interfaces.IGroupSearchService groupSearchService)
         {
             this.groupService = groupService;
             this.authenticationService = authenticationService;
             this.participantService = participantService;
             _addressService = addressService;
+            _groupSearchService = groupSearchService;
         }
 
         /// <summary>
@@ -204,6 +207,35 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
+            });
+        }
+
+        /// <summary>
+        /// This finds groups that match a participants answers for a specific group type.
+        /// If one or more groups are found, then a list of the group are returned.
+        /// If no groups are found, then an empty list will be returned.
+        /// </summary>
+        /// <param name="groupTypeId">Group Type ID of the groups to search</param>
+        /// <param name="participant">Participants answers to find matching groups</param>
+        /// <returns></returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [Route("api/group/groupType/{groupTypeId}/search")]
+        [HttpPost]
+        public IHttpActionResult GetSearchMatches(int groupTypeId, [FromBody] GroupParticipantDTO participant)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var matches = _groupSearchService.FindMatches(groupTypeId, participant);
+                    return Ok(matches);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error searching for matching groups for group type ID " + groupTypeId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 
