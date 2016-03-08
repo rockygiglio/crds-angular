@@ -1,14 +1,18 @@
 (function() {
   'use strict';
 
+  var moment = require('moment');
+  
   module.exports = VolunteerProfile;
 
-  VolunteerProfile.$Inject = ['GoVolunteerService'];
+  VolunteerProfile.$Inject = ['GoVolunteerService', 'Validation', '$rootScope'];
 
-  function VolunteerProfile(GoVolunteerService) {
+  function VolunteerProfile(GoVolunteerService, Validation, $rootScope) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        'onSubmit': '&' 
+      },
       bindToController: true,
       controller: VolunteerProfileController,
       controllerAs: 'volunteerProfile',
@@ -17,9 +21,48 @@
     
     
     function VolunteerProfileController() {
+      
+      var now = new Date();
+
       var vm = this;
+      vm.birthdateOpen = false;
+      vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
+      vm.openBirthdatePicker = openBirthdatePicker;
       vm.person = GoVolunteerService.person;
-      console.log(GoVolunteerService.person);
+      vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+      vm.submit = submit;
+      vm.validate = validate;
+
+      activate();
+
+      //////////////////////////
+
+      function activate() {
+        // any logic that needs to be done on initialization
+      }
+
+      function openBirthdatePicker($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        vm.birthdateOpen = true;
+      }
+
+
+      function submit() {
+        if(vm.profileForm.$valid){
+          vm.onSubmit({nextState: 'spouse'}); 
+        } else {
+         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError); 
+        }
+      }
+
+      function validate(fieldName) {
+        return Validation.showErrors(vm.profileForm, fieldName);
+      }
+
     }
   }
 
