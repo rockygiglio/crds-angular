@@ -3,9 +3,9 @@
 
   module.exports = GroupProfileCtrl;
 
-  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GoogleDistanceMatrixService', 'Responses'];
+  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GoogleDistanceMatrixService', 'Responses', '$state'];
 
-  function GroupProfileCtrl($scope, ImageService, GoogleDistanceMatrixService, Responses) {
+  function GroupProfileCtrl($scope, ImageService, GoogleDistanceMatrixService, Responses, $state) {
 
     $scope.defaultGroup = {
       groupTitle: 'Chuck M.',
@@ -19,6 +19,22 @@
         'This is my fourth time hosting a group and I’m looking forward to connecting with some new people and getting BRAVE. ' +
         'We\'ll meet at my house in Pleasant Ridge.'
     };
+
+
+    function getResponses() {
+      var responses = Responses.data;
+      if (responses.completed_flow === true) {
+        sessionStorage.setItem('participant', angular.toJson(responses));
+      } else {
+        responses = angular.fromJson(sessionStorage.getItem('participant'));
+      }
+
+      return responses;
+    }
+    var responses = getResponses();
+    if (_.has(responses, 'completed_flow') === false) {
+      $state.go('group_finder.join.questions');
+    }
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
     $scope.group = $scope.displayDefaultGroup ? $scope.defaultGroup : $scope.group;
