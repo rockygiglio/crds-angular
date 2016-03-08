@@ -1,5 +1,7 @@
 --Create test data for Brave Journey Group Finder
 --Creating Groups and Group_Attributes for the inserted groups
+USE MinistryPlatform;
+GO
 
 DECLARE @Host_Contacts AS TABLE (Contact_ID INT, Last_Name VARCHAR(50), Congregation_ID INT, Email_Address VARCHAR(255), Address_ID INT)
 
@@ -35,7 +37,7 @@ INSERT INTO Groups([Group_Name]
 	,[Domain_ID]
 	,[Remaining_Capacity]) 
 	OUTPUT INSERTED.Group_ID INTO @IdentityOutput
-	SELECT CONCAT('(t) 2016 Brave ', hc.Last_Name)
+	SELECT CONCAT('(dev) 2016 Brave ', hc.Last_Name)
 		,19
 		,8
 		,hc.Congregation_ID
