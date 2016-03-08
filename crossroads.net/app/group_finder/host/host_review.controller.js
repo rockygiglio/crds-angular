@@ -17,7 +17,7 @@
     'Email',
     '$log',
     'GroupInvitationService',
-    'GROUP_ROLE_ID_HOST',
+    'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
     'SERIES'
@@ -36,7 +36,7 @@
                           Email,
                           $log,
                           GroupInvitationService,
-                          GROUP_ROLE_ID_HOST,
+                          GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
                           SERIES) {
@@ -137,13 +137,7 @@
           zip: vm.responses.location.zip
         };
 
-        var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
-        group.singleAttributes = {};
-        _.each(singleAttributes, function (index) {
-          var answer = this.data[index];
-          var attributeTypeId = this.lookup[answer].attributeTypeId;
-          group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
-        }, {data: vm.responses, lookup: vm.lookup});
+        group.singleAttributes = Responses.getSingleAttributes(vm.lookup);
 
         var attributes = [];
         var petAttributeTypeId = null;
@@ -203,7 +197,7 @@
 
           // User invitation service to add person to that group
           return GroupInvitationService.acceptInvitation(group.groupId,
-            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+            {capacity: capacity, groupRoleId: GROUP_ROLE.HOST, attributes: group.attributes});
         })
         .then(function hostInviteSuccess() {
             // Reload group to pick up host as member
