@@ -32,14 +32,18 @@
     vm.initialize = initialize;
     vm.goToHost = goToHost;
     vm.goToResults = goToResults;
+<<<<<<< 91f10ba95bbeab57e2e2ca2a631b0a79a70fed61
     vm.lookup = LookupDefinitions;
+=======
+    vm.lookupContains = LookupDefinitions.lookupContains;
+>>>>>>> updated upsell lookup; refactored lookupContains
     vm.goBack = goBack;
     vm.lookupContains = lookupContains;
 
     function initialize() {
 
       vm.responses = getResponses();
-      vm.showUpsell = parseInt(vm.responses.prior_participation) > 2;
+      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
       vm.rejected = false;
@@ -122,10 +126,6 @@
 
     function goToResults() {
       $state.go('group_finder.join.results');
-    }
-
-    function lookupContains(id, keyword) {
-      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function goBack() {

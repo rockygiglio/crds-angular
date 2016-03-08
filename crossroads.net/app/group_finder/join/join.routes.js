@@ -20,7 +20,7 @@
             return ParticipantQuestionService.getQuestions();
           },
           LookupDefinitions: function(ParticipantQuestionService) {
-            return ParticipantQuestionService.getLookup();
+            return ParticipantQuestionService;
           }
         },
         data: {
