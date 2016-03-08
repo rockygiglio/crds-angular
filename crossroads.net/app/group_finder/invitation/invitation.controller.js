@@ -103,7 +103,7 @@
           .catch(function(error) {
             // An error happened accepting the invitation
             vm.rejected = true;
-            $log.error("An error happened while accepting a group invitation", error);
+            $log.error('An error happened while accepting a group invitation', error);
           })
           .finally(function() {
             vm.requestPending = false;

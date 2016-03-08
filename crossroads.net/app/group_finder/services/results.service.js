@@ -28,11 +28,50 @@
             group.id = group.groupId;
             group.groupTitle = groupTitle(group.contactName);
             group.mapLink = Address.mapLink(group.address);
+
+            if (_.has(group.singleAttributes, '73' ) ) {
+              group.groupType = group.singleAttributes[73].attribute.description;
+            }
+            group.attributes = [];
+
+            //
+            // check attributes for pets and kids
+            //
+            _.each(group.attributeTypes, function(attribute) {
+              if (attribute.name === 'Pets') {
+                _.each(attribute.attributes, function(type) {
+                  if (type.selected) {
+                    if (type.name.substr('dog')) { group.attributes.push('has a dog'); }
+                    if (type.name.substr('cat')) { group.attributes.push('has a cat'); }
+                  }
+                });
+              }
+              if (attribute.name === 'Kids') {
+                _.each(attribute.attributes, function(type) {
+                  if (type.selected && type.name.substr('kid')) { group.attributes.push('kids welcome'); }
+                });
+              }
+            });
           });
 
           console.log(groups);
         });
       }
+    }
+
+    function getGroupAttributes() {
+      var ret = [];
+      if (vm.lookupContains(vm.responses.kids, 'kid')) { ret.push('kids welcome'); }
+
+      if (vm.responses.pets) {
+        _.each(vm.responses.pets, function(value, id) {
+          if (value) {
+            if (vm.lookupContains(id, 'dog')) { ret.push('has a dog'); }
+            if (vm.lookupContains(id, 'cat')) { ret.push('has a cat'); }
+          }
+        });
+      }
+      return ret;
     }
 
     function displayTime(day, time) {
