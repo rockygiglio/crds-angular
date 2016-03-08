@@ -49,13 +49,6 @@
         },
         data: {meta: {title: SERIES.title,description: ''}}
       })
-      .state('group_finder.join.contact', {
-        controller: 'JoinContactCtrl as results',
-        url: '/contact',
-        templateUrl: 'join/join_contact.html',
-        resolve: {},
-        data: {meta: {title: SERIES.title,description: ''}}
-      })
       ;
 
   }
