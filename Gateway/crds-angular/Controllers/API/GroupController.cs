@@ -22,10 +22,11 @@ namespace crds_angular.Controllers.API
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupService groupService;
+        private readonly Services.Interfaces.IGroupService groupService;        
         private readonly IAuthenticationService authenticationService;
         private readonly IParticipantService participantService;
         private readonly Services.Interfaces.IAddressService _addressService;
+        private readonly IGroupSearchService _groupSearchService;
 
         private readonly int GroupRoleDefaultId =
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
@@ -33,12 +34,14 @@ namespace crds_angular.Controllers.API
         public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationService authenticationService,
                                IParticipantService participantService,
-                               Services.Interfaces.IAddressService addressService)
+                               Services.Interfaces.IAddressService addressService,
+                               Services.Interfaces.IGroupSearchService groupSearchService)
         {
             this.groupService = groupService;
             this.authenticationService = authenticationService;
             this.participantService = participantService;
             _addressService = addressService;
+            _groupSearchService = groupSearchService;
         }
 
         /// <summary>
@@ -225,7 +228,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var matches = groupService.FindMatches(groupTypeId, participant);
+                    var matches = _groupSearchService.FindMatches(groupTypeId, participant);
                     return Ok(matches);
                 }
                 catch (Exception ex)
