@@ -218,6 +218,7 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
         [Route("api/group/groupType/{groupTypeId}/search")]
+        [HttpPost]
         public IHttpActionResult GetSearchMatches(int groupTypeId, [FromBody] GroupParticipantDTO participant)
         {
             return Authorized(token =>
