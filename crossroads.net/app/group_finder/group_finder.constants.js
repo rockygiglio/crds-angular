@@ -29,7 +29,7 @@
     },
     GROUP_ID: {
       ANYWHERE: 166574,
-      NO_GROUP: 170702
+      NO_GROUP: 166573
     },
     CONTACT_ID: {
       JOURNEY: 7660256

@@ -35,19 +35,6 @@
       $anchorScroll();
     });
 
-
-    // Left in place for debugging purposes. Will remove at a later date
-    // TODO remove before deploy
-    function getResponses() {
-      if (Responses.data.completed_flow === true) {
-        sessionStorage.setItem('participant', angular.toJson(Responses.data));
-      } else {
-        Responses.data = angular.fromJson(sessionStorage.getItem('participant'));
-      }
-
-      return Responses.data;
-    }
-
     function noResultsHelp() {
       $state.go('group_finder.invitation', {groupId: GROUP_ID.NO_GROUP});
     }
