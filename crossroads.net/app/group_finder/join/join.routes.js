@@ -17,7 +17,10 @@
             return Person.getProfile();
           }],
           QuestionDefinitions: function(ParticipantQuestionService) {
-            return ParticipantQuestionService.get().$promise;
+            return ParticipantQuestionService.getQuestions();
+          },
+          LookupDefinitions: function(ParticipantQuestionService) {
+            return ParticipantQuestionService.getLookup();
           }
         },
         data: {
