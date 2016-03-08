@@ -421,6 +421,22 @@ namespace crds_angular.Services
 
         public List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
         {
+            // TODO: Add to configuration value
+            // AttributeType IDs
+            var groupGoalAttributeTypeId = 71;
+            var participantGoalAttributeTypeId = 72;
+            var groupTypeAttributeTypeId = 73;
+            var genderTypeAttributeTypeId = 76;
+            var maritalStatusTypeAttributeTypeId = 77;
+            var weekdayTimesAttributeTypeId = 78;
+            var weekendTimesAttributeTypeId = 79;
+
+            ObjectSingleAttributeDTO participantGoal;
+            ObjectSingleAttributeDTO gender;
+            ObjectSingleAttributeDTO maritalStatus;
+            ObjectAttributeTypeDTO weekdayTimes;
+            ObjectAttributeTypeDTO weekendTimes;
+
             // Load all groups for potential match            
             var mpGroups = _mpGroupService.GetSearchResults(groupTypeId);
             var mpAttributes = _attributeService.GetAttributes(null);
@@ -428,7 +444,87 @@ namespace crds_angular.Services
             // Filter list to remove non-matches
             //MeetingRangeId;
 
-            return ConvertToGroupDto(mpGroups, mpAttributes);
+            // Single-Attributes
+            participant.SingleAttributes.TryGetValue(participantGoalAttributeTypeId, out participantGoal);
+            participant.SingleAttributes.TryGetValue(genderTypeAttributeTypeId, out gender);
+            participant.SingleAttributes.TryGetValue(maritalStatusTypeAttributeTypeId, out maritalStatus);
+
+            // Attributes
+            participant.AttributeTypes.TryGetValue(weekdayTimesAttributeTypeId, out weekdayTimes);
+            participant.AttributeTypes.TryGetValue(weekendTimesAttributeTypeId, out weekendTimes);
+
+            var groups = new List<GroupDTO>();
+
+            foreach (var mpGroup in mpGroups)
+            {
+                if (checkCapacity(maritalStatus, mpGroup.RemainingCapacity)
+                    && inMarket(mpGroup.Address.Postal_Code)
+                    && matchDayTime(weekdayTimes,weekendTimes,mpGroup.SearchAttributes.MeetingRangeId)
+                    && matchGroupType(gender, maritalStatus, mpGroup.SearchAttributes.TypeId)
+                    )
+                {
+                    var group = Mapper.Map<GroupDTO>(mpGroup);
+
+                    var searchAttributes = mpGroup.SearchAttributes;
+
+                    var groupPets = GetPetAttributes(mpAttributes, mpGroup, searchAttributes);
+                    group.AttributeTypes.Add(groupPets.AttributeTypeId, groupPets);
+
+                    // Single-Attributes
+                    var goal = ConvertToSingleAttribute(mpAttributes, searchAttributes.GoalId);
+                    group.SingleAttributes.Add(goal.Key, goal.Value);
+
+                    var kids = ConvertToSingleAttribute(mpAttributes, searchAttributes.KidsId);
+                    group.SingleAttributes.Add(kids.Key, kids.Value);
+
+                    var groupType = ConvertToSingleAttribute(mpAttributes, searchAttributes.TypeId);
+                    group.SingleAttributes.Add(groupType.Key, groupType.Value);
+
+                    groups.Add(group);
+                }
+            }
+
+            return groups;
+            //return ConvertToGroupDto(mpGroups, mpAttributes);
+        }
+
+        private Boolean inMarket(String postalCode)
+        {
+            //TODO handle "in market" zip codes
+            return true;
+        }
+
+        private Boolean checkCapacity(ObjectSingleAttributeDTO maritalStatus, int capacity)
+        {
+            //TODO use config
+            var journeyTogeatherId = 7022;
+            return capacity > (maritalStatus.Value.AttributeId == journeyTogeatherId ? 1 : 0);
+        }
+
+        private Boolean matchGroupType(ObjectSingleAttributeDTO gender, ObjectSingleAttributeDTO maritalStatus, int attributeId)
+        {
+            //TODO handle type logic, marital status and gender
+            //TODO use config
+            var journeyTogeather = 7022;
+            var man = 7018;
+            var woman = 7019;
+            var married = 7010;
+            var mixed = 7007;
+            var men = 7008;
+            var women = 7009;
+
+            return (attributeId == mixed && maritalStatus.Value.AttributeId != journeyTogeather) //TODO I can't remember if we wanted to force married couples with other married couples or not
+                || (attributeId == married && maritalStatus.Value.AttributeId == journeyTogeather)
+                || (attributeId == men && gender.Value.AttributeId == man)
+                || (attributeId == women && gender.Value.AttributeId == woman)
+            ;
+        }
+
+        private Boolean matchDayTime(ObjectAttributeTypeDTO weekdayTime, ObjectAttributeTypeDTO weekendTime, int attributeId)
+        {
+            var weekday = weekdayTime.Attributes.FirstOrDefault(x => x.AttributeId == attributeId);
+            var weekend = weekendTime.Attributes.FirstOrDefault(x => x.AttributeId == attributeId);
+            return (weekday != default(ObjectAttributeDTO) || weekend != default(ObjectAttributeDTO));
         }
 
         private List<GroupDTO> ConvertToGroupDto(List<GroupSearchResult> mpGroups, List<Attribute> mpAttributes)
@@ -511,6 +607,7 @@ namespace crds_angular.Services
 
         private ObjectAttributeDTO ConvertToMultiAttribute(List<Attribute> mpAttributes, int attributeTypeId, bool selected)
         {
+            //TODO should attributeTypeId be attributeId?
             var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeTypeId);
 
             var groupAttribute = new ObjectAttributeDTO()
