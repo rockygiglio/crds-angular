@@ -5,8 +5,8 @@
 <ng-form class="row" name="volunteerProfile.profileForm" novalidate>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('firstName')}">
-    <input type="text" 
-           class="form-control" 
+    <input type="text"
+           class="form-control"
            name="firstName"
            placeholder="First Name"
            required
@@ -19,8 +19,8 @@
   </div>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('lastName')}">
-    <input type="text" 
-           class="form-control" 
+    <input type="text"
+           class="form-control"
            name="lastName"
            placeholder="Last Name"
            required
@@ -33,7 +33,7 @@
   </div>
 
   <div class="form-group col-xs-12" ng-class="{'has-error': volunteerProfile.validate('email')}">
-    <input type="email" 
+    <input type="email"
            class="form-control"
            name="email"
            placeholder="Email Address"
@@ -52,11 +52,11 @@
       </span>
     </ng-messages>
   </div>
-  
+
   <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('birthdate')}">
     <span class="input-group datepicker">
       <input type="text"
-             class="form-control" 
+             class="form-control"
              name="birthdate"
              placeholder="Date of Birth mm/dd/yyyy"
              datepicker-popup="MM/dd/yyyy"
@@ -69,8 +69,8 @@
              datepicker-validator
              required >
       <span class="input-group-btn">
-        <button type="button" 
-                class="btn btn-default" 
+        <button type="button"
+                class="btn btn-default"
                 ng-click="volunteerProfile.openBirthdatePicker($event)"> <i class="glyphicon glyphicon-calendar"></i>
         </button>
       </span>
@@ -84,15 +84,14 @@
         <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
       </span>
       <span ng-message="maxDate">
-        <span ng-if="profile.enforceAgeRestriction" dynamic-content="$root.MESSAGES.ageRestriction.content | html"></span>
-        <span ng-if="!profile.enforceAgeRestriction"  dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
+        <span dynamic-content="$root.MESSAGES.goVolunteerAgeRestriction.content | html"></span>
       </span>
     </ng-messages>
   </div>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('phone')}">
-    <input type="text" 
-           class="form-control" 
+    <input type="text"
+           class="form-control"
            name="phone"
            placeholder="Mobile Phone"
            ng-pattern='volunteerProfile.phoneFormat'
