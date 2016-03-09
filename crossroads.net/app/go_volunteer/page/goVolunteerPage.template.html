@@ -1,3 +1,6 @@
-<go-volunteer-org-name ng-if="goVolunteerPage.showOrgName()"> </go-volunteer-org-name>
-<go-volunteer-spouse ng-if="goVolunteerPage.showSpouse()"> </go-volunteer-spouse>
-<go-volunteer-profile ng-if="goVolunteerPage.showProfile()"> </go-volunteer-profile>
+<!-- <select-church></select-church> -->
+<form name="goVolunteerPage.parentForm" novalidate>
+  <go-volunteer-spouse ng-if="goVolunteerPage.showSpouse()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-spouse>
+  <go-volunteer-profile ng-if="goVolunteerPage.showProfile()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-profile>
+  <go-volunteer-org-name ng-if="goVolunteerPage.showOrgName()"> </go-volunteer-org-name>
+</form>
