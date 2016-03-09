@@ -44,9 +44,7 @@
         controller: 'JoinResultsCtrl as result',
         url: '/results',
         templateUrl: 'join/join_results.html',
-        resolve: {
-          Results: 'Results'
-        },
+        resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })
       ;
