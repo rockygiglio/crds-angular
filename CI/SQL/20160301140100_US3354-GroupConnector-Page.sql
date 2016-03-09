@@ -8,13 +8,13 @@ DECLARE @ROLE_ID INT = 107; --System Administrator - CRDS
 
 DECLARE @PAGE_NAME nvarchar(100) = N'Group Connectors';
 
-DECLARE @DEFAULT_FIELD_LIST NVARCHAR(1000) = N'Created_By_Table_Participant_ID_Table_Contact_ID_Table.[Display_Name] AS [Created_By]
+DECLARE @DEFAULT_FIELD_LIST NVARCHAR(2000) = N'Created_By_Table_Participant_ID_Table_Contact_ID_Table.[Display_Name] AS [Created_By]
 		, Project_ID_Table.[Project_Name] AS [Project Name]
 		, Created_By_Table_Preferred_Launch_Site_ID_Table.[Location_Name] AS [Preferred Launch Site]
-		, Created_By_Table_Organization_ID_Table.[Name] AS [Organization Name]
-		, Created_By_Table_Initiative_ID_Table.[Initiative_Name] AS [Initiative Name]';
+		, Created_By_Table_Organization_ID_Table.[Name] AS [Organization]
+		, Created_By_Table_Initiative_ID_Table.[Initiative_Name] AS [Initiative]';
 
-DECLARE @SELECTED_RECORD_EXPRESSION NVARCHAR(50) = N'Created_By_Table_Participant_ID_Table_Contact_ID_Table.[Display_Name]';
+DECLARE @SELECTED_RECORD_EXPRESSION NVARCHAR(255) = N'Created_By_Table_Participant_ID_Table_Contact_ID_Table.[Display_Name]';
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Pages] where [Display_Name] = @PAGE_NAME)
 BEGIN
@@ -38,7 +38,7 @@ BEGIN
 		,@PAGE_NAME
 		,N'GroupConnector_ID'
 		,N'Groups of folks that want to volunteer together'
-		,N'cr_GroupConnectors'		
+		,N'cr_GroupConnectors'
 		,@DEFAULT_FIELD_LIST
 		,@SELECTED_RECORD_EXPRESSION
 		,0
