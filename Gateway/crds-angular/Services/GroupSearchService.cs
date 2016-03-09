@@ -128,9 +128,8 @@ namespace crds_angular.Services
                                       CheckCapacity(maritalStatus, mpGroup.RemainingCapacity) &&
                                       InMarket(mpGroup.Address.Postal_Code) &&
                                       MatchDayTime(weekdayTimes, weekendTimes, mpGroup.SearchAttributes.MeetingRangeId) &&
-                                      MatchGroupType(gender, maritalStatus, mpGroup.SearchAttributes.TypeId) &&
-                                      MatchGoals(participantGoal, mpGroup.SearchAttributes.GoalId)
-                );
+                                      MatchGroupType(gender, maritalStatus, mpGroup.SearchAttributes.TypeId))
+                .OrderByDescending(mpGroup => SortGoal(participantGoal, mpGroup.SearchAttributes.GoalId));
         }
 
         private Boolean InMarket(String postalCode)
@@ -166,7 +165,7 @@ namespace crds_angular.Services
             return weekdayMatch || weekendMatch;
         }
 
-        private Boolean MatchGoals(ObjectSingleAttributeDTO participantGoal, int? groupGoalId)
+        private Boolean SortGoal(ObjectSingleAttributeDTO participantGoal, int? groupGoalId)
         {
             Dictionary<int, int> matching = new Dictionary<int, int>()
             {
