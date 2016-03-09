@@ -3,9 +3,9 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', 'Responses', 'Session'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', 'Responses'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS, Responses, Session) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS, Responses) {
     var requestPromise = null;
     var results = {};
     var groups = [];
