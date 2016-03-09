@@ -22,9 +22,6 @@
 
 
     var responses = Responses.data;
-    if (_.has(responses, 'completed_flow') === false) {
-      $state.go('group_finder.join.questions');
-    }
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
     $scope.group = $scope.displayDefaultGroup ? $scope.defaultGroup : $scope.group;
@@ -42,7 +39,7 @@
       return ImageService.DefaultProfileImage;
     };
 
-    if ($scope.group && responses.location) {
+    if (!$scope.displayDefaultGroup && $scope.group.address && responses.location) {
       var hostAddress = $scope.group.address.addressLine1 + ', ' +
           $scope.group.address.city + ', ' +
           $scope.group.address.state + ', ' +
@@ -60,14 +57,20 @@
             return distance + ' miles away from you';
           }
         };
-      }, function(error) {
-        $scope.getGroupDistance = function() { return ''; };
-      });
+      }, defaultDistance);
+    } else {
+      defaultDistance();
     }
 
     $scope.getGroupType = function() {
       return $scope.group.type;
     };
+
+    function defaultDistance() {
+      $scope.getGroupDistance = function() {
+        return '0 miles away from you';
+      };
+    }
 
   }
 
