@@ -47,7 +47,6 @@
       if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
-        $scope.$broadcast('groupFinderShowError');
       } else {
         $scope.go();
       }
@@ -165,6 +164,7 @@
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
           el.closest('div').addClass('has-error');
+          $scope.$broadcast('groupFinderShowError');
         }
         if (el.attr('name') === 'date_and_time[day]') {
           if (Responses.data.date_and_time.time === null) {
@@ -174,9 +174,9 @@
         if (el.data('input-type') !== undefined) {
           switch (el.data('input-type')) {
             case 'zip':
-              if ($scope.validZip(el.val()) === false) {
-                $scope.$broadcast('groupFinderZipError');
+              if (el.val() && $scope.validZip(el.val()) === false) {
                 el.closest('div').addClass('has-error');
+                $scope.$broadcast('groupFinderZipError');
               }
           }
         }
