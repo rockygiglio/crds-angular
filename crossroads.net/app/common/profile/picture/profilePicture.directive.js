@@ -11,6 +11,9 @@
       replace: true,
       scope: {
         contactId: '=?',
+        wrapperClass: '@?',
+        imageClass: '@?',
+        buttonText: '@?'
       },
       controller: 'ProfilePictureController as picture',
       bindToController: true,

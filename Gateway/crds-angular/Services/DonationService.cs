@@ -164,8 +164,8 @@ namespace crds_angular.Services
             var donationsResponse = new DonationsDTO();
 
             donationsResponse.Donations.AddRange(donations);
-            donationsResponse.BeginningDonationDate = donationsResponse.Donations.Last().DonationDate;
-            donationsResponse.EndingDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.BeginningDonationDate = donationsResponse.Donations.First().DonationDate;
+            donationsResponse.EndingDonationDate = donationsResponse.Donations.Last().DonationDate;
 
             return donationsResponse;
         }
@@ -380,15 +380,9 @@ namespace crds_angular.Services
 
         public List<GPExportDatumDTO> GetGPExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationService.GetGPExport(depositId, token);
-            var gpExport = new List<GPExportDatumDTO>();
+            var gpExportData = _mpDonationService.GetGPExportAndProcessorFees(depositId, token);
 
-            foreach (var gpExportDatum in gpExportData)
-            {
-                gpExport.Add(Mapper.Map<GPExportDatum, GPExportDatumDTO>(gpExportDatum));
-            }
-
-            return gpExport;
+            return gpExportData.Select(Mapper.Map<GPExportDatum, GPExportDatumDTO>).ToList();
         }
 
         public MemoryStream CreateGPExport(int selectionId, int depositId, string token)
@@ -529,7 +523,7 @@ namespace crds_angular.Services
 
             var donationAndDistribution = new DonationAndDistributionRecord
             {
-                DonationAmt = (int)amount,
+                DonationAmt = amount,
                 FeeAmt = fee,
                 DonorId = createDonation.DonorId,
                 ProgramId = createDonation.ProgramId,
@@ -544,7 +538,7 @@ namespace crds_angular.Services
                 DonationStatus = (int)donationStatus
             };
 
-            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution));
+            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false));
         }
         
     }

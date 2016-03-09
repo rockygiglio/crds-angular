@@ -1,0 +1,119 @@
+<div class="row">
+  <div class="col-sm-12"><progressbar value="25"></progressbar></div>
+</div>
+<h2>Tell us about yourself so we can keep you in the loop.</h2>
+<ng-form class="row" name="volunteerProfile.profileForm" novalidate>
+
+  <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('firstName')}">
+    <input type="text" 
+           class="form-control" 
+           name="firstName"
+           placeholder="First Name"
+           required
+           ng-model="volunteerProfile.person.nickName" >
+    <ng-messages for="volunteerProfile.profileForm.firstName.$error" ng-if="volunteerProfile.validate('firstName')">
+      <span ng-message="required">
+        <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+      </span>
+    </ng-messages>
+  </div>
+
+  <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('lastName')}">
+    <input type="text" 
+           class="form-control" 
+           name="lastName"
+           placeholder="Last Name"
+           required
+           ng-model="volunteerProfile.person.lastName" >
+    <ng-messages for="volunteerProfile.profileForm.lastName.$error" ng-if="volunteerProfile.validate('lastName')">
+      <span ng-message="required">
+        <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+      </span>
+    </ng-messages>
+  </div>
+
+  <div class="form-group col-xs-12" ng-class="{'has-error': volunteerProfile.validate('email')}">
+    <input type="email" 
+           class="form-control"
+           name="email"
+           placeholder="Email Address"
+           required
+           unique-email
+           ng-model="volunteerProfile.person.emailAddress">
+    <ng-messages for="volunteerProfile.profileForm.email.$error" ng-if="volunteerProfile.validate('email')">
+      <span ng-message="required">
+        <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+      </span>
+      <span ng-message="unique">
+        <span dynamic-content="$root.MESSAGES.emailInUse.content | html"></span>
+      </span>
+      <span ng-message="email">
+        <span dynamic-content="$root.MESSAGES.invalidEmail.content | html"></span>
+      </span>
+    </ng-messages>
+  </div>
+  
+  <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('birthdate')}">
+    <span class="input-group datepicker">
+      <input type="text"
+             class="form-control" 
+             name="birthdate"
+             placeholder="Date of Birth mm/dd/yyyy"
+             datepicker-popup="MM/dd/yyyy"
+             ng-model="volunteerProfile.person.dateOfBirth"
+             is-open="volunteerProfile.birthdateOpen"
+             show-button-bar='false'
+             max-date="{{volunteerProfile.maxBirthdate}}"
+             min-date="{{volunteerProfile.oneHundredFiftyYearsAgo}}"
+             init-date="volunteerProfile.initDate"
+             datepicker-validator
+             required >
+      <span class="input-group-btn">
+        <button type="button" 
+                class="btn btn-default" 
+                ng-click="volunteerProfile.openBirthdatePicker($event)"> <i class="glyphicon glyphicon-calendar"></i>
+        </button>
+      </span>
+    </span>
+    <ng-messages for="volunteerProfile.profileForm.birthdate.$error" ng-if="volunteerProfile.validate('birthdate')">
+      <ng-messages-include src="on-submit-messages"></ng-messages-include>
+      <span ng-message="date">
+        <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
+      </span>
+      <span ng-message="minDate">
+        <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
+      </span>
+      <span ng-message="maxDate">
+        <span ng-if="profile.enforceAgeRestriction" dynamic-content="$root.MESSAGES.ageRestriction.content | html"></span>
+        <span ng-if="!profile.enforceAgeRestriction"  dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
+      </span>
+    </ng-messages>
+  </div>
+
+  <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('phone')}">
+    <input type="text" 
+           class="form-control" 
+           name="phone"
+           placeholder="Mobile Phone"
+           ng-pattern='volunteerProfile.phoneFormat'
+           required
+           ng-model="volunteerProfile.person.mobilePhone">
+    <ng-messages for="volunteerProfile.profileForm.phone.$error" ng-if="volunteerProfile.validate('phone')" >
+      <span ng-message='required'>
+        <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>
+      </span>
+      <span ng-message="pattern">
+        <span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span>
+      </span>
+    </ng-messages>
+
+  </div>
+
+  <div class="col-xs-6 col-xs-offset-6">
+    <button type="submit" class="btn btn-block btn-primary-gc pull-right" ng-click="volunteerProfile.submit()"> Next
+      <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
+      	<use xlink:href="#arrow-right9"></use>
+      </svg>
+    </button>
+  </div>
+</ng-form>

@@ -133,6 +133,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Attribute_ID", 1},
                     {"Attribute_Name", "Attribute #1"},
+                    {"Attribute_Description", "Attribute Description #1"},
                     {"Attribute_Category_ID", 2},
                     {"Attribute_Category", "Category #1"},
                     {"Attribute_Category_Description", "Category Description #1"},
@@ -145,6 +146,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Attribute_ID", 4},
                     {"Attribute_Name", "Attribute #2"},
+                    {"Attribute_Description", "Attribute Description #2"},
                     {"Attribute_Category_ID", 5},
                     {"Attribute_Category", "Category #2"},
                     {"Attribute_Category_Description", "Category Description #2"},
@@ -157,6 +159,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Attribute_ID", 7},
                     {"Attribute_Name", "Attribute #3"},
+                    {"Attribute_Description", "Attribute Description #3"},
                     {"Attribute_Category_ID", null},
                     {"Attribute_Category", null},
                     {"Attribute_Category_Description", null},

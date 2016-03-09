@@ -172,7 +172,6 @@ namespace crds_angular.test.Services
         {
             const int daysBefore = 999;
             const int emailTemplateId = 77;
-            const int unassignedContact = 7386594;
             var participants = new List<EventParticipant>
             {
                 new EventParticipant
@@ -209,7 +208,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
             _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MessageTemplate());            
             _eventParticipantService.Setup(m => m.GetChildCareParticipants(daysBefore)).Returns(participants);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>())).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
 
             var kids = new List<Participant> { new Participant { ContactId = 456321987 } };
             _crdsEventService.Setup(m => m.EventParticpants(987654321, It.IsAny<string>())).Returns(kids);
@@ -234,7 +233,7 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _eventParticipantService.VerifyAll();
             _communicationService.VerifyAll();
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>()), Times.Exactly(2));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
         }
     }

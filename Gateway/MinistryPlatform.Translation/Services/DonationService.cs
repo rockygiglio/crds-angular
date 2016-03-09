@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
+using Communication = MinistryPlatform.Models.Communication;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -26,11 +28,18 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _processingProgramId;
         private readonly int _scholarshipPaymentTypeId;
         private readonly int _tripDonationMessageTemplateId;
+        private readonly int _donationCommunicationsPageId;
+        private readonly int _messagesPageId;
+        private readonly int _glAccountMappingByProgramPageView;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IDonorService _donorService;
         private readonly ICommunicationService _communicationService;
         private readonly IPledgeService _pledgeService;
+
+        private readonly int _donationStatusDeclined;
+        private readonly int _donationStatusDeposited;
+        private readonly int _donationStatusSucceeded;
 
         public DonationService(IMinistryPlatformService ministryPlatformService, IDonorService donorService, ICommunicationService communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
@@ -51,6 +60,12 @@ namespace MinistryPlatform.Translation.Services
             _processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
+            _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
+            _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
+            _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
+            _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
+            _messagesPageId = configuration.GetConfigIntValue("Messages");
+            _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("GLAccountMappingByProgramPageView");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -68,6 +83,10 @@ namespace MinistryPlatform.Translation.Services
                 var result = GetDonationByProcessorPaymentId(processorPaymentId, token);
 
                 UpdateDonationStatus(token, result.donationId, statusId, statusDate, statusNote);
+                if (statusId == _donationStatusSucceeded)
+                {
+                    FinishSendMessageFromDonor(result.donationId, true);
+                }
                 return (result.donationId);
             }));
         }
@@ -358,38 +377,117 @@ namespace MinistryPlatform.Translation.Services
             return trips;
         }
 
-        public List<GPExportDatum> GetGPExport(int depositId, string token)
+        public List<GPExportDatum> GetGPExportAndProcessorFees(int depositId, string token)
         {
-            var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
+            var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
+            var gpExportDictList = GetGPExport(depositId, token);
             var gpExport = new List<GPExportDatum>();
 
-            foreach (var result in results)
+            //loop through each donation and add it distributions to the 
+            //list of gp info being returned
+            foreach (var gpExportDict in gpExportDictList)
             {
-                var gp = new GPExportDatum
-                {
-                    ProccessFeeProgramId = _processingProgramId,
-                    ProgramId = result.ToInt("Program_ID"),
-                    DocumentType = result.ToString("Document_Type"),
-                    DonationId = result.ToInt("Donation_ID"),
-                    BatchName = result.ToString("Batch_Name"),
-                    DonationDate = result.ToDate("Donation_Date"),
-                    DepositDate = result.ToDate("Deposit_Date"),
-                    CustomerId = result.ToString("Customer_ID"),
-                    DonationAmount = result.ToString("Donation_Amount"),
-                    CheckbookId = result.ToString("Checkbook_ID"),
-                    CashAccount = result.ToString("Cash_Account"),
-                    ReceivableAccount = result.ToString("Receivable_Account"),
-                    DistributionAccount = result.ToString("Distribution_Account"),
-                    ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
-                    Amount = result.ToString("Amount"),
-                    ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
-                    PaymentTypeId = result.ToInt("Payment_Type_ID")
-                };
+                var previousProcessorFees = (decimal) 0.0;
+                var indx = 0;
 
-                gpExport.Add(gp);
+                foreach (var datum in gpExportDict.Value)
+                {
+                    var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDict.Value.Count, indx);
+                    gpExport.Add(AdjustedGpExportDatum(datum, processorFee));
+                    gpExport.Add(CreateProcessorFee(datum, processorFee, processingFeeGLMapping));
+
+                    //set this as we will use this to help determine how much of a processor fee is on the
+                    //next distribution of this donation
+                    previousProcessorFees += processorFee;
+                    indx++;
+                }
             }
 
             return gpExport;
+        }
+
+        private static decimal CalculateProcessorFee(GPExportDatum datum, decimal previousFee, Int64 distCount, Int64 distProcessed)
+        {
+            var processorFee = (datum.ProcessorFeeAmount - previousFee) / (distCount - distProcessed);
+            return Math.Round(processorFee, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private static GPExportDatum AdjustedGpExportDatum(GPExportDatum datum, decimal processorFee)
+        {
+            datum.Amount = datum.Amount - processorFee;
+            return datum;
+        }
+
+        private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
+        {
+            return new GPExportDatum
+            {
+                ProccessFeeProgramId = _processingProgramId,
+                ProgramId = _processingProgramId,
+                DocumentType = processingFeeGLMapping.ToString("Document_Type"),
+                DonationId = datum.DonationId,
+                BatchName = datum.BatchName,
+                DonationDate = datum.DonationDate,
+                DepositDate = datum.DepositDate,
+                CustomerId = processingFeeGLMapping.ToString("Customer_ID"),
+                DonationAmount = datum.DonationAmount,
+                CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
+                CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
+                ReceivableAccount = processingFeeGLMapping.ToString("Receivable_Account"),
+                DistributionAccount = processingFeeGLMapping.ToString("Distribution_Account"),
+                ScholarshipExpenseAccount = processingFeeGLMapping.ToString("Scholarship_Expense_Account"),
+                Amount = processorFee,
+                ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
+                PaymentTypeId = datum.PaymentTypeId,
+                ProcessorFeeAmount = datum.ProcessorFeeAmount
+            };
+        }
+
+        public Dictionary<int, List<GPExportDatum>> GetGPExport(int depositId, string token)
+        {
+            var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
+            var gpExport = new Dictionary<int, List<GPExportDatum>>();
+
+
+            foreach (var result in results)
+            {
+                var donationID = result.ToInt("Donation_ID");
+
+                if (!gpExport.ContainsKey(donationID))
+                {
+                    gpExport.Add(donationID, new List<GPExportDatum>());
+                }
+
+                gpExport[donationID].Add(
+                    new GPExportDatum
+                    {
+                        ProccessFeeProgramId = _processingProgramId,
+                        ProgramId = result.ToInt("Program_ID"),
+                        DocumentType = result.ToString("Document_Type"),
+                        DonationId = result.ToInt("Donation_ID"),
+                        BatchName = result.ToString("Batch_Name"),
+                        DonationDate = result.ToDate("Donation_Date"),
+                        DepositDate = result.ToDate("Deposit_Date"),
+                        CustomerId = result.ToString("Customer_ID"),
+                        DonationAmount = result.ToString("Donation_Amount"),
+                        CheckbookId = result.ToString("Checkbook_ID"),
+                        CashAccount = result.ToString("Cash_Account"),
+                        ReceivableAccount = result.ToString("Receivable_Account"),
+                        DistributionAccount = result.ToString("Distribution_Account"),
+                        ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
+                        Amount = Convert.ToDecimal(result.ToString("Amount")),
+                        ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
+                        PaymentTypeId = result.ToInt("Payment_Type_ID"),
+                        ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+                    });
+            }
+
+            return gpExport;
+        }
+
+        private Dictionary<string, object> GetProcessingFeeGLMapping(string token)
+        {
+            return _ministryPlatformService.GetPageViewRecords(_glAccountMappingByProgramPageView, token, _processingProgramId.ToString()).First();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
@@ -453,7 +551,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.UpdateRecord(_donationDistributionPageId, distributionData, ApiLogin());
         }
 
-        public void SendMessageFromDonor(int pledgeId, string message)
+        public void SendMessageFromDonor(int pledgeId, int donationId, string message)
         {
             var toDonor = _pledgeService.GetDonorForPledge(pledgeId);
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
@@ -467,9 +565,6 @@ namespace MinistryPlatform.Translation.Services
                 EmailAddress = "updates@crossroads.net"
             };
 
-            var defaultContactId = AppSetting("DefaultContactEmailId");
-            var defaultContactEmail = _communicationService.GetEmailFromContactId(defaultContactId);
-
             var comm = new Communication
             {
                 AuthorUserId = 5,
@@ -481,7 +576,57 @@ namespace MinistryPlatform.Translation.Services
                 ToContacts = toContacts,
                 MergeData = new Dictionary<string, object>()
             };
-            _communicationService.SendMessage(comm);
+            var communicationId = _communicationService.SendMessage(comm, true);
+            AddDonationCommunication(donationId, communicationId);
         }
+
+        public void FinishSendMessageFromDonor(int donationId, bool succeeded)
+        {
+            // this code sets the status of a pending message to donor to ready to send, once there's a successful donation
+            // stripe webhook returned - JPC 2/25/2016
+            var donationCommunicationRecords = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format("\"{0}\"",donationId), "");
+            var donationCommunicationRecord = donationCommunicationRecords.FirstOrDefault();
+            var communicationId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
+            var recordId = Int32.Parse(donationCommunicationRecord["dp_RecordID"].ToString());
+
+            Dictionary<string, object> communicationUpdateValues = new Dictionary<string, object>();
+            communicationUpdateValues.Add("Communication_ID", communicationId);
+
+            if (succeeded == true)
+            {
+                communicationUpdateValues.Add("Communication_Status_ID", 3);
+                _ministryPlatformService.UpdateRecord(_messagesPageId, communicationUpdateValues, ApiLogin());
+            }
+
+            DeleteOption[] deleteOptions = new DeleteOption[]
+            {
+                new DeleteOption
+                {
+                    Action = DeleteAction.Delete
+                }
+            };
+
+            try
+            {
+                _ministryPlatformService.DeleteRecord(_donationCommunicationsPageId, recordId, deleteOptions, ApiLogin());
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(string.Format("RemoveDonationCommunication failed.  DonationCommunicationId: {0}", recordId), e);
+            }
+        }
+
+        public void AddDonationCommunication(int donationId, int communicationId)
+        {
+            var communication = new Dictionary<string, object>
+            {
+                {"Donation_ID", donationId},
+                {"Communication_ID", communicationId},
+                {"Domain_ID", 1 }
+            };
+            var pageId = AppSetting("DonationCommunication");
+            _ministryPlatformService.CreateRecord(pageId, communication, ApiLogin(), true);
+        }
+
     }
 }

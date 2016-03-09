@@ -258,7 +258,9 @@
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
+    <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
+    <Compile Include="Models\Crossroads\AddressDTO.cs" />
     <Compile Include="Models\Crossroads\CommunicationDTO.cs" />
     <Compile Include="Models\Crossroads\Congregation.cs" />
     <Compile Include="Models\Crossroads\DonorStatementDTO.cs" />
@@ -275,6 +277,7 @@
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
     <Compile Include="Models\Crossroads\Events\EventRsvpDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
+    <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
@@ -283,17 +286,23 @@
     <Compile Include="Models\Crossroads\Serve\ServeReminder.cs" />
     <Compile Include="Models\Crossroads\SponsoredChild.cs" />
     <Compile Include="Models\Crossroads\Stewardship\PledgeDto.cs" />
+    <Compile Include="Models\Crossroads\Stewardship\StripeCard.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
+    <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
+    <Compile Include="Services\GroupSearchService.cs" />
+    <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
+    <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
+    <Compile Include="Services\Interfaces\ITaskService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\StaffContactService.cs" />
     <Compile Include="Services\EventService.cs" />
@@ -312,6 +321,7 @@
     <Compile Include="Models\MailChimp\SubscriberBatchDTO.cs" />
     <Compile Include="Services\SubscriptionsService.cs" />
     <Compile Include="Services\Interfaces\ISubscriptionsService.cs" />
+    <Compile Include="Services\TaskService.cs" />
     <Compile Include="Util\MailchimpListHandler.cs" />
     <Compile Include="Util\HttpAuthResult.cs" />
     <Compile Include="Util\FileResult.cs" />
@@ -331,8 +341,8 @@
     <Compile Include="Filters\UnhandledExceptionFilter.cs" />
     <Compile Include="Models\Crossroads\Attribute\AttributeDTO.cs" />
     <Compile Include="Models\Crossroads\Attribute\AttributeTypeDTO.cs" />
-    <Compile Include="Models\Crossroads\Profile\ContactAttributeDTO.cs" />
-    <Compile Include="Models\Crossroads\Profile\ContactAttributeTypeDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAttributeDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAttributeTypeDTO.cs" />
     <Compile Include="Models\Crossroads\Stewardship\StripeInvoice.cs" />
     <Compile Include="Models\Crossroads\Stewardship\RecurringGiftDto.cs" />
     <Compile Include="Models\Crossroads\Stewardship\UpdateDonorDTO.cs" />
@@ -453,16 +463,16 @@
     <Compile Include="Security\MPAuth.cs" />
     <Compile Include="Security\CustomAuthorize.cs" />
     <Compile Include="Services\AccountService.cs" />
-    <Compile Include="Models\Crossroads\Profile\ContactAllAttributesDTO.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectAllAttributesDTO.cs" />
     <Compile Include="Services\AttributeService.cs" />
-    <Compile Include="Services\ContactAttributeService.cs" />
-    <Compile Include="Models\Crossroads\Profile\ContactSingleAttributeDTO.cs" />
+    <Compile Include="Services\ObjectAttributeService.cs" />
+    <Compile Include="Models\Crossroads\Attribute\ObjectSingleAttributeDTO.cs" />
     <Compile Include="Services\DonationService.cs" />
     <Compile Include="Services\DonorService.cs" />
     <Compile Include="Services\EmailCommunication.cs" />
     <Compile Include="Services\EzScanCheckScannerService.cs" />
     <Compile Include="Services\GroupService.cs" />
-    <Compile Include="Services\Interfaces\IContactAttributeService.cs" />
+    <Compile Include="Services\Interfaces\IObjectAttributeService.cs" />
     <Compile Include="Services\Interfaces\IAttributeService.cs" />
     <Compile Include="Services\Interfaces\IAccountService.cs" />
     <Compile Include="Services\Interfaces\ICheckScannerService.cs" />
@@ -500,26 +510,32 @@
     <None Include="MinistryPlatform.Debug.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Demo.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Integration.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.local test.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.MPTest01.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MinistryPlatform.Release.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\PublishProfiles\local test.pubxml" />
     <None Include="Properties\PublishProfiles\MPTest01.pubxml" />
@@ -535,10 +551,12 @@
     </Content>
     <Content Include="Unity.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="MinistryPlatform.config">
       <TransformOnBuild>true</TransformOnBuild>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Web.Demo.config">
       <DependentUpon>Web.config</DependentUpon>

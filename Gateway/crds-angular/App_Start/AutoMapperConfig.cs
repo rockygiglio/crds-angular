@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
@@ -12,6 +13,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using Address = MinistryPlatform.Models.Address;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Group = MinistryPlatform.Models.Group;
 using Response = MinistryPlatform.Models.Response;
@@ -99,9 +101,9 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ContributionDate, opts => opts.MapFrom(src => src.DonationDate.ToString("MM/dd/yyyy")))
                 .ForMember(dest => dest.SettlementDate, opts => opts.MapFrom(src => src.DepositDate.ToString("MM/dd/yyyy")))
-                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DonationAmount))
+                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DonationAmount.ToString()))
                 .ForMember(dest => dest.ReceivablesAccount, opts => opts.MapFrom(src => src.ReceivableAccount))
-                .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount.ToString()))
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
                 .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate  )));
 
@@ -224,6 +226,34 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, BulkEmailSubscriberOpt>();
             Mapper.CreateMap<BulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
+
+            Mapper.CreateMap<Group, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
+
+            Mapper.CreateMap<GroupDTO, Group>()
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
+                .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
+
+
+            Mapper.CreateMap<GroupSearchResult, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
+
+            Mapper.CreateMap<Address, AddressDTO>()
+                .ForMember(dest => dest.AddressLine1, opts => opts.MapFrom(src => src.Address_Line_1))
+                .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
+                .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
+                .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
+                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
+
+            Mapper.CreateMap<AddressDTO, Address>()
+                .ForMember(dest => dest.Address_Line_1, opts => opts.MapFrom(src => src.AddressLine1))
+                .ForMember(dest => dest.Address_Line_2, opts => opts.MapFrom(src => src.AddressLine2))
+                .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))
+                .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
+                .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
+
+            Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
         }
     }
 }

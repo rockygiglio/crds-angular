@@ -7,6 +7,7 @@
   require('angular-resource');
   require('angular-sanitize');
   require('angular-messages');
+  require('angular-number-picker');
   require('angular-cookies');
   require('angular-toggle-switch');
   require('angular-scroll');
@@ -24,7 +25,9 @@
   require('angular-image-crop');
   require('angulartics');
   require('angulartics-gtm');
+  require('angularjs-slider');
 
+  require('../node_modules/angularjs-slider/dist/rzslider.min.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch-bootstrap.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch.css');
 })();

@@ -221,7 +221,7 @@ namespace crds_angular.Controllers.API
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                 {
-                    SendMessageFromDonor(pledgeId.Value, dto.GiftMessage);
+                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
                 }
                 var response = new DonationDTO
                 {
@@ -279,7 +279,7 @@ namespace crds_angular.Controllers.API
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                 {
-                    SendMessageFromDonor(pledgeId.Value, dto.GiftMessage);
+                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
                 }
 
                 var response = new DonationDTO()
@@ -303,11 +303,11 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        private void SendMessageFromDonor(int pledgeId, string message)
+        private void SendMessageFromDonor(int pledgeId, int donationId, string message)
         {
             try
             {
-                _mpDonationService.SendMessageFromDonor(pledgeId, message);
+                _mpDonationService.SendMessageFromDonor(pledgeId, donationId, message);
             }
             catch (Exception ex) {
                 _logger.Error(string.Format("Send Message From Donor Failed, pledgeId ({0})", pledgeId),ex);

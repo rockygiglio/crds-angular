@@ -357,13 +357,16 @@ namespace MinistryPlatform.Translation.Services
                 return (donationId);
             }
 
-            try
+            if (sendConfirmationEmail)
             {
-                SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
-            }
+                try
+                {
+                    SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
+                }
             catch (Exception e)
-            {
+                {
                 _logger.Error(string.Format("Failed when processing the template for Donation Id: {0}", donationId), e);
+                }
             }
 
             return donationId;

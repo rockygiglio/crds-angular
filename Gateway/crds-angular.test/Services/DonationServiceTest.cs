@@ -356,14 +356,14 @@ namespace crds_angular.test.Services
             var mockedExport = MockGPExport();
             var expectedReturn = MockExpectedGpExportDto();
 
-            _mpDonationService.Setup(mocked => mocked.GetGPExport(depositId, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGPExportAndProcessorFees(depositId, It.IsAny<string>())).Returns(mockedExport);
 
             var result = _fixture.GetGPExport(depositId, "asdfafasdfas");
 
             _mpDonationService.VerifyAll();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(4, result.Count);
             Assert.AreEqual(expectedReturn[0].DocumentType, mockedExport[0].DocumentType);
             Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DonationId);
             Assert.AreEqual(expectedReturn[0].DocumentDescription, mockedExport[0].BatchName);
@@ -376,11 +376,11 @@ namespace crds_angular.test.Services
             Assert.AreEqual(expectedReturn[0].CashAccount, mockedExport[0].ScholarshipExpenseAccount);
             Assert.AreEqual(expectedReturn[0].ReceivablesAccount, mockedExport[0].ReceivableAccount);
             Assert.AreEqual(expectedReturn[0].DistributionAccount, mockedExport[0].DistributionAccount);
-            Assert.AreEqual(expectedReturn[0].DistributionAmount, mockedExport[0].Amount);
-            Assert.AreEqual(expectedReturn[0].DistributionReference, "Processor Fees " + mockedExport[0].DonationDate);
+            Assert.AreEqual(expectedReturn[0].DistributionAmount, mockedExport[0].Amount.ToString());
+            Assert.AreEqual(expectedReturn[0].DistributionReference, "Contribution " + mockedExport[0].DonationDate);
             Assert.AreEqual(expectedReturn[0].CashAccount, mockedExport[0].ScholarshipExpenseAccount);
-            Assert.AreEqual(expectedReturn[1].DistributionReference, "Contribution " + mockedExport[1].DonationDate);
-            Assert.AreEqual(expectedReturn[1].CashAccount, mockedExport[1].CashAccount);
+            Assert.AreEqual(expectedReturn[1].DistributionReference, "Processor Fees " + mockedExport[1].DonationDate);
+
 
             Assert.AreEqual(expectedReturn[0].DocumentType, result[0].DocumentType);
             Assert.AreEqual(expectedReturn[0].DocumentNumber, result[0].DocumentNumber);
@@ -398,6 +398,23 @@ namespace crds_angular.test.Services
             Assert.AreEqual(expectedReturn[0].DistributionReference, result[0].DistributionReference);
             Assert.AreEqual(expectedReturn[0].CashAccount, result[0].CashAccount);
             Assert.AreEqual(expectedReturn[1].DistributionReference, result[1].DistributionReference);
+
+            Assert.AreEqual(expectedReturn[2].DocumentType, result[2].DocumentType);
+            Assert.AreEqual(expectedReturn[2].DocumentNumber, result[2].DocumentNumber);
+            Assert.AreEqual(expectedReturn[2].DocumentDescription, result[2].DocumentDescription);
+            Assert.AreEqual(expectedReturn[2].BatchId, result[2].BatchId);
+            Assert.AreEqual(expectedReturn[2].ContributionDate, result[2].ContributionDate);
+            Assert.AreEqual(expectedReturn[2].SettlementDate, result[2].SettlementDate);
+            Assert.AreEqual(expectedReturn[2].CustomerId, result[2].CustomerId);
+            Assert.AreEqual(expectedReturn[2].ContributionAmount, result[2].ContributionAmount);
+            Assert.AreEqual(expectedReturn[2].CheckbookId, result[2].CheckbookId);
+            Assert.AreEqual(expectedReturn[2].CashAccount, result[2].CashAccount);
+            Assert.AreEqual(expectedReturn[2].ReceivablesAccount, result[2].ReceivablesAccount);
+            Assert.AreEqual(expectedReturn[2].DistributionAccount, result[2].DistributionAccount);
+            Assert.AreEqual(expectedReturn[2].DistributionAmount, result[2].DistributionAmount);
+            Assert.AreEqual(expectedReturn[2].DistributionReference, result[2].DistributionReference);
+            Assert.AreEqual(expectedReturn[2].CashAccount, result[2].CashAccount);
+            Assert.AreEqual(expectedReturn[3].DistributionReference, result[3].DistributionReference);
         }
 
         private static List<GPExportDatumDTO> MockExpectedGpExportDto()
@@ -413,12 +430,29 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "200.00",
+                    ContributionAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "90551-031-02",
                     ReceivablesAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
-                    DistributionAmount = "200.00",
+                    DistributionAmount = "379.87",
+                    DistributionReference = "Contribution " + new DateTime(2015, 3, 28, 8, 30, 0)
+                },
+                new GPExportDatumDTO
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = 10002,
+                    DocumentDescription = "Test Batch",
+                    BatchId = "Test Batch",
+                    ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
+                    SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
+                    CustomerId = "CONTRIBUTI001",
+                    ContributionAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-02",
+                    ReceivablesAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DistributionAmount = "0.13",
                     DistributionReference = "Processor Fees " + new DateTime(2015, 3, 28, 8, 30, 0)
                 },
                 new GPExportDatumDTO
@@ -430,14 +464,31 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "20.00",
+                    ContributionAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivablesAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
-                    DistributionAmount = "20.00",
+                    DistributionAmount = "19.88",
                     DistributionReference = "Contribution " + new DateTime(2014, 3, 28, 8, 30, 0)
-                }
+                },
+                new GPExportDatumDTO
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = 10002,
+                    DocumentDescription = "Test 2 Batch",
+                    BatchId = "Test Batch",
+                    ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
+                    SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
+                    CustomerId = "CONTRIBUTI001",
+                    ContributionAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-02",
+                    ReceivablesAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DistributionAmount = "0.12",
+                    DistributionReference = "Processor Fees " + new DateTime(2015, 3, 28, 8, 30, 0)
+                },
             };
         }
 
@@ -453,14 +504,35 @@ namespace crds_angular.test.Services
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "200.00",
+                    DonationAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
-                    Amount = "200.00",
+                    Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 12,
-                    ProccessFeeProgramId = 12,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 9,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9
+                },
+                new GPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DonationId = 10002,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DonationAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    Amount = Convert.ToDecimal(0.13),
+                    ProgramId = 127,
+                    ProccessFeeProgramId = 127,
                     PaymentTypeId = 9,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
@@ -469,22 +541,43 @@ namespace crds_angular.test.Services
                 {
                     DocumentType = "SALE",
                     DonationId = 10002,
-                    BatchName = "Test Batch",
+                    BatchName = "Test 2 Batch",
                     DonationDate = new DateTime(2014, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2014, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "20.00",
+                    DonationAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
-                    Amount = "20.00",
+                    Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 112,
-                    ProccessFeeProgramId = 12,
+                    ProccessFeeProgramId = 127,
                     PaymentTypeId = 15,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
-                }
+                },
+                new GPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DonationId = 10002,
+                    BatchName = "Test 2 Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DonationAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    Amount = Convert.ToDecimal(0.12),
+                    ProgramId = 127,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 15,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
             };
         }
     

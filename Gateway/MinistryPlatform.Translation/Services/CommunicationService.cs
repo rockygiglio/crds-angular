@@ -17,6 +17,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _messagePageId = Convert.ToInt32(AppSettings("MessagesPageId"));
         private readonly int _recipientsSubPageId = Convert.ToInt32(AppSettings("RecipientsSubpageId"));
         private readonly int _communicationStatusId = Convert.ToInt32(AppSettings("CommunicationStatusId"));
+        private readonly int _communicationDraftStatus = Convert.ToInt32(AppSettings("CommunicationDraftId"));
         private readonly int _actionStatusId = Convert.ToInt32(AppSettings("ActionStatusId"));
         private readonly int _contactPageId = Convert.ToInt32(AppSettings("Contacts"));
 
@@ -80,16 +81,18 @@ namespace MinistryPlatform.Translation.Services
         /// Creates the correct record in MP so that the mail service can pick it up and send 
         /// it during the scheduled run
         /// </summary>
-        /// <param name="communication">The message properties </param>        
-        public void SendMessage(Communication communication)
+        /// <param name="communication">The message properties </param>     
+        /// <param name="isDraft"> Is this message a draft? Defaults to false </param>   
+        public int SendMessage(Communication communication, bool isDraft = false)
         {
             var token = ApiLogin();
-
-            var communicationId = AddCommunication(communication, token);
+            var communicationStatus = isDraft ? _communicationDraftStatus : _communicationStatusId;
+            var communicationId = AddCommunication(communication, token, communicationStatus);
             AddCommunicationMessages(communication, communicationId, token);
+            return communicationId;
         }
 
-        private int AddCommunication(Communication communication, string token)
+        private int AddCommunication(Communication communication, string token, int communicationStatus)
         {
             var dictionary = new Dictionary<string, object>
             {
@@ -99,7 +102,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Start_Date", DateTime.Now},
                 {"From_Contact", communication.FromContact.ContactId},
                 {"Reply_to_Contact", communication.ReplyToContact.ContactId},
-                {"Communication_Status_ID", _communicationStatusId}
+                {"Communication_Status_ID", communicationStatus}
             };
             var communicationId = _ministryPlatformService.CreateRecord(_messagePageId, dictionary, token);
             return communicationId;

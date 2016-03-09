@@ -8,6 +8,6 @@ namespace crds_angular.Services.Interfaces
         bool ChangePassword(string token, string newPassword);
         bool SaveCommunicationPrefs(string token, AccountInfo accountInfo);
         AccountInfo getAccountInfo(string token);
-        Dictionary<string, string> RegisterPerson(User newUserData);
+        User RegisterPerson(User newUserData);
     }
 }

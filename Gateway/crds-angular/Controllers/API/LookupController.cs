@@ -21,6 +21,11 @@ namespace crds_angular.Controllers.API
             _lookupService = lookupService;
         }
 
+
+        /// <summary>
+        /// Get lookup values for table passed in
+        /// </summary>
+        [RequiresAuthorization]
         [ResponseType(typeof (List<Dictionary<string, object>>))]
         [Route("api/lookup/{table?}")]
         [HttpGet]
@@ -57,6 +62,9 @@ namespace crds_angular.Controllers.API
                         break;
                     case "reminderdays":
                         ret = _lookupService.ReminderDays(t);
+                        break;
+                    case "meetingdays":
+                        ret = _lookupService.MeetingDays(t);
                         break;
                     default:
                         break;

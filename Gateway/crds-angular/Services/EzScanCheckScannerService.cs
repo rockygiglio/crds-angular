@@ -64,8 +64,7 @@ namespace crds_angular.Services
                 {
                     var contactDonor = CreateDonor(check);
                     //Always use the customer ID and source ID from the Donor Account, if it exists
-                    StripeCharge charge;
-                    charge = contactDonor.HasAccount ? _paymentService.ChargeCustomer(contactDonor.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId) : _paymentService.ChargeCustomer(contactDonor.ProcessorId, check.Amount, contactDonor.DonorId);
+                    var charge = contactDonor.HasAccount ? _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId) : _paymentService.ChargeCustomer(contactDonor.ProcessorId, check.Amount, contactDonor.DonorId);
                    
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
@@ -76,8 +75,10 @@ namespace crds_angular.Services
                     var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
                     var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
                     var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
+
+                    var customerId = contactDonor.HasAccount ? contactDonor.Account.ProcessorId : contactDonor.ProcessorId;
                                      
-                    var donorAccountId =_mpDonorService.UpdateDonorAccount(encryptedKey, charge.Source.id, contactDonor.ProcessorId);
+                    var donorAccountId = _mpDonorService.UpdateDonorAccount(encryptedKey, charge.Source.id, customerId);
                  
                     var programId = batchDetails.ProgramId == null ? null : batchDetails.ProgramId + "";
 
@@ -89,7 +90,7 @@ namespace crds_angular.Services
                         ProgramId = programId,
                         ChargeId = charge.Id,
                         PymtType = "check",
-                        ProcessorId = contactDonor.ProcessorId,
+                        ProcessorId = customerId,
                         SetupDate = check.CheckDate ?? (check.ScanDate ?? DateTime.Now),
                         RegisteredDonor = contactDonor.RegisteredUser,
                         DonorAcctId = donorAccountId,
@@ -97,7 +98,7 @@ namespace crds_angular.Services
                         CheckNumber = (check.CheckNumber ?? string.Empty).TrimStart(' ', '0').Right(MinistryPlatformCheckNumberMaxLength)
                     };
 
-                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
+                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false);
 
                     check.DonationId = donationId;
 
@@ -163,7 +164,7 @@ namespace crds_angular.Services
 
             var token = _paymentService.CreateToken(account, routing);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-            
+
             contactDonor.Details = new ContactDetails
             {
                 DisplayName = checkDetails.Name1,
@@ -182,10 +183,12 @@ namespace crds_angular.Services
                 AccountNumber = account,
                 RoutingNumber = routing,
                 Type = AccountType.Checking,
-                EncryptedAccount = encryptedKey
+                EncryptedAccount = encryptedKey,
+                ProcessorId = contactDonor.ProcessorId,
+                Token = token.Id
             };
-           
-            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token, DateTime.Now);
+
+            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token.Id, DateTime.Now);
         }
     }
 }

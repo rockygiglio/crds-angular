@@ -4,19 +4,21 @@
     //TODO Should this be moved to core?
     // MODULE NAMES
     MODULES: {
-      CROSSROADS: 'crossroads',
+      CHILDCARE: 'crossroads.childcare',
       CORE: 'crossroads.core',
       COMMON: 'crossroads.common',
-      SEARCH: 'crossroads.search',
-      TRIPS: 'crossroads.trips',
-      GIVE: 'crossroads.give',
-      MPTOOLS: 'crossroads.mptools',
-      PROFILE: 'crossroads.profile',
-      MEDIA: 'crossroads.media',
-      SIGNUP: 'crossroads.signup',
       COMMUNITY_GROUPS: 'crossroads.community',
+      CROSSROADS: 'crossroads',
+      GIVE: 'crossroads.give',
+      GO_VOLUNTEER: 'crossroads.go_volunteer',
+      GROUP_FINDER: 'crossroads.group_finder',
+      MEDIA: 'crossroads.media',
+      MPTOOLS: 'crossroads.mptools',
       ONETIME_SIGNUP: 'crossroads.onetime',
-      CHILDCARE: 'crossroads.childcare'
+      PROFILE: 'crossroads.profile',
+      SEARCH: 'crossroads.search',
+      SIGNUP: 'crossroads.signup',
+      TRIPS: 'crossroads.trips',
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,

@@ -168,7 +168,6 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldSendReminderEmails()
         {
-            const int pageId = 2203;
             const string apiToken = "1234";
             const int defaultEmailTemplate = 14567;
 
@@ -188,7 +187,7 @@ namespace crds_angular.test.Services
                 SignedupEmailAddress = fakeMyContact.Email_Address
             };
 
-            var fakePageView = new MPServeReminders()
+            var fakePageView = new MPServeReminder()
             {
                 Opportunity_Title = fakeServeReminder.OpportunityTitle,               
                 Opportunity_Contact_Id = fakeServeReminder.OpportunityContactId,
@@ -203,7 +202,7 @@ namespace crds_angular.test.Services
                 Shift_End = fakeServeReminder.ShiftEnd
             };
 
-            var fakeList = new List<MPServeReminders> ()
+            var fakeList = new List<MPServeReminder> ()
             {
                 fakePageView
             };
@@ -250,7 +249,7 @@ namespace crds_angular.test.Services
                                                                               fakeMyContact.Contact_ID,
                                                                               fakeMyContact.Email_Address,
                                                                               mergeData)).Returns(fakeCommunication);
-                _communicationService.Setup(m => m.SendMessage(fakeCommunication));
+                _communicationService.Setup(m => m.SendMessage(fakeCommunication, false));
                 _communicationService.Verify();
 
             });
@@ -621,11 +620,8 @@ namespace crds_angular.test.Services
                 {"Previous_Opportunity_Name", It.IsAny<string>()}
             };
 
-            _communicationService.Setup(
-                m => m.SendMessage(It.IsAny<Communication>()))
-                .Callback((Communication communication) => { }).Verifiable();
-            _communicationService.Verify(
-                m => m.SendMessage(It.IsAny<Communication>()));
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(),false));
         }
 
         [Test]
