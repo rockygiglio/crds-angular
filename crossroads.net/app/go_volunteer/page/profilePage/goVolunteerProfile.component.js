@@ -52,6 +52,7 @@
 
 
       function submit() {
+        vm.profileForm.$setSubmitted();
         if(vm.profileForm.$valid){
           vm.onSubmit({nextState: 'spouse'}); 
         } else {
