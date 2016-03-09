@@ -13,11 +13,10 @@
     $stateProvider
       .state('go-volunteer', {
         parent: 'goCincinnati',
-        templateUrl: 'go_volunteer/goVolunteer.template.html',
         abstract: true
       })
       .state('go-volunteer.city', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city',
         template: '<go-volunteer-city></go-volunteer-city>',
         data: {
@@ -36,7 +35,7 @@
         },
       })
       .state('go-volunteer.city.organizations', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city/organizations',
         template: '<go-volunteer-organizations></go-volunteer-organizations>',
         data: {
@@ -51,7 +50,7 @@
         }
       })
       .state('go-volunteer.signinpage', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/cincinnati/crossroads/signin',
         template: '<go-volunteer-signin> </go-volunteer-signin>',
         data: {
@@ -67,7 +66,7 @@
         }
       })
      /* .state('go-volunteer.crossroadsprofile', { */
-        //parent: 'go-volunteer',
+        //parent: 'goCincinnati',
         //url: '/go-volunteer/cincinnati/crossroads/profile',
         //template: '<go-volunteer-page></go-volunteer-page>',
         //data: {
@@ -90,7 +89,7 @@
         //}
       /*})*/
       .state('go-volunteer.crossroadspage', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/cincinnati/crossroads/:page',
         template: '<go-volunteer-page></go-volunteer-page>',
         data: {
@@ -112,7 +111,7 @@
         }
       })
       .state('go-volunteer.page', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city/:organization/:page',
         template: '<go-volunteer-page></go-volunteer-page>',
         data: {
