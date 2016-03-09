@@ -282,7 +282,8 @@ namespace crds_angular.Services
                 Selected = selected,
                 StartDate = DateTime.Today,
                 EndDate = null,
-                Notes = string.Empty
+                Notes = string.Empty,
+                Name = mpAttribute.Name
             };
 
             return groupAttribute;
