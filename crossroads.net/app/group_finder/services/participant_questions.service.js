@@ -46,6 +46,7 @@
               }, {attributeTypeId: question.attributeType.attributeTypeId});
             }
           });
+          service.lookup.loaded = true;
         });
       }
 

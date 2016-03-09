@@ -3,9 +3,9 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE_ID_PARTICIPANT'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_ROLE_ID_PARTICIPANT) {
+  function GroupCardCtrl($scope, ImageService, GROUP_ROLE) {
 
     $scope.participant_role_id = GROUP_ROLE.PARTICIPANT;
     $scope.defaultImage = ImageService.DefaultProfileImage;

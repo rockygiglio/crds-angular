@@ -3,13 +3,23 @@
 
   module.exports = ResponseService;
 
-  ResponseService.$inject = [];
+  ResponseService.$inject = ['ParticipantQuestionService'];
 
-  function ResponseService() {
+  function ResponseService(ParticipantQuestionService) {
     this.data = {};
 
     this.clear = function(){
       this.data = {};
+    };
+
+    this.lookup = function() {
+      if (ParticipantQuestionService.lookup.loaded) {
+        sessionStorage.setItem('lookup', angular.toJson(ParticipantQuestionService.lookup));
+      } else {
+        ParticipantQuestionService.lookup = angular.fromJson(sessionStorage.getItem('lookup'));
+      }
+
+      return ParticipantQuestionService.lookup;
     };
 
     this.getResponse = function(definition) {
@@ -37,7 +47,28 @@
           var attributeTypeId = this.lookup[answer].attributeTypeId;
           results[attributeTypeId] = {'attribute': {'attributeId': answer}};
         }
-      }, {responses: this.data, lookup: lookup});
+      }, {responses: this.data, lookup: this.lookup()});
+
+      return results;
+    };
+
+    this.getMultiAttributes = function(attributes) {
+      var results = {};
+      _.each(attributes, function(index) {
+        if (_.has(this.responses, index)) {
+          var answer = this.responses[index];
+          _.each(answer, function(value, answerId) {
+            if (value) {
+              var attributeTypeId = this.lookup[answerId].attributeTypeId;
+              if (!_.has(results, attributeTypeId)) {
+                results[attributeTypeId] = {attributeTypeId: attributeTypeId, attributes: []};
+              }
+
+              results[attributeTypeId].attributes.push({attributeId: answerId, selected: true});
+            }
+          }, {lookup: this.lookup});
+        }
+      }, {responses: this.data, lookup: this.lookup()});
 
       return results;
     };
