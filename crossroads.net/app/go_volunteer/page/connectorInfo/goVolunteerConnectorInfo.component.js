@@ -10,8 +10,8 @@
       restrict: 'E',
       scope: {},
       bindToController: true,
-      controller: GoVolunteerGroupConnectorController,
-      controllerAs: 'goConnectorInfo',
+      controller: GoVolunteerConnectorInfoController,
+      controllerAs: 'goVolunteerConnectorInfo',
       templateUrl: 'connectorInfo/goVolunteerConnectorInfo.template.html'
     };
 
