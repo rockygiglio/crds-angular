@@ -3,9 +3,9 @@
 
   module.exports = GroupProfileCtrl;
 
-  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', 'GoogleDistanceMatrixService', 'Responses'];
+  GroupProfileCtrl.$inject = ['$scope', 'ImageService', 'GoogleDistanceMatrixService', 'Responses', '$state'];
 
-  function GroupProfileCtrl($scope, ImageService, GROUP_TYPES, GoogleDistanceMatrixService, Responses) {
+  function GroupProfileCtrl($scope, ImageService, GoogleDistanceMatrixService, Responses, $state) {
 
     $scope.defaultGroup = {
       groupTitle: 'Chuck M.',
@@ -19,6 +19,12 @@
         'This is my fourth time hosting a group and I’m looking forward to connecting with some new people and getting BRAVE. ' +
         'We\'ll meet at my house in Pleasant Ridge.'
     };
+
+
+    var responses = Responses.data;
+    if (_.has(responses, 'completed_flow') === false) {
+      $state.go('group_finder.join.questions');
+    }
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
     $scope.group = $scope.displayDefaultGroup ? $scope.defaultGroup : $scope.group;
@@ -36,15 +42,15 @@
       return ImageService.DefaultProfileImage;
     };
 
-    if ($scope.group && Responses.data.location) {
-      var hostAddress = $scope.group.addressLine1 + ', ' +
-          $scope.group.city + ', ' +
-          $scope.group.state + ', ' +
-          $scope.group.postalCode;
-      var participantAddress = Responses.data.location.street + ', ' +
-          Responses.data.location.city + ', ' +
-          Responses.data.location.state + ', ' +
-          Responses.data.location.zip;
+    if ($scope.group && responses.location) {
+      var hostAddress = $scope.group.address.addressLine1 + ', ' +
+          $scope.group.address.city + ', ' +
+          $scope.group.address.state + ', ' +
+          $scope.group.address.postalCode;
+      var participantAddress = responses.location.street + ', ' +
+          responses.location.city + ', ' +
+          responses.location.state + ', ' +
+          responses.location.zip;
       GoogleDistanceMatrixService.distanceFromAddress(hostAddress, [
         participantAddress
       ]).then(function(result) {

@@ -34,12 +34,6 @@
       return 'group_card/group_' + $scope.template + '.html';
     };
 
-    $scope.mapAddress = function() {
-      var address = $scope.group.address;
-      var searchAddress = address.addressLine1 + ', ' + address.city + ', ' + address.state + ', ' + address.zip;
-      return 'https://maps.google.com/?q=' + searchAddress.replace(/\s/g, '+');
-    };
-
     $scope.groupTime = function() {
       return $scope.group.meetingDay + ', ' + $scope.group.meetingHour;
     };

@@ -46,6 +46,7 @@
               }, {attributeTypeId: question.attributeType.attributeTypeId});
             }
           });
+          service.lookup.loaded = true;
         });
       }
 
@@ -67,7 +68,12 @@
     }
 
     function lookupContains(id, keyword) {
-      return service.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
+      var contains = false;
+      if (id) {
+        contains = service.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
+      }
+
+      return contains;
     }
 
     function clearData() {
