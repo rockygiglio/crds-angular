@@ -27,95 +27,12 @@
 
     function loadResults() {
       if (!requestPromise) {
-        console.log(results.responses);
         if (_.has(results.responses.data, 'completed_flow') && results.responses.data.completed_flow === true) {
 
           var participant = {
-            attributeTypes: {
-              79: {
-                'attributeTypeId': 79,
-                'attributes': [
-                  {
-                    'attributeId': 7029,
-                    'selected': true
-                  },
-                  {
-                    'attributeId': 7030,
-                    'selected': true
-                  },
-                  {
-                    'attributeId': 7031,
-                    'selected': true
-                  },
-                  {
-                    'attributeId': 7032,
-                    'selected': true
-                  },
-                  {
-                    'attributeId': 7033,
-                    'selected': true
-                  },
-                  {
-                    'attributeId': 7034,
-                    'selected': true
-                  }
-                ]
-              },
-              78: {
-                  'attributeTypeId': 78,
-                  'attributes': [
-                    {
-                      'attributeId': 7023,
-                      'selected': true
-                    },
-                    {
-                      'attributeId': 7024,
-                      'selected': true
-                    },
-                    {
-                      'attributeId': 7025,
-                      'selected': true
-                    },
-                    {
-                      'attributeId': 7026,
-                      'selected': true
-                    },
-                    {
-                      'attributeId': 7027,
-                      'selected': true
-                    },
-                    {
-                      'attributeId': 7028,
-                      'selected': true
-                    }
-                  ]
-                }
-            },
-            singleAttributes: {
-              72: {
-                attribute: {
-                  attributeId: 7004
-                }
-              },
-              73: {
-                attribute: {
-                  attributeId: 7018
-                }
-              },
-              76: {
-                attribute: {
-                  attributeId: 7018
-                }
-              },
-              77: {
-                attribute: {
-                  attributeId: 7021
-                }
-              }
-            }
+            singleAttributes: Responses.getSingleAttributes(),
+            attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
           };
-          participant.singleAttributes = Responses.getSingleAttributes();
-          participant.attributeTypes = Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
           requestPromise = Group.Search.save({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, participant).$promise;
           requestPromise.then(function(results) {
             clearData();

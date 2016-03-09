@@ -81,7 +81,7 @@
               state: vm.responses.location.state,
               zip: vm.responses.location.zip
             },
-            singleAttributes: Responses.getSingleAttributes(vm.lookup)
+            singleAttributes: Responses.getSingleAttributes()
           };
 
           vm.invalidTime = false; // set as an override

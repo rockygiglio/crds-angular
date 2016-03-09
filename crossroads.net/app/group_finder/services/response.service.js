@@ -12,29 +12,8 @@
       this.data = {};
     };
 
-    this.lookup = function() {
-      if (ParticipantQuestionService.lookup.loaded) {
-        sessionStorage.setItem('lookup', angular.toJson(ParticipantQuestionService.lookup));
-      } else {
-        ParticipantQuestionService.lookup = angular.fromJson(sessionStorage.getItem('lookup'));
-      }
-
-      return ParticipantQuestionService.lookup;
-    };
-
     this.getResponse = function(definition) {
       return this.data[definition.key];
-    };
-
-    this.SaveState = function () {
-      sessionStorage.userService = angular.toJson(this.data);
-    };
-
-    this.RestoreState = function () {
-      var data = angular.fromJson(sessionStorage.userService);
-      if (data) {
-        this.data = data;
-      }
     };
 
     this.getSingleAttributes = function(lookup) {
@@ -47,7 +26,7 @@
           var attributeTypeId = this.lookup[answer].attributeTypeId;
           results[attributeTypeId] = {'attribute': {'attributeId': answer}};
         }
-      }, {responses: this.data, lookup: this.lookup()});
+      }, {responses: this.data, lookup: ParticipantQuestionService.lookup});
 
       return results;
     };
@@ -68,7 +47,7 @@
             }
           }, {lookup: this.lookup});
         }
-      }, {responses: this.data, lookup: this.lookup()});
+      }, {responses: this.data, lookup: ParticipantQuestionService.lookup});
 
       return results;
     };
