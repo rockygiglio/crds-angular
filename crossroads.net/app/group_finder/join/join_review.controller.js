@@ -32,13 +32,9 @@
     vm.initialize = initialize;
     vm.goToHost = goToHost;
     vm.goToResults = goToResults;
-<<<<<<< 91f10ba95bbeab57e2e2ca2a631b0a79a70fed61
     vm.lookup = LookupDefinitions;
-=======
-    vm.lookupContains = LookupDefinitions.lookupContains;
->>>>>>> updated upsell lookup; refactored lookupContains
     vm.goBack = goBack;
-    vm.lookupContains = lookupContains;
+    vm.lookupContains = LookupDefinitions.lookupContains;
 
     function initialize() {
 
