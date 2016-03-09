@@ -20,7 +20,7 @@
             return GroupQuestionService.getQuestions();
           },
           LookupDefinitions: function(GroupQuestionService) {
-            return GroupQuestionService.getLookup();
+            return GroupQuestionService;
           }
         },
         data: {

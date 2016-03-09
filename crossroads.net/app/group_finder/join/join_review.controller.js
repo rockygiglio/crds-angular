@@ -34,12 +34,12 @@
     vm.goToResults = goToResults;
     vm.lookup = LookupDefinitions;
     vm.goBack = goBack;
-    vm.lookupContains = lookupContains;
+    vm.lookupContains = LookupDefinitions.lookupContains;
 
     function initialize() {
 
       vm.responses = getResponses();
-      vm.showUpsell = parseInt(vm.responses.prior_participation) > 2;
+      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
       vm.rejected = false;
@@ -122,10 +122,6 @@
 
     function goToResults() {
       $state.go('group_finder.join.results');
-    }
-
-    function lookupContains(id, keyword) {
-      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function goBack() {

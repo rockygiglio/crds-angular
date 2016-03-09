@@ -47,10 +47,10 @@
     vm.invalidTime = false;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.lookup;
     vm.startOver = startOver;
     vm.publish = publish;
-    vm.lookupContains = lookupContains;
+    vm.lookupContains = LookupDefinitions.lookupContains;
     vm.getGroupAttributes = getGroupAttributes;
     vm.getGroupTime = getGroupTime;
     vm.formatTime = formatTime;
@@ -212,10 +212,6 @@
             vm.showPublish = false;
             $log.debug('An error occurred while publishing', error);
           });
-    }
-
-    function lookupContains(id, keyword) {
-      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function getGroupAttributes() {
