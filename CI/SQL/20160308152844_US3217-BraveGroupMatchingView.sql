@@ -29,21 +29,21 @@ VALUES(2214,'Journey Search Results',322,NULL,'Groups.[Group_ID]
 ,CASE  
  WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''00:00:00'' AND ''08:59:59'' ) 
  THEN  ''7029''
- WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''12:00:00'' ) 
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''11:59:59'' ) 
  THEN  ''7030''
- WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''17:00:00'' ) 
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''16:59:59'' ) 
  THEN  ''7031''
- WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''20:00:00'') 
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''19:59:59'') 
  THEN  ''7032''
  WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7)AND Groups.[Meeting_Time] BETWEEN ''20:00:00'' AND ''23:59:59'') 
  THEN  ''7033'' 
  WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''00:00:00'' AND ''08:59:59'')  
  THEN ''7023''  
- WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''12:00:00'')  
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''11:59:59'')  
  THEN ''7024''  
- WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''17:00:00'')  
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''16:59:59'')  
  THEN ''7025''  
- WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''20:00:00'')  
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''19:59:59'')  
  THEN ''7026'' 
  WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''20:00:00'' AND ''23:59:59'')  
  THEN ''7027''  
