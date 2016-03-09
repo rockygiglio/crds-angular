@@ -17,6 +17,8 @@
   require('./childrenCount');
   require('./groupConnector');
   require('./groupFindConnector');
-  require('./connectorInfo');  
+  require('./connectorInfo');
+  require('./uniqueSkills');
+  require('./equipment');  
 
 })();

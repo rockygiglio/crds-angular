@@ -28,6 +28,8 @@
       vm.showGroupConnector = showGroupConnector;
       vm.showGroupFindConnector = showGroupFindConnector;
       vm.showConnectorInfo = showConnectorInfo;
+      vm.showUniqueSkills = showUniqueSkills;
+      vm.showEquipment = showEquipment;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -67,6 +69,14 @@
 
       function showConnectorInfo() {
         return $stateParams.page === 'be-a-connector';
+      }
+
+      function showUniqueSkills() {
+        return $stateParams.page === 'unique-skills';
+      }
+
+      function showEquipment() {
+        return $stateParams.page === 'equipment';
       }
 
     }
