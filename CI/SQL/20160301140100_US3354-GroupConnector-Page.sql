@@ -56,5 +56,3 @@ INSERT INTO [dbo].[dp_Page_Section_Pages]
      VALUES
            (@PAGE_ID, @PAGE_SECTION_ID)
 END
-
-INSERT INTO dp_Role_Pages (Role_ID, Page_ID, Access_Level) VALUES (@ROLE_ID, @PAGE_ID, @ACCESS_LEVEL_FULL)

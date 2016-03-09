@@ -47,6 +47,3 @@ VALUES
 );
 
 SET IDENTITY_INSERT [dbo].[dp_Sub_Pages] OFF;
-
-
-INSERT INTO dp_Role_Sub_Pages (Role_ID, Sub_Page_ID, Access_Level) VALUES (@ROLE_ID, @SUB_PAGE_ID, @ACCESS_LEVEL_FULL);
