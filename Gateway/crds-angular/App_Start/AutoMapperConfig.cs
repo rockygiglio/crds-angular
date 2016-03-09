@@ -254,6 +254,16 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
             Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
+
+            Mapper.CreateMap<ContactRelationship, FamilyMember>()
+                .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.Last_Name))
+                .ForMember(dest => dest.PreferredName, opts => opts.MapFrom(src => src.Preferred_Name))
+                .ForMember(dest => dest.Age, opts => opts.MapFrom(src => src.Age))
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.Contact_Id))
+                .ForMember(dest => dest.Email, opts => opts.MapFrom(src => src.Email_Address))
+                .ForMember(dest => dest.RelationshipId, opts => opts.MapFrom(src => src.Relationship_Id))
+                .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.Participant_Id))
+                .ForMember(dest => dest.HighSchoolGraduationYear, opts => opts.MapFrom(src => src.HighSchoolGraduationYear));
         }
     }
 }
