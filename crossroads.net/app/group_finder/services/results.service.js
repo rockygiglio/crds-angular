@@ -10,20 +10,10 @@
     var results = {};
     var groups = [];
 
-    results.responses = getResponses();
+    results.responses = Responses;
     results.loadResults = loadResults;
     results.clearData = clearData;
     results.getResults = getResults;
-
-    function getResponses() {
-      if (Responses.data.completed_flow === true) {
-        sessionStorage.setItem('participant', angular.toJson(Responses.data));
-      } else {
-        Responses.data = angular.fromJson(sessionStorage.getItem('participant'));
-      }
-
-      return Responses;
-    }
 
     function loadResults() {
       if (!requestPromise) {

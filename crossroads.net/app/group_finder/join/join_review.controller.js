@@ -38,7 +38,7 @@
 
     function initialize() {
 
-      vm.responses = getResponses();
+      vm.responses = Responses.data;
       vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
@@ -104,16 +104,6 @@
       if (parseInt(vm.responses.relationship_status) === 2) {
         $scope.showInvite = true;
       }
-    }
-    
-    function getResponses() {
-      if (Responses.data.completed_flow === true) {
-        sessionStorage.setItem('participant', angular.toJson(Responses.data));
-      } else {
-        Responses.data = angular.fromJson(sessionStorage.getItem('participant'));
-      }
-
-      return Responses.data;
     }
 
     function goToHost() {

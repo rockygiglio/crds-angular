@@ -21,17 +21,7 @@
     };
 
 
-    function getResponses() {
-      var responses = Responses.data;
-      if (responses.completed_flow === true) {
-        sessionStorage.setItem('participant', angular.toJson(responses));
-      } else {
-        responses = angular.fromJson(sessionStorage.getItem('participant'));
-      }
-
-      return responses;
-    }
-    var responses = getResponses();
+    var responses = Responses.data;
     if (_.has(responses, 'completed_flow') === false) {
       $state.go('group_finder.join.questions');
     }
