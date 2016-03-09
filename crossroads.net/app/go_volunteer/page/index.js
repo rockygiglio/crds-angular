@@ -15,5 +15,7 @@
   require('./spouseName');
   require('./children');
   require('./childrenCount');
+  require('./groupConnector');
+  require('./groupFindConnector');  
 
 })();

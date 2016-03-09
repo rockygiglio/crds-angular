@@ -25,6 +25,8 @@
       vm.showSpouseName = showSpouseName;
       vm.showChildren = showChildren;
       vm.showChildrenCount = showChildrenCount;
+      vm.showGroupConnector = showGroupConnector;
+      vm.showGroupFindConnector = showGroupFindConnector;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -54,8 +56,12 @@
         return $stateParams.page === 'children-count';
       }
 
-      function showSpouseName() {
-        return $stateParams.page === 'spouse-name';
+      function showGroupConnector() {
+        return $stateParams.page === 'group-connector';
+      }
+
+      function showGroupFindConnector() {
+        return $stateParams.page === 'group-find-connector';
       }
 
     }
