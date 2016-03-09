@@ -13,6 +13,7 @@
     service.loadQuestions = loadQuestions;
     service.getLookup = getLookup;
     service.getQuestions = getQuestions;
+    service.lookupContains = lookupContains;
 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
@@ -63,6 +64,10 @@
       return loadPromise.then(function() {
         return service.lookup;
       });
+    }
+
+    function lookupContains(id, keyword) {
+      return service.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function clearData() {
