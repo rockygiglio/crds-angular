@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Attribute;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Groups
@@ -13,6 +13,9 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
+
+        [JsonProperty(PropertyName = "groupParticipantId")]
+        public int GroupParticipantId { get; set; }
 
         [JsonProperty(PropertyName = "nickName")]
         public string NickName { get; set; }
@@ -29,7 +32,10 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }
 
-        [JsonProperty(PropertyName = "attributes")]
-        public List<crds_angular.Models.Crossroads.Profile.ContactAttributeDTO> Attributes { get; set; }
+        [JsonProperty(PropertyName = "attributeTypes")]
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
+
+        [JsonProperty(PropertyName = "singleAttributes")]
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }        
     }
 }

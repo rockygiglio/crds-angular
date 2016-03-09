@@ -59,7 +59,7 @@
         templateUrl: 'templates/amount.html'
       })
       .state('give.register', {
-        controller: 'RegisterCtrl',
+        controller: 'RegisterController',
         templateUrl: 'templates/register.html'
       })
       .state('give.commitment', {

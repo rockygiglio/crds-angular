@@ -3,9 +3,9 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['$cookies', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
+  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
 
-  function GroupInfoService($cookies, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
+  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
     var requestPromise = null;
 
     //
@@ -21,22 +21,37 @@
     groupInfo.getHosting = getHosting;
     groupInfo.getParticipating = getParticipating;
     groupInfo.findHosting = findHosting;
+    groupInfo.findParticipating = findParticipating;
+    groupInfo.findParticipatingOrHost = findParticipatingOrHost;
+    groupInfo.isParticipatingOrHost = isParticipatingOrHost;
 
     // Clear the group info cache when the user logs out
-    $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, reset);
+
+    // Clear and reload
+    $rootScope.$on('groupFinderReloadGroups', reloadGroups);
 
     //
     // Initialize the data
     //
-    function loadGroupInfo() {
-      if (!requestPromise) {
+    function loadGroupInfo(forceReload) {
+      if (!requestPromise || forceReload) {
         requestPromise = Group.Type.query({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}).$promise;
         requestPromise.then(function(data) {
-          var cid = $cookies.get('userId');
+          // Clear existing data before reloading to avoid duplicates
+          clearData();
+
+          // Process the database groups
+          var cid = Session.exists('userId');
           if (cid) {
             _.each(data, function(group) {
+
+              // default to something
               if (group.contactId === parseInt(cid)) {
                 group.isHost = true;
+                if (_.has(group.singleAttributes[73].attribute, 'description')) {
+                  group.type = group.singleAttributes[73].attribute.description;
+                }
                 groups.hosting.push(group);
 
                 // Query the other participants of the group
@@ -50,8 +65,15 @@
               if (!group.meetingTime || !group.meetingDayId || !group.address) {
                 group.isPrivate = true;
               }
+
+              // Parse the host's name
+              parseContactName(group);
+
+              // Convert the meetingDayId and the meetingTime into the client formats
+              processMeetingDayAndTime(group);
             });
           }
+          $rootScope.$emit('groupFinderInfoLoaded');
           return groups;
         }, function error() {
           // An error occurred, clear the promise so another attempt can be made
@@ -74,10 +96,30 @@
       return groups.participating;
     }
 
-    function findHosting(id) {
+    function findHosting(groupId) {
       return _.find(groups.hosting, function(group) {
-        return group.groupId === parseInt(id);
+        return group.groupId === parseInt(groupId);
       });
+    }
+
+    function findParticipating(groupId) {
+      return _.find(groups.participating, function(group) {
+        return group.groupId === parseInt(groupId);
+      });
+    }
+
+    function findParticipatingOrHost(groupId) {
+      var group = findParticipating(groupId);
+      if (!group) {
+        group = findHosting(groupId);
+      }
+
+      return group;
+    }
+
+    function isParticipatingOrHost(groupId) {
+      var group = findParticipatingOrHost(groupId);
+      return !!group;
     }
 
     function queryParticipants(group) {
@@ -101,10 +143,43 @@
       });
     }
 
-    function clearData() {
+    function parseContactName(group) {
+      if (group.contactName) {
+        group.contact = {};
+
+        var tokens = group.contactName.split(/ *, */);
+        group.contact.lastName = tokens[0];
+        if (tokens.length > 1) {
+          group.contact.firstName = tokens[1];
+        }
+      }
+    }
+
+    function processMeetingDayAndTime(group) {
+      var meetingTime = moment().format('YYYY-MM-DD') + ' ' + group.meetingTime;
+
+      group.meetingDay = moment().isoWeekday(group.meetingDayId - 1).format('dddd');
+      var time = moment(meetingTime);
+      var format = 'h a';
+      if (time.minutes() !== 0) {
+        format = 'h:mm a';
+      }
+      group.meetingHour = time.format(format);
+    }
+
+    function reset() {
       requestPromise = null;
+      clearData();
+    }
+
+    function clearData() {
       groups.hosting = [];
       groups.participating = [];
+    }
+
+    function reloadGroups() {
+      reset();
+      loadGroupInfo();
     }
 
     //

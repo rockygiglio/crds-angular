@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2013		
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crds-angular", "crds-angular\crds-angular.csproj", "{DC3B7EDC-2B9A-49F4-A5C8-50BA4C3E2A7B}"
@@ -39,6 +39,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossroadsStripeOnboarding", "CrossroadsStripeOnboarding\CrossroadsStripeOnboarding.csproj", "{0AEEDCB6-EF78-4DEC-B9AC-810A91F10747}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.EventReminder", "EventReminder\Crossroads.EventReminder.csproj", "{13B48D32-0626-4897-9B9C-03F921365F99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.ScheduledDataUpdate", "Crossroads.ScheduledDataUpdate\Crossroads.ScheduledDataUpdate.csproj", "{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +154,14 @@ Global
 		{13B48D32-0626-4897-9B9C-03F921365F99}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{13B48D32-0626-4897-9B9C-03F921365F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13B48D32-0626-4897-9B9C-03F921365F99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Demo|Any CPU.ActiveCfg = Demo|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Demo|Any CPU.Build.0 = Demo|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Integration|Any CPU.Build.0 = Integration|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE8E07FF-E257-4B93-9DB2-5B0D5F78B0CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

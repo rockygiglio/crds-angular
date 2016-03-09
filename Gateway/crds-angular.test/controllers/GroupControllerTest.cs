@@ -10,6 +10,7 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -27,8 +28,8 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IGroupService> groupServiceMock;
         private Mock<IAuthenticationService> authenticationServiceMock;
         private Mock<IParticipantService> participantServiceMock;
-        private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;
-        private Mock<ICommunicationService> communicationServiceMock; 
+        private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;        
+        private Mock<IGroupSearchService> groupSearchServiceMock;
         private string authType;
         private string authToken;
 
@@ -38,10 +39,10 @@ namespace crds_angular.test.controllers
             groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
             authenticationServiceMock = new Mock<IAuthenticationService>();
             participantServiceMock = new Mock<IParticipantService>();
-            addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();
-            communicationServiceMock = new Mock<ICommunicationService>();
+            addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
+            groupSearchServiceMock = new Mock<IGroupSearchService>();
 
-            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object,participantServiceMock.Object, addressServiceMock.Object);
+            fixture = new GroupController(groupServiceMock.Object, authenticationServiceMock.Object, participantServiceMock.Object, addressServiceMock.Object, groupSearchServiceMock.Object);
 
             authType = "auth_type";
             authToken = "auth_token";
@@ -291,7 +292,7 @@ namespace crds_angular.test.controllers
           
             IHttpActionResult result = fixture.GetGroups(groupTypeId);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(NotFoundResult), result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
         }
 
         [Test]

@@ -8,19 +8,42 @@
       2: 'Co-ed',
       3: 'Married couples only'
     },
+    DAYS: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     SERIES: {
-      permalink: 'brave',
+      permalink: 'bravegrouptool',
       title: 'Brave'
     },
     GROUP_API_CONSTANTS: {
       GROUP_TYPE_ID: 19,
       MINISTRY_ID: 8,
       START_DATE: moment().format(),
-      END_DATE: '2017-02-1T10:00:00.000Z'
+      END_DATE: '2016-05-14T10:00:00.000Z'
+    },
+    EMAIL_TEMPLATES: {
+      HOST_PUBLIC_CONFIRM_EMAIL_ID: 17546,
+      HOST_PRIVATE_CONFIRM_EMAIL_ID: 17547,
+      PARTICIPANT_PUBLIC_CONFIRM_EMAIL_ID: 17548,
+      PARTICIPANT_PRIVATE_CONFIRM_EMAIL_ID: 17549,
+      INVITE_EMAIL_ID: 17462,
+      NO_GROUP: 17551
+    },
+    GROUP_ID: {
+      ANYWHERE: 166574,
+      NO_GROUP: 166573
+    },
+    CONTACT_ID: {
+      JOURNEY: 7660256
     },
     GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg',
-    GROUP_ROLE_ID_HOST: 22,
-    GROUP_ROLE_ID_PARTICIPANT: 16
+    GROUP_ROLE: {
+      HOST: 22,
+      PARTICIPANT: 16
+    },
+    QA_PAGES: {
+      HOST: '/bravehost/',
+      JOIN: '/braveparticipant/'
+    }
+
   };
 
 })();

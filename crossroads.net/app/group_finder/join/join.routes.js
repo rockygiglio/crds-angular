@@ -17,7 +17,10 @@
             return Person.getProfile();
           }],
           QuestionDefinitions: function(ParticipantQuestionService) {
-            return ParticipantQuestionService.get().$promise;
+            return ParticipantQuestionService.getQuestions();
+          },
+          LookupDefinitions: function(ParticipantQuestionService) {
+            return ParticipantQuestionService;
           }
         },
         data: {
@@ -44,13 +47,6 @@
         resolve: {
           Results: 'Results'
         },
-        data: {meta: {title: SERIES.title,description: ''}}
-      })
-      .state('group_finder.join.contact', {
-        controller: 'JoinContactCtrl as results',
-        url: '/contact',
-        templateUrl: 'join/join_contact.html',
-        resolve: {},
         data: {meta: {title: SERIES.title,description: ''}}
       })
       ;

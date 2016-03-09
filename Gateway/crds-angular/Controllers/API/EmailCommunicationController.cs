@@ -16,7 +16,6 @@ namespace crds_angular.Controllers.API
             _emailCommunication = emailCommunication;
         }
 
-
         /// <summary>
         /// Send an email to a specific contactId
         /// </summary>

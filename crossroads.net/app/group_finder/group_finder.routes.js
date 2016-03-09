@@ -3,9 +3,9 @@
 
   module.exports = GroupFinderRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES' ];
+  GroupFinderRoutes.$inject = ['$stateProvider', 'SERIES'];
 
-  function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
+  function GroupFinderRoutes($stateProvider, SERIES) {
 
     $stateProvider
       .state('group_finder', {
@@ -33,7 +33,13 @@
         resolve: {
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
-          }]
+          }],
+          StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
+            function(GroupQuestionService, ParticipantQuestionService) {
+              GroupQuestionService.loadQuestions();
+              ParticipantQuestionService.loadQuestions();
+            }
+          ]
         },
         data: {
           isProtected: true,
@@ -48,7 +54,17 @@
         controller: 'GroupInvitationCtrl as invitation',
         url: '/group/join/:groupId',
         templateUrl: 'invitation/invitation.html',
-        resolve: {},
+        resolve: {
+          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
+            return GroupInfo.loadGroupInfo();
+          }],
+          AuthenticatedPerson: ['Person', function(Person) {
+            return Person.getProfile();
+          }],
+          LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
+            return ParticipantQuestionService.getLookup();
+          }]
+        },
         data: {
           isProtected: true,
           meta: {

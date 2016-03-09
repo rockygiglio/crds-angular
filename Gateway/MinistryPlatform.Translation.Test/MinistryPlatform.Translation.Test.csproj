@@ -92,7 +92,7 @@
     <Compile Include="LookupTest.cs" />
     <Compile Include="Services\BulkEmailRepositoryTest.cs" />
     <Compile Include="Services\CommunicationServiceTest.cs" />
-    <Compile Include="Services\ContactAttributeServiceTest.cs" />
+    <Compile Include="Services\ObjectAttributeServiceTest.cs" />
     <Compile Include="Services\ContactRelationshipServiceTest.cs" />
     <Compile Include="Services\EventParticipantServiceTest.cs" />
     <Compile Include="Services\DestinationServiceTest.cs" />
@@ -106,7 +106,9 @@
     <Compile Include="Services\ParticipantServiceTest.cs" />
     <Compile Include="Services\PledgeCampaignServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
+    <Compile Include="Services\ResponseServiceTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />
+    <Compile Include="Services\TaskRepositoryTest.cs" />
     <Compile Include="TranslationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -37,6 +37,7 @@ function htmlReplace(devBuild) {
       search: { js: '/assets/search.js' },
       media: { js: '/assets/media.js' },
       give: { js: '/assets/give.js' },
+      govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' }
     };
   } else {
@@ -54,6 +55,7 @@ function htmlReplace(devBuild) {
       searchjs: assets.search.js,
       mediajs: assets.media.js,
       givejs: assets.give.js,
+      govolunteerjs: assets.govolunteer.js,
       js: assets.main.js
     })).pipe(gulp.dest('./'));
 
@@ -68,6 +70,7 @@ function htmlReplace(devBuild) {
       searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
     })).pipe(gulp.dest('./'));
 
