@@ -96,12 +96,15 @@
            name="phone"
            placeholder="Mobile Phone"
            ng-pattern='volunteerProfile.phoneFormat'
+           required
            ng-model="volunteerProfile.person.mobilePhone">
     <ng-messages for="volunteerProfile.profileForm.phone.$error" ng-if="volunteerProfile.validate('phone')" >
-      <span ng-message='required' ng-if='profile.requireMobilePhone'>
+      <span ng-message='required'>
         <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>
       </span>
-      <span ng-message="pattern"><span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span></span>
+      <span ng-message="pattern">
+        <span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span>
+      </span>
     </ng-messages>
 
   </div>
