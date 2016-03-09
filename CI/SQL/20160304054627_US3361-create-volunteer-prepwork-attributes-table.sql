@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[cr_Registration_PrepWork_Attributes](
 	[Registration_PrepWork_Attribute_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Registration_ID] [int] NOT NULL,
 	[Attribute_ID] [int] NOT NULL,
-	[Spouse_Contact_ID] [int] NULL,
+	[Spouse] [bit] NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_Registration_PrepWork_Attributes] PRIMARY KEY CLUSTERED 
 (
@@ -42,12 +42,3 @@ GO
 
 ALTER TABLE [dbo].[cr_Registration_PrepWork_Attributes] CHECK CONSTRAINT [FK_Registration_PrepWork_Attributes_Registration]
 GO
-
-ALTER TABLE [dbo].[cr_Registration_PrepWork_Attributes]  WITH CHECK ADD  CONSTRAINT [FK_Registration_PrepWork_Attributes_Contact] FOREIGN KEY([Spouse_Contact_ID])
-REFERENCES [dbo].[Contacts] ([Contact_ID])
-GO
-
-ALTER TABLE [dbo].[cr_Registration_PrepWork_Attributes] CHECK CONSTRAINT [FK_Registration_PrepWork_Attributes_Contact]
-GO
-
-
