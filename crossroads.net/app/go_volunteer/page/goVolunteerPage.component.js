@@ -27,6 +27,7 @@
       vm.showChildrenCount = showChildrenCount;
       vm.showGroupConnector = showGroupConnector;
       vm.showGroupFindConnector = showGroupFindConnector;
+      vm.showConnectorInfo = showConnectorInfo;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -62,6 +63,10 @@
 
       function showGroupFindConnector() {
         return $stateParams.page === 'group-find-connector';
+      }
+
+      function showConnectorInfo() {
+        return $stateParams.page === 'be-a-connector';
       }
 
     }
