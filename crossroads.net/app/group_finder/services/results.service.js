@@ -3,67 +3,60 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', 'Responses'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS, Responses) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS) {
     var requestPromise = null;
     var results = {};
     var groups = [];
 
-    results.responses = Responses;
     results.loadResults = loadResults;
     results.clearData = clearData;
     results.getResults = getResults;
 
-    function loadResults() {
+    function loadResults(participant) {
       if (!requestPromise) {
-        if (_.has(results.responses.data, 'completed_flow') && results.responses.data.completed_flow === true) {
 
-          var participant = {
-            singleAttributes: Responses.getSingleAttributes(),
-            attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
-          };
-          requestPromise = Group.Search.save({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, participant).$promise;
-          requestPromise.then(function(results) {
-            clearData();
+        requestPromise = Group.Search.save({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, participant).$promise;
+        requestPromise.then(function(results) {
+          clearData();
 
-            groups = results.slice(0,12);
+          groups = results.slice(0,12);
 
-            _.each(groups, function(group) {
-              group.time = displayTime(group.meetingDayId, group.meetingTime);
-              group.description = group.groupDescription;
-              group.id = group.groupId;
-              group.groupTitle = groupTitle(group.contactName);
-              group.mapLink = Address.mapLink(group.address);
+          _.each(groups, function(group) {
+            group.time = displayTime(group.meetingDayId, group.meetingTime);
+            group.description = group.groupDescription;
+            group.id = group.groupId;
+            group.groupTitle = groupTitle(group.contactName);
+            group.mapLink = Address.mapLink(group.address);
 
-              if (_.has(group.singleAttributes, '73' ) ) {
-                group.groupType = group.singleAttributes[73].attribute.description;
+            if (_.has(group.singleAttributes, '73' ) ) {
+              group.groupType = group.singleAttributes[73].attribute.description;
+            }
+            group.attributes = [];
+
+            //
+            // check attributes for pets and kids
+            //
+            _.each(group.attributeTypes, function(attribute) {
+              if (attribute.name === 'Pets') {
+                _.each(attribute.attributes, function(type) {
+                  if (type.selected && type.name) {
+                    if (type.name.substr('dog')) { group.attributes.push('has a dog'); }
+                    if (type.name.substr('cat')) { group.attributes.push('has a cat'); }
+                  }
+                });
               }
-              group.attributes = [];
-
-              //
-              // check attributes for pets and kids
-              //
-              _.each(group.attributeTypes, function(attribute) {
-                if (attribute.name === 'Pets') {
-                  _.each(attribute.attributes, function(type) {
-                    if (type.selected && type.name) {
-                      if (type.name.substr('dog')) { group.attributes.push('has a dog'); }
-                      if (type.name.substr('cat')) { group.attributes.push('has a cat'); }
-                    }
-                  });
-                }
-                if (attribute.name === 'Kids') {
-                  _.each(attribute.attributes, function(type) {
-                    if (type.selected && type.name.substr('kid')) { group.attributes.push('kids welcome'); }
-                  });
-                }
-              });
+              if (attribute.name === 'Kids') {
+                _.each(attribute.attributes, function(type) {
+                  if (type.selected && type.name.substr('kid')) { group.attributes.push('kids welcome'); }
+                });
+              }
             });
-            console.log(groups);
-
           });
-        }
+
+          return groups;
+        });
       }
 
       return requestPromise;
@@ -84,6 +77,7 @@
     }
 
     function clearData() {
+      requestPromise = null;
       groups = [];
     }
 

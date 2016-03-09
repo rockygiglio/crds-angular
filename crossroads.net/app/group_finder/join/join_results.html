@@ -1,20 +1,33 @@
-<div ng-if="result.results.length <= 0">
-  <div dynamic-content="$root.MESSAGES.groupFinderParticipantNoResults.content | html"></div>
-  <p class="btns text-center">
-    <a class="btn btn-next-question btn-block-mobile" href="#" ui-sref="group_finder.join.questions">Start Over</a>
-  </p>
+<div ng-if="result.loading">
+  Loading...
+</div>
+<div ng-if="!result.loading">
+  <div ng-if="result.error">
+    <h3>Oops, something went wrong.</h3>
+    <p class="btns text-center">
+      <a class="btn btn-next-question btn-block-mobile" href="#" ui-sref="group_finder.join.questions">Start Over</a>
+    </p>
+  </div>
+  <div ng-if="result.results.length <= 0">
+    <div dynamic-content="$root.MESSAGES.groupFinderParticipantNoResults.content | html"></div>
+    <p class="btns text-center">
+      <a class="btn btn-next-question btn-block-mobile" href="#" ui-sref="group_finder.join.questions">Start Over</a>
+    </p>
+  </div>
+
+  <div class="results" ng-if="result.results.length > 0">
+    <div class="text-center" ng-show="result.currentPage == 1" dynamic-content="$root.MESSAGES.groupFinderParticipantResultsHeader.content | html"></div>
+
+    <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
+    <pager ng-model="result.currentPage"
+           total-items="result.results.length"
+           items-per-page="6"
+           previous-text="Back"
+           next-text="Next"
+           template-url="templates/pager.html"></pager>
+    <div dynamic-content="$root.MESSAGES.groupFinderResultsHelp.content | html"></div>
+    <a ng-click="result.noResultsHelp()" class="btn btn-previous-question btn-block-mobile">contact crossroads</a>
+    <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderContactCRDS.content | html"></div>
+  </div>
 </div>
 
-<div class="results" ng-if="result.results.length > 0">
-  <div class="text-center" ng-show="result.currentPage == 1" dynamic-content="$root.MESSAGES.groupFinderParticipantResultsHeader.content | html"></div>
-
-  <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
-  <pager ng-model="result.currentPage"
-         total-items="result.results.length"
-         items-per-page="6"
-         previous-text="Back"
-         next-text="Next"
-         template-url="templates/pager.html"></pager>
-  <a ng-click="result.noResultsHelp()">Not Finding Any Groups?</a>
-  <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderContactCRDS.content | html"></div>
-</div>
