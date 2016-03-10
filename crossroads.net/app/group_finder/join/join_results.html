@@ -1,6 +1,4 @@
-<div ng-if="result.loading">
-  Loading...
-</div>
+<preloader full-screen='true' ng-show="result.loading"> </preloader>
 <div ng-if="!result.loading">
   <div ng-if="result.error">
     <h3>Oops, something went wrong.</h3>

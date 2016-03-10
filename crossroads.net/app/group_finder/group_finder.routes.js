@@ -14,9 +14,7 @@
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
-          StartProfileLoad: ['Person', function(Person) {
-            Person.loadProfile();
-          }]
+
         },
         data: {
           meta: {
@@ -31,6 +29,9 @@
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {
+          StartProfileLoad: ['Person', function(Person) {
+            Person.loadProfile();
+          }],
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
           }],
