@@ -43,8 +43,14 @@
       var lookup = LookupDefinitions.lookup;
 
       var participant = {
-        singleAttributes: Responses.getSingleAttributes(lookup),
-        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'], lookup)
+        address: {
+          addressLine1: Responses.data.location.street,
+          city: Responses.data.location.city,
+          state: Responses.data.location.state,
+          zip: Responses.data.location.zip
+        },
+        singleAttributes: Responses.getSingleAttributes(),
+        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
       };
       vm.resultsPromise = Results.loadResults(participant)
         .then(function displayResults(value) {
