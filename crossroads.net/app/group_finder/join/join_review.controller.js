@@ -39,7 +39,7 @@
     function initialize() {
 
       vm.responses = Responses.data;
-      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
+      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes') || vm.lookupContains(vm.responses.prior_participation, 'once');
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
       vm.rejected = false;
