@@ -16,7 +16,7 @@
       return this.data[definition.key];
     };
 
-    this.getSingleAttributes = function(lookup) {
+    this.getSingleAttributes = function() {
       // all defined single attributes, may or may not exist for all flows
       var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status', 'prior_participation'];
       var results = {};
