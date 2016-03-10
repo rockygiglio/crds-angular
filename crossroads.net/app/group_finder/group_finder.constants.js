@@ -34,7 +34,7 @@
     CONTACT_ID: {
       JOURNEY: 7660256
     },
-    GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg',
+    GOOGLE_API_KEY: __GOOGLE_API_KEY__,
     GROUP_ROLE: {
       HOST: 22,
       PARTICIPANT: 16
