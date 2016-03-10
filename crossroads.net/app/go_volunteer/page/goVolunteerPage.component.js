@@ -34,6 +34,7 @@
       vm.showAvailablePrep = showAvailablePrep;
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
+      vm.showThankYou = showThankYou;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -97,6 +98,10 @@
 
       function showWaiver() {
         return $stateParams.page === 'waiver';
+      }
+
+      function showThankYou() {
+        return $stateParams.page === 'thank-you';
       }
 
     }

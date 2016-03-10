@@ -23,5 +23,6 @@
   require('./additionalInfo');
   require('./availablePrep');
   require('./availablePrepSpouse');
-  require('./waiver');  
+  require('./waiver');
+  require('./thankYou');    
 })();
