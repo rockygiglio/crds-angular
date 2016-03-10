@@ -2,7 +2,7 @@
   'use strict';
 
   var moment = require('moment');
-  
+
   module.exports = VolunteerProfile;
 
   VolunteerProfile.$Inject = ['GoVolunteerService', 'Validation', '$rootScope'];
@@ -11,23 +11,22 @@
     return {
       restrict: 'E',
       scope: {
-        'onSubmit': '&' 
+        onSubmit: '&'
       },
       bindToController: true,
       controller: VolunteerProfileController,
       controllerAs: 'volunteerProfile',
       templateUrl: 'profilePage/goVolunteerProfile.template.html'
     };
-    
-    
+
     function VolunteerProfileController() {
-      
+
       var now = new Date();
 
       var vm = this;
       vm.birthdateOpen = false;
       vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      vm.maxBirthdate = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate());
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.person = GoVolunteerService.person;
@@ -50,13 +49,12 @@
         vm.birthdateOpen = true;
       }
 
-
       function submit() {
         vm.profileForm.$setSubmitted();
-        if(vm.profileForm.$valid){
-          vm.onSubmit({nextState: 'spouse'}); 
+        if (vm.profileForm.$valid) {
+          vm.onSubmit({nextState: 'spouse'});
         } else {
-         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError); 
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
       }
 
