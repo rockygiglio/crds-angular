@@ -77,9 +77,8 @@
         description: vm.responses.description,
         type: vm.lookup[vm.responses.group_type].description,
         attributes: vm.getGroupAttributes(),
-        host: {
-          contactId: AuthenticatedPerson.contactId
-        }
+        editProfilePicture: true,
+        contactId: AuthenticatedPerson.contactId
       };
 
       vm.pending = false;
