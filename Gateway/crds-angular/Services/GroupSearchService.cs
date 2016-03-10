@@ -154,8 +154,9 @@ namespace crds_angular.Services
             //TODO I can't remember if we wanted to force married couples with other married couples or not
             return (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId) ||
                    (groupTypeId == GroupTypeMarriedCouplesAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
-                   (groupTypeId == GroupTypeMenAttributeId && gender.Value.AttributeId == ParticipantGenderManAttributeId) ||
-                   (groupTypeId == GroupTypeWomenAttributeId && gender.Value.AttributeId == ParticipantGenderWomanAttributeId);
+                   (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
+                   (groupTypeId == GroupTypeMenAttributeId && (gender.Value.AttributeId == ParticipantGenderManAttributeId) && (maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId)) ||
+                   (groupTypeId == GroupTypeWomenAttributeId && (gender.Value.AttributeId == ParticipantGenderWomanAttributeId) && (maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId));
         }
 
         private Boolean MatchDayTime(ObjectAttributeTypeDTO weekdayTime, ObjectAttributeTypeDTO weekendTime, int? attributeId)
