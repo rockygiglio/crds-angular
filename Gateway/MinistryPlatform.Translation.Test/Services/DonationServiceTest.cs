@@ -422,8 +422,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[1].DonationAmount, result[1].DonationAmount);
             Assert.AreEqual(mockGPExportData[1].CheckbookId, result[1].CheckbookId);
             Assert.AreEqual(mockGPExportData[1].CashAccount, result[1].CashAccount);
-            Assert.AreEqual(mockGPExportData[1].ReceivableAccount, result[1].ReceivableAccount);
-            Assert.AreEqual(mockGPExportData[1].DistributionAccount, result[1].DistributionAccount);
+            Assert.AreEqual(mockGPExportData[0].ReceivableAccount, result[1].ReceivableAccount);
+            Assert.AreEqual(mockGPExportData[0].DistributionAccount, result[1].DistributionAccount);
             Assert.AreEqual(mockGPExportData[1].Amount, result[1].Amount);
             Assert.AreEqual(mockGPExportData[1].ProgramId, result[1].ProgramId);
             Assert.AreEqual(mockGPExportData[1].ProccessFeeProgramId, result[1].ProccessFeeProgramId);
