@@ -63,7 +63,7 @@
             return Person.getProfile();
           }],
           LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
-            return ParticipantQuestionService.getLookup();
+            return ParticipantQuestionService;
           }]
         },
         data: {

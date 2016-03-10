@@ -40,7 +40,7 @@
 
     vm.groupId = $stateParams.groupId;
     vm.requestPending = true;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.getLookup();
     vm.showInvite = false;
     vm.capacity = 0;
     vm.goToDashboard = goToDashboard;
@@ -68,7 +68,7 @@
           vm.capacity = 1;
 
           // Set capacity to account for invited spouse
-          if (parseInt(vm.responses.relationship_status) === 2) {
+          if (LookupDefinitions.lookupContains(vm.responses.marital_status, 'same group')) {
             vm.capacity = 2;
             vm.showInvite = true;
           }
