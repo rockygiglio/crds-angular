@@ -3,7 +3,7 @@
 
   module.exports = GroupProfileDirective;
 
-  require('./group_profile.html');
+
 
   GroupProfileDirective.$inject = [];
 
@@ -13,7 +13,7 @@
       scope: {
         group: '=?'
       },
-      controller: require('./group_profile.controller'),
+      controller: 'GroupProfileCtrl',
       templateUrl: 'group_profile/group_profile.html'
     };
   }
