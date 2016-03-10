@@ -44,6 +44,8 @@
     };
 
     $scope.nextQuestion = function() {
+      $scope.$broadcast('groupFinderClearError');
+
       if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
@@ -159,11 +161,10 @@
     };
 
     $scope.applyErrors = function() {
-      $scope.$broadcast('groupFinderClearError');
+      $scope.$broadcast('groupFinderShowError');
 
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
-          el.closest('div').addClass('has-error');
           $scope.$broadcast('groupFinderShowError');
         }
         if (el.attr('name') === 'date_and_time[day]') {
@@ -175,7 +176,8 @@
           switch (el.data('input-type')) {
             case 'zip':
               if (el.val() && $scope.validZip(el.val()) === false) {
-                el.closest('div').addClass('has-error');
+                $scope.$broadcast('groupFinderClearError');
+
                 $scope.$broadcast('groupFinderZipError');
               }
           }
