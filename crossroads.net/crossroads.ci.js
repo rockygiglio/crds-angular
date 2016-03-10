@@ -4,6 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var definePlugin = new webpack.DefinePlugin({
   __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
+  __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
   __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
   __STRIPE_PUBKEY__ : JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M')
 });

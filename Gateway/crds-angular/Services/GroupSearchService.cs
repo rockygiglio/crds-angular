@@ -47,6 +47,7 @@ namespace crds_angular.Services
         private readonly int ParticipantGoal2AttributeId;
         private readonly int ParticipantGoal3AttributeId;
         private readonly int ParticipantGoal4AttributeId;
+        private readonly int MaxGroupSearchResults;
         private List<string> _inMarketZipCodes;
 
         public GroupSearchService(IGroupService mpGroupService,
@@ -87,6 +88,7 @@ namespace crds_angular.Services
             ParticipantGoal3AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal3AttributeId");
             ParticipantGoal4AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal4AttributeId");
             _inMarketZipCodes = ParseZipCodes(configurationWrapper.GetConfigValue("InMarketZipCodes"));
+            MaxGroupSearchResults = configurationWrapper.GetConfigIntValue("MaxGroupSearchResults");
         }
 
         private List<string> ParseZipCodes(string zipCodes)
@@ -95,7 +97,7 @@ namespace crds_angular.Services
             return zipCodes.Split(',').ToList();
         }
 
-        public List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
+        public IEnumerable<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
         {
             // Load all groups for potential match
             var mpGroups = _mpGroupService.GetSearchResults(groupTypeId);
@@ -103,7 +105,8 @@ namespace crds_angular.Services
 
             var mpFilteredGroups = FilterSearchResults(participant, mpGroups);
 
-            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes);
+            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes).Take(MaxGroupSearchResults);
+         
             return groups;
         }
 
@@ -151,11 +154,11 @@ namespace crds_angular.Services
 
         private Boolean MatchGroupType(ObjectSingleAttributeDTO gender, ObjectSingleAttributeDTO maritalStatus, int? groupTypeId)
         {
-            //TODO I can't remember if we wanted to force married couples with other married couples or not
             return (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId) ||
                    (groupTypeId == GroupTypeMarriedCouplesAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
-                   (groupTypeId == GroupTypeMenAttributeId && gender.Value.AttributeId == ParticipantGenderManAttributeId) ||
-                   (groupTypeId == GroupTypeWomenAttributeId && gender.Value.AttributeId == ParticipantGenderWomanAttributeId);
+                   (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
+                   (groupTypeId == GroupTypeMenAttributeId && (gender.Value.AttributeId == ParticipantGenderManAttributeId) && (maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId)) ||
+                   (groupTypeId == GroupTypeWomenAttributeId && (gender.Value.AttributeId == ParticipantGenderWomanAttributeId) && (maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId));
         }
 
         private Boolean MatchDayTime(ObjectAttributeTypeDTO weekdayTime, ObjectAttributeTypeDTO weekendTime, int? attributeId)
@@ -282,7 +285,8 @@ namespace crds_angular.Services
                 Selected = selected,
                 StartDate = DateTime.Today,
                 EndDate = null,
-                Notes = string.Empty
+                Notes = string.Empty,
+                Name = mpAttribute.Name
             };
 
             return groupAttribute;

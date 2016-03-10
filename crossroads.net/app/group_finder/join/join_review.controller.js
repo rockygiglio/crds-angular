@@ -32,7 +32,7 @@
     vm.initialize = initialize;
     vm.goToHost = goToHost;
     vm.goToResults = goToResults;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.lookup;
     vm.goBack = goBack;
     vm.lookupContains = LookupDefinitions.lookupContains;
 
@@ -83,7 +83,7 @@
                 state: vm.responses.location.state,
                 zip: vm.responses.location.zip
               },
-              singleAttributes: Responses.getSingleAttributes()
+              singleAttributes: Responses.getSingleAttributes(vm.lookup)
             };
 
             vm.invalidTime = false; // set as an override

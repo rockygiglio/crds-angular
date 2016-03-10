@@ -5,6 +5,6 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IGroupSearchService
     {             
-        List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant);
+        IEnumerable<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant);
     }
 }
