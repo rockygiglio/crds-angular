@@ -47,6 +47,7 @@ namespace crds_angular.Services
         private readonly int ParticipantGoal2AttributeId;
         private readonly int ParticipantGoal3AttributeId;
         private readonly int ParticipantGoal4AttributeId;
+        private readonly int MaxGroupSearchResults;
         private List<string> _inMarketZipCodes;
 
         public GroupSearchService(IGroupService mpGroupService,
@@ -87,6 +88,7 @@ namespace crds_angular.Services
             ParticipantGoal3AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal3AttributeId");
             ParticipantGoal4AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal4AttributeId");
             _inMarketZipCodes = ParseZipCodes(configurationWrapper.GetConfigValue("InMarketZipCodes"));
+            MaxGroupSearchResults = configurationWrapper.GetConfigIntValue("MaxGroupSearchResults");
         }
 
         private List<string> ParseZipCodes(string zipCodes)
@@ -95,7 +97,7 @@ namespace crds_angular.Services
             return zipCodes.Split(',').ToList();
         }
 
-        public List<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
+        public IEnumerable<GroupDTO> FindMatches(int groupTypeId, GroupParticipantDTO participant)
         {
             // Load all groups for potential match
             var mpGroups = _mpGroupService.GetSearchResults(groupTypeId);
@@ -103,7 +105,8 @@ namespace crds_angular.Services
 
             var mpFilteredGroups = FilterSearchResults(participant, mpGroups);
 
-            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes);
+            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes).Take(MaxGroupSearchResults);
+         
             return groups;
         }
 
