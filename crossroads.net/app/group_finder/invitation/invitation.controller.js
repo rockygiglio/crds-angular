@@ -74,9 +74,24 @@
           }
         }
 
-        GroupInvitationService.acceptInvitation(vm.groupId,
-          {capacity: vm.capacity, groupRoleId: GROUP_ROLE.PARTICIPANT}
-          )
+        var participant = {
+          capacityNeeded: vm.capacity,
+          groupRoleId: GROUP_ROLE.PARTICIPANT,
+          attributeTypes: {}
+        };
+        if (_.has(Responses.data, 'completed_flow')) {
+          if (_.has(Responses.data, 'location')) {
+            participant.address = {
+              addressLine1: Responses.data.location.street,
+              city: Responses.data.location.city,
+              state: Responses.data.location.state,
+              zip: Responses.data.location.zip
+            };
+          }
+          participant.singleAttributes = Responses.getSingleAttributes();
+        }
+
+        GroupInvitationService.acceptInvitation(vm.groupId, participant)
           .then(function invitationAccepted() {
             // Invitation acceptance was successful
             vm.accepted = true;
@@ -148,6 +163,10 @@
             vm.requestPending = false;
             Responses.clear();
           });
+
+        //  singleAttributes: ,
+        //  attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
+        //};
       }
     }
 
