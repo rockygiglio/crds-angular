@@ -30,6 +30,8 @@
       vm.showConnectorInfo = showConnectorInfo;
       vm.showUniqueSkills = showUniqueSkills;
       vm.showEquipment = showEquipment;
+      vm.showAdditionalInfo = showAdditionalInfo;
+      vm.showAvailablePrep = showAvailablePrep;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -77,6 +79,14 @@
 
       function showEquipment() {
         return $stateParams.page === 'equipment';
+      }
+
+      function showAdditionalInfo() {
+        return $stateParams.page === 'additional-info';
+      }
+
+      function showAvailablePrep() {
+        return $stateParams.page === 'available-prep';
       }
 
     }

@@ -4,16 +4,54 @@
   </div>
 </div>
 <h2>Do you have special equipment that can be used on your project?</h2>
-
+<p>
+  We don't care about the hammer you bought from Target. Only list things that require a license or can seriously injure people.
+</p>
 <form>
   <div class="row">
-
+    <div class="col-xs-12">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="">
+          Backhoe
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="">
+          Ladder
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="">
+          Jazzy
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" ng-click="otherField = !otherField">
+          Other
+        </label>
+      </div>
+    </div>
   </div>
-
+  <div class="row push-bottom" ng-show="otherField">
+    <div class="col-xs-11">
+      <input type="text" class="form-control" />
+    </div>
+    <div class="col-xs-1 text-left hard-left">
+      <a href="#" tooltip="Add another item" tooltip-placement="top" class="add-text-input-row">
+        <svg viewBox="0 0 32 32" class="icon icon-plus4 icon-large">
+        	<use xlink:href="#plus4"></use>
+        </svg>
+      </a>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-xs-12">
-      <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'group-connector'})">Next</button>
+      <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'additional-info'})">Next</button>
     </div>
   </div>
 </form>

@@ -19,6 +19,8 @@
   require('./groupFindConnector');
   require('./connectorInfo');
   require('./uniqueSkills');
-  require('./equipment');  
+  require('./equipment');
+  require('./additionalInfo');
+  require('./availablePrep');  
 
 })();
