@@ -98,21 +98,20 @@
     </div>
 
     <div class="form-group col-xs-6" ng-class="{'has-error': volunteerProfile.validate('phone')}">
+      <label>Mobile Phone</label>
       <input type="text"
              class="form-control"
              name="phone"
-             placeholder="Mobile Phone"
+             placeholder="Enter mobile phone"
              ng-pattern='volunteerProfile.phoneFormat'
-             required
              ng-model="volunteerProfile.person.mobilePhone">
       <ng-messages for="volunteerProfile.profileForm.phone.$error" ng-if="volunteerProfile.validate('phone')" >
-        <span ng-message='required'>
+        <span ng-message='required' ng-if='profile.requireMobilePhone'>
           <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>
         </span>
-        <span ng-message="pattern">
-          <span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span>
-        </span>
+        <span ng-message="pattern"><span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span></span>
       </ng-messages>
+
     </div>
 
     <div class="col-xs-12">
