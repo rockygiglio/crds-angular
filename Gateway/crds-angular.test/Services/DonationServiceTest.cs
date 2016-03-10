@@ -1558,7 +1558,7 @@ namespace crds_angular.test.Services
                                  d.DonorAcctId.Equals(donorAccountId + "") &&
                                  d.CheckScannerBatchName == null &&
                                  d.DonationStatus == donationStatus &&
-                                 d.CheckNumber == null), true)).Returns(123);
+                                 d.CheckNumber == null), false)).Returns(123);
 
             _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
