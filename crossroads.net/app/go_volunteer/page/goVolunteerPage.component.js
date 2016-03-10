@@ -32,6 +32,8 @@
       vm.showEquipment = showEquipment;
       vm.showAdditionalInfo = showAdditionalInfo;
       vm.showAvailablePrep = showAvailablePrep;
+      vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
+      vm.showWaiver = showWaiver;
 
       function showProfile() {
         return $stateParams.page === 'profile';
@@ -87,6 +89,14 @@
 
       function showAvailablePrep() {
         return $stateParams.page === 'available-prep';
+      }
+
+      function showAvailablePrepSpouse() {
+        return $stateParams.page === 'available-prep-spouse';
+      }
+
+      function showWaiver() {
+        return $stateParams.page === 'waiver';
       }
 
     }

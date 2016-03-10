@@ -21,6 +21,7 @@
   require('./uniqueSkills');
   require('./equipment');
   require('./additionalInfo');
-  require('./availablePrep');  
-
+  require('./availablePrep');
+  require('./availablePrepSpouse');
+  require('./waiver');  
 })();
