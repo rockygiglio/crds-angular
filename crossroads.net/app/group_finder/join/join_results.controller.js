@@ -55,7 +55,7 @@
           });
 
         })
-        .catch(function error(error) {
+        .catch(function(error) {
           console.log('Search Result Error:', error);
           vm.error = true;
           vm.loading = false;
