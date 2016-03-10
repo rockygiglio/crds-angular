@@ -13,22 +13,22 @@ VALUES(2215,'Current Journey Anywhere Group',316,'BRAVE Journey participants tha
  FROM Group_Participant_Attributes GPA, Attributes A 
  where GPA.Attribute_ID = A.Attribute_ID and 
 GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-Attribute_Type_ID = 76) AS ''Gender''
+Attribute_Type_ID = 76) AS [Gender]
 ,(SELECT Attribute_Name 
  FROM Group_Participant_Attributes GPA, Attributes A 
  where GPA.Attribute_ID = A.Attribute_ID and 
 GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-Attribute_Type_ID = 77) AS ''Marital Status''
+Attribute_Type_ID = 77) AS [Marital Status]
 ,(SELECT Attribute_Name 
  FROM Group_Participant_Attributes GPA, Attributes A 
  where GPA.Attribute_ID = A.Attribute_ID and 
 GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-Attribute_Type_ID = 70) AS ''Group Participant Past Experience''
+Attribute_Type_ID = 70) AS [Group Participant Past Experience]
 ,(SELECT Attribute_Name 
  FROM Group_Participant_Attributes GPA, Attributes A 
  where GPA.Attribute_ID = A.Attribute_ID and 
 GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-Attribute_Type_ID = 72) AS ''Group Participant Goal''
+Attribute_Type_ID = 72) AS [Group Participant Goal]
 ,STUFF((SELECT '', '' + Attribute_Name 
      FROM Group_Participant_Attributes GPA
       INNER JOIN Attributes A ON A.Attribute_ID = GPA.Attribute_ID	
