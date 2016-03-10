@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-sm-12">
+    <progressbar value="15"></progressbar>
+  </div>
+</div>
+<h2>What is your second choice of three project preference?</h2>
+<form>
+  <div class="row">
+    <div class="col-xs-12">
+      <a style="white-space:normal !important;" class="btn btn-standard btn-block push-half-bottom {{item.state}}" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})" ng-repeat="item in goProjectPrefTwo.list">
+        {{item.title}}
+        <br>
+        <span class="small text-muted">Min Age: 8</span>
+      </a>
+    </div>
+  </div>
+</form>

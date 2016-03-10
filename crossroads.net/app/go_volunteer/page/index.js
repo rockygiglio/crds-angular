@@ -18,11 +18,14 @@
   require('./groupConnector');
   require('./groupFindConnector');
   require('./connectorInfo');
+  require('./launchSite');
+  require('./projectPrefOne');
+  require('./projectPrefTwo');
   require('./uniqueSkills');
   require('./equipment');
   require('./additionalInfo');
   require('./availablePrep');
   require('./availablePrepSpouse');
   require('./waiver');
-  require('./thankYou');    
+  require('./thankYou');
 })();

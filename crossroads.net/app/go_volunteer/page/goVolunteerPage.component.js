@@ -28,6 +28,9 @@
       vm.showGroupConnector = showGroupConnector;
       vm.showGroupFindConnector = showGroupFindConnector;
       vm.showConnectorInfo = showConnectorInfo;
+      vm.showLaunchSite = showLaunchSite;
+      vm.showProjectPrefOne = showProjectPrefOne;
+      vm.showProjectPrefTwo = showProjectPrefTwo;
       vm.showUniqueSkills = showUniqueSkills;
       vm.showEquipment = showEquipment;
       vm.showAdditionalInfo = showAdditionalInfo;
@@ -74,6 +77,18 @@
 
       function showConnectorInfo() {
         return $stateParams.page === 'be-a-connector';
+      }
+
+      function showLaunchSite() {
+        return $stateParams.page === 'launch-site';
+      }
+
+      function showProjectPrefOne() {
+        return $stateParams.page === 'project-preference-one';
+      }
+
+      function showProjectPrefTwo() {
+        return $stateParams.page === 'project-preference-two';
       }
 
       function showUniqueSkills() {
