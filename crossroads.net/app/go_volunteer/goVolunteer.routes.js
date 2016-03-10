@@ -10,6 +10,8 @@
     //$urlMatcherFactory.strictMode(false);
     crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'goVolunteerRouteType', /\/go-volunteer\/.*$/);
 
+    $urlMatcherFactory.caseInsensitive(true);
+
     $stateProvider
       .state('go-volunteer', {
         parent: 'noHeaderOrFooter',
@@ -66,30 +68,7 @@
           Meta: Meta
         }
       })
-     /* .state('go-volunteer.crossroadsprofile', { */
-        //parent: 'go-volunteer',
-        //url: '/go-volunteer/cincinnati/crossroads/profile',
-        //template: '<go-volunteer-page></go-volunteer-page>',
-        //data: {
-          //meta: {
-            //title: 'Some Title', 
-            //description: ''
-          //},
-          //isProtected: true
-        //},
-        //resolve: {
-          //Meta: Meta,
-          //loggedin: crds_utilities.checkLoggedin,
-          //Profile: 'Profile',
-          //$cookies: '$cookies',
-          //$stateParams: '$stateParams',
-          //$state: '$state',
-          //$q: '$q',
-          //GoVolunteerService: 'GoVolunteerService',
-          //Person: Person
-        //}
-      /*})*/
-      .state('go-volunteer.crossroadspage', {
+     .state('go-volunteer.crossroadspage', {
         parent: 'go-volunteer',
         url: '/go-volunteer/cincinnati/crossroads/:page',
         template: '<go-volunteer-page></go-volunteer-page>',
@@ -184,6 +163,10 @@
     return deferred.promise;
   }
 
+  function Organization(GoVolunteerService, $stateParams, $q, crossroads) {
+    var deferred = $q.defer();
+  }
+  
   function buildLink(city, org, state) {
     var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city); 
     if (state.next.name === 'go-volunteer.city.organizations') {
