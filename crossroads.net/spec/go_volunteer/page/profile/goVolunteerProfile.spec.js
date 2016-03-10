@@ -38,7 +38,7 @@ describe('Go Volunteer Profile Page Component', function() {
     spyOn($rootScope, '$emit').and.callThrough();
 
     GoVolunteerService = $injector.get('GoVolunteerService');
-    GoVolunteerService.person = helpers.person;
+    GoVolunteerService.person = angular.copy(helpers.person);
 
     Validation = $injector.get('Validation');
 
@@ -57,6 +57,25 @@ describe('Go Volunteer Profile Page Component', function() {
     isolatedScope.submit();
     expect($rootScope.$emit).toHaveBeenCalledWith('notify', 'generalError');
     expect(isolatedScope.profileForm.firstName.$error.required).toBeTruthy();
+  });
+
+  it('should fail if age is less than 18', function() {
+    scope.$digest();
+    var isolatedScope = element.isolateScope().volunteerProfile;
+    var now = new Date();
+    var fiveYearsAgo = now.getFullYear() - 5;
+    var under18 = '11/20/' + fiveYearsAgo + '';
+
+    isolatedScope.profileForm.firstName.$setViewValue(helpers.person.firstName);
+    isolatedScope.profileForm.lastName.$setViewValue(helpers.person.lastName);
+    isolatedScope.profileForm.email.$setViewValue(helpers.person.emailAddress);
+    isolatedScope.profileForm.birthdate.$setViewValue(under18);
+    isolatedScope.profileForm.phone.$setViewValue(helpers.person.mobilePhone);
+
+    isolatedScope.submit();
+
+    expect($rootScope.$emit).toHaveBeenCalledWith('notify', 'generalError');
+    expect(isolatedScope.profileForm.birthdate.$error.maxDate).toBeTruthy();
   });
 
   it('should show an error message if the form is invalid', function() {
