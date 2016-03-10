@@ -24,6 +24,7 @@
           groups = results.slice(0,12);
 
           _.each(groups, function(group) {
+            group.editProfilePicture = false;
             group.time = displayTime(group.meetingDayId, group.meetingTime);
             group.description = group.groupDescription;
             group.id = group.groupId;
