@@ -6,7 +6,7 @@ require('../../../../app/go_volunteer/goVolunteer.module');
 
 describe('Go Volunteer Profile Page Component', function() {
   var CONSTANTS = require('crds-constants');
-  var MODULE = CONSTANTS.MODULES.GO_VOLUNTEER; 
+  var MODULE = CONSTANTS.MODULES.GO_VOLUNTEER;
 
   var helpers = require('../../goVolunteer.helpers');
 
@@ -49,8 +49,8 @@ describe('Go Volunteer Profile Page Component', function() {
     element = '<go-volunteer-profile on-submit="ctrl.onSubmit(newState)"></go-volunteer-profile>';
     element = $compile(element)(scope);
   }));
- 
-  it('should fail if firstName is empty', function (){
+
+  it('should fail if firstName is empty', function() {
     scope.$digest();
     var isolatedScope = element.isolateScope().volunteerProfile;
     isolatedScope.profileForm.firstName.$setViewValue(null);
@@ -67,7 +67,7 @@ describe('Go Volunteer Profile Page Component', function() {
     expect($rootScope.$emit).toHaveBeenCalledWith('notify', 'generalError');
     isolatedScope.profileForm.firstName.$setViewValue(helpers.person.firstName);
   });
-  
+
   it('should call the onSubmit callback', function() {
     scope.$digest();
     var isolatedScope = element.isolateScope().volunteerProfile;
@@ -76,10 +76,10 @@ describe('Go Volunteer Profile Page Component', function() {
     isolatedScope.profileForm.email.$setViewValue(helpers.person.emailAddress);
     isolatedScope.profileForm.birthdate.$setViewValue(helpers.person.dateOfBirth);
     isolatedScope.profileForm.phone.$setViewValue(helpers.person.mobilePhone);
-    
+
     isolatedScope.submit();
-    
-    expect(isolatedScope.profileForm.lastName.$error.required).toBeFalsy(); 
+
+    expect(isolatedScope.profileForm.lastName.$error.required).toBeFalsy();
     expect(scope.ctrl.onSubmit).toHaveBeenCalled();
   });
 
