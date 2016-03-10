@@ -151,7 +151,6 @@ namespace crds_angular.Services
 
         private Boolean MatchGroupType(ObjectSingleAttributeDTO gender, ObjectSingleAttributeDTO maritalStatus, int? groupTypeId)
         {
-            //TODO I can't remember if we wanted to force married couples with other married couples or not
             return (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId != ParticipantJourneyTogetherAttributeId) ||
                    (groupTypeId == GroupTypeMarriedCouplesAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
                    (groupTypeId == GroupTypeMixedAttributeId && maritalStatus.Value.AttributeId == ParticipantJourneyTogetherAttributeId) ||
