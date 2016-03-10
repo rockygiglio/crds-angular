@@ -14,6 +14,7 @@
       imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/chuck-mingo.jpg',
       attributes: ['kids welcome', 'has cats'],
       host: { contactId: 12345 },
+      editProfilePicture: false,
       description: 'Hi, I\'m Chuck. I’m 37 years old, married and a dad to three adventurous kids. ' +
         'I like to run marathons, watch the Philadelphia Eagles (when they’re good) and I really like to smile. ' +
         'This is my fourth time hosting a group and I’m looking forward to connecting with some new people and getting BRAVE. ' +
@@ -22,9 +23,6 @@
 
 
     var responses = Responses.data;
-    if (_.has(responses, 'completed_flow') === false) {
-      $state.go('group_finder.join.questions');
-    }
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
     $scope.group = $scope.displayDefaultGroup ? $scope.defaultGroup : $scope.group;
@@ -34,7 +32,7 @@
       if($scope.displayDefaultGroup) {
         return $scope.defaultGroup.imageUrl;
       } else {
-        return ImageService.ProfileImageBaseURL + $scope.host.contactId;
+        return ImageService.ProfileImageBaseURL + $scope.group.contactId;
       }
     };
 
@@ -42,7 +40,7 @@
       return ImageService.DefaultProfileImage;
     };
 
-    if ($scope.group && responses.location) {
+    if (!$scope.displayDefaultGroup && $scope.group.address && responses.location) {
       var hostAddress = $scope.group.address.addressLine1 + ', ' +
           $scope.group.address.city + ', ' +
           $scope.group.address.state + ', ' +
@@ -60,14 +58,20 @@
             return distance + ' miles away from you';
           }
         };
-      }, function(error) {
-        $scope.getGroupDistance = function() { return ''; };
-      });
+      }, defaultDistance);
+    } else {
+      defaultDistance();
     }
 
     $scope.getGroupType = function() {
       return $scope.group.type;
     };
+
+    function defaultDistance() {
+      $scope.getGroupDistance = function() {
+        return '0 miles away from you';
+      };
+    }
 
   }
 

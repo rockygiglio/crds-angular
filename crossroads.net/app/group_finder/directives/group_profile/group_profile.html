@@ -2,8 +2,8 @@
   <header>
     <div class="media">
       <div class="media-left">
-        <img ng-if="displayDefaultGroup" class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
-        <profile-picture ng-if="!displayDefaultGroup && group.contactId"
+        <img ng-if="displayDefaultGroup || !group.editProfilePicture" class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
+        <profile-picture ng-if="!displayDefaultGroup && group.editProfilePicture"
                          contact-id="group.contactId"
                          wrapper-class="group-profile-picture"
                          image-class="pull-left img-responsive img-circle"
