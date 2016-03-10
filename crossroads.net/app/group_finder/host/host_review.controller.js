@@ -136,7 +136,7 @@
           zip: vm.responses.location.zip
         };
 
-        group.singleAttributes = Responses.getSingleAttributes();
+        group.singleAttributes = Responses.getSingleAttributes(vm.lookup);
 
         var attributes = [];
         var petAttributeTypeId = null;

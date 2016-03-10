@@ -3,9 +3,9 @@
 
   module.exports = ResponseService;
 
-  ResponseService.$inject = ['ParticipantQuestionService'];
+  ResponseService.$inject = [];
 
-  function ResponseService(ParticipantQuestionService) {
+  function ResponseService() {
     this.data = {};
 
     this.clear = function(){
@@ -16,7 +16,7 @@
       return this.data[definition.key];
     };
 
-    this.getSingleAttributes = function() {
+    this.getSingleAttributes = function(lookup) {
       // all defined single attributes, may or may not exist for all flows
       var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status', 'prior_participation'];
       var results = {};
@@ -26,12 +26,12 @@
           var attributeTypeId = this.lookup[answer].attributeTypeId;
           results[attributeTypeId] = {'attribute': {'attributeId': answer}};
         }
-      }, {responses: this.data, lookup: ParticipantQuestionService.lookup});
+      }, {responses: this.data, lookup: lookup});
 
       return results;
     };
 
-    this.getMultiAttributes = function(attributes) {
+    this.getMultiAttributes = function(attributes, lookup ) {
       var results = {};
       _.each(attributes, function(index) {
         if (_.has(this.responses, index)) {
@@ -47,7 +47,7 @@
             }
           }, {lookup: this.lookup});
         }
-      }, {responses: this.data, lookup: ParticipantQuestionService.lookup});
+      }, {responses: this.data, lookup: lookup});
 
       return results;
     };

@@ -9,7 +9,8 @@
     '$anchorScroll',
     'GROUP_ID',
     '$state',
-    'Responses'
+    'Responses',
+    'LookupDefinitions'
   ];
 
   function JoinResultsCtrl(Results,
@@ -17,7 +18,8 @@
                            $anchorScroll,
                            GROUP_ID,
                            $state,
-                           Responses
+                           Responses,
+                           LookupDefinitions
   ) {
     var vm = this;
 
@@ -38,9 +40,11 @@
 
       Results.clearData();
 
+      var lookup = LookupDefinitions.lookup;
+
       var participant = {
-        singleAttributes: Responses.getSingleAttributes(),
-        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
+        singleAttributes: Responses.getSingleAttributes(lookup),
+        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'], lookup)
       };
       vm.resultsPromise = Results.loadResults(participant)
         .then(function displayResults(value) {
