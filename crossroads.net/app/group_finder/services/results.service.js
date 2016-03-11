@@ -21,9 +21,7 @@
         requestPromise.then(function(results) {
           clearData();
 
-          groups = results.slice(0,12);
-
-          _.each(groups, function(group) {
+          groups = _.map(results, function(group) {
             group.editProfilePicture = false;
             group.time = displayTime(group.meetingDayId, group.meetingTime);
             group.description = group.groupDescription;
@@ -54,6 +52,7 @@
                 });
               }
             });
+            return group;
           });
 
           return groups;
