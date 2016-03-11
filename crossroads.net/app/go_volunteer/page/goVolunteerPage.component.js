@@ -31,6 +31,7 @@
       vm.showLaunchSite = showLaunchSite;
       vm.showProjectPrefOne = showProjectPrefOne;
       vm.showProjectPrefTwo = showProjectPrefTwo;
+      vm.showProjectPrefThree = showProjectPrefThree;
       vm.showUniqueSkills = showUniqueSkills;
       vm.showEquipment = showEquipment;
       vm.showAdditionalInfo = showAdditionalInfo;
@@ -89,6 +90,10 @@
 
       function showProjectPrefTwo() {
         return $stateParams.page === 'project-preference-two';
+      }
+
+      function showProjectPrefThree() {
+        return $stateParams.page === 'project-preference-three';
       }
 
       function showUniqueSkills() {

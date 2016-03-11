@@ -21,6 +21,7 @@
   require('./launchSite');
   require('./projectPrefOne');
   require('./projectPrefTwo');
+  require('./projectPrefThree');
   require('./uniqueSkills');
   require('./equipment');
   require('./additionalInfo');
