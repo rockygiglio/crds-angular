@@ -137,12 +137,22 @@
             emailAddress: person.email,
             firstName: person.nickName,
             lastName: person.lastName,
-            affinities: person.attributes
+            affinities: parseAffinity(person.singleAttributes)
           });
         });
 
         group.members = members;
       });
+    }
+
+    function parseAffinity(attributes) {
+      return _.compact(
+        _.map(attributes, function(attributeType) {
+          if (_.has(attributeType.attribute, 'description') && attributeType.attribute.description) {
+            return attributeType.attribute.description;
+          }
+        })
+      );
     }
 
     function parseContactName(group) {

@@ -2,8 +2,9 @@
 
 <div ui-view class="dashboard">
   <div class="container">
+    <preloader full-screen='true' ng-show="dashboard.loading"></preloader>
 
-    <div class="groups hosting" ng-if="dashboard.groups.hosting.length > 0">
+    <div class="groups hosting" ng-if="dashboard.groups.hosting.length > 0 && !dashboard.loading">
       <div class="page-header">
         <h3>Groups you're hosting</h3>
       </div>
@@ -15,7 +16,7 @@
       <p><a class="btn btn-standard-dark btn-block" ui-sref="group_finder.host({ step: 1 })">Host Another Group</a></p>
     </div>
 
-    <div class="groups participating">
+    <div class="groups participating" ng-if="!dashboard.loading">
       <div class="page-header">
         <h3>Groups you've joined</h3>
       </div>
