@@ -88,7 +88,7 @@
               zip: Responses.data.location.zip
             };
           }
-          participant.singleAttributes = Responses.getSingleAttributes();
+          participant.singleAttributes = Responses.getSingleAttributes(vm.lookup);
         }
 
         GroupInvitationService.acceptInvitation(vm.groupId, participant)
