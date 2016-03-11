@@ -49,8 +49,8 @@
           state: Responses.data.location.state,
           zip: Responses.data.location.zip
         },
-        singleAttributes: Responses.getSingleAttributes(),
-        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
+        singleAttributes: Responses.getSingleAttributes(lookup),
+        attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'], lookup)
       };
       vm.resultsPromise = Results.loadResults(participant)
         .then(function displayResults(value) {
