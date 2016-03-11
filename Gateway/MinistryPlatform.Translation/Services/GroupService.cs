@@ -253,6 +253,7 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(record => new GroupSearchResult()
             {
                 GroupId = record.ToInt("Group_ID"),
+                ContactId = record.ToInt("Contact_Id"),
                 Name = record.ToString("Group_Name"),
                 GroupDescription = record.ToString("Description"),
                 StartDate = record.ToDate("Start_Date"),
