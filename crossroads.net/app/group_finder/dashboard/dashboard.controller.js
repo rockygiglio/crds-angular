@@ -22,6 +22,7 @@
     var vm = this;
 
     vm.person = AuthenticatedPerson;
+    vm.name = AuthenticatedPerson.nickName;
     vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
     vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;

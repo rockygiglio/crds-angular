@@ -9,8 +9,6 @@
     var vm = this;
 
     vm.participant_role_id = GROUP_ROLE.PARTICIPANT;
-
-    vm.hostName = AuthenticatedPerson.nickName;
     vm.loading = true;
     vm.emailGroup = emailGroup;
 
