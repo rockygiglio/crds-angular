@@ -163,10 +163,6 @@
             vm.requestPending = false;
             Responses.clear();
           });
-
-        //  singleAttributes: ,
-        //  attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'])
-        //};
       }
     }
 
