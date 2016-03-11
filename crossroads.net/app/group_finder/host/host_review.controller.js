@@ -17,7 +17,7 @@
     'Email',
     '$log',
     'GroupInvitationService',
-    'GROUP_ROLE_ID_HOST',
+    'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
     'SERIES'
@@ -36,7 +36,7 @@
                           Email,
                           $log,
                           GroupInvitationService,
-                          GROUP_ROLE_ID_HOST,
+                          GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
                           SERIES) {
@@ -47,10 +47,10 @@
     vm.invalidTime = false;
     vm.responses = Responses.data;
     vm.host = AuthenticatedPerson;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.lookup;
     vm.startOver = startOver;
     vm.publish = publish;
-    vm.lookupContains = lookupContains;
+    vm.lookupContains = LookupDefinitions.lookupContains;
     vm.getGroupAttributes = getGroupAttributes;
     vm.getGroupTime = getGroupTime;
     vm.formatTime = formatTime;
@@ -77,9 +77,8 @@
         description: vm.responses.description,
         type: vm.lookup[vm.responses.group_type].description,
         attributes: vm.getGroupAttributes(),
-        host: {
-          contactId: AuthenticatedPerson.contactId
-        }
+        editProfilePicture: true,
+        contactId: AuthenticatedPerson.contactId
       };
 
       vm.pending = false;
@@ -121,10 +120,6 @@
       group.waitListInd = false;
       group.childCareInd = false;
 
-      // When and where does the group meet
-      group.meetingDayId = 1;
-
-      group.meetingTime = '';
       group.address = {};
 
       if (vm.isPrivate() === false) {
@@ -141,13 +136,7 @@
           zip: vm.responses.location.zip
         };
 
-        var singleAttributes = ['gender', 'goals', 'group_type', 'kids', 'marital_status'];
-        group.singleAttributes = {};
-        _.each(singleAttributes, function (index) {
-          var answer = this.data[index];
-          var attributeTypeId = this.lookup[answer].attributeTypeId;
-          group.singleAttributes[attributeTypeId] = {'attribute': {'attributeId': answer}};
-        }, {data: vm.responses, lookup: vm.lookup});
+        group.singleAttributes = Responses.getSingleAttributes(vm.lookup);
 
         var attributes = [];
         var petAttributeTypeId = null;
@@ -207,7 +196,7 @@
 
           // User invitation service to add person to that group
           return GroupInvitationService.acceptInvitation(group.groupId,
-            {capacity: capacity, groupRoleId: GROUP_ROLE_ID_HOST, attributes: group.attributes});
+            {capacity: capacity, groupRoleId: GROUP_ROLE.HOST, attributes: group.attributes});
         })
         .then(function hostInviteSuccess() {
             // Reload group to pick up host as member
@@ -222,10 +211,6 @@
             vm.showPublish = false;
             $log.debug('An error occurred while publishing', error);
           });
-    }
-
-    function lookupContains(id, keyword) {
-      return vm.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function getGroupAttributes() {

@@ -42,5 +42,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 
         List<GroupParticipant> GetGroupParticipants(int groupId);
 
+        List<GroupSearchResult> GetSearchResults(int groupTypeId);
     }
 }

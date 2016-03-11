@@ -22,7 +22,7 @@
         { title: 'Artistic Painting', state: '', age: '13' },
         { title: 'Construction', state: '', age: '13' },
         { title: 'Gardening', state: '', age: '2' },
-        { title: 'Landscaping', state: 'disabled', age: '8' },
+        { title: 'Landscaping', state: '', age: '8' },
         { title: 'Organizing and Cleaning', state: '', age: '2' },
         { title: 'Painting', state: '', age: '13' },
         { title: 'Prayer', state: '', age: '2' },
@@ -30,7 +30,7 @@
         { title: 'Working with Children', state: '', age: '2' },
         { title: 'Working with the Elderly', state: '', age: '2' }
       ];
-      
+
     }
   }
 

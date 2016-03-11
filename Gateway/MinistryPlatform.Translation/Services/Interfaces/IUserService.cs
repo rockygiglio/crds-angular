@@ -13,5 +13,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int GetContactIdByUserId(int userId);
         MinistryPlatformUser GetUserByResetToken(string resetToken);
         List<RoleDto> GetUserRoles(int userId);
+
+        MinistryPlatformUser GetUserByRecordId(int recordId);
     }
 }

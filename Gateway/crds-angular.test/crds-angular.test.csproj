@@ -188,6 +188,7 @@
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
+    <Compile Include="Services\GroupSearchServiceTest.cs" />
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\ListHandlerTest.cs" />
     <Compile Include="Services\LoginServiceTest.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Services\StripeEventServiceTest.cs" />
     <Compile Include="Services\StripeServiceTest.cs" />
     <Compile Include="Services\SubscriptionServiceTest.cs" />
+    <Compile Include="Services\TaskServiceTest.cs" />
     <Compile Include="Services\TripServiceTest.cs" />
     <Compile Include="Services\ObjectAttributeServiceTest.cs" />
     <Compile Include="Services\UserImpersonationServiceTest.cs" />

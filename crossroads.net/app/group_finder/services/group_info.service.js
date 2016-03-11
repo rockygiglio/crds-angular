@@ -3,9 +3,9 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
+  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope', 'Address'];
 
-  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
+  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope, Address) {
     var requestPromise = null;
 
     //
@@ -65,6 +65,8 @@
               if (!group.meetingTime || !group.meetingDayId || !group.address) {
                 group.isPrivate = true;
               }
+
+              group.mapLink = Address.mapLink(group.address);
 
               // Parse the host's name
               parseContactName(group);

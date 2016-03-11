@@ -153,6 +153,7 @@
     }, function() {
       deferred.reject();
     });
+
     return deferred.promise;
   }
 
@@ -173,6 +174,7 @@
           GoVolunteerService.person = data;
           deferred.resolve();
         }, function(err) {
+
           console.log(err);
           deferred.reject();
         });
@@ -180,6 +182,7 @@
     } else {
       deferred.resolve();
     }
+
     return deferred.promise;
   }
 
@@ -188,12 +191,11 @@
     if (state.next.name === 'go-volunteer.city.organizations') {
       return base + 'organizations/';
     }
+
     if (org) {
       base = base + addTrailingSlashIfNecessary(org);
     }
     return base;
   }
-
-
 
 })();

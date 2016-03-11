@@ -121,6 +121,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />
     <Compile Include="Services\ContactService.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Services\ResponseService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\SelectionService.cs" />
+    <Compile Include="Services\TaskRepository.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />
     <Compile Include="Utils\MPFormatConversion.cs" />

@@ -108,6 +108,7 @@
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />
+    <Compile Include="Services\TaskRepositoryTest.cs" />
     <Compile Include="TranslationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -5,7 +5,7 @@
 </div>
 <h2>Find your group</h2>
 <p>
-  Can’t find a fit? <a ui-sref="go-volunteer.crossroadspage({page: 'unique-skills'})">Create your own group.</a>
+  Can’t find a fit? <a href="#" ui-sref="go-volunteer.crossroadspage({page: 'unique-skills'})">Create your own group.</a>
 </p>
 
 <form>
@@ -16,84 +16,39 @@
              placeholder="Search">
     </div>
 
-    <div class="col-xs-12">
-      <label class="media card-item media-card-link">
-        <input type="checkbox" role="checkbox" />
-          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-            <div class="media-checked">
-              <svg viewBox="0 0 32 32" class="icon icon-checkmark icon-large center">
-                <use xlink:href="#checkmark"></use>
-              </svg>
-            </div>
-            <img class="media-object img-responsive" src="http://crossroads-media.imgix.net/images/styeguide-images-4.jpg?dpr=2&ixjsv=1.1.2&q=50&w=350" alt="Demo">
-          </div><!--/media-left-->
-          <div class="media-body soft-half-ends soft-half-right">
-            <h4 class="media-heading flush-bottom">John Doe</h4>
-            <p class="flush-bottom">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </p>
-          </div><!--/media-body-->
-      </label><!--/media-card-link-->
-    </div><!--/col-xs-12-->
-
-    <div class="col-xs-12">
-      <label class="media card-item media-card-link">
-        <input type="checkbox" role="checkbox" />
-          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-            <div class="media-checked">
-              <svg viewBox="0 0 32 32" class="icon icon-checkmark icon-large center">
-                <use xlink:href="#checkmark"></use>
-              </svg>
-            </div>
-            <img class="media-object img-responsive" src="http://crossroads-media.imgix.net/images/styeguide-images-2.jpg?dpr=2&ixjsv=1.1.2&q=50&w=350" alt="Demo">
-          </div><!--/media-left-->
-          <div class="media-body soft-half-ends soft-half-right">
-            <h4 class="media-heading flush-bottom">Jane Doe</h4>
-            <p class="flush-bottom">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit sit amet, consectetur adipisicing elit.
-            </p>
-          </div><!--/media-body-->
-      </label><!--/media-card-link-->
-    </div><!--/col-xs-12-->
-
-    <div class="col-xs-12">
-      <label class="media card-item media-card-link disabled">
-        <input type="checkbox" role="checkbox" />
-          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-            <div class="media-checked">
-              <svg viewBox="0 0 32 32" class="icon icon-checkmark icon-large center">
-                <use xlink:href="#checkmark"></use>
-              </svg>
-            </div>
-            <img class="media-object img-responsive" src="http://crossroads-media.imgix.net/images/styeguide-images-3.jpg?dpr=2&ixjsv=1.1.2&q=50&w=350" alt="Demo">
-          </div><!--/media-left-->
-          <div class="media-body soft-half-ends soft-half-right">
-            <div class="media-heading flush-bottom"><h4 class="pull-left flush-ends">Joe Doe</h4><span class="label label-standard-dark">Group Full</span></div>
-            <p class="flush-bottom">
-              Elit sit amet, consectetur adipisicing elit Lorem ipsum dolor sit amet consectetur.
-            </p>
-          </div><!--/media-body-->
-      </label><!--/media-card-link-->
-    </div><!--/col-xs-12-->
-
-    <div class="col-xs-12">
-      <label class="media card-item media-card-link disabled">
-        <input type="checkbox" role="checkbox" />
-          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-            <div class="media-checked">
-              <svg viewBox="0 0 32 32" class="icon icon-checkmark icon-large center">
-                <use xlink:href="#checkmark"></use>
-              </svg>
-            </div>
-            <img class="media-object img-responsive" src="http://crossroads-media.imgix.net/images/styeguide-images-3.jpg?dpr=2&ixjsv=1.1.2&q=50&w=350" alt="Demo">
-          </div><!--/media-left-->
-          <div class="media-body soft-half-ends soft-half-right">
-            <div class="media-heading flush-bottom"><h4 class="pull-left flush-ends">Joe Doe</h4><span class="label label-standard-dark">Age Restricted</span></div>
-            <p class="flush-bottom">
-              Elit sit amet, consectetur adipisicing elit Lorem ipsum dolor sit amet consectetur.
-            </p>
-          </div><!--/media-body-->
-      </label><!--/media-card-link-->
-    </div><!--/col-xs-12-->
+  <div class="col-xs-12">
+    <a href="#" ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h3 class="media-heading flush-bottom">John Doe</h3>
+          <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        </div>
+      </div>
+    </a>
+    <a href="#" ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h3 class="media-heading flush-bottom">John Doe & Susie Doe</h3>
+          <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        </div>
+      </div>
+    </a>
+    <a href="#" ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
+        </div>
+        <div class="media-body soft-half-ends soft-half-right">
+          <h3 class="media-heading flush-bottom">Joe Doe & Brent Stevenson</h3>
+          <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        </div>
+      </div>
+    </a>
   </div>
 </form>
