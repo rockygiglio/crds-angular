@@ -25,11 +25,16 @@
     vm.profileImageBaseUrl = ImageService.ProfileImageBaseURL;
     vm.profileImage = vm.profileImageBaseUrl + vm.person.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
+    vm.loading = true;
 
-    vm.groups = {
-      hosting: GroupInfo.getHosting(),
-      participating: GroupInfo.getParticipating()
-    };
+    vm.resultsPromise = GroupInfo.loadGroupInfo()
+      .then(function displayGroups() {
+        vm.groups = {
+          hosting: GroupInfo.getHosting(),
+          participating: GroupInfo.getParticipating()
+        };
+        vm.loading = false;
+      });
 
     $scope.setGroup = function(group) {
       vm.group = group;

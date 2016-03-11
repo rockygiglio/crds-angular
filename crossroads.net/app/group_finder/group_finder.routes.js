@@ -32,9 +32,6 @@
           StartProfileLoad: ['Person', function(Person) {
             Person.loadProfile();
           }],
-          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
-            return GroupInfo.loadGroupInfo();
-          }],
           StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
             function(GroupQuestionService, ParticipantQuestionService) {
               GroupQuestionService.loadQuestions();
