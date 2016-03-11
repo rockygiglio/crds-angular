@@ -53,7 +53,7 @@
         attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'], lookup)
       };
       vm.resultsPromise = Results.loadResults(participant)
-        .then(function displayResults(value) {
+        .then(function displayResults() {
           vm.results = Results.getResults();
           vm.loading = false;
 
