@@ -40,7 +40,7 @@
 
     vm.groupId = $stateParams.groupId;
     vm.requestPending = true;
-    vm.lookup = LookupDefinitions.getLookup();
+    vm.lookup = LookupDefinitions.lookup;
     vm.showInvite = false;
     vm.capacity = 0;
     vm.goToDashboard = goToDashboard;
@@ -106,6 +106,7 @@
             if (vm.groupHelp) {
               vm.showInvite = false;
               email = {
+                groupId      : GROUP_ID.NO_GROUP,
                 fromContactId: AuthenticatedPerson.contactId,
                 toContactId  : CONTACT_ID.JOURNEY,
                 templateId   : EMAIL_TEMPLATES.NO_GROUP,

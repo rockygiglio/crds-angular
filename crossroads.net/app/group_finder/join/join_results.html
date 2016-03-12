@@ -17,15 +17,10 @@
     <div class="text-center" ng-show="result.currentPage == 1" dynamic-content="$root.MESSAGES.groupFinderParticipantResultsHeader.content | html"></div>
 
     <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
-    <pager ng-model="result.currentPage"
-           total-items="result.results.length"
-           items-per-page="6"
-           previous-text="Back"
-           next-text="Next"
-           template-url="templates/pager.html"></pager>
+    <a ng-show="result.hasResults" ng-click="result.showMore()" href class="btn btn-next-question pull-right">Show More</a>
+    <br />
     <div dynamic-content="$root.MESSAGES.groupFinderResultsHelp.content | html"></div>
     <a ng-click="result.noResultsHelp()" class="btn btn-previous-question btn-block-mobile">contact crossroads</a>
-    <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderContactCRDS.content | html"></div>
   </div>
 </div>
 
