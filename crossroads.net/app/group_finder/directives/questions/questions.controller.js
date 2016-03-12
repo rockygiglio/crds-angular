@@ -144,7 +144,8 @@
                 if(typeof response === 'object') {
                   if(controlName === undefined) {
                     // multi-select value, ie. checkbox
-                    response = Object.keys(response);
+                    var key = Object.keys(response);
+                    response =_.some(response);
                   } else {
                     // compound group of fields, ie. address, date/time, etc.
                     response = response[controlName];
@@ -166,7 +167,7 @@
                   }
                 }
 
-                var hasError = (response === undefined || response === '');
+                var hasError = (response === undefined || response === '' || response === false);
 
                 return hasError ? el : false;
               })

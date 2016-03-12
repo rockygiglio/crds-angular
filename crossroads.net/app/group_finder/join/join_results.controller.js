@@ -5,8 +5,6 @@
 
   JoinResultsCtrl.$inject = [
     'Results',
-    '$scope',
-    '$anchorScroll',
     'GROUP_ID',
     '$state',
     'Responses',
@@ -14,8 +12,6 @@
   ];
 
   function JoinResultsCtrl(Results,
-                           $scope,
-                           $anchorScroll,
                            GROUP_ID,
                            $state,
                            Responses,
@@ -30,7 +26,9 @@
     vm.pending = true;
     vm.startOver = startOver;
     vm.initialize = initialize;
+    vm.showMore = showMore;
     vm.error = false;
+    vm.hasResults = true;
 
     function initialize() {
 
@@ -52,24 +50,25 @@
         singleAttributes: Responses.getSingleAttributes(lookup),
         attributeTypes: Responses.getMultiAttributes(['date_time_week', 'date_time_weekend'], lookup)
       };
+
       vm.resultsPromise = Results.loadResults(participant)
-        .then(function displayResults() {
-          vm.results = Results.getResults();
-          vm.loading = false;
-
-          $scope.$watch('result.currentPage + result.numPerPage', function() {
-            var begin = ((vm.currentPage - 1) * vm.numPerPage);
-            var end = begin + vm.numPerPage;
-            vm.filteredResults = vm.results.slice(begin, end);
-            $anchorScroll();
-          });
-
-        })
+        .then(displayResults)
         .catch(function(error) {
           console.log('Search Result Error:', error);
           vm.error = true;
           vm.loading = false;
         });
+    }
+
+    function showMore() {
+      var start = 0,
+          end = vm.filteredResults.length + 6; // grab the next 6 results
+      vm.filteredResults = vm.results.slice(start, end);
+
+      // hide the "Show More" button if there are no more results
+      if (vm.filteredResults.length === vm.results.length) {
+        vm.hasResults = false;
+      }
     }
 
     function noResultsHelp() {
@@ -79,6 +78,22 @@
     function startOver() {
       Results.clearData();
       $state.go('group_finder.join.questions');
+    }
+
+    function displayResults(results) {
+      // this should get passed if once the $promise completes but just in case...
+      vm.results = results;
+      if (!vm.results) {
+        vm.results = Results.getResults();
+      }
+
+      vm.loading = false;
+
+      // just show the first 6 items
+      vm.filteredResults = vm.results.slice(0, 6);
+
+      // don't display the "Show More" button if there are no more results
+      vm.hasResults =  vm.results.length - vm.filteredResults.length >= 1;
     }
 
     vm.initialize();
