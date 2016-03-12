@@ -32,7 +32,7 @@
       NO_GROUP: 166573
     },
     CONTACT_ID: {
-      JOURNEY: 7660271
+      JOURNEY: 7660256
     },
     GOOGLE_API_KEY: __GOOGLE_API_KEY__,
     GROUP_ROLE: {
