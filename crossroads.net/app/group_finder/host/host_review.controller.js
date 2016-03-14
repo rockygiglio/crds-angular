@@ -20,7 +20,8 @@
     'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
-    'SERIES'
+    'SERIES',
+    'CONTACT_ID'
   ];
 
   function HostReviewCtrl($window,
@@ -39,7 +40,9 @@
                           GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
-                          SERIES) {
+                          SERIES,
+                          CONTACT_ID
+  ) {
     var vm = this;
 
     vm.pending = true;
@@ -173,7 +176,7 @@
           // Send host confirmation emails
           var email = {
             groupId: group.groupId,
-            fromContactId: AuthenticatedPerson.contactId,
+            fromContactId: CONTACT_ID.HOST,
             toContactId: AuthenticatedPerson.contactId
           };
 
