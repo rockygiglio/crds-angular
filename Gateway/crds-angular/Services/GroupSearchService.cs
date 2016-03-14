@@ -38,17 +38,18 @@ namespace crds_angular.Services
         private readonly int GroupPetsDogAttributeId;
         private readonly int GroupPetsCatAttributeId;
 
-        private readonly int GroupGoal1AttributeId;
-        private readonly int GroupGoal2AttributeId;
-        private readonly int GroupGoal3AttributeId;
-        private readonly int GroupGoal4AttributeId;
+        private readonly int GroupGoalConnectWithCommunity;
+        private readonly int GroupGoalMakeFriends;
+        private readonly int GroupGoalLearnAndGrow;
+        private readonly int GroupGoalMentorOthers;
 
-        private readonly int ParticipantGoal1AttributeId;
-        private readonly int ParticipantGoal2AttributeId;
-        private readonly int ParticipantGoal3AttributeId;
-        private readonly int ParticipantGoal4AttributeId;
+        private readonly int ParticipantGoalNotSure;
+        private readonly int ParticipantGoalGrowSpiritually;
+        private readonly int ParticipantGoalLearnFromSomeone;
+        private readonly int ParticipantGoalMakeFriends;
         private readonly int MaxGroupSearchResults;
         private List<string> _inMarketZipCodes;
+        private Dictionary<int, int> _goalMatches;
 
         public GroupSearchService(IGroupService mpGroupService,
                                   IAttributeService attributeService, 
@@ -78,17 +79,25 @@ namespace crds_angular.Services
             GroupPetsCatAttributeId = configurationWrapper.GetConfigIntValue("GroupPetsCatAttributeId");
             GroupPetsDogAttributeId = configurationWrapper.GetConfigIntValue("GroupPetsDogAttributeId");
 
-            GroupGoal1AttributeId = configurationWrapper.GetConfigIntValue("GroupGoal1AttributeId");
-            GroupGoal2AttributeId = configurationWrapper.GetConfigIntValue("GroupGoal2AttributeId");
-            GroupGoal3AttributeId = configurationWrapper.GetConfigIntValue("GroupGoal3AttributeId");
-            GroupGoal4AttributeId = configurationWrapper.GetConfigIntValue("GroupGoal4AttributeId");
+            GroupGoalConnectWithCommunity = configurationWrapper.GetConfigIntValue("GroupGoalConnectWithCommunity");
+            GroupGoalMakeFriends = configurationWrapper.GetConfigIntValue("GroupGoalMakeFriends");
+            GroupGoalLearnAndGrow = configurationWrapper.GetConfigIntValue("GroupGoalLearnAndGrow");
+            GroupGoalMentorOthers = configurationWrapper.GetConfigIntValue("GroupGoalMentorOthers");
 
-            ParticipantGoal1AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal1AttributeId");
-            ParticipantGoal2AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal2AttributeId");
-            ParticipantGoal3AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal3AttributeId");
-            ParticipantGoal4AttributeId = configurationWrapper.GetConfigIntValue("ParticipantGoal4AttributeId");
+            ParticipantGoalNotSure = configurationWrapper.GetConfigIntValue("ParticipantGoalNotSure");
+            ParticipantGoalGrowSpiritually = configurationWrapper.GetConfigIntValue("ParticipantGoalGrowSpiritually");
+            ParticipantGoalLearnFromSomeone = configurationWrapper.GetConfigIntValue("ParticipantGoalLearnFromSomeone");
+            ParticipantGoalMakeFriends = configurationWrapper.GetConfigIntValue("ParticipantGoalMakeFriends");
             _inMarketZipCodes = ParseZipCodes(configurationWrapper.GetConfigValue("InMarketZipCodes"));
             MaxGroupSearchResults = configurationWrapper.GetConfigIntValue("MaxGroupSearchResults");
+
+            _goalMatches = new Dictionary<int, int>()
+            {
+                {GroupGoalConnectWithCommunity, ParticipantGoalNotSure},
+                {GroupGoalMakeFriends, ParticipantGoalMakeFriends},
+                {GroupGoalLearnAndGrow, ParticipantGoalGrowSpiritually},
+                {GroupGoalMentorOthers, ParticipantGoalLearnFromSomeone},
+            };
         }
 
         private List<string> ParseZipCodes(string zipCodes)
@@ -104,8 +113,9 @@ namespace crds_angular.Services
             var mpAttributes = _attributeService.GetAttributes(null);
 
             var mpFilteredGroups = FilterSearchResults(participant, mpGroups);
+            mpFilteredGroups = mpFilteredGroups.Take(MaxGroupSearchResults);
 
-            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes).Take(MaxGroupSearchResults);
+            var groups = ConvertToGroupDto(mpFilteredGroups, mpAttributes);
          
             return groups;
         }
@@ -169,26 +179,19 @@ namespace crds_angular.Services
         }
 
         private Boolean SortGoal(ObjectSingleAttributeDTO participantGoal, int? groupGoalId)
-        {
-            Dictionary<int, int> matching = new Dictionary<int, int>()
-            {
-                {GroupGoal1AttributeId, ParticipantGoal1AttributeId},
-                {GroupGoal2AttributeId, ParticipantGoal2AttributeId},
-                {GroupGoal3AttributeId, ParticipantGoal3AttributeId},
-                {GroupGoal4AttributeId, ParticipantGoal4AttributeId},
-            };
+        {            
 
             if (!groupGoalId.HasValue)
             {
                 return false;
             }
 
-            if (!matching.ContainsKey(groupGoalId.Value))
+            if (!_goalMatches.ContainsKey(groupGoalId.Value))
             {
                 return false;
             }
 
-            return participantGoal.Value.AttributeId == matching[groupGoalId.Value];
+            return participantGoal.Value.AttributeId == _goalMatches[groupGoalId.Value];
         }
 
         private List<GroupDTO> ConvertToGroupDto(IEnumerable<GroupSearchResult> mpGroups, List<Attribute> mpAttributes)
