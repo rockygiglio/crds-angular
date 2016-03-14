@@ -37,7 +37,10 @@
               GroupQuestionService.loadQuestions();
               ParticipantQuestionService.loadQuestions();
             }
-          ]
+          ],
+          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
+            return GroupInfo.loadGroupInfo();
+          }]
         },
         data: {
           isProtected: true,
