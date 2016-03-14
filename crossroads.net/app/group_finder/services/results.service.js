@@ -34,6 +34,7 @@
             }
             group.attributes = [];
 
+
             //
             // check attributes for pets and kids
             //
@@ -52,6 +53,10 @@
                 });
               }
             });
+
+            if (_.has(group.singleAttributes, '75' ) ) {
+              group.attributes.push('kids welcome');
+            }
             return group;
           });
 
