@@ -88,6 +88,7 @@ namespace crds_angular.Services
             ParticipantGoalGrowSpiritually = configurationWrapper.GetConfigIntValue("ParticipantGoalGrowSpiritually");
             ParticipantGoalLearnFromSomeone = configurationWrapper.GetConfigIntValue("ParticipantGoalLearnFromSomeone");
             ParticipantGoalMakeFriends = configurationWrapper.GetConfigIntValue("ParticipantGoalMakeFriends");
+
             _inMarketZipCodes = ParseZipCodes(configurationWrapper.GetConfigValue("InMarketZipCodes"));
             MaxGroupSearchResults = configurationWrapper.GetConfigIntValue("MaxGroupSearchResults");
 
