@@ -1,6 +1,22 @@
-<!-- <select-church></select-church> -->
 <form name="goVolunteerPage.parentForm" novalidate>
   <go-volunteer-spouse ng-if="goVolunteerPage.showSpouse()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-spouse>
   <go-volunteer-profile ng-if="goVolunteerPage.showProfile()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-profile>
   <go-volunteer-org-name ng-if="goVolunteerPage.showOrgName()"> </go-volunteer-org-name>
+  <go-volunteer-spouse-name ng-if="goVolunteerPage.showSpouseName()"> </go-volunteer-spouse-name>
+  <go-volunteer-children ng-if="goVolunteerPage.showChildren()"> </go-volunteer-children>
+  <go-volunteer-children-count ng-if="goVolunteerPage.showChildrenCount()"></go-volunteer-children-count>
+  <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()"></go-volunteer-group-connector>
+  <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()"></go-volunteer-group-find-connector>
+  <go-volunteer-connector-info ng-if="goVolunteerPage.showConnectorInfo()"></go-volunteer-connector-info>
+  <go-volunteer-launch-site ng-if="goVolunteerPage.showLaunchSite()"></go-volunteer-launch-site>
+  <go-volunteer-project-pref-one ng-if="goVolunteerPage.showProjectPrefOne()"></go-volunteer-project-pref-one>
+  <go-volunteer-project-pref-two ng-if="goVolunteerPage.showProjectPrefTwo()"></go-volunteer-project-pref-two>
+  <go-volunteer-project-pref-three ng-if="goVolunteerPage.showProjectPrefThree()"></go-volunteer-project-pref-three>
+  <go-volunteer-unique-skills ng-if="goVolunteerPage.showUniqueSkills()"></go-volunteer-unique-skills>
+  <go-volunteer-equipment ng-if="goVolunteerPage.showEquipment()"></go-volunteer-equipment>
+  <go-volunteer-additional-info ng-if="goVolunteerPage.showAdditionalInfo()"></go-volunteer-additional-info>
+  <go-volunteer-available-prep ng-if="goVolunteerPage.showAvailablePrep()"></go-volunteer-available-prep>
+  <go-volunteer-available-prep-spouse ng-if="goVolunteerPage.showAvailablePrepSpouse()"></go-volunteer-available-prep-spouse>
+  <go-volunteer-waiver ng-if="goVolunteerPage.showWaiver()"></go-volunteer-waiver>
+  <go-volunteer-thank-you ng-if="goVolunteerPage.showThankYou()"></go-volunteer-thank-you>
 </form>
