@@ -18,6 +18,19 @@
     function GoVolunteerUniqueSkillsController() {
       var vm = this;
 
+      vm.list = [
+        { title: "Jack of all trades but not a professional" },
+        { title: "I can design and paint a mural" },
+        { title: "I like to entertain kids" },
+        { title: "I'm a professional carpenter" },
+        { title: "I'm a professional carpet installer" },
+        { title: "I'm a professional contractor" },
+        { title: "I'm a professional electrician" },
+        { title: "I'm a professional landscaper" },
+        { title: "I'm a professional painter" },
+        { title: "I'm a professional plumber" }
+      ];
+
     }
   }
 
