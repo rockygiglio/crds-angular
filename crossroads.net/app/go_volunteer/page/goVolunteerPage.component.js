@@ -32,8 +32,9 @@
 
         } else {
           $state.go('go-volunteer.page', {
-            'city': $stateParams.city,
-            'organization': $stateParams.organization
+            city: $stateParams.city,
+            organization: $stateParams.organization,
+            page: nextState
           });
         }
       }
