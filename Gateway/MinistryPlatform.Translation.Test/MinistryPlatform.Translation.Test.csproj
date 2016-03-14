@@ -62,6 +62,9 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="MvcContrib">
+      <HintPath>..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -103,6 +106,7 @@
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />
     <Compile Include="Services\OpportunityServiceTest.cs" />
+    <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\ParticipantServiceTest.cs" />
     <Compile Include="Services\PledgeCampaignServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />

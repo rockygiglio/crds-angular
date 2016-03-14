@@ -177,6 +177,7 @@
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />
     <Compile Include="Models\Crossroads\Events\EventMapperTest.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\OrganizationTest.cs" />
     <Compile Include="Models\Json\RestHttpActionResultTest.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\ListHandlerTest.cs" />
     <Compile Include="Services\LoginServiceTest.cs" />
+    <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />
