@@ -462,22 +462,29 @@ namespace MinistryPlatform.Translation.Services
 
         private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, decimal processorFee)
         {
-            datum.Amount = datum.Amount - processorFee;
+            if (!datum.DocumentType.Equals("RETURNS"))
+            {
+                datum.Amount = datum.Amount - processorFee;
+            }
+
             return datum;
         }
 
         private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
+            processorFee = processorFee<0 ? -1*processorFee : processorFee;
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
                 ProgramId = _processingProgramId,
-                DocumentType = processingFeeGLMapping.ToString("Document_Type"),
+                DocumentType = datum.DocumentType,
+                DepositId = datum.DepositId,
                 DonationId = datum.DonationId,
                 BatchName = datum.BatchName,
                 DonationDate = datum.DonationDate,
                 DepositDate = datum.DepositDate,
                 CustomerId = processingFeeGLMapping.ToString("Customer_ID"),
+                DepositAmount = datum.DepositAmount,
                 DonationAmount = datum.DonationAmount,
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
                 CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
@@ -493,6 +500,7 @@ namespace MinistryPlatform.Translation.Services
 
         private static void AdjustProcessorFee(GPExportDatum glLevelFee, decimal processorFee)
         {
+            processorFee = processorFee < 0 ? -1 * processorFee : processorFee;
             glLevelFee.Amount = glLevelFee.Amount + processorFee;
         }
 
@@ -511,25 +519,27 @@ namespace MinistryPlatform.Translation.Services
                     gpExport.Add(donationID, new List<GPExportDatum>());
                 }
 
+                var amount = Convert.ToDecimal(result.ToString("Amount"));
                 gpExport[donationID].Add(
                     new GPExportDatum
                     {
                         ProccessFeeProgramId = _processingProgramId,
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
-                        DocumentType = result.ToString("Document_Type"),
+                        DocumentType = (amount < 0) ? "RETURNS" : result.ToString("Document_Type"),
                         DonationId = result.ToInt("Donation_ID"),
                         BatchName = result.ToString("Batch_Name"),
                         DonationDate = result.ToDate("Donation_Date"),
                         DepositDate = result.ToDate("Deposit_Date"),
                         CustomerId = result.ToString("Customer_ID"),
                         DonationAmount = result.ToString("Donation_Amount"),
+                        DepositAmount = result.ToString("Deposit_Amount"),
                         CheckbookId = result.ToString("Checkbook_ID"),
                         CashAccount = result.ToString("Cash_Account"),
                         ReceivableAccount = result.ToString("Receivable_Account"),
                         DistributionAccount = result.ToString("Distribution_Account"),
                         ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
-                        Amount = Convert.ToDecimal(result.ToString("Amount")),
+                        Amount = (amount < 0) ? -1*amount : amount,
                         ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
                         PaymentTypeId = result.ToInt("Payment_Type_ID"),
                         ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
