@@ -14,6 +14,7 @@
     service.getLookup = getLookup;
     service.getQuestions = getQuestions;
     service.lookupContains = lookupContains;
+    service.showUpsell = showUpsell;
 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
@@ -80,6 +81,10 @@
       promise = null;
       delete service.questions;
       delete service.lookup;
+    }
+
+    function showUpsell(prior_participation) {
+      return lookupContains(prior_participation, 'yes') || lookupContains(prior_participation, 'once');
     }
 
     return service;
