@@ -8,6 +8,7 @@
   function GoVolunteerRoutes($stateProvider, $urlMatcherFactory, $locationProvider) {
 
     //$urlMatcherFactory.strictMode(false);
+
     crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'goVolunteerRouteType', /\/go-volunteer\/.*$/);
 
     $stateProvider
@@ -32,7 +33,7 @@
           GoVolunteerService: 'GoVolunteerService',
           CmsInfo: CmsInfo,
           Meta: Meta
-        },
+        }
       })
       .state('go-volunteer.city.organizations', {
         parent: 'goCincinnati',
@@ -65,29 +66,6 @@
           Meta: Meta
         }
       })
-     /* .state('go-volunteer.crossroadsprofile', { */
-        //parent: 'goCincinnati',
-        //url: '/go-volunteer/cincinnati/crossroads/profile',
-        //template: '<go-volunteer-page></go-volunteer-page>',
-        //data: {
-          //meta: {
-            //title: 'Some Title',
-            //description: ''
-          //},
-          //isProtected: true
-        //},
-        //resolve: {
-          //Meta: Meta,
-          //loggedin: crds_utilities.checkLoggedin,
-          //Profile: 'Profile',
-          //$cookies: '$cookies',
-          //$stateParams: '$stateParams',
-          //$state: '$state',
-          //$q: '$q',
-          //GoVolunteerService: 'GoVolunteerService',
-          //Person: Person
-        //}
-      /*})*/
       .state('go-volunteer.crossroadspage', {
         parent: 'goCincinnati',
         url: '/go-volunteer/cincinnati/crossroads/:page',

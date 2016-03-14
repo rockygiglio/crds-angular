@@ -43,15 +43,18 @@
 
 
       function handlePageChange(nextState) {
-        if(!$stateParams.organization) {
+        if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
-           'page': nextState
+            
+           page: nextState
+
          });
 
         } else {
           $state.go('go-volunteer.page', {
-            'city': $stateParams.city,
-            'organization': $stateParams.organization
+            city: $stateParams.city,
+            organization: $stateParams.organization,
+            page: nextState
           });
         }
       }

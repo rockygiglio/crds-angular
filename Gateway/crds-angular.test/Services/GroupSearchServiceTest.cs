@@ -22,7 +22,16 @@ namespace crds_angular.test.Services
         private Mock<IGroupService> _groupService;
         private Mock<IConfigurationWrapper> _config;
         private Mock<MPServices.IAttributeService> _attributeService;
-     
+        private const int GroupGoalConnectWithCommunity = 6999;
+        private const int GroupGoalMakeFriends = 7002;
+        private const int GroupGoalLearnAndGrow = 7000;
+        private const int GroupGoalMentorOthers = 7001;
+
+        private const int ParticipantGoalNotSure = 7003;
+        private const int ParticipantGoalGrowSpiritually = 7004;
+        private const int ParticipantGoalLearnFromSomeone = 7005;
+        private const int ParticipantGoalMakeFriends = 7006;
+
         private const int MaxGroupSearchResults = 32;
         private const string InMarketZipCodes = "40355, 41001, 41005, 41006, 41007, 41011";
         private const int WeekendTimes = 7030;
@@ -30,6 +39,8 @@ namespace crds_angular.test.Services
         private const int ParticipantGoal = 7003;
         private const int Gender = 7018;
         private const int MaritalStatus = 7020;
+
+
    
         [SetUp]
         public void SetUp()
@@ -46,6 +57,16 @@ namespace crds_angular.test.Services
             _config.Setup(mocked => mocked.GetConfigIntValue("ParticipantGoalAttributeTypeId")).Returns(ParticipantGoal);
             _config.Setup(mocked => mocked.GetConfigIntValue("GenderTypeAttributeTypeId")).Returns(Gender);
             _config.Setup(mocked => mocked.GetConfigIntValue("MaritalStatusTypeAttributeTypeId")).Returns(MaritalStatus);
+
+            _config.Setup(mocked => mocked.GetConfigIntValue("GroupGoalConnectWithCommunity")).Returns(GroupGoalConnectWithCommunity);
+            _config.Setup(mocked => mocked.GetConfigIntValue("GroupGoalMakeFriends")).Returns(GroupGoalMakeFriends);
+            _config.Setup(mocked => mocked.GetConfigIntValue("GroupGoalLearnAndGrow")).Returns(GroupGoalLearnAndGrow);
+            _config.Setup(mocked => mocked.GetConfigIntValue("GroupGoalMentorOthers")).Returns(GroupGoalMentorOthers);
+
+            _config.Setup(mocked => mocked.GetConfigIntValue("ParticipantGoalNotSure")).Returns(ParticipantGoalNotSure);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ParticipantGoalGrowSpiritually")).Returns(ParticipantGoalGrowSpiritually);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ParticipantGoalLearnFromSomeone")).Returns(ParticipantGoalLearnFromSomeone);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ParticipantGoalMakeFriends")).Returns(ParticipantGoalMakeFriends);
 
             _fixture = new GroupSearchService(_groupService.Object, _attributeService.Object,_config.Object);
         }

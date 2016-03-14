@@ -12,13 +12,12 @@
       bindToController: true,
       controller: GoVolunteerSpouseController,
       controllerAs: 'goSpouse',
-      templateUrl: 'spouse/goVolunteerSpouse.template.html'   
+      templateUrl: 'spouse/goVolunteerSpouse.template.html'
     };
-    
+
     function GoVolunteerSpouseController() {
       var vm = this;
-
-    }  
+    }
   }
 
 })();

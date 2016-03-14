@@ -10,6 +10,10 @@
     "type": "git",
     "url": "https://github.com/crdschurch/crds-angular"
   },
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
+    "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev"
+  },
   "author": "Matt Silbernagel",
   "license": "ISC",
   "bugs": {
