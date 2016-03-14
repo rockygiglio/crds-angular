@@ -15,7 +15,8 @@
         emailAddress: '',
         dateOfBirth: null,
         mobilePhone: null
-      }
+      },
+      spouse: {}
     };
 
     return volunteerService;

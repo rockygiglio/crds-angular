@@ -153,7 +153,7 @@ namespace crds_angular.Controllers.API
                     RelationshipId = s.Relationship_Id,
                     ParticipantId = s.Participant_Id,
                     HighSchoolGraduationYear = s.HighSchoolGraduationYear
-                }).Single();
+                }).SingleOrDefault();
                 return Ok(spouse);
             });
         }
