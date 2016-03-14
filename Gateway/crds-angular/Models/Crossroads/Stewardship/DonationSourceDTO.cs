@@ -21,6 +21,9 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty(PropertyName = "last4", NullValueHandling = NullValueHandling.Ignore)]
         public string AccountNumberLast4 { get; set; }
 
+        [JsonProperty(PropertyName = "check_number", NullValueHandling = NullValueHandling.Ignore)]
+        public string CheckNumber { get; internal set; }
+
         [JsonProperty(PropertyName = "brand", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(StringEnumConverter))]
         public CreditCardType? CardType { get; set; }
 
