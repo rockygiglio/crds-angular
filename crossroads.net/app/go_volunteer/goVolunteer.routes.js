@@ -82,12 +82,14 @@
         resolve: {
           Meta: Meta,
           Profile: 'Profile',
+          Organizations: 'Organizations',
           $cookies: '$cookies',
           $stateParams: '$stateParams',
           loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
-          Person: Person  
+          Person: Person,
+          Organization: Organization
         }
       })
       .state('go-volunteer.page', {
@@ -104,7 +106,8 @@
           $stateParams: '$stateParams',
           $q: '$q',
           CmsInfo: CmsInfo,
-          Meta: Meta
+          Meta: Meta,
+          Organization: Organization
         }
       })
       ;
@@ -163,8 +166,26 @@
     return deferred.promise;
   }
 
-  function Organization(GoVolunteerService, $stateParams, $q, crossroads) {
+  function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
     var deferred = $q.defer();
+    var param = 'crossroads'; 
+    if ($state.next.name === 'go-volunteer.page') {
+      param = $stateParams.organization; 
+    }
+    // did we already get this information?
+    if (!_.isEmpty(GoVolunteerService.organization)) {
+      deferred.resolve();   
+    } else {
+      Organizations.ByName.get({name: param}, function(data){
+        GoVolunteerService.organization = data;  
+        deferred.resolve();
+      }, function(err) {
+        console.log('Error while trying to get organization ' + param );
+        console.log(err);
+        deferred.reject();
+      });
+    }
+    return deferred.promise;
   }
   
   function buildLink(city, org, state) {
