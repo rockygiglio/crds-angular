@@ -20,7 +20,8 @@
     'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
-    'SERIES'
+    'SERIES',
+    'CONTACT_ID'
   ];
 
   function HostReviewCtrl($window,
@@ -39,7 +40,9 @@
                           GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
-                          SERIES) {
+                          SERIES,
+                          CONTACT_ID
+  ) {
     var vm = this;
 
     vm.pending = true;
@@ -136,7 +139,7 @@
           zip: vm.responses.location.zip
         };
 
-        group.singleAttributes = Responses.getSingleAttributes();
+        group.singleAttributes = Responses.getSingleAttributes(vm.lookup);
 
         var attributes = [];
         var petAttributeTypeId = null;

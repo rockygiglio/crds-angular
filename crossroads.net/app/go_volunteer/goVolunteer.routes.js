@@ -8,23 +8,23 @@
   function GoVolunteerRoutes($stateProvider, $urlMatcherFactory, $locationProvider) {
 
     //$urlMatcherFactory.strictMode(false);
+
     crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'goVolunteerRouteType', /\/go-volunteer\/.*$/);
 
     $urlMatcherFactory.caseInsensitive(true);
 
     $stateProvider
       .state('go-volunteer', {
-        parent: 'noHeaderOrFooter',
-        templateUrl: 'go_volunteer/goVolunteer.template.html',
+        parent: 'goCincinnati',
         abstract: true
       })
       .state('go-volunteer.city', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city',
         template: '<go-volunteer-city></go-volunteer-city>',
         data: {
           meta: {
-            title: 'Some Title', 
+            title: 'Some Title',
             description: ''
           }
         },
@@ -35,15 +35,15 @@
           GoVolunteerService: 'GoVolunteerService',
           CmsInfo: CmsInfo,
           Meta: Meta
-        },
+        }
       })
       .state('go-volunteer.city.organizations', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city/organizations',
         template: '<go-volunteer-organizations></go-volunteer-organizations>',
         data: {
           meta: {
-            title: 'Some Title', 
+            title: 'Some Title',
             description: ''
           }
         },
@@ -52,13 +52,13 @@
           Meta: Meta
         }
       })
-      .state('go-volunteer.signinpage', { 
-        parent: 'go-volunteer',
+      .state('go-volunteer.signinpage', {
+        parent: 'goCincinnati',
         url: '/go-volunteer/cincinnati/crossroads/signin',
         template: '<go-volunteer-signin> </go-volunteer-signin>',
         data: {
           meta: {
-            title: 'Some Title', 
+            title: 'Some Title',
             description: ''
           }
         },
@@ -68,13 +68,13 @@
           Meta: Meta
         }
       })
-     .state('go-volunteer.crossroadspage', {
-        parent: 'go-volunteer',
+      .state('go-volunteer.crossroadspage', {
+        parent: 'goCincinnati',
         url: '/go-volunteer/cincinnati/crossroads/:page',
         template: '<go-volunteer-page></go-volunteer-page>',
         data: {
           meta: {
-            title: 'Some Title', 
+            title: 'Some Title',
             description: ''
           },
           isProtected: true
@@ -93,12 +93,12 @@
         }
       })
       .state('go-volunteer.page', {
-        parent: 'go-volunteer',
+        parent: 'goCincinnati',
         url: '/go-volunteer/:city/:organization/:page',
         template: '<go-volunteer-page></go-volunteer-page>',
         data: {
           meta: {
-            title: 'Some Title', 
+            title: 'Some Title',
             description: ''
           }
         },
@@ -120,7 +120,7 @@
 
     return link;
   }
-  
+
   function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
     var city = $stateParams.city || 'cincinnati';
     var organization = $stateParams.organizations || undefined;
@@ -131,11 +131,12 @@
       if (data.pages.length === 0) {
         deferred.reject();
       }
-      GoVolunteerService.cmsInfo = data; 
+      GoVolunteerService.cmsInfo = data;
       deferred.resolve();
     }, function() {
-      deferred.reject();                  
+      deferred.reject();
     });
+
     return deferred.promise;
   }
 
@@ -146,7 +147,7 @@
 
   function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
     var deferred = $q.defer();
-     
+
     if ($stateParams.page === 'profile') {
       var cid = $cookies.get('userId');
       if (!cid) {
@@ -156,6 +157,7 @@
           GoVolunteerService.person = data;
           deferred.resolve();
         }, function(err) {
+
           console.log(err);
           deferred.reject();
         });
@@ -163,6 +165,7 @@
     } else {
       deferred.resolve();
     }
+
     return deferred.promise;
   }
 
@@ -189,16 +192,15 @@
   }
   
   function buildLink(city, org, state) {
-    var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city); 
+    var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     if (state.next.name === 'go-volunteer.city.organizations') {
       return base + 'organizations/';
     }
+
     if (org) {
       base = base + addTrailingSlashIfNecessary(org);
-    } 
+    }
     return base;
-  } 
-  
-  
+  }
 
 })();
