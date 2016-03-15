@@ -14,9 +14,7 @@
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
-          StartProfileLoad: ['Person', function(Person) {
-            Person.loadProfile();
-          }]
+
         },
         data: {
           meta: {
@@ -31,8 +29,8 @@
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {
-          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
-            return GroupInfo.loadGroupInfo();
+          StartProfileLoad: ['Person', function(Person) {
+            Person.loadProfile();
           }],
           StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
             function(GroupQuestionService, ParticipantQuestionService) {
@@ -62,7 +60,7 @@
             return Person.getProfile();
           }],
           LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
-            return ParticipantQuestionService.getLookup();
+            return ParticipantQuestionService;
           }]
         },
         data: {

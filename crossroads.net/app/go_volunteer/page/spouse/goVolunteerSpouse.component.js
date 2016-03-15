@@ -8,32 +8,39 @@
   function GoVolunteerSpouse(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerSpouseController,
       controllerAs: 'goSpouse',
-      templateUrl: 'spouse/goVolunteerSpouse.template.html'   
+      templateUrl: 'spouse/goVolunteerSpouse.template.html'
     };
-    
+
     function GoVolunteerSpouseController() {
       var vm = this;
       vm.spouse = GoVolunteerService.spouse;
       vm.spouseName = spouseName;
       vm.submit = submit;
 
-      function spouseName(){
-        if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined){
+      function spouseName() {
+        if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined) {
           return vm.spouse.preferredName + ' ' + vm.spouse.lastName;
         } else {
-          return "your spouse";
+          return 'your spouse';
         }
       }
 
-      function submit(spouseServing){
-        if(spouseServing){
-
+      function submit(spouseServing) {
+        GoVolunteerService.spouseAttending = spouseServing;
+        if (spouseServing) {
+          if (vm.spouse.preferredName === '' || vm.spouse.preferredName === undefined) {
+            vm.onSubmit({nextState: 'spouse-name'});
+          } else {
+            vm.onSubmit({nextState: 'children'});
+          }
         } else {
-          
+          vm.onSubmit({nextState: 'children'});
         }
       }
     }

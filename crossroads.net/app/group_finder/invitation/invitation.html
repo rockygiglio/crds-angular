@@ -1,9 +1,7 @@
+<preloader full-screen='true' ng-show="invitation.requestPending"> </preloader>
 <div class="container group-invitation">
   <div class="error" ng-if="invitation.error">An unknown error has occurred, please contact support</div>
-  <div ng-if="invitation.requestPending">
-    <h3>Please wait...</h3>
-    <p class="lead">Your request is being processed.</p>
-  </div>
+  
   <div ng-if="!invitation.requestPending">
 
     <div ng-if="invitation.accepted && !invitation.groupHelp">

@@ -1,0 +1,52 @@
+USE MinistryPlatform;
+GO
+
+UPDATE dp_Page_Views
+	SET
+		Field_List = 'Groups.[Group_ID]
+, Groups.[Group_Name]
+, Groups.[Description]
+, Groups.[Start_Date]
+, Groups.[End_Date]
+, Groups.[Meeting_Time]
+, Meeting_Day_ID_Table.[Meeting_Day_ID]
+, Meeting_Day_ID_Table.[Meeting_Day]
+, Offsite_Meeting_Address_Table.[Address_ID]
+, Offsite_Meeting_Address_Table.[Address_Line_1]
+, Offsite_Meeting_Address_Table.[Address_Line_2]
+, Offsite_Meeting_Address_Table.[City] AS [City]
+, Offsite_Meeting_Address_Table.[State/Region]
+, Offsite_Meeting_Address_Table.[Postal_Code]
+, Groups.[Remaining_Capacity]
+, Primary_Contact_Table.[Contact_Id]
+, Primary_Contact_Table.[Nickname]
+, Primary_Contact_Table.[Last_Name]
+, (SELECT TOP 1 Attributes.Attribute_ID FROM Group_Attributes, Attributes where Group_Attributes.Attribute_ID=Attributes.Attribute_ID and Attributes.Attribute_Type_ID = 73 and Group_ID = Groups.[Group_ID] and (Group_Attributes.End_Date > GetDate() OR Group_Attributes.End_Date IS NULL)) as [Group_Type]
+, (SELECT TOP 1 Attributes.Attribute_ID FROM Group_Attributes, Attributes where Group_Attributes.Attribute_ID=Attributes.Attribute_ID and Attributes.Attribute_Type_ID = 71 and Group_ID = Groups.[Group_ID] and (Group_Attributes.End_Date > GetDate() OR Group_Attributes.End_Date IS NULL)) as [Group_Goal]
+, (SELECT TOP 1 Attributes.Attribute_ID FROM Group_Attributes, Attributes where Group_Attributes.Attribute_ID=Attributes.Attribute_ID and Attributes.Attribute_Type_ID = 75 and Group_ID = Groups.[Group_ID] and (Group_Attributes.End_Date > GetDate() OR Group_Attributes.End_Date IS NULL)) as [Kids]
+, (SELECT TOP 1 Attributes.Attribute_ID FROM Group_Attributes, Attributes where Group_Attributes.Attribute_ID=Attributes.Attribute_ID and Group_Attributes.Attribute_ID in (7012) and Group_ID = Groups.[Group_ID] and (Group_Attributes.End_Date > GetDate() OR Group_Attributes.End_Date IS NULL)) as [Has_Cat]
+, (SELECT TOP 1 Attributes.Attribute_ID FROM Group_Attributes, Attributes where Group_Attributes.Attribute_ID=Attributes.Attribute_ID and Group_Attributes.Attribute_ID in (7011) and Group_ID = Groups.[Group_ID] and (Group_Attributes.End_Date > GetDate() OR Group_Attributes.End_Date IS NULL)) as [Has_Dog]
+,CASE
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7) AND Groups.[Meeting_Time] BETWEEN ''00:00:00'' AND ''08:59:59'' )
+ THEN  ''7029''
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7) AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''11:59:59'' )
+ THEN  ''7030''
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7) AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''16:59:59'' )
+ THEN  ''7031''
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7) AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''19:59:59'')
+ THEN  ''7032''
+ WHEN ((Meeting_Day_ID_Table.Meeting_Day_ID = 1 OR Meeting_Day_ID_Table.Meeting_Day_ID = 7) AND Groups.[Meeting_Time] BETWEEN ''20:00:00'' AND ''23:59:59'')
+ THEN  ''7033''
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''00:00:00'' AND ''08:59:59'')
+ THEN ''7023''
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''09:00:00'' AND ''11:59:59'')
+ THEN ''7024''
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''12:00:00'' AND ''16:59:59'')
+ THEN ''7025''
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''17:00:00'' AND ''19:59:59'')
+ THEN ''7026''
+ WHEN (Meeting_Day_ID_Table.Meeting_Day_ID BETWEEN 2 AND 6 AND Groups.[Meeting_Time] BETWEEN ''20:00:00'' AND ''23:59:59'')
+ THEN ''7027''
+ END AS [Meeting_Range]'
+	WHERE
+		Page_View_ID = 2214

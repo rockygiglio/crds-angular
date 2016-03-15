@@ -44,7 +44,7 @@
       var hostAddress = $scope.group.address.addressLine1 + ', ' +
           $scope.group.address.city + ', ' +
           $scope.group.address.state + ', ' +
-          $scope.group.address.postalCode;
+          $scope.group.address.zip;
       var participantAddress = responses.location.street + ', ' +
           responses.location.city + ', ' +
           responses.location.state + ', ' +

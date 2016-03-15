@@ -32,14 +32,14 @@
     vm.initialize = initialize;
     vm.goToHost = goToHost;
     vm.goToResults = goToResults;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.lookup;
     vm.goBack = goBack;
     vm.lookupContains = LookupDefinitions.lookupContains;
 
     function initialize() {
 
       vm.responses = Responses.data;
-      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
+      vm.showUpsell = false;
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
       vm.rejected = false;
@@ -83,7 +83,7 @@
                 state: vm.responses.location.state,
                 zip: vm.responses.location.zip
               },
-              singleAttributes: Responses.getSingleAttributes()
+              singleAttributes: Responses.getSingleAttributes(vm.lookup)
             };
 
             vm.invalidTime = false; // set as an override
@@ -114,7 +114,8 @@
     }
 
     function goToResults() {
-      $state.go('group_finder.join.results');
+      Responses.data.bypassUpsell = true;
+      $state.go('group_finder.join.questions');
     }
 
     function goBack() {

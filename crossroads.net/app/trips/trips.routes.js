@@ -63,7 +63,7 @@
         templateUrl: 'tripgivingTemplates/login.html'
       })
       .state('tripgiving.register', {
-        controller: 'RegisterCtrl',
+        controller: 'RegisterController',
         templateUrl: 'tripgivingTemplates/register.html'
       })
       .state('tripgiving.confirm', {

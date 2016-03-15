@@ -40,7 +40,7 @@
 
     vm.groupId = $stateParams.groupId;
     vm.requestPending = true;
-    vm.lookup = LookupDefinitions;
+    vm.lookup = LookupDefinitions.lookup;
     vm.showInvite = false;
     vm.capacity = 0;
     vm.goToDashboard = goToDashboard;
@@ -68,15 +68,30 @@
           vm.capacity = 1;
 
           // Set capacity to account for invited spouse
-          if (parseInt(vm.responses.relationship_status) === 2) {
+          if (LookupDefinitions.lookupContains(vm.responses.marital_status, 'same group')) {
             vm.capacity = 2;
             vm.showInvite = true;
           }
         }
 
-        GroupInvitationService.acceptInvitation(vm.groupId,
-          {capacity: vm.capacity, groupRoleId: GROUP_ROLE.PARTICIPANT}
-          )
+        var participant = {
+          capacityNeeded: vm.capacity,
+          groupRoleId: GROUP_ROLE.PARTICIPANT,
+          attributeTypes: {}
+        };
+        if (_.has(Responses.data, 'completed_flow')) {
+          if (_.has(Responses.data, 'location')) {
+            participant.address = {
+              addressLine1: Responses.data.location.street,
+              city: Responses.data.location.city,
+              state: Responses.data.location.state,
+              zip: Responses.data.location.zip
+            };
+          }
+          participant.singleAttributes = Responses.getSingleAttributes(vm.lookup);
+        }
+
+        GroupInvitationService.acceptInvitation(vm.groupId, participant)
           .then(function invitationAccepted() {
             // Invitation acceptance was successful
             vm.accepted = true;
@@ -91,6 +106,7 @@
             if (vm.groupHelp) {
               vm.showInvite = false;
               email = {
+                groupId      : GROUP_ID.NO_GROUP,
                 fromContactId: AuthenticatedPerson.contactId,
                 toContactId  : CONTACT_ID.JOURNEY,
                 templateId   : EMAIL_TEMPLATES.NO_GROUP,

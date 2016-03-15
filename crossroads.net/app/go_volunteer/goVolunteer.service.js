@@ -16,7 +16,8 @@
         dateOfBirth: null,
         mobilePhone: null
       },
-      spouse: {}
+      spouse: {},
+      spouseAttending: false
     };
 
     return volunteerService;

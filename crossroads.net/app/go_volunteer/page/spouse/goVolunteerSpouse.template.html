@@ -2,7 +2,8 @@
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
 <h2>Will {{ goSpouse.spouseName() }} be serving with you?</h2>
-<form class="row">
+<!--<h2>We see you're married, will <strong>Lindsay Miller</strong> be serving with you?</h2> -->
+<div class="row">
   <div class="col-xs-6">
     <button type="submit" class="btn btn-block btn-standard"  ng-click="goSpouse.submit(false)">No
     </button>
@@ -11,4 +12,10 @@
     <button type="submit" class="btn btn-block btn-primary-gc"  ng-click="goSpouse.submit(true)">Yes
     </button>
   </div>
-</form>
+</div>
+
+<div class="panel panel-default push-top">
+  <div class="panel-body text-muted small">
+    <p>If this information is incorrect, please request updates by contacting <a href="mailto:accounts@crossroads.net">accounts@crossroads.net.</p>
+  </div>
+</div>
