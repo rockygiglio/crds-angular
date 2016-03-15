@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Security;
@@ -26,6 +21,10 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult GetOrganization(string name)
         {
             var org = _organizationService.GetOrganizationByName(name);
+            if (org == null)
+            {
+                return NotFound();
+            }
             return Ok(org);
         }
     }
