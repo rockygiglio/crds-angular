@@ -90,6 +90,11 @@ namespace crds_angular.test.Services
         [Test]
         public void TestCreateDonationsForBatch()
         {
+            const string encryptedKey = "PH/rty1234";
+            const string decrypAcct = "6015268542";
+            const string decryptRout = "042000314";
+            const string donorAcctId = "4321";
+
             var checks = new List<CheckScannerCheck>
             {
                 new CheckScannerCheck
@@ -162,14 +167,11 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
+                    DonorAccountId = Int32.Parse(donorAcctId),
                     ProcessorId = "cus_aeirhsjidhriuewiwq",
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
             };
-            const string encryptedKey = "PH/rty1234";
-            const string decrypAcct = "6015268542";
-            const string decryptRout = "042000314";
-            const string donorAcctId = "4321";
           
             _checkScannerDao.Setup(mocked => mocked.GetChecksForBatch("batch123")).Returns(checks);
             _checkScannerDao.Setup(mocked => mocked.UpdateBatchStatus("batch123", BatchStatus.Exported)).Returns(new CheckScannerBatch());
@@ -198,7 +200,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout);
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct, decryptRout)).Returns(encryptedKey);
-            _mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey, contactDonorExisting.Account.ProcessorAccountId, contactDonorExisting.Account.ProcessorId)).Returns(donorAcctId);
+            //_mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey, contactDonorExisting.Account.ProcessorAccountId, contactDonorExisting.Account.ProcessorId)).Returns(donorAcctId);
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
@@ -224,6 +226,7 @@ namespace crds_angular.test.Services
                 RegisteredUser = false,
                 Account = new DonorAccount
                 {
+                    DonorAccountId = 220022,
                     ProcessorId = "cus_222000222",
                     ProcessorAccountId = "card_123456789"
                 }
@@ -258,7 +261,27 @@ namespace crds_angular.test.Services
             _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorNew.Account.ProcessorId, contactDonorNew.Account.ProcessorAccountId, checks[1].Amount, contactDonorNew.DonorId)).Returns(mockCharge);
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct, decryptRout)).Returns(encryptedKey);
-            _mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey, mockCharge.Source.id, contactDonorNew.ProcessorId)).Returns(donorAcctId);
+            //_mpDonorService.Setup(mocked => mocked.CreateDonorAccount(encryptedKey, mockCharge.Source.id, contactDonorNew.ProcessorId)).Returns(donorAcctId);
+
+            //_mpDonorService.Setup(
+            //    mocked =>
+            //        mocked.CreateDonorAccount(null,
+            //                                  checks[1].RoutingNumber,
+            //                                  checks[1].AccountNumber,
+            //                                  encryptedKey,
+            //                                  222222,
+            //                                  mockCharge.Source.id,
+            //                                  contactDonorNew.ProcessorId)).Returns(int.Parse(donorAcctId));
+
+            //_mpDonorService.Setup(
+            //    mocked =>
+            //        mocked.CreateDonorAccount(null,
+            //                                  checks[0].RoutingNumber,
+            //                                  checks[0].AccountNumber,
+            //                                  encryptedKey + "88",
+            //                                  444444,
+            //                                  nonAccountProcessorAccountId,
+            //                                  nonAccountProcessorId)).Returns(1);
 
             _mpDonorService.Setup(
                 mocked =>
@@ -273,7 +296,7 @@ namespace crds_angular.test.Services
                                                                  d.ProcessorId.Equals(contactDonorNew.Account.ProcessorId) &&
                                                                  d.SetupDate.Equals(checks[1].CheckDate) &&
                                                                  !d.RegisteredDonor &&
-                                                                 d.DonorAcctId == donorAcctId &&
+                                                                 d.DonorAcctId == 220022.ToString() &&
                                                                  d.CheckScannerBatchName.Equals("batch123") &&
                                                                  d.CheckNumber.Equals("22222")), false))
                 .Returns(654);
@@ -294,6 +317,7 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
+                    DonorAccountId = 330033,
                     ProcessorAccountId = "src_123",
                     ProcessorId = "cus_333000333"
                 }
@@ -331,7 +355,7 @@ namespace crds_angular.test.Services
                                           contactDonorExistingStripeCustomerWithAccount.DonorId)).Returns(mockChargeExistingStripeCustomer);
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "99", decryptRout + "99")).Returns(encryptedKey + "99");
-            _mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey + "99", mockChargeExistingStripeCustomer.Source.id, contactDonorExistingStripeCustomer.ProcessorId)).Returns(donorAcctId);
+            //_mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey + "99", mockChargeExistingStripeCustomer.Source.id, contactDonorExistingStripeCustomer.ProcessorId)).Returns(donorAcctId);
 
             _mpDonorService.Setup(
                 mocked =>
@@ -346,7 +370,7 @@ namespace crds_angular.test.Services
                                                                  d.ProcessorId.Equals(contactDonorExistingStripeCustomerWithAccount.Account.ProcessorId) &&
                                                                  d.SetupDate.Equals(checks[2].CheckDate) &&
                                                                  d.RegisteredDonor &&
-                                                                 d.DonorAcctId == donorAcctId &&
+                                                                 d.DonorAcctId == 330033.ToString() &&
                                                                  d.CheckScannerBatchName.Equals("batch123") &&
                                                                  d.CheckNumber.Equals("33333")), false))
                 .Returns(654);
@@ -368,7 +392,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void TestCreateDonationsForBatchNoEzScanAccount()
+        public void TestCreateDonationsForBatchNoDonorAccount()
         {
             var checks = new List<CheckScannerCheck>
             {
@@ -398,7 +422,10 @@ namespace crds_angular.test.Services
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
-            const string donorAcctId = "4321";
+            const string donorAcctId = "440044";
+
+            string nonAccountProcessorAccountId = "src_789";
+            string nonAccountProcessorId = "856";
 
             _checkScannerDao.Setup(mocked => mocked.GetChecksForBatch("batch123")).Returns(checks);
             _checkScannerDao.Setup(mocked => mocked.UpdateBatchStatus("batch123", BatchStatus.Exported)).Returns(new CheckScannerBatch());
@@ -413,8 +440,10 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
-                    ProcessorAccountId = "src_789",
-                    ProcessorId = "856"
+                    DonorAccountId = 440044,
+                    Token = "tok986"
+                    //ProcessorAccountId = "src_789",
+                    //ProcessorId = "856"
                 }
             };
 
@@ -446,9 +475,6 @@ namespace crds_angular.test.Services
                 }
             };
 
-            string nonAccountProcessorAccountId = "src_789";
-            string nonAccountProcessorId = "856";
-
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((ContactDonor)null);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
@@ -465,7 +491,7 @@ namespace crds_angular.test.Services
                                               encryptedKey + "88",
                                               444444,
                                               nonAccountProcessorAccountId,
-                                              nonAccountProcessorId)).Returns(1);
+                                              nonAccountProcessorId)).Returns(int.Parse(donorAcctId));
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
 
@@ -487,7 +513,7 @@ namespace crds_angular.test.Services
                                           contactDonorNonExistingStripeCustomer.DonorId)).Returns(mockChargeNonExistingStripeCustomer);
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
-            _mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey + "88", mockChargeNonExistingStripeCustomer.Source.id, contactDonorNonExistingStripeCustomer.Account.ProcessorId)).Returns(donorAcctId);
+            //_mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey + "88", mockChargeNonExistingStripeCustomer.Source.id, contactDonorNonExistingStripeCustomer.Account.ProcessorId)).Returns(donorAcctId);
 
             _mpDonorService.Setup(
                 mocked =>
@@ -606,7 +632,8 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
-                    ProcessorId = "111000111"
+                    ProcessorId = "111000111",
+                    ProcessorAccountId = "111111"
                 }
             };
 
@@ -651,7 +678,8 @@ namespace crds_angular.test.Services
                 RegisteredUser = true,
                 Account = new DonorAccount
                 {
-                    ProcessorId = "111000111"
+                    ProcessorId = "111000111",
+                    ProcessorAccountId = "111111"
                 }
             };
 

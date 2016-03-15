@@ -63,45 +63,42 @@ namespace crds_angular.Services
                 try
                 {
                     var contactDonor = CreateDonor(check);
-                    //var x = contactDonor.Account.HasPaymentProcessorInfo();
 
                     var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
                     var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
                     var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
 
-                    // if the account object is null, create a new one - create a new account
-                    //if (contactDonor.Account == null)
-                    if (contactDonor.Account == null || contactDonor.Account.HasPaymentProcessorInfo() == false)
+                    string donorAccountId = "";
+
+                    if (contactDonor.Account.HasPaymentProcessorInfo() == false)
                     {
-                        // 1. create customer (payment service) - get customer id
                         var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId.ToString());
 
-                        // 2. add source to customer (payment service) - use customer id, returns a source id
-                        var token = _paymentService.CreateToken(account, routing);
-                        var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, token.Id);
+                        //var token = _paymentService.CreateToken(account, routing);
+                        var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
 
-                        // 3. assign account.processorid with customer id and account.processoraccountid with the source id from step 2
+                        donorAccountId = _mpDonorService.CreateDonorAccount(null,
+                                                                                check.RoutingNumber,
+                                                                                check.AccountNumber,
+                                                                                encryptedKey,
+                                                                                contactDonor.DonorId,
+                                                                                stripeCustomerSource.id,
+                                                                                stripeCustomer.id).ToString();
+
                         contactDonor.Account = new DonorAccount
                         {
+                            DonorAccountId = int.Parse(donorAccountId),
                             ProcessorId = stripeCustomer.id,
                             ProcessorAccountId = stripeCustomerSource.id
                         };
-
-                        // 4. add account to contactdonor that is populated with the customer id and source id
-                        _mpDonorService.CreateDonorAccount(null,
-                                                           check.RoutingNumber,
-                                                           check.AccountNumber,
-                                                           encryptedKey,
-                                                           contactDonor.DonorId,
-                                                           contactDonor.Account.ProcessorAccountId, 
-                                                           contactDonor.Account.ProcessorId);
                     }
-
-                    //var customerId = contactDonor.Account.ProcessorId;
+                    else
+                    {
+                        donorAccountId = contactDonor.Account.DonorAccountId.ToString();
+                    }
 
                     //Always use the customer ID and source ID from the Donor Account, if it exists
                     var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId);
-                    var donorAccountId = _mpDonorService.UpdateDonorAccount(encryptedKey, charge.Source.id, contactDonor.Account.ProcessorId);
 
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
@@ -176,18 +173,18 @@ namespace crds_angular.Services
             // if find by contact donor id is used then contact donor found by id matches contact donor 
             // found by account and account has stripe token
             if (contactDonorById != null && contactDonorById.ContactId == contactDonorByAccount.ContactId &&
-                contactDonorByAccount.Account.ProcessorId != null)
+                contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
             // if find by contact donor id is not used then contact donor 
             // found by account has stripe token
-            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.ProcessorId != null)
+            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
 
-            var contactDonor = (contactDonorById == null) ? contactDonorByAccount : contactDonorById;
+            var contactDonor = contactDonorById ?? contactDonorByAccount;
 
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
@@ -214,7 +211,6 @@ namespace crds_angular.Services
                 RoutingNumber = routing,
                 Type = AccountType.Checking,
                 EncryptedAccount = encryptedKey,
-                ProcessorId = contactDonor.ProcessorId,
                 Token = token.Id
             };
 

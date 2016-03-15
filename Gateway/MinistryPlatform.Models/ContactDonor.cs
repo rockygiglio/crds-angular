@@ -57,6 +57,7 @@ namespace MinistryPlatform.Models
 
     public class DonorAccount
     {
+        public int DonorAccountId { get; set; }
         public string AccountNumber { get; set; }
         public string RoutingNumber { get; set; }
         public AccountType Type { get; set; }
