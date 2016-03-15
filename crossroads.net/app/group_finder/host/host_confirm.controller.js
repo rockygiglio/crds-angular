@@ -11,16 +11,11 @@
     vm.showDashboard = showDashboard;
     vm.successMessage = successMessage;
     vm.responses = Responses;
-    vm.loadingDashboard = true;
 
 
     if (vm.responses.data.completed_flow !== true) {
       $state.go('group_finder.host.questions');
     }
-
-    $rootScope.$on('groupFinderInfoLoaded', function() {
-      vm.loadingDashboard = false;
-    });
 
     Responses.clear();
 
