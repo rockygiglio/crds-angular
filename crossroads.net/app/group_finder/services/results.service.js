@@ -34,6 +34,7 @@
             }
             group.attributes = [];
 
+
             //
             // check attributes for pets and kids
             //
@@ -41,17 +42,16 @@
               if (attribute.name === 'Pets') {
                 _.each(attribute.attributes, function(type) {
                   if (type.selected && type.name) {
-                    if (type.name.substr('dog')) { group.attributes.push('has a dog'); }
-                    if (type.name.substr('cat')) { group.attributes.push('has a cat'); }
+                    if (type.name.indexOf('dog') !== -1) { group.attributes.push('has a dog'); }
+                    if (type.name.indexOf('cat') !== -1) { group.attributes.push('has a cat'); }
                   }
                 });
               }
-              if (attribute.name === 'Kids') {
-                _.each(attribute.attributes, function(type) {
-                  if (type.selected && type.name.substr('kid')) { group.attributes.push('kids welcome'); }
-                });
-              }
             });
+
+            if (_.has(group.singleAttributes, '75' ) && group.singleAttributes[75].attribute.attributeId === 7017) {
+              group.attributes.push('kids welcome');
+            }
             return group;
           });
 

@@ -17,7 +17,7 @@
     <div class="text-center" ng-show="result.currentPage == 1" dynamic-content="$root.MESSAGES.groupFinderParticipantResultsHeader.content | html"></div>
 
     <group-profile group="group" ng-repeat="group in result.filteredResults"></group-profile>
-    <a ng-show="result.hasResults" ng-click="result.showMore()" href class="btn btn-next-question pull-right">Show More</a>
+    <a ng-show="result.hasResults" ng-click="result.showMore()" href class="btn btn-next-question btn-block-mobile pull-right">Show More</a>
     <br />
     <div dynamic-content="$root.MESSAGES.groupFinderResultsHelp.content | html"></div>
     <a ng-click="result.noResultsHelp()" class="btn btn-previous-question btn-block-mobile">contact crossroads</a>

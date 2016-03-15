@@ -20,7 +20,8 @@
     'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
-    'SERIES'
+    'SERIES',
+    'CONTACT_ID'
   ];
 
   function HostReviewCtrl($window,
@@ -39,7 +40,9 @@
                           GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
-                          SERIES) {
+                          SERIES,
+                          CONTACT_ID
+  ) {
     var vm = this;
 
     vm.pending = true;
