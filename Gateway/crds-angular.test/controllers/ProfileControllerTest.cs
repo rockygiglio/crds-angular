@@ -212,6 +212,31 @@ namespace crds_angular.test.controllers
             var r = (OkNegotiatedContentResult<FamilyMember>)result;
             Assert.AreEqual(r.Content.PreferredName, heather.PreferredName);
         }
+
+        [Test]
+        public void ShouldNotReturnSpouse()
+        {
+           var familyList = new List<ContactRelationship>
+            {
+                new ContactRelationship()
+                {
+                    Age = 12,
+                    Contact_Id = 13579,
+                    Last_Name = "Maddox",
+                    Preferred_Name = "Brady",
+                    Relationship_Id = 6
+                }
+            };
+
+            _contactRelationshipService.Setup(x => x.GetMyImmediateFamilyRelationships(myContactId, _authType + " " + _authToken)).Returns(familyList);
+
+            IHttpActionResult result = _fixture.GetMySpouse(myContactId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<FamilyMember>>(result);
+            var r = (OkNegotiatedContentResult<FamilyMember>)result;
+            Assert.IsNull(r.Content);
+        }
         
     }
 }
