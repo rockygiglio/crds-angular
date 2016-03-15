@@ -49,7 +49,7 @@
               }
             });
 
-            if (_.has(group.singleAttributes, '75' ) && group.singleAttributes[75].attribute.attributeId === 7016) {
+            if (_.has(group.singleAttributes, '75' ) && group.singleAttributes[75].attribute.attributeId === 7017) {
               group.attributes.push('kids welcome');
             }
             return group;

@@ -122,7 +122,8 @@
                   AddressLine1  : vm.responses.location.street,
                   City          : vm.responses.location.city,
                   State         : vm.responses.location.state,
-                  PostalCode    : vm.responses.location.zip
+                  PostalCode    : vm.responses.location.zip,
+                  Email         : AuthenticatedPerson.emailAddress
                 }
               };
             } else {

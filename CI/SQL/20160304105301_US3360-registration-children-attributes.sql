@@ -1,6 +1,10 @@
 USE [MinistryPlatform]
 GO
 
+DECLARE @attr_type int;
+
+SELECT @attr_type = Attribute_Type_ID from Attribute_Types WHERE Attribute_Type = 'GO Cincinnati - Registration Children';
+
 INSERT INTO [dbo].[Attributes]
            ([Attribute_Name]
            ,[Attribute_Type_ID]
@@ -8,10 +12,9 @@ INSERT INTO [dbo].[Attributes]
            ,[Sort_Order])
      VALUES
            ('Ages 2-7'
-           ,80
+           ,@attr_type
            ,1
            ,1)
-GO
 
 INSERT INTO [dbo].[Attributes]
            ([Attribute_Name]
@@ -20,10 +23,9 @@ INSERT INTO [dbo].[Attributes]
            ,[Sort_Order])
      VALUES
            ('Ages 8-12'
-           ,80
+           ,@attr_type
            ,1
            ,2)
-GO
 
 INSERT INTO [dbo].[Attributes]
            ([Attribute_Name]
@@ -32,7 +34,8 @@ INSERT INTO [dbo].[Attributes]
            ,[Sort_Order])
      VALUES
            ('Ages 13-17'
-           ,80
+           ,@attr_type
            ,1
            ,3)
+
 GO
