@@ -21,7 +21,7 @@
                     <use ng-attr-xlink:href="{{'#' + donation.source.icon}}" xlink:href=""></use>
                 </svg>
               </span>
-              {{donation.source.name}}
+              {{donation.source.name}}<span ng-if="donation.source.type == 'Check'"> | Check #{{donation.source.check_number}}</span>
             </small>
         </div>
       </td>
