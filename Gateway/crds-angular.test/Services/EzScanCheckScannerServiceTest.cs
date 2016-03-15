@@ -368,6 +368,162 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestCreateDonationsForBatchNoEzScanAccount()
+        {
+            var checks = new List<CheckScannerCheck>
+            {
+                new CheckScannerCheck
+                {
+                    Id = 44444,
+                    DonorId = 444444,
+                    AccountNumber =  "444",
+                    Address = new crds_angular.Models.Crossroads.Stewardship.Address
+                    {
+                        Line1 = "4 line 1",
+                        Line2 = "4 line 2",
+                        City = "4 city",
+                        State = "4 state",
+                        PostalCode = "4 postal"
+                    },
+                    Amount = 444400,
+                    CheckDate = DateTime.Now.AddHours(3),
+                    CheckNumber = "44444",
+                    Name1 = "4 name 1",
+                    Name2 = "4 name 2",
+                    RoutingNumber = "4040",
+                    ScanDate = DateTime.Now.AddHours(4)
+                }
+            };
+
+            const string encryptedKey = "PH/rty1234";
+            const string decrypAcct = "6015268542";
+            const string decryptRout = "042000314";
+            const string donorAcctId = "4321";
+
+            _checkScannerDao.Setup(mocked => mocked.GetChecksForBatch("batch123")).Returns(checks);
+            _checkScannerDao.Setup(mocked => mocked.UpdateBatchStatus("batch123", BatchStatus.Exported)).Returns(new CheckScannerBatch());
+            _checkScannerDao.Setup(mocked => mocked.UpdateCheckStatus(44444, true, null));
+
+            //// donor without account for ez scan check
+            var contactDonorNonExistingStripeCustomer = new ContactDonor
+            {
+                ProcessorId = "cus_444000444",
+                DonorId = 444444,
+                ContactId = 444444,
+                RegisteredUser = true,
+                Account = new DonorAccount
+                {
+                    ProcessorAccountId = "src_789",
+                    ProcessorId = "856"
+                }
+            };
+
+            var contactDonorNonExistingStripeCustomerWithoutAccount = new ContactDonor
+            {
+                ProcessorId = "cus_444000444",
+                DonorId = 444444,
+                ContactId = 444444,
+                RegisteredUser = true
+            };
+
+            var stripeCustomer = new StripeCustomer
+            {
+                id = "856",
+                default_source = "src_789"
+            };
+
+            var nonAccountStripeCustomer = new StripeCustomer
+            {
+                id = "src_789"
+            };
+
+            var mockChargeNonExistingStripeCustomer = new StripeCharge
+            {
+                Id = "9080706050",
+                Source = new StripeSource()
+                {
+                    id = "ba_dgsttety6737hjjhweiu398765"
+                }
+            };
+
+            string nonAccountProcessorAccountId = "src_789";
+            string nonAccountProcessorId = "856";
+
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
+            _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
+            _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout + "88");
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct + "88", decryptRout + "88")).Returns(new StripeToken { Id = "tok986" });
+            _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString())).Returns(stripeCustomer);
+            _paymentService.Setup(mocked => mocked.AddSourceToCustomer(stripeCustomer.id, "tok986")).Returns(nonAccountStripeCustomer);
+
+            _mpDonorService.Setup(
+                mocked =>
+                    mocked.CreateDonorAccount(null,
+                                              checks[0].RoutingNumber,
+                                              checks[0].AccountNumber,
+                                              encryptedKey + "88",
+                                              444444,
+                                              nonAccountProcessorAccountId,
+                                              nonAccountProcessorId)).Returns(1);
+
+            _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
+
+            _donorService.Setup(
+               mocked =>
+                   mocked.CreateOrUpdateContactDonor(
+                       It.IsAny<ContactDonor>(),
+                       It.IsAny<string>(),
+                       string.Empty,
+                       It.IsAny<string>(),
+                       It.IsAny<DateTime>()))
+               .Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
+
+            _paymentService.Setup(
+                mocked =>
+                    mocked.ChargeCustomer(stripeCustomer.id,
+                                          stripeCustomer.default_source,
+                                          checks[0].Amount,
+                                          contactDonorNonExistingStripeCustomer.DonorId)).Returns(mockChargeNonExistingStripeCustomer);
+
+            _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
+            _mpDonorService.Setup(mocked => mocked.UpdateDonorAccount(encryptedKey + "88", mockChargeNonExistingStripeCustomer.Source.id, contactDonorNonExistingStripeCustomer.Account.ProcessorId)).Returns(donorAcctId);
+
+            _mpDonorService.Setup(
+                mocked =>
+                    mocked.CreateDonationAndDistributionRecord(
+                        It.Is<DonationAndDistributionRecord>(d =>
+                                                                 d.DonationAmt == checks[0].Amount &&
+                                                                 d.FeeAmt == null &&
+                                                                 d.DonorId == contactDonorNonExistingStripeCustomerWithoutAccount.DonorId &&
+                                                                 d.ProgramId.Equals("9090") &&
+                                                                 d.ChargeId.Equals("9080706050") &&
+                                                                 d.PymtType.Equals("check") &&
+                                                                 d.ProcessorId.Equals(nonAccountProcessorId) &&
+                                                                 d.SetupDate.Equals(checks[0].CheckDate) &&
+                                                                 d.RegisteredDonor &&
+                                                                 d.DonorAcctId == donorAcctId &&
+                                                                 d.CheckScannerBatchName.Equals("batch123") &&
+                                                                 d.CheckNumber.Equals("44444")), false))
+                .Returns(654);
+
+
+            var result = _fixture.CreateDonationsForBatch(new CheckScannerBatch
+            {
+                Name = "batch123",
+                ProgramId = 9090
+            });
+            _checkScannerDao.VerifyAll();
+            _donorService.VerifyAll();
+            _mpDonorService.VerifyAll();
+            _paymentService.VerifyAll();
+            Assert.NotNull(result);
+            Assert.NotNull(result.Checks);
+            Assert.AreEqual(1, result.Checks.Count);
+            Assert.AreEqual(BatchStatus.Exported, result.Status);
+        }
+
+        [Test]
         public void TestGetContactDonorForCheck()
         {
             const string encryptedKey = "disCv2kF/8HlRCWeTqolok1G4imf1cNZershgmCCFDI=";
