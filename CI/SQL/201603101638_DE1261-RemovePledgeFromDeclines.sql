@@ -6,15 +6,23 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+-- Create a placeholder Trigger, so the below ALTER will always work.
+-- This allows the same SQL file to be run in any environment, without errors.
+-- This is preferable to dropping the trigger, as permissions will be maintained
+-- on an existing trigger.
+IF OBJECT_ID('dbo.crds_tr_Update_RemovePledgeIfDeclined', 'TR') IS NULL
+    EXEC('CREATE TRIGGER dbo.crds_tr_Update_RemovePledgeIfDeclined ON [dbo].[Donations] AFTER UPDATE AS SELECT 1')
+GO
+
 -- =============================================
 -- Author:      Joe Kerstanoff
 -- Create date: 3/10/2016
 -- Update date: 3/10/2016
 -- Description: Remove Pledges from declined donations so they are not counted on reports / profile give page.
 -- =============================================
-Create TRIGGER [dbo].[crds_tr_Update_RemovePledgeIfDeclined]
+ALTER TRIGGER [dbo].[crds_tr_Update_RemovePledgeIfDeclined]
   ON  [dbo].[Donations]
-  AFTER INSERT, UPDATE
+  AFTER UPDATE
 AS
 BEGIN
 
