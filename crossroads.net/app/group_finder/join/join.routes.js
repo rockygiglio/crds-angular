@@ -32,27 +32,27 @@
         controller: 'JoinQuestionsCtrl as join',
         url: '/questions',
         templateUrl: 'join/join_questions.html',
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.join.review', {
         controller: 'JoinReviewCtrl as join',
         url: '/review',
         templateUrl: 'join/join_review.html',
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.join.results', {
         controller: 'JoinResultsCtrl as result',
         url: '/results',
         templateUrl: 'join/join_results.html',
         resolve: {},
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.join.upsell', {
         controller: 'JoinUpsellCtrl as upsell',
         url: '/host',
         templateUrl: 'join/join_upsell.html',
         resolve: {},
-        data: {metta: {title: SERIES.title, description: ''}}
+        data: {isProtected: true, metta: {title: SERIES.title, description: ''}}
       })
       ;
 
