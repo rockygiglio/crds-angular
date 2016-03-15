@@ -8,6 +8,7 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using System.Web.Security;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
@@ -269,6 +270,11 @@ namespace MinistryPlatform.Translation.Services
         public UserInfo GetContactInfo(string token)
         {
             return Call<UserInfo>(token, platformClient => platformClient .GetCurrentUserInfo());
+        }
+
+        public void CompleteTask(string token, int taskId, bool rejected, string comments)
+        {
+            VoidCall(token, platformClient => platformClient.CompleteTask(taskId, rejected, comments));
         }
 
         private int GetMinistryPlatformId(string mpKey)

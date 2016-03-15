@@ -2,19 +2,19 @@
   <header>
     <div class="media">
       <div class="media-left">
-        <img ng-if="displayDefaultGroup" class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
-        <profile-picture ng-if="!displayDefaultGroup && group.host.contactId"
-                         contact-id="group.host.contactId"
+        <img ng-if="displayDefaultGroup || !group.editProfilePicture" class="media-object img-circle" ng-src="{{getProfileImage()}}" alt="Profile Photo" err-src="{{getDefaultImage()}}"/>
+        <profile-picture ng-if="!displayDefaultGroup && group.editProfilePicture"
+                         contact-id="group.contactId"
                          wrapper-class="group-profile-picture"
                          image-class="pull-left img-responsive img-circle"
                          button-text="Change"></profile-picture>
       </div>
       <div class="media-body">
-        <p class="group-type text-uppercase"><strong>{{getGroupType()}}</strong></p>
+        <p class="group-type text-uppercase"><strong>{{group.groupType}}</strong></p>
         <h4 class="media-heading">{{group.groupTitle}}</h4>
         <ul class="list-unstyled">
-          <li>{{group.time}}</li>
-          <li>{{getGroupDistance() || group.distance}}</li>
+          <li class="downcase">{{group.time}}</li>
+          <li><a target="_blank" href="{{group.mapLink}}">{{getGroupDistance()}}</a></li>
         </ul>
       </div>
     </div>

@@ -3,9 +3,9 @@
 
   module.exports = PersonService;
 
-  PersonService.$inject = ['$rootScope', '$cookies', 'Profile', 'AUTH_EVENTS'];
+  PersonService.$inject = ['$rootScope', 'Session', 'Profile', 'AUTH_EVENTS'];
 
-  function PersonService($rootScope, $cookies, Profile, AUTH_EVENTS) {
+  function PersonService($rootScope, Session, Profile, AUTH_EVENTS) {
     var promise = null;
 
     //
@@ -28,9 +28,9 @@
 
     function loadProfile() {
       if (!promise) {
-        var cid = $cookies.get('userId');
-        if (cid) {
-          promise = Profile.Person.get({contactId: cid}).$promise;
+        var contactId = Session.exists('userId');
+        if (contactId) {
+          promise = Profile.Person.get({contactId: contactId}).$promise;
 
           promise.then(function(data) {
             service.profile = decorateProfile(data);

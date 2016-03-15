@@ -79,5 +79,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<Dictionary<string, object>> GetSelectionsDict(int selectionId, String token, String search = "", String sort = "");
         SelectQueryResult GetSelectionRecords(int selectionId, String token, String search = "", String sort = "");
         UserInfo GetContactInfo(string token);
+        void CompleteTask(string token, int taskId, bool rejected, string comments);
     }
 }

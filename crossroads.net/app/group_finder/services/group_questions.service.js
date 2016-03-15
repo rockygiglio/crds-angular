@@ -13,6 +13,7 @@
     service.loadQuestions = loadQuestions;
     service.getLookup = getLookup;
     service.getQuestions = getQuestions;
+    service.lookupContains = lookupContains;
 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, clearData);
 
@@ -38,7 +39,8 @@
               question.answers = _.map(question.attributeType.attributes, function(attribute) {
                 service.lookup[attribute.attributeId] = {
                   name: attribute.name,
-                  attributeTypeId: this.attributeTypeId
+                  attributeTypeId: this.attributeTypeId,
+                  description: attribute.description
                 };
                 return { id: attribute.attributeId, name: attribute.name };
               }, {attributeTypeId: question.attributeType.attributeTypeId});
@@ -55,6 +57,10 @@
       return loadPromise.then(function() {
         return service.questions;
       });
+    }
+
+    function lookupContains(id, keyword) {
+      return service.lookup[id].name.toLowerCase().indexOf(keyword) > -1;
     }
 
     function getLookup() {

@@ -3,11 +3,11 @@
 
   module.exports = GroupCardCtrl;
 
-  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_TYPES', 'GROUP_ROLE_ID_PARTICIPANT', '$modal'];
+  GroupCardCtrl.$inject = ['$scope', 'ImageService', 'GROUP_ROLE'];
 
-  function GroupCardCtrl($scope, ImageService, GROUP_TYPES, GROUP_ROLE_ID_PARTICIPANT, $modal) {
+  function GroupCardCtrl($scope, ImageService, GROUP_ROLE) {
 
-    $scope.GROUP_ROLE_ID_PARTICIPANT = GROUP_ROLE_ID_PARTICIPANT;
+    $scope.participant_role_id = GROUP_ROLE.PARTICIPANT;
     $scope.defaultImage = ImageService.DefaultProfileImage;
 
     $scope.getMemberImage = function(member) {
@@ -23,7 +23,6 @@
     };
 
     $scope.getGroupType = function() {
-      // TODO - The 'Co-ed' default value should be removed once the API is completed
       return $scope.group.type ? 'A group of ' + $scope.group.type : 'A group';
     };
 
@@ -35,15 +34,8 @@
       return 'group_card/group_' + $scope.template + '.html';
     };
 
-    $scope.mapAddress = function() {
-      var address = $scope.group.address;
-      var searchAddress = address.addressLine1 + ', ' + address.city + ', ' + address.state + ', ' + address.zip;
-      return 'https://maps.google.com/?q=' + searchAddress.replace(/\s/g, '+');
-    };
-
     $scope.groupTime = function() {
-      var meetingTime = moment().format('YYYY-MM-DD') + ' ' + $scope.group.meetingTime;
-      return moment().isoWeekday($scope.group.meetingDayId - 1).format('dddd') + ', ' + moment(meetingTime).format('h a');
+      return $scope.group.meetingDay + ', ' + $scope.group.meetingHour;
     };
 
   }

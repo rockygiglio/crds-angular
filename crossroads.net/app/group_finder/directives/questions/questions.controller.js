@@ -9,7 +9,8 @@
     '$scope',
     '$state',
     '$window',
-    'Responses'
+    'Responses',
+    'ParticipantQuestionService'
   ];
 
   function QuestionsCtrl( $location,
@@ -17,7 +18,12 @@
                           $scope,
                           $state,
                           $window,
-                          Responses) {
+                          Responses,
+                          ParticipantQuestionService
+  ) {
+
+    var vm = this;
+    vm.upsellRedirect = upsellRedirect;
 
     $scope.initialize = function() {
 
@@ -26,8 +32,14 @@
       });
 
       $scope.step = parseInt($location.hash()) || $scope.step;
-      $scope.responses = Responses.data;
       $scope.totalQuestions = _.size($scope.questions);
+
+      // handle return to last questions if rejecting upsell
+      if (_.has(Responses.data, 'bypassUpsell')) {
+        $scope.step = $scope.totalQuestions;
+      }
+
+      $scope.responses = Responses.data;
 
       Object.defineProperty($scope, 'nextBtn', {
         get: function() {
@@ -38,15 +50,17 @@
 
     $scope.previousQuestion = function() {
       $scope.applyErrors();
+      $scope.$broadcast('groupFinderClearError');
       $scope.step--;
       $scope.provideFocus();
     };
 
     $scope.nextQuestion = function() {
+      $scope.$broadcast('groupFinderClearError');
+
       if(_.any($scope.currentErrorFields())) {
         $scope.applyErrors();
         $scope.provideFocus();
-        $scope.$broadcast('groupFinderShowError');
       } else {
         $scope.go();
       }
@@ -56,8 +70,10 @@
       Responses.data.completed_flow = true;
       if($scope.mode === 'host' && $scope.isPrivateGroup()) {
         $state.go('group_finder.' + $scope.mode + '.review');
-      } else if($scope.step === $scope.totalQuestions) {
+      } else if ($scope.step === $scope.totalQuestions) {
         $state.go('group_finder.' + $scope.mode + '.review');
+      } else if (vm.upsellRedirect()) {
+        $state.go('group_finder.' + $scope.mode + '.upsell');
       } else {
         Responses.data.completed_flow = false;
         $scope.step++;
@@ -128,13 +144,14 @@
                 if(typeof response === 'object') {
                   if(controlName === undefined) {
                     // multi-select value, ie. checkbox
-                    response = Object.keys(response);
+                    var key = Object.keys(response);
+                    response =_.some(response);
                   } else {
                     // compound group of fields, ie. address, date/time, etc.
                     response = response[controlName];
                   }
                 }
-                //
+
                 if (el.data('input-type') !== undefined) {
                   switch (el.data('input-type')) {
                     case 'zip':
@@ -144,7 +161,13 @@
                   }
                 }
 
-                var hasError = (response === undefined || response === '');
+                if (el.attr('name') === 'date_and_time[day]') {
+                  if (Responses.data.date_and_time.time === null) {
+                    response = '';
+                  }
+                }
+
+                var hasError = (response === undefined || response === '' || response === false);
 
                 return hasError ? el : false;
               })
@@ -153,19 +176,24 @@
     };
 
     $scope.applyErrors = function() {
-      $('div.has-error:visible').removeClass('has-error');
-      $scope.$broadcast('groupFinderClearError');
+      $scope.$broadcast('groupFinderShowError');
 
       _.each($scope.currentErrorFields(), function(el){
         if(el.val() === '' || el.val().indexOf('undefined') > -1) {
-          el.closest('div').addClass('has-error');
+          $scope.$broadcast('groupFinderShowError');
+        }
+        if (el.attr('name') === 'date_and_time[day]') {
+          if (Responses.data.date_and_time.time === null) {
+            $scope.$broadcast('groupFinderTimeError');
+          }
         }
         if (el.data('input-type') !== undefined) {
           switch (el.data('input-type')) {
             case 'zip':
-              if ($scope.validZip(el.val()) === false) {
+              if (el.val() && $scope.validZip(el.val()) === false) {
+                $scope.$broadcast('groupFinderClearError');
+
                 $scope.$broadcast('groupFinderZipError');
-                el.closest('div').addClass('has-error');
               }
           }
         }
@@ -203,6 +231,14 @@
         $scope.step = parseInt(hash);
       }
     };
+
+    function upsellRedirect() {
+      return Responses.data.joinFlow &&
+        ParticipantQuestionService.showUpsell(Responses.data.prior_participation) &&
+        _.has(Responses.data, 'location') &&
+        $scope.currentQuestion().title === 'location' &&
+        $scope.mode !== 'host';
+    }
 
     // ----------------------------------- //
 

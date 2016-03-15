@@ -14,17 +14,35 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _usersApiLookupPageViewId;
+        private readonly int _usersPageId;
 
         public UserService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _usersApiLookupPageViewId = _configurationWrapper.GetConfigIntValue("UsersApiLookupPageView");
+            _usersPageId = _configurationWrapper.GetConfigIntValue("Users");
         }
 
         public MinistryPlatformUser GetByUserId(string userId)
         {
             var searchString = string.Format("\"{0}\",", userId);
             return (GetUser(searchString));
+        }
+
+        public MinistryPlatformUser GetUserByRecordId(int recordId)
+        {
+            var record = _ministryPlatformService.GetRecordDict(_usersPageId, recordId, ApiLogin());
+
+            var user = new MinistryPlatformUser
+            {
+                CanImpersonate = record["Can_Impersonate"] as bool? ?? false,
+                Guid = record.ContainsKey("User_GUID") ? record["User_GUID"].ToString() : null,
+                UserId = record["User_Name"] as string,
+                UserEmail = record["User_Email"] as string,
+                UserRecordId = Int32.Parse(record["User_ID"].ToString())
+            };
+
+            return (user);
         }
 
         public MinistryPlatformUser GetByAuthenticationToken(string authToken)

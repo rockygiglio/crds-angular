@@ -3,9 +3,9 @@
 
   module.exports = GroupFinderRoutes;
 
-  GroupFinderRoutes.$inject = ['$stateProvider', '$urlRouterProvider', 'SERIES' ];
+  GroupFinderRoutes.$inject = ['$stateProvider', 'SERIES'];
 
-  function GroupFinderRoutes($stateProvider, $urlRouterProvider, SERIES) {
+  function GroupFinderRoutes($stateProvider, SERIES) {
 
     $stateProvider
       .state('group_finder', {
@@ -14,9 +14,7 @@
         controller: 'GroupFinderCtrl as base',
         templateUrl: 'common/layout.html',
         resolve: {
-          StartProfileLoad: ['Person', function(Person) {
-            Person.loadProfile();
-          }]
+
         },
         data: {
           meta: {
@@ -31,11 +29,17 @@
         url: '/summary',
         templateUrl: 'summary/summary.html',
         resolve: {
+          StartProfileLoad: ['Person', function(Person) {
+            Person.loadProfile();
+          }],
+          StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
+            function(GroupQuestionService, ParticipantQuestionService) {
+              GroupQuestionService.loadQuestions();
+              ParticipantQuestionService.loadQuestions();
+            }
+          ],
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
-          }],
-          StartQuestionLoad: ['GroupQuestionService', function(GroupQuestionService) {
-            GroupQuestionService.loadQuestions();
           }]
         },
         data: {
@@ -54,6 +58,12 @@
         resolve: {
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
+          }],
+          AuthenticatedPerson: ['Person', function(Person) {
+            return Person.getProfile();
+          }],
+          LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
+            return ParticipantQuestionService;
           }]
         },
         data: {

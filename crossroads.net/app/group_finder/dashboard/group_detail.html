@@ -1,17 +1,8 @@
 <tabset class="group-detail">
   <tab heading="My Group" active="tab[1].active" ng-click="detail.goToTab(tab)" class="{{tab.class}}" >
+    <preloader full-screen='true' ng-show="detail.loading"></preloader>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          <h3 class="text-center group-description">{{detail.group.groupDescription}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <hr />
-
-    <div ng-repeat="member in detail.group.members track by $index" ng-if="member.groupRoleId == detail.GROUP_ROLE_ID_PARTICIPANT">
+    <div ng-repeat="member in detail.group.members track by $index" ng-if="member.groupRoleId == detail.participant_role_id && !detail.loading">
       <hr ng-if="$index > 0" />
       <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
@@ -19,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="detail.group.members.length <= 1">
+    <div ng-if="detail.group.members.length <= 1 && !detail.loading">
       <div class="help text-center">No one has joined your group yet.</div>
     </div>
 

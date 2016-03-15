@@ -101,9 +101,9 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ContributionDate, opts => opts.MapFrom(src => src.DonationDate.ToString("MM/dd/yyyy")))
                 .ForMember(dest => dest.SettlementDate, opts => opts.MapFrom(src => src.DepositDate.ToString("MM/dd/yyyy")))
-                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DonationAmount))
+                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DonationAmount.ToString()))
                 .ForMember(dest => dest.ReceivablesAccount, opts => opts.MapFrom(src => src.ReceivableAccount))
-                .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount.ToString()))
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
                 .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate  )));
 
@@ -234,6 +234,10 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<GroupDTO, Group>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
+
+
+            Mapper.CreateMap<GroupSearchResult, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
 
             Mapper.CreateMap<Address, AddressDTO>()
                 .ForMember(dest => dest.AddressLine1, opts => opts.MapFrom(src => src.Address_Line_1))

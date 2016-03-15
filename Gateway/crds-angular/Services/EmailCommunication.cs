@@ -41,11 +41,19 @@ namespace crds_angular.Services
 
             communication.AuthorUserId = email.FromUserId ?? _communicationService.GetUserIdFromContactId(token, email.FromContactId);
 
+            //TODO: GetPerson call has overhead of loading attributes, family, and other stuff, may want to refactor to simpler calls
+            //possibly something like this
+            //contact.ContactId = DefaultContactEmailId;
+            //contact.EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId);
             var sender = _personService.GetPerson(DefaultContactEmailId);
             var from = new Contact { ContactId = sender.ContactId, EmailAddress = sender.EmailAddress };
             communication.FromContact = from;
             communication.ReplyToContact = from;
 
+            //TODO: GetPerson call has overhead of loading attributes, family, and other stuff, may want to refactor to simpler calls
+            //possibly something like this
+            //contact.ContactId = email.ToContactId;
+            //contact.EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId);
             var receiver = _personService.GetPerson(email.ToContactId);
             var recipient = new Contact {ContactId = receiver.ContactId, EmailAddress = receiver.EmailAddress};
             communication.ToContacts.Add(recipient);
@@ -57,13 +65,25 @@ namespace crds_angular.Services
 
             communication.MergeData = email.MergeData;
 
+            if (!communication.MergeData.ContainsKey("BaseUrl"))
+            {
+                communication.MergeData.Add("BaseUrl", _configurationWrapper.GetConfigValue("BaseUrl"));
+            }
+
             _communicationService.SendMessage(communication);
         }
 
         public void SendEmail(CommunicationDTO emailData)
         {
-            var sender = _personService.GetPerson(DefaultContactEmailId);
-            var from = new Contact {ContactId = DefaultContactEmailId, EmailAddress = sender.EmailAddress};
+            //TODO - Refactor - Assumption is made that the FromContactId and ReplyToContactId are always the same
+            var replyToContactId = emailData.FromContactId;
+            if (replyToContactId == 0)
+            {
+                replyToContactId = DefaultContactEmailId;
+            }
+                
+            var from = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
+
             var comm = new Communication
             {
                 AuthorUserId = 1,
