@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using log4net;
@@ -12,18 +11,18 @@ namespace MinistryPlatform.Translation.Services
 {
     public class ContactService : BaseService, IContactService
     {
-        private readonly int _contactsPageId;
-        private readonly int _householdsPageId;
-        private readonly int _securityRolesSubPageId;
+        private readonly int _addressesPageId;
+        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int _congregationDefaultId;
+        private readonly int _contactsPageId;
         private readonly int _householdDefaultSourceId;
         private readonly int _householdPositionDefaultId;
-        private readonly int _addressesPageId;
-        private readonly int _participantsPageId;
+        private readonly int _householdsPageId;
         private readonly ILog _logger = LogManager.GetLogger(typeof (ContactService));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly int _participantsPageId;
+        private readonly int _securityRolesSubPageId;
 
         public ContactService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
@@ -41,21 +40,37 @@ namespace MinistryPlatform.Translation.Services
             _participantsPageId = configuration.GetConfigIntValue("Participants");
         }
 
-        public string GetContactEmail(int contactId)
+        public int CreateContactForGuestGiver(string emailAddress, string displayName)
         {
-            try
+            var contactDonor = new ContactDonor
             {
-                var recordsDict = _ministryPlatformService.GetRecordDict(_contactsPageId, contactId, ApiLogin());
+                Details = new ContactDetails
+                {
+                    DisplayName = displayName,
+                    EmailAddress = emailAddress
+                }
+            };
+            return (CreateContact(contactDonor));
+        }
 
-                var contactEmail = recordsDict["Email_Address"].ToString();
+        public int CreateContactForNewDonor(ContactDonor contactDonor)
+        {
+            return (CreateContact(contactDonor));
+        }
 
-                return contactEmail;
-            }
-            catch (NullReferenceException)
+        public int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard)
+        {
+            var householdId = CreateAddressHouseholdForSponsoredChild(town, lastName);
+
+            var contact = new MyContact
             {
-                _logger.Debug(string.Format("Trying to email address of {0} failed", contactId));
-                return string.Empty;
-            }
+                First_Name = firstName,
+                Last_Name = lastName,
+                ID_Number = idCard,
+                Household_ID = householdId
+            };
+
+            return CreateContact(contact);
         }
 
         public MyContact GetContactById(int contactId)
@@ -89,17 +104,10 @@ namespace MinistryPlatform.Translation.Services
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
-        public int GetContactIdByParticipantId(int participantId)
-        {
-            var token = ApiLogin();
-            var participant = _ministryPlatformService.GetRecordDict(_participantsPageId, participantId, token);
-            return participant.ToInt("Contact_ID");
-        }
-
         public MyContact GetContactByParticipantId(int participantId)
         {
             var token = ApiLogin();
-            var searchString = string.Format("{0},",participantId);
+            var searchString = string.Format("{0},", participantId);
             var contacts = _ministryPlatformService.GetPageViewRecords("ContactByParticipantId", token, searchString);
             var c = contacts.SingleOrDefault();
             if (c == null)
@@ -116,12 +124,51 @@ namespace MinistryPlatform.Translation.Services
             return contact;
         }
 
-        public List<Dictionary<string, object>> StaffContacts()
+        public string GetContactEmail(int contactId)
+        {
+            try
+            {
+                var recordsDict = _ministryPlatformService.GetRecordDict(_contactsPageId, contactId, ApiLogin());
+
+                var contactEmail = recordsDict["Email_Address"].ToString();
+
+                return contactEmail;
+            }
+            catch (NullReferenceException)
+            {
+                _logger.Debug(string.Format("Trying to email address of {0} failed", contactId));
+                return string.Empty;
+            }
+        }
+
+        public int GetContactIdByEmail(string email)
+        {
+            var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
+            if (records.Count > 1)
+            {
+                throw new Exception("User email did not return exactly one user record");
+            }
+            if (records.Count < 1)
+            {
+                return 0;
+            }
+
+            var record = records[0];
+            return record.ToInt("dp_RecordID");
+        }
+
+        public int GetContactIdByParticipantId(int participantId)
         {
             var token = ApiLogin();
-            var userRoleStaff = _configurationWrapper.GetConfigIntValue("StaffUserRoleId");
-            var records = _ministryPlatformService.GetSubpageViewRecords("UserDetails", userRoleStaff, token);
-            return records;
+            var participant = _ministryPlatformService.GetRecordDict(_participantsPageId, participantId, token);
+            return participant.ToInt("Contact_ID");
+        }
+
+        public IList<int> GetContactIdByRoleId(int roleId, string token)
+        {
+            var records = _ministryPlatformService.GetSubPageRecords(_securityRolesSubPageId, roleId, token);
+
+            return records.Select(record => (int) record["Contact_ID"]).ToList();
         }
 
         public List<HouseholdMember> GetHouseholdFamilyMembers(int householdId)
@@ -157,6 +204,61 @@ namespace MinistryPlatform.Translation.Services
             return contact;
         }
 
+        public List<Dictionary<string, object>> StaffContacts()
+        {
+            var token = ApiLogin();
+            var userRoleStaff = _configurationWrapper.GetConfigIntValue("StaffUserRoleId");
+            var records = _ministryPlatformService.GetSubpageViewRecords("UserDetails", userRoleStaff, token);
+            return records;
+        }
+
+        public void UpdateContact(int contactId, Dictionary<string, object> profileDictionary)
+        {
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error Saving contact: " + e.Message);
+                }
+            });
+        }
+
+        public void UpdateContact(int contactId,
+                                  Dictionary<string, object> profileDictionary,
+                                  Dictionary<string, object> householdDictionary,
+                                  Dictionary<string, object> addressDictionary)
+        {
+            WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+                    if (addressDictionary["Address_ID"] != null)
+                    {
+                        //address exists, update it
+                        _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
+                    }
+                    else
+                    {
+                        //address does not exist, create it, then attach to household
+                        var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
+                        householdDictionary.Add("Address_ID", addressId);
+                    }
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    return 0;
+                }
+            });
+        }
+
         private static MyContact ParseProfileRecord(Dictionary<string, object> recordsDict)
         {
             var contact = new MyContact
@@ -170,7 +272,7 @@ namespace MinistryPlatform.Translation.Services
                 City = recordsDict.ToString("City"),
                 State = recordsDict.ToString("State"),
                 County = recordsDict.ToString("County"),
-                Postal_Code = recordsDict.ToString("Postal_Code"),                
+                Postal_Code = recordsDict.ToString("Postal_Code"),
                 Contact_ID = recordsDict.ToInt("Contact_ID"),
                 Date_Of_Birth = recordsDict.ToDateAsString("Date_of_Birth"),
                 Email_Address = recordsDict.ToString("Email_Address"),
@@ -192,7 +294,7 @@ namespace MinistryPlatform.Translation.Services
                 Passport_Expiration = ParseExpirationDate(recordsDict.ToNullableDate("Passport_Expiration")),
                 Passport_Firstname = recordsDict.ToString("Passport_Firstname"),
                 Passport_Lastname = recordsDict.ToString("Passport_Lastname"),
-                Passport_Middlename = recordsDict.ToString("Passport_Middlename")                
+                Passport_Middlename = recordsDict.ToString("Passport_Middlename")
             };
             if (recordsDict.ContainsKey("Participant_Start_Date"))
             {
@@ -228,24 +330,14 @@ namespace MinistryPlatform.Translation.Services
             return null;
         }
 
-        public int CreateContactForNewDonor(ContactDonor contactDonor)
+        public int CreateSimpleContact(string firstName, string lastName, string email)
         {
-            return (CreateContact(contactDonor));
-        }
-
-        public int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard)
-        {
-            var householdId = CreateAddressHouseholdForSponsoredChild(town, lastName);
-
-            var contact = new MyContact
+            return CreateContact(new MyContact
             {
                 First_Name = firstName,
                 Last_Name = lastName,
-                ID_Number = idCard,
-                Household_ID = householdId
-            };
-            
-            return CreateContact(contact);
+                Email_Address = email
+            });
         }
 
         private int CreateAddressHouseholdForSponsoredChild(string town, string lastName)
@@ -257,25 +349,12 @@ namespace MinistryPlatform.Translation.Services
                     City = town,
                     Line1 = "Not Known"
                 };
-                return  CreateHouseholdAndAddress(lastName, address, ApiLogin());
+                return CreateHouseholdAndAddress(lastName, address, ApiLogin());
             }
             else
             {
                 return -1;
             }
-        }
-
-        public int CreateContactForGuestGiver(string emailAddress, string displayName)
-        {
-            var contactDonor = new ContactDonor
-            {
-                Details = new ContactDetails
-                {
-                    DisplayName = displayName,
-                    EmailAddress = emailAddress
-                }
-            };
-            return (CreateContact(contactDonor));
         }
 
         private int CreateContact(MyContact contact)
@@ -358,7 +437,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private int CreateHouseholdAndAddress(string householdName, PostalAddress address, string apiToken )
+        private int CreateHouseholdAndAddress(string householdName, PostalAddress address, string apiToken)
         {
             var addressDictionary = new Dictionary<string, object>
             {
@@ -379,76 +458,6 @@ namespace MinistryPlatform.Translation.Services
             };
 
             return (_ministryPlatformService.CreateRecord(_householdsPageId, householdDictionary, apiToken));
-        }
-
-        public IList<int> GetContactIdByRoleId(int roleId, string token)
-        {
-            var records = _ministryPlatformService.GetSubPageRecords(_securityRolesSubPageId, roleId, token);
-
-            return records.Select(record => (int) record["Contact_ID"]).ToList();
-        }
-
-        public void UpdateContact(int contactId, Dictionary<string, object> profileDictionary)
-        {
-            var retValue = WithApiLogin<int>(token =>
-            {
-                try
-                {
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
-                    return 1;
-                }
-                catch (Exception e)
-                {
-                    throw new ApplicationException("Error Saving contact: " + e.Message);
-                }
-            });
-        }
-
-        public void UpdateContact(int contactId,
-                                  Dictionary<string, object> profileDictionary,
-                                  Dictionary<string, object> householdDictionary,
-                                  Dictionary<string, object> addressDictionary)
-        {
-            WithApiLogin<int>(token =>
-            {
-                try
-                {
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
-                    if (addressDictionary["Address_ID"] != null)
-                    {
-                        //address exists, update it
-                        _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                    }
-                    else
-                    {
-                        //address does not exist, create it, then attach to household
-                        var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                        householdDictionary.Add("Address_ID", addressId);
-                    }
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
-                    return 1;
-                }
-                catch (Exception e)
-                {
-                    return 0;
-                }
-            });
-        }
-
-        public int GetContactIdByEmail(string email)
-        {
-            var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
-            if (records.Count > 1)
-            {
-                throw new Exception("User email did not return exactly one user record");
-            }
-            if (records.Count < 1)
-            {
-                return 0;
-            }
-
-            var record = records[0];
-            return record.ToInt("dp_RecordID");
         }
     }
 }

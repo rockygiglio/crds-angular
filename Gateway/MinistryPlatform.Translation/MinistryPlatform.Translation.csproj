@@ -102,6 +102,7 @@
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
+    <Compile Include="Models\GoCincinnati\Registration.cs" />
     <Compile Include="Models\MPServeReminder.cs" />
     <Compile Include="Models\Opportunities\MPResponse.cs" />
     <Compile Include="Models\People\MpParticipant.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\GoCincinnati\RegistrationService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />

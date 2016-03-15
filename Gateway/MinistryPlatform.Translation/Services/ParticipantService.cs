@@ -19,6 +19,19 @@ namespace MinistryPlatform.Translation.Services
             this._ministryPlatformService = ministryPlatformService;
         }
 
+        public int CreateParticipantRecord(int contactId)
+        {
+            var token = ApiLogin();
+            var pageId = _configurationWrapper.GetConfigIntValue("Participants");
+
+            var participantDictionary = new Dictionary<string, object>();
+            participantDictionary["Participant_Type_ID"] = _configurationWrapper.GetConfigIntValue("Participant_Type_Default_ID");
+            participantDictionary["Participant_Start_Date"] = DateTime.Now;
+            participantDictionary["Contact_Id"] = contactId;
+
+            return _ministryPlatformService.CreateRecord(pageId, participantDictionary, token);
+        }
+
         //Get Participant IDs of a contact
         public Participant GetParticipantRecord(string token)
         {

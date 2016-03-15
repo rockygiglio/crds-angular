@@ -4,11 +4,19 @@ using System.Web.Http;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Security;
+using crds_angular.Services;
 
 namespace crds_angular.Controllers.API
 {
     public class GoVolunteerRegistrationController : MPAuth
     {
+        private readonly IGoVolunteerService _goVolunteerService;
+
+        public GoVolunteerRegistrationController(IGoVolunteerService goVolunteerService)
+        {
+            _goVolunteerService = goVolunteerService;
+        }
+
         [AcceptVerbs("POST")]
         [Route("api/goVolunteerRegistration")]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
@@ -19,7 +27,8 @@ namespace crds_angular.Controllers.API
                 {
                     try
                     {
-                        throw new NotImplementedException("POST goVolunteerRegistration");
+                        //throw new NotImplementedException("POST goVolunteerRegistration");
+                        _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                         return Ok();
                     }
                     catch (Exception e)

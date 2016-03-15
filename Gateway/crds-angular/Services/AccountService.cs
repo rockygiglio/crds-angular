@@ -23,6 +23,7 @@ namespace crds_angular.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILookupService _lookupService;
         private readonly IApiUserService _apiUserService;
+        private readonly IParticipantService _participantService;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
             ICommunicationService communicationService, 
@@ -30,7 +31,8 @@ namespace crds_angular.Services
             ISubscriptionsService subscriptionService, 
             IMinistryPlatformService ministryPlatformService, 
             ILookupService lookupService,
-            IApiUserService apiUserService)
+            IApiUserService apiUserService,
+            IParticipantService participantService)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
@@ -39,6 +41,7 @@ namespace crds_angular.Services
             _ministryPlatformService = ministryPlatformService;
             _lookupService = lookupService;
             _apiUserService = apiUserService;
+            _participantService = participantService;
         }
         public bool ChangePassword(string token, string newPassword)
         {
@@ -156,16 +159,16 @@ namespace crds_angular.Services
             _ministryPlatformService.CreateSubRecord(_configurationWrapper.GetConfigIntValue("Users_Roles"),userRecordId, userRoleDictionary, token);
         }
 
-        private void CreateParticipantRecord(string token, int contactRecordId)
-        {
-            var participantDictionary = new Dictionary<string, object>();
-            participantDictionary["Participant_Type_ID"] = _configurationWrapper.GetConfigIntValue("Participant_Type_Default_ID");
+        //private void CreateParticipantRecord(string token, int contactRecordId)
+        //{
+        //    var participantDictionary = new Dictionary<string, object>();
+        //    participantDictionary["Participant_Type_ID"] = _configurationWrapper.GetConfigIntValue("Participant_Type_Default_ID");
 
-            participantDictionary["Participant_Start_Date"] = DateTime.Now;
-            participantDictionary["Contact_Id"] = contactRecordId;
+        //    participantDictionary["Participant_Start_Date"] = DateTime.Now;
+        //    participantDictionary["Contact_Id"] = contactRecordId;
 
-            _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Participants"), participantDictionary, token);
-        }
+        //    _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Participants"), participantDictionary, token);
+        //}
         /*
          * Not needed as long as the triggers are in place on Ministry Platform
          */
@@ -193,7 +196,7 @@ namespace crds_angular.Services
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);
             CreateContactHouseholdRecord(token, householdRecordId, contactRecordId);
             CreateUserRoleSubRecord(token, userRecordId);
-            CreateParticipantRecord(token, contactRecordId);
+            _participantService.CreateParticipantRecord(contactRecordId);
             CreateNewUserSubscriptions(contactRecordId, token);
 
             //TODO Contingent on cascading delete via contact
