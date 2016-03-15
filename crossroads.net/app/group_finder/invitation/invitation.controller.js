@@ -123,7 +123,7 @@
                   City          : vm.responses.location.city,
                   State         : vm.responses.location.state,
                   PostalCode    : vm.responses.location.zip,
-                  Email         : AuthenticatedPerson.email
+                  Email         : AuthenticatedPerson.emailAddress
                 }
               };
             } else {
