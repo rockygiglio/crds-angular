@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   module.exports = PaymentDisplayDetailService;
@@ -13,7 +13,7 @@
     };
 
     function postProcess(paymentsDisplayInput) {
-      var paymentsDisplay = _.transform(paymentsDisplayInput, function(result, p) {
+      var paymentsDisplay = _.transform(paymentsDisplayInput, function (result, p) {
         var paymentsDisplay = _.cloneDeep(p);
         setDisplayDetails(paymentsDisplay.source);
         result.push(paymentsDisplay);
@@ -31,25 +31,35 @@
           source.viewBox = '0 0 34 32';
           break;
         case 'Bank':
-         if (source.last4 == undefined){
-             source.icon = '';
-          } 
-        case 'Check':
-          source.icon = 'library';
           source.viewBox = '0 0 32 32';
-          if (source.last4 == undefined){             
-             source.icon = '';
-          }  else {
+          if (source.last4 !== undefined) {
+            source.icon = 'library';
             source.name = 'ending in ' + source.last4;
-          }       
+          } else {
+            source.icon = '';
+          }
+
+          break;
+        case 'Check':
+          source.viewBox = '0 0 32 32';
+          if (source.last4 !== undefined) {
+            source.icon = 'library';
+            source.name = 'ending in ' + source.last4 + ' | Check #' + source.check_number;
+          } else {
+            source.icon = '';
+            source.name = 'Check #' + source.check_number;
+          }
+
           break;
         case 'CreditCard':
           source.icon = getCardIcon(source.brand);
           source.viewBox = '0 0 160 100';
-          if (source.last4 != undefined){
+          if (source.last4 !== undefined) {
             source.name = 'ending in ' + source.last4;
-          } 
+          }
+
           break;
+
       }
     }
 
