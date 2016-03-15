@@ -75,8 +75,15 @@ namespace crds_angular.Services
 
         public void SendEmail(CommunicationDTO emailData)
         {
-            var sender = _personService.GetPerson(DefaultContactEmailId);
-            var from = new Contact {ContactId = DefaultContactEmailId, EmailAddress = sender.EmailAddress};
+            //TODO - Refactor - Assumption is made that the FromContactId and ReplyToContactId are always the same
+            var replyToContactId = emailData.FromContactId;
+            if (replyToContactId == 0)
+            {
+                replyToContactId = DefaultContactEmailId;
+            }
+                
+            var from = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
+
             var comm = new Communication
             {
                 AuthorUserId = 1,
