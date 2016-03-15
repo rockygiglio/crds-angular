@@ -176,7 +176,7 @@
           // Send host confirmation emails
           var email = {
             groupId: group.groupId,
-            fromContactId: CONTACT_ID.HOST,
+            fromContactId: AuthenticatedPerson.contactId,
             toContactId: AuthenticatedPerson.contactId
           };
 
