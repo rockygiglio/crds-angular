@@ -176,7 +176,7 @@
       param = $stateParams.organization; 
     }
     // did we already get this information?
-    if (!_.isEmpty(GoVolunteerService.organization)) {
+    if (useCachedOrg(param, GoVolunteerService.organization)) {
       deferred.resolve();   
     } else {
       Organizations.ByName.get({name: param}, function(data){
@@ -189,6 +189,15 @@
       });
     }
     return deferred.promise;
+  }
+
+  function useCachedOrg(org, cachedOrg) {
+    if (!_.isEmpty(cachedOrg)) {
+      if (_.startsWith(cachedOrg.name.toLowerCase(),org.toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
   }
   
   function buildLink(city, org, state) {
