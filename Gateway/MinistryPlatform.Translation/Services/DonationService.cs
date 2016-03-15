@@ -504,7 +504,7 @@ namespace MinistryPlatform.Translation.Services
             glLevelFee.Amount = glLevelFee.Amount + processorFee;
         }
 
-        private Dictionary<int, List<GPExportDatum>> GetGPExportData(int depositId, string token)
+        public Dictionary<int, List<GPExportDatum>> GetGPExportData(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
             var gpExport = new Dictionary<int, List<GPExportDatum>>();
