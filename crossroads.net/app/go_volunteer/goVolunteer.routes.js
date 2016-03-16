@@ -89,6 +89,7 @@
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
+          Spouse: GetSpouse,
           Organization: Organization
         }
       })
@@ -136,6 +137,30 @@
     }, function() {
       deferred.reject();
     });
+
+    return deferred.promise;
+  }
+
+  function GetSpouse(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+    var deferred = $q.defer();
+
+    if ($stateParams.page === 'spouse') {
+      var cid = $cookies.get('userId');
+      if (!cid) {
+        deferred.reject();
+      } else {
+        Profile.Spouse.get({contactId: cid}, function(data) {
+          GoVolunteerService.spouse = data;
+          deferred.resolve();
+        }, function(err) {
+
+          console.log(err);
+          deferred.reject();
+        });
+      }
+    } else {
+      deferred.resolve();
+    }
 
     return deferred.promise;
   }

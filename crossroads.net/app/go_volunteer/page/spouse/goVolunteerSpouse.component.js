@@ -3,12 +3,14 @@
 
   module.exports = GoVolunteerSpouse;
 
-  GoVolunteerSpouse.$inject = [];
+  GoVolunteerSpouse.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerSpouse() {
+  function GoVolunteerSpouse(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerSpouseController,
       controllerAs: 'goSpouse',
@@ -17,6 +19,32 @@
 
     function GoVolunteerSpouseController() {
       var vm = this;
+      vm.spouseKnown = true;
+      vm.spouse = GoVolunteerService.spouse;
+      vm.spouseName = spouseName;
+      vm.submit = submit;
+
+      function spouseName() {
+        if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined) {
+          return vm.spouse.preferredName + ' ' + vm.spouse.lastName;
+        } else {
+          vm.spouseKnown = false;
+          return 'your spouse';
+        }
+      }
+
+      function submit(spouseServing) {
+        GoVolunteerService.spouseAttending = spouseServing;
+        if (spouseServing) {
+          if (vm.spouseKnown) {
+            vm.onSubmit({nextState: 'children'});
+          } else {
+            vm.onSubmit({nextState: 'spouse-name'});
+          }
+        } else {
+          vm.onSubmit({nextState: 'children'});
+        }
+      }
     }
   }
 

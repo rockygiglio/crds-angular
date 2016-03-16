@@ -16,6 +16,8 @@
         dateOfBirth: null,
         mobilePhone: null
       },
+      spouse: {},
+      spouseAttending: false,
       organization: {}
     };
 
