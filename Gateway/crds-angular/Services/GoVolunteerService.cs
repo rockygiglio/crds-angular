@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 
 namespace crds_angular.Services
 {
-    public class GoVolunteerService : MinistryPlatformBaseService, IGoVolunteerService
+    public class GoVolunteerService : IGoVolunteerService
 
     {
         private readonly IConfigurationWrapper _configurationWrapper;
