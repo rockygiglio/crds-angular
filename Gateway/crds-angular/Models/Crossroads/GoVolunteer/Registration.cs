@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using crds_angular.Models.Crossroads.Profile;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
@@ -47,11 +46,15 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "roleId")]
         public int RoleId { get; set; }
 
+        // had the existing Person object, but it felt way too heavy
+        // and Ministry-Platformy, rolling my own specific person class
+        // revisit this decision once intergration starts
+        // also, haven't figured out skills yet
         [JsonProperty(PropertyName = "self")]
-        public Person Self { get; set; }
+        public Registrant Self { get; set; }
 
         [JsonProperty(PropertyName = "spouse")]
-        public Person Spouse { get; set; }
+        public Registrant Spouse { get; set; }
 
         [JsonProperty(PropertyName = "spouseParticipation")]
         [Required]
@@ -60,47 +63,5 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "waiverSigned")]
         [Required]
         public bool WaiverSigned { get; set; }
-    }
-
-    public class GroupConnector
-    {
-        [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
-    }
-
-    public class ChildrenAttending
-    {
-        [JsonProperty(PropertyName = "count")]
-        public int Count { get; set; }
-
-        [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
-    }
-
-    public class PrepWork
-    {
-        [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
-
-        [JsonProperty(PropertyName = "spouse")]
-        public bool Spouse { get; set; }
-    }
-
-    public class Equipment
-    {
-        [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
-
-        [JsonProperty(PropertyName = "notes")]
-        public string Notes { get; set; }
-    }
-
-    public class ProjectPreference
-    {
-        [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
-
-        [JsonProperty(PropertyName = "priority")]
-        public int Priority { get; set; }
     }
 }

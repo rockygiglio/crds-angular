@@ -273,6 +273,12 @@
     <Compile Include="Models\Crossroads\Events\Room.cs" />
     <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ChildrenAttending.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\Equipment.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\GroupConnector.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\PrepWork.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ProjectPreference.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\Registrant.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Registration.cs" />
     <Compile Include="Models\Crossroads\GroupContactDTO.cs" />
     <Compile Include="Models\Crossroads\Events\Event.cs" />

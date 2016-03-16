@@ -49,6 +49,17 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
             return AddAttribute(registrationId, dictionary, "RegistrationPrepWorkSubPage");
         }
 
+        public int AddProjectPreferences(int registrationId, int projectType, int priority)
+        {
+            var dictionary = new Dictionary<string, object>
+            {
+                {"Project_Type_ID", projectType},
+                {"Priority", priority}
+            };
+
+            return AddAttribute(registrationId, dictionary, "RegistrationProjectPreferencesSubPage");
+        }
+
         public int CreateRegistration(Registration registration)
         {
             var token = ApiLogin();
@@ -76,23 +87,12 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
             }
         }
 
-        public int AddProjectPreferences(int registrationId, int projectType, int priority)
-        {
-            var dictionary = new Dictionary<string, object>
-            {
-                {"Project_Type_ID", projectType},
-                {"Priority", priority}
-            };
-
-            return AddAttribute(registrationId, dictionary, "RegistrationProjectPreferencesSubPage");
-        }
-
         private int AddAttribute(int registrationId, Dictionary<string, object> dictionary, string pageKey)
         {
             var token = ApiLogin();
             try
             {
-                return _ministryPlatformService.CreateSubRecord(pageKey, registrationId, dictionary, token, false);
+                return _ministryPlatformService.CreateSubRecord(pageKey, registrationId, dictionary, token, true);
             }
             catch (Exception e)
             {

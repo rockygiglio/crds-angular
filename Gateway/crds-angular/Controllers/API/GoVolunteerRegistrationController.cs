@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Security;
@@ -25,8 +27,9 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (Registration))]
         public IHttpActionResult Get()
         {
+            // TODO this static end point for testing ONLY
+            // TODO please delete me
             var registration = new Registration();
-            registration.Self = new Person {FirstName = "Lakshmi", LastName = "Nair", EmailAddress = "email@nair.com"};
             registration.Equipment = new List<Equipment>
             {
                 new Equipment
@@ -37,7 +40,7 @@ namespace crds_angular.Controllers.API
             };
             registration.PrepWork = new List<PrepWork> { new PrepWork { Id = 7042, Spouse = false } };
             registration.ProjectPreferences = new List<ProjectPreference>{ new ProjectPreference {Id=5, Priority = 1}};
-            registration.Spouse = new Person { FirstName = "Spouse", LastName = "Nair", EmailAddress = "spouse@nair.com" };
+            registration.Spouse = new Registrant { FirstName = "Spouse", LastName = "Nair", EmailAddress = "spouse@nair.com" };
             registration.AdditionalInformation = "Additional Information";
             registration.ChildAgeGroup = new List<ChildrenAttending> { new ChildrenAttending { Count = 3, Id = 7043 } };
             registration.CreateGroupConnector = false;
@@ -48,7 +51,6 @@ namespace crds_angular.Controllers.API
             registration.RoleId = 2;
             registration.SpouseParticipation = true;
             registration.WaiverSigned = true;
-
 
             return Ok(registration);
         }
@@ -63,7 +65,9 @@ namespace crds_angular.Controllers.API
                 {
                     try
                     {
-                        //throw new NotImplementedException("POST goVolunteerRegistration");
+                        // for testing
+                        goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                        // end for testing
                         _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                         return Ok();
                     }
