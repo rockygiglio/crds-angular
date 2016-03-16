@@ -20,12 +20,8 @@ namespace MinistryPlatform.Translation.Services
         public MPOrganization GetOrganization(string name, string token)
         {
             var search = string.Format("{0},", name);
-            var result = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("OrganizationsPage"), token, search);
-            if (result.Count > 1)
-            {
-                throw new MultipleRecordsException();
-            }
-            return MapOrganizations(result).FirstOrDefault();
+            var result = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("OrganizationsPage"), token, search);            
+            return MapOrganizations(result).SingleOrDefault();
         }
 
         public List<MPOrganization> GetOrganizations(string token)

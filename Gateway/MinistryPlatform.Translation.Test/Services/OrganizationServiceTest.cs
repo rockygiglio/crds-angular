@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _mpServiceMock.Setup(m => m.GetRecordsDict(
                 ORGPAGE, fakeToken, string.Format("{0},", name), It.IsAny<string>())
              ).Returns(ListOfOrganizationsWithSameName());
-            Assert.Throws<MultipleRecordsException>(() => _fixture.GetOrganization(name, fakeToken));
+            Assert.Throws<InvalidOperationException>(() => _fixture.GetOrganization(name, fakeToken));
         }
 
         [Test]
