@@ -319,13 +319,15 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<TransferPaidResponseDTO>(result);
             var tp = (TransferPaidResponseDTO)result;
+            // TODO Remove these writelines, just trying to figure out why this test works locally but fails on the build server
+            Console.WriteLine(string.Format("Successful: {0}", string.Join(",", tp.SuccessfulUpdates.Select(x => "[" + x + "]").ToArray())));
+            Console.WriteLine(string.Format("Failed: {0}", string.Join(",", tp.FailedUpdates.Select(x => "[" + x + "]").ToArray())));
+            Console.WriteLine(string.Format("Charges: {0}", string.Join(",", charges.GetRange(0, 5).Select(charge => "[" + charge.Id + "]").ToArray())));
+
             Assert.AreEqual(7, tp.TotalTransactionCount);
             Assert.AreEqual(5, tp.SuccessfulUpdates.Count);
             Assert.AreEqual(charges.GetRange(0, 5).Select(charge => charge.Id), tp.SuccessfulUpdates);
             Assert.AreEqual(2, tp.FailedUpdates.Count);
-            // TODO Remove these writelines, just trying to figure out why this test works locally but fails on the build server
-            Console.WriteLine(string.Join(",", tp.SuccessfulUpdates.Select(x => "[" + x + "]").ToArray()));
-            Console.WriteLine(string.Join(",", tp.FailedUpdates.Select(x => "[" + x + "]").ToArray()));
             Assert.AreEqual("ch444", tp.FailedUpdates[0].Key);
             Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[0].Value);
             Assert.AreEqual("ch555", tp.FailedUpdates[1].Key);
