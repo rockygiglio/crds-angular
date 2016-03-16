@@ -131,23 +131,29 @@ namespace crds_angular.Services
             _logger.Debug(string.Format("{0} charges to update for transfer {1}", charges.Count, transfer.Id));
 
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
-            //charges.Sort((l, r) => l.Created.CompareTo(r.Created));
-            var sortedCharges = charges.OrderBy(x => x.Created);
+            var sortedCharges = charges.OrderByDescending(charge => charge.Created);
 
             foreach (var charge in sortedCharges)
             {
                 try
                 {
-                    string paymentId;
+                    var paymentId = charge.Id;
                     StripeRefund refund = null;
-                    if (charge.Type.Contains("refund"))
+                    if ("refund".Equals(charge.Type)) // Credit Card Refund
                     {
                         refund = _paymentService.GetChargeRefund(charge.Id);
                         paymentId = refund.Data[0].Id;
                     }
-                    else
+                    else if ("payment_refund".Equals(charge.Type)) // Bank Account Refund
                     {
-                        paymentId = charge.Id;
+                        var refundData = _paymentService.GetRefund(charge.Id);
+                        refund = new StripeRefund
+                        {
+                            Data = new List<StripeRefundData>
+                            {
+                                refundData
+                            }
+                        };
                     }
 
                     DonationDTO donation;

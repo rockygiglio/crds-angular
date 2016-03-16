@@ -139,6 +139,12 @@ namespace crds_angular.test.Services
         [Test]
         public void TestTransferPaid()
         {
+            var transfer = new StripeTransfer
+            {
+                Id = "tx9876",
+                Amount = 1443
+            };
+
             var e = new StripeEvent
             {
                 LiveMode = true,
@@ -146,14 +152,11 @@ namespace crds_angular.test.Services
                 Created = DateTime.Now.AddDays(-1),
                 Data = new StripeEventData
                 {
-                    Object = JObject.FromObject(new StripeTransfer
-                    {
-                        Id = "tx9876",
-                        Amount = 1443
-                    })
+                    Object = JObject.FromObject(transfer)
                 }
             };
 
+            var dateCreated = DateTime.Now;
             var charges = new List<StripeCharge>
             {
                 new StripeCharge
@@ -161,49 +164,64 @@ namespace crds_angular.test.Services
                     Id = "ch111",
                     Amount = 111,
                     Fee = 1,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(1)
                 },
                 new StripeCharge
                 {
                     Id = "ch222",
                     Amount = 222,
                     Fee = 2,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(2)
                 },
                 new StripeCharge
                 {
                     Id = "ch333",
                     Amount = 333,
                     Fee = 3,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(3)
                 },
                 new StripeCharge
                 {
                     Id = "ch777",
                     Amount = 777, 
                     Fee = 7,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(4)
                 },
                 new StripeCharge
                 {
                     Id = "ch888",
                     Amount = 888, 
                     Fee = 8,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(5)
+                },
+                new StripeCharge
+                {
+                    Id = "re999",
+                    Amount = 999,
+                    Fee = 9,
+                    Type = "payment_refund",
+                    Created = dateCreated.AddDays(8)
                 },
                 new StripeCharge
                 {
                     Id = "ch444",
                     Amount = 444,
                     Fee = 4,
-                    Type = "charge"
+                    Type = "charge",
+                    Created = dateCreated.AddDays(6)
                 },
                 new StripeCharge
                 {
                     Id = "ch555",
-                    Amount = 555, 
+                    Amount = 555,
                     Fee = 5,
-                    Type = "refund"
+                    Type = "refund",
+                    Created = dateCreated.AddDays(7)
                 }
             };
 
@@ -251,6 +269,38 @@ namespace crds_angular.test.Services
             {
                 Id = 5150,
                 ProcessorTransferId = "OU812"
+            });
+
+            var stripeRefundData = new StripeRefundData
+            {
+                Id = "re999",
+                Amount = "999",
+                Charge = new StripeCharge
+                {
+                    Id = "ch999"
+                }
+            };
+            _paymentService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefundData);
+
+            _donationService.Setup(
+                mocked => mocked.CreateDonationForBankAccountErrorRefund(It.Is<StripeRefund>(r => r.Data != null && r.Data.Count == 1 && r.Data[0].Equals(stripeRefundData))))
+                .Returns(876);
+
+            var firstRefund = true;
+            _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("re999")).Returns(() =>
+            {
+                if (firstRefund)
+                {
+                    firstRefund = false;
+                    throw (new DonationNotFoundException("re999"));
+                }
+
+                return (new DonationDTO()
+                {
+                    Id = "9999",
+                    BatchId = null,
+                    Amount = 999
+                });
             });
 
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch777")).Returns(new DonationDTO
@@ -307,6 +357,7 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(3333, 999, e.Created, null)).Returns(3333);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(7777, 999, e.Created, null)).Returns(7777);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(8888, 999, e.Created, null)).Returns(8888);
+            _donationService.Setup(mocked => mocked.UpdateDonationStatus(9999, 999, e.Created, null)).Returns(9999);
             _donationService.Setup(mocked => mocked.CreateDeposit(It.IsAny<DepositDTO>())).Returns(
                 (DepositDTO o) =>
                 {
@@ -319,19 +370,13 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<TransferPaidResponseDTO>(result);
             var tp = (TransferPaidResponseDTO)result;
-            // TODO Remove these writelines, just trying to figure out why this test works locally but fails on the build server
-            Console.WriteLine(string.Format("Successful: {0}", string.Join(",", tp.SuccessfulUpdates.Select(x => "[" + x + "]").ToArray())));
-            Console.WriteLine(string.Format("Failed: {0}", string.Join(",", tp.FailedUpdates.Select(x => "[" + x + "]").ToArray())));
-            Console.WriteLine(string.Format("Charges: {0}", string.Join(",", charges.Take(5).Select(charge => "[" + charge.Id + "]").ToArray())));
-            Console.WriteLine(string.Format("Charges.Take(5): {0}", string.Join(",", charges.Take(5))));
-
-            Assert.AreEqual(7, tp.TotalTransactionCount);
-            Assert.AreEqual(5, tp.SuccessfulUpdates.Count);
-            Assert.AreEqual(charges.Take(5).Select(charge => charge.Id), tp.SuccessfulUpdates);
+            Assert.AreEqual(8, tp.TotalTransactionCount);
+            Assert.AreEqual(6, tp.SuccessfulUpdates.Count);
+            Assert.AreEqual(charges.Take(6).Reverse().Select(charge => charge.Id), tp.SuccessfulUpdates);
             Assert.AreEqual(2, tp.FailedUpdates.Count);
-            Assert.AreEqual("ch444", tp.FailedUpdates[0].Key);
-            Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[0].Value);
-            Assert.AreEqual("ch555", tp.FailedUpdates[1].Key);
+            Assert.AreEqual("ch555", tp.FailedUpdates[0].Key);
+            Assert.AreEqual("ch444", tp.FailedUpdates[1].Key);
+            Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[1].Value);
             Assert.IsNotNull(tp.Batch);
             Assert.IsNotNull(tp.Deposit);
             Assert.IsNotNull(tp.Exception);
@@ -340,10 +385,10 @@ namespace crds_angular.test.Services
                 o.BatchName.Matches(@"MP\d{12}")
                 && o.SetupDateTime == o.FinalizedDateTime
                 && o.BatchEntryType == 555
-                && o.ItemCount == 5
-                && o.BatchTotalAmount == ((111 + 222 + 333 + 777 + 888) / Constants.StripeDecimalConversionValue)
+                && o.ItemCount == 6
+                && o.BatchTotalAmount == ((111 + 222 + 333 + 777 + 888 + 999) / Constants.StripeDecimalConversionValue)
                 && o.Donations != null
-                && o.Donations.Count == 5
+                && o.Donations.Count == 6
                 && o.DepositId == 98765
                 && o.ProcessorTransferId.Equals("tx9876")
             )));
@@ -354,9 +399,9 @@ namespace crds_angular.test.Services
                 && o.AccountNumber.Equals(" ")
                 && o.BatchCount == 1
                 && o.DepositDateTime != null
-                && o.DepositTotalAmount == (1464 / Constants.StripeDecimalConversionValue)
-                && o.ProcessorFeeTotal == (21 / Constants.StripeDecimalConversionValue)
-                && o.DepositAmount == (1443 / Constants.StripeDecimalConversionValue)
+                && o.DepositTotalAmount == ((transfer.Amount + 30) / Constants.StripeDecimalConversionValue)
+                && o.ProcessorFeeTotal == (30 / Constants.StripeDecimalConversionValue)
+                && o.DepositAmount == (transfer.Amount / Constants.StripeDecimalConversionValue)
                 && o.Notes == null
                 && o.ProcessorTransferId.Equals("tx9876")
             )));
