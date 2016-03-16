@@ -6,6 +6,7 @@
   angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
     .config(require('./goVolunteer.routes'))
     .factory('GoVolunteerService', require('./goVolunteer.service'))
+    .factory('Organizations', require('./organizations.service'))
     ;
 
   require('./city');

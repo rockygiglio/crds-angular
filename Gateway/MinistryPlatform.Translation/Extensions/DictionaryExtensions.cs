@@ -106,7 +106,7 @@ namespace MinistryPlatform.Translation.Extensions
         }
 
         public static DateTime ToDate(this Dictionary<string, object> input, string key, bool throwExceptionIfFailed = false)
-        {
+        {            
             var dictVal = DictVal(input, key);
             if (dictVal == null)
             {
@@ -205,7 +205,7 @@ namespace MinistryPlatform.Translation.Extensions
             return result;
         }
 
-        private static object DictVal(Dictionary<string, object> input, string key)
+        private static object DictVal(IReadOnlyDictionary<string, object> input, string key)
         {
             object dictVal;
             try
