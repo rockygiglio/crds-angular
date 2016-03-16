@@ -417,7 +417,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues1, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues2, It.IsAny<string>(), true));
 
-            // _ministryPlatformService.VerifyAll();
+            _ministryPlatformService.VerifyAll();
             _programService.VerifyAll();
             _communicationService.VerifyAll();
             Assert.IsNotNull(response);
