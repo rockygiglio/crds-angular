@@ -7,14 +7,12 @@ USE [MinistryPlatform]
             ,[Domain_ID]
             ,[Available_Online]
             ,[__ExternalAttributeTypeID]
-            ,[Prevent_Multiple_Selection]
-            ,[Online_Sort_Order])
+            ,[Prevent_Multiple_Selection])
       VALUES
             ('GO Cincinnati - Registration PrepWork'
             ,null
 			,1
 			,null
 			,null
-			,0
-			,null);
+			,0);
  GO

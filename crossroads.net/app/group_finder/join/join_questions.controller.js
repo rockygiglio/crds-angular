@@ -12,6 +12,8 @@
     vm.currentStep = $scope.$parent.currentStep;
     vm.responses = $scope.responses = Responses.data;
 
+    Responses.data.joinFlow = true;
+
     if (_.has(Responses.data, 'location') === false) {
       if (AuthenticatedPerson.city !== null &&
         AuthenticatedPerson.state !== null &&

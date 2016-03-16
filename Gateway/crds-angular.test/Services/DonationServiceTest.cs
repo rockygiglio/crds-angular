@@ -356,7 +356,7 @@ namespace crds_angular.test.Services
             var mockedExport = MockGPExport();
             var expectedReturn = MockExpectedGpExportDto();
 
-            _mpDonationService.Setup(mocked => mocked.GetGPExportAndProcessorFees(depositId, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGPExport(depositId, It.IsAny<string>())).Returns(mockedExport);
 
             var result = _fixture.GetGPExport(depositId, "asdfafasdfas");
 
@@ -365,13 +365,13 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(4, result.Count);
             Assert.AreEqual(expectedReturn[0].DocumentType, mockedExport[0].DocumentType);
-            Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DonationId);
+            Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DepositId);
             Assert.AreEqual(expectedReturn[0].DocumentDescription, mockedExport[0].BatchName);
             Assert.AreEqual(expectedReturn[0].BatchId, mockedExport[0].BatchName);
             Assert.AreEqual(expectedReturn[0].ContributionDate, mockedExport[0].DonationDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].SettlementDate, mockedExport[0].DepositDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].CustomerId, mockedExport[0].CustomerId);
-            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DonationAmount);
+            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DepositAmount);
             Assert.AreEqual(expectedReturn[0].CheckbookId, mockedExport[0].CheckbookId);
             Assert.AreEqual(expectedReturn[0].CashAccount, mockedExport[0].ScholarshipExpenseAccount);
             Assert.AreEqual(expectedReturn[0].ReceivablesAccount, mockedExport[0].ReceivableAccount);
@@ -499,12 +499,12 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
-                    DonationId = 10002,
+                    DepositId = 10002,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "400.00",
+                    DepositAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
@@ -520,12 +520,12 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
-                    DonationId = 10002,
+                    DepositId = 10002,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "400.00",
+                    DepositAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",
@@ -540,12 +540,12 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
-                    DonationId = 10002,
+                    DepositId = 10002,
                     BatchName = "Test 2 Batch",
                     DonationDate = new DateTime(2014, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2014, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "400.00",
+                    DepositAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
@@ -561,12 +561,12 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
-                    DonationId = 10002,
+                    DepositId = 10002,
                     BatchName = "Test 2 Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DonationAmount = "400.00",
+                    DepositAmount = "400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",

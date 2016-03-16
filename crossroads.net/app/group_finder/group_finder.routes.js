@@ -32,15 +32,15 @@
           StartProfileLoad: ['Person', function(Person) {
             Person.loadProfile();
           }],
-          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
-            return GroupInfo.loadGroupInfo();
-          }],
           StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
             function(GroupQuestionService, ParticipantQuestionService) {
               GroupQuestionService.loadQuestions();
               ParticipantQuestionService.loadQuestions();
             }
-          ]
+          ],
+          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
+            return GroupInfo.loadGroupInfo();
+          }]
         },
         data: {
           isProtected: true,
@@ -63,7 +63,7 @@
             return Person.getProfile();
           }],
           LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
-            return ParticipantQuestionService.getLookup();
+            return ParticipantQuestionService;
           }]
         },
         data: {

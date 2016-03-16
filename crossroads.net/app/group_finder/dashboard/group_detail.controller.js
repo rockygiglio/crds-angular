@@ -9,20 +9,16 @@
     var vm = this;
 
     vm.participant_role_id = GROUP_ROLE.PARTICIPANT;
-    vm.group = GroupInfo.findHosting($stateParams.groupId);
-    vm.hostName = AuthenticatedPerson.nickName;
-
+    vm.loading = true;
     vm.emailGroup = emailGroup;
+    vm.displayBackButton = true;
 
-    $scope.$on('$viewContentLoaded', viewContentLoaded);
-
-    //
-    // Implementation
-    //
-
-    function viewContentLoaded(event){
-      $scope.$parent.setGroup(vm.group);
-    }
+    vm.resultsPromise = GroupInfo.loadGroupInfo()
+      .then(function displayGroups() {
+        vm.group = GroupInfo.findHosting($stateParams.groupId);
+        $scope.$parent.setGroup(vm.group);
+        vm.loading = false;
+      });
 
     function emailGroup() {
       var modalInstance = $modal.open({

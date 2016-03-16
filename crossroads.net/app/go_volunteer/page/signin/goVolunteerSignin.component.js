@@ -7,7 +7,7 @@
 
   function GoVolunteerSignin() {
     return {
-      restrict: 'E', 
+      restrict: 'E',
       scope: {},
       bindToController: true,
       controller: GoVolunteerSigninController,
@@ -17,8 +17,6 @@
 
     function GoVolunteerSigninController() {
       var vm = this;
-      
     }
   }
-
 })();

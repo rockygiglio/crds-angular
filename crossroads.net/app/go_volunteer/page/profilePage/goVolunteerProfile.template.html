@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-sm-12"><progressbar value="25"></progressbar></div>
+  <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
 
 <h2>Tell us about yourself so we can keep you in the loop.</h2>
@@ -12,7 +12,7 @@
       <input type="text"
              class="form-control"
              name="firstName"
-             placeholder="Enter first Name"
+             placeholder="Enter first name"
              required
              ng-model="volunteerProfile.person.nickName" >
       <ng-messages for="volunteerProfile.profileForm.firstName.$error" ng-if="volunteerProfile.validate('firstName')">
@@ -27,7 +27,7 @@
       <input type="text"
              class="form-control"
              name="lastName"
-             placeholder="Enter last Name"
+             placeholder="Enter last name"
              required
              ng-model="volunteerProfile.person.lastName" >
       <ng-messages for="volunteerProfile.profileForm.lastName.$error" ng-if="volunteerProfile.validate('lastName')">
@@ -103,9 +103,10 @@
              name="phone"
              placeholder="Enter mobile phone"
              ng-pattern='volunteerProfile.phoneFormat'
-             ng-model="volunteerProfile.person.mobilePhone">
+             ng-model="volunteerProfile.person.mobilePhone"
+             required >
       <ng-messages for="volunteerProfile.profileForm.phone.$error" ng-if="volunteerProfile.validate('phone')" >
-        <span ng-message='required' ng-if='profile.requireMobilePhone'>
+        <span ng-message='required'>
           <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>
         </span>
         <span ng-message="pattern"><span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span></span>

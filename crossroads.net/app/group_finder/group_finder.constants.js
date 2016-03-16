@@ -1,3 +1,4 @@
+/* globals __GOOGLE_API_KEY__ */
 (function(){
   'use strict';
 
@@ -32,6 +33,7 @@
       NO_GROUP: 166573
     },
     CONTACT_ID: {
+      HOST: 7660769,
       JOURNEY: 7660256
     },
     GOOGLE_API_KEY: __GOOGLE_API_KEY__,
