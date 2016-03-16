@@ -6,7 +6,6 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Exceptions;
 using Moq;
@@ -324,6 +323,9 @@ namespace crds_angular.test.Services
             Assert.AreEqual(5, tp.SuccessfulUpdates.Count);
             Assert.AreEqual(charges.GetRange(0, 5).Select(charge => charge.Id), tp.SuccessfulUpdates);
             Assert.AreEqual(2, tp.FailedUpdates.Count);
+            // TODO Remove these writelines, just trying to figure out why this test works locally but fails on the build server
+            Console.WriteLine(string.Join(",", tp.SuccessfulUpdates.Select(x => "[" + x + "]").ToArray()));
+            Console.WriteLine(string.Join(",", tp.FailedUpdates.Select(x => "[" + x + "]").ToArray()));
             Assert.AreEqual("ch444", tp.FailedUpdates[0].Key);
             Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[0].Value);
             Assert.AreEqual("ch555", tp.FailedUpdates[1].Key);
