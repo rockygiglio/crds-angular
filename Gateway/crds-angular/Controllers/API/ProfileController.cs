@@ -142,19 +142,27 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(token =>
             {
-                var family = _contactRelationshipService.GetMyImmediateFamilyRelationships(contactid, token);
-                var spouse = family.Where(f => f.Relationship_Id ==1).Select(s => new FamilyMember
+                try
                 {
-                    Age = s.Age,
-                    ContactId = s.Contact_Id,
-                    Email = s.Email_Address,
-                    LastName = s.Last_Name,
-                    PreferredName = s.Preferred_Name,
-                    RelationshipId = s.Relationship_Id,
-                    ParticipantId = s.Participant_Id,
-                    HighSchoolGraduationYear = s.HighSchoolGraduationYear
-                }).SingleOrDefault();
-                return Ok(spouse);
+                    var family = _contactRelationshipService.GetMyImmediateFamilyRelationships(contactid, token);
+                    var spouse = family.Where(f => f.Relationship_Id == 1).Select(s => new FamilyMember
+                    {
+                        Age = s.Age,
+                        ContactId = s.Contact_Id,
+                        Email = s.Email_Address,
+                        LastName = s.Last_Name,
+                        PreferredName = s.Preferred_Name,
+                        RelationshipId = s.Relationship_Id,
+                        ParticipantId = s.Participant_Id,
+                        HighSchoolGraduationYear = s.HighSchoolGraduationYear
+                    }).SingleOrDefault();
+                    return Ok(spouse);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Spouse Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 
