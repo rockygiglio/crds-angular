@@ -323,6 +323,7 @@ namespace crds_angular.test.Services
             Console.WriteLine(string.Format("Successful: {0}", string.Join(",", tp.SuccessfulUpdates.Select(x => "[" + x + "]").ToArray())));
             Console.WriteLine(string.Format("Failed: {0}", string.Join(",", tp.FailedUpdates.Select(x => "[" + x + "]").ToArray())));
             Console.WriteLine(string.Format("Charges: {0}", string.Join(",", charges.Take(5).Select(charge => "[" + charge.Id + "]").ToArray())));
+            Console.WriteLine(string.Format("Charges.Take(5): {0}", string.Join(",", charges.Take(5))));
 
             Assert.AreEqual(7, tp.TotalTransactionCount);
             Assert.AreEqual(5, tp.SuccessfulUpdates.Count);
