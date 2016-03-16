@@ -1,3 +1,4 @@
+/* globals __GOOGLE_API_KEY__ */
 (function(){
   'use strict';
 
@@ -24,12 +25,27 @@
       HOST_PRIVATE_CONFIRM_EMAIL_ID: 17547,
       PARTICIPANT_PUBLIC_CONFIRM_EMAIL_ID: 17548,
       PARTICIPANT_PRIVATE_CONFIRM_EMAIL_ID: 17549,
-      INVITE_EMAIL_ID: 17462
+      INVITE_EMAIL_ID: 17462,
+      NO_GROUP: 17551
     },
-    ANYWHERE_GROUP_ID: 166574,
-    GOOGLE_API_KEY: 'AIzaSyAlv_y_ltF9naBkMhQOpg_aFas6AD6Hpzg',
-    GROUP_ROLE_ID_HOST: 22,
-    GROUP_ROLE_ID_PARTICIPANT: 16
+    GROUP_ID: {
+      ANYWHERE: 166574,
+      NO_GROUP: 166573
+    },
+    CONTACT_ID: {
+      HOST: 7660769,
+      JOURNEY: 7660256
+    },
+    GOOGLE_API_KEY: __GOOGLE_API_KEY__,
+    GROUP_ROLE: {
+      HOST: 22,
+      PARTICIPANT: 16
+    },
+    QA_PAGES: {
+      HOST: '/bravehost/',
+      JOIN: '/braveparticipant/'
+    }
+
   };
 
 })();

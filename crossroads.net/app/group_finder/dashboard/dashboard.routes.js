@@ -14,9 +14,6 @@
         templateUrl: 'dashboard/dashboard.html',
         controller: 'DashboardCtrl as dashboard',
         resolve: {
-          LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
-            return GroupInfo.loadGroupInfo();
-          }],
           AuthenticatedPerson: ['Person', function(Person) {
             return Person.getProfile();
           }]
@@ -35,6 +32,7 @@
         controller: 'GroupDetailCtrl as detail',
         templateUrl: 'dashboard/group_detail.html',
         data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''
