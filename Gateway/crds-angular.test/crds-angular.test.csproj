@@ -77,6 +77,22 @@
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FsCheck, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FsCheck.2.2.4\lib\net45\FsCheck.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FsCheck.NUnit, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FsCheck.NUnit.2.2.4\lib\net45\FsCheck.NUnit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FsCheck.NUnit.Addin, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FsCheck.NUnit.2.2.4\lib\net45\FsCheck.NUnit.Addin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -100,6 +116,12 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnit.Runners.2.6.4\tools\lib\nunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\packages\NUnit.Runners.2.6.4\tools\lib\nunit.core.interfaces.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
@@ -167,6 +189,7 @@
     <Compile Include="controllers\DonorControllerTest.cs" />
     <Compile Include="controllers\EventLocationControllerTest.cs" />
     <Compile Include="controllers\AccountControllerTest.cs" />
+    <Compile Include="controllers\GoVolunteerControllerTest.cs" />
     <Compile Include="controllers\LoginControllerTest.cs" />
     <Compile Include="controllers\ProfileControllerTest.cs" />
     <Compile Include="controllers\GroupControllerTest.cs" />
@@ -177,6 +200,7 @@
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />
     <Compile Include="Models\Crossroads\Events\EventMapperTest.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\OrganizationTest.cs" />
     <Compile Include="Models\Json\RestHttpActionResultTest.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -192,6 +216,7 @@
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\ListHandlerTest.cs" />
     <Compile Include="Services\LoginServiceTest.cs" />
+    <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />
@@ -259,6 +284,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FsCheckAddin.fs" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
