@@ -27,7 +27,7 @@ namespace MinistryPlatform.Models
         public int? MeetingDayId { get; set; }
         public int CongregationId { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public bool AvailableOnline { get; set; }
         public int RemainingCapacity { get; set; }
         public int ContactId { get; set; }

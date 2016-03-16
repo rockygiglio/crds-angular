@@ -3,9 +3,9 @@
 
   module.exports = GroupInfoService;
 
-  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope'];
+  GroupInfoService.$inject = ['Session', 'Group', 'GROUP_API_CONSTANTS', 'AUTH_EVENTS', '$rootScope', 'Address'];
 
-  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope) {
+  function GroupInfoService(Session, Group, GROUP_API_CONSTANTS, AUTH_EVENTS, $rootScope, Address) {
     var requestPromise = null;
 
     //
@@ -65,6 +65,8 @@
               if (!group.meetingTime || !group.meetingDayId || !group.address) {
                 group.isPrivate = true;
               }
+
+              group.mapLink = Address.mapLink(group.address);
 
               // Parse the host's name
               parseContactName(group);
@@ -135,12 +137,22 @@
             emailAddress: person.email,
             firstName: person.nickName,
             lastName: person.lastName,
-            affinities: person.attributes
+            affinities: parseAffinity(person.singleAttributes)
           });
         });
 
         group.members = members;
       });
+    }
+
+    function parseAffinity(attributes) {
+      return _.compact(
+        _.map(attributes, function(attributeType) {
+          if (_.has(attributeType.attribute, 'description') && attributeType.attribute.description) {
+            return attributeType.attribute.description;
+          }
+        })
+      );
     }
 
     function parseContactName(group) {

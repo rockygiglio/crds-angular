@@ -1,4 +1,7 @@
 <div class="review with-padding" ng-if="!host.pending">
+  <div ng-if="host.timeError">
+    Not Times available
+  </div>
   <div class="text-center" dynamic-content="$root.MESSAGES.groupFinderHostReviewHeader.content | html"></div>
 
   <group-profile group="host.group"></group-profile>
