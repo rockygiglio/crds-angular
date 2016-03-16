@@ -9,6 +9,7 @@
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
+      childrenAttending: {},
       person: {
         nickName: '',
         lastName: '',
