@@ -19,7 +19,7 @@
 
     function GoVolunteerSpouseController() {
       var vm = this;
-      vm.showAccountEmail = true;
+      vm.spouseKnown = true;
       vm.spouse = GoVolunteerService.spouse;
       vm.spouseName = spouseName;
       vm.submit = submit;
@@ -28,7 +28,7 @@
         if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined) {
           return vm.spouse.preferredName + ' ' + vm.spouse.lastName;
         } else {
-          vm.showAccountEmail = false;
+          vm.spouseKnown = false;
           return 'your spouse';
         }
       }
@@ -36,10 +36,10 @@
       function submit(spouseServing) {
         GoVolunteerService.spouseAttending = spouseServing;
         if (spouseServing) {
-          if (vm.spouse.preferredName === '' || vm.spouse.preferredName === undefined) {
-            vm.onSubmit({nextState: 'spouse-name'});
-          } else {
+          if (vm.spouseKnown) {
             vm.onSubmit({nextState: 'children'});
+          } else {
+            vm.onSubmit({nextState: 'spouse-name'});
           }
         } else {
           vm.onSubmit({nextState: 'children'});
