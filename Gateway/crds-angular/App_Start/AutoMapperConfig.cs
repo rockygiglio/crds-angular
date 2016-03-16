@@ -255,6 +255,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
             Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
+
         }
     }
 }

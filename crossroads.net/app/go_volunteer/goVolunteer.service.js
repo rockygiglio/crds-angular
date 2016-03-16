@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerService;
 
-  GoVolunteerService.$inject = [];
+  GoVolunteerService.$inject = ['$resource'];
 
-  function GoVolunteerService() {
+  function GoVolunteerService($resource) {
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
@@ -15,7 +15,10 @@
         emailAddress: '',
         dateOfBirth: null,
         mobilePhone: null
-      }
+      },
+      spouse: {},
+      spouseAttending: false,
+      organization: {}
     };
 
     return volunteerService;

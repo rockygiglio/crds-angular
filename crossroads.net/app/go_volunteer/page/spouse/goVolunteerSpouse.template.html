@@ -1,22 +1,20 @@
 <div class="row">
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
-<!-- Display if spouse is unknown
-<h2>Will your spouse be serving with you?</h2>
--->
-<h2>We see you're married, will <strong>Lindsay Miller</strong> be serving with you?</h2>
+<h2 ng-if='goSpouse.spouseKnown'>We see you're married, will <strong>{{ goSpouse.spouseName() }}</strong> be serving with you?</h2>
+<h2 ng-if='!goSpouse.spouseKnown'>Will your spouse be serving with you?</h2>
 <div class="row">
   <div class="col-xs-6">
-    <button type="submit" class="btn btn-block btn-standard">No
+    <button type="submit" class="btn btn-block btn-standard"  ng-click="goSpouse.submit(false)">No
     </button>
   </div>
   <div class="col-xs-6">
-    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'spouse-name' })">Yes
+    <button type="submit" class="btn btn-block btn-primary-gc"  ng-click="goSpouse.submit(true)">Yes
     </button>
   </div>
 </div>
 
-<div class="panel panel-default push-top">
+<div class="panel panel-default push-top" ng-if='goSpouse.spouseKnown'>
   <div class="panel-body text-muted small">
     <p>If this information is incorrect, please request updates by contacting <a href="mailto:accounts@crossroads.net">accounts@crossroads.net.</p>
   </div>

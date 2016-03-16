@@ -31,6 +31,7 @@ namespace crds_angular.test.controllers
         private Mock<IUserImpersonationService> _impersonationService;
         private Mock<IAuthenticationService> _authenticationService;
         private Mock<IUserService> _userService;
+        private Mock<IContactRelationshipService> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _config;
 
         private string _authType;
@@ -47,11 +48,12 @@ namespace crds_angular.test.controllers
             _impersonationService = new Mock<IUserImpersonationService>();
             _authenticationService = new Mock<IAuthenticationService>();
             _userService = new Mock<IUserService>();
+            _contactRelationshipService = new Mock<IContactRelationshipService>();
             _config = new Mock<IConfigurationWrapper>();
 
             _config.Setup(mocked => mocked.GetConfigValue("AdminGetProfileRoles")).Returns("123,456");
 
-            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _config.Object);
+            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object);
             _authenticationServiceMock = new Mock<IAuthenticationService>();
 
             _authType = "auth_type";
@@ -164,8 +166,77 @@ namespace crds_angular.test.controllers
 
         }
 
+        [Test]
+        public void ShouldGetSpouse()
+        {
+            var heather = new FamilyMember
+            {
+                ContactId = 98765,
+                PreferredName = "Heather",
+                LastName = "Augustine",
+                RelationshipId = 1,
+                Age = 29,
+                Email = "user@isp.tld"
+            };
 
 
+            var familyList = new List<ContactRelationship>
+            {
+                new ContactRelationship()
+                {
+                    Age = heather.Age,
+                    Contact_Id = heather.ContactId,
+                    Participant_Id = 346323,
+                    Last_Name = heather.LastName,
+                    Preferred_Name = heather.PreferredName,
+                    Relationship_Id = heather.RelationshipId,
+                    Email_Address = heather.Email,
+                    HighSchoolGraduationYear = 0
+                },
+                new ContactRelationship()
+                {
+                    Age = 12,
+                    Contact_Id = 13579,
+                    Last_Name = "Maddox",
+                    Preferred_Name = "Brady",
+                    Relationship_Id = 6
+                }
+            };
+
+            _contactRelationshipService.Setup(x => x.GetMyImmediateFamilyRelationships(myContactId, _authType + " " + _authToken)).Returns(familyList);
+
+            IHttpActionResult result = _fixture.GetMySpouse(myContactId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<FamilyMember>>(result);
+            var r = (OkNegotiatedContentResult<FamilyMember>)result;
+            Assert.AreEqual(r.Content.PreferredName, heather.PreferredName);
+        }
+
+        [Test]
+        public void ShouldNotReturnSpouse()
+        {
+           var familyList = new List<ContactRelationship>
+            {
+                new ContactRelationship()
+                {
+                    Age = 12,
+                    Contact_Id = 13579,
+                    Last_Name = "Maddox",
+                    Preferred_Name = "Brady",
+                    Relationship_Id = 6
+                }
+            };
+
+            _contactRelationshipService.Setup(x => x.GetMyImmediateFamilyRelationships(myContactId, _authType + " " + _authToken)).Returns(familyList);
+
+            IHttpActionResult result = _fixture.GetMySpouse(myContactId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<FamilyMember>>(result);
+            var r = (OkNegotiatedContentResult<FamilyMember>)result;
+            Assert.IsNull(r.Content);
+        }
         
     }
 }
