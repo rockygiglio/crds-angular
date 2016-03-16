@@ -13,6 +13,7 @@ using crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System.Web.Http;
+using FsCheck;
 
 namespace crds_angular.test.controllers
 {
@@ -48,15 +49,21 @@ namespace crds_angular.test.controllers
 
         [Test]
         public void ShouldHandleNullOrganization()
-        {
-            const string name = "whatever";           
-            _organizationService.Setup(m => m.GetOrganizationByName(name)).Returns((Organization)null);
-            var response = _fixture.GetOrganization(name);
-
-            Assert.IsNotNull(response);
-            Assert.IsInstanceOf<NotFoundResult>(response);                      
+        {          
+            _organizationService.Setup(m => m.GetOrganizationByName(It.IsAny<string>())).Returns((Organization)null);            
+            Prop.ForAll<string>(st =>
+            {
+                var response = _fixture.GetOrganization(st);
+                Assert.IsNotNull(response);
+                Assert.IsInstanceOf<NotFoundResult>(response);
+            }).QuickCheckThrowOnFailure();               
         }
 
+        [Test]
+        public void ShouldUsFSCheck()
+        {
+            Prop.ForAll<int[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs)).QuickCheckThrowOnFailure();
+        }
 
         private static Organization ValidOrganization(string name)
         {
