@@ -122,7 +122,10 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\GoCincinnati\GroupConnectorService.cs" />
     <Compile Include="Services\GoCincinnati\RegistrationService.cs" />
+    <Compile Include="Services\Interfaces\GoCincinnati\IGroupConnectorService.cs" />
+    <Compile Include="Services\Interfaces\GoCincinnati\IRegistrationService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />

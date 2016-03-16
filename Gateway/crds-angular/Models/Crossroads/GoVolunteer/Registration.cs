@@ -13,7 +13,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         public string AdditionalInformation { get; set; }
 
         [JsonProperty(PropertyName = "children")]
-        public List<ChildrenAttending> Children { get; set; }
+        public List<ChildrenAttending> ChildAgeGroup { get; set; }
 
         [JsonProperty(PropertyName = "createGroupConnector")]
         public bool CreateGroupConnector { get; set; }

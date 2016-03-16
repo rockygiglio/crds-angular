@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.GoVolunteer;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Security;
-using crds_angular.Services;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -15,6 +18,39 @@ namespace crds_angular.Controllers.API
         public GoVolunteerRegistrationController(IGoVolunteerService goVolunteerService)
         {
             _goVolunteerService = goVolunteerService;
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/goVolunteerRegistration")]
+        [ResponseType(typeof (Registration))]
+        public IHttpActionResult Get()
+        {
+            var registration = new Registration();
+            registration.Self = new Person {FirstName = "Lakshmi", LastName = "Nair", EmailAddress = "email@nair.com"};
+            registration.Equipment = new List<Equipment>
+            {
+                new Equipment
+                {
+                    Id = 1,
+                    Notes = "test"
+                }
+            };
+            registration.PrepWork = new List<PrepWork> { new PrepWork { Id = 7042, Spouse = false } };
+            registration.ProjectPreferences = new List<ProjectPreference>{ new ProjectPreference {Id=5, Priority = 1}};
+            registration.Spouse = new Person { FirstName = "Spouse", LastName = "Nair", EmailAddress = "spouse@nair.com" };
+            registration.AdditionalInformation = "Additional Information";
+            registration.ChildAgeGroup = new List<ChildrenAttending> { new ChildrenAttending { Count = 3, Id = 7043 } };
+            registration.CreateGroupConnector = false;
+            registration.GroupConnectorId = 0;
+            registration.InitiativeId = 1;
+            registration.OrganizationId = 1;
+            registration.PreferredLaunchSiteId = 3;
+            registration.RoleId = 2;
+            registration.SpouseParticipation = true;
+            registration.WaiverSigned = true;
+
+
+            return Ok(registration);
         }
 
         [AcceptVerbs("POST")]
