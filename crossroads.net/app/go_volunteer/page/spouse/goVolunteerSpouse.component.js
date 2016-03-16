@@ -19,6 +19,7 @@
 
     function GoVolunteerSpouseController() {
       var vm = this;
+      vm.showAccountEmail = true;
       vm.spouse = GoVolunteerService.spouse;
       vm.spouseName = spouseName;
       vm.submit = submit;
@@ -27,6 +28,7 @@
         if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined) {
           return vm.spouse.preferredName + ' ' + vm.spouse.lastName;
         } else {
+          vm.showAccountEmail = false;
           return 'your spouse';
         }
       }
