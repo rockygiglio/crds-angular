@@ -131,9 +131,10 @@ namespace crds_angular.Services
             _logger.Debug(string.Format("{0} charges to update for transfer {1}", charges.Count, transfer.Id));
 
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
-            charges.Sort((l, r) => l.Created.CompareTo(r.Created));
+            //charges.Sort((l, r) => l.Created.CompareTo(r.Created));
+            var sortedCharges = charges.OrderBy(x => x.Created);
 
-            foreach (var charge in charges)
+            foreach (var charge in sortedCharges)
             {
                 try
                 {
