@@ -10,33 +10,33 @@
 <div class="row">
   <div class="col-xs-10 col-xs-offset-1">
     <div class="checkbox">
-      <label>
-        <input type="checkbox" value="">
+      <label for="equipment-backhoe">
+        <input type="checkbox" value="" id="equipment-backhoe">
         Backhoe
       </label>
     </div>
     <div class="checkbox">
-      <label>
-        <input type="checkbox" value="">
+      <label for="equipment-ladder">
+        <input type="checkbox" value="" id="equipment-ladder">
         Ladder
       </label>
     </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" value="">
+    <div class="checkbox" for="equipment-jazzy">
+      <label for="equipment-jazzy">
+        <input type="checkbox" value="" id="equipment-jazzy">
         Jazzy
       </label>
     </div>
     <div class="checkbox">
-      <label>
-        <input type="checkbox" value="" ng-click="otherField = !otherField">
+      <label for="equipment-other">
+        <input type="checkbox" value="" ng-click="otherField = !otherField" id="equipment-other">
         Other
       </label>
     </div>
   </div>
 </div>
 <div class="row push-bottom" ng-show="otherField">
-  <div class="col-xs-11">
+  <div class="col-xs-10 col-xs-offset-1">
     <input type="text" class="form-control" />
   </div>
   <div class="col-xs-1 text-left hard-left">

@@ -5,10 +5,11 @@
 <div class="row">
   <ng-form name="goSpouseName.spouseForm" novalidate>
   <div class="form-group col-xs-6" ng-class="{'has-error': goSpouseName.validate('preferredName')}">
-    <label>First Name</label>
+    <label for="preferredName">First Name</label>
     <input type="text"
            class="form-control"
            name="preferredName"
+           id="preferredName"
            placeholder="Spouse's first name*"
            required
            ng-model="goSpouseName.spouse.preferredName">
@@ -20,10 +21,11 @@
   </div>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': goSpouseName.validate('lastName')}">
-    <label>Last Name</label>
+    <label for="lastName">Last Name</label>
     <input type="text"
            class="form-control"
            name="lastName"
+           id="lastName"
            placeholder="Spouse's last name*"
            required
            ng-model="goSpouseName.spouse.lastName" >
@@ -35,10 +37,11 @@
   </div>
 
   <div class="form-group col-xs-12">
-    <label>Email</label>
+    <label for="email">Email</label>
     <input type="email"
            class="form-control"
            name="email"
+           id="email"
            placeholder="Spouse's email address*"
            required
            ng-model="goSpouseName.spouse.email">
@@ -53,11 +56,12 @@
   </div>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': goSpouseName.validate('birthdate')}">
-      <label>Birth Date</label>
+      <label for="birthdate">Birth Date</label>
       <span class="input-group datepicker">
         <input type="text"
                class="form-control"
                name="birthdate"
+               id="birthdate"
                placeholder="mm/dd/yyyy"
                datepicker-popup="MM/dd/yyyy"
                ng-model="goSpouseName.spouse.dateOfBirth"
@@ -90,10 +94,11 @@
     </div>
 
   <div class="form-group col-xs-6" ng-class="{'has-error': goSpouseName.validate('phone')}">
-      <label>Mobile Phone</label>
+      <label for="phone">Mobile Phone</label>
       <input type="text"
              class="form-control"
              name="phone"
+             id="phone"
              placeholder="Enter mobile phone"
              ng-pattern='goSpouseName.phoneFormat'
              ng-model="goSpouseName.spouse.mobilePhone"

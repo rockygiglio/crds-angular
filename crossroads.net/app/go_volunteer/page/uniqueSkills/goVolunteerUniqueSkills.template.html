@@ -14,8 +14,9 @@
       <span class="">Ages {{item.age}}&plus;</span>
     </a>
     <div class="checkbox" ng-repeat="item in goUniqueSkills.list">
-      <label>
-        <input type="checkbox" value="">
+      <!-- / Shouldn't use the title here. Should use an ID from MT -->
+      <label for="{{item.title}}">
+        <input type="checkbox" value="" id="{{item.title}}">
         {{item.title}}
       </label>
     </div>
