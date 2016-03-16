@@ -12,6 +12,7 @@ namespace MinistryPlatform.Models
         public int donationAmt { get; set; }
         public DateTime donationDate { get; set; }
         public int paymentTypeId { get; set; }
+        public string itemNumber { get; set; }
         public string donationNotes { get; set; }
         public int donationStatus { get; set; }
         public DateTime donationStatusDate { get; set; }
@@ -23,7 +24,7 @@ namespace MinistryPlatform.Models
         #region Distributions property
         private readonly List<DonationDistribution> _distributions = new List<DonationDistribution>();
         public List<DonationDistribution> Distributions { get { return (_distributions); } }
-        #endregion
+         #endregion
 
         public Donation()
         {
