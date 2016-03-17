@@ -83,7 +83,8 @@
                 state: vm.responses.location.state,
                 zip: vm.responses.location.zip
               },
-              singleAttributes: Responses.getSingleAttributes(vm.lookup)
+              singleAttributes: Responses.getSingleAttributes(vm.lookup),
+              attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
             };
 
             vm.invalidTime = false; // set as an override
