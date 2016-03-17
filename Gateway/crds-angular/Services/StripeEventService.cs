@@ -6,10 +6,8 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using log4net;
 using System.Text;
-using System.Text.RegularExpressions;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -23,7 +21,6 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(StripeEventController));
         private readonly IPaymentService _paymentService;
         private readonly IDonationService _donationService;
-        private readonly IDonorService _donorService;
         private readonly MinistryPlatform.Translation.Services.Interfaces.IDonorService _mpDonorService;
         private readonly int _donationStatusDeclined;
         private readonly int _donationStatusDeposited;
@@ -33,11 +30,10 @@ namespace crds_angular.Services
         // This value is used when creating the batch name for exporting to GP.  It must be 15 characters or less.
         private const string BatchNameDateFormat = @"\M\PyyyyMMddHHmm";
        
-        public StripeEventService(IPaymentService paymentService, IDonationService donationService, IDonorService donorService, MinistryPlatform.Translation.Services.Interfaces.IDonorService mpDonorService, IConfigurationWrapper configuration)
+        public StripeEventService(IPaymentService paymentService, IDonationService donationService, MinistryPlatform.Translation.Services.Interfaces.IDonorService mpDonorService, IConfigurationWrapper configuration)
         {
             _paymentService = paymentService;
             _donationService = donationService;
-            _donorService = donorService;
             _mpDonorService = mpDonorService;
 
             _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
@@ -61,11 +57,12 @@ namespace crds_angular.Services
                 .Append(charge.FailureMessage ?? "No Stripe Failure Message");
             _donationService.UpdateDonationStatus(charge.Id, _donationStatusDeclined, eventTimestamp, notes.ToString());
             _donationService.ProcessDeclineEmail(charge.Id);
-                // Create a refund if it is a bank account failure
-            var chargeDetails = _paymentService.GetCharge(charge.Id);
-            if ("payment".Equals(chargeDetails.BalanceTransaction.Type))
+
+            // Create a refund if it is a bank account failure
+            if (charge.Source != null && "bank_account".Equals(charge.Source.Object) && charge.Refunds?.Data != null && charge.Refunds.Data.Any())
             {
-                _donationService.CreateDonationForBankAccountErrorRefund(chargeDetails.Refund);
+                var refundData = _paymentService.GetRefund(charge.Refunds.Data[0].Id);
+                _donationService.CreateDonationForBankAccountErrorRefund(new StripeRefund { Data = new List<StripeRefundData> { refundData } } );
             }
         }
 

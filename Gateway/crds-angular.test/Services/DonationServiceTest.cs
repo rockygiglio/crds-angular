@@ -89,7 +89,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentIdDonationNotFound()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123")).Returns((Donation) null);
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((Donation) null);
             Assert.IsNull(_fixture.GetDonationByProcessorPaymentId("123"));
             _mpDonationService.VerifyAll();
         }
@@ -97,7 +97,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentId()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123")).Returns(new Donation
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns(new Donation
             {
                 donationId = 123,
                 donationAmt = 456,
@@ -1477,7 +1477,7 @@ namespace crds_angular.test.Services
                 donationId = 123
             };
 
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Returns(donation);
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId, false)).Returns(donation);
 
             var donationId = _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
@@ -1535,7 +1535,7 @@ namespace crds_angular.test.Services
                 ProgramId = programId,
                 RecurringGiftId = recurringGiftId
             };
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Throws(new DonationNotFoundException(chargeId));
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId, false)).Throws(new DonationNotFoundException(chargeId));
             _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(recurringGift);
             _mpDonorService.Setup(mocked => mocked.UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, Constants.ResetFailCount));
 

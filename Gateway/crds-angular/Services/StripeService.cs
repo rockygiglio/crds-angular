@@ -361,6 +361,7 @@ namespace crds_angular.Services
             var url = string.Format("refunds/{0}", refundId);
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "charge");
+            request.AddParameter("expand[]", "balance_transaction");
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query refund", response);

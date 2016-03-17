@@ -443,7 +443,7 @@ namespace crds_angular.Services
             Donation donation;
             try
             {
-                donation = _mpDonationService.GetDonationByProcessorPaymentId(refund.Data[0].Charge.Id);
+                donation = _mpDonationService.GetDonationByProcessorPaymentId(refund.Data[0].Charge.Id, true);
             }
             catch (DonationNotFoundException)
             {
@@ -454,10 +454,10 @@ namespace crds_angular.Services
             var donationAndDist = new DonationAndDistributionRecord
             {
                 Anonymous = false,
-                ChargeId = refund.Data[0].Charge.Id,
+                ChargeId = refund.Data[0].Id,
                 CheckNumber = null,
                 CheckScannerBatchName = null,
-                DonationAmt = int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue,
+                DonationAmt = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue),
                 DonationStatus = (int)DonationStatus.Deposited,
                 DonorAcctId = string.Empty,
                 DonorId = _bankErrorRefundDonorId,
@@ -476,7 +476,7 @@ namespace crds_angular.Services
             {
                 donationAndDist.Distributions.Add(new DonationDistribution
                 {
-                    donationDistributionAmt = distribution.donationDistributionAmt,
+                    donationDistributionAmt = -distribution.donationDistributionAmt,
                     donationDistributionProgram = distribution.donationDistributionProgram,
                     PledgeId = distribution.PledgeId
                 });

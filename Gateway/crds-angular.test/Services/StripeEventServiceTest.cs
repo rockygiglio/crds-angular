@@ -22,7 +22,6 @@ namespace crds_angular.test.Services
         private StripeEventService _fixture;
         private Mock<IPaymentService> _paymentService;
         private Mock<IDonationService> _donationService;
-        private Mock<IDonorService> _donorService;
         private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService> _mpDonorService;
         
         [SetUp]
@@ -36,10 +35,9 @@ namespace crds_angular.test.Services
 
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
             _donationService = new Mock<IDonationService>(MockBehavior.Strict);
-            _donorService = new Mock<IDonorService>(MockBehavior.Strict);
             _mpDonorService = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService>(MockBehavior.Strict);
 
-            _fixture = new StripeEventService(_paymentService.Object, _donationService.Object, _donorService.Object, _mpDonorService.Object, configuration.Object);
+            _fixture = new StripeEventService(_paymentService.Object, _donationService.Object, _mpDonorService.Object, configuration.Object);
         }
 
         [Test]
@@ -98,18 +96,8 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var stripeCharge = new StripeCharge
-            {
-                BalanceTransaction = new StripeBalanceTransaction
-                {
-                    Type = "charge"
-                }
-            };
-
-
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
             _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
-            _paymentService.Setup(mocked => mocked.GetCharge("9876")).Returns(stripeCharge);
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _paymentService.VerifyAll();
             _donationService.VerifyAll();
@@ -129,26 +117,32 @@ namespace crds_angular.test.Services
                     {
                         Id = "9876",
                         FailureCode = "invalid_routing_number",
-                        FailureMessage = "description from stripe"
+                        FailureMessage = "description from stripe",
+                        Source = new StripeSource()
+                        {
+                            Object = "bank_account"
+                        },
+                        Refunds = new StripeList<StripeRefund>
+                        {
+                            Data = new List<StripeRefund>
+                            {
+                                new StripeRefund
+                                {
+                                    Id = "re999"
+                                }
+                            }
+                        }
                     })
                 }
             };
 
-            var stripeRefund = new StripeRefund();
-
-            var stripeCharge = new StripeCharge
-            {
-                BalanceTransaction = new StripeBalanceTransaction
-                {
-                    Type = "payment"
-                },
-                Refund = stripeRefund
-            };
+            var stripeRefund = new StripeRefundData();
 
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
             _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
-            _paymentService.Setup(mocked => mocked.GetCharge("9876")).Returns(stripeCharge);
-            _donationService.Setup(mocked => mocked.CreateDonationForBankAccountErrorRefund(stripeRefund)).Returns(123);
+            _paymentService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefund);
+            _donationService.Setup(mocked => mocked.CreateDonationForBankAccountErrorRefund(It.Is<StripeRefund>(r => r.Data != null && r.Data.Any() && r.Data[0] == stripeRefund)))
+                .Returns(123);
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _paymentService.VerifyAll();
@@ -477,7 +471,6 @@ namespace crds_angular.test.Services
 
             _fixture.InvoicePaymentSucceeded(DateTime.Now, invoice);
             _paymentService.VerifyAll();
-            _donorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -581,9 +574,7 @@ namespace crds_angular.test.Services
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _fixture.ProcessStripeEvent(e);
-            _donorService.VerifyAll();
             _mpDonorService.VerifyAll();
-            _donorService.VerifyAll();
             _paymentService.VerifyAll();
         }
     }

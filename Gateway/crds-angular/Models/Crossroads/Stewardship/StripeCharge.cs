@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using crds_angular.Models.Json;
 using Newtonsoft.Json;
 
@@ -69,20 +70,7 @@ namespace crds_angular.Models.Crossroads.Stewardship
         }
         #endregion
 
-        #region Expandable Refund
-        public string RefundId { get; set; }
-
-        [JsonIgnore]
-        public StripeRefund Refund { get; set; }
-
-        [JsonProperty("refund")]
-        internal object InternalRefund
-        {
-            set
-            {
-                StripeExpandableProperty<StripeRefund>.Map(value, s => RefundId = s, o => Refund = o);
-            }
-        }
-        #endregion
+        [JsonProperty("refunds")]
+        public StripeList<StripeRefund> Refunds { get; set; }
     }
 }
