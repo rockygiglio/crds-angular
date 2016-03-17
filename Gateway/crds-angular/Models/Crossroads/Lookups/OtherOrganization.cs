@@ -15,10 +15,10 @@ namespace crds_angular.Models.Crossroads.Lookups
         }
 
         [JsonProperty(PropertyName = "id")]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; }
+        public string Name { get; set; }
         
     }
 }
