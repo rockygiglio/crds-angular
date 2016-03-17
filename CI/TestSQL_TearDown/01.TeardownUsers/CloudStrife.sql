@@ -55,6 +55,15 @@ WHERE contact_id = @contactID;
 Delete from [dbo].dp_Communications
 WHERE Communication_ID = @communicationID;
 
+DELETE FROM [dbo].dp_communication_messages
+WHERE COMMUNICATION_ID in (select Communication_id from [dbo].dp_Communications where AUTHOR_USER_ID = @userAccount);
+
+DELETE FROM [dbo].dp_Communications
+WHERE Reply_to_Contact = @contactID;
+
+DELETE from [dbo].dp_Communications
+WHERE AUTHOR_USER_ID = @userAccount;
+
 Delete from [dbo].Activity_Log
 WHERE Contact_id = @contactID;
 
@@ -81,7 +90,7 @@ DECLARE @donationsTable table
 	donation_id int
 )
 
-insert into @donationsTable (donation_id) (select donation_id from donation_distributions where program_id in (select program_id from programs where program_name like '(t) GO Midgar%'));
+insert into @donationsTable (donation_id) (select donation_id from donation_distributions where pledge_id in (select pledge_id from pledges where donor_id = @donorID and pledge_campaign_id = 10000000));
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
