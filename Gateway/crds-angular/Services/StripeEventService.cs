@@ -59,7 +59,7 @@ namespace crds_angular.Services
             _donationService.ProcessDeclineEmail(charge.Id);
 
             // Create a refund if it is a bank account failure
-            if (charge.Source != null && "bank_account".Equals(charge.Source.Object) && charge.Refunds?.Data != null && charge.Refunds.Data.Any())
+            if (charge.Source != null && "bank_account".Equals(charge.Source.Object) && charge.Refunds != null && charge.Refunds.Data != null && charge.Refunds.Data.Any())
             {
                 var refundData = _paymentService.GetRefund(charge.Refunds.Data[0].Id);
                 _donationService.CreateDonationForBankAccountErrorRefund(new StripeRefund { Data = new List<StripeRefundData> { refundData } } );
