@@ -18,7 +18,8 @@
       },
       spouse: {},
       spouseAttending: false,
-      organization: {}
+      organization: {},
+      otherOrgName: null
     };
 
     return volunteerService;
