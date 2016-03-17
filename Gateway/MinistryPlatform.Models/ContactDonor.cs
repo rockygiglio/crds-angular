@@ -57,6 +57,7 @@ namespace MinistryPlatform.Models
 
     public class DonorAccount
     {
+        public int DonorAccountId { get; set; }
         public string AccountNumber { get; set; }
         public string RoutingNumber { get; set; }
         public AccountType Type { get; set; }
@@ -66,6 +67,16 @@ namespace MinistryPlatform.Models
         public string Token { get; set; }
 
         public bool HasToken { get { return !string.IsNullOrWhiteSpace(Token); } }
+
+        public bool HasPaymentProcessorInfo()
+        {
+            if (String.IsNullOrWhiteSpace(ProcessorId) || String.IsNullOrWhiteSpace(ProcessorAccountId))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public enum AccountType
