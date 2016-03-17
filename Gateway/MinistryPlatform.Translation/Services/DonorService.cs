@@ -483,6 +483,7 @@ namespace MinistryPlatform.Translation.Services
 
             contactDonor.Account = new DonorAccount
             {
+                DonorAccountId = accounts[0].ToInt("Donor_Account_ID"),
                 ProcessorAccountId = accounts[0]["Processor_Account_ID"].ToString(),
                 ProcessorId = accounts[0]["Processor_ID"].ToString()
             };

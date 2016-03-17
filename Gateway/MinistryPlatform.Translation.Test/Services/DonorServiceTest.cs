@@ -970,6 +970,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetContactDonorForDonorAccount()
         {
+            const int donorAccountId = 1234567;
             const int donorId = 1234567;
             const string processorId = "cus_431234";
             const int contactId = 565656;
@@ -985,6 +986,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new Dictionary<string, object>
                 {
+                    {"Donor_Account_ID", donorAccountId},
                     { "Contact_ID", contactId },
                     {"Processor_Account_ID", processorAccountId},
                     {"Processor_ID", accountProcessorId},
@@ -1031,6 +1033,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _crypto.VerifyAll();
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(result.Account.DonorAccountId, 1234567);
             Assert.AreEqual(result.DonorId, donor.DonorId);
             Assert.AreEqual(result.ContactId, donor.ContactId);
             Assert.AreEqual(result.ProcessorId, donor.ProcessorId);
