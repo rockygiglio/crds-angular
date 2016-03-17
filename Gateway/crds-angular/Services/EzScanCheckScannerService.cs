@@ -72,14 +72,13 @@ namespace crds_angular.Services
 
                     if (contactDonor.Account.HasPaymentProcessorInfo() == false)
                     {
-                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId.ToString());
+                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks");
 
-                        //var token = _paymentService.CreateToken(account, routing);
                         var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
 
                         donorAccountId = _mpDonorService.CreateDonorAccount(null,
-                                                                                check.RoutingNumber,
-                                                                                check.AccountNumber,
+                                                                                routing,
+                                                                                account.Right(4),
                                                                                 encryptedKey,
                                                                                 contactDonor.DonorId,
                                                                                 stripeCustomerSource.id,
@@ -205,7 +204,9 @@ namespace crds_angular.Services
                 }
             };
 
-            contactDonor.Account = new DonorAccount
+            var newDonor = _donorService.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, null, DateTime.Now);
+
+            newDonor.Account = new DonorAccount
             {
                 AccountNumber = account,
                 RoutingNumber = routing,
@@ -214,7 +215,7 @@ namespace crds_angular.Services
                 Token = token.Id
             };
 
-            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token.Id, DateTime.Now);
+            return newDonor;
         }
     }
 }
