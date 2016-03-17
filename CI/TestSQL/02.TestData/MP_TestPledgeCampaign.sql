@@ -48,7 +48,7 @@ UPDATE [dbo].Programs SET Pledge_Campaign_ID = 10000010 where program_name = '(t
 --Program for (t) Test Pledge Program2
 
 INSERT INTO [dbo].programs 
-(Program_Name              ,Congregation_ID,Ministry_ID,[Start_Date]                     ,End_Date                       ,Program_Type_ID,Leadership_Team,Primary_Contact,Priority_ID,On_Connection_Card,Stewardship_Information,Tax_Deductible_Donations,Statement_Title           ,Statement_Header_ID,Allow_Online_Giving,Online_Sort_Order,Pledge_Campaign_ID,Account_Number,Default_Target_Event,On_Donation_Batch_Tool,Domain_ID,Available_Online,__ExternalFundID,Communication_ID, Allow_Online_Giving) VALUES
+(Program_Name              ,Congregation_ID,Ministry_ID,[Start_Date]                     ,End_Date                       ,Program_Type_ID,Leadership_Team,Primary_Contact,Priority_ID,On_Connection_Card,Stewardship_Information,Tax_Deductible_Donations,Statement_Title           ,Statement_Header_ID,Allow_Online_Giving,Online_Sort_Order,Pledge_Campaign_ID,Account_Number,Default_Target_Event,On_Donation_Batch_Tool,Domain_ID,Available_Online,__ExternalFundID,Communication_ID, Allow_Recurring_Giving) VALUES
 ('(t) Test Pledge Program2',5              ,8          ,CAST(@startDate as smalldatetime),CAST(@endDate as smalldatetime),1              ,null           ,2562428        ,null       ,null              ,null                   ,1                       ,'(t) Test Pledge Program2',1                  ,1                  ,2                ,null              ,null          ,null                ,1                     ,1        ,1               ,null            ,11402           , 1 );
 
 --Pledge Campaign for (t) Test Pledge Campaign
