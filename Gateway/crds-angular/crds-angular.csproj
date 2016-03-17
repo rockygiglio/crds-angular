@@ -282,6 +282,7 @@
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
+    <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
@@ -300,11 +301,13 @@
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
+    <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
     <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
+    <Compile Include="Services\Interfaces\IGatewayLookupService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
     <Compile Include="Services\Interfaces\ITaskService.cs" />

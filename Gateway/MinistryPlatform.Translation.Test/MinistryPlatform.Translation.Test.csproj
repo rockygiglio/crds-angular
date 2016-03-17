@@ -117,6 +117,7 @@
     <Compile Include="LookupTest.cs" />
     <Compile Include="Services\BulkEmailRepositoryTest.cs" />
     <Compile Include="Services\CommunicationServiceTest.cs" />
+    <Compile Include="Services\LookupServiceTest.cs" />
     <Compile Include="Services\ObjectAttributeServiceTest.cs" />
     <Compile Include="Services\ContactRelationshipServiceTest.cs" />
     <Compile Include="Services\EventParticipantServiceTest.cs" />

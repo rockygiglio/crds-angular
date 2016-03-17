@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Lookups;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -62,7 +65,29 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Dictionary<string, object>> WorkTeams(string token)
         {
-            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("WorkTeams"), token);
+            return _ministryPlatformServiceImpl.GetLookupRecords(_configurationWrapper.GetConfigIntValue("WorkTeams"), token);
+        }
+
+        public IEnumerable<T> GetList<T>(string token)
+        {
+            if (typeof (T) == typeof (MPWorkTeams))
+            {
+                return (IEnumerable<T>) 
+                    WorkTeams(token).Select(wt => new MPWorkTeams(wt.ToInt("dp_RecordID"), wt.ToString("dp_RecordName")));
+            }
+            if (typeof (T) == typeof (MPOtherOrganization))
+            {                
+                return (IEnumerable<T>)
+                    _ministryPlatformServiceImpl.GetLookupRecords(_configurationWrapper.GetConfigIntValue("OtherOrgs"), token)
+                    .Select(other => new MPOtherOrganization(other.ToInt("dp_RecordID"), other.ToString("dp_RecordName")));
+            }
+
+            return null;
+        }
+
+        public T GetObject<T>(string token)
+        {
+            throw new NotImplementedException();
         }
 
         public List<Dictionary<string, object>> MeetingDays(string token)
