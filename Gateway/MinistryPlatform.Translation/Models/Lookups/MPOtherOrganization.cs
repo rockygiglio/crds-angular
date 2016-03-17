@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Models.Lookups
             OtherOrganization = name;
         }
 
-        public int OtherOrganizationID { get; }
-        public string OtherOrganization { get; }
+        public int OtherOrganizationID { get; set; }
+        public string OtherOrganization { get; set;  }
     }
 }

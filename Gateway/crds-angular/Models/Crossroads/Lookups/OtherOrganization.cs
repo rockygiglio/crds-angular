@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Lookups
 {
@@ -13,7 +14,10 @@ namespace crds_angular.Models.Crossroads.Lookups
             Name = name;
         }
 
+        [JsonProperty(PropertyName = "id")]
         public int Id { get; }
+
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; }
         
     }

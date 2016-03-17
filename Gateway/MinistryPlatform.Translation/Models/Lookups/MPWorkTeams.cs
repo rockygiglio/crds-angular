@@ -8,7 +8,7 @@
             WorkTeam = workTeamName;
         }
 
-        public int WorkTeamId { get; }
-        public string WorkTeam { get; }
+        public int WorkTeamId { get; set; }
+        public string WorkTeam { get; set; }
     }
 }
