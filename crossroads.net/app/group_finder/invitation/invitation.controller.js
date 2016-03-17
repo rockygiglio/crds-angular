@@ -77,7 +77,8 @@
         var participant = {
           capacityNeeded: vm.capacity,
           groupRoleId: GROUP_ROLE.PARTICIPANT,
-          attributeTypes: {}
+          singleAttributes: Responses.getSingleAttributes(vm.lookup),
+          attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
         };
         if (_.has(Responses.data, 'completed_flow')) {
           if (_.has(Responses.data, 'location')) {
@@ -88,7 +89,6 @@
               zip: Responses.data.location.zip
             };
           }
-          participant.singleAttributes = Responses.getSingleAttributes(vm.lookup);
         }
 
         GroupInvitationService.acceptInvitation(vm.groupId, participant)

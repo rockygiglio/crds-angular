@@ -4,6 +4,7 @@ namespace MinistryPlatform.Models
 {
     public class GPExportDatum
     {
+        public int DepositId { get; set; }
         public int ProccessFeeProgramId { get; set; }
         public int ProgramId { get; set; }
         public string DocumentType { get; set; }
@@ -12,6 +13,7 @@ namespace MinistryPlatform.Models
         public DateTime DonationDate { get; set; }
         public DateTime DepositDate { get; set; }
         public string CustomerId { get; set; }
+        public string DepositAmount { get; set; }
         public string DonationAmount { get; set; }
         public string CheckbookId { get; set; }
         public string CashAccount { get; set; }

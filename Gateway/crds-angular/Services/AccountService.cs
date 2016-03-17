@@ -9,6 +9,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
+using ILookupService = MinistryPlatform.Translation.Services.Interfaces.ILookupService;
 
 namespace crds_angular.Services
 {

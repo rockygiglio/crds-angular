@@ -63,22 +63,48 @@ namespace crds_angular.Services
                 try
                 {
                     var contactDonor = CreateDonor(check);
+
+                    var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
+                    var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
+                    var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
+
+                    string donorAccountId = "";
+
+                    if (contactDonor.Account.HasPaymentProcessorInfo() == false)
+                    {
+                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks");
+
+                        var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
+
+                        donorAccountId = _mpDonorService.CreateDonorAccount(null,
+                                                                                routing,
+                                                                                account.Right(4),
+                                                                                encryptedKey,
+                                                                                contactDonor.DonorId,
+                                                                                stripeCustomerSource.id,
+                                                                                stripeCustomer.id).ToString();
+
+                        contactDonor.Account = new DonorAccount
+                        {
+                            DonorAccountId = int.Parse(donorAccountId),
+                            ProcessorId = stripeCustomer.id,
+                            ProcessorAccountId = stripeCustomerSource.id
+                        };
+                    }
+                    else
+                    {
+                        donorAccountId = contactDonor.Account.DonorAccountId.ToString();
+                    }
+
                     //Always use the customer ID and source ID from the Donor Account, if it exists
-                    var charge = contactDonor.HasAccount ? _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId) : _paymentService.ChargeCustomer(contactDonor.ProcessorId, check.Amount, contactDonor.DonorId);
-                   
+                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId);
+
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
                     // Mark the check as exported now, so we don't double-charge a community member.
                     // If the CreateDonationAndDistributionRecord fails, we'll still consider it exported, but
                     // it will be in error, and will have to be manually resolved.
                     check.Exported = true;
-                    var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
-                    var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
-                    var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-
-                    var customerId = contactDonor.HasAccount ? contactDonor.Account.ProcessorId : contactDonor.ProcessorId;
-                                     
-                    var donorAccountId = _mpDonorService.UpdateDonorAccount(encryptedKey, charge.Source.id, customerId);
                  
                     var programId = batchDetails.ProgramId == null ? null : batchDetails.ProgramId + "";
 
@@ -90,7 +116,7 @@ namespace crds_angular.Services
                         ProgramId = programId,
                         ChargeId = charge.Id,
                         PymtType = "check",
-                        ProcessorId = customerId,
+                        ProcessorId = contactDonor.Account.ProcessorId,
                         SetupDate = check.CheckDate ?? (check.ScanDate ?? DateTime.Now),
                         RegisteredDonor = contactDonor.RegisteredUser,
                         DonorAcctId = donorAccountId,
@@ -146,18 +172,18 @@ namespace crds_angular.Services
             // if find by contact donor id is used then contact donor found by id matches contact donor 
             // found by account and account has stripe token
             if (contactDonorById != null && contactDonorById.ContactId == contactDonorByAccount.ContactId &&
-                contactDonorByAccount.Account.ProcessorId != null)
+                contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
             // if find by contact donor id is not used then contact donor 
             // found by account has stripe token
-            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.ProcessorId != null)
+            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
 
-            var contactDonor = (contactDonorById == null) ? contactDonorByAccount : contactDonorById;
+            var contactDonor = contactDonorById ?? contactDonorByAccount;
 
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
@@ -178,17 +204,18 @@ namespace crds_angular.Services
                 }
             };
 
-            contactDonor.Account = new DonorAccount
+            var newDonor = _donorService.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, null, DateTime.Now);
+
+            newDonor.Account = new DonorAccount
             {
                 AccountNumber = account,
                 RoutingNumber = routing,
                 Type = AccountType.Checking,
                 EncryptedAccount = encryptedKey,
-                ProcessorId = contactDonor.ProcessorId,
                 Token = token.Id
             };
 
-            return _donorService.CreateOrUpdateContactDonor(contactDonor, encryptedKey, string.Empty, token.Id, DateTime.Now);
+            return newDonor;
         }
     }
 }
