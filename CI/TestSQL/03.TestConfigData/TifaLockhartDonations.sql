@@ -110,7 +110,7 @@ set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
 
 INSERT INTO [dbo].Donations 
 (Donor_ID      ,Donation_Amount,Donation_Date                                     ,Payment_Type_ID,Non_Cash_Asset_Type_ID,Item_Number,Batch_ID,Notes,Donor_Account_ID,[Anonymous],Check_Scanner_Batch,Donation_Status_Information,Donation_Status_ID,Donation_Status_Date      ,Donation_Status_Notes,Online_Donation_Information,Transaction_Code,Subscription_Code,Gateway_Response,Processed,Domain_ID,Currency,Receipted,Invoice_Number,Receipt_Number,__ExternalContributionID,__ExternalPaymentID,__ExternalGiverID,__ExternalDonorID,__ExteralMasterID1,__ExternalMasterID2,Registered_Donor,Processor_ID,Processor_Fee_Amount,Reconcile_Change_Needed,Reconcile_Change_Complete) VALUES
-(@tifaDonorId  ,200.0000       ,CAST(@thisYear+'-01-03 08:00:00' as smalldatetime),1              ,null                  ,null       ,null    ,null ,null            ,0          ,null               ,null                       ,4                 ,{ts '2015-09-01 00:00:00'},null                 ,null                       ,null            ,null             ,null            ,1        ,1        ,null    ,1        ,null          ,null          ,null                    ,null               ,null             ,null             ,null              ,null               ,null            ,null        ,null                ,null                   ,null                     );
+(@tifaDonorId  ,200.0000       ,CAST(@thisYear+'-01-03 08:00:00' as smalldatetime),5              ,null                  ,null       ,null    ,null ,null            ,0          ,null               ,null                       ,4                 ,{ts '2015-09-01 00:00:00'},null                 ,null                       ,null            ,null             ,null            ,1        ,1        ,null    ,1        ,null          ,null          ,null                    ,null               ,null             ,null             ,null              ,null               ,null            ,null        ,null                ,null                   ,null                     );
 
 --Insert the Donation_Distribution. This has a lot of sub-selects to get the right data. Sorry :(
 INSERT INTO [dbo].donation_distributions 
@@ -135,7 +135,7 @@ INSERT INTO [dbo].Donations
 --Insert the Donation_Distribution for the Soft Credit Donation
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID                                                                                                                                     ,Amount   ,Program_ID,Pledge_ID,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
-((select top 1 Donation_ID from donations where donor_id = @fidelityDonor and donation_date = CAST(@thisYear+'-09-07 00:00:00' as smalldatetime)),2500.0000,3         ,null     ,null        ,@tifaDonorId     ,null ,1        ,null                    ,null                  ,5              );
+((select top 1 Donation_ID from donations where donor_id = @fidelityDonor and donation_date = CAST(@thisYear+'-06-07 00:00:00' as smalldatetime)),2500.0000,3         ,null     ,null        ,@tifaDonorId     ,null ,1        ,null                    ,null                  ,5              );
 GO
 
 --Add a Donation by Tifa, with credit card that we will do a partial refund on
