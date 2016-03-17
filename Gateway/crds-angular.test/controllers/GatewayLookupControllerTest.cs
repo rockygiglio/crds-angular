@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
@@ -46,6 +48,13 @@ namespace crds_angular.test.controllers
             var r = (OkNegotiatedContentResult<List<OtherOrganization>>)response;
             Assert.IsNotNull(r.Content);
             Assert.AreSame(orgs, r.Content);
+        }
+        [Test]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void ShouldThrowAnException()
+        {
+            _gatewayLookupService.Setup(m => m.GetOtherOrgs(null)).Throws(new Exception());
+            _fixture.GetOtherOrganizations();
         }
 
         private List<OtherOrganization> otherOrganizations()
