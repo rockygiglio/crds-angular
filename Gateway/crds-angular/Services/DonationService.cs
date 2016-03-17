@@ -378,7 +378,7 @@ namespace crds_angular.Services
 
         public List<GPExportDatumDTO> GetGPExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationService.GetGPExportAndProcessorFees(depositId, token);
+            var gpExportData = _mpDonationService.GetGPExport(depositId, token);
 
             return gpExportData.Select(Mapper.Map<GPExportDatum, GPExportDatumDTO>).ToList();
         }

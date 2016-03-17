@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  
+
   module.exports = Organizations;
 
   Organizations.$inject = ['$stateParams', 'GoVolunteerService'];
@@ -14,12 +14,12 @@
       controllerAs: 'organizations',
       templateUrl: 'organizations/organizations.template.html'
     };
-    
-    function OrganizationsController() { 
+
+    function OrganizationsController() {
       var vm = this;
-      
+
       vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0];
-      vm.content = vm.cmsInfo.content;   
+      vm.content = vm.cmsInfo.content;
     }
   }
 

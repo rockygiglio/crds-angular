@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities.Interfaces;
@@ -36,9 +35,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly IDonorService _donorService;
         private readonly ICommunicationService _communicationService;
         private readonly IPledgeService _pledgeService;
-
-        private readonly int _donationStatusDeclined;
-        private readonly int _donationStatusDeposited;
+        
         private readonly int _donationStatusSucceeded;
 
         public DonationService(IMinistryPlatformService ministryPlatformService, IDonorService donorService, ICommunicationService communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
@@ -60,8 +57,6 @@ namespace MinistryPlatform.Translation.Services
             _processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
-            _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
-            _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
             _messagesPageId = configuration.GetConfigIntValue("Messages");
@@ -377,65 +372,125 @@ namespace MinistryPlatform.Translation.Services
             return trips;
         }
 
-        public List<GPExportDatum> GetGPExportAndProcessorFees(int depositId, string token)
+        public List<GPExportDatum> GetGPExport(int depositId, string token)
         {
-            var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
-            var gpExportDictList = GetGPExport(depositId, token);
             var gpExport = new List<GPExportDatum>();
+            var glLevelGPExport = GetGLLevelGpExport(depositId, token);
 
-            //loop through each donation and add it distributions to the 
-            //list of gp info being returned
-            foreach (var gpExportDict in gpExportDictList)
+            foreach (var glLevelGPData in glLevelGPExport)
             {
-                var previousProcessorFees = (decimal) 0.0;
-                var indx = 0;
-
-                foreach (var datum in gpExportDict.Value)
-                {
-                    var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDict.Value.Count, indx);
-                    gpExport.Add(AdjustedGpExportDatum(datum, processorFee));
-                    gpExport.Add(CreateProcessorFee(datum, processorFee, processingFeeGLMapping));
-
-                    //set this as we will use this to help determine how much of a processor fee is on the
-                    //next distribution of this donation
-                    previousProcessorFees += processorFee;
-                    indx++;
-                }
+                gpExport.Add(glLevelGPData.Value[0]);
+                gpExport.Add(glLevelGPData.Value[1]);
             }
 
             return gpExport;
+        } 
+
+        private Dictionary<string, List<GPExportDatum>> GetGLLevelGpExport(int depositId, string token)
+        {
+            var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
+            var gpExportDonationLevel = GetGPExportData(depositId, token);
+            //index 0 will contain the contribution index 1 the processor fee
+            var gpExportGLLevel = new Dictionary<string, List<GPExportDatum>>(); 
+
+            //loop through each donation and add it to the the correct GL Mapping
+            foreach (var gpExportDistLevel in gpExportDonationLevel)
+            {
+                GenerateGLLevelGpExport(gpExportGLLevel, gpExportDistLevel.Value, processingFeeGLMapping);
+            }
+
+            return gpExportGLLevel;
         }
 
-        private static decimal CalculateProcessorFee(GPExportDatum datum, decimal previousFee, Int64 distCount, Int64 distProcessed)
+        private void GenerateGLLevelGpExport(IDictionary<string, List<GPExportDatum>> gpExportGLLevel, ICollection<GPExportDatum> gpExportDistLevel, Dictionary<string, object> processingFeeGLMapping)
+        {
+
+            var previousProcessorFees = (decimal)0.0;
+            var indx = 0;
+
+            foreach (var datum in gpExportDistLevel)
+            {
+
+                var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDistLevel.Count, indx);
+                var key = String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}", datum.DocumentType, datum.BatchName, datum.DonationDate.ToString("MM/dd/yyyy"), datum.CheckbookId, datum.CashAccount, datum.ReceivableAccount, datum.DistributionAccount);
+                
+                //if key is not there add it
+                if (!gpExportGLLevel.ContainsKey(key))
+                {
+                    gpExportGLLevel.Add(key, new List<GPExportDatum>());
+                }
+
+                //If this is a new GL Level Contribution take out the processor fee and add it in
+                //If it is not take out the processor fee and add to the existing GL Level Contribution
+                if (gpExportGLLevel[key].Count == 0)
+                {
+                    gpExportGLLevel[key].Add(AdjustGPExportDatumAmount(datum, processorFee));
+                }
+                else
+                {
+                     AdjustGpExportDatum(gpExportGLLevel[key][0], datum, processorFee);
+                }
+
+                //the same as above except processor fee and not contribution
+                if (gpExportGLLevel[key].Count == 1)
+                {
+                    gpExportGLLevel[key].Add(CreateProcessorFee(datum, processorFee, processingFeeGLMapping));
+                }
+                else
+                {
+                    AdjustProcessorFee(gpExportGLLevel[key][1], processorFee);
+                }
+
+                //set this as we will use this to help determine how much of a processor fee is on the
+                //next distribution of this donation
+                previousProcessorFees += processorFee;
+                indx++;
+            }
+        }
+
+        private static decimal CalculateProcessorFee(GPExportDatum datum, decimal previousFee, long distCount, long distProcessed)
         {
             var processorFee = (datum.ProcessorFeeAmount - previousFee) / (distCount - distProcessed);
             return Math.Round(processorFee, 2, MidpointRounding.AwayFromZero);
         }
 
-        private static GPExportDatum AdjustedGpExportDatum(GPExportDatum datum, decimal processorFee)
+        private static void AdjustGpExportDatum(GPExportDatum glLevelDatum, GPExportDatum datum, decimal processorFee)
         {
-            datum.Amount = datum.Amount - processorFee;
+            AdjustGPExportDatumAmount(datum, processorFee);
+            glLevelDatum.Amount += datum.Amount;
+        }
+
+        private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, decimal processorFee)
+        {
+            if (!datum.DocumentType.Equals("RETURNS"))
+            {
+                datum.Amount = datum.Amount - processorFee;
+            }
+
             return datum;
         }
 
         private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
+            processorFee = processorFee<0 ? -1*processorFee : processorFee;
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
                 ProgramId = _processingProgramId,
-                DocumentType = processingFeeGLMapping.ToString("Document_Type"),
+                DocumentType = datum.DocumentType,
+                DepositId = datum.DepositId,
                 DonationId = datum.DonationId,
                 BatchName = datum.BatchName,
                 DonationDate = datum.DonationDate,
                 DepositDate = datum.DepositDate,
                 CustomerId = processingFeeGLMapping.ToString("Customer_ID"),
+                DepositAmount = datum.DepositAmount,
                 DonationAmount = datum.DonationAmount,
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
                 CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
-                ReceivableAccount = processingFeeGLMapping.ToString("Receivable_Account"),
-                DistributionAccount = processingFeeGLMapping.ToString("Distribution_Account"),
-                ScholarshipExpenseAccount = processingFeeGLMapping.ToString("Scholarship_Expense_Account"),
+                ReceivableAccount = datum.ReceivableAccount,
+                DistributionAccount = datum.DistributionAccount,
+                ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
                 Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
                 PaymentTypeId = datum.PaymentTypeId,
@@ -443,7 +498,13 @@ namespace MinistryPlatform.Translation.Services
             };
         }
 
-        public Dictionary<int, List<GPExportDatum>> GetGPExport(int depositId, string token)
+        private static void AdjustProcessorFee(GPExportDatum glLevelFee, decimal processorFee)
+        {
+            processorFee = processorFee < 0 ? -1 * processorFee : processorFee;
+            glLevelFee.Amount = glLevelFee.Amount + processorFee;
+        }
+
+        public Dictionary<int, List<GPExportDatum>> GetGPExportData(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
             var gpExport = new Dictionary<int, List<GPExportDatum>>();
@@ -458,24 +519,27 @@ namespace MinistryPlatform.Translation.Services
                     gpExport.Add(donationID, new List<GPExportDatum>());
                 }
 
+                var amount = Convert.ToDecimal(result.ToString("Amount"));
                 gpExport[donationID].Add(
                     new GPExportDatum
                     {
                         ProccessFeeProgramId = _processingProgramId,
+                        DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
-                        DocumentType = result.ToString("Document_Type"),
+                        DocumentType = (amount < 0) ? "RETURNS" : result.ToString("Document_Type"),
                         DonationId = result.ToInt("Donation_ID"),
                         BatchName = result.ToString("Batch_Name"),
                         DonationDate = result.ToDate("Donation_Date"),
                         DepositDate = result.ToDate("Deposit_Date"),
                         CustomerId = result.ToString("Customer_ID"),
                         DonationAmount = result.ToString("Donation_Amount"),
+                        DepositAmount = result.ToString("Deposit_Amount"),
                         CheckbookId = result.ToString("Checkbook_ID"),
                         CashAccount = result.ToString("Cash_Account"),
                         ReceivableAccount = result.ToString("Receivable_Account"),
                         DistributionAccount = result.ToString("Distribution_Account"),
                         ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
-                        Amount = Convert.ToDecimal(result.ToString("Amount")),
+                        Amount = (amount < 0) ? -1*amount : amount,
                         ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
                         PaymentTypeId = result.ToInt("Payment_Type_ID"),
                         ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
