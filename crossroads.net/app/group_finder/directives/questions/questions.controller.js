@@ -236,7 +236,8 @@
       return Responses.data.joinFlow &&
         ParticipantQuestionService.showUpsell(Responses.data.prior_participation) &&
         _.has(Responses.data, 'location') &&
-        $scope.currentQuestion().title === 'location';
+        $scope.currentQuestion().title === 'location' &&
+        $scope.mode !== 'host';
     }
 
     // ----------------------------------- //

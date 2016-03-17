@@ -1003,6 +1003,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1017,6 +1018,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1031,6 +1033,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 }
             };
 
@@ -1076,6 +1079,14 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Display_On_Statements", false},
                     {"Display_On_MyTrips", false},
                     {"Donation_Status", "Succeeded"}
+                },
+                new Dictionary<string, object>
+                {
+                    {"dp_RecordID", 3},
+                    {"Display_On_Giving_History", false},
+                    {"Display_On_Statements", false},
+                    {"Display_On_MyTrips", false},
+                    {"Donation_Status", "Succeeded"}
                 }
             };
 
@@ -1094,6 +1105,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1108,6 +1120,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", ""}
                 },
                 new Dictionary<string, object>
                 {
@@ -1121,8 +1134,23 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Transaction_Code", "tx_1000"},
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
+                    {"Donor_Display_Name", "Test Name"}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Donation_Date", DateTime.Now},
+                    {"Donation_ID", 3000},
+                    {"Soft_Credit_Donor_ID", null},
+                    {"Donation_Status_ID", 1},
+                    {"Donation_Status_Date", DateTime.Now},
+                    {"Donor_ID", 1100},
+                    {"Payment_Type_ID", 1110},
+                    {"Transaction_Code", "tx_1000"},
+                    {"Amount", 9000.00M},
+                    {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
-                }
+                    {"Item_Number", "1234"}
+                },
             };
 
             var searchString = "\"*/2015*\",True";
@@ -1133,7 +1161,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.VerifyAll();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(3, result.Count);
             Assert.AreEqual(2, result[0].Distributions.Count);
             Assert.AreEqual(1000000, result[0].donationAmt);
             Assert.AreEqual("Program 1", result[0].Distributions[0].donationDistributionProgram);
@@ -1145,6 +1173,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].donationAmt);
             Assert.AreEqual("Program 2", result[1].Distributions[0].donationDistributionProgram);
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
+
+            Assert.AreEqual("1234", result[2].itemNumber);
             
         }
 
@@ -1186,6 +1216,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1200,6 +1231,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1214,6 +1246,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 }
             };
 
@@ -1278,6 +1311,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1292,6 +1326,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 },
                 new Dictionary<string, object>
                 {
@@ -1306,6 +1341,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null}
                 }
             };
 

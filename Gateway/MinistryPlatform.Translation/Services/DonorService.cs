@@ -737,6 +737,7 @@ namespace MinistryPlatform.Translation.Services
                 transactionCode = record["Transaction_Code"] as string,
                 softCreditDonorId = record["Soft_Credit_Donor_ID"] as int? ?? 0,
                 donorDisplayName = record["Donor_Display_Name"] as string,
+                itemNumber = record["Item_Number"] as string
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new DonationStatus();

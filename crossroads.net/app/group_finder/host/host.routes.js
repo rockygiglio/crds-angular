@@ -33,21 +33,21 @@
         url: '/questions',
         templateUrl: 'host/host_questions.html',
         resolve: {},
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.host.review', {
         controller: 'HostReviewCtrl as host',
         url: '/review',
         templateUrl: 'host/host_review.html',
         resolve: {},
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       .state('group_finder.host.confirm', {
         controller: 'HostConfirmCtrl as host',
         url: '/success',
         templateUrl: 'host/host_confirm.html',
         resolve: {},
-        data: {meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
       })
       ;
 

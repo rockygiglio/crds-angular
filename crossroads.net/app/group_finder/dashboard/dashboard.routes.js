@@ -32,6 +32,7 @@
         controller: 'GroupDetailCtrl as detail',
         templateUrl: 'dashboard/group_detail.html',
         data: {
+          isProtected: true,
           meta: {
             title: SERIES.title,
             description: ''
