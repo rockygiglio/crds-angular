@@ -4,21 +4,27 @@ using System.Linq;
 using System.Web;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using MinistryPlatform.Translation.Models.GoCincinnati;
+using MinistryPlatform.Translation.Services;
 using Newtonsoft.Json;
+using IGroupConnectorService = crds_angular.Services.Interfaces.IGroupConnectorService;
 
 namespace crds_angular.Services
 {
-    public class GroupConnectorService
+    public class GroupConnectorService : IGroupConnectorService
     {
-        public GroupConnector GetGroupConnectorsByOrganization(Organization organization)
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IGroupConnectorService _mpGroupConnectorService;
+
+        public GroupConnectorService(MinistryPlatform.Translation.Services.Interfaces.IGroupConnectorService groupConnectorService)
         {
+            _mpGroupConnectorService = groupConnectorService;
+        }
+
+        public List<GroupConnector> GetGroupConnectorsByOrganization(int organization, int initiativeId)
+        {
+            
             var groupConnector = new GroupConnector();
-            var mpGroupConnector = {};
-            if (mpGroupConnector != null)
-            {
-                return groupConnector.FromMpGroupConnector(mpGroupConnector);
-            }
-            return null;
+            var mpGroupConnector = _mpGroupConnectorService.GetGroupConnectors(organization, initiativeId);
+            return mpGroupConnector != null ? groupConnector.FromMpGroupConnectorList(mpGroupConnector) : null;
         }
     }
 
@@ -39,16 +45,15 @@ namespace crds_angular.Services
         [JsonProperty(PropertyName = "organizationName")]
         public string OrganizationName { get; set; }
 
-        public GroupConnector FromMpGroupConnector(MpGroupConnector mpGroupConnector)
+        public List<GroupConnector> FromMpGroupConnectorList(List<MpGroupConnector> mpGroupConnectors)
         {
-            return new GroupConnector()
+            return mpGroupConnectors.Select(r => new GroupConnector
             {
-                Id = mpGroupConnector.Id,
-                Name = mpGroupConnector.Name,
-                PreferredLaunchSite = mpGroupConnector.PreferredLaunchSite,
-                ProjectName = mpGroupConnector.ProjectName,
-                OrganizationName = mpGroupConnector.OrganizationName
-            };
+                Id = r.Id,
+                Name = r.Name,
+                ProjectName = r.ProjectName,
+                PreferredLaunchSite = r.PreferredLaunchSite
+            }).ToList();
         }
     }
 

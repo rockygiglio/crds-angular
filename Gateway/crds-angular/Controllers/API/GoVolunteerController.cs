@@ -5,6 +5,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Security;
+using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
@@ -12,16 +13,18 @@ namespace crds_angular.Controllers.API
     public class GoVolunteerController : MPAuth
     {
         private readonly IOrganizationService _organizationService;
+        private readonly IGroupConnectorService _groupConnectorService;
 
-        public GoVolunteerController(IOrganizationService organizationService)
+        public GoVolunteerController(IOrganizationService organizationService, IGroupConnectorService groupConnectorService)
         {
             _organizationService = organizationService;
+            _groupConnectorService = groupConnectorService;
         }
 
         [HttpGet]
-        [ResponseType(typeof ())]
+        [ResponseType(typeof (GroupConnector))]
         [Route("api/group-connectors/{org}")]
-        public IHttpActionResult GetGroupConnectors(Organization org)
+        public IHttpActionResult GetGroupConnectors(int org)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +37,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(org);
+                    var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(org, 1);
 
                     if (groupConnectors == null)
                     {

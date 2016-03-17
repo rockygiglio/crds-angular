@@ -5,6 +5,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads.GoVolunteer;
+using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -16,12 +17,13 @@ namespace crds_angular.test.controllers
     {
         private GoVolunteerController _fixture;
         private Mock<IOrganizationService> _organizationService;
+        private Mock<IGroupConnectorService> _groupConnectorService;
 
         [SetUp]
         public void Setup()
         {
             _organizationService = new Mock<IOrganizationService>();
-            _fixture = new GoVolunteerController(_organizationService.Object)
+            _fixture = new GoVolunteerController(_organizationService.Object, _groupConnectorService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
