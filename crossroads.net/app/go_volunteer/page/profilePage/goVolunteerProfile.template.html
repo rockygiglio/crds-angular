@@ -12,7 +12,7 @@
       <input type="text"
              class="form-control"
              name="firstName"
-             placeholder="Enter first name"
+             placeholder="Enter first name*"
              required
              ng-model="volunteerProfile.person.nickName" >
       <ng-messages for="volunteerProfile.profileForm.firstName.$error" ng-if="volunteerProfile.validate('firstName')">
@@ -27,7 +27,7 @@
       <input type="text"
              class="form-control"
              name="lastName"
-             placeholder="Enter last name"
+             placeholder="Enter last name*"
              required
              ng-model="volunteerProfile.person.lastName" >
       <ng-messages for="volunteerProfile.profileForm.lastName.$error" ng-if="volunteerProfile.validate('lastName')">
@@ -42,7 +42,7 @@
       <input type="email"
              class="form-control"
              name="email"
-             placeholder="Enter email address"
+             placeholder="Enter email address*"
              required
              unique-email
              ng-model="volunteerProfile.person.emailAddress">
@@ -65,7 +65,7 @@
         <input type="text"
                class="form-control"
                name="birthdate"
-               placeholder="mm/dd/yyyy"
+               placeholder="mm/dd/yyyy*"
                datepicker-popup="MM/dd/yyyy"
                ng-model="volunteerProfile.person.dateOfBirth"
                is-open="volunteerProfile.birthdateOpen"
@@ -101,7 +101,7 @@
       <input type="text"
              class="form-control"
              name="phone"
-             placeholder="Enter mobile phone"
+             placeholder="Enter mobile phone*"
              ng-pattern='volunteerProfile.phoneFormat'
              ng-model="volunteerProfile.person.mobilePhone"
              required >
