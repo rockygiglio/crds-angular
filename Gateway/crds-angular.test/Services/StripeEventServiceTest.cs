@@ -98,8 +98,58 @@ namespace crds_angular.test.Services
                 }
             };
 
+            var stripeCharge = new StripeCharge
+            {
+                BalanceTransaction = new StripeBalanceTransaction
+                {
+                    Type = "charge"
+                }
+            };
+
+
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
             _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
+            _paymentService.Setup(mocked => mocked.GetCharge("9876")).Returns(stripeCharge);
+            Assert.IsNull(_fixture.ProcessStripeEvent(e));
+            _paymentService.VerifyAll();
+            _donationService.VerifyAll();
+        }
+
+        [Test]
+        public void TestChargeFailedBankAccountError()
+        {
+            var e = new StripeEvent
+            {
+                LiveMode = true,
+                Type = "charge.failed",
+                Created = DateTime.Now.AddDays(-1),
+                Data = new StripeEventData
+                {
+                    Object = JObject.FromObject(new StripeCharge
+                    {
+                        Id = "9876",
+                        FailureCode = "invalid_routing_number",
+                        FailureMessage = "description from stripe"
+                    })
+                }
+            };
+
+            var stripeRefund = new StripeRefund();
+
+            var stripeCharge = new StripeCharge
+            {
+                BalanceTransaction = new StripeBalanceTransaction
+                {
+                    Type = "payment"
+                },
+                Refund = stripeRefund
+            };
+
+            _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
+            _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
+            _paymentService.Setup(mocked => mocked.GetCharge("9876")).Returns(stripeCharge);
+            _donationService.Setup(mocked => mocked.CreateDonationForBankAccountErrorRefund(stripeRefund)).Returns(123);
+
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _paymentService.VerifyAll();
             _donationService.VerifyAll();
@@ -229,19 +279,22 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch111")).Returns(new DonationDTO
             {
                 Id = "1111",
-                BatchId = null
+                BatchId = null,
+                Status = DonationStatus.Pending
             });
 
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch222")).Returns(new DonationDTO
             {
                 Id = "2222",
-                BatchId = null
+                BatchId = null,
+                Status = DonationStatus.Pending
             });
 
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch333")).Returns(new DonationDTO
             {
                 Id = "3333",
-                BatchId = null
+                BatchId = null,
+                Status = DonationStatus.Pending
             });
 
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch444")).Throws(new Exception("Not gonna do it, wouldn't be prudent."));
@@ -328,7 +381,8 @@ namespace crds_angular.test.Services
                 {
                     Id = "8888",
                     BatchId = null,
-                    Amount = 888
+                    Amount = 888,
+                    Status = DonationStatus.Declined
                 });
             });
 
@@ -356,7 +410,6 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(2222, 999, e.Created, null)).Returns(2222);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(3333, 999, e.Created, null)).Returns(3333);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(7777, 999, e.Created, null)).Returns(7777);
-            _donationService.Setup(mocked => mocked.UpdateDonationStatus(8888, 999, e.Created, null)).Returns(8888);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(9999, 999, e.Created, null)).Returns(9999);
             _donationService.Setup(mocked => mocked.CreateDeposit(It.IsAny<DepositDTO>())).Returns(
                 (DepositDTO o) =>

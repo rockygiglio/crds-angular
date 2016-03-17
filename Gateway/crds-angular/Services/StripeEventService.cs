@@ -61,6 +61,12 @@ namespace crds_angular.Services
                 .Append(charge.FailureMessage ?? "No Stripe Failure Message");
             _donationService.UpdateDonationStatus(charge.Id, _donationStatusDeclined, eventTimestamp, notes.ToString());
             _donationService.ProcessDeclineEmail(charge.Id);
+                // Create a refund if it is a bank account failure
+            var chargeDetails = _paymentService.GetCharge(charge.Id);
+            if ("payment".Equals(chargeDetails.BalanceTransaction.Type))
+            {
+                _donationService.CreateDonationForBankAccountErrorRefund(chargeDetails.Refund);
+            }
         }
 
         public void InvoicePaymentSucceeded(DateTime? eventTimestamp, StripeInvoice invoice)
@@ -185,12 +191,21 @@ namespace crds_angular.Services
                         }
                     }
 
-                    _logger.Debug(string.Format("Updating charge id {0} to Deposited status", charge));
-                    var donationId = _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
+                    if (donation.Status != DonationStatus.Declined && donation.Status != DonationStatus.Refunded)
+                    {
+                        _logger.Debug(string.Format("Updating charge id {0} to Deposited status", charge.Id));
+                        _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
+                    }
+                    else
+                    {
+                        _logger.Debug(string.Format("Not updating charge id {0} to Deposited status - it was already {1}",
+                                                    charge.Id,
+                                                    System.Enum.GetName(typeof (DonationStatus), donation.Status)));
+                    }
                     response.SuccessfulUpdates.Add(charge.Id);
                     batch.ItemCount++;
                     batch.BatchTotalAmount += (charge.Amount /Constants.StripeDecimalConversionValue);
-                    batch.Donations.Add(new DonationDTO { Id = "" + donationId, Amount = charge.Amount, Fee = charge.Fee });
+                    batch.Donations.Add(new DonationDTO { Id = donation.Id, Amount = charge.Amount, Fee = charge.Fee });
                 }
                 catch (Exception e)
                 {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship
 {
-    public class StripeRefund
+    public class StripeRefund : StripeObject
     {
         [JsonProperty("data")]
         public List<StripeRefundData> Data { get; set; }
