@@ -1454,6 +1454,7 @@ namespace crds_angular.test.Services
             const string processorId = "cus_123";
             const string subscriptionId = "sub_123";
             const string chargeId = "ch_123";
+            DateTime invoiceDate = new DateTime(2016, 3, 16);
 
             var invoice = new StripeInvoice
             {
@@ -1461,6 +1462,7 @@ namespace crds_angular.test.Services
                 Amount = 12300,
                 Charge = chargeId,
                 Customer = processorId,
+                Date = invoiceDate
             };
 
             const int chargeAmount = 45600;
@@ -1519,7 +1521,8 @@ namespace crds_angular.test.Services
                                  d.DonorAcctId.Equals(donorAccountId + "") &&
                                  d.CheckScannerBatchName == null &&
                                  d.DonationStatus == donationStatus &&
-                                 d.CheckNumber == null), false)).Returns(123);
+                                 d.CheckNumber == null &&
+                                 d.SetupDate == invoiceDate), false)).Returns(123);
 
             _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
