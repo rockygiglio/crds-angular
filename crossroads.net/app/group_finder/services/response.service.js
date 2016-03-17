@@ -33,7 +33,7 @@
       return results;
     };
 
-    this.getMultiAttributes = function(attributes, lookup ) {
+    this.getMultiAttributes = function(lookup, attributes) {
       var results = {};
       _.each(attributes, function(index) {
         if (_.has(this.responses, index)) {

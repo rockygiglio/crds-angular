@@ -29,6 +29,7 @@
       vm.maxBirthdate = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate());
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker;
+      vm.person = GoVolunteerService.person;
       vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
       vm.submit = submit;
       vm.validate = validate;
