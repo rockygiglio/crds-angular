@@ -191,6 +191,7 @@
     <Compile Include="controllers\AccountControllerTest.cs" />
     <Compile Include="controllers\GoVolunteerControllerTest.cs" />
     <Compile Include="controllers\LoginControllerTest.cs" />
+    <Compile Include="controllers\LookupControllerTest.cs" />
     <Compile Include="controllers\ProfileControllerTest.cs" />
     <Compile Include="controllers\GroupControllerTest.cs" />
     <Compile Include="controllers\ServeControllerTest.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
+    <Compile Include="Services\GatewayLookupServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\ListHandlerTest.cs" />
