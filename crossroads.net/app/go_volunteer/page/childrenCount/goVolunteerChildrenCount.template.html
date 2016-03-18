@@ -7,21 +7,21 @@
 
 <div class="row">
   <div class="col-xs-12 soft-half-bottom">
-    <h-number value="0" singular="Child Age 2-7" plural="Children Age 2-7" min="0" max="15" step="1"></h-number>
+    <h-number value="goChildrenCount.childTwoSeven" singular="Child Age 2-7" plural="Children Age 2-7" min="0" max="15" step="1"></h-number>
   </div>
   <div class="col-xs-12 soft-half-bottom">
-    <h-number value="0" singular="Child Age 8-12" plural="Children Age 8-12" min="0" max="15" step="1"></h-number>
+    <h-number value="goChildrenCount.childEightTwelve" singular="Child Age 8-12" plural="Children Age 8-12" min="0" max="15" step="1"></h-number>
   </div>
   <div class="col-xs-12 soft-half-bottom">
-    <h-number value="0" singular="Child Age 13-18" plural="Children Age 13-18" min="0" max="15" step="1"></h-number>
+    <h-number value="goChildrenCount.childThirteenEighteen" singular="Child Age 13-18" plural="Children Age 13-18" min="0" max="15" step="1"></h-number>
   </div>
 </div>
 <hr />
 <h3 class="push-bottom">
-  <strong>3</strong> Total</h3>
+  <strong>{{ goChildrenCount.totalChildren() }}</strong> Total</h3>
 <div class="row">
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'group-connector'})">Next
+    <button type="submit" class="btn btn-block btn-primary-gc" ng-click='goChildrenCount.submit()'>Next
       <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
         <use xlink:href="#arrow-right9"></use>
       </svg>

@@ -7,7 +7,8 @@
 
   function OrganizationsService($resource) {
     return {
-      ByName: $resource(__API_ENDPOINT__ + 'api/organization/:name')
+      ByName: $resource(__API_ENDPOINT__ + 'api/organization/:name'),
+      Others: $resource(__API_ENDPOINT__ + 'api/organizations/other')
     };
   }
 

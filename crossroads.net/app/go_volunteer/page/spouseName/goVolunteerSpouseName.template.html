@@ -66,8 +66,7 @@
                max-date="{{goSpouseName.maxBirthdate}}"
                min-date="{{goSpouseName.oneHundredFiftyYearsAgo}}"
                init-date="goSpouseName.initDate"
-               datepicker-validator
-               required >
+               datepicker-validator >
         <span class="input-group-btn">
           <button type="button"
                   class="btn btn-default"
@@ -96,12 +95,8 @@
              name="phone"
              placeholder="Enter mobile phone"
              ng-pattern='goSpouseName.phoneFormat'
-             ng-model="goSpouseName.spouse.mobilePhone"
-             required >
+             ng-model="goSpouseName.spouse.mobilePhone" >
       <ng-messages for="goSpouseName.spouseForm.phone.$error" ng-if="goSpouseName.validate('phone')" >
-        <span ng-message='required'>
-          <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>
-        </span>
         <span ng-message="pattern"><span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span></span>
       </ng-messages>
 

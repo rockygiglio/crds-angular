@@ -9,6 +9,7 @@
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
+      childrenAttending: {},
       person: {
         nickName: '',
         lastName: '',
@@ -18,7 +19,8 @@
       },
       spouse: {},
       spouseAttending: false,
-      organization: {}
+      organization: {},
+      otherOrgName: null
     };
 
     return volunteerService;
