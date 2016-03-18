@@ -390,7 +390,7 @@ namespace MinistryPlatform.Translation.Services
 
         private GPExportDatum AddDocumentNumber(GPExportDatum datum, int index)
         {
-            datum.DocumentNumber = String.Format("{0}000{1}", datum.DepositId, index);
+            datum.DocumentNumber = string.Format("{0}000{1}", datum.DepositId, index);
 
             return datum;
         }
