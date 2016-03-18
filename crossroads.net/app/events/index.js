@@ -1,7 +1,7 @@
 //(function() {
 	'use strict';
 
-	require('./atriumevents.html');
+	require('./events/atriumevents.html');
 
 	var app = angular.module('crossroads');
 
