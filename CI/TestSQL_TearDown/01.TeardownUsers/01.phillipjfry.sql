@@ -52,6 +52,9 @@ WHERE contact_id = @contactID;
 DELETE from [dbo].dp_communication_messages 
 WHERE Communication_ID = @communicationID;
 
+DELETE from [dbo].dp_communication_messages
+WHERE Contact_ID = @contactID;
+
 Delete from [dbo].dp_Communications
 WHERE Communication_ID = @communicationID;
 
@@ -85,6 +88,8 @@ insert into @donationsTable (donation_id) (select donation_id from donation_dist
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
+
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
 --Delete all of Fry's donations.
@@ -93,6 +98,8 @@ delete from @donationsTable;
 insert into @donationsTable (donation_id) (select donation_id from donations where donor_id = @donorId);
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
+
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
 
 delete from donations where donation_id in (select donation_id from @donationsTable);
 

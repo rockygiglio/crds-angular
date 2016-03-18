@@ -12,6 +12,8 @@ delete from [dbo].form_response_answers where form_response_id in (select form_r
 
 delete from [dbo].form_responses where event_id in (select event_id from event_participants where event_id in (select event_id from events where event_title = @tripName));
 
+delete from [dbo].cr_EventParticipant_documents where event_participant_ID in (select Event_Participant_ID from Event_Participants where event_id in (select event_id from events where event_title = @tripName));
+
 delete from [dbo].event_participants where event_id in (select event_id from [dbo].events where event_title = @tripName);
 
 delete from [dbo].event_groups where event_id in (select event_id from [dbo].events where event_title = @tripName);
@@ -57,5 +59,9 @@ delete from GL_Account_Mapping where program_id in (select program_id from progr
 delete from [dbo].events where program_id in (select program_id from programs where program_name = @tripName);
 
 delete from [dbo].programs where program_name = @tripName;
+
+DELETE FROM [dbo].FORM_RESPONSE_ANSWERS where FORM_RESPONSE_ID in (select FORM_RESPONSE_ID FROM [dbo].Form_Responses where PLEDGE_CAMPAIGN_ID = 10000000);
+
+delete from [dbo].Form_Responses where PLEDGE_CAMPAIGN_ID = 10000000;
 
 delete from [dbo].pledge_campaigns where pledge_campaign_id = @pledgeCampaignId;
