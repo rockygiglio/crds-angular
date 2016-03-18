@@ -272,12 +272,29 @@ set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpc
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
 
---44 dollar check with no check number
+--44 dollar check with no check number but has stripe data - Should not HAPPEN
 INSERT INTO [dbo].donations 
 (Donor_ID     ,Donation_Amount,Donation_Date                                     ,Payment_Type_ID,Non_Cash_Asset_Type_ID,Item_Number,Batch_ID,Notes,Donor_Account_ID,[Anonymous],Check_Scanner_Batch,Donation_Status_Information,Donation_Status_ID,Donation_Status_Date                              ,Donation_Status_Notes,Online_Donation_Information,Transaction_Code             ,Subscription_Code,Gateway_Response,Processed,Domain_ID,Currency,Receipted,Invoice_Number,Receipt_Number,__ExternalContributionID,__ExternalPaymentID,__ExternalGiverID,__ExternalDonorID,__ExteralMasterID1,__ExternalMasterID2,Registered_Donor,Processor_ID        ,Processor_Fee_Amount,Reconcile_Change_Needed,Reconcile_Change_Complete) VALUES
-(@tifaDonorId ,44.0000        ,CAST(@thisYear+'-01-07 14:27:27' as smalldatetime),1              ,null                  ,'1338'     ,null    ,null ,null            ,null       ,null               ,null                       ,2                 ,CAST(@thisYear+'-01-06 12:27:27' as smalldatetime),null                 ,null                       ,'py_17q5pZEldv5NE53s2tTutxOz',null             ,null            ,null     ,1        ,null    ,0        ,null          ,null          ,null                    ,null               ,null             ,null             ,null              ,null               ,1               ,'cus_85UsQReBytr2dn',0.25                ,null                   ,null                     );
+(@tifaDonorId ,44.0000        ,CAST(@thisYear+'-01-07 14:27:27' as smalldatetime),1              ,null                  ,null       ,null    ,null ,null            ,null       ,null               ,null                       ,2                 ,CAST(@thisYear+'-01-06 12:27:27' as smalldatetime),null                 ,null                       ,'py_17q5pZEldv5NE53s2tTutxOz',null             ,null            ,null     ,1        ,null    ,0        ,null          ,null          ,null                    ,null               ,null             ,null             ,null              ,null               ,1               ,'cus_85UsQReBytr2dn',0.25                ,null                   ,null                     );
 
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID                                                                                         ,Amount ,Program_ID,Pledge_ID,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
 ((select top 1 Donation_ID from donations where donor_id = @tifaDonorId order by Donation_date desc) ,44.0000,3         ,null     ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
+GO
+
+--Add a Check with no check number or stripe data (DBT check case)
+DECLARE @tifaDonorId as int
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+
+DECLARE @thisYear as VARCHAR(4)
+set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
+
+--45 dollar check with no check number and no stripe data
+INSERT INTO [dbo].donations 
+(Donor_ID     ,Donation_Amount,Donation_Date                                     ,Payment_Type_ID,Non_Cash_Asset_Type_ID,Item_Number,Batch_ID,Notes,Donor_Account_ID,[Anonymous],Check_Scanner_Batch,Donation_Status_Information,Donation_Status_ID,Donation_Status_Date                              ,Donation_Status_Notes,Online_Donation_Information,Transaction_Code,Subscription_Code,Gateway_Response,Processed,Domain_ID,Currency,Receipted,Invoice_Number,Receipt_Number,__ExternalContributionID,__ExternalPaymentID,__ExternalGiverID,__ExternalDonorID,__ExteralMasterID1,__ExternalMasterID2,Registered_Donor,Processor_ID,Processor_Fee_Amount,Reconcile_Change_Needed,Reconcile_Change_Complete) VALUES
+(@tifaDonorId ,45.0000        ,CAST(@thisYear+'-01-07 15:27:27' as smalldatetime),1              ,null                  ,null       ,null    ,null ,null            ,null       ,null               ,null                       ,2                 ,CAST(@thisYear+'-01-06 12:27:27' as smalldatetime),null                 ,null                       ,null            ,null             ,null            ,null     ,1        ,null    ,0        ,null          ,null          ,null                    ,null               ,null             ,null             ,null              ,null               ,1               ,null        ,null                ,null                   ,null                     );
+
+INSERT INTO [dbo].donation_distributions 
+(Donation_ID                                                                                         ,Amount ,Program_ID,Pledge_ID,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
+((select top 1 Donation_ID from donations where donor_id = @tifaDonorId order by Donation_date desc) ,45.0000,3         ,null     ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
 GO
