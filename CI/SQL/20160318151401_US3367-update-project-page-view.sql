@@ -11,6 +11,7 @@ UPDATE [dbo].[dp_Page_Views]
 , Project_ID_Table_Project_Type_ID_Table.[Description] AS [Project_Type]
 , Project_ID_Table_Project_Type_ID_Table.[Minimum_Age] AS [Project_Minimum_Age]
 , Project_ID_Table.[_Volunteer_Count] AS [Volunteer_Count]
+, Project_ID_Table.[Maximum_Volunteers] AS [Project_Maximum_Volunteers]
 , cr_GroupConnectors.[GroupConnector_ID]'
  WHERE Page_View_ID = 2219
 GO

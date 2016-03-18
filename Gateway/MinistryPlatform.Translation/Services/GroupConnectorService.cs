@@ -38,6 +38,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 Id = r.ToInt("GroupConnector_ID"),
                 Name = r.ToString("Primary_Registration"),
+                ProjectMaximumVolunteers = r.ToInt("Project_Maximum_Volunteers"),
                 ProjectMinimumAge = r.ToInt("Project_Minimum_Age"),
                 ProjectName = r.ToString("Project_Name"),
                 ProjectType = r.ToString("Project_Type"),

@@ -9,7 +9,7 @@
     return {
       restrict: 'E',
       scope: {
-        onSubmit: '&' 
+        onSubmit: '&'
       },
       bindToController: true,
       controller: GoVolunteerGroupFindConnectorController,
@@ -25,7 +25,7 @@
       vm.groupConnectors = [];
       vm.loaded = loaded;
       vm.organization = GoVolunteerService.organization;
- 
+      vm.registrationCount = registrationCount();
       vm.submit = submit;
       vm.youngestInRegistration = youngestInRegistration();
 
@@ -50,7 +50,7 @@
       }
 
       function handleError(err) {
-        // show error page? 
+        // show error page?
         console.log(err);
       }
 
@@ -58,7 +58,7 @@
         return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
       }
 
-      function disableCard(projectMinAge) {
+      function disableCard(projectMinAge, projectMax, projectCurrentVolunteers) {
         if (projectMinAge === 0) {
           return false;
         }
@@ -67,7 +67,19 @@
           return true;
         }
 
+        if (vm.registrationCount > (projectMax - projectCurrentVolunteers)) {
+          return true;
+        }
+
         return false;
+      }
+
+      function registrationCount() {
+        return 1 +
+          GoVolunteerService.spouseAttending +
+          GoVolunteerService.childrenAttending.childTwoSeven +
+          GoVolunteerService.childrenAttending.childEightTwelve +
+          GoVolunteerService.childrenAttending.childThirteenEighteen;
       }
 
       function submit(groupConnectorId) {

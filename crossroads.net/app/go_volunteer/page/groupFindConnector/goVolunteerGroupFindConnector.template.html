@@ -16,7 +16,7 @@
            class="form-control"
            placeholder="Search">
   </div>
-  
+
   <div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
     <preloader full-screen="false" > </preloader>
   </div>
@@ -28,7 +28,9 @@
   <div class="col-sm-12">
     <!-- ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})" -->
     <div ng-repeat="g in goGroupFindConnector.groupConnectors">
-    <button ng-click="goGroupFindConnector.submit(g.groupConnectorId)" ng-disabled=goGroupFindConnector.disableCard(g.projectMinimumAge)>
+    <button
+      ng-click="goGroupFindConnector.submit(g.groupConnectorId)"
+      ng-disabled=goGroupFindConnector.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)>
       <div class="media card-item media-card-link">
         <!-- Leaving this markup here for now, but no img was specified in AC -->
         <!-- <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
