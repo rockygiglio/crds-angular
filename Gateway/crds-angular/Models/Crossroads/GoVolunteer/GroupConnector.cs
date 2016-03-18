@@ -32,7 +32,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
             {
                 Id = r.Id,
                 Name = r.Name,
+                ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
+                ProjectType = r.ProjectType,
                 PreferredLaunchSite = r.PreferredLaunchSite
             }).ToList();
         }
