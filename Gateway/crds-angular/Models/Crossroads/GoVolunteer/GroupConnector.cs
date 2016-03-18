@@ -25,6 +25,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "projectType")]
         public string ProjectType { get; set; }
 
+        [JsonProperty(PropertyName = "volunteerCount")]
+        public int VolunteerCount { get; set; }
 
         public List<GroupConnector> FromMpGroupConnectorList(List<MpGroupConnector> mpGroupConnectors)
         {
@@ -35,7 +37,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
                 ProjectType = r.ProjectType,
-                PreferredLaunchSite = r.PreferredLaunchSite
+                PreferredLaunchSite = r.PreferredLaunchSite,
+                VolunteerCount = r.VolunteerCount
             }).ToList();
         }
     }

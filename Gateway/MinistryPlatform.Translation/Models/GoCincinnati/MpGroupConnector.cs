@@ -9,5 +9,6 @@
         public int ProjectMinimumAge { get; set; }
         public string ProjectName { get; set; }
         public string ProjectType { get; set; }
+        public int VolunteerCount { get; set; }
     }
 }

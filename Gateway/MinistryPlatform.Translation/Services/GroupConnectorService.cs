@@ -41,7 +41,8 @@ namespace MinistryPlatform.Translation.Services
                 ProjectMinimumAge = r.ToInt("Project_Minimum_Age"),
                 ProjectName = r.ToString("Project_Name"),
                 ProjectType = r.ToString("Project_Type"),
-                PreferredLaunchSite = r.ToString("Preferred_Launch_Site")
+                PreferredLaunchSite = r.ToString("Preferred_Launch_Site"),
+                VolunteerCount = r.ToInt("Volunteer_Count")
             }).ToList();
         }
     }
