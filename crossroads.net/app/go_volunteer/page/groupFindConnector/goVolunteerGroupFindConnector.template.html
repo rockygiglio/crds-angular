@@ -5,7 +5,7 @@
 </div>
 <h2>Find your group</h2>
 <p>
-  Can’t find a fit? <a ui-sref="go-volunteer.crossroadspage({page: 'unique-skills'})">Create your own group.</a>
+  Can’t find a fit? <a ng-click="goGroupFindConnector.createGroup()">Create your own group.</a>
 </p>
 
 <div class="row">
@@ -15,8 +15,12 @@
            class="form-control"
            placeholder="Search">
   </div>
+  
+  <div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
+    <preloader full-screen="false" > </preloader>
+  </div>
 
-  <div class="col-sm-12">
+  <div class="col-sm-12" ng-if="goGroupFindConnector.loaded()">
     <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})"  ng-repeat="g in goGroupFindConnector.groupConnectors">
       <div class="media card-item media-card-link">
         <!-- Leaving this markup here for now, but no img was specified in AC -->

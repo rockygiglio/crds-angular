@@ -8,7 +8,9 @@
   function GoVolunteerGroupFindConnector(GoVolunteerService, GroupConnectors) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&' 
+      },
       bindToController: true,
       controller: GoVolunteerGroupFindConnectorController,
       controllerAs: 'goGroupFindConnector',
@@ -18,9 +20,11 @@
     function GoVolunteerGroupFindConnectorController() {
       var vm = this;
       vm.activate = activate;
+      vm.createGroup = createGroup;
       vm.groupConnectors = [];
+      vm.loaded = loaded;
       vm.organization = GoVolunteerService.organization;
-
+ 
       vm.activate();
 
       /////////////////////////
@@ -29,13 +33,28 @@
         console.log('org');
         console.log(vm.organization);
 
-        GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
-          vm.groupConnectors = data;
-        },
+        if (vm.organization.openSignup) {
+          GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+            vm.groupConnectors = data;
+          }, handleError);
+        } else {
+          GroupConnectors.ByOrgId.query({orgId: vm.organization.organizationId, initiativeId: 1}, function(data) {
+            vm.groupConnectors = data;
+          }, handleError);
 
-        function(err) {
-          console.log(err);
-        });
+        }
+      }
+
+      function createGroup() {
+        vm.onSubmit({nextState: 'unique-skills'});
+      }
+
+      function handleError(err) {
+        console.log(err);
+      }
+
+      function loaded() {
+        return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
       }
     }
   }
