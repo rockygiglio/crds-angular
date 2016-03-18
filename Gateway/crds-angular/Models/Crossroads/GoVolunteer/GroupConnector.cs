@@ -7,8 +7,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 {
     public class GroupConnector
     {
-        [JsonProperty(PropertyName = "organizationId")]
-        public int Id { get; set; }
+        [JsonProperty(PropertyName = "groupConnectorId")]
+        public int GroupConnectorId { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
@@ -30,7 +30,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         {
             return mpGroupConnectors.Select(r => new GroupConnector
             {
-                Id = r.Id,
+                GroupConnectorId = r.Id,
                 Name = r.Name,
                 ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
