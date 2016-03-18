@@ -274,6 +274,7 @@
     <Compile Include="Models\Crossroads\Events\Room.cs" />
     <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\GroupConnector.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Organization.cs" />
     <Compile Include="Models\Crossroads\GroupContactDTO.cs" />
     <Compile Include="Models\Crossroads\Events\Event.cs" />

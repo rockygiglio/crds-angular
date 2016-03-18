@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Security;
-using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
     public class GoVolunteerController : MPAuth
     {
-        private readonly IOrganizationService _organizationService;
         private readonly IGroupConnectorService _groupConnectorService;
+        private readonly IOrganizationService _organizationService;
 
         public GoVolunteerController(IOrganizationService organizationService, IGroupConnectorService groupConnectorService)
         {
@@ -22,9 +22,36 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [ResponseType(typeof (GroupConnector))]
-        [Route("api/group-connectors/{org}")]
-        public IHttpActionResult GetGroupConnectors(int org)
+        [ResponseType(typeof (List<GroupConnector>))]
+        [Route("api/group-connectors/open-orgs/{initiativeId}")]
+        public IHttpActionResult GetGetGroupConnectorsOpenOrgs(int initiativeId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var groupConnectors = _groupConnectorService.GetGroupConnectorsForOpenOrganizations(initiativeId);
+
+                    if (groupConnectors == null)
+                    {
+                        return NotFound();
+                    }
+                    return Ok(groupConnectors);
+                }
+                catch (Exception e)
+                {
+                    const string msg = "GoVolunteerController.GetGetGroupConnectorsOpenOrgs";
+                    logger.Error(msg, e);
+                    var apiError = new ApiErrorDto(msg, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [HttpGet]
+        [ResponseType(typeof (List<GroupConnector>))]
+        [Route("api/group-connectors/{orgId}/{initiativeId}")]
+        public IHttpActionResult GetGroupConnectorsForOrg(int orgId, int initiativeId)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +64,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(org, 1);
+                    var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(orgId, initiativeId);
 
                     if (groupConnectors == null)
                     {
@@ -47,7 +74,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    const string msg = "GoVolunteerController.GetGroupConnectors";
+                    const string msg = "GoVolunteerController.GetGroupConnectorsForOrg";
                     logger.Error(msg, e);
                     var apiError = new ApiErrorDto(msg, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);

@@ -17,12 +17,21 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<MpGroupConnector> GetGroupConnectors(int organizationId, int initiativeName)
+        public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId)
+        {
+            var searchString = string.Format(",,,,true,{0}", initiativeId);
+            return GetGroupConnectors(searchString);
+        }
+
+        public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId)
+        {
+            var searchString = string.Format(",,,{0},,{1}", organizationId, initiativeId);
+            return GetGroupConnectors(searchString);
+        }
+
+        private List<MpGroupConnector> GetGroupConnectors(string searchString)
         {
             var token = ApiLogin();
-            var searchString = string.Format(",,,{0},{1}", organizationId, initiativeName);
-            //var pageKey = _configurationWrapper.GetConfigIntValue("GroupConnectorPage");
-            //var result = _ministryPlatformService.GetRecordsDict(pageKey, token, searchString);
             var result = _ministryPlatformService.GetPageViewRecords("GroupConnectorPageView", token, searchString);
 
             return result.Select(r => new MpGroupConnector

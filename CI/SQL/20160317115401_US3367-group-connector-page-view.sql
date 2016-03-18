@@ -4,7 +4,7 @@ GO
 SET IDENTITY_INSERT [dbo].[dp_Page_Views] ON;
 GO
 
-DECLARE @PageViewId INT = 2118;
+DECLARE @PageViewId INT = 2219;
 DECLARE @PageId INT = 13;
 DECLARE @PageViewTitle VARCHAR(50) = 'GroupConnectorsByOrganization';
 DECLARE @FieldList VARCHAR(1000) = 'Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[Display_Name] AS [Primary_Registration]
