@@ -7,7 +7,7 @@ SET [Field_List] = 'Groups.[Group_Name] AS [Group_Name]
 , Groups.[Start_Date]
 , Primary_Contact_Table.[Display_Name] AS [Primary_Contact]
 , Groups.[Remaining_Capacity]
-,(SELECT COUNT(*) FROM Group_Participants GP WHERE GP.Group_ID = Groups.Group_ID) AS No_Of_Participants
+,(SELECT COUNT(*) FROM Group_Participants GP WHERE GP.Group_ID = Groups.Group_ID AND GP.Group_Role_ID = 16) AS No_Of_Participants
 , Meeting_Day_ID_Table.[Meeting_Day]
 , Groups.[Meeting_Time]
 , Offsite_Meeting_Address_Table.[Address_Line_1]
@@ -39,7 +39,7 @@ SET [Field_List] = 'Groups.[Group_Name] AS [Group_Name]
 , Groups.[Start_Date]
 , Primary_Contact_Table.[Display_Name] AS [Primary_Contact]
 , Groups.[Remaining_Capacity]
-,(SELECT COUNT(*) FROM Group_Participants GP WHERE GP.Group_ID = Groups.Group_ID) AS No_Of_Participants
+,(SELECT COUNT(*) FROM Group_Participants GP WHERE GP.Group_ID = Groups.Group_ID AND GP.Group_Role_ID = 16) AS No_Of_Participants
 , Meeting_Day_ID_Table.[Meeting_Day]
 , Groups.[Meeting_Time]
 , Offsite_Meeting_Address_Table.[Address_Line_1]
