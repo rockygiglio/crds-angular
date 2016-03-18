@@ -16,6 +16,25 @@
            placeholder="Search">
   </div>
 
+  <div><pre>{{goGroupFindConnector.groupConnectors}}</pre></div>
+
+  <div class="col-sm-12" ng-repeat="g in goGroupFindConnector.groupConnectors">
+    <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
+      <div class="media card-item media-card-link">
+        <!-- Leaving this markup here for now, but no img was specified in AC -->
+        <!-- <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+          <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
+        </div> -->
+        <div class="media-body soft-half-ends soft-half-right">
+          <h3 class="media-heading flush-bottom">{{g.name}}</h3>
+          <p class="flush-bottom">project type</p>
+          <p class="flush-bottom">{{p.preferredLaunchSite}}</p>
+          <p class="flush-bottom">min age</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
 <div class="col-sm-12">
   <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
     <div class="media card-item media-card-link">

@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerGroupFindConnector;
 
-  GoVolunteerGroupFindConnector.$inject = [];
+  GoVolunteerGroupFindConnector.$inject = ['GoVolunteerService', 'GroupConnectors'];
 
-  function GoVolunteerGroupFindConnector() {
+  function GoVolunteerGroupFindConnector(GoVolunteerService, GroupConnectors) {
     return {
       restrict: 'E',
       scope: {},
@@ -17,7 +17,26 @@
 
     function GoVolunteerGroupFindConnectorController() {
       var vm = this;
+      vm.activate = activate;
+      vm.groupConnectors = [];
+      vm.organization = GoVolunteerService.organization;
 
+      vm.activate();
+
+      /////////////////////////
+
+      function activate() {
+        console.log('org');
+        console.log(vm.organization);
+
+        GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+          vm.groupConnectors = data;
+        },
+
+        function(err) {
+          console.log(err);
+        });
+      }
     }
   }
 
