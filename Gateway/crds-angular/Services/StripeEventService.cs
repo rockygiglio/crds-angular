@@ -51,11 +51,8 @@ namespace crds_angular.Services
         public void ChargeFailed(DateTime? eventTimestamp, StripeCharge charge)
         {
             _logger.Debug("Processing charge.failed event for charge id " + charge.Id);
-            var notes = new StringBuilder();
-            notes.Append(charge.FailureCode ?? "No Stripe Failure Code")
-                .Append(": ")
-                .Append(charge.FailureMessage ?? "No Stripe Failure Message");
-            _donationService.UpdateDonationStatus(charge.Id, _donationStatusDeclined, eventTimestamp, notes.ToString());
+            var notes = string.Format("{0}: {1}", charge.FailureCode ?? "No Stripe Failure Code", charge.FailureMessage ?? "No Stripe Failure Message");
+            _donationService.UpdateDonationStatus(charge.Id, _donationStatusDeclined, eventTimestamp, notes);
             _donationService.ProcessDeclineEmail(charge.Id);
 
             // Create a refund if it is a bank account failure
