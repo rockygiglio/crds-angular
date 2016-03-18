@@ -30,9 +30,6 @@
       /////////////////////////
 
       function activate() {
-        console.log('org');
-        console.log(vm.organization);
-
         if (vm.organization.openSignup) {
           GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
             vm.groupConnectors = data;
@@ -41,7 +38,6 @@
           GroupConnectors.ByOrgId.query({orgId: vm.organization.organizationId, initiativeId: 1}, function(data) {
             vm.groupConnectors = data;
           }, handleError);
-
         }
       }
 
@@ -50,6 +46,7 @@
       }
 
       function handleError(err) {
+        // show error page? 
         console.log(err);
       }
 
