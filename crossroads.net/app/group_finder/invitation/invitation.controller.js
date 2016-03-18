@@ -77,7 +77,8 @@
         var participant = {
           capacityNeeded: vm.capacity,
           groupRoleId: GROUP_ROLE.PARTICIPANT,
-          attributeTypes: {}
+          singleAttributes: Responses.getSingleAttributes(vm.lookup),
+          attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
         };
         if (_.has(Responses.data, 'completed_flow')) {
           if (_.has(Responses.data, 'location')) {
@@ -88,7 +89,6 @@
               zip: Responses.data.location.zip
             };
           }
-          participant.singleAttributes = Responses.getSingleAttributes(vm.lookup);
         }
 
         GroupInvitationService.acceptInvitation(vm.groupId, participant)
@@ -130,10 +130,11 @@
               var group = GroupInfo.findParticipatingOrHost(vm.groupId);
               if (cid && group) {
                 email = {
-                  groupId      : group.groupId,
-                  fromContactId: cid,
-                  toContactId  : cid,
-                  mergeData    : {
+                  groupId          : group.groupId,
+                  replyToContact   : CONTACT_ID.JOURNEY,
+                  fromContactId    : cid,
+                  toContactId      : cid,
+                  mergeData : {
                     HostName         : group.contact ? group.contact.firstName : null,
                     HostPreferredName: group.contact ? group.contact.firstName : null
                   }

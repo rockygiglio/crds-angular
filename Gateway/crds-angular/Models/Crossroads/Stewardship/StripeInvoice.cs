@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using crds_angular.Models.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace crds_angular.Models.Crossroads.Stewardship
 {
@@ -16,6 +19,10 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("amount_due")]
         public int Amount { get; set; }
+
+        [JsonProperty("date")]
+        [JsonConverter(typeof(StripeDateTimeConverter))]
+        public DateTime Date { get; set; }
 
         [JsonProperty("paid")]
         public bool Paid { get; set; }

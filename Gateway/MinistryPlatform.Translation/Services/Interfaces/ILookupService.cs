@@ -23,5 +23,9 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<Dictionary<string, object>> ReminderDays(string token);
 
         List<Dictionary<string, object>> WorkTeams(string token);
+
+        IEnumerable<T> GetList<T>(string token);
+        T GetObject<T>(string token);
+
     }
 }

@@ -4,6 +4,7 @@ namespace MinistryPlatform.Models
 {
     public class GPExportDatum
     {
+        public string DocumentNumber { get; set; }
         public int DepositId { get; set; }
         public int ProccessFeeProgramId { get; set; }
         public int ProgramId { get; set; }
