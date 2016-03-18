@@ -328,10 +328,14 @@ namespace crds_angular.Services
         {
             var url = string.Format("charges/{0}/refunds", chargeId);
             var request = new RestRequest(url, Method.GET);
+            request.AddParameter("expand[]", "balance_transaction");
+            request.AddParameter("expand[]", "charge");
 
-            var response = _stripeRestClient.Execute<StripeRefund>(request);
+            var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge refund", response);
-            var refund = response.Data;
+
+            // TODO Execute<StripeRefund>() above always gets an error deserializing the response, so using Execute() instead, and manually deserializing here
+            var refund = JsonConvert.DeserializeObject<StripeRefund>(response.Content);
             
             return (refund);
         }
@@ -357,6 +361,7 @@ namespace crds_angular.Services
             var url = string.Format("refunds/{0}", refundId);
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "charge");
+            request.AddParameter("expand[]", "balance_transaction");
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query refund", response);

@@ -291,6 +291,7 @@
     <Compile Include="Models\Crossroads\SponsoredChild.cs" />
     <Compile Include="Models\Crossroads\Stewardship\PledgeDto.cs" />
     <Compile Include="Models\Crossroads\Stewardship\StripeCard.cs" />
+    <Compile Include="Models\Crossroads\Stewardship\StripeList.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />

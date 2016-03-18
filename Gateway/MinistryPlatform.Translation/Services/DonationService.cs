@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
@@ -30,6 +31,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _donationCommunicationsPageId;
         private readonly int _messagesPageId;
         private readonly int _glAccountMappingByProgramPageView;
+        private readonly int _donationDistributionsSubPage;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IDonorService _donorService;
@@ -61,6 +63,7 @@ namespace MinistryPlatform.Translation.Services
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
             _messagesPageId = configuration.GetConfigIntValue("Messages");
             _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("GLAccountMappingByProgramPageView");
+            _donationDistributionsSubPage = configuration.GetConfigIntValue("DonationDistributionsApiSubPageView");
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -75,7 +78,7 @@ namespace MinistryPlatform.Translation.Services
         {
             return(WithApiLogin(token =>
             {
-                var result = GetDonationByProcessorPaymentId(processorPaymentId, token);
+                var result = GetDonationByProcessorPaymentId(processorPaymentId, token, false);
 
                 UpdateDonationStatus(token, result.donationId, statusId, statusDate, statusNote);
                 if (statusId == _donationStatusSucceeded)
@@ -283,7 +286,7 @@ namespace MinistryPlatform.Translation.Services
             try
             {
                 var apiToken = ApiLogin();
-                var result = GetDonationByProcessorPaymentId(processorPaymentId, apiToken);
+                var result = GetDonationByProcessorPaymentId(processorPaymentId, apiToken, false);
 
                 var rec = _ministryPlatformService.GetRecordsDict(_distributionPageId, apiToken, string.Format(",,,,,,,,\"{0}\"", result.donationId));
                 
@@ -296,7 +299,7 @@ namespace MinistryPlatform.Translation.Services
                 var paymentType = PaymentType.GetPaymentType(result.paymentTypeId).name;
                 var declineEmailTemplate = PaymentType.GetPaymentType(result.paymentTypeId).declineEmailTemplateId;
 
-                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt, paymentType, result.donationDate,
+                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt / Constants.StripeDecimalConversionValue, paymentType, result.donationDate,
                     program, result.donationNotes);
             }
             catch (Exception ex)
@@ -307,12 +310,12 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public Donation GetDonationByProcessorPaymentId(string processorPaymentId)
+        public Donation GetDonationByProcessorPaymentId(string processorPaymentId, bool retrieveDistributions = false)
         {
-            return (WithApiLogin(token => GetDonationByProcessorPaymentId(processorPaymentId, token)));
+            return (WithApiLogin(token => GetDonationByProcessorPaymentId(processorPaymentId, token, retrieveDistributions)));
         }
         
-        private Donation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken)
+        private Donation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken, bool retrieveDistributions)
         {
             var result = _ministryPlatformService.GetRecordsDict(_donationsPageId, apiToken,
                 string.Format(",,,,,,,\"{0}\"", processorPaymentId));
@@ -329,11 +332,34 @@ namespace MinistryPlatform.Translation.Services
                 donationId = dictionary.ToInt("dp_RecordID"),
                 donorId = dictionary.ToInt("Donor_ID"),
                 donationDate = dictionary.ToDate("Donation_Date"),
-                donationAmt = Convert.ToInt32(dictionary["Donation_Amount"]),
+                donationAmt = (int)((dictionary["Donation_Amount"] as decimal? ?? 0M) * Constants.StripeDecimalConversionValue),
                 paymentTypeId = PaymentType.GetPaymentType(dictionary.ToString("Payment_Type")).id,
                 donationNotes = dictionary.ToString("Donation_Status_Notes"),
                 batchId = dictionary.ToNullableInt("Batch_ID")
             };
+
+            if (!retrieveDistributions)
+            {
+                return d;
+            }
+
+            var distributions = _ministryPlatformService.GetSubpageViewRecords(_donationDistributionsSubPage, d.donationId, apiToken);
+            if (distributions == null || !distributions.Any())
+            {
+                return (d);
+            }
+
+            foreach (var dist in distributions)
+            {
+                d.Distributions.Add(new DonationDistribution
+                {
+                    donationId = d.donationId,
+                    donationDistributionAmt = (int)((dist["Amount"] as decimal? ?? 0M) * Constants.StripeDecimalConversionValue),
+                    donationDistributionId = dist.ToInt("Donation_Distribution_ID"),
+                    donationDistributionProgram = dist.ToString("Program_ID"),
+                    PledgeId = dist.ToNullableInt("Pledge_ID")
+                });
+            }
             return (d);
         }
 

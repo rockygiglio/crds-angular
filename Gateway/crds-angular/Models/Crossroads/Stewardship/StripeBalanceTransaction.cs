@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using crds_angular.Models.Json;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship
 {
@@ -12,5 +14,12 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("fee")]
         public int? Fee { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("created")]
+        [JsonConverter(typeof(StripeDateTimeConverter))]
+        public DateTime Created { get; set; }
     }
 }

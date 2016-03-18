@@ -258,6 +258,35 @@ namespace MinistryPlatform.Translation.Services
             
         }
 
+        private void CreateDistributionRecord(int donationId, decimal amount, string programId, int? pledgeId = null, string apiToken = null)
+        {
+            if (apiToken == null)
+            {
+                apiToken = ApiLogin();
+            }
+
+            var distributionValues = new Dictionary<string, object>
+            {
+                {"Donation_ID", donationId},
+                {"Amount", amount},
+                {"Program_ID", programId}                
+            };
+            if (pledgeId != null)
+            {
+                distributionValues.Add("Pledge_ID", pledgeId);
+            }
+
+            try
+            {
+                _ministryPlatformService.CreateRecord(_donationDistributionPageId, distributionValues, apiToken, true);
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(
+                    string.Format("CreateDonationDistributionRecord failed.  Donation Id: {0}", donationId), e);
+            }
+        }
+
         public int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true)
         {
             var pymtId = PaymentType.GetPaymentType(donationAndDistribution.PymtType).id;
@@ -303,30 +332,29 @@ namespace MinistryPlatform.Translation.Services
                 throw new ApplicationException(string.Format("CreateDonationRecord failed.  Donor Id: {0}", donationAndDistribution.DonorId), e);
             }
 
-            if (string.IsNullOrWhiteSpace(donationAndDistribution.ProgramId))
+            if (donationAndDistribution.HasDistributions)
+            {
+                foreach (var distribution in donationAndDistribution.Distributions)
+                {
+                    CreateDistributionRecord(donationId,
+                                             distribution.donationDistributionAmt/Constants.StripeDecimalConversionValue,
+                                             distribution.donationDistributionProgram,
+                                             distribution.PledgeId,
+                                             apiToken);
+                }
+            }
+            else if (string.IsNullOrWhiteSpace(donationAndDistribution.ProgramId))
             {
                 return (donationId);
-            }
-            
-            var distributionValues = new Dictionary<string, object>
+            } 
+            else 
             {
-                {"Donation_ID", donationId},
-                {"Amount", donationAndDistribution.DonationAmt},
-                {"Program_ID", donationAndDistribution.ProgramId}                
-            };
-            if (donationAndDistribution.PledgeId != null)
-            {
-                distributionValues.Add("Pledge_ID", donationAndDistribution.PledgeId);
+                CreateDistributionRecord(donationId, donationAndDistribution.DonationAmt, donationAndDistribution.ProgramId, donationAndDistribution.PledgeId, apiToken);
             }
 
-            try
+            if (!sendConfirmationEmail)
             {
-                _ministryPlatformService.CreateRecord(_donationDistributionPageId, distributionValues, apiToken, true);
-            }
-            catch (Exception e)
-            {
-                throw new ApplicationException(
-                    string.Format("CreateDonationDistributionRecord failed.  Donation Id: {0}", donationId), e);
+                return (donationId);
             }
 
             if (sendConfirmationEmail)
@@ -335,9 +363,9 @@ namespace MinistryPlatform.Translation.Services
                 {
                     SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
                 }
-                catch (Exception)
+            catch (Exception e)
                 {
-                    _logger.Error(string.Format("Failed when processing the template for Donation Id: {0}", donationId));
+                _logger.Error(string.Format("Failed when processing the template for Donation Id: {0}", donationId), e);
                 }
             }
 
