@@ -45,7 +45,7 @@ namespace crds_angular.Services
             }
 
             var replyToContactId = email.ReplyToContactId ?? DefaultContactEmailId;
-            var from = new Contact { ContactId = email.FromContactId, EmailAddress = _communicationService.GetEmailFromContactId(email.FromContactId) };
+            var from = new Contact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
             var replyTo = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
             var recipient = new Contact {ContactId = email.ToContactId, EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId) };
 
@@ -72,7 +72,7 @@ namespace crds_angular.Services
         {
             var replyToContactId = emailData.ReplyToContactId ?? DefaultContactEmailId;
                 
-            var from = new Contact { ContactId = emailData.FromContactId, EmailAddress = _communicationService.GetEmailFromContactId(emailData.FromContactId) };
+            var from = new Contact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
             var replyTo = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
 
             var comm = new Communication
