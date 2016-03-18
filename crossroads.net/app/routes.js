@@ -84,22 +84,6 @@
           parent: 'noHeaderOrFooter',
           url: '/atriumevents?site',
           templateUrl: 'events/atriumevents.html',
-
-          //resolve: {
-          //  $stateParams: '$stateParams',
-          //  Site: function ($stateParams) {
-          //    var site = {site: $stateParams.site};
-          //  }
-          //},
-
-          //resolve: {
-          //  PasswordService: 'PasswordService',
-          //  $stateParams: '$stateParams',
-          //  TokenStatus: function (PasswordService, $stateParams) {
-          //    var token = {token: $stateParams.token};
-          //    return PasswordService.VerifyResetToken.get(token).$promise;
-          //  }
-          //}
         })
         .state('giving_history', {
           parent: 'noSideBar',
