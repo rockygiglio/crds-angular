@@ -53,7 +53,6 @@ describe('Go Volunteer Other Organization Component', function() {
                            'api/organizations/other').respond(200, helpers.otherOrganizations);
     isolated.goOrgName.activate();
     $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingRequest();
     expect(element.isolateScope().goOrgName.availableOptions.length).toEqual(helpers.otherOrganizations.length);
   });
 

@@ -49,15 +49,6 @@
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
-      function handleError(err) {
-        // show error page? 
-        console.log(err);
-      }
-
-      function loaded() {
-        return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
-      }
-
       function disableCard(projectMinAge) {
         if (projectMinAge === 0) {
           return false;
@@ -68,6 +59,15 @@
         }
 
         return false;
+      }
+
+      function handleError(err) {
+        // show error page?
+        console.log(err);
+      }
+
+      function loaded() {
+        return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
       }
 
       function submit(groupConnectorId) {
