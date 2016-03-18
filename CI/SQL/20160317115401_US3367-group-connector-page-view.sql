@@ -14,7 +14,7 @@ DECLARE @FieldList VARCHAR(1000) = 'Primary_Registration_Table_Participant_ID_Ta
 , Primary_Registration_Table_Organization_ID_Table.[Open_Signup] AS [Organization_Open_Signup] 
 , Primary_Registration_Table_Initiative_ID_Table.[Initiative_ID]
 , Project_ID_Table_Project_Type_ID_Table.[Description] AS [Project_Type]
-, Project_ID_Table_Project_Type_ID_Table.[Minimum_Age] AS [Project_Minimum Age]
+, Project_ID_Table_Project_Type_ID_Table.[Minimum_Age] AS [Project_Minimum_Age]
 , cr_GroupConnectors.[GroupConnector_ID]';
 DECLARE @ViewClause VARCHAR(1000) = 'cr_GroupConnectors.[GroupConnector_ID] IS NOT NULL';
 DECLARE @Description VARCHAR(1000) = 'API View';

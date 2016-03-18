@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -53,14 +52,6 @@ namespace crds_angular.Controllers.API
         [Route("api/group-connectors/{orgId}/{initiativeId}")]
         public IHttpActionResult GetGroupConnectorsForOrg(int orgId, int initiativeId)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-                var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
-                throw new HttpResponseException(dataError.HttpResponseMessage);
-            }
-
-
             try
             {
                 var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(orgId, initiativeId);

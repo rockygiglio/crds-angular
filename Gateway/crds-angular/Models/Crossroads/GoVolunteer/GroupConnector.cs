@@ -16,6 +16,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "preferredLaunchSite")]
         public string PreferredLaunchSite { get; set; }
 
+        [JsonProperty(PropertyName = "projectMaximumVolunteers")]
+        public int ProjectMaximumVolunteers { get; set; }
+
         [JsonProperty(PropertyName = "projectMinimumAge")]
         public int ProjectMinimumAge { get; set; }
 
@@ -25,6 +28,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "projectType")]
         public string ProjectType { get; set; }
 
+        [JsonProperty(PropertyName = "volunteerCount")]
+        public int VolunteerCount { get; set; }
 
         public List<GroupConnector> FromMpGroupConnectorList(List<MpGroupConnector> mpGroupConnectors)
         {
@@ -32,10 +37,12 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
             {
                 GroupConnectorId = r.Id,
                 Name = r.Name,
+                ProjectMaximumVolunteers = r.ProjectMaximumVolunteers,
                 ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
                 ProjectType = r.ProjectType,
-                PreferredLaunchSite = r.PreferredLaunchSite
+                PreferredLaunchSite = r.PreferredLaunchSite,
+                VolunteerCount = r.VolunteerCount
             }).ToList();
         }
     }
