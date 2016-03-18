@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
@@ -405,6 +404,13 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(mockGPExportData[5].DocumentType, result[5].DocumentType);
             Assert.AreEqual(mockGPExportData[5].Amount, result[5].Amount);
+
+            Assert.AreEqual(mockGPExportData[0].DocumentNumber, result[0].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[1].DocumentNumber, result[1].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[2].DocumentNumber, result[2].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[3].DocumentNumber, result[3].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[4].DocumentNumber, result[4].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[5].DocumentNumber, result[5].DocumentNumber);
         }
 
         [Test]
@@ -697,6 +703,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340001",
                     DepositId = 12341234,
                     DocumentType = "SALE",
                     DonationId = 10002,
@@ -720,6 +727,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340001",
                     DepositId = 12341234,
                     DocumentType = "SALE",
                     DonationId = 10002,
@@ -743,6 +751,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340002",
                     DepositId = 12341234,
                     DocumentType = "SALE",
                     DonationId = 10002,
@@ -766,6 +775,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340002",
                     DepositId = 12341234,
                     DocumentType = "SALE",
                     DonationId = 10002,
@@ -789,6 +799,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340003",
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
                     DonationId = 1004,
@@ -812,6 +823,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
                 new GPExportDatum
                 {
+                    DocumentNumber = "123412340003",
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
                     DonationId = 10004,
