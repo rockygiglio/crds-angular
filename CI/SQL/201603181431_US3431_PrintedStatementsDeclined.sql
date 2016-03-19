@@ -283,7 +283,6 @@ FROM (SELECT Top 100 PERCENT D.Donation_ID
 	 AND Do.Statement_Frequency_ID <> 3
 	 AND ISNULL(Prog.Statement_Header_ID,0) <> ISNULL(@OmitStmtHeaderID,-1)
 	 AND ((@EnvelopeOnly = 1 AND Do.Envelope_No IS NOT NULL) OR (@EnvelopeOnly = 0 AND Do.Envelope_No IS NULL) OR @EnvelopeOnly IS NULL)
-	 AND ISNULL(Prog.Tax_Deductible_Donations,0) = 1 --Omit Non Deductible
      AND D.Donation_Status_ID = 2 -- Deposited
 	 AND Do.Statement_Method_ID <> 4
 	) gifts
