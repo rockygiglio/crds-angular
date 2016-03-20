@@ -447,7 +447,7 @@ namespace MinistryPlatform.Translation.Services
                 }
                 else
                 {
-                    AdjustProcessorFee(gpExportGLLevel[key][1], processorFee);
+                    AdjustProcessorFee(gpExportGLLevel[key][1], datum, processorFee);
                 }
 
                 //set this as we will use this to help determine how much of a processor fee is on the
@@ -467,6 +467,7 @@ namespace MinistryPlatform.Translation.Services
         {
             AdjustGPExportDatumAmount(datum, processorFee);
             glLevelDatum.Amount += datum.Amount;
+            glLevelDatum.DonationAmount += datum.DonationAmount;
         }
 
         private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, decimal processorFee)
@@ -507,10 +508,11 @@ namespace MinistryPlatform.Translation.Services
             };
         }
 
-        private static void AdjustProcessorFee(GPExportDatum glLevelFee, decimal processorFee)
+        private static void AdjustProcessorFee(GPExportDatum glLevelFee, GPExportDatum datum, decimal processorFee)
         {
             processorFee = processorFee < 0 ? -1 * processorFee : processorFee;
             glLevelFee.Amount = glLevelFee.Amount + processorFee;
+            glLevelFee.DonationAmount += datum.DonationAmount;
         }
 
         public Dictionary<int, List<GPExportDatum>> GetGPExportData(int depositId, string token)
@@ -541,7 +543,7 @@ namespace MinistryPlatform.Translation.Services
                         DonationDate = result.ToDate("Donation_Date"),
                         DepositDate = result.ToDate("Deposit_Date"),
                         CustomerId = result.ToString("Customer_ID"),
-                        DonationAmount = result.ToString("Donation_Amount"),
+                        DonationAmount = (amount < 0) ? -1 * amount : amount,
                         DepositAmount = result.ToString("Deposit_Amount"),
                         CheckbookId = result.ToString("Checkbook_ID"),
                         CashAccount = result.ToString("Cash_Account"),
