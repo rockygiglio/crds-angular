@@ -40,6 +40,8 @@ namespace MinistryPlatform.Models
 
         public string CheckNumber { get; set; }
 
+        public string Notes { get; set; }
+
         #region Donation Distributions
         private readonly List<DonationDistribution> _distributions = new List<DonationDistribution>();
 
