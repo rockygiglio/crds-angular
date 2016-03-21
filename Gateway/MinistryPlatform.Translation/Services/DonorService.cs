@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Crossroads.Utilities;
-using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
@@ -319,6 +318,11 @@ namespace MinistryPlatform.Translation.Services
             if (!string.IsNullOrWhiteSpace(donationAndDistribution.CheckNumber))
             {
                 donationValues["Item_Number"] = donationAndDistribution.CheckNumber;
+            }
+
+            if (!string.IsNullOrWhiteSpace(donationAndDistribution.Notes))
+            {
+                donationValues["Notes"] = donationAndDistribution.Notes;
             }
 
             int donationId;

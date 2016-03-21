@@ -170,6 +170,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var donationDistPageId = Convert.ToInt32(ConfigurationManager.AppSettings["Distributions"]);
             const int donationStatus = 4;
             const string itemNumber = "98766";
+            const string notes = "notes notes notes";
 
             var defaultContact = new MyContact()
             {
@@ -204,7 +205,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Is_Recurring_Gift", false},
                 {"Donor_Account_ID",donorAcctId },
                 {"Check_Scanner_Batch", checkScannerBatchName},
-                {"Item_Number", itemNumber}
+                {"Item_Number", itemNumber},
+                {"Notes", notes}
             };
 
             var expectedDistributionValues = new Dictionary<string, object>
@@ -262,7 +264,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 DonorAcctId = donorAcctId,
                 CheckScannerBatchName = checkScannerBatchName,
                 DonationStatus = donationStatus,
-                CheckNumber = itemNumber
+                CheckNumber = itemNumber,
+                Notes = notes
             };
 
             var response =

@@ -469,7 +469,8 @@ namespace crds_angular.Services
                 PymtType = donation.paymentTypeId+"",
                 RecurringGiftId = null,
                 RegisteredDonor = false,
-                SetupDate = refund.Data[0].BalanceTransaction.Created
+                SetupDate = refund.Data[0].BalanceTransaction.Created,
+                Notes = string.Format("Reversed from DonationID {0}", donation.donationId)
             };
 
             foreach (var distribution in donation.Distributions)
