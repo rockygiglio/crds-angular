@@ -43,9 +43,9 @@
         unknown: false
       };
       vm.sending = true;
-      // TODO add 'working' indicator, success/failure message, and validation
       var toSend = {
         fromContact: fromContactId,
+        replyToContact: fromContactId,
         toContacts: toContactIds,
         subject: vm.subject,
         body: vm.message
@@ -66,7 +66,6 @@
         }, function() {
           vm.sending = false;
           $log.debug('GroupContactCtrl - error sending message');
-          // TODO general error message
           vm.errors.unknown = true;
         });
       } else {

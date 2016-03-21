@@ -531,7 +531,7 @@ namespace crds_angular.Services
                 ChargeId = invoice.Charge,
                 PymtType = createDonation.PaymentType,
                 ProcessorId = invoice.Customer,
-                SetupDate = DateTime.Now,
+                SetupDate = invoice.Date,
                 RegisteredDonor = true,
                 RecurringGift = true,
                 RecurringGiftId = createDonation.RecurringGiftId,

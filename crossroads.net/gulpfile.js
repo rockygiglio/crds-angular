@@ -44,21 +44,6 @@ function htmlReplace(devBuild) {
     assets = require('./webpack-assets.json');
   }
 
-  gulp.src('app/atriumevents.html')
-    .pipe(htmlreplace({
-      angjs: assets.ang.js,
-      corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      corecss: assets.core.css,
-      commonjs: assets.common.js,
-      profilejs: assets.profile.js,
-      tripsjs: assets.trips.js,
-      searchjs: assets.search.js,
-      mediajs: assets.media.js,
-      givejs: assets.give.js,
-      govolunteerjs: assets.govolunteer.js,
-      js: assets.main.js
-    })).pipe(gulp.dest('./'));
-
   gulp.src('app/index.html')
     .pipe(htmlreplace({
       angjs: assets.ang.js,

@@ -403,14 +403,23 @@ namespace MinistryPlatform.Translation.Services
             var gpExport = new List<GPExportDatum>();
             var glLevelGPExport = GetGLLevelGpExport(depositId, token);
 
+            var id = 1;
             foreach (var glLevelGPData in glLevelGPExport)
             {
-                gpExport.Add(glLevelGPData.Value[0]);
-                gpExport.Add(glLevelGPData.Value[1]);
+                gpExport.Add(AddDocumentNumber(glLevelGPData.Value[0], id));
+                gpExport.Add(AddDocumentNumber(glLevelGPData.Value[1], id));
+                id++;
             }
 
             return gpExport;
-        } 
+        }
+
+        private GPExportDatum AddDocumentNumber(GPExportDatum datum, int index)
+        {
+            datum.DocumentNumber = string.Format("{0}000{1}", datum.DepositId, index);
+
+            return datum;
+        }
 
         private Dictionary<string, List<GPExportDatum>> GetGLLevelGpExport(int depositId, string token)
         {
@@ -438,7 +447,7 @@ namespace MinistryPlatform.Translation.Services
             {
 
                 var processorFee = CalculateProcessorFee(datum, previousProcessorFees, gpExportDistLevel.Count, indx);
-                var key = String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}", datum.DocumentType, datum.BatchName, datum.DonationDate.ToString("MM/dd/yyyy"), datum.CheckbookId, datum.CashAccount, datum.ReceivableAccount, datum.DistributionAccount);
+                var key = string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}", datum.DocumentType, datum.BatchName, datum.DonationDate.ToString("MM/dd/yyyy"), datum.CheckbookId, datum.CashAccount, datum.ReceivableAccount, datum.DistributionAccount);
                 
                 //if key is not there add it
                 if (!gpExportGLLevel.ContainsKey(key))

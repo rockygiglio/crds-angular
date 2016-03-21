@@ -31,6 +31,11 @@ update [dbo].Pledge_campaigns set program_id = null where pledge_campaign_id in 
 update [dbo].events set program_id = 3 where program_id in (select program_id from programs where program_name like '(t) Test Pledge Program%');
 update [dbo].opportunities set program_id = 3 where program_id in (select program_id from programs where program_name like '(t) Test Pledge Program%');
 
+--Update any recurring gifts to general fund that were created with our test programs.
+update [dbo].Recurring_gifts set program_id = 3 where program_id in (select program_id from programs where program_name like '(t) Test Pledge Program%');
+
+DELETE From [dbo].GL_Account_Mapping where program_id in (select program_id from programs where program_name like '(t) Test Pledge Program%');
+
 delete from [dbo].programs where program_id in (select program_id from programs where program_name like '(t) Test Pledge Program%');
 
 delete from [dbo].pledge_campaigns where pledge_campaign_id in (select pledge_campaign_id from pledge_campaigns where campaign_name like '(t) Test Pledge Campaign%');

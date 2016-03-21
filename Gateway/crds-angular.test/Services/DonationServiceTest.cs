@@ -365,7 +365,7 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(4, result.Count);
             Assert.AreEqual(expectedReturn[0].DocumentType, mockedExport[0].DocumentType);
-            Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DepositId);
+            Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DocumentNumber);
             Assert.AreEqual(expectedReturn[0].DocumentDescription, mockedExport[0].BatchName);
             Assert.AreEqual(expectedReturn[0].BatchId, mockedExport[0].BatchName);
             Assert.AreEqual(expectedReturn[0].ContributionDate, mockedExport[0].DonationDate.ToString("MM/dd/yyyy"));
@@ -424,7 +424,7 @@ namespace crds_angular.test.Services
                 new GPExportDatumDTO
                 {
                     DocumentType = "SALE",
-                    DocumentNumber = 10002,
+                    DocumentNumber = "10002001",
                     DocumentDescription = "Test Batch",
                     BatchId = "Test Batch",
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
@@ -441,7 +441,7 @@ namespace crds_angular.test.Services
                 new GPExportDatumDTO
                 {
                     DocumentType = "SALE",
-                    DocumentNumber = 10002,
+                    DocumentNumber = "10002001",
                     DocumentDescription = "Test Batch",
                     BatchId = "Test Batch",
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
@@ -458,7 +458,7 @@ namespace crds_angular.test.Services
                 new GPExportDatumDTO
                 {
                     DocumentType = "SALE",
-                    DocumentNumber = 10002,
+                    DocumentNumber = "10002002",
                     DocumentDescription = "Test 2 Batch",
                     BatchId = "Test 2 Batch",
                     ContributionDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
@@ -475,7 +475,7 @@ namespace crds_angular.test.Services
                 new GPExportDatumDTO
                 {
                     DocumentType = "SALE",
-                    DocumentNumber = 10002,
+                    DocumentNumber = "10002002",
                     DocumentDescription = "Test 2 Batch",
                     BatchId = "Test Batch",
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
@@ -499,6 +499,7 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
+                    DocumentNumber = "10002001",
                     DepositId = 10002,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
@@ -520,6 +521,7 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
+                    DocumentNumber = "10002001",
                     DepositId = 10002,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
@@ -540,6 +542,7 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
+                    DocumentNumber = "10002002",
                     DepositId = 10002,
                     BatchName = "Test 2 Batch",
                     DonationDate = new DateTime(2014, 3, 28, 8, 30, 0),
@@ -561,6 +564,7 @@ namespace crds_angular.test.Services
                 new GPExportDatum
                 {
                     DocumentType = "SALE",
+                    DocumentNumber = "10002002",
                     DepositId = 10002,
                     BatchName = "Test 2 Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
@@ -1610,6 +1614,7 @@ namespace crds_angular.test.Services
             const string processorId = "cus_123";
             const string subscriptionId = "sub_123";
             const string chargeId = "ch_123";
+            DateTime invoiceDate = new DateTime(2016, 3, 16);
 
             var invoice = new StripeInvoice
             {
@@ -1617,6 +1622,7 @@ namespace crds_angular.test.Services
                 Amount = 12300,
                 Charge = chargeId,
                 Customer = processorId,
+                Date = invoiceDate
             };
 
             const int chargeAmount = 45600;
@@ -1675,7 +1681,8 @@ namespace crds_angular.test.Services
                                  d.DonorAcctId.Equals(donorAccountId + "") &&
                                  d.CheckScannerBatchName == null &&
                                  d.DonationStatus == donationStatus &&
-                                 d.CheckNumber == null), false)).Returns(123);
+                                 d.CheckNumber == null &&
+                                 d.SetupDate == invoiceDate), false)).Returns(123);
 
             _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
