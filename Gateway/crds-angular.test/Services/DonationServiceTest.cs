@@ -371,7 +371,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(expectedReturn[0].ContributionDate, mockedExport[0].DonationDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].SettlementDate, mockedExport[0].DepositDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].CustomerId, mockedExport[0].CustomerId);
-            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DepositAmount);
+            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DonationAmount.ToString());
             Assert.AreEqual(expectedReturn[0].CheckbookId, mockedExport[0].CheckbookId);
             Assert.AreEqual(expectedReturn[0].CashAccount, mockedExport[0].ScholarshipExpenseAccount);
             Assert.AreEqual(expectedReturn[0].ReceivablesAccount, mockedExport[0].ReceivableAccount);
@@ -430,7 +430,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("380.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "90551-031-02",
                     ReceivablesAccount = "90013-031-21",
@@ -447,7 +447,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("380.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-02",
                     ReceivablesAccount = "77777-031-21",
@@ -464,7 +464,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("20.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivablesAccount = "90013-031-21",
@@ -481,7 +481,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("20.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-02",
                     ReceivablesAccount = "77777-031-21",
@@ -505,11 +505,12 @@ namespace crds_angular.test.Services
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DepositAmount = "400.00",
+                    DepositAmount ="400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
                     Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 12,
@@ -532,6 +533,7 @@ namespace crds_angular.test.Services
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",
                     DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
                     Amount = Convert.ToDecimal(0.13),
                     ProgramId = 127,
                     ProccessFeeProgramId = 127,
@@ -553,6 +555,7 @@ namespace crds_angular.test.Services
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
                     Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 112,
@@ -575,6 +578,7 @@ namespace crds_angular.test.Services
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",
                     DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
                     Amount = Convert.ToDecimal(0.12),
                     ProgramId = 127,
                     ProccessFeeProgramId = 127,
