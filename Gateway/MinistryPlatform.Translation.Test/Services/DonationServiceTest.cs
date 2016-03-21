@@ -393,16 +393,20 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
             Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
             Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
+            Assert.AreEqual(mockGPExportData[0].DonationAmount, result[0].DonationAmount);
 
             Assert.AreEqual(mockGPExportData[1].DocumentType, result[1].DocumentType);
             Assert.AreEqual(mockGPExportData[1].Amount, result[1].Amount);
             Assert.AreEqual(mockGPExportData[1].CashAccount, result[1].CashAccount);
             Assert.AreEqual(mockGPExportData[1].DistributionAccount, result[1].DistributionAccount);
+            Assert.AreEqual(mockGPExportData[1].DonationAmount, result[1].DonationAmount);
 
             Assert.AreEqual(mockGPExportData[4].DocumentType, result[4].DocumentType);
+            Assert.AreEqual(mockGPExportData[4].DonationAmount, result[4].DonationAmount);
             Assert.AreEqual(mockGPExportData[4].Amount, result[4].Amount);
 
             Assert.AreEqual(mockGPExportData[5].DocumentType, result[5].DocumentType);
+            Assert.AreEqual(mockGPExportData[5].DonationAmount, result[5].DonationAmount);
             Assert.AreEqual(mockGPExportData[5].Amount, result[5].Amount);
 
             Assert.AreEqual(mockGPExportData[0].DocumentNumber, result[0].DocumentNumber);
@@ -600,7 +604,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("185.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "90287-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -623,7 +627,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("15"),
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
@@ -645,13 +649,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
-                    DonationId = 1003,
+                    DonationId = 10003,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "300.00",
+                    DonationAmount = Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "90287-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -673,13 +677,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
-                    DonationId = 1004,
+                    DonationId = 10004,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "-300.00",
+                    DonationAmount = Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "90287-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -712,7 +716,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "90287-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -736,7 +740,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -760,7 +764,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
@@ -784,7 +788,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "90013-031-21",
@@ -802,13 +806,13 @@ namespace MinistryPlatform.Translation.Test.Services
                     DocumentNumber = "123412340003",
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
-                    DonationId = 1004,
+                    DonationId = 10004,
                     BatchName = "Test Batch",
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "-300.00",
+                    DonationAmount = Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "90287-031-20",
                     ReceivableAccount = "90287-031-21",
@@ -832,7 +836,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
                     DepositAmount = "400.00",
-                    DonationAmount = "200.00",
+                    DonationAmount = Convert.ToDecimal("300.00"),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "90287-031-21",
