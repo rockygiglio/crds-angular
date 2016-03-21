@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship
 {
-    public class StripeRefund
+    public class StripeRefund : StripeObject
     {
         [JsonProperty("data")]
         public List<StripeRefundData> Data { get; set; }
@@ -33,6 +33,23 @@ namespace crds_angular.Models.Crossroads.Stewardship
             }
         }
         #endregion
+
+        #region Expandable Balance Transaction Property
+        public string BalanceTransactionId { get; set; }
+
+        [JsonIgnore]
+        public StripeBalanceTransaction BalanceTransaction { get; set; }
+
+        [JsonProperty("balance_transaction")]
+        internal object InternalBalanceTransaction
+        {
+            set
+            {
+                StripeExpandableProperty<StripeBalanceTransaction>.Map(value, s => BalanceTransactionId = s, o => BalanceTransaction = o);
+            }
+        }
+        #endregion
+
     }
         
     }

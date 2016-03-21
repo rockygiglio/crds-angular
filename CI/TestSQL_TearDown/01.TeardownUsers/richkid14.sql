@@ -98,6 +98,23 @@ delete from pledges where donor_id = @donorID;
 --delete the donor
 delete from donors where donor_id = @donorID;
 
+--Delete all groups Rich Kid14 is primary contact on. 
+DECLARE @groupsTable table
+(
+	group_id int
+)
+
+insert into @groupsTable (group_id) (select group_id from groups where PRIMARY_CONTACT = @contactID);
+
+--Delete participants from the GROUPS
+DELETE FROM GROUP_PARTICIPANTS where group_id in (select group_id from @groupsTable);
+
+--Delete group attributes
+DELETE FROM GROUP_ATTRIBUTES where group_id in (select group_id from @groupsTable);
+
+--Then Delete the groups
+DELETE FROM GROUPS where GROUP_ID in (select group_id from @groupsTable);
+
 --Lets start getting rid of the participant record
 delete from Form_Response_Answers where form_response_id = (select form_response_id from form_responses where contact_id = @contactID);
 

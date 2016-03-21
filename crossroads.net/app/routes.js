@@ -75,6 +75,16 @@
           abstract: true,
           templateUrl: 'templates/noHeaderOrFooter.html'
         })
+        .state('goCincinnati', {
+          parent: 'root',
+          abstract: true,
+          templateUrl: 'templates/goCincinnati.html'
+        })
+        .state('atriumEvents', {
+          parent: 'noHeaderOrFooter',
+          url: '/atriumevents?site',
+          templateUrl: 'events/atriumevents.html',
+        })
         .state('giving_history', {
           parent: 'noSideBar',
           url: '/givinghistory',
@@ -512,6 +522,8 @@
                       return $templateFactory.fromUrl('templates/homePage.html');
                     case 'CenteredContentPage':
                       return $templateFactory.fromUrl('templates/centeredContentPage.html');
+                    case 'GoCincinnati':
+                      return $templateFactory.fromUrl('templates/goCincinnati.html');
                     default:
                       return $templateFactory.fromUrl('templates/noSideBar.html');
                   }

@@ -6,5 +6,6 @@
         public int donationId { get; set; }
         public int donationDistributionAmt { get; set; }
         public string donationDistributionProgram { get; set; }
+        public int? PledgeId { get; set; }
     }
 }

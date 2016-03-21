@@ -26,6 +26,7 @@ namespace crds_angular.Services
         private readonly IPaymentService _paymentService;
         private readonly MPServices.IContactService _contactService;
         private readonly int _statementTypeFamily;
+        private readonly int _bankErrorRefundDonorId;
 
         public DonationService(MPServices.IDonationService mpDonationService, MPServices.IDonorService mpDonorService, IPaymentService paymentService, MPServices.IContactService contactService, IConfigurationWrapper config)
         {
@@ -34,6 +35,7 @@ namespace crds_angular.Services
             _paymentService = paymentService;
             _contactService = contactService;
             _statementTypeFamily = config.GetConfigIntValue("DonorStatementTypeFamily");
+            _bankErrorRefundDonorId = config.GetConfigIntValue("DonorIdForBankErrorRefund");
         }
 
         public DonationDTO GetDonationByProcessorPaymentId(string processorPaymentId)
@@ -378,7 +380,7 @@ namespace crds_angular.Services
 
         public List<GPExportDatumDTO> GetGPExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationService.GetGPExportAndProcessorFees(depositId, token);
+            var gpExportData = _mpDonationService.GetGPExport(depositId, token);
 
             return gpExportData.Select(Mapper.Map<GPExportDatum, GPExportDatumDTO>).ToList();
         }
@@ -422,6 +424,67 @@ namespace crds_angular.Services
             var date = DateTime.Today.ToString("yyMMdd");
             var batchName = batch.BatchName.Replace(" ", "_");
             return string.Format("XRDReceivables-{0}_{1}.txt", batchName, date);
+        }
+
+        public int? CreateDonationForBankAccountErrorRefund(StripeRefund refund)
+        {
+            if (refund.Data[0].BalanceTransaction == null || !"payment_failure_refund".Equals(refund.Data[0].BalanceTransaction.Type))
+            {
+                _logger.Error(string.Format("Balance transaction was not set, or was not a payment_failure_refund for refund ID {0}", refund.Data[0].Id));
+                return (null);
+            }
+
+            if (refund.Data[0].Charge == null || string.IsNullOrWhiteSpace(refund.Data[0].Charge.Id))
+            {
+                _logger.Error(string.Format("No associated Charge for Refund {0}", refund.Data[0].Id));
+                return (null);
+            }
+
+            Donation donation;
+            try
+            {
+                donation = _mpDonationService.GetDonationByProcessorPaymentId(refund.Data[0].Charge.Id, true);
+            }
+            catch (DonationNotFoundException)
+            {
+                _logger.Error(string.Format("No Donation with payment processor ID {0} in MP for Refund {1}", refund.Data[0].Charge.Id, refund.Data[0].Id));
+                return (null);
+            }
+
+            var donationAndDist = new DonationAndDistributionRecord
+            {
+                Anonymous = false,
+                ChargeId = refund.Data[0].Id,
+                CheckNumber = null,
+                CheckScannerBatchName = null,
+                DonationAmt = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue),
+                DonationStatus = (int)DonationStatus.Deposited,
+                DonorAcctId = string.Empty,
+                DonorId = _bankErrorRefundDonorId,
+                FeeAmt = refund.Data[0].BalanceTransaction.Fee,
+                PledgeId = null,
+                RecurringGift = false,
+                ProcessorId = string.Empty,
+                ProgramId = donation.Distributions[0].donationDistributionProgram,
+                PymtType = donation.paymentTypeId+"",
+                RecurringGiftId = null,
+                RegisteredDonor = false,
+                SetupDate = refund.Data[0].BalanceTransaction.Created,
+                Notes = string.Format("Reversed from DonationID {0}", donation.donationId)
+            };
+
+            foreach (var distribution in donation.Distributions)
+            {
+                donationAndDist.Distributions.Add(new DonationDistribution
+                {
+                    donationDistributionAmt = -distribution.donationDistributionAmt,
+                    donationDistributionProgram = distribution.donationDistributionProgram,
+                    PledgeId = distribution.PledgeId
+                });
+            }
+
+            // Create the refund donation and distribution(s), but do NOT send email
+            return(_mpDonorService.CreateDonationAndDistributionRecord(donationAndDist, false));
         }
 
         public int? CreateDonationForInvoice(StripeInvoice invoice)
@@ -468,7 +531,7 @@ namespace crds_angular.Services
                 ChargeId = invoice.Charge,
                 PymtType = createDonation.PaymentType,
                 ProcessorId = invoice.Customer,
-                SetupDate = DateTime.Now,
+                SetupDate = invoice.Date,
                 RegisteredDonor = true,
                 RecurringGift = true,
                 RecurringGiftId = createDonation.RecurringGiftId,

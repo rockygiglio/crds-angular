@@ -2,7 +2,7 @@
   'use strict';
 
   var MODULE = require('crds-constants').MODULES.GO_VOLUNTEER;
-  
+
   require('./goVolunteerSpouse.template.html');
 
   angular.module(MODULE)

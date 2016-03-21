@@ -130,10 +130,11 @@
               var group = GroupInfo.findParticipatingOrHost(vm.groupId);
               if (cid && group) {
                 email = {
-                  groupId      : group.groupId,
-                  fromContactId: cid,
-                  toContactId  : cid,
-                  mergeData    : {
+                  groupId          : group.groupId,
+                  replyToContact   : CONTACT_ID.JOURNEY,
+                  fromContactId    : cid,
+                  toContactId      : cid,
+                  mergeData : {
                     HostName         : group.contact ? group.contact.firstName : null,
                     HostPreferredName: group.contact ? group.contact.firstName : null
                   }

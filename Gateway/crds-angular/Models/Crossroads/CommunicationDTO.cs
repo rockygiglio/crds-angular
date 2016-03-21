@@ -8,6 +8,9 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "fromContact")]
         public int FromContactId { get; set; }
 
+        [JsonProperty(PropertyName = "replyToContact")]
+        public int? ReplyToContactId { get; set; }
+
         [JsonProperty(PropertyName = "toContacts")]
         public List<int> ToContactIds { get; set; }
 

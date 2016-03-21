@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict()';
 
   module.exports = DonationList;
@@ -20,7 +20,7 @@
     };
 
     function link(scope) {
-      scope.$watch('donationsInput', function(donations) {
+      scope.$watch('donationsInput', function (donations) {
         scope.donations = PaymentDisplayDetailService.postProcess(donations);
       });
     }
