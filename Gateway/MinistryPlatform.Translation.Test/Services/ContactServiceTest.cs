@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
@@ -248,6 +249,56 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.GetContactIdByParticipantId(participantId);
             Assert.AreEqual(contactId, result);
+        }
+
+        [Test]
+        public void shouldCreateSimpleContact()
+        {
+            var firstname = "Mary";
+            var lastname = "richard";
+            var email = "mary.richard@gmail.com";
+
+           
+            _ministryPlatformService.Setup(
+                mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), "ABC", false))
+                .Returns(123);
+
+            var contactId = _fixture.CreateSimpleContact(firstname, lastname, email);
+
+            Assert.AreEqual(123, contactId);
+
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,
+                                                                          It.Is<Dictionary<string, object>>(d =>
+
+                                                                            d["Company"].Equals(false)
+                                                                            && d["Last_Name"].Equals(lastname)
+                                                                            && d["First_Name"].Equals(firstname)
+                                                                            && d["Display_Name"].Equals(lastname + ", " + firstname)
+                                                                            && d["Nickname"].Equals(firstname)
+  ),
+                                                                          It.IsAny<string>(),
+                                                                          false));
+
+            
+        }
+        [Test]
+        public void shouldThrowApplicationExceptionWhenSimpleContactCreationFails()
+        {
+            Exception ex = new Exception("Simple contact creation failed");
+            _ministryPlatformService.Setup(
+                mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Throws(ex);
+
+            try
+            {
+                _fixture.CreateSimpleContact("mary", "richard", "mary.richard@gmail.com");
+                Assert.Fail("Expected exception was not thrown");
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof(ApplicationException), e);
+                Assert.AreSame(ex, e.InnerException);
+            }
         }
     }
 }

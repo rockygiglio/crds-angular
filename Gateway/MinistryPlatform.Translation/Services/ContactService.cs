@@ -377,7 +377,8 @@ namespace MinistryPlatform.Translation.Services
 
             try
             {
-                return (_ministryPlatformService.CreateRecord(_contactsPageId, contactDictionary, ApiLogin()));
+                var token = ApiLogin();
+                return (_ministryPlatformService.CreateRecord(_contactsPageId, contactDictionary, token, false));
             }
             catch (Exception e)
             {
