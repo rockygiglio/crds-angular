@@ -50,7 +50,8 @@ namespace crds_angular.Services
             {
                 Amount = d.donationAmt,
                 Id = d.donationId + "",
-                BatchId = d.batchId
+                BatchId = d.batchId,
+                Status = (DonationStatus)d.donationStatus
             };
             return (donation);
         }

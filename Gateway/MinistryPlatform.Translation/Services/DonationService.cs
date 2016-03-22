@@ -326,7 +326,7 @@ namespace MinistryPlatform.Translation.Services
             }
 
             var dictionary = result.First();
-          
+
             var d = new Donation()
             {
                 donationId = dictionary.ToInt("dp_RecordID"),
@@ -335,7 +335,8 @@ namespace MinistryPlatform.Translation.Services
                 donationAmt = (int)((dictionary["Donation_Amount"] as decimal? ?? 0M) * Constants.StripeDecimalConversionValue),
                 paymentTypeId = PaymentType.GetPaymentType(dictionary.ToString("Payment_Type")).id,
                 donationNotes = dictionary.ToString("Donation_Status_Notes"),
-                batchId = dictionary.ToNullableInt("Batch_ID")
+                batchId = dictionary.ToNullableInt("Batch_ID"),
+                donationStatus = dictionary.ToInt("Donation_Status_ID")
             };
 
             if (!retrieveDistributions)
