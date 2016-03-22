@@ -101,7 +101,8 @@ namespace crds_angular.test.Services
             {
                 donationId = 123,
                 donationAmt = 456,
-                batchId = 789
+                batchId = 789,
+                donationStatus = (int)crds_angular.Models.Crossroads.Stewardship.DonationStatus.Declined
             });
             var result = _fixture.GetDonationByProcessorPaymentId("123");
             _mpDonationService.VerifyAll();
@@ -109,6 +110,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(123+"", result.Id);
             Assert.AreEqual(456, result.Amount);
             Assert.AreEqual(789, result.BatchId);
+            Assert.AreEqual(crds_angular.Models.Crossroads.Stewardship.DonationStatus.Declined, result.Status);
         }
 
         [Test]

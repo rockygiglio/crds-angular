@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.App_Start;
+using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Models;
@@ -8,6 +9,8 @@ using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using MinistryPlatform.Translation.Enum;
+using MinistryPlatform.Translation.Extensions;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -43,6 +46,7 @@ namespace MinistryPlatform.Translation.Test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("Messages")).Returns(341);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GLAccountMappingByProgramPageView")).Returns(2213);
             configuration.Setup(mocked => mocked.GetConfigIntValue("ScholarshipPaymentTypeId")).Returns(9);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("DonationDistributionsApiSubPageView")).Returns(5050);
 
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -234,7 +238,8 @@ namespace MinistryPlatform.Translation.Test.Services
                         {"Donation_Date", donationStatusDate},
                         {"Donation_Status_Notes", donationStatusNotes},
                         {"Payment_Type", paymentType},
-                        {"Batch_ID", batchId}
+                        {"Batch_ID", batchId},
+                        {"Donation_Status_ID", donationStatusId+1}
                     }
                 }
             };
@@ -895,6 +900,133 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mocked => mocked.DeleteRecord(540, It.IsAny<int>(), It.IsAny<DeleteOption[]>(), It.IsAny<string>())).Returns(1);
             _fixture.FinishSendMessageFromDonor(123,true);
             _ministryPlatformService.VerifyAll();
+        }
+
+        [Test]
+        public void TestGetDonationByProcessorPaymentIdNoDistributions()
+        {
+            const int donationId = 987;
+            var donationDate = DateTime.Today.AddDays(-1);
+            const string donationStatusNotes = "note";
+            const int donationStatusId = 654;
+            const int donorId = 9876;
+            const decimal donationAmt = 4343;
+            const string paymentType = "Bank";
+            const int batchId = 9090;
+
+            var searchResult = new List<Dictionary<string, object>>
+            {
+                {
+                    new Dictionary<string, object>
+                    {
+                        {"dp_RecordID", donationId},
+                        {"Donor_ID", donorId},
+                        {"Donation_Amount", donationAmt},
+                        {"Donation_Date", donationDate},
+                        {"Donation_Status_Notes", donationStatusNotes},
+                        {"Payment_Type", paymentType},
+                        {"Batch_ID", batchId},
+                        {"Donation_Status_ID", donationStatusId}
+                    }
+                }
+            };
+
+            _ministryPlatformService.Setup(
+                mocked => mocked.GetRecordsDict(9090, It.IsAny<string>(), ",,,,,,,\"ch_123\"", It.IsAny<string>()))
+                .Returns(searchResult);
+
+            var result = _fixture.GetDonationByProcessorPaymentId("ch_123");
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(donationId, result.donationId);
+            Assert.AreEqual(donorId, result.donorId);
+            Assert.AreEqual((int)(donationAmt * Constants.StripeDecimalConversionValue), result.donationAmt);
+            Assert.AreEqual(donationDate, result.donationDate);
+            Assert.AreEqual(donationStatusNotes, result.donationNotes);
+            Assert.AreEqual(PaymentType.GetPaymentType(paymentType).id, result.paymentTypeId);
+            Assert.AreEqual(batchId, result.batchId);
+            Assert.AreEqual(donationStatusId, result.donationStatus);
+        }
+
+        [Test]
+        public void TestGetDonationByProcessorPaymentIdWithDistributions()
+        {
+            const int donationId = 987;
+            var donationDate = DateTime.Today.AddDays(-1);
+            const string donationStatusNotes = "note";
+            const int donationStatusId = 654;
+            const int donorId = 9876;
+            const decimal donationAmt = 4343;
+            const string paymentType = "Bank";
+            const int batchId = 9090;
+
+            var searchResult = new List<Dictionary<string, object>>
+            {
+                {
+                    new Dictionary<string, object>
+                    {
+                        {"dp_RecordID", donationId},
+                        {"Donor_ID", donorId},
+                        {"Donation_Amount", donationAmt},
+                        {"Donation_Date", donationDate},
+                        {"Donation_Status_Notes", donationStatusNotes},
+                        {"Payment_Type", paymentType},
+                        {"Batch_ID", batchId},
+                        {"Donation_Status_ID", donationStatusId}
+                    }
+                }
+            };
+
+            _ministryPlatformService.Setup(
+                mocked => mocked.GetRecordsDict(9090, It.IsAny<string>(), ",,,,,,,\"ch_123\"", It.IsAny<string>()))
+                .Returns(searchResult);
+            var distributions = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Amount", 123M},
+                    {"Donation_Distribution_ID", 999},
+                    {"Program_ID", 99},
+                    {"Pledge_ID", 9}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Amount", 456M},
+                    {"Donation_Distribution_ID", 888},
+                    {"Program_ID", 88},
+                    {"Pledge_ID", null}
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords(5050, donationId, It.IsAny<string>(), string.Empty, string.Empty, 0)).Returns(distributions);
+
+            var result = _fixture.GetDonationByProcessorPaymentId("ch_123", true);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(donationId, result.donationId);
+            Assert.AreEqual(donorId, result.donorId);
+            Assert.AreEqual((int)(donationAmt * Constants.StripeDecimalConversionValue), result.donationAmt);
+            Assert.AreEqual(donationDate, result.donationDate);
+            Assert.AreEqual(donationStatusNotes, result.donationNotes);
+            Assert.AreEqual(PaymentType.GetPaymentType(paymentType).id, result.paymentTypeId);
+            Assert.AreEqual(batchId, result.batchId);
+            Assert.AreEqual(donationStatusId, result.donationStatus);
+            Assert.IsNotNull(result.Distributions);
+            Assert.AreEqual(2, result.Distributions.Count);
+
+            Assert.AreEqual(donationId, result.Distributions[0].donationId);
+            Assert.AreEqual((int) ((distributions[0]["Amount"] as decimal? ?? 0M)*Constants.StripeDecimalConversionValue), result.Distributions[0].donationDistributionAmt);
+            Assert.AreEqual(distributions[0].ToInt("Donation_Distribution_ID"), result.Distributions[0].donationDistributionId);
+            Assert.AreEqual(distributions[0].ToString("Program_ID"), result.Distributions[0].donationDistributionProgram);
+            Assert.AreEqual(distributions[0].ToNullableInt("Pledge_ID"), result.Distributions[0].PledgeId);
+
+            Assert.AreEqual(donationId, result.Distributions[1].donationId);
+            Assert.AreEqual((int)((distributions[1]["Amount"] as decimal? ?? 0M) * Constants.StripeDecimalConversionValue), result.Distributions[1].donationDistributionAmt);
+            Assert.AreEqual(distributions[1].ToInt("Donation_Distribution_ID"), result.Distributions[1].donationDistributionId);
+            Assert.AreEqual(distributions[1].ToString("Program_ID"), result.Distributions[1].donationDistributionProgram);
+            Assert.IsNull(result.Distributions[1].PledgeId);
         }
     }
 }
