@@ -192,25 +192,25 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new Dictionary<string, object>{
                     {"dp_RecordID", It.IsAny<int>() },
-                    {"Location_Name", "Oakley"},
-                    {"Location_Type_ID", 1},
-                    {"Organization", 1},
+                    {"Location Name", "Oakley"},
+                    {"Location Type ID", 1},
+                    {"Organization ID", 1},
                     {"Name", "Crossroads"},
-                    {"Address_Line_1", "123 Sesame St."},
+                    {"Address Line 1", "123 Sesame St."},
                     {"City", "Cincinnati"},
-                    {"State", "OH"},
-                    {"Postal_Code", 45209}
+                    {"State/Region", "OH"},
+                    {"Postal Code", 45209}
                 },
                 new Dictionary<string, object>{
                     {"dp_RecordID", It.IsAny<int>() },
-                    {"Location_Name", "Mason"},
-                    {"Location_Type_ID", 1},
-                    {"Organization", 1},
+                    {"Location Name", "Mason"},
+                    {"Location Type ID", 1},
+                    {"Organization ID", 1},
                     {"Name", "Crossroads"},
-                    {"Address_Line_1", "221B Baker St."},
+                    {"Address Line 1", "221B Baker St."},
                     {"City", "Cincinnati"},
-                    {"State", "OH"},
-                    {"Postal_Code", 45209}
+                    {"State/Region", "OH"},
+                    {"Postal Code", 45209}
                 }
             };
         } 
