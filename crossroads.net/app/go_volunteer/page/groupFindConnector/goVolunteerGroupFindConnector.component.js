@@ -83,7 +83,8 @@
       }
 
       function submit(groupConnectorId) {
-        console.log('click: ' + groupConnectorId);
+        GoVolunteerService.groupConnectorId = groupConnectorId;
+        vm.onSubmit({nextState: 'unique-skills'});
       }
 
       function youngestInRegistration() {

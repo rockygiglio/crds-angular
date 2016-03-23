@@ -10,40 +10,35 @@
 
 <div class="row">
 
-  <!-- Search not in scope for US3367 -->
   <div class="form-group col-sm-12 push-bottom">
-    <input type="text"
-           class="form-control"
-           placeholder="Search">
+    <input type="text" class="form-control" placeholder="Search" ng-model="query">
   </div>
 
   <div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
     <preloader full-screen="false" > </preloader>
   </div>
 
-  <div class="col-sm-12" ng-if="goGroupFindConnector.loaded()">
-    <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})"  ng-repeat="g in goGroupFindConnector.groupConnectors">
+  <div class="col-sm-12">
+    <div ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
+      <a
+        ng-click="goGroupFindConnector.submit(g.groupConnectorId)"
+        ng-disabled="goGroupFindConnector.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)">
+        <div class="media card-item media-card-link">
+          <profile-picture contact-id="g.primaryContactRegistrationId" 
+                            wrapper-class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"
+                            image-class="media-object img-responsive imgix-fluid"
+                            disallow-change="false"> 
+          </profile-picture>
+          <div class="media-body soft-half-ends soft-half-right">
+            <h3 class="media-heading flush-bottom">{{ g.name }}</h3>
+            <p class="flush-bottom">Project Type: {{ g.projectType }}</p>
+            <p class="flush-bottom">Preferred Launch Site: {{ g.preferredLaunchSite }}</p>
+            <p class="flush-bottom">Minimum Age: {{ g.projectMinimumAge }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
   </div>
 
-  <div class="col-sm-12">
-    <!-- ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})" -->
-    <div ng-repeat="g in goGroupFindConnector.groupConnectors">
-    <button
-      ng-click="goGroupFindConnector.submit(g.groupConnectorId)"
-      ng-disabled=goGroupFindConnector.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)>
-      <div class="media card-item media-card-link">
-        <!-- Leaving this markup here for now, but no img was specified in AC -->
-        <!-- <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
-        </div> -->
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">{{ g.name }}</h3>
-          <p class="flush-bottom">Project Type: {{ g.projectType }}</p>
-          <p class="flush-bottom">Preferred Launch Site: {{ g.preferredLaunchSite }}</p>
-          <p class="flush-bottom">Minimum Age: {{ g.projectMinimumAge }}</p>
-        </div>
-      </div>
-    </button>
-  </div>
-  </div>
 </div>
