@@ -283,6 +283,7 @@
     <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
     <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\OrgLocation.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />

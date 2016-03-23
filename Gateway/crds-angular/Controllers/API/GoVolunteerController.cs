@@ -58,5 +58,22 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
+
+        [HttpGet]
+        [ResponseType(typeof (List<OrgLocation>))]
+        [Route("api/organizations/{orgId}/locations/")]
+        public IHttpActionResult GetLocationsForOrganization(int orgId)
+        {
+            try
+            {
+                var Locs = _organizationService.GetLocationsForOrganization(orgId);
+                return Ok(Locs);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get locations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
     }
 }

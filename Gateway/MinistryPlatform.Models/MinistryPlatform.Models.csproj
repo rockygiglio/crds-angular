@@ -66,6 +66,7 @@
     <Compile Include="GroupSearchResult.cs" />
     <Compile Include="GroupSearchAttributes.cs" />
     <Compile Include="GroupServingResponses.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="MPTask.cs" />
     <Compile Include="ObjectAttributeConfiguration.cs" />
     <Compile Include="ObjectAttributeConfigurationFactory.cs" />

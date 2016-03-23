@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -25,6 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private const int ORGPAGE = 1234;
+        private const int LocPage = 2220;
 
         [SetUp]
         public void SetUp()
@@ -36,6 +38,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _configWrapper.Setup(m => m.GetConfigIntValue("OrganizationsPage")).Returns(ORGPAGE);
+            _configWrapper.Setup(m => m.GetConfigIntValue("LocationsByOrg")).Returns(LocPage);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
             _fixture = new OrganizationService(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
@@ -115,6 +118,16 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.IsEmpty(ret);
         }
 
+        [Test]
+        public void shouldGetLocations()
+        {
+            var fakeToken = "randomString";
+            _mpServiceMock.Setup(m => m.GetPageViewRecords(LocPage, fakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
+            var ret = _fixture.GetLocationsForOrganization(1, fakeToken);
+            Assert.IsInstanceOf<List<Location>>(ret);
+            Assert.IsNotNull(ret);
+        }
+
         private List<Dictionary<string, object>> ListOfValidOrganizations()
         {
             return new List<Dictionary<string, object>>()
@@ -172,6 +185,35 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Open_Signup", true}
             };
         }
+
+        private static List<Dictionary<string, object>> LocationList()
+        {
+            return new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>{
+                    {"dp_RecordID", It.IsAny<int>() },
+                    {"Location_Name", "Oakley"},
+                    {"Location_Type_ID", 1},
+                    {"Organization", 1},
+                    {"Name", "Crossroads"},
+                    {"Address_Line_1", "123 Sesame St."},
+                    {"City", "Cincinnati"},
+                    {"State", "OH"},
+                    {"Postal_Code", 45209}
+                },
+                new Dictionary<string, object>{
+                    {"dp_RecordID", It.IsAny<int>() },
+                    {"Location_Name", "Mason"},
+                    {"Location_Type_ID", 1},
+                    {"Organization", 1},
+                    {"Name", "Crossroads"},
+                    {"Address_Line_1", "221B Baker St."},
+                    {"City", "Cincinnati"},
+                    {"State", "OH"},
+                    {"Postal_Code", 45209}
+                }
+            };
+        } 
 
     }
 }

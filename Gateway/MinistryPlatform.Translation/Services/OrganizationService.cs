@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -28,6 +28,24 @@ namespace MinistryPlatform.Translation.Services
         {
             var result = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("OrganizationsPage"), token);
             return MapOrganizations(result);
+        }
+
+        public List<Location> GetLocationsForOrganization(int orgId, string token)
+        {
+            var search = string.Format("{0},", orgId);
+            var result = _ministryPlatformService.GetPageViewRecords(_configurationWrapper.GetConfigIntValue("LocationsByOrg"), token, search);
+            return result.Select(record => new Location
+            {
+                LocationId = record.ToInt("dp_RecordID"),
+                LocationName = record.ToString("Location Name"),
+                LocationTypeId = record.ToInt("Location Type ID"),
+                OrganizationId = record.ToInt("Organization ID"),
+                OrganizationName = record.ToString("Name"),
+                Address = record.ToString("Address Line 1"),
+                City = record.ToString("City"),
+                State = record.ToString("State/Region"),
+                Zip = record.ToString("Postal Code")
+            }).ToList();
         }
 
         private static List<MPOrganization> MapOrganizations(IEnumerable<Dictionary<string, object>> records )
