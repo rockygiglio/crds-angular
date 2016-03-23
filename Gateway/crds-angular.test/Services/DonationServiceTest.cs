@@ -38,6 +38,7 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorStatementTypeFamily")).Returns(456);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorIdForBankErrorRefund")).Returns(987);
 
             _fixture = new DonationService(_mpDonationService.Object, _mpDonorService.Object, _paymentService.Object, _contactService.Object, _configurationWrapper.Object);
         }
@@ -88,7 +89,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentIdDonationNotFound()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123")).Returns((Donation) null);
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((Donation) null);
             Assert.IsNull(_fixture.GetDonationByProcessorPaymentId("123"));
             _mpDonationService.VerifyAll();
         }
@@ -96,11 +97,12 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentId()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123")).Returns(new Donation
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns(new Donation
             {
                 donationId = 123,
                 donationAmt = 456,
-                batchId = 789
+                batchId = 789,
+                donationStatus = (int)crds_angular.Models.Crossroads.Stewardship.DonationStatus.Declined
             });
             var result = _fixture.GetDonationByProcessorPaymentId("123");
             _mpDonationService.VerifyAll();
@@ -108,6 +110,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(123+"", result.Id);
             Assert.AreEqual(456, result.Amount);
             Assert.AreEqual(789, result.BatchId);
+            Assert.AreEqual(crds_angular.Models.Crossroads.Stewardship.DonationStatus.Declined, result.Status);
         }
 
         [Test]
@@ -370,7 +373,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(expectedReturn[0].ContributionDate, mockedExport[0].DonationDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].SettlementDate, mockedExport[0].DepositDate.ToString("MM/dd/yyyy"));
             Assert.AreEqual(expectedReturn[0].CustomerId, mockedExport[0].CustomerId);
-            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DepositAmount);
+            Assert.AreEqual(expectedReturn[0].ContributionAmount, mockedExport[0].DonationAmount.ToString());
             Assert.AreEqual(expectedReturn[0].CheckbookId, mockedExport[0].CheckbookId);
             Assert.AreEqual(expectedReturn[0].CashAccount, mockedExport[0].ScholarshipExpenseAccount);
             Assert.AreEqual(expectedReturn[0].ReceivablesAccount, mockedExport[0].ReceivableAccount);
@@ -429,7 +432,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("380.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "90551-031-02",
                     ReceivablesAccount = "90013-031-21",
@@ -446,7 +449,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("380.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-02",
                     ReceivablesAccount = "77777-031-21",
@@ -463,7 +466,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2014, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("20.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivablesAccount = "90013-031-21",
@@ -480,7 +483,7 @@ namespace crds_angular.test.Services
                     ContributionDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     SettlementDate = new DateTime(2015, 3, 28, 8, 30, 0).ToString("MM/dd/yyyy"),
                     CustomerId = "CONTRIBUTI001",
-                    ContributionAmount = "400.00",
+                    ContributionAmount = Convert.ToDecimal("20.00").ToString(),
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-02",
                     ReceivablesAccount = "77777-031-21",
@@ -504,11 +507,12 @@ namespace crds_angular.test.Services
                     DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
                     CustomerId = "CONTRIBUTI001",
-                    DepositAmount = "400.00",
+                    DepositAmount ="400.00",
                     CheckbookId = "PNC001",
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
                     Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 12,
@@ -531,6 +535,7 @@ namespace crds_angular.test.Services
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",
                     DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
                     Amount = Convert.ToDecimal(0.13),
                     ProgramId = 127,
                     ProccessFeeProgramId = 127,
@@ -552,6 +557,7 @@ namespace crds_angular.test.Services
                     CashAccount = "91213-031-20",
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
                     Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 112,
@@ -574,6 +580,7 @@ namespace crds_angular.test.Services
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "77777-031-21",
                     DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
                     Amount = Convert.ToDecimal(0.12),
                     ProgramId = 127,
                     ProccessFeeProgramId = 127,
@@ -1393,6 +1400,161 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestCreateDonationForBankAccountErrorRefundNoBalanceTransaction()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData()
+                }
+            };
+
+            Assert.IsNull(_fixture.CreateDonationForBankAccountErrorRefund(refund));
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForBankAccountErrorRefundWrongBalanceTransactionType()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData
+                    {
+                        BalanceTransaction = new StripeBalanceTransaction
+                        {
+                            Type = "not_payment_failure_refund"
+                        }
+                    }
+                }
+            };
+
+            Assert.IsNull(_fixture.CreateDonationForBankAccountErrorRefund(refund));
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForBankAccountErrorRefundNoDonationFound()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData
+                    {
+                        BalanceTransaction = new StripeBalanceTransaction
+                        {
+                            Type = "payment_failure_refund"
+                        },
+                        Charge = new StripeCharge
+                        {
+                            Id = "py_123"
+                        }
+                    }
+                }
+            };
+
+            var donationNotFound = new DonationNotFoundException("py_123");
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("py_123", true)).Throws(donationNotFound);
+
+            Assert.IsNull(_fixture.CreateDonationForBankAccountErrorRefund(refund));
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+            _paymentService.VerifyAll();
+        }
+
+        [Test]
+        public void TestCreateDonationForBankAccountError()
+        {
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    new StripeRefundData
+                    {
+                        Amount = "12345",
+                        Id = "pyr_123",
+                        BalanceTransaction = new StripeBalanceTransaction
+                        {
+                            Type = "payment_failure_refund",
+                            Fee = 678,
+                            Created = DateTime.Today.AddDays(-1)
+                        },
+                        Charge = new StripeCharge
+                        {
+                            Id = "py_123"
+                        }
+                    }
+                }
+            };
+
+
+            var donation = new Donation
+            {
+                Distributions =
+                {
+                    new DonationDistribution
+                    {
+                        donationDistributionProgram = "9",
+                        donationDistributionAmt = 9,
+                        PledgeId = 9
+                    },
+                    new DonationDistribution
+                    {
+                        donationDistributionProgram = "8",
+                        donationDistributionAmt = 8,
+                        PledgeId = 8
+                    }
+
+                },
+                donationId = 987,
+                paymentTypeId = 4
+            };
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("py_123", true)).Returns(donation);
+
+            _mpDonorService.Setup(mocked => mocked.CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(d => 
+                !d.Anonymous 
+                && d.ChargeId.Equals(refund.Data[0].Id) 
+                && d.CheckNumber == null 
+                && d.CheckScannerBatchName == null 
+                && d.DonationAmt == -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue)
+                && d.DonationStatus == (int)crds_angular.Models.Crossroads.Stewardship.DonationStatus.Deposited 
+                && d.DonorAcctId.Equals(string.Empty) 
+                && d.DonorId == 987
+                && d.FeeAmt == refund.Data[0].BalanceTransaction.Fee 
+                && d.PledgeId == null 
+                && !d.RecurringGift 
+                && d.ProcessorId.Equals(string.Empty) 
+                && d.ProgramId.Equals(donation.Distributions[0].donationDistributionProgram)
+                && d.PymtType.Equals(donation.paymentTypeId + "") 
+                && d.RecurringGiftId == null 
+                && !d.RegisteredDonor 
+                && d.SetupDate == refund.Data[0].BalanceTransaction.Created
+                && d.Notes.Equals(string.Format("Reversed from DonationID {0}", donation.donationId))
+                && d.HasDistributions
+                && d.Distributions.Count == 2
+                && d.Distributions[0].donationDistributionAmt == -donation.Distributions[0].donationDistributionAmt
+                && d.Distributions[0].donationDistributionProgram.Equals(donation.Distributions[0].donationDistributionProgram)
+                && d.Distributions[0].PledgeId == donation.Distributions[0].PledgeId
+                && d.Distributions[1].donationDistributionAmt == -donation.Distributions[1].donationDistributionAmt
+                && d.Distributions[1].donationDistributionProgram.Equals(donation.Distributions[1].donationDistributionProgram)
+                && d.Distributions[1].PledgeId == donation.Distributions[1].PledgeId
+            ), false)).Returns(999);
+
+            var result = _fixture.CreateDonationForBankAccountErrorRefund(refund);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(999, result.Value);
+
+            _mpDonorService.VerifyAll();
+            _mpDonationService.VerifyAll();
+            _paymentService.VerifyAll();
+        }
+
+        [Test]
         public void TestCreateDonationForInvoiceNoAmount()
         {
             var invoice = new StripeInvoice
@@ -1442,7 +1604,7 @@ namespace crds_angular.test.Services
                 donationId = 123
             };
 
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Returns(donation);
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId, false)).Returns(donation);
 
             var donationId = _fixture.CreateDonationForInvoice(invoice);
             _paymentService.VerifyAll();
@@ -1502,7 +1664,7 @@ namespace crds_angular.test.Services
                 ProgramId = programId,
                 RecurringGiftId = recurringGiftId
             };
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId)).Throws(new DonationNotFoundException(chargeId));
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId, false)).Throws(new DonationNotFoundException(chargeId));
             _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(recurringGift);
             _mpDonorService.Setup(mocked => mocked.UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, Constants.ResetFailCount));
 

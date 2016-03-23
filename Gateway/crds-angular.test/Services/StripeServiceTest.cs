@@ -13,6 +13,7 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
+using Newtonsoft.Json;
 
 namespace crds_angular.test.Services
 {
@@ -472,7 +473,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetChargeRefund()
         {
-            var data = new StripeRefund
+            var expectedRefund = new StripeRefund
             {
                 Data = new List<StripeRefundData>()
                 {
@@ -488,19 +489,23 @@ namespace crds_angular.test.Services
 
                 }
             };
+
+            var refundDataJson = JsonConvert.SerializeObject(expectedRefund);
         
-            var response = new Mock<IRestResponse<StripeRefund>>();
+            var response = new Mock<IRestResponse>();
             response.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
             response.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.OK).Verifiable();
-            response.SetupGet(mocked => mocked.Data).Returns(data).Verifiable();
+            response.SetupGet(mocked => mocked.Content).Returns(refundDataJson).Verifiable();
 
-            _restClient.Setup(mocked => mocked.Execute<StripeRefund>(It.IsAny<IRestRequest>())).Returns(response.Object);
+            _restClient.Setup(mocked => mocked.Execute(It.IsAny<IRestRequest>())).Returns(response.Object);
 
             var refund = _fixture.GetChargeRefund("456");
-            _restClient.Verify(mocked => mocked.Execute<StripeRefund>(
+            _restClient.Verify(mocked => mocked.Execute(
                 It.Is<RestRequest>(o =>
                     o.Method == Method.GET
                     && o.Resource.Equals("charges/456/refunds")
+                    && o.Parameters.Matches("expand[]", "balance_transaction")
+                    && o.Parameters.Matches("expand[]", "charge")
             )));
        
             _restClient.VerifyAll();

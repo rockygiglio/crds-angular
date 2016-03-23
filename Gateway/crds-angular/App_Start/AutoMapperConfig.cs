@@ -101,7 +101,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ContributionDate, opts => opts.MapFrom(src => src.DonationDate.ToString("MM/dd/yyyy")))
                 .ForMember(dest => dest.SettlementDate, opts => opts.MapFrom(src => src.DepositDate.ToString("MM/dd/yyyy")))
-                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DepositAmount))
+                .ForMember(dest => dest.ContributionAmount, opts => opts.MapFrom(src => src.DonationAmount.ToString()))
                 .ForMember(dest => dest.ReceivablesAccount, opts => opts.MapFrom(src => src.ReceivableAccount))
                 .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount.ToString()))
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))

@@ -38,9 +38,10 @@ describe('Go Volunteer Page Component', function() {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $stateParams = $injector.get('$stateParams');          
+    $httpBackend = $injector.get('$httpBackend');
     
     $state = $injector.get('$state');
-    spyOn($state, 'go');
+    spyOn($state, 'go').and.returnValue(true);
     
     $rootScope.MESSAGES = {
       generalError: 'generalError'
@@ -57,7 +58,6 @@ describe('Go Volunteer Page Component', function() {
     element = $compile(element)(scope);
     scope.$digest();
     isolatedScope = element.isolateScope().goVolunteerPage;
-
   }));
 
   it('should show the profile', function() {
@@ -92,8 +92,5 @@ describe('Go Volunteer Page Component', function() {
       expect($state.go).toHaveBeenCalledWith('go-volunteer.page', 
                                              { city: 'cincinnati', organization: 'whateva', page: 'spouse'});
     });
-
   });
-
-  
 });

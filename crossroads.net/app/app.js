@@ -1,5 +1,5 @@
 require('./group_finder');
-require('./events');
+
 require('./childcare');
 require('./mp_tools');
 require('../lib/select.css');
@@ -26,7 +26,7 @@ require('../lib/select.css');
    ]);
 
   angular.module(constants.MODULES.CROSSROADS).config(require('./routes'));
-
+    require('./events');
   require('./signup');
   require('./styleguide');
   require('./superbowl');
