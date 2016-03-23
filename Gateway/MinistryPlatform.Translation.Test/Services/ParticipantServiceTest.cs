@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -24,6 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
+            _configWrapper.Setup(m => m.GetConfigIntValue("Participants")).Returns(355);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
             _fixture = new ParticipantService(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
@@ -60,5 +63,31 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("email-address", participant.EmailAddress);
             Assert.AreEqual(100, participant.ParticipantId);
         }
+
+        [Test]
+
+        public void shouldCreateParticipantRecord()
+        {
+            const int contactId = 9999;
+            DateTime date = DateTime.Now; 
+            string dateString = date.ToString();
+
+            var mockDictionary = new Dictionary<string, object>
+            {
+                    {"Participant_Type_Default_ID", 2},
+                    {"Participant_Start_Date", date},
+                    {"Contact ID", 99999},
+            };
+
+          
+            _mpServiceMock.Setup(
+                mocked => mocked.CreateRecord(355, It.IsAny<Dictionary<String,Object>>(), "ABC", false))
+                .Returns(123);
+
+            var participant = _fixture.CreateParticipantRecord(contactId);
+            Assert.AreEqual(123, participant);           
+        }
+
     }
+
 }
