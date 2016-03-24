@@ -23,6 +23,7 @@ namespace crds_angular.Services.Interfaces
         DonationsDTO GetDonationsForDonor(int donorId, string donationYear = null, bool softCredit = false);
         DonationYearsDTO GetDonationYearsForDonor(int donorId);
         int? CreateDonationForInvoice(StripeInvoice invoice);
+        int? CreateDonationForBankAccountErrorRefund(StripeRefund refund);
         
             // ReSharper disable once InconsistentNaming
         List<GPExportDatumDTO> GetGPExport(int depositId, string token);

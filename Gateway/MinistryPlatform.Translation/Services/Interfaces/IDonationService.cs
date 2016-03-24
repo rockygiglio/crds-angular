@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         DonationBatch GetDonationBatchByProcessorTransferId(string processorTransferId);
         DonationBatch GetDonationBatch(int batchId);
         DonationBatch GetDonationBatchByDepositId(int depositId);
-        Donation GetDonationByProcessorPaymentId(string processorPaymentId);
+        Donation GetDonationByProcessorPaymentId(string processorPaymentId, bool retrieveDistributions = false);
         List<Deposit> GetSelectedDonationBatches(int selectionId, string token); 
         void AddDonationToBatch(int batchId, int donationId);
         void ProcessDeclineEmail(string processorPaymentId);
@@ -21,8 +21,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
             string eventMessage, string responseMessage);
 
         List<TripDistribution> GetMyTripDistributions(int contactId);
-        Dictionary<int, List<GPExportDatum>> GetGPExport(int depositId, string token);
-        List<GPExportDatum> GetGPExportAndProcessorFees(int depositId, string token);
+        List<GPExportDatum> GetGPExport(int depositId, string token);
         void UpdateDepositToExported(int selectionId, int depositId, string token);
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
         void SendMessageFromDonor(int pledgeId, int donationId, string message);

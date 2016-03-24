@@ -102,6 +102,9 @@
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
+    <Compile Include="Models\Lookups\MPOtherOrganization.cs" />
+    <Compile Include="Models\Lookups\MPWorkTeams.cs" />
+    <Compile Include="Models\MPOrganization.cs" />
     <Compile Include="Models\MPServeReminder.cs" />
     <Compile Include="Models\Opportunities\MPResponse.cs" />
     <Compile Include="Models\People\MpParticipant.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />
@@ -174,6 +178,7 @@
     <Compile Include="Services\MinistryPlatformService.cs" />
     <Compile Include="Services\MinistryPlatformServiceImpl.cs" />
     <Compile Include="Services\OpportunityServiceImpl.cs" />
+    <Compile Include="Services\OrganizationService.cs" />
     <Compile Include="Services\ParticipantService.cs" />
     <Compile Include="Services\PledgeService.cs" />
     <Compile Include="Services\PrivateInviteService.cs" />

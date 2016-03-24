@@ -6,7 +6,7 @@
 #   -DestinationPath path_name   The directory to send the file to on the remote server (required)
 
 Param (
-  [string]$DBServer = "216.68.184.202", # default to public IP of MPTEST02
+  [string]$DBServer = "MPTEST02", # default to MPTEST02 (assuming this is running remote on MPTEST02)
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [string]$BackupPath = "/cygdrive/D/SqlServer/Backup",
   [string]$DestinationPath = "/cygdrive/E/Backup/FromProduction"

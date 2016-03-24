@@ -255,11 +255,13 @@
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
+    <Compile Include="Controllers\API\GoVolunteerController.cs" />
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
+    <Compile Include="Exceptions\MoreThanOneRecordException.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
     <Compile Include="Models\Crossroads\CommunicationDTO.cs" />
     <Compile Include="Models\Crossroads\Congregation.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Models\Crossroads\Events\Room.cs" />
     <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\Organization.cs" />
     <Compile Include="Models\Crossroads\GroupContactDTO.cs" />
     <Compile Include="Models\Crossroads\Events\Event.cs" />
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
@@ -279,6 +282,7 @@
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
+    <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
@@ -287,6 +291,7 @@
     <Compile Include="Models\Crossroads\SponsoredChild.cs" />
     <Compile Include="Models\Crossroads\Stewardship\PledgeDto.cs" />
     <Compile Include="Models\Crossroads\Stewardship\StripeCard.cs" />
+    <Compile Include="Models\Crossroads\Stewardship\StripeList.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />
@@ -296,13 +301,17 @@
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
+    <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
     <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
+    <Compile Include="Services\Interfaces\IGatewayLookupService.cs" />
+    <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
     <Compile Include="Services\Interfaces\ITaskService.cs" />
+    <Compile Include="Services\OrganizationService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\StaffContactService.cs" />
     <Compile Include="Services\EventService.cs" />

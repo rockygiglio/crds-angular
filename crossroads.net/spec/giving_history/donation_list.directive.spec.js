@@ -3,7 +3,7 @@ require('../../app/ang');
 
 require('../../app/app');
 
-describe('DonationList Directive', function() {
+describe('DonationList Directive', function () {
   var $compile;
   var $rootScope;
   var $httpBackend;
@@ -13,12 +13,12 @@ describe('DonationList Directive', function() {
 
   beforeEach(angular.mock.module('crossroads'));
 
-  beforeEach(angular.mock.module(function($provide) {
-    $provide.value('$state', { get: function() {} });
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value('$state', { get: function () {} });
   }));
 
   beforeEach(
-      inject(function(_$compile_, _$rootScope_, _$httpBackend_) {
+      inject(function (_$compile_, _$rootScope_, _$httpBackend_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $httpBackend = _$httpBackend_;
@@ -169,9 +169,28 @@ describe('DonationList Directive', function() {
             source: {
               type: 'Check',
               last4: '8000',
+              check_number: '1234',
               expectedViewBox: '0 0 32 32',
-              expectedName: 'ending in 8000',
+              expectedName: 'ending in 8000 | Check #1234',
               expectedIcon: 'library'
+            }
+          },
+          {
+            amount: 8000,
+            status: 'Succeeded',
+            date: '2015-03-31T09:52:44.873',
+            distributions: [
+              {
+                program_name: 'Crossroads',
+                amount: 8000
+              }
+            ],
+            source: {
+              type: 'Check',
+              check_number: '5678',
+              expectedViewBox: '0 0 32 32',
+              expectedName: 'Check #5678',
+              expectedIcon: ''
             }
           }
         ];
@@ -189,14 +208,14 @@ describe('DonationList Directive', function() {
       })
   );
 
-  describe('scope.$watch(donationsInput)', function() {
+  describe('scope.$watch(donationsInput)', function () {
     var element;
-    beforeEach(function() {
+    beforeEach(function () {
       element = $compile(angular.element(templateString))(scope);
       scope.$digest();
     });
 
-    it('should call postProcessDonations and set data appropriately', function() {
+    it('should call postProcessDonations and set data appropriately', function () {
       var isolateScope = element.isolateScope();
       expect(isolateScope.donations).toBeDefined();
       expect(isolateScope.donations.length).toEqual(originalDonations.length);
@@ -205,14 +224,14 @@ describe('DonationList Directive', function() {
       expect(isolateScope.donationsInput).toEqual(originalDonations);
 
       // Using the "expected*" properties on the mocked donations, make sure the actual properties are set correctly
-      _.forEach(isolateScope.donations, function(donation) {
+      _.forEach(isolateScope.donations, function (donation) {
         expect(donation.source.name).toEqual(donation.source.expectedName);
         expect(donation.source.icon).toEqual(donation.source.expectedIcon);
         expect(donation.source.viewBox).toEqual(donation.source.expectedViewBox);
       });
     });
 
-    it('should call postProcessDonations when donationsInput model changes', function() {
+    it('should call postProcessDonations when donationsInput model changes', function () {
       originalDonations.push(
           {
             amount: 9000,
@@ -243,7 +262,7 @@ describe('DonationList Directive', function() {
       expect(isolateScope.donations.length).toEqual(scope.donationsInput.length);
 
       // Using the "expected*" properties on the mocked donations, make sure the actual properties are set correctly
-      _.forEach(isolateScope.donations, function(donation) {
+      _.forEach(isolateScope.donations, function (donation) {
         expect(donation.source.name).toEqual(donation.source.expectedName);
         expect(donation.source.icon).toEqual(donation.source.expectedIcon);
         expect(donation.source.viewBox).toEqual(donation.source.expectedViewBox);

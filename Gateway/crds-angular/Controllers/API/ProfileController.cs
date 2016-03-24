@@ -4,13 +4,16 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Profile;
+using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
@@ -26,9 +29,10 @@ namespace crds_angular.Controllers.API
         private readonly IUserImpersonationService _impersonationService;
         private readonly IAuthenticationService _authenticationService ;
         private readonly IUserService _userService;
+        private readonly IContactRelationshipService _contactRelationshipService;
         private readonly List<int> _allowedAdminGetProfileRoles;
 
-        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationService authenticationService, IUserService userService, IConfigurationWrapper config)
+        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationService authenticationService, IUserService userService, IContactRelationshipService contactRelationshipService, IConfigurationWrapper config)
         {
             _personService = personService;
             _serveService = serveService;
@@ -36,6 +40,7 @@ namespace crds_angular.Controllers.API
             _donorService = donorService;
             _authenticationService = authenticationService;
             _userService = userService;
+            _contactRelationshipService = contactRelationshipService;
             _allowedAdminGetProfileRoles = config.GetConfigValue("AdminGetProfileRoles").Split(',').Select(int.Parse).ToList();
         }
 
@@ -125,6 +130,37 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Get Profile Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [ResponseType(typeof(FamilyMember))]
+        [Route("api/profile/{contactId}/spouse")]
+        [HttpGet]
+        public IHttpActionResult GetMySpouse(int contactid)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var family = _contactRelationshipService.GetMyImmediateFamilyRelationships(contactid, token);
+                    var spouse = family.Where(f => f.Relationship_Id == 1).Select(s => new FamilyMember
+                    {
+                        Age = s.Age,
+                        ContactId = s.Contact_Id,
+                        Email = s.Email_Address,
+                        LastName = s.Last_Name,
+                        PreferredName = s.Preferred_Name,
+                        RelationshipId = s.Relationship_Id,
+                        ParticipantId = s.Participant_Id,
+                        HighSchoolGraduationYear = s.HighSchoolGraduationYear
+                    }).SingleOrDefault();
+                    return Ok(spouse);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Spouse Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
