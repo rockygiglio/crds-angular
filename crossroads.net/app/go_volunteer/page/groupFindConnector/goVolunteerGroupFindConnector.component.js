@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerGroupFindConnector;
 
-  GoVolunteerGroupFindConnector.$inject = ['GoVolunteerService', 'GroupConnectors'];
+  GoVolunteerGroupFindConnector.$inject = ['$rootScope', 'GoVolunteerService', 'GroupConnectors'];
 
-  function GoVolunteerGroupFindConnector(GoVolunteerService, GroupConnectors) {
+  function GoVolunteerGroupFindConnector($rootScope, GoVolunteerService, GroupConnectors) {
     return {
       restrict: 'E',
       scope: {
@@ -82,8 +82,10 @@
           GoVolunteerService.childrenAttending.childThirteenEighteen;
       }
 
-      function submit(groupConnectorId) {
-        GoVolunteerService.groupConnectorId = groupConnectorId;
+      function submit(g) {
+        if (vm.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)) { return 0;
+        }
+        GoVolunteerService.groupConnectorId = g.groupConnectorId;
         vm.onSubmit({nextState: 'unique-skills'});
       }
 

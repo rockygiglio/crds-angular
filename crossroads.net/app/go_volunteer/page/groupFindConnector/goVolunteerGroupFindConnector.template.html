@@ -21,7 +21,7 @@
   <div class="col-sm-12">
     <div ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
       <a
-        ng-click="goGroupFindConnector.submit(g.groupConnectorId)"
+        ng-click="goGroupFindConnector.submit(g)"
         ng-disabled="goGroupFindConnector.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)">
         <div class="media card-item media-card-link">
           <profile-picture contact-id="g.primaryContactRegistrationId" 
