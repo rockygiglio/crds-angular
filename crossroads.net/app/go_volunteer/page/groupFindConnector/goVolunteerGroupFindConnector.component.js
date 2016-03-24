@@ -24,6 +24,8 @@
       vm.disableCard = disableCard;
       vm.groupConnectors = [];
       vm.loaded = loaded;
+      vm.loneWolf = loneWolf;
+      vm.noConnectors = noConnectors;
       vm.organization = GoVolunteerService.organization;
       vm.registrationCount = registrationCount();
       vm.submit = submit;
@@ -49,15 +51,6 @@
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
-      function handleError(err) {
-        // show error page?
-        console.log(err);
-      }
-
-      function loaded() {
-        return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
-      }
-
       function disableCard(projectMinAge, projectMax, projectCurrentVolunteers) {
         if (projectMinAge === 0) {
           return false;
@@ -74,6 +67,19 @@
         return false;
       }
 
+      function handleError(err) {
+        // show error page?
+        console.log(err);
+      }
+
+      function loaded() {
+        return (vm.groupConnectors !== null && vm.groupConnectors.$resolved);
+      }
+
+      function loneWolf() {
+        vm.onSubmit({nextState: 'launch-site'});
+      }
+      
       function registrationCount() {
         return 1 +
           GoVolunteerService.spouseAttending +
@@ -83,10 +89,17 @@
       }
 
       function submit(g) {
-        if (vm.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)) { return 0;
+        if (vm.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          return -1; 
         }
+
         GoVolunteerService.groupConnectorId = g.groupConnectorId;
         vm.onSubmit({nextState: 'unique-skills'});
+      }
+
+      function noConnectors() {
+        return vm.groupConnectors && vm.groupConnectors.$resolved && vm.groupConnectors.length < 1; 
       }
 
       function youngestInRegistration() {

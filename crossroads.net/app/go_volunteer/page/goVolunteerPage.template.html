@@ -3,7 +3,7 @@
   <go-volunteer-profile ng-if="goVolunteerPage.showProfile()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-profile>
   <go-volunteer-org-name ng-if="goVolunteerPage.showOrgName()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-org-name>
   <go-volunteer-spouse-name ng-if="goVolunteerPage.showSpouseName()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-spouse-name>
-  <go-volunteer-children ng-if="goVolunteerPage.showChildren()"> </go-volunteer-children>
+  <go-volunteer-children ng-if="goVolunteerPage.showChildren()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-children>
   <go-volunteer-children-count ng-if="goVolunteerPage.showChildrenCount()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-children-count>
   <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-connector>
   <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-find-connector>
