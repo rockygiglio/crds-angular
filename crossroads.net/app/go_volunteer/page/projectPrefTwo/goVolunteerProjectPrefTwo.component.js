@@ -22,7 +22,7 @@
         { title: 'Artistic Painting', state: '', age: '13', img: 'art' },
         { title: 'Construction', state: '', age: '13', img: 'cons' },
         { title: 'Gardening', state: '', age: '2', img: 'gard' },
-        { title: 'Landscaping', state: '', age: '8', img: 'gardening' },
+        { title: 'Landscaping', state: 'checked', age: '8', img: 'gardening' },
         { title: 'Organizing and Cleaning', state: '', age: '2', img: 'org' },
         { title: 'Painting', state: 'disabled', age: '13', img: 'painting' },
         { title: 'Prayer', state: '', age: '2', img: 'prayer' },
