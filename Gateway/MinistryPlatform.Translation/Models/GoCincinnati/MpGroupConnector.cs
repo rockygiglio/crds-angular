@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int PrimaryRegistrationID { get; set; }
         public string OrganizationName { get; set; }
         public string PreferredLaunchSite { get; set; }
         public int ProjectMaximumVolunteers { get; set; }

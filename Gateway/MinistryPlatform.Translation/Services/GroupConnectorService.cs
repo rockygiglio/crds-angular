@@ -19,13 +19,13 @@ namespace MinistryPlatform.Translation.Services
 
         public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId)
         {
-            var searchString = string.Format(",,,,true,{0}", initiativeId);
+            var searchString = string.Format(",,,,,true,{0}", initiativeId);
             return GetGroupConnectors(searchString);
         }
 
         public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId)
         {
-            var searchString = string.Format(",,,{0},,{1}", organizationId, initiativeId);
+            var searchString = string.Format(",,,,{0},,{1}", organizationId, initiativeId);
             return GetGroupConnectors(searchString);
         }
 
@@ -38,6 +38,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 Id = r.ToInt("GroupConnector_ID"),
                 Name = r.ToString("Primary_Registration"),
+                PrimaryRegistrationID = r.ToInt("Primary_Registration_Contact_ID"),
                 ProjectMaximumVolunteers = r.ToInt("Project_Maximum_Volunteers"),
                 ProjectMinimumAge = r.ToInt("Project_Minimum_Age"),
                 ProjectName = r.ToString("Project_Name"),

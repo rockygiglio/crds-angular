@@ -13,6 +13,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
+        [JsonProperty(PropertyName = "primaryContactRegistrationId")]
+        public int PrimaryRegistraionContactId { get; set; }
+
         [JsonProperty(PropertyName = "preferredLaunchSite")]
         public string PreferredLaunchSite { get; set; }
 
@@ -37,6 +40,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
             {
                 GroupConnectorId = r.Id,
                 Name = r.Name,
+                PrimaryRegistraionContactId = r.PrimaryRegistrationID,
                 ProjectMaximumVolunteers = r.ProjectMaximumVolunteers,
                 ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
