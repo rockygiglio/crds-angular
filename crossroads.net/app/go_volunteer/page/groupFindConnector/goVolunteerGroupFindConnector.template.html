@@ -3,7 +3,8 @@
     <progressbar value="15"></progressbar>
   </div>
 </div>
-<h2>Find your group</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerGroupFindConnectorQuestion.content | html"></div>
 
 <div ng-if="goGroupFindConnector.noConnectors()"> 
   <p>
