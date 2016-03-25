@@ -17,7 +17,10 @@ namespace crds_angular.Controllers.API
         private readonly IOrganizationService _organizationService;
         private readonly IGoSkillsService _skillsService;
 
-        public GoVolunteerController(IOrganizationService organizationService, IGroupConnectorService groupConnectorService, IGatewayLookupService gatewayLookupService, IGoSkillsService _skillsService)
+        public GoVolunteerController(IOrganizationService organizationService, 
+            IGroupConnectorService groupConnectorService, 
+            IGatewayLookupService gatewayLookupService, 
+            IGoSkillsService skillsService)
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
