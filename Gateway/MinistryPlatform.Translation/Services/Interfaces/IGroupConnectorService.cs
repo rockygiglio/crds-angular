@@ -5,7 +5,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IGroupConnectorService
     {
-        List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId);
-        List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId);
+        List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId, string token);
+        List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId, string token);
     }
 }

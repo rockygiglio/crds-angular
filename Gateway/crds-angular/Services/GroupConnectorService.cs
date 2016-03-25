@@ -1,28 +1,33 @@
 ﻿using System.Collections.Generic;
 using crds_angular.Models.Crossroads.GoVolunteer;
-using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.GoCincinnati;
+using MinistryPlatform.Translation.Services.Interfaces;
+using IGroupConnectorService = crds_angular.Services.Interfaces.IGroupConnectorService;
 
 namespace crds_angular.Services
 {
     public class GroupConnectorService : IGroupConnectorService
     {
         private readonly MinistryPlatform.Translation.Services.Interfaces.IGroupConnectorService _mpGroupConnectorService;
+        private readonly IApiUserService _apiUserService;        
 
-        public GroupConnectorService(MinistryPlatform.Translation.Services.Interfaces.IGroupConnectorService groupConnectorService)
+        public GroupConnectorService(MinistryPlatform.Translation.Services.Interfaces.IGroupConnectorService groupConnectorService, IApiUserService apiUserService)
         {
             _mpGroupConnectorService = groupConnectorService;
+            _apiUserService = apiUserService;            
         }
 
         public List<GroupConnector> GetGroupConnectorsByOrganization(int organization, int initiativeId)
         {
-            var mpGroupConnector = _mpGroupConnectorService.GetGroupConnectorsForOrganization(organization, initiativeId);
+            var token = _apiUserService.GetToken();
+            var mpGroupConnector = _mpGroupConnectorService.GetGroupConnectorsForOrganization(organization, initiativeId, token);
             return MapGroupConnector(mpGroupConnector);
         }
 
         public List<GroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId)
         {
-            var mpGroupConnector = _mpGroupConnectorService.GetGroupConnectorsForOpenOrganizations(initiativeId);
+            var token = _apiUserService.GetToken();
+            var mpGroupConnector = _mpGroupConnectorService.GetGroupConnectorsForOpenOrganizations(initiativeId, token);
             return MapGroupConnector(mpGroupConnector);
         }
 
