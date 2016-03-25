@@ -10,6 +10,44 @@
       dateOfBirth: '11/02/1980',
       mobilePhone: '513-111-1111'
     },
+    arch_organization: {
+   		contactId: 0,
+			endDate: '0001-01-01T00:00:00',
+			name: 'Archdiocese of Cincinnati',
+			openSignup: false,
+			organizationId: 2,
+			startDate: '2016-02-29T00:00:00' 
+    },
+		other_organization: {
+      contactId: 0,
+			endDate: '0001-01-01T00:00:00',
+			name: 'other',
+			openSignup: true,
+			organizationId: 2,
+			startDate: '2016-02-29T00:00:00' 
+    },
+    crossroads_organization: {
+      contactId: 0,
+			endDate: '0001-01-01T00:00:00',
+			name: 'crossroads',
+			openSignup: true,
+			organizationId: 2,
+			startDate: '2016-02-29T00:00:00' 
+    },
+    crossroads_group_connectors: [
+      { 
+        name: 'Canterbury, Andy ',
+        organizationId: 6,
+        preferredLaunchSite: 'Anywhere',
+        projectName: 'Annette\'s Defect Party'
+      },
+      {
+        name: 'Maddox, TJ',
+        organizationId: 1,
+        preferredLaunchSite: 'Anywhere',
+        projectName: null
+      }
+    ],
     otherOrganizations: [
       {'id':32,'name':'Peoples Church'},
       {'id':31,'name':'Prince of Peace'},

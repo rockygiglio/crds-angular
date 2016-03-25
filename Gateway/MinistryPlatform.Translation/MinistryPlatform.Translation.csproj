@@ -102,6 +102,7 @@
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
+    <Compile Include="Models\GoCincinnati\MpGroupConnector.cs" />
     <Compile Include="Models\Lookups\MPOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MPWorkTeams.cs" />
     <Compile Include="Models\MPGoVolunteerSkill.cs" />
@@ -125,6 +126,8 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\GroupConnectorService.cs" />
+    <Compile Include="Services\Interfaces\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\ISkillsService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />

@@ -8,7 +8,9 @@
   function GoVolunteerGroupConnector() {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&' 
+      },
       bindToController: true,
       controller: GoVolunteerGroupConnectorController,
       controllerAs: 'goGroupConnector',
@@ -17,7 +19,15 @@
 
     function GoVolunteerGroupConnectorController() {
       var vm = this;
+      vm.submit = submit;
 
+      function submit(groupConnector) {
+        if (groupConnector) {
+          vm.onSubmit({nextState: 'group-find-connector'});   
+        } else {
+          vm.onSubmit({nextState: 'launch-site'});   
+        }
+      }
     }
   }
 

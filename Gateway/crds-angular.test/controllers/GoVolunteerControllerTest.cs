@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
@@ -9,18 +8,20 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services.Interfaces;
+using FsCheck;
 using Moq;
 using NUnit.Framework;
-using FsCheck;
 
 namespace crds_angular.test.controllers
 {
     public class GoVolunteerControllerTest
     {
         private GoVolunteerController _fixture;
-        private Mock<IOrganizationService> _organizationService;
         private Mock<IGatewayLookupService> _gatewayLookupService;
         private Mock<IGoSkillsService> _skillsService;
+        private Mock<IGroupConnectorService> _groupConnectorService;
+        private Mock<IOrganizationService> _organizationService;
+
 
         [SetUp]
         public void Setup()
@@ -28,7 +29,8 @@ namespace crds_angular.test.controllers
             _organizationService = new Mock<IOrganizationService>();
             _gatewayLookupService = new Mock<IGatewayLookupService>();
             _skillsService = new Mock<IGoSkillsService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, _gatewayLookupService.Object, _skillsService.Object)
+            _groupConnectorService = new Mock<IGroupConnectorService>();
+            _fixture = new GoVolunteerController(_organizationService.Object, _groupConnectorService.Object, _gatewayLookupService.Object, _skillsService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
@@ -52,8 +54,7 @@ namespace crds_angular.test.controllers
 
         [Test]
         public void ShouldGetOrganizationByName()
-        {            
-    
+        {
             Prop.ForAll<int, int, string>((contactId, orgId, name) =>
             {
                 var returnValue = ValidOrganization(contactId, orgId, name);
@@ -62,23 +63,22 @@ namespace crds_angular.test.controllers
                 Assert.IsNotNull(response);
                 Assert.IsInstanceOf<OkNegotiatedContentResult<Organization>>(response);
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                var r = (OkNegotiatedContentResult<Organization>)response;
+                var r = (OkNegotiatedContentResult<Organization>) response;
                 Assert.IsNotNull(r.Content);
                 Assert.AreSame(returnValue, r.Content);
             }).VerboseCheckThrowOnFailure();
-
         }
 
         [Test]
         public void ShouldHandleNullOrganization()
-        {          
-            _organizationService.Setup(m => m.GetOrganizationByName(It.IsAny<string>())).Returns((Organization)null);            
+        {
+            _organizationService.Setup(m => m.GetOrganizationByName(It.IsAny<string>())).Returns((Organization) null);
             Prop.ForAll<string>(st =>
             {
                 var response = _fixture.GetOrganization(st);
                 Assert.IsNotNull(response);
                 Assert.IsInstanceOf<NotFoundResult>(response);
-            }).QuickCheckThrowOnFailure();            
+            }).QuickCheckThrowOnFailure();
         }
 
         [Test]
@@ -93,12 +93,13 @@ namespace crds_angular.test.controllers
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<OtherOrganization>>>(response);
             // ReSharper disable once SuspiciousTypeConversion.Global
-            var r = (OkNegotiatedContentResult<List<OtherOrganization>>)response;
+            var r = (OkNegotiatedContentResult<List<OtherOrganization>>) response;
             Assert.IsNotNull(r.Content);
             Assert.AreSame(orgs, r.Content);
         }
+
         [Test]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedException(typeof (HttpResponseException))]
         public void ShouldThrowAnException()
         {
             _gatewayLookupService.Setup(m => m.GetOtherOrgs(null)).Throws(new Exception());
@@ -109,9 +110,9 @@ namespace crds_angular.test.controllers
         {
             return new List<OtherOrganization>()
             {
-              new OtherOrganization(12,"sdfrtrtg"),
-              new OtherOrganization(15,"dghjhnjmh"),
-              new OtherOrganization(13, "gfhnnhmjm")
+                new OtherOrganization(12, "sdfrtrtg"),
+                new OtherOrganization(15, "dghjhnjmh"),
+                new OtherOrganization(13, "gfhnnhmjm")
             };
         }
 

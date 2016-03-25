@@ -16,12 +16,12 @@
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
+    vm.disallowChange = vm.disallowChange || false;
     vm.openModal = openModal;
-
     // Manage directive style and text defaults
-    vm.wrapperClass = $scope.wrapperClass || 'col-xs-3 col-sm-2';
-    vm.imageClass = $scope.imageClass || 'pull-left img-square img-responsive';
-    vm.buttonText = $scope.buttonText || 'Change Photo';
+    vm.wrapperClass = vm.wrapperClass || 'col-xs-3 col-sm-2';
+    vm.imageClass = vm.imageClass || 'pull-left img-square img-responsive';
+    vm.buttonText = vm.buttonText || 'Change Photo';
 
     function openModal() {
       var changeProfileImage = $modal.open({
