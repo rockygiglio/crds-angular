@@ -80,7 +80,7 @@
 
       function handleError(err) {
         // show error page?
-        console.log(err);
+        // console.log(err);
       }
 
       function loaded() {
