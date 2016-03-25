@@ -85,12 +85,14 @@
           Organizations: 'Organizations',
           $cookies: '$cookies',
           $stateParams: '$stateParams',
+          SkillsService: 'SkillsService',
           loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
           Spouse: GetSpouse,
-          Organization: Organization
+          Organization: Organization,
+          Skills: Skills
         }
       })
       .state('go-volunteer.page', {
@@ -106,9 +108,12 @@
         resolve: {
           $stateParams: '$stateParams',
           $q: '$q',
+          SkillsService: 'SkillsService',
+          loggedin: crds_utilities.checkLoggedin,
           CmsInfo: CmsInfo,
           Meta: Meta,
-          Organization: Organization
+          Organization: Organization,
+          Skills: Skills
         }
       })
       ;
@@ -189,6 +194,26 @@
       }
     } else {
       deferred.resolve();
+    }
+
+    return deferred.promise;
+  }
+
+  function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
+    var deferred = $q.defer();
+    if ($stateParams.page === 'unique-skills' && _.isEmpty(GoVolunteerService.skills)) {
+      SkillsService.query(function(d) {
+        GoVolunteerService.skills = d;
+        deferred.resolve();
+      }, 
+
+      function (err) {
+        console.err(err);
+        deferred.reject();
+      });
+
+    } else {
+      deferred.resolve(); 
     }
 
     return deferred.promise;

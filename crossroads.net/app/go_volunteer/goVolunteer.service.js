@@ -17,6 +17,7 @@
         dateOfBirth: null,
         mobilePhone: null
       },
+      skills: [],
       spouse: {},
       spouseAttending: false,
       organization: {},

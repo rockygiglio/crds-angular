@@ -7,6 +7,7 @@
     .config(require('./goVolunteer.routes'))
     .factory('GoVolunteerService', require('./goVolunteer.service'))
     .factory('Organizations', require('./organizations.service'))
+    .factory('SkillsService', require('./skills.service'))
     ;
 
   require('./city');
