@@ -79,7 +79,7 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<OrgLocation>))]
+        [ResponseType(typeof(List<ProjectType>))]
         [Route("api/goVolunteer/projectTypes")]
         public IHttpActionResult GetProjectTypes()
         {

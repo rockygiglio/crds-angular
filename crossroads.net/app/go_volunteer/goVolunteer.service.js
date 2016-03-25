@@ -19,6 +19,9 @@
         mobilePhone: null
       },
       preferredLaunchSite: {},
+      projectPrefOne: {},
+      projectPrefTwo: {},
+      projectPrefThree: {},
       spouse: {},
       spouseAttending: false,
       organization: {},

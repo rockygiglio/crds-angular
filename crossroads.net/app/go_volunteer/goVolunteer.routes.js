@@ -91,7 +91,8 @@
           Person: Person,
           Spouse: GetSpouse,
           Organization: Organization,
-          Locations: Locations
+          Locations: Locations,
+          ProjectTypes: ProjectTypes
         }
       })
       .state('go-volunteer.page', {
@@ -110,7 +111,8 @@
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
-          Locations: Locations
+          Locations: Locations,
+          ProjectTypes: ProjectTypes
         }
       })
       ;
@@ -233,6 +235,24 @@
         deferred.reject();
       });
     }
+    return deferred.promise;
+  }
+
+  function ProjectTypes(GoVolunteerService, $state, $stateParams, $q, GoVolunteerDataService) {
+    var deferred = $q.defer();
+    
+    if ($stateParams.page === 'project-preference-one') {
+        GoVolunteerDataService.ProjectTypes.query(function(data) {
+          GoVolunteerService.projectTypes = data;
+          deferred.resolve();
+        }, function(err) {
+          console.log(err);
+          deferred.reject();
+        });
+    } else {
+      deferred.resolve();
+    }
+
     return deferred.promise;
   }
 

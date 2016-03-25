@@ -26,11 +26,11 @@ namespace MinistryPlatform.Translation.Services
         {
             return records.Select(record => new ProjectType
             {
-                ProjectTypeId = record.ToInt(""),
-                Description = record.ToString(""),
-                MinAge = record.ToInt(""),
-                SortOrder = record.ToInt(""),
-                ImageUrl = record.ToString("")
+                ProjectTypeId = record.ToInt("dp_RecordID"),
+                Description = record.ToString("Description"),
+                MinAge = record.ToInt("Minimum_Age"),
+                SortOrder = record.ToInt("SortOrder"),
+                ImageUrl = record.ToString("Image_URL")
             }).ToList();
         }
     }
