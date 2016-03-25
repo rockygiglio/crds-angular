@@ -35,7 +35,7 @@ namespace crds_angular.test.Services
 
             Prop.ForAll<string>( token =>
             {
-                var skills = MPSkills();
+                var skills = TestHelpers.MPSkills();
                 _apiUserService.Setup(m => m.GetToken()).Returns(token);
                 _skillsService.Setup(m => m.GetGoVolunteerSkills(token)).Returns(skills);
                 var returned = _fixture.RetrieveGoSkills();
@@ -44,15 +44,6 @@ namespace crds_angular.test.Services
                 _skillsService.VerifyAll();
             }).QuickCheckThrowOnFailure();           
         }
-
-        private static List<MPGoVolunteerSkill> MPSkills()
-        {            
-            return new List<int>(10).Select(ls => new MPGoVolunteerSkill(
-                         Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
-                         Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                         Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
-                         )).ToList();          
-        } 
-
+       
     }
 }

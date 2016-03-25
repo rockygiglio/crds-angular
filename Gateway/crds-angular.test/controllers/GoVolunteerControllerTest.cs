@@ -20,18 +20,35 @@ namespace crds_angular.test.controllers
         private GoVolunteerController _fixture;
         private Mock<IOrganizationService> _organizationService;
         private Mock<IGatewayLookupService> _gatewayLookupService;
+        private Mock<IGoSkillsService> _skillsService;
 
         [SetUp]
         public void Setup()
         {
             _organizationService = new Mock<IOrganizationService>();
             _gatewayLookupService = new Mock<IGatewayLookupService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, _gatewayLookupService.Object)
+            _skillsService = new Mock<IGoSkillsService>();
+            _fixture = new GoVolunteerController(_organizationService.Object, _gatewayLookupService.Object, _skillsService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
             };
         }
+
+        [Test]
+        public void ShouldGetSkillsList()
+        {
+            const int listSize = 20;
+            var skills = TestHelpers.ListOfGoSkills(listSize);
+            _skillsService.Setup(m => m.RetrieveGoSkills()).Returns(skills);
+            var response = _fixture.GetGoSkills();            
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);
+            var r = (OkNegotiatedContentResult<List<GoSkills>>)response;
+            Assert.IsNotNull(r.Content);
+            Assert.AreEqual(r.Content.Count, listSize);
+            Assert.AreSame(skills, r.Content);
+    }
 
         [Test]
         public void ShouldGetOrganizationByName()
