@@ -22,10 +22,11 @@
       vm.activate = activate;
       vm.createGroup = createGroup;
       vm.disableCard = disableCard;
+      vm.disabledReason = disabledReason;
       vm.groupConnectors = [];
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
-      vm.noConnectors = noConnectors;
+      vm.showGroups = showGroups;
       vm.organization = GoVolunteerService.organization;
       vm.registrationCount = registrationCount();
       vm.submit = submit;
@@ -51,20 +52,30 @@
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
-      function disableCard(projectMinAge, projectMax, projectCurrentVolunteers) {
-        if (projectMinAge === 0) {
+      function disableCard(group) {
+        if (group.projectMinimumAge === 0) {
           return false;
         }
 
-        if (projectMinAge > vm.youngestInRegistration) {
+        if (group.projectMinimumAge > vm.youngestInRegistration) {
           return true;
         }
 
-        if (vm.registrationCount > (projectMax - projectCurrentVolunteers)) {
+        if (vm.volunteerCount > (group.projectMaximumAge - group.projectvolunteerCount)) {
           return true;
         }
 
         return false;
+      }
+
+      function disabledReason(g) {
+        if (g.projectMinimumAge > vm.youngestInRegistration) {
+          return 'Minimum age for this project is ' + g.projectMinimumAge;
+        }
+
+        if (vm.volunteerCount > (g.projectMaximumAge - g.projectvolunteerCount)) {
+          return 'Group is Full';
+        }
       }
 
       function handleError(err) {
@@ -89,8 +100,8 @@
       }
 
       function submit(g) {
-        if (vm.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)) {
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+        if (vm.disableCard(g)){
+          $rootScope.$emit('notify', $rootScope.MESSAGES.goVolunteerGroupDisabled);
           return -1; 
         }
 
@@ -98,8 +109,8 @@
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
-      function noConnectors() {
-        return vm.groupConnectors && vm.groupConnectors.$resolved && vm.groupConnectors.length < 1; 
+      function showGroups() {
+        return vm.loaded() && vm.groupConnectors.length > 0; 
       }
 
       function youngestInRegistration() {

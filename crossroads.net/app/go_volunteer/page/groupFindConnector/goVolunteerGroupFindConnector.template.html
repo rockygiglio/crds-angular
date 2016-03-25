@@ -6,51 +6,42 @@
 
 <div dynamic-content="$root.MESSAGES.goVolunteerGroupFindConnectorQuestion.content | html"></div>
 
-<div ng-if="goGroupFindConnector.noConnectors()"> 
-  <p>
-    There are no groups available for this organization <a ng-click="goGroupFindConnector.createGroup()">Create your own group.</a>
-    Or <a ng-click="goGroupFindConnector.loneWolf()"> proceed without joining a group </a> 
-  </p>
+<div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
+  <preloader full-screen="false" > </preloader>
 </div>
 
-<div ng-if="!goGroupFindConnector.noConnectors()">
-  <p>
-    Can’t find a fit? <a ng-click="goGroupFindConnector.createGroup()">Create your own group.</a>
-    Or <a ng-click="goGroupFindConnector.loneWolf()"> proceed without joining a group </a> 
-  </p>
 
-  <div class="row">
-
+<div ng-if="goGroupFindConnector.showGroups()">
+  
+   <div class="row">
     <div class="form-group col-sm-12 push-bottom">
       <input type="text" class="form-control" placeholder="Search" ng-model="query">
     </div>
 
-    <div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
-      <preloader full-screen="false" > </preloader>
-    </div>
-
-    <div class="col-sm-12">
-          <div ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
-        <a
-          ng-click="goGroupFindConnector.submit(g)"
-          ng-disabled="goGroupFindConnector.disableCard(g.projectMinimumAge, g.projectMaximumVolunteers, g.volunteerCount)">
-          <div class="media card-item media-card-link">
-            <profile-picture contact-id="g.primaryContactRegistrationId" 
-                              wrapper-class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"
-                              image-class="media-object img-responsive imgix-fluid"
-                              disallow-change="false"> 
-            </profile-picture>
-            <div class="media-body soft-half-ends soft-half-right">
-              <h3 class="media-heading flush-bottom">{{ g.name }}</h3>
-              <p class="flush-bottom">Project Type: {{ g.projectType }}</p>
-              <p class="flush-bottom">Preferred Launch Site: {{ g.preferredLaunchSite }}</p>
-              <p class="flush-bottom">Minimum Age: {{ g.projectMinimumAge }}</p>
-            </div>
+     <div class="col-sm-12">
+      <a ng-click="goGroupFindConnector.submit(g)"
+         ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
+        <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
+          <profile-picture contact-id="g.primaryContactRegistrationId" 
+                           wrapper-class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"
+                           image-class="media-object img-responsive imgix-fluid"
+                           disallow-change="false"> 
+          </profile-picture>
+          <div class="media-body soft-half-ends soft-half-right">
+            <h3 class="media-heading flush-bottom">{{g.name}}</h3>
+            <p class="flush-bottom">
+              Project Type: {{g.projectType}}<br />
+              Launch Site: {{g.preferredLaunchSite}} 
+            </p>
           </div>
-        </a>
-      </div>
-
+          <div class="triangle">
+            <span>Age {{g.projectMinimumAge}} </span>
+          </div>
+          <div class="disabled-reason" ng-if="goGroupFindConnector.disableCard(g)">
+            {{goGroupFindConnector.disabledReason(g)}}
+          </div>
+        </div>
+      </a>
     </div>
-
   </div>
 </div>
