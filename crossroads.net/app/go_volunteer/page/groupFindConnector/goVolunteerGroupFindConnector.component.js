@@ -70,11 +70,11 @@
 
       function disabledReason(g) {
         if (g.projectMinimumAge > vm.youngestInRegistration) {
-          return 'Minimum age for this project is ' + g.projectMinimumAge;
+          return 'Minimum age is ' + g.projectMinimumAge;
         }
 
         if (vm.volunteerCount > (g.projectMaximumAge - g.projectvolunteerCount)) {
-          return 'Group is Full';
+          return 'Group is full';
         }
       }
 
@@ -90,7 +90,7 @@
       function loneWolf() {
         vm.onSubmit({nextState: 'launch-site'});
       }
-      
+
       function registrationCount() {
         return 1 +
           GoVolunteerService.spouseAttending +
@@ -102,7 +102,7 @@
       function submit(g) {
         if (vm.disableCard(g)){
           $rootScope.$emit('notify', $rootScope.MESSAGES.goVolunteerGroupDisabled);
-          return -1; 
+          return -1;
         }
 
         GoVolunteerService.groupConnectorId = g.groupConnectorId;
@@ -110,7 +110,7 @@
       }
 
       function showGroups() {
-        return vm.loaded() && vm.groupConnectors.length > 0; 
+        return vm.loaded() && vm.groupConnectors.length > 0;
       }
 
       function youngestInRegistration() {

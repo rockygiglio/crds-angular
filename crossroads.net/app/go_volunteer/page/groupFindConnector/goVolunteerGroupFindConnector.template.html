@@ -12,7 +12,7 @@
 
 
 <div ng-if="goGroupFindConnector.showGroups()">
-  
+
    <div class="row">
     <div class="form-group col-sm-12 push-bottom">
       <input type="text" class="form-control" placeholder="Search" ng-model="query">
@@ -22,23 +22,23 @@
       <a ng-click="goGroupFindConnector.submit(g)"
          ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
         <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
-          <profile-picture contact-id="g.primaryContactRegistrationId" 
+          <profile-picture contact-id="g.primaryContactRegistrationId"
                            wrapper-class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"
                            image-class="media-object img-responsive imgix-fluid"
-                           disallow-change="false"> 
+                           disallow-change="false">
           </profile-picture>
           <div class="media-body soft-half-ends soft-half-right">
             <h3 class="media-heading flush-bottom">{{g.name}}</h3>
             <p class="flush-bottom">
               Project Type: {{g.projectType}}<br />
-              Launch Site: {{g.preferredLaunchSite}} 
+              Launch Site: {{g.preferredLaunchSite}}
             </p>
           </div>
           <div class="triangle">
             <span>Age {{g.projectMinimumAge}} </span>
           </div>
           <div class="disabled-reason" ng-if="goGroupFindConnector.disableCard(g)">
-            {{goGroupFindConnector.disabledReason(g)}}
+            <span>{{goGroupFindConnector.disabledReason(g)}}</span>
           </div>
         </div>
       </a>
