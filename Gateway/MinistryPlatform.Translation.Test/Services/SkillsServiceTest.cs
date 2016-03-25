@@ -16,9 +16,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IAuthenticationService> _authenticationService;
-
-        private const int CONFIG = 123;
-
+        
         [SetUp]
         public void Setup()
         {
@@ -27,29 +25,50 @@ namespace MinistryPlatform.Translation.Test.Services
             _authenticationService = new Mock<IAuthenticationService>();
 
             _fixture = new SkillsService(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerSkills")).Returns(CONFIG);
+            
         }
 
         [Test]
         public void ShouldGetGoVolunteerSkills()
         {
-           Prop.ForAll<List<Dictionary<string,object>>>((list) =>
+           Prop.ForAll<int, string>((config, token) =>
            {
-               var token = "random";
                //var returnVal = new MPGoVolunteerSkill(id, label, name);
-               _ministryPlatformService.Setup(m => m.GetRecordsDict(CONFIG, token, "", "")).Returns(list);
+               _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerSkills")).Returns(config);
+               _ministryPlatformService.Setup(m => m.GetRecordsDict(config, token, "", "")).Returns(ListOfSkills());
                var newList = _fixture.GetGoVolunteerSkills(token);
 
-               Assert.AreEqual(list.Count, newList.Count);
+               Assert.AreEqual(ListOfSkills().Count, newList.Count);
                _ministryPlatformService.VerifyAll();
            }).QuickCheckThrowOnFailure();
         }
 
-        [Test]
-        public void ShouldNotThrowErrorIfNoLabel()
+        private List<Dictionary<string, object>> ListOfSkills()
         {
-            
-        }        
+            return new List<Dictionary<string, object>>()
+            {
+                
+                new Dictionary<string, object>()
+                {
+                    {"Go_Volunteer_Skills_ID", 2},
+                    {"Label", "some label" },
+                    {"Attribute_Name", "Skill Attribute" }
+                },
+                new Dictionary<string, object>()
+                {
+                    {"Go_Volunteer_Skills_ID", 3},
+                    {"Label", "some label 2" },
+                    {"Attribute_Name", "Skill Attribute two" }
+                },
+                new Dictionary<string, object>()
+                {
+                    {"Go_Volunteer_Skills_ID", 4},
+                    {"Label", null },
+                    {"Attribute_Name", "Skill Attribute four" }
+                }
+            };
+        }
+           
          
     }
 }

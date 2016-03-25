@@ -14,11 +14,33 @@ namespace crds_angular.Controllers.API
     {
         private readonly IOrganizationService _organizationService;
         private readonly IGatewayLookupService _gatewayLookupService;
+        private readonly IGoSkillsService _skillsService;
 
-        public GoVolunteerController(IOrganizationService organizationService, IGatewayLookupService gatewayLookupService)
+        public GoVolunteerController(
+            IOrganizationService organizationService, 
+            IGatewayLookupService gatewayLookupService,
+            IGoSkillsService skillsService)
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
+            _skillsService = skillsService;
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(List<GoSkills>))]
+        [Route("api/govolunteer/skills")]
+        public IHttpActionResult GetGoSkills()
+        {
+            try
+            {
+                var skills =_skillsService.RetrieveGoSkills();
+                return Ok(skills);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Go Volunteer Skills failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         [HttpGet]
