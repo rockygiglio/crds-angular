@@ -275,6 +275,7 @@
     <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Organization.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ProjectType.cs" />
     <Compile Include="Models\Crossroads\GroupContactDTO.cs" />
     <Compile Include="Models\Crossroads\Events\Event.cs" />
     <Compile Include="Models\Crossroads\Events\EventProfile.cs" />
@@ -303,10 +304,12 @@
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\GatewayLookupService.cs" />
+    <Compile Include="Services\GoVolunteerService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
+    <Compile Include="Services\Interfaces\IGoVolunteerService.cs" />
     <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IGatewayLookupService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />

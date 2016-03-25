@@ -10,6 +10,7 @@
       // private, don't use these
       cmsInfo: {},
       childrenAttending: {},
+      launchSites: {},
       person: {
         nickName: '',
         lastName: '',
@@ -17,6 +18,7 @@
         dateOfBirth: null,
         mobilePhone: null
       },
+      preferredLaunchSite: {},
       spouse: {},
       spouseAttending: false,
       organization: {},

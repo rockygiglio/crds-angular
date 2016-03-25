@@ -20,13 +20,15 @@ namespace crds_angular.test.controllers
         private GoVolunteerController _fixture;
         private Mock<IOrganizationService> _organizationService;
         private Mock<IGatewayLookupService> _gatewayLookupService;
+        private Mock<IGoVolunteerService> _goVolunteerService;
 
         [SetUp]
         public void Setup()
         {
             _organizationService = new Mock<IOrganizationService>();
             _gatewayLookupService = new Mock<IGatewayLookupService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, _gatewayLookupService.Object)
+            _goVolunteerService = new Mock<IGoVolunteerService>();
+            _fixture = new GoVolunteerController(_organizationService.Object, _gatewayLookupService.Object, _goVolunteerService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()

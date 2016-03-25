@@ -23,6 +23,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "zip")]
         public string Zip { get; set; }
 
+        [JsonProperty(PropertyName = "imageUrl")]
+        public string ImageUrl { get; set; }
+
         public OrgLocation FromMpLocation(Location loc)
         {
             return new OrgLocation
@@ -32,7 +35,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 Address = loc.Address,
                 City = loc.City,
                 State = loc.State,
-                Zip = loc.Zip
+                Zip = loc.Zip,
+                ImageUrl = loc.ImageUrl
             };
             
         }

@@ -25,7 +25,8 @@ BEGIN
 	, Address_ID_Table.[Address_Line_1] AS [Address Line 1]
 	, Address_ID_Table.[City] AS [City]
 	, Address_ID_Table.[State/Region] AS [State/Region]
-	, Address_ID_Table.[Postal_Code] AS [Postal Code]'
+	, Address_ID_Table.[Postal_Code] AS [Postal Code]
+	, Image_URL'
 			   ,'1=1')
 	SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF
 END

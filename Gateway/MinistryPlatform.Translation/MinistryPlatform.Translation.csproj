@@ -124,6 +124,8 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\GoVolunteerService.cs" />
+    <Compile Include="Services\Interfaces\IGoVolunteerService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />

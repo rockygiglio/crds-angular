@@ -90,7 +90,8 @@
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
           Spouse: GetSpouse,
-          Organization: Organization
+          Organization: Organization,
+          Locations: Locations
         }
       })
       .state('go-volunteer.page', {
@@ -108,7 +109,8 @@
           $q: '$q',
           CmsInfo: CmsInfo,
           Meta: Meta,
-          Organization: Organization
+          Organization: Organization,
+          Locations: Locations
         }
       })
       ;
@@ -158,6 +160,24 @@
           deferred.reject();
         });
       }
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.promise;
+  }
+
+  function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
+    var deferred = $q.defer();
+
+    if ($stateParams.page === 'launch-site') {
+      Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
+        GoVolunteerService.launchSites = data;
+        deferred.resolve();
+      }, function(err) {
+        console.log(err);
+        deferred.reject();
+      });
     } else {
       deferred.resolve();
     }

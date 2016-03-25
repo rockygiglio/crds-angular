@@ -14,11 +14,13 @@ namespace crds_angular.Controllers.API
     {
         private readonly IOrganizationService _organizationService;
         private readonly IGatewayLookupService _gatewayLookupService;
+        private readonly IGoVolunteerService _goVolunteerService;
 
-        public GoVolunteerController(IOrganizationService organizationService, IGatewayLookupService gatewayLookupService)
+        public GoVolunteerController(IOrganizationService organizationService, IGatewayLookupService gatewayLookupService, IGoVolunteerService goVolunteerService)
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
+            _goVolunteerService = goVolunteerService;
         }
 
         [HttpGet]
@@ -61,7 +63,7 @@ namespace crds_angular.Controllers.API
 
         [HttpGet]
         [ResponseType(typeof (List<OrgLocation>))]
-        [Route("api/organizations/{orgId}/locations/")]
+        [Route("api/organizations/{orgId}/locations")]
         public IHttpActionResult GetLocationsForOrganization(int orgId)
         {
             try
@@ -72,6 +74,23 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Unable to get locations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(List<OrgLocation>))]
+        [Route("api/goVolunteer/projectTypes")]
+        public IHttpActionResult GetProjectTypes()
+        {
+            try
+            {
+                var projectTypes = _goVolunteerService.GetProjectTypes();
+                return Ok(projectTypes);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get project types", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

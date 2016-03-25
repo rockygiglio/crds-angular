@@ -44,7 +44,8 @@ namespace MinistryPlatform.Translation.Services
                 Address = record.ToString("Address Line 1"),
                 City = record.ToString("City"),
                 State = record.ToString("State/Region"),
-                Zip = record.ToString("Postal Code")
+                Zip = record.ToString("Postal Code"),
+                ImageUrl = record.ToString("Image_URL")
             }).ToList();
         }
 
