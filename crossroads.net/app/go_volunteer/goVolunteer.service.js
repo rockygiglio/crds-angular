@@ -21,8 +21,12 @@
       skills: [],
       spouse: {},
       spouseAttending: false,
+      myPrepTime: false,
+      spousePrepTime: false,
       organization: {},
-      otherOrgName: null
+      otherOrgName: null,
+      prepWork: [],
+
     };
 
     return volunteerService;

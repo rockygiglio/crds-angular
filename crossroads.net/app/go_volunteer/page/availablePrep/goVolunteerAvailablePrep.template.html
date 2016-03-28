@@ -8,11 +8,17 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <a class="btn btn-standard btn-block push-half-bottom" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">Yes, from 12 - 3 pm</a>
-    <a class="btn btn-standard btn-block push-half-bottom" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">Yes, from 12 - 6 pm</a>
-    <a class="btn btn-standard btn-block push-half-bottom" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">Yes, from 3 - 6 pm</a>
-    <a class="btn btn-standard btn-block push-half-bottom" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">Yes, from 3 - 9 pm</a>
-    <a class="btn btn-standard btn-block push-half-bottom" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">Yes, from 6 - 9 pm</a>
-    <a class="btn btn-standard-dark btn-block" ui-sref="go-volunteer.crossroadspage({page: 'available-prep-spouse'})">No, I'm not available</a>
+    
+    <a class="btn btn-standard btn-block push-half-bottom"
+       ng-repeat="p in goAvailablePrep.prepWork"
+       ng-click="goAvailablePrep.chooseTime(p)"> 
+      Yes, from {{ p.name }}
+    </a>
+
+    <a class="btn btn-standard-dark btn-block"
+       ng-click="goAvailablePrep.chooseTime(false)">
+      No, I'm not available
+    </a>
+
   </div>
 </div>
