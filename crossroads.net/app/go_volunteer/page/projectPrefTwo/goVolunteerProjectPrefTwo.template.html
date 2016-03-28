@@ -6,15 +6,14 @@
 <h2>What is your <strong>second</strong> choice of three project preference?</h2>
 
 <div class="row">
-  <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefTwo.list" ng-repeat="item in goProjectPrefTwo.list">
-    <!-- TODO: Disable the link if the preference is disabled because it has already been choosen. -->
-    <a class="push-bottom gradiant-text-background border {{item.state}}" ui-sref="go-volunteer.crossroadspage({page: 'project-preference-three'})">
-      <img src="https://crds-cms-uploads.imgix.net/content/images/{{item.img}}.jpg" class="img-responsive img-full-width" />
+  <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefTwo.projectTypes">
+    <a class="push-bottom gradiant-text-background border" ng-class="goProjectPrefTwo.alreadySelected(item.projectTypeId)"  href="#" ng-click="goProjectPrefTwo.submit(item.projectTypeId)">
+      <img src="{{item.imageUrl}}" class="img-responsive img-full-width" />
       <div class="img-link-text">
-        {{item.title}}
+        {{item.desc}}
       </div>
       <div class="triangle">
-        <span>Age {{item.age}}+</span>
+        <span>Age {{item.minAge}}+</span>
       </div>
     </a>
   </div>

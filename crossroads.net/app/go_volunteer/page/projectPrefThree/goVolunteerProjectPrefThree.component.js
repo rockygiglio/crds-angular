@@ -3,12 +3,14 @@
 
   module.exports = GoVolunteerProjectPrefThree;
 
-  GoVolunteerProjectPrefThree.$inject = ['$sce'];
+  GoVolunteerProjectPrefThree.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerProjectPrefThree() {
+  function GoVolunteerProjectPrefThree(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerProjectPrefThreeController,
       controllerAs: 'goProjectPrefThree',
@@ -18,18 +20,22 @@
     function GoVolunteerProjectPrefThreeController($sce) {
       var vm = this;
 
-      vm.list = [
-        { title: 'Artistic Painting', state: '', age: '13', img: 'art' },
-        { title: 'Construction', state: '', age: '13', img: 'cons' },
-        { title: 'Gardening', state: 'disabled', age: '2', img: 'gard' },
-        { title: 'Landscaping', state: '', age: '8', img: 'gardening' },
-        { title: 'Organizing and Cleaning', state: '', age: '2', img: 'org' },
-        { title: 'Painting', state: 'disabled', age: '13', img: 'painting' },
-        { title: 'Prayer', state: '', age: '2', img: 'prayer' },
-        { title: 'Serving Meals or Throw A Party', state: '', age: '8', img: 'cooking' },
-        { title: 'Working with Children', state: '', age: '2', img: 'kids' },
-        { title: 'Working with the Elderly', state: '', age: '2', img: 'elder' }
-      ];
+      vm.projectTypes = GoVolunteerService.projectTypes;
+      vm.alreadySelected = alreadySelected;
+      vm.submit = submit;
+
+      function alreadySelected(projectTypeId) {
+        if ((GoVolunteerService.projectPrefOne === projectTypeId) || (GoVolunteerService.projectPrefTwo === projectTypeId)) {
+          return ['disabled', 'checked'];
+        }
+
+        return [];
+      }
+
+      function submit(projectTypeId) {
+        GoVolunteerService.projectPrefThree = projectTypeId;
+        vm.onSubmit({nextState: 'unique-skills'});
+      }
 
     }
   }
