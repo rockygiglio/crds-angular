@@ -90,6 +90,7 @@
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
+          PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
           Skills: Skills
@@ -112,7 +113,8 @@
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
-          Skills: Skills
+          Skills: Skills,
+          PrepWork: PrepWork
         }
       })
       ;
@@ -196,6 +198,24 @@
     }
 
     return deferred.promise;
+  }
+
+  function PrepWork(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
+    var deferred = $q.defer();
+    if ($stateParams.page === 'available-prep' && _.isEmpty(GoVolunteerService.prepWork)) {
+      GoVolunteerDataService.PrepWork.query(function(data) {
+        GoVolunteerService.prepWork = data;
+        deferred.resolve();
+      },
+
+      function(err) {
+        deferred.reject();
+      });
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.$promise;
   }
 
   function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
