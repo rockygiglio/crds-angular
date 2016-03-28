@@ -22,6 +22,8 @@
       projectPrefOne: {},
       projectPrefTwo: {},
       projectPrefThree: {},
+      privateGroup: false,
+      skills: [],
       spouse: {},
       spouseAttending: false,
       organization: {},

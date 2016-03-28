@@ -199,7 +199,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Address Line 1", "123 Sesame St."},
                     {"City", "Cincinnati"},
                     {"State/Region", "OH"},
-                    {"Postal Code", 45209}
+                    {"Postal Code", 45209},
+                    {"Image_URL", "www.com.net"}
                 },
                 new Dictionary<string, object>{
                     {"dp_RecordID", It.IsAny<int>() },
@@ -210,7 +211,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Address Line 1", "221B Baker St."},
                     {"City", "Cincinnati"},
                     {"State/Region", "OH"},
-                    {"Postal Code", 45209}
+                    {"Postal Code", 45209},
+                    {"Image_URL", "www.com.net"}
                 }
             };
         } 

@@ -3,7 +3,8 @@
     <progressbar value="15"></progressbar>
   </div>
 </div>
-<h2>What is your <strong>third</strong> choice of three project preference?</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerProjectPrefThreeQuestion.content | html"></div>
 
 <div class="row">
   <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefThree.projectTypes">
@@ -15,6 +16,9 @@
       <div class="triangle">
         <span>Age {{item.minAge}}+</span>
       </div>
+      <svg viewBox="0 0 32 32" class="icon icon-checkmark icon-xlarge center">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#checkmark"></use>
+      </svg>
     </a>
   </div>
 </div>

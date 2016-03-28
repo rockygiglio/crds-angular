@@ -3,7 +3,8 @@
     <progressbar value="15"></progressbar>
   </div>
 </div>
-<h2>What is your <strong>first</strong> choice of three project preference?</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerProjectPrefOneQuestion.content | html"></div>
 
 <div class="row">
   <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefOne.projectTypes">
