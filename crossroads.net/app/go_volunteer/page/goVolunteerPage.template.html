@@ -5,7 +5,7 @@
   <go-volunteer-spouse-name ng-if="goVolunteerPage.showSpouseName()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-spouse-name>
   <go-volunteer-children ng-if="goVolunteerPage.showChildren()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-children>
   <go-volunteer-children-count ng-if="goVolunteerPage.showChildrenCount()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-children-count>
-  <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()"></go-volunteer-group-connector>
+  <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-connector>
   <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()"></go-volunteer-group-find-connector>
   <go-volunteer-connector-info ng-if="goVolunteerPage.showConnectorInfo()"></go-volunteer-connector-info>
   <go-volunteer-launch-site ng-if="goVolunteerPage.showLaunchSite()"></go-volunteer-launch-site>
