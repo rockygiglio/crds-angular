@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerGroupConnector;
 
-  GoVolunteerGroupConnector.$inject = [];
+  GoVolunteerGroupConnector.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerGroupConnector() {
+  function GoVolunteerGroupConnector(GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {
@@ -25,6 +25,7 @@
         if (groupConnector) {
           vm.onSubmit({nextState: 'group-find-connector'});
         } else {
+          GoVolunteerService.privateGroup = true;
           vm.onSubmit({nextState: 'launch-site'});
         }
       }
