@@ -92,7 +92,8 @@
           Person: Person,
           Spouse: GetSpouse,
           Organization: Organization,
-          Skills: Skills
+          Skills: Skills,
+          CmsInfo: CmsInfo
         }
       })
       .state('go-volunteer.page', {
@@ -129,7 +130,7 @@
   function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
     var city = $stateParams.city || 'cincinnati';
     var organization = $stateParams.organizations || undefined;
-    var link = buildLink(city, organization, $state);
+    var link = buildLink(city, organization, $state, $stateParams);
     var deferred = $q.defer();
     var page = Page.get({ url: link });
     page.$promise.then(function(data) {
@@ -249,14 +250,19 @@
     return false;
   }
   
-  function buildLink(city, org, state) {
+  function buildLink(city, org, state, stateParams) {
     var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     if (state.next.name === 'go-volunteer.city.organizations') {
       return base + 'organizations/';
     }
 
     if (org) {
-      base = base + addTrailingSlashIfNecessary(org);
+      return base + addTrailingSlashIfNecessary(org);
+    } 
+    
+    if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {
+      var organization = stateParams.organization || 'crossroads';
+      base = base + 'organizations/' + organization + '/' +  addTrailingSlashIfNecessary(stateParams.page);
     }
     return base;
   }
