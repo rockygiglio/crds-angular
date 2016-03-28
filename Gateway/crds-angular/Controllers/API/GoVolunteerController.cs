@@ -38,7 +38,7 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<AttributeTypeDTO>))]
+        [ResponseType(typeof(List<AttributeDTO>))]
         [Route("api/govolunteer/prep-times")]
         public IHttpActionResult GetPrepTimes()
         {
