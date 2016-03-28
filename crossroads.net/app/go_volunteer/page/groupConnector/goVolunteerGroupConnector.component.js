@@ -9,7 +9,7 @@
     return {
       restrict: 'E',
       scope: {
-        onSubmit: '&' 
+        onSubmit: '&'
       },
       bindToController: true,
       controller: GoVolunteerGroupConnectorController,
@@ -23,9 +23,9 @@
 
       function submit(groupConnector) {
         if (groupConnector) {
-          vm.onSubmit({nextState: 'group-find-connector'});   
+          vm.onSubmit({nextState: 'group-find-connector'});
         } else {
-          vm.onSubmit({nextState: 'launch-site'});   
+          vm.onSubmit({nextState: 'launch-site'});
         }
       }
     }
