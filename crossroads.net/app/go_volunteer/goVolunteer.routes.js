@@ -136,9 +136,11 @@
       if (data.pages.length === 0) {
         deferred.reject();
       }
+
       GoVolunteerService.cmsInfo = data;
       deferred.resolve();
     }, function() {
+
       deferred.reject();
     });
 
@@ -204,15 +206,16 @@
       SkillsService.query(function(d) {
         GoVolunteerService.skills = d;
         deferred.resolve();
-      }, 
+      },
 
-      function (err) {
+      function(err) {
+
         console.err(err);
         deferred.reject();
       });
 
     } else {
-      deferred.resolve(); 
+      deferred.resolve();
     }
 
     return deferred.promise;
@@ -220,35 +223,39 @@
 
   function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
     var deferred = $q.defer();
-    var param = 'crossroads'; 
+    var param = 'crossroads';
     if ($state.next.name === 'go-volunteer.page') {
-      param = $stateParams.organization; 
+      param = $stateParams.organization;
     }
+
     // did we already get this information?
     if (useCachedOrg(param, GoVolunteerService.organization)) {
-      deferred.resolve();   
+      deferred.resolve();
     } else {
-      Organizations.ByName.get({name: param}, function(data){
-        GoVolunteerService.organization = data;  
+      Organizations.ByName.get({name: param}, function(data) {
+        GoVolunteerService.organization = data;
         deferred.resolve();
       }, function(err) {
-        console.log('Error while trying to get organization ' + param );
+
+        console.log('Error while trying to get organization ' + param);
         console.log(err);
         deferred.reject();
       });
     }
+
     return deferred.promise;
   }
 
   function useCachedOrg(org, cachedOrg) {
     if (!_.isEmpty(cachedOrg)) {
-      if (_.startsWith(cachedOrg.name.toLowerCase(),org.toLowerCase())) {
+      if (_.startsWith(cachedOrg.name.toLowerCase(), org.toLowerCase())) {
         return true;
       }
     }
+
     return false;
   }
-  
+
   function buildLink(city, org, state) {
     var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     if (state.next.name === 'go-volunteer.city.organizations') {
@@ -258,6 +265,7 @@
     if (org) {
       base = base + addTrailingSlashIfNecessary(org);
     }
+
     return base;
   }
 
