@@ -17,6 +17,7 @@
         dateOfBirth: null,
         mobilePhone: null
       },
+      privateGroup: false,
       skills: [],
       spouse: {},
       spouseAttending: false,

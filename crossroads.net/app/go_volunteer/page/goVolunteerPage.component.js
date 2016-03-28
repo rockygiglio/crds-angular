@@ -41,14 +41,11 @@
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
 
-
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
-            
-           page: nextState
-
-         });
+            page: nextState
+          });
 
         } else {
           $state.go('go-volunteer.page', {
