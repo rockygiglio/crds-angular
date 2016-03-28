@@ -173,6 +173,17 @@
             }
           }
         })
+        .state('brave-at-home', {
+          parent: 'noHeaderOrFooter',
+          url: '/brave-at-home',
+          templateUrl: 'brave_at_home/braveAtHome.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
