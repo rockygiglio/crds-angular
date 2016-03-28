@@ -109,7 +109,6 @@
           $stateParams: '$stateParams',
           $q: '$q',
           SkillsService: 'SkillsService',
-          loggedin: crds_utilities.checkLoggedin,
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
