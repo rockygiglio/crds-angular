@@ -21,7 +21,7 @@ namespace crds_angular.test.controllers
         private Mock<IGoSkillsService> _skillsService;
         private Mock<IGroupConnectorService> _groupConnectorService;
         private Mock<IOrganizationService> _organizationService;
-
+        private Mock<IGoEquipmentService> _equipmentService;
 
         [SetUp]
         public void Setup()
@@ -30,7 +30,7 @@ namespace crds_angular.test.controllers
             _gatewayLookupService = new Mock<IGatewayLookupService>();
             _skillsService = new Mock<IGoSkillsService>();
             _groupConnectorService = new Mock<IGroupConnectorService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, _groupConnectorService.Object, _gatewayLookupService.Object, _skillsService.Object)
+            _fixture = new GoVolunteerController(_organizationService.Object, _groupConnectorService.Object, _gatewayLookupService.Object, _skillsService.Object, _equipmentService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()

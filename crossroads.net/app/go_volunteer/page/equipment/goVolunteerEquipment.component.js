@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerEquipment;
 
-  GoVolunteerEquipment.$inject = [];
+  GoVolunteerEquipment.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerEquipment() {
+  function GoVolunteerEquipment(GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -17,6 +17,7 @@
 
     function GoVolunteerEquipmentController() {
       var vm = this;
+      vm.equipment = GoVolunteerService.equipment;
 
     }
   }

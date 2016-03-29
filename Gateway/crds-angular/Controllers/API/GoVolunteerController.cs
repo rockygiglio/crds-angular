@@ -16,16 +16,36 @@ namespace crds_angular.Controllers.API
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly IOrganizationService _organizationService;
         private readonly IGoSkillsService _skillsService;
+        private readonly IGoEquipmentService _equipmentService;
 
         public GoVolunteerController(IOrganizationService organizationService, 
             IGroupConnectorService groupConnectorService, 
             IGatewayLookupService gatewayLookupService, 
-            IGoSkillsService skillsService)
+            IGoSkillsService skillsService,
+            IGoEquipmentService equipmentService)
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
             _groupConnectorService = groupConnectorService;
             _skillsService = skillsService;
+            _equipmentService = equipmentService;
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(List<GoEquipment>))]
+        [Route("api/govolunteer/equipment")]
+        public IHttpActionResult GetGoEquipment()
+        {
+            try
+            {
+                var equipment = _equipmentService.RetrieveGoEquipment();
+                return Ok(equipment);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Go Volunteer Equipment failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         [HttpGet]

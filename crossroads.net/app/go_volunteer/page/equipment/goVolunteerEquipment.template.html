@@ -5,30 +5,22 @@
 </div>
 
 <div dynamic-content="$root.MESSAGES.goVolunteerEquipmentQuestion.content | html"></div>
-
+<pre>{{goEquipment.equipment}}</pre>
 <div class="row">
   <div class="col-xs-10 col-xs-offset-1">
-    <div class="checkbox">
-      <label for="equipment-backhoe" class="control-label">
-        <input type="checkbox" value="" id="equipment-backhoe">
-        Backhoe
+    <div class="checkbox" ng-repeat="item in goEquipment.equipment">
+      <!-- / Shouldn't use the title here. Should use an ID from MT -->
+      <label for="{{item.id}}" class="control-label">
+        <input type="checkbox"
+               ng-value="item.id"
+               id="{{item.id}}"
+               ng-model="item.checked">
+        {{item.label}}
       </label>
     </div>
     <div class="checkbox">
-      <label for="equipment-ladder" class="control-label">
-        <input type="checkbox" value="" id="equipment-ladder">
-        Ladder
-      </label>
-    </div>
-    <div class="checkbox" for="equipment-jazzy" class="control-label">
-      <label for="equipment-jazzy" class="control-label">
-        <input type="checkbox" value="" id="equipment-jazzy">
-        Jazzy
-      </label>
-    </div>
-    <div class="checkbox">
-      <label for="equipment-other" class="control-label">
-        <input type="checkbox" value="" ng-click="otherField = !otherField" id="equipment-other">
+      <label for="7043" class="control-label">
+        <input type="checkbox" value="" ng-click="otherField = !otherField" id="7043">
         Other
       </label>
     </div>

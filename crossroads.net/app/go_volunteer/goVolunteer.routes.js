@@ -92,7 +92,8 @@
           Person: Person,
           Spouse: GetSpouse,
           Organization: Organization,
-          Skills: Skills
+          Skills: Skills,
+          Equipment: Equipment
         }
       })
       .state('go-volunteer.page', {
@@ -109,10 +110,12 @@
           $stateParams: '$stateParams',
           $q: '$q',
           SkillsService: 'SkillsService',
+          EquipmentService: 'EquipmentService',
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
-          Skills: Skills
+          Skills: Skills,
+          Equipment: Equipment
         }
       })
       ;
@@ -143,6 +146,26 @@
 
       deferred.reject();
     });
+
+    return deferred.promise;
+  }
+
+  function Equipment(GoVolunteerService, EquipmentService, $stateParams, $q) {
+    var deferred = $q.defer();
+    if ($stateParams.page === 'equipment' && _.isEmpty(GoVolunteerService.equipment)) {
+      EquipmentService.query(function(d) {
+        GoVolunteerService.equipment = d;
+        deferred.resolve();
+      },
+
+      function(err) {
+
+        console.error(err);
+        deferred.reject();
+      });
+    } else {
+      deferred.resolve();
+    }
 
     return deferred.promise;
   }
