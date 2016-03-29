@@ -23,15 +23,18 @@ namespace crds_angular.test.controllers
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private GoVolunteerController _fixture;
         private Mock<IGatewayLookupService> _gatewayLookupService;
+        private Mock<IGoVolunteerService> _goVolunteerService;
         private Mock<IGroupConnectorService> _groupConnectorService;
         private Mock<IOrganizationService> _organizationService;
         private Mock<IGoSkillsService> _skillsService;
+
 
         [SetUp]
         public void Setup()
         {
             _organizationService = new Mock<IOrganizationService>();
             _gatewayLookupService = new Mock<IGatewayLookupService>();
+            _goVolunteerService = new Mock<IGoVolunteerService>();
             _skillsService = new Mock<IGoSkillsService>();
             _groupConnectorService = new Mock<IGroupConnectorService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
@@ -41,8 +44,10 @@ namespace crds_angular.test.controllers
                                                  _groupConnectorService.Object,
                                                  _gatewayLookupService.Object,
                                                  _skillsService.Object,
+                                                 _goVolunteerService.Object,
                                                  _attributeService.Object,
                                                  _configurationWrapper.Object)
+
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()

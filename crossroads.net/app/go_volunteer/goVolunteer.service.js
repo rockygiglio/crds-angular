@@ -12,6 +12,7 @@
       childrenAttending: {},
       equipment: [],
       otherEquipment: [],
+      launchSites: {},
       person: {
         nickName: '',
         lastName: '',
@@ -19,6 +20,10 @@
         dateOfBirth: null,
         mobilePhone: null
       },
+      preferredLaunchSite: {},
+      projectPrefOne: {},
+      projectPrefTwo: {},
+      projectPrefThree: {},
       privateGroup: false,
       skills: [],
       spouse: {},

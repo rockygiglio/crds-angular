@@ -31,7 +31,6 @@
       function submit() {
         GoVolunteerService.equipment = _.where(vm.equipment, {checked: true});
         GoVolunteerService.otherEquipment = vm.otherEquipment;
-        debugger;
         vm.onSubmit({nextState: 'additional-info'});
       }
     }

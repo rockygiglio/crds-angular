@@ -3,33 +3,42 @@
 
   module.exports = GoVolunteerProjectPrefTwo;
 
-  GoVolunteerProjectPrefTwo.$inject = ['$sce'];
+  GoVolunteerProjectPrefTwo.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerProjectPrefTwo() {
+  function GoVolunteerProjectPrefTwo(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerProjectPrefTwoController,
       controllerAs: 'goProjectPrefTwo',
       templateUrl: 'projectPrefTwo/goVolunteerProjectPrefTwo.template.html'
     };
 
-    function GoVolunteerProjectPrefTwoController($sce) {
+    function GoVolunteerProjectPrefTwoController() {
       var vm = this;
+      vm.projectTypes = GoVolunteerService.projectTypes;
+      vm.alreadySelected = alreadySelected;
+      vm.submit = submit;
 
-      vm.list = [
-        { title: 'Artistic Painting', state: '', age: '13', img: 'art' },
-        { title: 'Construction', state: '', age: '13', img: 'cons' },
-        { title: 'Gardening', state: '', age: '2', img: 'gard' },
-        { title: 'Landscaping', state: 'checked disabled', age: '8', img: 'gardening' },
-        { title: 'Organizing and Cleaning', state: '', age: '2', img: 'org' },
-        { title: 'Painting', state: '', age: '13', img: 'painting' },
-        { title: 'Prayer', state: '', age: '2', img: 'prayer' },
-        { title: 'Serving Meals or Throw A Party', state: '', age: '8', img: 'cooking' },
-        { title: 'Working with Children', state: '', age: '2', img: 'kids' },
-        { title: 'Working with the Elderly', state: '', age: '2', img: 'elder' }
-      ];
+      function alreadySelected(projectTypeId) {
+        if (GoVolunteerService.projectPrefOne === projectTypeId) {
+          return ['disabled', 'checked'];
+        }
+
+        return [];
+      }
+
+      function submit(projectTypeId) {
+        if (GoVolunteerService.projectPrefOne == projectTypeId) {
+          return;
+        }
+
+        GoVolunteerService.projectPrefTwo = projectTypeId;
+        vm.onSubmit({nextState: 'project-preference-three'});
+      }
 
     }
   }
