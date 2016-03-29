@@ -184,6 +184,31 @@
             }
           }
         })
+        .state('brave-intro-one', {
+          parent: 'noHeaderOrFooter',
+          url: '/bbrave-intro-one',
+          templateUrl: 'brave_at_home/braveIntro1.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        /*
+        .state('brave-login', {
+          parent: 'noHeaderOrFooter',
+          url: '/brave-login',
+          templateUrl: 'brave_at_home/braveLogin.html',
+          data: {
+            isProtected: true,
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        */
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
