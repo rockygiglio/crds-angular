@@ -6,8 +6,8 @@
 
 <div class="row">
   <div class="form-group col-xs-12">
-    <a ng-repeat="locs in goLaunchSite.locations">
-      <div class="media card-item media-card-link" ng-click="goLaunchSite.submit(locs.locationId)">
+    <a ng-repeat="locs in goLaunchSite.locations" ng-click="goLaunchSite.submit(locs.locationId)">
+      <div class="media card-item media-card-link">
         <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
           <img class="media-object img-responsive imgix-fluid" data-src="{{locs.imageUrl}}" alt="{{locs.location}}" title="" />
         </div>
@@ -17,13 +17,5 @@
         </div>
       </div>
     </a>
-    <!--
-    ui-sref="go-volunteer.crossroadspage({page: 'project-preference-one'})"
-    <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/florence.jpg" alt="Demo" title="" />
-    <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/mason.jpg" alt="Demo" title="" />
-    <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/westside.jpg" alt="Demo" title="" />
-    <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/bogarts.jpg" alt="Demo" title="" />
-    <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/oxford.jpg" alt="Demo" title="" />
-     -->
   </div>
 </div>
