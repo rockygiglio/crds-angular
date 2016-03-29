@@ -134,9 +134,9 @@
     var deferred = $q.defer();
     var page = Page.get({ url: link });
     page.$promise.then(function(data) {
-      if (data.pages.length === 0) {
-        deferred.reject();
-      }
+      /*if (data.pages.length === 0) {*/
+        //deferred.reject();
+      /*}*/
       GoVolunteerService.cmsInfo = data;
       deferred.resolve();
     }, function() {
@@ -262,6 +262,7 @@
     
     if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {
       var organization = stateParams.organization || 'crossroads';
+      organization = (organization === 'other') ? 'crossroads' : organization;
       base = base + 'organizations/' + organization + '/' +  addTrailingSlashIfNecessary(stateParams.page);
     }
     return base;
