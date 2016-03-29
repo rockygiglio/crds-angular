@@ -49,9 +49,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
-                var attributes = _attributeService.GetAttributeTypes(prepTypeId);
-                var attributeTypeDto = attributes.Single();
-                return Ok(attributeTypeDto.Attributes);
+                return Ok(GetAttributesByType(prepTypeId));
             }
             catch (Exception e)
             {
