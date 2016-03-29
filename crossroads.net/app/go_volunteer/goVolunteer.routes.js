@@ -85,12 +85,14 @@
           Organizations: 'Organizations',
           $cookies: '$cookies',
           $stateParams: '$stateParams',
+          SkillsService: 'SkillsService',
           loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
           Spouse: GetSpouse,
-          Organization: Organization
+          Organization: Organization,
+          Skills: Skills
         }
       })
       .state('go-volunteer.page', {
@@ -106,9 +108,11 @@
         resolve: {
           $stateParams: '$stateParams',
           $q: '$q',
+          SkillsService: 'SkillsService',
           CmsInfo: CmsInfo,
           Meta: Meta,
-          Organization: Organization
+          Organization: Organization,
+          Skills: Skills
         }
       })
       ;
@@ -132,12 +136,9 @@
       if (data.pages.length === 0) {
         deferred.reject();
       }
-
       GoVolunteerService.cmsInfo = data;
       deferred.resolve();
-    },
-
-    function() {
+    }, function() {
       deferred.reject();
     });
 
@@ -197,42 +198,57 @@
     return deferred.promise;
   }
 
-  function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
+  function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
     var deferred = $q.defer();
-    var param = 'crossroads';
-    if ($state.next.name === 'go-volunteer.page') {
-      param = $stateParams.organization;
-    }
-
-    // did we already get this information?
-    if (useCachedOrg(param, GoVolunteerService.organization)) {
-      deferred.resolve();
-    } else {
-      Organizations.ByName.get({name: param}, function(data) {
-        GoVolunteerService.organization = data;
+    if ($stateParams.page === 'unique-skills' && _.isEmpty(GoVolunteerService.skills)) {
+      SkillsService.query(function(d) {
+        GoVolunteerService.skills = d;
         deferred.resolve();
-      },
+      }, 
 
-      function(err) {
-        console.log('Error while trying to get organization ' + param);
-        console.log(err);
+      function (err) {
+        console.err(err);
         deferred.reject();
       });
+
+    } else {
+      deferred.resolve(); 
     }
 
     return deferred.promise;
   }
 
+  function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
+    var deferred = $q.defer();
+    var param = 'crossroads'; 
+    if ($state.next.name === 'go-volunteer.page') {
+      param = $stateParams.organization; 
+    }
+    // did we already get this information?
+    if (useCachedOrg(param, GoVolunteerService.organization)) {
+      deferred.resolve();   
+    } else {
+      Organizations.ByName.get({name: param}, function(data){
+        GoVolunteerService.organization = data;  
+        deferred.resolve();
+      }, function(err) {
+        console.log('Error while trying to get organization ' + param );
+        console.log(err);
+        deferred.reject();
+      });
+    }
+    return deferred.promise;
+  }
+
   function useCachedOrg(org, cachedOrg) {
     if (!_.isEmpty(cachedOrg)) {
-      if (_.startsWith(cachedOrg.name.toLowerCase(), org.toLowerCase())) {
+      if (_.startsWith(cachedOrg.name.toLowerCase(),org.toLowerCase())) {
         return true;
       }
     }
-
     return false;
   }
-
+  
   function buildLink(city, org, state) {
     var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     if (state.next.name === 'go-volunteer.city.organizations') {
@@ -242,7 +258,6 @@
     if (org) {
       base = base + addTrailingSlashIfNecessary(org);
     }
-
     return base;
   }
 
