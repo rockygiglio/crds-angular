@@ -9,7 +9,8 @@
     return {
       restrict: 'E',
       scope: {
-        onSubmit: '&' 
+        onSubmit: '&',
+        forSpouse: '=forSpouse'
       },
       bindToController: true,
       controller: GoVolunteerAvailablePrepController,
@@ -20,8 +21,9 @@
     function GoVolunteerAvailablePrepController() {
       var vm = this;
       vm.chooseTime = chooseTime;
+      vm.forSpouse = vm.forSpouse || false;
       vm.prepWork = GoVolunteerService.prepWork;
-
+     
       activate();
       /////////////////////////
 
@@ -34,8 +36,13 @@
       }
 
       function chooseTime(prepTime) {
-        GoVolunteerService.myPrepTime = prepTime;
-        vm.onSubmit({nextState: 'available-prep-spouse'});
+        if (vm.forSpouse) { 
+          GoVolunteerService.spousePrepTime = prepTime;
+          vm.onSubmit({nextState: 'waiver'});
+        } else {
+          GoVolunteerService.myPrepTime = prepTime;
+          vm.onSubmit({nextState: 'available-prep-spouse'});
+        }
       }
     }
   }

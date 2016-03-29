@@ -41,45 +41,62 @@ describe('Go Volunteer Prep Work Component', function() {
     scope.ctrl = {
       onSubmit: jasmine.createSpy('onSubmit').and.callThrough()
     };
-
-    element = '<go-volunteer-available-prep on-submit="ctrl.onSubmit(nextState)"></go-volunteer-available-prep>';
-    element = $compile(element)(scope);
-    
   }));
 
-  it('should have a list of prep work options', function() {
-    scope.$digest();
-    isolated = element.isolateScope().goAvailablePrep;
-    expect(isolated.prepWork.length).toEqual(helpers.prepWork.length);
+  describe("My Prep Time Availability", function() {
+
+    beforeEach(function() {
+      element = '<go-volunteer-available-prep on-submit="ctrl.onSubmit(nextState)"></go-volunteer-available-prep>';
+      element = $compile(element)(scope);
+    });
+
+    it('should have a list of prep work options', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      expect(isolated.prepWork.length).toEqual(helpers.prepWork.length);
+    });
+
+    it('should call onSubmit if there is no prep times', function() {
+      GoVolunteerService.prepWork = [];
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver'); 
+    });
+
+    it('should call onSubmit if prep times is undefined', function() {
+      GoVolunteerService.prepWork = undefined;
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver'); 
+    });
+
+    it('should set my prepTime preference and continue to my spouse option', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      isolated.chooseTime(helpers.prepWork[0]);
+      expect(GoVolunteerService.myPrepTime).toEqual(helpers.prepWork[0]);
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('available-prep-spouse');
+    });
+
+    it('should set my prepTime preference to false and continue to spouse option', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      isolated.chooseTime(false);
+      expect(GoVolunteerService.myPrepTime).toEqual(false);
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('available-prep-spouse');
+    });
   });
 
-  it('should call onSubmit if there is no prep times', function() {
-    GoVolunteerService.prepWork = [];
-    scope.$digest();
-    isolated = element.isolateScope().goAvailablePrep;
-    expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver'); 
+  describe('My Spouses Prep Time Availability', function() {
+    
+    beforeEach(function() {
+      element = '<go-volunteer-available-prep on-submit="ctrl.onSubmit(nextState)" for-spouse="true">' + 
+                '</go-volunteer-available-prep>';
+      element = $compile(element)(scope);
+    });
+
+
+
   });
 
-  it('should call onSubmit if prep times is undefined', function() {
-    GoVolunteerService.prepWork = undefined;
-    scope.$digest();
-    isolated = element.isolateScope().goAvailablePrep;
-    expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver'); 
-  });
-
-  it('should set my prepTime preference and continue to my spouse option', function() {
-    scope.$digest();
-    isolated = element.isolateScope().goAvailablePrep;
-    isolated.chooseTime(helpers.prepWork[0]);
-    expect(GoVolunteerService.myPrepTime).toEqual(helpers.prepWork[0]);
-    expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('available-prep-spouse');
-  });
-
-  it('should set my prepTime preference to false and continue to spouse option', function() {
-    scope.$digest();
-    isolated = element.isolateScope().goAvailablePrep;
-    isolated.chooseTime(false);
-    expect(GoVolunteerService.myPrepTime).toEqual(false);
-    expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('available-prep-spouse');
-  });
 });

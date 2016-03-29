@@ -4,7 +4,8 @@
   </div>
 </div>
 
-<div dynamic-content="$root.MESSAGES.goVolunteerAvailablePrepQuestion.content | html"></div>
+<div ng-if="!goAvailablePrep.forSpouse" dynamic-content="$root.MESSAGES.goVolunteerAvailablePrepQuestion.content | html"></div>
+<div ng-if="goAvailablePrep.forSpouse" dynamic-content="$root.MESSAGES.goVolunteerAvailablePrepSpouseQuestion.content | html"></div>
 
 <div class="row">
   <div class="col-xs-12">
