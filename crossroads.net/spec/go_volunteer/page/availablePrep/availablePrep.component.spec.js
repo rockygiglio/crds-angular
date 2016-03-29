@@ -43,7 +43,7 @@ describe('Go Volunteer Prep Work Component', function() {
     };
   }));
 
-  describe("My Prep Time Availability", function() {
+  describe('My Prep Time Availability', function() {
 
     beforeEach(function() {
       element = '<go-volunteer-available-prep on-submit="ctrl.onSubmit(nextState)"></go-volunteer-available-prep>';
@@ -95,6 +95,27 @@ describe('Go Volunteer Prep Work Component', function() {
       element = $compile(element)(scope);
     });
 
+    it('should set have the list of prep work options', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      expect(isolated.prepWork.length).toEqual(helpers.prepWork.length);
+    });
+
+    it('should set my spouses prepTime preference and continue to the waiver option', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      isolated.chooseTime(helpers.prepWork[0]);
+      expect(GoVolunteerService.spousePrepTime).toEqual(helpers.prepWork[0]);
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver');
+    });
+
+    it('should set my spouses prepTime preference to false and continue to waiver option', function() {
+      scope.$digest();
+      isolated = element.isolateScope().goAvailablePrep;
+      isolated.chooseTime(false);
+      expect(GoVolunteerService.spousePrepTime).toEqual(false);
+      expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('waiver');
+    });
 
 
   });
