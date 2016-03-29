@@ -1,31 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
     public class GoVolunteerController : MPAuth
     {
         private readonly IGatewayLookupService _gatewayLookupService;
+        private readonly IGoVolunteerService _goVolunteerService;
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly IOrganizationService _organizationService;
         private readonly IGoSkillsService _skillsService;
+        private readonly IAttributeService _attributeService;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
         public GoVolunteerController(IOrganizationService organizationService, 
             IGroupConnectorService groupConnectorService, 
             IGatewayLookupService gatewayLookupService, 
-            IGoSkillsService skillsService)
+            IGoSkillsService skillsService,
+            IGoVolunteerService goVolunteerService,
+            IAttributeService attributeService,
+            IConfigurationWrapper configWrapper)
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
+            _goVolunteerService = goVolunteerService;
             _groupConnectorService = groupConnectorService;
             _skillsService = skillsService;
+            _attributeService = attributeService;
+            _configurationWrapper = configWrapper;
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(List<AttributeDTO>))]
+        [Route("api/govolunteer/prep-times")]
+        public IHttpActionResult GetPrepTimes()
+        {
+            try
+            {
+                var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
+                var attributes = _attributeService.GetAttributeTypes(prepTypeId);
+                var attributeTypeDto = attributes.Single();
+                return Ok(attributeTypeDto.Attributes);;
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Prep Times failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         [HttpGet]
@@ -128,6 +159,40 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Unable to get other organizations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
+        [ResponseType(typeof (List<OrgLocation>))]
+        [Route("api/organizations/{orgId}/locations")]
+        public IHttpActionResult GetLocationsForOrganization(int orgId)
+        {
+            try
+            {
+                var Locs = _organizationService.GetLocationsForOrganization(orgId);
+                return Ok(Locs);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get locations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(List<ProjectType>))]
+        [Route("api/goVolunteer/projectTypes")]
+        public IHttpActionResult GetProjectTypes()
+        {
+            try
+            {
+                var projectTypes = _goVolunteerService.GetProjectTypes();
+                return Ok(projectTypes);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get project types", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

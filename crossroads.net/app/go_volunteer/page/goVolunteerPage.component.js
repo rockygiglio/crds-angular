@@ -125,7 +125,7 @@
       }
 
       function showAvailablePrep() {
-        return $stateParams.page === 'available-prep';
+        return $stateParams.page === 'available-prep' || $stateParams.page === 'available-prep-spouse';
       }
 
       function showAvailablePrepSpouse() {
