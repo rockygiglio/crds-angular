@@ -33,6 +33,10 @@
       }
 
       function submit(projectTypeId) {
+        if ((GoVolunteerService.projectPrefOne === projectTypeId) || (GoVolunteerService.projectPrefTwo === projectTypeId)) {
+          return;
+        }
+
         GoVolunteerService.projectPrefThree = projectTypeId;
         vm.onSubmit({nextState: 'unique-skills'});
       }

@@ -32,6 +32,10 @@
       }
 
       function submit(projectTypeId) {
+        if (GoVolunteerService.projectPrefOne == projectTypeId) {
+          return;
+        }
+
         GoVolunteerService.projectPrefTwo = projectTypeId;
         vm.onSubmit({nextState: 'project-preference-three'});
       }
