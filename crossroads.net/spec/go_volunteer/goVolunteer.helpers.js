@@ -78,6 +78,13 @@
       {'id':6,'name':'Whitewater Crossing'},
       {'id':2,'name':'Xenia Nazarene'},
       {'id':1,'name':'Xenos Christian Fellowship'}
+    ],
+    prepWork: [
+      {id: 230, name: 'Preparation Work 12PM - 3PM'},
+      {id: 231, name: 'Preparation Work 12PM - 6PM'},
+      {id: 232, name: 'Preparation Work 3PM - 6PM'},
+      {id: 233, name: 'Preparation Work 6PM - 9PM'},
+      {id: 234, name: 'Preparation Work 3PM - 9PM'},
     ]
   };
 
