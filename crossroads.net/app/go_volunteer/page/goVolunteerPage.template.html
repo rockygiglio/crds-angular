@@ -6,8 +6,8 @@
   <go-volunteer-children ng-if="goVolunteerPage.showChildren()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-children>
   <go-volunteer-children-count ng-if="goVolunteerPage.showChildrenCount()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-children-count>
   <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-connector>
-  <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()"></go-volunteer-group-find-connector>
-  <go-volunteer-connector-info ng-if="goVolunteerPage.showConnectorInfo()"></go-volunteer-connector-info>
+  <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-find-connector>
+  <go-volunteer-connector-info ng-if="goVolunteerPage.showConnectorInfo()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-connector-info>
   <go-volunteer-launch-site ng-if="goVolunteerPage.showLaunchSite()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-launch-site>
   <go-volunteer-project-pref-one ng-if="goVolunteerPage.showProjectPrefOne()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-project-pref-one>
   <go-volunteer-project-pref-two ng-if="goVolunteerPage.showProjectPrefTwo()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-project-pref-two>
