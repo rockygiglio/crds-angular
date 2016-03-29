@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services.Interfaces;
@@ -32,6 +34,9 @@ namespace crds_angular.test.controllers
             _gatewayLookupService = new Mock<IGatewayLookupService>();
             _skillsService = new Mock<IGoSkillsService>();
             _groupConnectorService = new Mock<IGroupConnectorService>();
+            _configurationWrapper = new Mock<IConfigurationWrapper>();
+            _attributeService = new Mock<IAttributeService>();
+
             _fixture = new GoVolunteerController(_organizationService.Object,
                                                  _groupConnectorService.Object,
                                                  _gatewayLookupService.Object,
@@ -111,6 +116,38 @@ namespace crds_angular.test.controllers
         {
             _gatewayLookupService.Setup(m => m.GetOtherOrgs(null)).Throws(new Exception());
             _fixture.GetOtherOrganizations();
+        }
+
+        [Test]
+        public void ShouldGetPrepTimes()
+        {
+            Prop.ForAll<int>(config =>
+            {
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
+                var attributeTypes = TestHelpers.ListOfAttributeTypeDtos(1);
+                _attributeService.Setup(m => m.GetAttributeTypes(config)).Returns(attributeTypes);
+                var response = _fixture.GetPrepTimes();
+                Assert.IsNotNull(response);
+                Assert.IsInstanceOf<OkNegotiatedContentResult<List<AttributeDTO>>>(response);
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                var r = (OkNegotiatedContentResult<List<AttributeDTO>>) response;
+                Assert.IsNotNull(r.Content);
+                Assert.AreSame(attributeTypes.Single().Attributes, r.Content);
+                _attributeService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfThereAreMoreThanOneAttributeType()
+        {
+            Prop.ForAll<int>(config =>
+            {
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
+                var attributeTypes = TestHelpers.ListOfAttributeTypeDtos(10);
+                _attributeService.Setup(m => m.GetAttributeTypes(config)).Returns(attributeTypes);
+                Assert.Throws<HttpResponseException>(() => { _fixture.GetPrepTimes(); });
+                _attributeService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
         }
 
         private List<OtherOrganization> otherOrganizations()

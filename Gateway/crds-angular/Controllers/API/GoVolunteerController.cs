@@ -39,6 +39,26 @@ namespace crds_angular.Controllers.API
 
         [HttpGet]
         [ResponseType(typeof (List<AttributeDTO>))]
+        [Route("api/govolunteer/prep-times")]
+        public IHttpActionResult GetPrepTimes()
+        {
+            try
+            {
+                var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
+                var attributes = _attributeService.GetAttributeTypes(prepTypeId);
+                var attributeTypeDto = attributes.Single();
+                return Ok(attributeTypeDto.Attributes);
+                ;
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Prep Times failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
+        [ResponseType(typeof (List<AttributeDTO>))]
         [Route("api/govolunteer/equipment")]
         public IHttpActionResult GetGoEquipment()
         {
@@ -76,7 +96,6 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
-
 
         [HttpGet]
         [ResponseType(typeof (List<GroupConnector>))]

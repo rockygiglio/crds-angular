@@ -84,6 +84,13 @@
       {id: 501, name: 'Truck'},
       {id: 502, name: 'Bush Hog'},
       {id: 503, name: 'Hammer'}
+    ],
+    prepWork: [
+      {id: 230, name: 'Preparation Work 12PM - 3PM'},
+      {id: 231, name: 'Preparation Work 12PM - 6PM'},
+      {id: 232, name: 'Preparation Work 3PM - 6PM'},
+      {id: 233, name: 'Preparation Work 6PM - 9PM'},
+      {id: 234, name: 'Preparation Work 3PM - 9PM'},
     ]
   };
 

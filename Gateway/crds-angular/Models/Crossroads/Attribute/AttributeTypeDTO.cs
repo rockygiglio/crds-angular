@@ -7,10 +7,13 @@ namespace crds_angular.Models.Crossroads.Attribute
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+
         [JsonProperty(PropertyName = "attributes")]
-        public List<crds_angular.Models.Crossroads.Attribute.AttributeDTO> Attributes { get; private set;  }
+        public List<crds_angular.Models.Crossroads.Attribute.AttributeDTO> Attributes { get; set;  }
+
         [JsonProperty(PropertyName = "attributeTypeId")]
         public int AttributeTypeId { get; set; }
+
         [JsonProperty(PropertyName = "allowMultipleSelections")]
         public bool AllowMultipleSelections { get; set; }
 
