@@ -93,6 +93,8 @@
           PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
+          Locations: Locations,
+          ProjectTypes: ProjectTypes,
           Skills: Skills
         }
       })
@@ -113,6 +115,8 @@
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
+          Locations: Locations,
+          ProjectTypes: ProjectTypes,
           Skills: Skills,
           PrepWork: PrepWork
         }
@@ -164,6 +168,24 @@
           deferred.reject();
         });
       }
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.promise;
+  }
+
+  function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
+    var deferred = $q.defer();
+
+    if ($stateParams.page === 'launch-site') {
+      Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
+        GoVolunteerService.launchSites = data;
+        deferred.resolve();
+      }, function(err) {
+        console.log(err);
+        deferred.reject();
+      });
     } else {
       deferred.resolve();
     }
@@ -257,6 +279,24 @@
         deferred.reject();
       });
     }
+    return deferred.promise;
+  }
+
+  function ProjectTypes(GoVolunteerService, $state, $stateParams, $q, GoVolunteerDataService) {
+    var deferred = $q.defer();
+    
+    if ($stateParams.page === 'project-preference-one') {
+        GoVolunteerDataService.ProjectTypes.query(function(data) {
+          GoVolunteerService.projectTypes = data;
+          deferred.resolve();
+        }, function(err) {
+          console.log(err);
+          deferred.reject();
+        });
+    } else {
+      deferred.resolve();
+    }
+
     return deferred.promise;
   }
 

@@ -8,10 +8,10 @@
   <go-volunteer-group-connector ng-if="goVolunteerPage.showGroupConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-connector>
   <go-volunteer-group-find-connector ng-if="goVolunteerPage.showGroupFindConnector()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-group-find-connector>
   <go-volunteer-connector-info ng-if="goVolunteerPage.showConnectorInfo()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-connector-info>
-  <go-volunteer-launch-site ng-if="goVolunteerPage.showLaunchSite()"></go-volunteer-launch-site>
-  <go-volunteer-project-pref-one ng-if="goVolunteerPage.showProjectPrefOne()"></go-volunteer-project-pref-one>
-  <go-volunteer-project-pref-two ng-if="goVolunteerPage.showProjectPrefTwo()"></go-volunteer-project-pref-two>
-  <go-volunteer-project-pref-three ng-if="goVolunteerPage.showProjectPrefThree()"></go-volunteer-project-pref-three>
+  <go-volunteer-launch-site ng-if="goVolunteerPage.showLaunchSite()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-launch-site>
+  <go-volunteer-project-pref-one ng-if="goVolunteerPage.showProjectPrefOne()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-project-pref-one>
+  <go-volunteer-project-pref-two ng-if="goVolunteerPage.showProjectPrefTwo()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-project-pref-two>
+  <go-volunteer-project-pref-three ng-if="goVolunteerPage.showProjectPrefThree()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-project-pref-three>
   <go-volunteer-unique-skills ng-if="goVolunteerPage.showUniqueSkills()" on-submit="goVolunteerPage.handlePageChange(nextState)" ></go-volunteer-unique-skills>
   <go-volunteer-equipment ng-if="goVolunteerPage.showEquipment()"></go-volunteer-equipment>
   <go-volunteer-additional-info ng-if="goVolunteerPage.showAdditionalInfo()"></go-volunteer-additional-info>

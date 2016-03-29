@@ -3,12 +3,14 @@
 
   module.exports = GoVolunteerLaunchSite;
 
-  GoVolunteerLaunchSite.$inject = [];
+  GoVolunteerLaunchSite.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerLaunchSite() {
+  function GoVolunteerLaunchSite(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerLaunchSiteController,
       controllerAs: 'goLaunchSite',
@@ -17,7 +19,13 @@
 
     function GoVolunteerLaunchSiteController() {
       var vm = this;
+      vm.locations = GoVolunteerService.launchSites;
+      vm.submit = submit;
 
+      function submit(locationId) {
+        GoVolunteerService.preferredLaunchSite = locationId;
+        vm.onSubmit({nextState: 'project-preference-one'});
+      }
     }
   }
 

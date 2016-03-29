@@ -49,7 +49,7 @@
       }
 
       function createGroup() {
-        vm.onSubmit({nextState: 'unique-skills'});
+        vm.onSubmit({nextState: 'be-a-connector'});
       }
 
       function disableCard(group) {

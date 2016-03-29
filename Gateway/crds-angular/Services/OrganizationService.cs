@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
-using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
 
 namespace crds_angular.Services
 {
@@ -39,6 +37,17 @@ namespace crds_angular.Services
             {
                 var org = new Organization();
                 return org.FromMpOrganization(o);
+            }).ToList();
+        }
+
+        public List<OrgLocation> GetLocationsForOrganization(int orgId)
+        {
+            var apiUserToken = _mpApiUserService.GetToken();
+            var locs = _mpOrganizationService.GetLocationsForOrganization(orgId, apiUserToken);
+            return locs.Select(l =>
+            {
+                var loc = new OrgLocation();
+                return loc.FromMpLocation(l);
             }).ToList();
         }
     }
