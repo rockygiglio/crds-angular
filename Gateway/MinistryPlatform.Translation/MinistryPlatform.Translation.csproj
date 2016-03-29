@@ -103,6 +103,8 @@
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
     <Compile Include="Models\GoCincinnati\MpGroupConnector.cs" />
+    <Compile Include="Models\GoCincinnati\ProjectType.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Lookups\MPOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MPWorkTeams.cs" />
     <Compile Include="Models\MPGoVolunteerSkill.cs" />

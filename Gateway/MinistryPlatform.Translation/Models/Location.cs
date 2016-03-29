@@ -1,5 +1,5 @@
-﻿namespace MinistryPlatform.Models
-{
+﻿namespace MinistryPlatform.Translation.Models
+{ 
     public class Location
     {
         public int LocationId { get; set; }

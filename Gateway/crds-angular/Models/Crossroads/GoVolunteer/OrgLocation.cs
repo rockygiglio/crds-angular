@@ -1,4 +1,4 @@
-﻿using MinistryPlatform.Models;
+﻿using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer

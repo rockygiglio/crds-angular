@@ -1,4 +1,4 @@
-﻿namespace MinistryPlatform.Models
+﻿namespace MinistryPlatform.Translation.Models.GoCincinnati
 {
     public class ProjectType
     {

@@ -19,7 +19,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "imageUrl")]
         public string ImageUrl { get; set; }
 
-        public ProjectType FromMpProjectType(MinistryPlatform.Models.ProjectType pt)
+        public ProjectType FromMpProjectType(MinistryPlatform.Translation.Models.GoCincinnati.ProjectType pt)
         {
             return new ProjectType
             {

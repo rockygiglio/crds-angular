@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
