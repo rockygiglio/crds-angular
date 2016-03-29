@@ -8,7 +8,9 @@
   function GoVolunteerEquipment(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerEquipmentController,
       controllerAs: 'goEquipment',
@@ -17,8 +19,21 @@
 
     function GoVolunteerEquipmentController() {
       var vm = this;
-      vm.equipment = GoVolunteerService.equipment;
+      vm.addEquipment = addEquipment;
+      vm.equipment = GoVolunteerService.availableEquipment;
+      vm.otherEquipment = [{equipment: {name: null}}];
+      vm.submit = submit;
 
+      function addEquipment() {
+        vm.otherEquipment.push({equipment: {name: null}});
+      }
+
+      function submit() {
+        GoVolunteerService.equipment = _.where(vm.equipment, {checked: true});
+        GoVolunteerService.otherEquipment = vm.otherEquipment;
+        debugger;
+        vm.onSubmit({nextState: 'additional-info'});
+      }
     }
   }
 

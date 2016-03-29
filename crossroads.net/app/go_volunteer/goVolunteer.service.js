@@ -10,6 +10,8 @@
       // private, don't use these
       cmsInfo: {},
       childrenAttending: {},
+      equipment: [],
+      otherEquipment: [],
       person: {
         nickName: '',
         lastName: '',

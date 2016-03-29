@@ -274,7 +274,6 @@
     <Compile Include="Models\Crossroads\Events\Room.cs" />
     <Compile Include="Models\Crossroads\Events\RoomEquipment.cs" />
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
-    <Compile Include="Models\Crossroads\GoVolunteer\GoEquipment.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\GoSkills.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\GroupConnector.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Organization.cs" />
@@ -304,7 +303,6 @@
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
-    <Compile Include="Services\GoEquipmentService.cs" />
     <Compile Include="Services\GroupConnectorService.cs" />
     <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GoSkillsService.cs" />
@@ -312,7 +310,6 @@
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
-    <Compile Include="Services\Interfaces\IGoEquipmentService.cs" />
     <Compile Include="Services\Interfaces\IGoSkillsService.cs" />
     <Compile Include="Services\Interfaces\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\IGroupSearchService.cs" />

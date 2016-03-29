@@ -8,6 +8,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using Moq;
 using NUnit.Framework;
@@ -16,12 +17,13 @@ namespace crds_angular.test.controllers
 {
     public class GoVolunteerControllerTest
     {
+        private Mock<IAttributeService> _attributeService;
+        private Mock<IConfigurationWrapper> _configurationWrapper;
         private GoVolunteerController _fixture;
         private Mock<IGatewayLookupService> _gatewayLookupService;
-        private Mock<IGoSkillsService> _skillsService;
         private Mock<IGroupConnectorService> _groupConnectorService;
         private Mock<IOrganizationService> _organizationService;
-        private Mock<IGoEquipmentService> _equipmentService;
+        private Mock<IGoSkillsService> _skillsService;
 
         [SetUp]
         public void Setup()
@@ -30,7 +32,12 @@ namespace crds_angular.test.controllers
             _gatewayLookupService = new Mock<IGatewayLookupService>();
             _skillsService = new Mock<IGoSkillsService>();
             _groupConnectorService = new Mock<IGroupConnectorService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, _groupConnectorService.Object, _gatewayLookupService.Object, _skillsService.Object, _equipmentService.Object)
+            _fixture = new GoVolunteerController(_organizationService.Object,
+                                                 _groupConnectorService.Object,
+                                                 _gatewayLookupService.Object,
+                                                 _skillsService.Object,
+                                                 _attributeService.Object,
+                                                 _configurationWrapper.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
@@ -43,14 +50,14 @@ namespace crds_angular.test.controllers
             const int listSize = 20;
             var skills = TestHelpers.ListOfGoSkills(listSize);
             _skillsService.Setup(m => m.RetrieveGoSkills()).Returns(skills);
-            var response = _fixture.GetGoSkills();            
+            var response = _fixture.GetGoSkills();
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);
-            var r = (OkNegotiatedContentResult<List<GoSkills>>)response;
+            var r = (OkNegotiatedContentResult<List<GoSkills>>) response;
             Assert.IsNotNull(r.Content);
             Assert.AreEqual(r.Content.Count, listSize);
             Assert.AreSame(skills, r.Content);
-    }
+        }
 
         [Test]
         public void ShouldGetOrganizationByName()

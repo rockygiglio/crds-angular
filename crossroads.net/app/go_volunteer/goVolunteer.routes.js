@@ -152,9 +152,9 @@
 
   function Equipment(GoVolunteerService, EquipmentService, $stateParams, $q) {
     var deferred = $q.defer();
-    if ($stateParams.page === 'equipment' && _.isEmpty(GoVolunteerService.equipment)) {
+    if ($stateParams.page === 'equipment' && _.isEmpty(GoVolunteerService.availableEquipment)) {
       EquipmentService.query(function(d) {
-        GoVolunteerService.equipment = d;
+        GoVolunteerService.availableEquipment = d;
         deferred.resolve();
       },
 
