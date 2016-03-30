@@ -182,6 +182,7 @@
           parent: 'brave',
           url: '/brave-at-home',
           templateUrl: 'brave_at_home/braveAtHome.html',
+          controller: 'BraveHomeController as brave_home_controller',
           data: {
             meta: {
               title: 'Brave at Home',
@@ -193,6 +194,7 @@
           parent: 'brave',
           url: '/brave-intro-one',
           templateUrl: 'brave_at_home/braveIntro1.html',
+          controller: 'BraveHomeController as brave_home_controller',
           data: {
             meta: {
               title: 'Brave at Home',
@@ -204,6 +206,7 @@
           parent: 'brave',
           url: '/brave-intro-two',
           templateUrl: 'brave_at_home/braveIntro2.html',
+          controller: 'BraveHomeController as brave_home_controller',
           data: {
             meta: {
               title: 'Brave at Home',
@@ -215,6 +218,7 @@
           parent: 'brave',
           url: '/brave-intro-three',
           templateUrl: 'brave_at_home/braveIntro3.html',
+          controller: 'BraveHomeController as brave_home_controller',
           data: {
             meta: {
               title: 'Brave at Home',
