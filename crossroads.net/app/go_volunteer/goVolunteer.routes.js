@@ -114,7 +114,6 @@
           $stateParams: '$stateParams',
           $q: '$q',
           SkillsService: 'SkillsService',
-          EquipmentService: 'EquipmentService',
           CmsInfo: CmsInfo,
           Meta: Meta,
           Organization: Organization,
@@ -153,10 +152,10 @@
     return deferred.promise;
   }
 
-  function Equipment(GoVolunteerService, EquipmentService, $stateParams, $q) {
+  function Equipment(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
     var deferred = $q.defer();
     if ($stateParams.page === 'equipment' && _.isEmpty(GoVolunteerService.availableEquipment)) {
-      EquipmentService.query(function(d) {
+      GoVolunteerDataService.Equipment.query(function(d) {
         GoVolunteerService.availableEquipment = d;
         deferred.resolve();
       },
