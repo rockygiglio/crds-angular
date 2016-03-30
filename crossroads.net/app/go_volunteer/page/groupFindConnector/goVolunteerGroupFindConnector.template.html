@@ -30,7 +30,7 @@
           <div class="media-body soft-half-ends soft-half-right">
             <h3 class="media-heading flush-bottom">{{g.name}}</h3>
             <p class="flush-bottom">
-              Project Type: {{g.projectType}}<br />
+              <span ng-if="g.projectType !== null">Project Type: {{g.projectType}}<br /></span>
               Launch Site: {{g.preferredLaunchSite}}
             </p>
           </div>
