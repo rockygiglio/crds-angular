@@ -61,7 +61,7 @@
           return true;
         }
 
-        if (vm.volunteerCount > (group.projectMaximumAge - group.projectvolunteerCount)) {
+        if (vm.registrationCount > (group.projectMaximumVolunteers - group.volunteerCount)) {
           return true;
         }
 
@@ -73,7 +73,7 @@
           return 'Minimum age is ' + g.projectMinimumAge;
         }
 
-        if (vm.volunteerCount > (g.projectMaximumAge - g.projectvolunteerCount)) {
+        if (vm.registrationCount > (g.projectMaximumVolunteers - g.volunteerCount)) {
           return 'Group is full';
         }
       }
@@ -100,7 +100,7 @@
       }
 
       function submit(g) {
-        if (vm.disableCard(g)){
+        if (vm.disableCard(g)) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.goVolunteerGroupDisabled);
           return -1;
         }
@@ -114,15 +114,15 @@
       }
 
       function youngestInRegistration() {
-        if (GoVolunteerService.childrenAttending.childTwoSeven !== 0) {
+        if (GoVolunteerService.childrenAttending.childTwoSeven > 0) {
           return 2;
         }
 
-        if (GoVolunteerService.childrenAttending.childEightTwelve !== 0) {
+        if (GoVolunteerService.childrenAttending.childEightTwelve > 0) {
           return 8;
         }
 
-        if (GoVolunteerService.childrenAttending.childThirteenEighteen !== 0) {
+        if (GoVolunteerService.childrenAttending.childThirteenEighteen > 0) {
           return 13;
         }
 

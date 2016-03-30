@@ -22,11 +22,13 @@
       <a ng-click="goGroupFindConnector.submit(g)"
          ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
         <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
-          <profile-picture contact-id="g.primaryContactRegistrationId"
-                           wrapper-class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"
-                           image-class="media-object img-responsive imgix-fluid"
-                           disallow-change="false">
-          </profile-picture>
+          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+            <profile-picture contact-id="g.primaryContactRegistrationId"
+                             wrapper-class="embed-responsive embed-responsive-1by1"
+                             image-class="media-object img-responsive imgix-fluid embed-responsive-item"
+                             disallow-change="false">
+            </profile-picture>
+          </div>
           <div class="media-body soft-half-ends soft-half-right">
             <h3 class="media-heading flush-bottom">{{g.name}}</h3>
             <p class="flush-bottom">

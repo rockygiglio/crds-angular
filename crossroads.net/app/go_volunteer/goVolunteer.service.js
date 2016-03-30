@@ -9,7 +9,11 @@
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
-      childrenAttending: {},
+      childrenAttending: {
+        childTwoSeven: 0,
+        childEightTwelve: 0,
+        childThirteenEighteen: 0
+      },
       equipment: [],
       otherEquipment: [],
       launchSites: {},
