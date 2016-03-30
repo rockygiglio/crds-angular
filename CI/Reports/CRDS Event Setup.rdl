@@ -2028,7 +2028,7 @@
           <Value>Approved</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Event Statuss</Prompt>
+      <Prompt>Event Status</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
