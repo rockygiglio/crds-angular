@@ -6,7 +6,7 @@
   SkillsService.$inject = ['$resource'];
 
   function SkillsService($resource) {
-    return  $resource(__API_ENDPOINT__ + 'api/govolunteer/skills');
+    return $resource(__API_ENDPOINT__ + 'api/govolunteer/skills');
   }
 
 })();

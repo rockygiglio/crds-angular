@@ -14,6 +14,8 @@
         childEightTwelve: 0,
         childThirteenEighteen: 0
       },
+      equipment: [],
+      otherEquipment: [],
       launchSites: {},
       person: {
         nickName: '',

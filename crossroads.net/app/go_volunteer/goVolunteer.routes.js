@@ -93,6 +93,7 @@
           PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
+          Equipment: Equipment,
           CmsInfo: CmsInfo,
           Locations: Locations,
           ProjectTypes: ProjectTypes,
@@ -119,6 +120,7 @@
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills,
+          Equipment: Equipment,
           PrepWork: PrepWork
         }
       })
@@ -146,6 +148,26 @@
 
       deferred.reject();
     });
+
+    return deferred.promise;
+  }
+
+  function Equipment(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
+    var deferred = $q.defer();
+    if ($stateParams.page === 'equipment' && _.isEmpty(GoVolunteerService.availableEquipment)) {
+      GoVolunteerDataService.Equipment.query(function(d) {
+        GoVolunteerService.availableEquipment = d;
+        deferred.resolve();
+      },
+
+      function(err) {
+
+        console.error(err);
+        deferred.reject();
+      });
+    } else {
+      deferred.resolve();
+    }
 
     return deferred.promise;
   }
@@ -292,9 +314,9 @@
 
     if ($stateParams.page === 'project-preference-one') {
       GoVolunteerDataService.ProjectTypes.query(function(data) {
-          GoVolunteerService.projectTypes = data;
-          deferred.resolve();
-        },
+        GoVolunteerService.projectTypes = data;
+        deferred.resolve();
+      },
 
         function(err) {
           console.log(err);
