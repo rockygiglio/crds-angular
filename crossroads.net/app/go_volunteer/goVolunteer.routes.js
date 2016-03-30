@@ -94,6 +94,7 @@
           Spouse: GetSpouse,
           Organization: Organization,
           Equipment: Equipment,
+          CmsInfo: CmsInfo,
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills
@@ -138,14 +139,10 @@
   function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
     var city = $stateParams.city || 'cincinnati';
     var organization = $stateParams.organizations || undefined;
-    var link = buildLink(city, organization, $state);
+    var link = buildLink(city, organization, $state, $stateParams);
     var deferred = $q.defer();
     var page = Page.get({ url: link });
     page.$promise.then(function(data) {
-      if (data.pages.length === 0) {
-        deferred.reject();
-      }
-
       GoVolunteerService.cmsInfo = data;
       deferred.resolve();
     }, function() {
@@ -301,8 +298,9 @@
       Organizations.ByName.get({name: param}, function(data) {
         GoVolunteerService.organization = data;
         deferred.resolve();
-      }, function(err) {
+      },
 
+      function(err) {
         console.log('Error while trying to get organization ' + param);
         console.log(err);
         deferred.reject();
@@ -319,11 +317,12 @@
       GoVolunteerDataService.ProjectTypes.query(function(data) {
         GoVolunteerService.projectTypes = data;
         deferred.resolve();
-      }, function(err) {
+      },
 
-        console.log(err);
-        deferred.reject();
-      });
+        function(err) {
+          console.log(err);
+          deferred.reject();
+        });
     } else {
       deferred.resolve();
     }
@@ -341,14 +340,20 @@
     return false;
   }
 
-  function buildLink(city, org, state) {
+  function buildLink(city, org, state, stateParams) {
     var base = '/go-volunteer/' + addTrailingSlashIfNecessary(city);
     if (state.next.name === 'go-volunteer.city.organizations') {
       return base + 'organizations/';
     }
 
     if (org) {
-      base = base + addTrailingSlashIfNecessary(org);
+      return base + addTrailingSlashIfNecessary(org);
+    }
+
+    if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {
+      var organization = stateParams.organization || 'crossroads';
+      organization = (organization === 'other') ? 'crossroads' : organization;
+      base = base + 'organizations/' + organization + '/' +  addTrailingSlashIfNecessary(stateParams.page);
     }
 
     return base;
