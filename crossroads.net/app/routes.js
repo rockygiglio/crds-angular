@@ -80,6 +80,11 @@
           abstract: true,
           templateUrl: 'templates/goCincinnati.html'
         })
+        .state('brave', {
+          parent: 'root',
+          abstract: true,
+          templateUrl: 'templates/brave.html'
+        })
         .state('atriumEvents', {
           parent: 'noHeaderOrFooter',
           url: '/atriumevents?site',
@@ -174,7 +179,7 @@
           }
         })
         .state('brave-at-home', {
-          parent: 'noHeaderOrFooter',
+          parent: 'brave',
           url: '/brave-at-home',
           templateUrl: 'brave_at_home/braveAtHome.html',
           data: {
@@ -185,9 +190,31 @@
           }
         })
         .state('brave-intro-one', {
-          parent: 'noHeaderOrFooter',
-          url: '/bbrave-intro-one',
+          parent: 'brave',
+          url: '/brave-intro-one',
           templateUrl: 'brave_at_home/braveIntro1.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-intro-two', {
+          parent: 'brave',
+          url: '/brave-intro-two',
+          templateUrl: 'brave_at_home/braveIntro2.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-intro-three', {
+          parent: 'brave',
+          url: '/brave-intro-three',
+          templateUrl: 'brave_at_home/braveIntro3.html',
           data: {
             meta: {
               title: 'Brave at Home',
@@ -560,6 +587,8 @@
                       return $templateFactory.fromUrl('templates/centeredContentPage.html');
                     case 'GoCincinnati':
                       return $templateFactory.fromUrl('templates/goCincinnati.html');
+                    case 'Brave':
+                      return $templateFactory.fromUrl('templates/brave.html');
                     default:
                       return $templateFactory.fromUrl('templates/noSideBar.html');
                   }
