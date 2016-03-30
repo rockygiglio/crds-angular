@@ -1,8 +1,14 @@
 <div ng-class="picture.wrapperClass">
-  <label for="fileInputModal" class="profile-pic" ng-click="picture.openModal()">
+  <label for="fileInputModal" class="profile-pic" ng-click="picture.openModal()" ng-hide="picture.disallowChange" >
       <img class="profile-image" ng-class="picture.imageClass"
         ng-src="{{picture.path}}" alt="Profile Photo"
         err-src="{{picture.defaultImage}}"/>
       <span class="change-photo">{{picture.buttonText}}</span>
   </label>
+
+ <img class="profile-image" ng-class="picture.imageClass"
+        ng-src="{{picture.path}}" alt="Profile Photo"
+        err-src="{{picture.defaultImage}}" 
+        ng-show="picture.disallowChange" />
+  
 </div>

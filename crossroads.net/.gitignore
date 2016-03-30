@@ -45,7 +45,6 @@ karma_html/
 .htaccess
 apache_site.conf
 index.html
-atriumevents.html
 webpack-assets.json
 robots.txt
 

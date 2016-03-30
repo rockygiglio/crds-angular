@@ -4,6 +4,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
+using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 
 namespace MinistryPlatform.Translation.Services.GoCincinnati
 {

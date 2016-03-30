@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-sm-12"><progressbar value="15"></progressbar></div>
+</div>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerChildrenQuestion.content | html"></div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <button type="submit" class="btn btn-block btn-standard" ng-click="goChildren.submit(false)" >No
+    </button>
+  </div>
+  <div class="col-xs-6">
+    <button type="submit" class="btn btn-block btn-primary-gc" ng-click="goChildren.submit(true)">Yes
+    </button>
+  </div>
+</div>

@@ -96,7 +96,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ToString("Processor_Transfer_ID")));
 
             Mapper.CreateMap<GPExportDatum, GPExportDatumDTO>()
-                .ForMember(dest => dest.DocumentNumber, opts => opts.MapFrom(src => src.DonationId))
+                .ForMember(dest => dest.DocumentNumber, opts => opts.MapFrom(src => src.DocumentNumber))
                 .ForMember(dest => dest.DocumentDescription, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ContributionDate, opts => opts.MapFrom(src => src.DonationDate.ToString("MM/dd/yyyy")))
@@ -125,6 +125,7 @@ namespace crds_angular.App_Start
                                 : (System.Enum.IsDefined(typeof (PaymentType), src.paymentTypeId) ? (PaymentType) src.paymentTypeId : PaymentType.Other)),
                         PaymentProcessorId = src.transactionCode,
                         Name = ((src.softCreditDonorId != 0) ? src.donorDisplayName : null),
+                        CheckNumber = src.itemNumber
                         
                     };
 
@@ -254,6 +255,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
             Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
+
         }
     }
 }

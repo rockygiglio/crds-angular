@@ -1,9 +1,11 @@
 USE [MinistryPlatform]
 GO
 
+WHILE EXISTS (SELECT * FROM contacts WHERE email_address = 'mpcrds+cloudstrife@gmail.com')
+BEGIN
 --Get the required data to add to our contact. 
 Declare @contactID as int
-Set @contactID = (select top 1 contact_id from contacts where email_address = 'mpcrds+cloudstrife@gmail.com' and last_name = 'Strife');
+Set @contactID = (select top 1 contact_id from contacts where email_address = 'mpcrds+cloudstrife@gmail.com');
 
 Declare @houseHoldID as int
 set @houseHoldID = (select houseHold_ID from contacts where contact_id = @contactID);
@@ -20,7 +22,7 @@ set @donorID = (select donor_id from donors where contact_id = @contactID);
 --Update old contact record so we can delete it. 
 UPDATE [dbo].Contacts
 SET Household_ID = null, Participant_Record = null, User_Account = null, Donor_record = null
-WHERE email_address = 'mpcrds+cloudstrife@gmail.com' and last_name = 'Strife';
+WHERE email_address = 'mpcrds+cloudstrife@gmail.com';
 
 --Delete the address if it exists.
 IF  (select address_id from households where Household_ID = @houseHoldID) is not Null
@@ -47,10 +49,22 @@ DELETE from [dbo].dp_Contact_Publications
 WHERE contact_id = @contactID;
 
 DELETE from [dbo].dp_communication_messages 
-WHERE Communication_ID = @communicationID;
+WHERE communication_id = @communicationID;
+
+DELETE from [dbo].dp_communication_messages
+WHERE contact_id = @contactID;
 
 Delete from [dbo].dp_Communications
 WHERE Communication_ID = @communicationID;
+
+DELETE FROM [dbo].dp_communication_messages
+WHERE COMMUNICATION_ID in (select Communication_id from [dbo].dp_Communications where AUTHOR_USER_ID = @userAccount);
+
+DELETE FROM [dbo].dp_Communications
+WHERE Reply_to_Contact = @contactID;
+
+DELETE from [dbo].dp_Communications
+WHERE AUTHOR_USER_ID = @userAccount;
 
 Delete from [dbo].Activity_Log
 WHERE Contact_id = @contactID;
@@ -72,20 +86,28 @@ delete from [dbo].contact_relationships where contact_id = @contactID;
 
 delete from [dbo].contact_relationships where related_contact_id = @contactID;
 
---Temp table for deleting donations
+--Delete all donations for Cloud's trip pledge program. This is custom for Cloud's teardown script.
 DECLARE @donationsTable table
 (
 	donation_id int
 )
+
+insert into @donationsTable (donation_id) (select donation_id from donation_distributions where pledge_id in (select pledge_id from pledges where donor_id = @donorID and pledge_campaign_id = 10000000));
+
+delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
+
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
+
+delete from donations where donation_id in (select donation_id from @donationsTable);
 
 --Delete all of Cloud's donations.
 delete from @donationsTable;
 
 insert into @donationsTable (donation_id) (select donation_id from donations where donor_id = @donorId);
 
-insert into @donationsTable (donation_id) (select donation_id from donation_distributions where soft_credit_donor = @donorId);
-
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
+
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
 
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
@@ -93,6 +115,23 @@ delete from pledges where donor_id = @donorID;
 
 --delete the donor
 delete from donors where donor_id = @donorID;
+
+--Delete all groups Cloud is primary contact on. 
+DECLARE @groupsTable table
+(
+	group_id int
+)
+
+insert into @groupsTable (group_id) (select group_id from groups where PRIMARY_CONTACT = @contactID);
+
+--Delete participants from the GROUPS
+DELETE FROM GROUP_PARTICIPANTS where group_id in (select group_id from @groupsTable);
+
+--Delete group attributes
+DELETE FROM GROUP_ATTRIBUTES where group_id in (select group_id from @groupsTable);
+
+--Then Delete the groups
+DELETE FROM GROUPS where GROUP_ID in (select group_id from @groupsTable);
 
 --Lets start getting rid of the participant record
 delete from Form_Response_Answers where form_response_id = (select form_response_id from form_responses where contact_id = @contactID);
@@ -108,7 +147,6 @@ delete from event_participants where participant_id = @participantID;
 delete from group_participants where participant_id = @participantID;
 
 delete from participants where participant_id = @participantID;
-GO
 
 --Delete userAccount
 delete from dp_user_roles where user_id = (select user_id from dp_users where user_email = 'mpcrds+cloudstrife@gmail.com');
@@ -116,5 +154,5 @@ delete from dp_user_roles where user_id = (select user_id from dp_users where us
 delete from dp_users where user_email = 'mpcrds+cloudstrife@gmail.com';
 
 --Delete Cloud's old contact record
-DELETE FROM [dbo].Contacts where contact_id = (select top 1 contact_id from contacts where email_address = 'mpcrds+cloudstrife@gmail.com' and last_name = 'Strife');
-GO
+DELETE FROM [dbo].Contacts where contact_id = (select top 1 contact_id from contacts where email_address = 'mpcrds+cloudstrife@gmail.com');
+END

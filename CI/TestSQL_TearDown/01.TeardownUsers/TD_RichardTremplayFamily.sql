@@ -113,6 +113,9 @@ delete from donor_accounts where donor_id in (SELECT Donor_ID FROM Donors WHERE 
 --delete donation distributions
 delete donation_distributions where donation_id in (select donation_id from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%')));
 
+--delete donation communications
+delete cr_Donation_Communications where donation_id in (select donation_id from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%')));
+
 --delete donations
 delete from donations where donor_id in (SELECT Donor_ID FROM Donors WHERE Contact_ID IN (SELECT Contact_ID FROM Contacts WHERE Email_Address like 'mpcrds+tremplay%'));
 

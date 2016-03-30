@@ -23,21 +23,23 @@
       _.each(singleAttributes, function (index) {
         if (_.has(this.responses, index)) {
           var answer = this.responses[index];
-          var attributeTypeId = this.lookup[answer].attributeTypeId;
-          results[attributeTypeId] = {'attribute': {'attributeId': answer}};
+          if (_.has(this.lookup, answer)) {
+            var attributeTypeId = this.lookup[answer].attributeTypeId;
+            results[attributeTypeId] = {'attribute': {'attributeId': answer}};
+          }
         }
       }, {responses: this.data, lookup: lookup});
 
       return results;
     };
 
-    this.getMultiAttributes = function(attributes, lookup ) {
+    this.getMultiAttributes = function(lookup, attributes) {
       var results = {};
       _.each(attributes, function(index) {
         if (_.has(this.responses, index)) {
           var answer = this.responses[index];
           _.each(answer, function(value, answerId) {
-            if (value) {
+            if (value && _.has(this.lookup, answerId)) {
               var attributeTypeId = this.lookup[answerId].attributeTypeId;
               if (!_.has(results, attributeTypeId)) {
                 results[attributeTypeId] = {attributeTypeId: attributeTypeId, attributes: []};

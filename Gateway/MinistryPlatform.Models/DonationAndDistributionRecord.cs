@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MinistryPlatform.Models
 {
@@ -37,5 +39,22 @@ namespace MinistryPlatform.Models
         public bool Anonymous { get; set; }
 
         public string CheckNumber { get; set; }
+
+        public string Notes { get; set; }
+
+        #region Donation Distributions
+        private readonly List<DonationDistribution> _distributions = new List<DonationDistribution>();
+
+        public List<DonationDistribution> Distributions
+        {
+            get { return _distributions; }
+        }
+
+        public bool HasDistributions
+        {
+            get { return _distributions.Any(); }
+        }
+        #endregion
+
     }
 }

@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-sm-12">
+    <progressbar value="15"></progressbar>
+  </div>
+</div>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerWaiverQuestion.content | html"></div>
+
+<div class="row">
+  <div class="col-xs-12">
+      <div class="smaller terms-box soft-half">
+        <div dynamic-content="goWaiver.waiver | html"> </div>
+      </div>
+  </div>
+</div>
+<div class="row push-top">
+  <div class="col-xs-12">
+    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'thank-you'})">I agree, submit my registration
+      <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
+      	<use xlink:href="#arrow-right9"></use>
+      </svg>
+    </button>
+  </div>
+</div>

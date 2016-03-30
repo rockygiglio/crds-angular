@@ -39,7 +39,7 @@
     function initialize() {
 
       vm.responses = Responses.data;
-      vm.showUpsell = vm.lookupContains(vm.responses.prior_participation, 'yes');
+      vm.showUpsell = false;
       vm.showResults = vm.showUpsell === false;
       vm.contactCrds = false;
       vm.rejected = false;
@@ -83,7 +83,8 @@
                 state: vm.responses.location.state,
                 zip: vm.responses.location.zip
               },
-              singleAttributes: Responses.getSingleAttributes(vm.lookup)
+              singleAttributes: Responses.getSingleAttributes(vm.lookup),
+              attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
             };
 
             vm.invalidTime = false; // set as an override
@@ -114,7 +115,8 @@
     }
 
     function goToResults() {
-      $state.go('group_finder.join.results');
+      Responses.data.bypassUpsell = true;
+      $state.go('group_finder.join.questions');
     }
 
     function goBack() {

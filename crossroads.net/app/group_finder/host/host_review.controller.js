@@ -20,7 +20,8 @@
     'GROUP_ROLE',
     'LookupDefinitions',
     'DAYS',
-    'SERIES'
+    'SERIES',
+    'CONTACT_ID'
   ];
 
   function HostReviewCtrl($window,
@@ -39,7 +40,9 @@
                           GROUP_ROLE,
                           LookupDefinitions,
                           DAYS,
-                          SERIES) {
+                          SERIES,
+                          CONTACT_ID
+  ) {
     var vm = this;
 
     vm.pending = true;
@@ -174,7 +177,8 @@
           var email = {
             groupId: group.groupId,
             fromContactId: AuthenticatedPerson.contactId,
-            toContactId: AuthenticatedPerson.contactId
+            toContactId: AuthenticatedPerson.contactId,
+            replyToContact: CONTACT_ID.HOST
           };
 
           if (!vm.isPrivate()) {

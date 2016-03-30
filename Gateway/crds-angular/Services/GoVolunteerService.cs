@@ -5,6 +5,12 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
+using System.Collections.Generic;
+using System.Linq;
+using crds_angular.Models.Crossroads.GoVolunteer;
+using crds_angular.Services.Interfaces;
+using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
+using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -18,13 +24,14 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
         private readonly IParticipantService _participantService;
         private readonly IRegistrationService _registrationService;
+        private readonly IProjectTypeService _projectTypeService;
 
         public GoVolunteerService(IParticipantService participantService,
                                   IRegistrationService registrationService,
                                   IContactService contactService,
                                   IGroupConnectorService groupConnectorService,
                                   IConfigurationWrapper configurationWrapper,
-                                  IContactRelationshipService contactRelationshipService)
+                                  IContactRelationshipService contactRelationshipService, IProjectTypeService projectTypeService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -32,6 +39,7 @@ namespace crds_angular.Services
             _groupConnectorService = groupConnectorService;
             _configurationWrapper = configurationWrapper;
             _contactRelationshipService = contactRelationshipService;
+            _projectTypeService = projectTypeService;
         }
 
         public bool CreateRegistration(Registration registration, string token)
@@ -187,6 +195,18 @@ namespace crds_angular.Services
                 throw new ApplicationException("Nooooooo");
             }
             return participantId;
+        }
+
+        public List<ProjectType> GetProjectTypes()
+        {
+            //var apiUserToken = _mpApiUserService.GetToken();
+
+            var pTypes = _projectTypeService.GetProjectTypes();
+            return pTypes.Select(pt =>
+            {
+                var projType = new ProjectType();
+                return projType.FromMpProjectType(pt);
+            }).ToList();
         }
     }
 }

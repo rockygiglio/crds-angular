@@ -10,7 +10,7 @@
         };
 
         public string DocumentType { get; set; }
-        public int DocumentNumber { get; set; }
+        public string DocumentNumber { get; set; }
         public string DocumentDescription { get; set; }
         public string BatchId { get; set; }
         public string ContributionDate { get; set; }

@@ -2,7 +2,7 @@
 (function () {
   module.exports = function ($scope, $location, $anchorScroll, growl, $modal) {
     var _this = this;
-    
+
     _this.time = Date.now();
     _this.hstep = 1;
     _this.mstep = 15;

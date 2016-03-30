@@ -49,6 +49,9 @@ WHERE contact_id = @contactID;
 DELETE from [dbo].dp_communication_messages 
 WHERE Communication_ID = @communicationID;
 
+Delete from [dbo].dp_communication_messages 
+WHERE contact_id = @contactID;
+
 Delete from [dbo].dp_Communications
 WHERE Communication_ID = @communicationID;
 
@@ -82,6 +85,8 @@ insert into @donationsTable (donation_id) (select donation_id from donation_dist
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
+
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
 --Delete all of Husband's donations.
@@ -91,12 +96,31 @@ insert into @donationsTable (donation_id) (select donation_id from donations whe
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
+delete from [dbo].CR_DONATION_COMMUNICATIONS where donation_id in (select donation_id from @donationsTable);
+
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
 delete from pledges where donor_id = @donorID;
 
 --delete the donor
 delete from donors where donor_id = @donorID;
+
+--Delete all groups Kathryn-Husband is primary contact on. 
+DECLARE @groupsTable table
+(
+	group_id int
+)
+
+insert into @groupsTable (group_id) (select group_id from groups where PRIMARY_CONTACT = @contactID);
+
+--Delete participants from the GROUPS
+DELETE FROM GROUP_PARTICIPANTS where group_id in (select group_id from @groupsTable);
+
+--Delete group attributes
+DELETE FROM GROUP_ATTRIBUTES where group_id in (select group_id from @groupsTable);
+
+--Then Delete the groups
+DELETE FROM GROUPS where GROUP_ID in (select group_id from @groupsTable);
 
 --Lets start getting rid of the participant record
 delete from Form_Response_Answers where form_response_id = (select form_response_id from form_responses where contact_id = @contactID);
