@@ -7,15 +7,14 @@
 <div dynamic-content="$root.MESSAGES.goVolunteerProjectPrefOneQuestion.content | html"></div>
 
 <div class="row">
-  <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefOne.list" ng-repeat="item in goProjectPrefOne.list">
-    <!-- TODO: Disable the link if the preference is disabled because it has already been choosen. -->
-    <a class="push-bottom gradiant-text-background border {{item.state}}" ui-sref="go-volunteer.crossroadspage({page: 'project-preference-two'})">
-      <img src="https://crds-cms-uploads.imgix.net/content/images/{{item.img}}.jpg" class="img-responsive img-full-width" />
+  <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefOne.projectTypes">
+    <a class="push-bottom gradiant-text-background border" href="#" ng-click="goProjectPrefOne.submit(item.projectTypeId)">
+      <img src="{{item.imageUrl}}" class="img-responsive img-full-width" />
       <div class="img-link-text">
-        {{item.title}}
+        {{item.desc}}
       </div>
       <div class="triangle">
-        <span>Age {{item.age}}+</span>
+        <span>Age {{item.minAge}}+</span>
       </div>
     </a>
   </div>
