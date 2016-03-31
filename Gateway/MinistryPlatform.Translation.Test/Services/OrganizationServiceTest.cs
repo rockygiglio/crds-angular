@@ -212,7 +212,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"City", "Cincinnati"},
                     {"State/Region", "OH"},
                     {"Postal Code", 45209},
-                    {"Image_URL", "www.com.net"}
+                    {"Image URL", "www.com.net"}
                 }
             };
         } 
