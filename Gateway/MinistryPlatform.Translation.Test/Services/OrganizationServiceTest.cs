@@ -26,7 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private const int ORGPAGE = 1234;
-        private const int LocPage = 2220;
+        private const int LocPage = 180;
 
         [SetUp]
         public void SetUp()
@@ -38,7 +38,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _configWrapper.Setup(m => m.GetConfigIntValue("OrganizationsPage")).Returns(ORGPAGE);
-            _configWrapper.Setup(m => m.GetConfigIntValue("LocationsByOrg")).Returns(LocPage);
+            _configWrapper.Setup(m => m.GetConfigIntValue("LocationsForOrg")).Returns(LocPage);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
             _fixture = new OrganizationService(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
@@ -122,7 +122,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void shouldGetLocations()
         {
             var fakeToken = "randomString";
-            _mpServiceMock.Setup(m => m.GetPageViewRecords(LocPage, fakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
+            _mpServiceMock.Setup(m => m.GetSubpageViewRecords(LocPage, It.IsAny<int>(), fakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
             var ret = _fixture.GetLocationsForOrganization(1, fakeToken);
             Assert.IsInstanceOf<List<Location>>(ret);
             Assert.IsNotNull(ret);
@@ -200,7 +200,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"City", "Cincinnati"},
                     {"State/Region", "OH"},
                     {"Postal Code", 45209},
-                    {"Image_URL", "www.com.net"}
+                    {"Image URL", "www.com.net"}
                 },
                 new Dictionary<string, object>{
                     {"dp_RecordID", It.IsAny<int>() },
@@ -212,7 +212,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"City", "Cincinnati"},
                     {"State/Region", "OH"},
                     {"Postal Code", 45209},
-                    {"Image_URL", "www.com.net"}
+                    {"Image URL", "www.com.net"}
                 }
             };
         } 
