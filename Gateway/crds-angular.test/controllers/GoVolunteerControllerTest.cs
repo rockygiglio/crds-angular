@@ -19,14 +19,15 @@ namespace crds_angular.test.controllers
 {
     public class GoVolunteerControllerTest
     {
+        private Mock<IAttributeService> _attributeService;
+        private Mock<IConfigurationWrapper> _configurationWrapper;
         private GoVolunteerController _fixture;
         private Mock<IGatewayLookupService> _gatewayLookupService;
         private Mock<IGoVolunteerService> _goVolunteerService;
-        private Mock<IGoSkillsService> _skillsService;
         private Mock<IGroupConnectorService> _groupConnectorService;
         private Mock<IOrganizationService> _organizationService;
-        private Mock<IConfigurationWrapper> _configurationService;
-        private Mock<IAttributeService> _attributeService;
+        private Mock<IGoSkillsService> _skillsService;
+
 
         [SetUp]
         public void Setup()
@@ -36,15 +37,17 @@ namespace crds_angular.test.controllers
             _goVolunteerService = new Mock<IGoVolunteerService>();
             _skillsService = new Mock<IGoSkillsService>();
             _groupConnectorService = new Mock<IGroupConnectorService>();
-            _configurationService = new Mock<IConfigurationWrapper>();
+            _configurationWrapper = new Mock<IConfigurationWrapper>();
             _attributeService = new Mock<IAttributeService>();
-            _fixture = new GoVolunteerController(_organizationService.Object, 
-                _groupConnectorService.Object, 
-                _gatewayLookupService.Object, 
-                _skillsService.Object,
-                _goVolunteerService.Object,
-                _attributeService.Object,
-                _configurationService.Object)
+
+            _fixture = new GoVolunteerController(_organizationService.Object,
+                                                 _groupConnectorService.Object,
+                                                 _gatewayLookupService.Object,
+                                                 _skillsService.Object,
+                                                 _goVolunteerService.Object,
+                                                 _attributeService.Object,
+                                                 _configurationWrapper.Object)
+
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
@@ -57,14 +60,14 @@ namespace crds_angular.test.controllers
             const int listSize = 20;
             var skills = TestHelpers.ListOfGoSkills(listSize);
             _skillsService.Setup(m => m.RetrieveGoSkills()).Returns(skills);
-            var response = _fixture.GetGoSkills();            
+            var response = _fixture.GetGoSkills();
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);
-            var r = (OkNegotiatedContentResult<List<GoSkills>>)response;
+            var r = (OkNegotiatedContentResult<List<GoSkills>>) response;
             Assert.IsNotNull(r.Content);
             Assert.AreEqual(r.Content.Count, listSize);
             Assert.AreSame(skills, r.Content);
-    }
+        }
 
         [Test]
         public void ShouldGetOrganizationByName()
@@ -125,27 +128,26 @@ namespace crds_angular.test.controllers
         {
             Prop.ForAll<int>(config =>
             {
-                _configurationService.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
                 var attributeTypes = TestHelpers.ListOfAttributeTypeDtos(1);
                 _attributeService.Setup(m => m.GetAttributeTypes(config)).Returns(attributeTypes);
                 var response = _fixture.GetPrepTimes();
                 Assert.IsNotNull(response);
                 Assert.IsInstanceOf<OkNegotiatedContentResult<List<AttributeDTO>>>(response);
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                var r = (OkNegotiatedContentResult<List<AttributeDTO>>)response;
+                var r = (OkNegotiatedContentResult<List<AttributeDTO>>) response;
                 Assert.IsNotNull(r.Content);
                 Assert.AreSame(attributeTypes.Single().Attributes, r.Content);
                 _attributeService.VerifyAll();
             }).QuickCheckThrowOnFailure();
         }
 
-        [Test]        
+        [Test]
         public void ShouldThrowExceptionIfThereAreMoreThanOneAttributeType()
         {
             Prop.ForAll<int>(config =>
             {
-                //var config = 1234;
-                _configurationService.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("PrepWorkAttributeTypeId")).Returns(config);
                 var attributeTypes = TestHelpers.ListOfAttributeTypeDtos(10);
                 _attributeService.Setup(m => m.GetAttributeTypes(config)).Returns(attributeTypes);
                 Assert.Throws<HttpResponseException>(() => { _fixture.GetPrepTimes(); });

@@ -15,21 +15,22 @@ namespace crds_angular.Controllers.API
 {
     public class GoVolunteerController : MPAuth
     {
+        private readonly IAttributeService _attributeService;
+        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IGatewayLookupService _gatewayLookupService;
         private readonly IGoVolunteerService _goVolunteerService;
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly IOrganizationService _organizationService;
         private readonly IGoSkillsService _skillsService;
-        private readonly IAttributeService _attributeService;
-        private readonly IConfigurationWrapper _configurationWrapper;
 
-        public GoVolunteerController(IOrganizationService organizationService, 
-            IGroupConnectorService groupConnectorService, 
-            IGatewayLookupService gatewayLookupService, 
-            IGoSkillsService skillsService,
-            IGoVolunteerService goVolunteerService,
-            IAttributeService attributeService,
-            IConfigurationWrapper configWrapper)
+        public GoVolunteerController(IOrganizationService organizationService,
+                                     IGroupConnectorService groupConnectorService,
+                                     IGatewayLookupService gatewayLookupService,
+                                     IGoSkillsService skillsService,
+                                     IGoVolunteerService goVolunteerService,
+                                     IAttributeService attributeService,
+                                     IConfigurationWrapper configurationWrapper)
+
         {
             _organizationService = organizationService;
             _gatewayLookupService = gatewayLookupService;
@@ -37,20 +38,18 @@ namespace crds_angular.Controllers.API
             _groupConnectorService = groupConnectorService;
             _skillsService = skillsService;
             _attributeService = attributeService;
-            _configurationWrapper = configWrapper;
+            _configurationWrapper = configurationWrapper;
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<AttributeDTO>))]
+        [ResponseType(typeof (List<AttributeDTO>))]
         [Route("api/govolunteer/prep-times")]
         public IHttpActionResult GetPrepTimes()
         {
             try
             {
                 var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
-                var attributes = _attributeService.GetAttributeTypes(prepTypeId);
-                var attributeTypeDto = attributes.Single();
-                return Ok(attributeTypeDto.Attributes);;
+                return Ok(GetAttributesByType(prepTypeId));
             }
             catch (Exception e)
             {
@@ -60,13 +59,36 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<GoSkills>))]
+        [ResponseType(typeof (List<AttributeDTO>))]
+        [Route("api/govolunteer/equipment")]
+        public IHttpActionResult GetGoEquipment()
+        {
+            try
+            {
+                var attributeTypeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiEquipmentAttributeType");
+                return Ok(GetAttributesByType(attributeTypeId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Go Volunteer Equipment failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        private List<AttributeDTO> GetAttributesByType(int attributeTypeId)
+        {
+            var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
+            return attributeTypes.Single().Attributes;
+        }
+
+        [HttpGet]
+        [ResponseType(typeof (List<GoSkills>))]
         [Route("api/govolunteer/skills")]
         public IHttpActionResult GetGoSkills()
         {
             try
             {
-                var skills =_skillsService.RetrieveGoSkills();
+                var skills = _skillsService.RetrieveGoSkills();
                 return Ok(skills);
             }
             catch (Exception e)
@@ -75,7 +97,6 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
-
 
         [HttpGet]
         [ResponseType(typeof (List<GroupConnector>))]
@@ -181,7 +202,7 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<ProjectType>))]
+        [ResponseType(typeof (List<ProjectType>))]
         [Route("api/goVolunteer/projectTypes")]
         public IHttpActionResult GetProjectTypes()
         {

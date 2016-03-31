@@ -6,7 +6,8 @@
   function GoVolunteerDataService($resource) {
     return {
       ProjectTypes: $resource(__API_ENDPOINT__ + 'api/goVolunteer/projectTypes'),
-      PrepWork: $resource(__API_ENDPOINT__ + 'api/govolunteer/prep-times')
+      PrepWork: $resource(__API_ENDPOINT__ + 'api/govolunteer/prep-times'),
+      Equipment: $resource(__API_ENDPOINT__ + 'api/govolunteer/equipment')
     };
   }
 })();
