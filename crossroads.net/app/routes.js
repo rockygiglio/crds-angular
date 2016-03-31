@@ -85,6 +85,127 @@
           abstract: true,
           templateUrl: 'templates/brave.html'
         })
+        .state('brave-at-home', {
+          parent: 'brave',
+          url: '/brave-at-home',
+          templateUrl: 'brave_at_home/braveAtHome.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-intro-two', {
+          parent: 'brave',
+          url: '/brave-intro-two',
+          templateUrl: 'brave_at_home/braveIntro2.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-intro-three', {
+          parent: 'brave',
+          url: '/brave-intro-three',
+          templateUrl: 'brave_at_home/braveIntro3.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-intro-four', {
+          parent: 'brave',
+          url: '/brave-intro-four',
+          templateUrl: 'brave_at_home/braveIntro4.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-one', {
+          parent: 'brave',
+          url: '/brave-room-one',
+          templateUrl: 'brave_at_home/braveRoom1.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-two', {
+          parent: 'brave',
+          url: '/brave-room-two',
+          templateUrl: 'brave_at_home/braveRoom2.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-three', {
+          parent: 'brave',
+          url: '/brave-room-three',
+          templateUrl: 'brave_at_home/braveRoom3.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-four', {
+          parent: 'brave',
+          url: '/brave-room-four',
+          templateUrl: 'brave_at_home/braveRoom4.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-five', {
+          parent: 'brave',
+          url: '/brave-room-five',
+          templateUrl: 'brave_at_home/braveRoom5.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-room-six', {
+          parent: 'brave',
+          url: '/brave-room-six',
+          templateUrl: 'brave_at_home/braveRoom6.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
+        .state('brave-share', {
+          parent: 'brave',
+          url: '/brave-share',
+          templateUrl: 'brave_at_home/braveShare.html',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          }
+        })
         .state('atriumEvents', {
           parent: 'noHeaderOrFooter',
           url: '/atriumevents?site',
@@ -178,68 +299,6 @@
             }
           }
         })
-        .state('brave-at-home', {
-          parent: 'brave',
-          url: '/brave-at-home',
-          templateUrl: 'brave_at_home/braveAtHome.html',
-          controller: 'BraveHomeController as brave_home_controller',
-          data: {
-            meta: {
-              title: 'Brave at Home',
-              description: ''
-            }
-          }
-        })
-        .state('brave-intro-one', {
-          parent: 'brave',
-          url: '/brave-intro-one',
-          templateUrl: 'brave_at_home/braveIntro1.html',
-          controller: 'BraveHomeController as brave_home_controller',
-          data: {
-            meta: {
-              title: 'Brave at Home',
-              description: ''
-            }
-          }
-        })
-        .state('brave-intro-two', {
-          parent: 'brave',
-          url: '/brave-intro-two',
-          templateUrl: 'brave_at_home/braveIntro2.html',
-          controller: 'BraveHomeController as brave_home_controller',
-          data: {
-            meta: {
-              title: 'Brave at Home',
-              description: ''
-            }
-          }
-        })
-        .state('brave-intro-three', {
-          parent: 'brave',
-          url: '/brave-intro-three',
-          templateUrl: 'brave_at_home/braveIntro3.html',
-          controller: 'BraveHomeController as brave_home_controller',
-          data: {
-            meta: {
-              title: 'Brave at Home',
-              description: ''
-            }
-          }
-        })
-        /*
-        .state('brave-login', {
-          parent: 'noHeaderOrFooter',
-          url: '/brave-login',
-          templateUrl: 'brave_at_home/braveLogin.html',
-          data: {
-            isProtected: true,
-            meta: {
-              title: 'Brave at Home',
-              description: ''
-            }
-          }
-        })
-        */
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
