@@ -23,8 +23,9 @@
       vm.chooseTime = chooseTime;
       vm.forSpouse = vm.forSpouse || false;
       vm.prepWork = GoVolunteerService.prepWork;
-     
+
       activate();
+
       /////////////////////////
 
       function activate() {
@@ -36,7 +37,7 @@
       }
 
       function chooseTime(prepTime) {
-        if (vm.forSpouse) { 
+        if (vm.forSpouse) {
           GoVolunteerService.spousePrepTime = prepTime;
           vm.onSubmit({nextState: 'waiver'});
         } else {
