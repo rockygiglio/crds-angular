@@ -3,12 +3,14 @@
 
   module.exports = GoVolunteerAdditionalInfo;
 
-  GoVolunteerAdditionalInfo.$inject = [];
+  GoVolunteerAdditionalInfo.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerAdditionalInfo() {
+  function GoVolunteerAdditionalInfo(GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerAdditionalInfoController,
       controllerAs: 'goAdditionalInfo',
@@ -17,7 +19,12 @@
 
     function GoVolunteerAdditionalInfoController() {
       var vm = this;
+      vm.submit = submit;
 
+      function submit() {
+        GoVolunteerService.additionalInformation = vm.additionalInfo;
+        vm.onSubmit({nextState: 'available-prep'});
+      }
     }
   }
 
