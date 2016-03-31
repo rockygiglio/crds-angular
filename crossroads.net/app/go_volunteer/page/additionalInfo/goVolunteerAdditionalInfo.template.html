@@ -8,13 +8,18 @@
 
 <div class="row push-half-bottom">
   <div class="col-xs-12">
-    <textarea class="form-control" rows="3" placeholder="Tell us about any unique skills or special needs for your volunteer experience." ></textarea>
+    <textarea
+      class="form-control"
+      rows="3"
+      ng-model="goAdditionalInfo.additionalInfo"
+      placeholder="Tell us about any unique skills or special needs for your volunteer experience." >
+    </textarea>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'available-prep'})">Next
+    <button type="submit" class="btn btn-block btn-primary-gc" ng-click="goAdditionalInfo.submit()">Next
       <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
         <use xlink:href="#arrow-right9"></use>
       </svg>
