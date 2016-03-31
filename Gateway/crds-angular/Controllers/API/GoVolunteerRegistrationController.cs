@@ -55,34 +55,34 @@ namespace crds_angular.Controllers.API
             return Ok(registration);
         }
 
-        [AcceptVerbs("POST")]
-        [Route("api/goVolunteerRegistration")]
-        public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
-        {
-            if (ModelState.IsValid)
-            {
-                return Authorized(token =>
-                {
-                    try
-                    {
-                        // for testing
-                        goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-                        // end for testing
-                        _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
-                        return Ok();
-                    }
-                    catch (Exception e)
-                    {
-                        var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
-                        logger.Error(msg, e);
-                        var apiError = new ApiErrorDto(msg, e);
-                        throw new HttpResponseException(apiError.HttpResponseMessage);
-                    }
-                });
-            }
-            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-            var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
-            throw new HttpResponseException(dataError.HttpResponseMessage);
-        }
+        //[AcceptVerbs("POST")]
+        //[Route("api/goVolunteerRegistration")]
+        //public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        return Authorized(token =>
+        //        {
+        //            try
+        //            {
+        //                // for testing
+        //                goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+        //                // end for testing
+        //                _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
+        //                return Ok();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
+        //                logger.Error(msg, e);
+        //                var apiError = new ApiErrorDto(msg, e);
+        //                throw new HttpResponseException(apiError.HttpResponseMessage);
+        //            }
+        //        });
+        //    }
+        //    var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+        //    var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
+        //    throw new HttpResponseException(dataError.HttpResponseMessage);
+        //}
     }
 }

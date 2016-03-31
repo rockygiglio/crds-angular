@@ -19,6 +19,8 @@
       var vm = this;
       vm.waiver = null;
 
+      vm.temp = GoVolunteerService;
+
       activate();
 
       function activate() {
