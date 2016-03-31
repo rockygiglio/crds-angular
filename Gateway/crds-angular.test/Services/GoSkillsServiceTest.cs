@@ -19,13 +19,15 @@ namespace crds_angular.test.Services
         private GoSkillsService _fixture;
         private Mock<IApiUserService> _apiUserService;
         private Mock<ISkillsService> _skillsService;
+        private Mock<crds_angular.Services.Interfaces.IObjectAttributeService> _objectAttributeService;
 
         [SetUp]
         public void Setup()
         {
             _apiUserService = new Mock<IApiUserService>();
             _skillsService = new Mock<ISkillsService>();
-            _fixture = new GoSkillsService(_apiUserService.Object, _skillsService.Object);
+            _objectAttributeService = new Mock<crds_angular.Services.Interfaces.IObjectAttributeService>();
+            _fixture = new GoSkillsService(_apiUserService.Object, _skillsService.Object, _objectAttributeService.Object);
             
         }
 
