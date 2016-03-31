@@ -40,20 +40,26 @@
       return ImageService.DefaultProfileImage;
     };
 
-    if (!$scope.displayDefaultGroup && $scope.group.address && responses.location) {
+    if ($scope.group.distance) {
+      $scope.getGroupDistance = function (result) {
+        return $scope.group.distance + ' miles away from you';
+      };
+    } else if (!$scope.displayDefaultGroup && $scope.group.address && responses.location) {
+      // TODO: This probably will no longer be used, but leaving here due to timeline
       var hostAddress = $scope.group.address.addressLine1 + ', ' +
-          $scope.group.address.city + ', ' +
-          $scope.group.address.state + ', ' +
-          $scope.group.address.zip;
+        $scope.group.address.city + ', ' +
+        $scope.group.address.state + ', ' +
+        $scope.group.address.zip;
       var participantAddress = responses.location.street + ', ' +
-          responses.location.city + ', ' +
-          responses.location.state + ', ' +
-          responses.location.zip;
+        responses.location.city + ', ' +
+        responses.location.state + ', ' +
+        responses.location.zip;
+
       GoogleDistanceMatrixService.distanceFromAddress(hostAddress, [
         participantAddress
-      ]).then(function(result) {
-        $scope.getGroupDistance = function() {
-          if(result[0].distance) {
+      ]).then(function (result) {
+        $scope.getGroupDistance = function () {
+          if (result[0].distance) {
             var distance = Math.round((result[0].distance.value / 1609.344) * 10) / 10;
             return distance + ' miles away from you';
           }

@@ -55,11 +55,28 @@
             return group;
           });
 
+          // TODO: Pass in participant address
+          groups = loadDistance(groups);
+          groups = sortByDistance(groups);
+
           return groups;
         });
       }
 
       return requestPromise;
+    }
+
+    function loadDistance(groups) {
+      var initialDistance = 1000;
+      _.each(groups, function(group) {
+        initialDistance--;
+        group.distance = initialDistance;
+      });
+      return groups;
+    }
+
+    function sortByDistance(groups) {
+      return groups;
     }
 
     function displayTime(day, time) {
