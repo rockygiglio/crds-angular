@@ -5,8 +5,23 @@
 
   GoVolunteerService.$inject = ['$resource'];
 
+  function createGroupConnector(groupConnectorId) {
+    if (groupConnectorId === null || groupConnectorId === undefined) {
+      return true;
+    }
+
+    return false;
+  }
+
   function GoVolunteerService($resource) {
     var volunteerService =  {
+      getRegistrationDto: function(data) {
+        return {
+          additionalInformation: data.additionalInformation,
+          createGroupConnector: data.groupConnectorId
+        };
+      },
+
       // private, don't use these
       cmsInfo: {},
       childrenAttending: {
