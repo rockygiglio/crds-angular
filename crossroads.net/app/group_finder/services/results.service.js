@@ -3,9 +3,9 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService) {
     var requestPromise = null;
     var results = {};
     var groups = [];
@@ -17,8 +17,8 @@
     function loadResults(participant) {
       if (!requestPromise) {
 
-        requestPromise = Group.Search.save({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, participant).$promise;
-        requestPromise.then(function(results) {
+        var searchPromise = Group.Search.save({groupTypeId: GROUP_API_CONSTANTS.GROUP_TYPE_ID}, participant).$promise;
+        var loadedPromise = searchPromise.then(function(results) {
           clearData();
 
           groups = _.map(results, function(group) {
@@ -55,28 +55,65 @@
             return group;
           });
 
-          // TODO: Pass in participant address
-          groups = loadDistance(groups);
-          groups = sortByDistance(groups);
-
           return groups;
         });
+
+        var distancePromise = loadedPromise.then(function(groups) {
+          return loadDistance(groups, participant);
+        });
+
+        var sortPromise = distancePromise.then(function() {
+          // Not sure how to get groups from promise results since returning a promise and not data
+          // grabing 'groups' variable from function scope instead
+          groups = sortByDistance(groups);
+        });
+
+        requestPromise = sortPromise;
       }
 
       return requestPromise;
     }
 
-    function loadDistance(groups) {
-      var initialDistance = 1000;
-      _.each(groups, function(group) {
-        initialDistance--;
-        group.distance = initialDistance;
+    function loadDistance(groups, participant) {
+      var promises = [];
+
+      var chunkedGroups = _.chunk(groups, 25);
+
+      _.forEach(chunkedGroups, function(chunk) {
+        var participantAddress = participant.address.addressLine1 + ', ' +
+            participant.address.city + ', ' +
+            participant.address.state + ', ' +
+            participant.address.zip;
+
+        var hostAddresses = _.map(chunk, function(group) {
+          return group.address.addressLine1 + ', ' +
+            group.address.city + ', ' +
+            group.address.state + ', ' +
+            group.address.zip;
+        });
+
+        var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
+          .then(function(result) {
+            _.forEach(chunk, function(group, index) {
+              var resultDistance = result[index].distance;
+              if (resultDistance) {
+                group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
+              }
+            });
+          }, function() {
+            // TODO: What can we do if this failed?
+          });
+
+        promises.push(googlePromise);
       });
-      return groups;
+
+      return $q.all(promises);
     }
 
     function sortByDistance(groups) {
-      return groups;
+      return _.sortBy(groups, function(group) {
+        return group.distance;
+      });
     }
 
     function displayTime(day, time) {
