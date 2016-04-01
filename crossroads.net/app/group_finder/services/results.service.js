@@ -78,7 +78,7 @@
     function loadDistance(groups, participant) {
       var promises = [];
 
-      var chunkedGroups = _.chunk(groups, 25);
+      var chunkedGroups = _.chunk(groups, 20);
 
       _.forEach(chunkedGroups, function(chunk, index) {
         var participantAddress = participant.address.addressLine1 + ', ' +
@@ -100,7 +100,7 @@
             // TODO: Do we need to pass in deferred?
             var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
               .then(function(result) {
-                $log.debug('Starting distanceFromAddress.then at ' + moment());
+                $log.debug('Starting distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS'));
 
                 _.forEach(chunk, function(group, index) {
                   var resultDistance = result[index].distance;
@@ -109,19 +109,19 @@
                   }
                 });
 
-                $log.debug('Finishing distanceFromAddress.then at ' + moment());
+                $log.debug('Finishing distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS'));
                 //deferred.resolve(group);
                 deferred.resolve();
               }, function() {
                 // TODO: What can we do if this failed?
-                $log.debug('Finishing with Errors distanceFromAddress.then at ' + moment());
+                $log.debug('Finishing with Errors distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS'));
                 deferred.reject();
               });
 
             //promises.push(googlePromise);
           }, wait, true, chunk, participantAddress, hostAddresses, deferred);
 
-        promises.push(deferred);
+        promises.push(deferred.promise);
       });
 
       $log.debug('returning promises', promises);
