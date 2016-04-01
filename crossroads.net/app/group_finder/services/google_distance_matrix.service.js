@@ -115,11 +115,13 @@
 
     function handleResponse(response, status, deferred) {
       var err;
+      $log.debug('handleResponse ' + moment().format('HH:mm:ss:SSS'));
 
       if (status !== google.maps.DistanceMatrixStatus.OK) {
         err = 'Google maps could not process the request and resulted in status:' + status;
         $log.error(err);
         deferred.reject(err);
+        return;
       }
 
       // If the origin address could not be found the rows array will exist but be empty
@@ -135,6 +137,7 @@
         err = 'Provided origin address could not be resolved to a physical location';
         $log.error(err);
         deferred.reject(err);
+        return;
       }
 
       deferred.resolve(result);
@@ -150,6 +153,8 @@
       }
 
       var matrixService = new google.maps.DistanceMatrixService();
+
+      $log.debug('calling getDistanceMatrix ' + moment().format('HH:mm:ss:SSS'));
       matrixService.getDistanceMatrix({
         origins: [startingAddress],
         destinations: destinationAddressList,
