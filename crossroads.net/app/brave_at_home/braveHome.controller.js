@@ -7,6 +7,9 @@
 function BraveHomeController($scope, $window, $stateParams, $log, $location, $anchorScroll, Email) {
 		var vm = this;
 
+
+    
+
     console.log('test');
     //
     // email = {
