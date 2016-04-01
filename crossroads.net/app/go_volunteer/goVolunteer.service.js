@@ -64,11 +64,33 @@
     return {id: preferenceId, priority: priority};
   }
 
-  function self(person) {
-    var dto = {};
+  function personDto(person) {
+    var dto = {
+      lastName: person.lastName,
+      dob: person.dateOfBirth,
+      mobile: person.mobilePhone
+    };
+
     if (_.has(person, 'contactId')) {
       dto.contactId = person.contactId;
     }
+
+    if (_.has(person, 'nickName')) {
+      dto.firstName = person.nickName;
+    }
+
+    if (_.has(person, 'preferredName')) {
+      dto.firstName = person.preferredName;
+
+    if (_.has(person, 'emailAddress')) {
+      dto.emailAddress = person.emailAddress;
+    }
+
+    if (_.has(person, 'email')) {
+      dto.emailAddress = person.email;
+    }
+
+    return dto;
   }
 
   function GoVolunteerService($resource) {
@@ -76,6 +98,7 @@
       getRegistrationDto: function(data) {
         return {
           additionalInformation: data.additionalInformation,
+          children: [],
           createGroupConnector: createGroupConnector(data.groupConnectorId),
           equipment: equipment(data.equipment, data.otherEquipment),
           groupConnectorId: data.groupConnectorId,
@@ -85,7 +108,10 @@
           preferredLaunchSiteId: data.preferredLaunchSite,
           prepWork: prepWork(data.myPrepTime, data.spousePrepTime),
           projectPreferences: projectPreferences(data.projectPrefOne, data.projectPrefTwo, data.projectPrefThree),
-          self: self(data.person)
+          self: personDto(data.person),
+          spouse: personDto(data.spouse),
+          spouseParticipation: data.spouseAttending,
+          waiver: true
         };
       },
 
