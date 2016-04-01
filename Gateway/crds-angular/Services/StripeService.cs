@@ -39,6 +39,7 @@ namespace crds_angular.Services
         {
             return (response.ResponseStatus != ResponseStatus.Completed
                     || (errorNotFound && response.StatusCode == HttpStatusCode.NotFound)
+                    || response.StatusCode == HttpStatusCode.Unauthorized
                     || response.StatusCode == HttpStatusCode.BadRequest
                     || response.StatusCode == HttpStatusCode.PaymentRequired);
         }
@@ -254,6 +255,7 @@ namespace crds_angular.Services
                 {
                     defaultSource.routing_number = source.routing_number;
                     defaultSource.bank_last4 = source.last4;
+                    defaultSource.name = source.name;
                 }
                 else
                 {
