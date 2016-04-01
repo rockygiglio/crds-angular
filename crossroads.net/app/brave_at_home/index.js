@@ -9,6 +9,8 @@ require('./braveRoom3.html');
 require('./braveRoom4.html');
 require('./braveRoom5.html');
 require('./braveRoom6.html');
+require('./braveReflect.html');
+require('./braveHope.html');
 require('./braveShare.html');
 
 app.controller('BraveHomeController', require('./braveHome.controller'));

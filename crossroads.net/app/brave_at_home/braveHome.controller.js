@@ -2,33 +2,22 @@
   'use strict';
   module.exports = BraveHomeController;
 
-  BraveHomeController.$inject = ['$scope', '$window', '$stateParams', '$log', '$location', '$anchorScroll', 'Email'];
+  BraveHomeController.$inject = ['$scope', '$rootScope', '$window', '$stateParams', '$log', '$location', '$anchorScroll', 'Email', 'Session', '$state'];
 
-function BraveHomeController($scope, $window, $stateParams, $log, $location, $anchorScroll, Email) {
+function BraveHomeController($scope, $rootScope, $window, $stateParams, $log, $location, $anchorScroll, Email, Session, $state) {
 		var vm = this;
 
+    var userid = Session.exists('userId') !== undefined ? Session.exists('userId') : 0;
+    //var emailaddress = Session.exists('email') !== undefined ? Session.exists('email') : 0;
+    var username = Session.exists('username') !== undefined ? Session.exists('username') : 0;
 
-    
+    $scope.bravePage = $state.current.data.bravePage;
 
-    console.log('test');
-    //
-    // email = {
-    //   groupId          : group.groupId,
-    //   replyToContact   : CONTACT_ID.JOURNEY,
-    //   fromContactId    : cid,
-    //   toContactId      : cid,
-    //   mergeData : {
-    //     HostName         : group.contact ? group.contact.firstName : null,
-    //     HostPreferredName: group.contact ? group.contact.firstName : null
-    //   }
-    // };
-
-    // email.templateId = EMAIL_TEMPLATES.PARTICIPANT_PUBLIC_CONFIRM_EMAIL_ID;
-    //
-    // Email.Mail.save(email).$promise.catch(function emailError(error) {
-    //   $log.error('Email confirmation failed', error);
-    // });
-
-
+    $scope.$watch(function(){
+      return $state.current.data;
+    }, function(p){
+      //$scope.itemId = p.itemId;
+      $scope.bravePage = p.bravePage;
+    });
 	};
 })()
