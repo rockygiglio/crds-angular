@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
@@ -13,50 +13,65 @@ namespace crds_angular.Services
     public class GoSkillsService : IGoSkillsService
     {
         private readonly IApiUserService _apiUserService;
+        private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IContactService _contactService;
+        private readonly IObjectAttributeService _objectAttributeService;
         private readonly ISkillsService _skillsService;
-        private readonly crds_angular.Services.Interfaces.IObjectAttributeService _objectAttributeService;
 
-        public GoSkillsService(IApiUserService apiUserService, ISkillsService skillsService, IObjectAttributeService objectAttributeService)
+        public GoSkillsService(IApiUserService apiUserService,
+                               ISkillsService skillsService,
+                               IObjectAttributeService objectAttributeService,
+                               IContactService contactService,
+                               IConfigurationWrapper configurationWrapper)
         {
             _apiUserService = apiUserService;
             _skillsService = skillsService;
             _objectAttributeService = objectAttributeService;
+            _contactService = contactService;
+            _configurationWrapper = configurationWrapper;
         }
 
-        public List<GoSkills> RetrieveGoSkills()
+        public List<GoSkills> RetrieveGoSkills(string token)
         {
-            //make this a parm?
-            var contactId = 768379;
-            var token = _apiUserService.GetToken();
-            var skills = _skillsService.GetGoVolunteerSkills(token);
+            // get all the skill attributes
+            var apiToken = _apiUserService.GetToken();
+            var skills = _skillsService.GetGoVolunteerSkills(apiToken);
 
-
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
-            var attributesTypes =_objectAttributeService.GetObjectAttributes(token,contactId,configuration);
-
-            ObjectAttributeTypeDTO value;
-            attributesTypes.MultiSelect.TryGetValue(24, out value);
-
-            //can we updated 'checked' on skills list when there's a match in attributetypes?
-            foreach (var skill in skills)
+            // if the user is logged in, check if they have skills
+            if (token == string.Empty)
             {
-                if (value != null)
-                {
-                    var thisValue = value.Attributes.SingleOrDefault(w => w.AttributeId == skill.AttributeId);
-                }
-                var inList = value != null && value.Attributes.Any(w => w.AttributeId == skill.AttributeId && w.Selected);
-                if (inList)
-                {
-                    Console.WriteLine("hi");
-                    skill.Checked =true;
+                // not logged in, get out
+                return new GoSkills().ToGoSkills(skills);
+            }
 
+            // get skills using the logged in users token
+            var contactSkills = ContactSkills(token);
+
+            // match our list to the users, update "checked" to true when appropriate
+            if (contactSkills != null)
+            {
+                foreach (var skill in skills.Where(skill => contactSkills.Attributes.Any(s => s.AttributeId == skill.AttributeId && s.Selected)))
+                {
+                    skill.Checked = true;
                 }
             }
 
-
-
-
             return new GoSkills().ToGoSkills(skills);
+        }
+
+        private ObjectAttributeTypeDTO ContactSkills(string token)
+        {
+            var contact = _contactService.GetMyProfile(token);
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
+
+            ObjectAttributeTypeDTO contactSkills;
+            // not in love with this next part
+            // alternatives?
+            // we could iterate over the whole set, knowing we should only find matches in "Skills"
+            var skillsAttributeTypeId = _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills");
+            attributesTypes.MultiSelect.TryGetValue(skillsAttributeTypeId, out contactSkills);
+            return contactSkills;
         }
     }
 }
