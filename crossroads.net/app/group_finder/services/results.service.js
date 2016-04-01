@@ -3,12 +3,13 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService', '$timeout', '$log'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService', '$timeout'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService, $timeout, $log) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService, $timeout) {
     var requestPromise = null;
     var results = {};
     var groups = [];
+    var retryCount = 0;
 
     results.loadResults = loadResults;
     results.clearData = clearData;
@@ -75,10 +76,9 @@
       return requestPromise;
     }
 
-    function makeCall(participantAddress, hostAddresses, chunk, deferred) {
-      var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
-        .then(function (result) {
-          $log.debug('Starting distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS'));
+    function getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred) {
+      GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
+        .then(function(result) {
 
           _.forEach(chunk, function (group, index) {
             var resultDistance = result[index].distance;
@@ -87,57 +87,61 @@
             }
           });
 
-          $log.debug('Finishing distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS'));
-          //deferred.resolve(group);
           deferred.resolve();
         })
         .catch(function(reason) {
-          // TODO: What can we do if this failed?
-          $log.debug('Finishing with Errors distanceFromAddress.then at ' + moment().format('HH:mm:ss:SSS') + ' so we will retry');
-          //deferred.reject();
+          var isOverLimit =  reason.indexOf('OVER_QUERY_LIMIT') > -1;
 
-          $timeout(function(chunk, participantAddress, hostAddresses, deferred) {
-            // TODO: Do we need to pass in deferred?
-            makeCall(participantAddress, hostAddresses, chunk, deferred);
-            //promises.push(googlePromise);
+          if (!isOverLimit) {
+            deferred.reject('Failed to load distance due to error ' + reason);
+            return;
+          }
+
+          if (retryCount >= 150) {
+            deferred.reject('Failed to load distance after ' + retryCount + ' retries.');
+            return;
+          }
+
+          $timeout(function (chunk, participantAddress, hostAddresses, deferred) {
+            getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
           }, 2000, true, chunk, participantAddress, hostAddresses, deferred);
 
+          retryCount++;
         });
+
+      return deferred.promise;
     }
 
     function loadDistance(groups, participant) {
-      var promises = [];
-
       var chunkedGroups = _.chunk(groups, 25);
+      retryCount = 0;
 
-      _.forEach(chunkedGroups, function(chunk, index) {
+      var previousDeferred = $q.defer();
+      previousDeferred.resolve();
+
+      _.forEach(chunkedGroups, function(chunk) {
         var participantAddress = participant.address.addressLine1 + ', ' +
           participant.address.city + ', ' +
           participant.address.state + ', ' +
           participant.address.zip;
 
-        var hostAddresses = _.map(chunk, function(group) {
+        var hostAddresses = _.map(chunk, function (group) {
           return group.address.addressLine1 + ', ' +
             group.address.city + ', ' +
             group.address.state + ', ' +
             group.address.zip;
         });
 
-        var wait = 1000 * index;
         var deferred = $q.defer();
 
-        $timeout(function(chunk, participantAddress, hostAddresses, deferred) {
-            // TODO: Do we need to pass in deferred?
-          makeCall(participantAddress, hostAddresses, chunk, deferred);
-          //promises.push(googlePromise);
-          }, wait, true, chunk, participantAddress, hostAddresses, deferred);
+        previousDeferred.promise.then(function () {
+          getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
+        });
 
-        promises.push(deferred.promise);
+        previousDeferred = deferred;
       });
 
-      $log.debug('returning promises', promises);
-
-      return $q.all(promises);
+      return previousDeferred.promise;
     }
 
     function sortByDistance(groups) {
