@@ -5,6 +5,69 @@
 
   GoVolunteerService.$inject = ['$resource'];
 
+  function GoVolunteerService($resource) {
+    var volunteerService =  {
+      // private, don't use these
+      cmsInfo: {},
+      childrenAttending: {
+        childTwoSeven: 0,
+        childEightTwelve: 0,
+        childThirteenEighteen: 0
+      },
+      equipment: [],
+      otherEquipment: [],
+      launchSites: {},
+      person: {
+        nickName: '',
+        lastName: '',
+        emailAddress: '',
+        dateOfBirth: null,
+        mobilePhone: null
+      },
+      preferredLaunchSite: {},
+      projectPrefOne: {},
+      projectPrefTwo: {},
+      projectPrefThree: {},
+      privateGroup: false,
+      skills: [],
+      spouse: {
+        fromDb: false
+      },
+      spouseAttending: false,
+      myPrepTime: false,
+      spousePrepTime: false,
+      organization: {},
+      otherOrgName: null,
+      prepWork: [],
+
+      getRegistrationDto: function(data) {
+        return registrationDto(data);
+      }
+    };
+
+    return volunteerService;
+  }
+
+  function registrationDto(data) {
+    return {
+      additionalInformation: data.additionalInformation,
+      children: [],
+      createGroupConnector: createGroupConnector(data.groupConnectorId),
+      equipment: equipment(data.equipment, data.otherEquipment),
+      groupConnectorId: data.groupConnectorId,
+      // need something for private group connector flag
+      initiativeId: 0, // how will we get this?  user doesn't input, part of CMS page?
+      organizationId: data.organizationId, // really location
+      preferredLaunchSiteId: data.preferredLaunchSite,
+      prepWork: prepWork(data.myPrepTime, data.spousePrepTime),
+      projectPreferences: projectPreferences(data.projectPrefOne, data.projectPrefTwo, data.projectPrefThree),
+      self: personDto(data.person),
+      spouse: personDto(data.spouse),
+      spouseParticipation: data.spouseAttending,
+      waiver: true
+    };
+  }
+
   function createGroupConnector(groupConnectorId) {
     if (groupConnectorId === null || groupConnectorId === undefined) {
       return true;
@@ -81,6 +144,7 @@
 
     if (_.has(person, 'preferredName')) {
       dto.firstName = person.preferredName;
+    }
 
     if (_.has(person, 'emailAddress')) {
       dto.emailAddress = person.emailAddress;
@@ -91,66 +155,6 @@
     }
 
     return dto;
-  }
-
-  function GoVolunteerService($resource) {
-    var volunteerService =  {
-      getRegistrationDto: function(data) {
-        return {
-          additionalInformation: data.additionalInformation,
-          children: [],
-          createGroupConnector: createGroupConnector(data.groupConnectorId),
-          equipment: equipment(data.equipment, data.otherEquipment),
-          groupConnectorId: data.groupConnectorId,
-          // need something for private group connector flag
-          initiativeId: 0, // how will we get this?  user doesn't input, part of CMS page?
-          organizationId: data.organizationId, // really location
-          preferredLaunchSiteId: data.preferredLaunchSite,
-          prepWork: prepWork(data.myPrepTime, data.spousePrepTime),
-          projectPreferences: projectPreferences(data.projectPrefOne, data.projectPrefTwo, data.projectPrefThree),
-          self: personDto(data.person),
-          spouse: personDto(data.spouse),
-          spouseParticipation: data.spouseAttending,
-          waiver: true
-        };
-      },
-
-      // private, don't use these
-      cmsInfo: {},
-      childrenAttending: {
-        childTwoSeven: 0,
-        childEightTwelve: 0,
-        childThirteenEighteen: 0
-      },
-      equipment: [],
-      otherEquipment: [],
-      launchSites: {},
-      person: {
-        nickName: '',
-        lastName: '',
-        emailAddress: '',
-        dateOfBirth: null,
-        mobilePhone: null
-      },
-      preferredLaunchSite: {},
-      projectPrefOne: {},
-      projectPrefTwo: {},
-      projectPrefThree: {},
-      privateGroup: false,
-      skills: [],
-      spouse: {
-        fromDb: false
-      },
-      spouseAttending: false,
-      myPrepTime: false,
-      spousePrepTime: false,
-      organization: {},
-      otherOrgName: null,
-      prepWork: [],
-
-    };
-
-    return volunteerService;
   }
 
 })();
