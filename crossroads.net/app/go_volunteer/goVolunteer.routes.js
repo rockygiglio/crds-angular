@@ -179,15 +179,21 @@
       var cid = $cookies.get('userId');
       if (!cid) {
         deferred.reject();
-      } else {
+      } else if (GoVolunteerService.spouse.preferredName === undefined) {
         Profile.Spouse.get({contactId: cid}, function(data) {
           GoVolunteerService.spouse = data;
+          if (data.preferredName !== undefined) {
+            GoVolunteerService.spouse.fromDb = true;
+          }
+
           deferred.resolve();
         }, function(err) {
 
           console.log(err);
           deferred.reject();
         });
+      } else {
+        deferred.resolve();
       }
     } else {
       deferred.resolve();
@@ -227,7 +233,7 @@
       var cid = $cookies.get('userId');
       if (!cid) {
         deferred.reject();
-      } else {
+      } else if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
           GoVolunteerService.person = data;
           deferred.resolve();
@@ -236,6 +242,8 @@
           console.log(err);
           deferred.reject();
         });
+      } else {
+        deferred.resolve();
       }
     } else {
       deferred.resolve();
@@ -259,7 +267,7 @@
       deferred.resolve();
     }
 
-    return deferred.$promise;
+    return deferred.promise;
   }
 
   function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {

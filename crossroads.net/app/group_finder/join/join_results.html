@@ -1,4 +1,7 @@
-<preloader full-screen='true' ng-show="result.loading"> </preloader>
+<preloader full-screen='true' ng-show="result.loading"></preloader>
+<div class="text-center lead" ng-if="result.loading">
+  Give us few moments while we generate the best results for your BRAVE group
+</div>
 <div ng-if="!result.loading">
   <div ng-if="result.error">
     <h3>Oops, something went wrong.</h3>
