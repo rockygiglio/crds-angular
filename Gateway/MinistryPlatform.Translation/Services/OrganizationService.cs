@@ -32,8 +32,8 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Location> GetLocationsForOrganization(int orgId, string token)
         {
-            var search = string.Format("{0},", orgId);
-            var result = _ministryPlatformService.GetPageViewRecords(_configurationWrapper.GetConfigIntValue("LocationsByOrg"), token, search);
+            var result = _ministryPlatformService.GetSubpageViewRecords(_configurationWrapper.GetConfigIntValue("LocationsForOrg"), orgId, token);
+
             return result.Select(record => new Location
             {
                 LocationId = record.ToInt("dp_RecordID"),
@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Services
                 City = record.ToString("City"),
                 State = record.ToString("State/Region"),
                 Zip = record.ToString("Postal Code"),
-                ImageUrl = record.ToString("Image_URL")
+                ImageUrl = record.ToString("Image URL")
             }).ToList();
         }
 

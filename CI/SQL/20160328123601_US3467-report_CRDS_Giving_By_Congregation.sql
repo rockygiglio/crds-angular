@@ -19,8 +19,8 @@ GO
 ALTER PROCEDURE [dbo].[report_CRDS_Giving_By_Congregation] 
      @startdate DATETIME ,
      @enddate DATETIME,
-	 @programid AS VARCHAR(MAX) 
-
+	 @programid AS VARCHAR(MAX) ,
+	 @congregationid AS VARCHAR(MAX)
 AS 
 BEGIN
 SET nocount ON;
@@ -64,6 +64,7 @@ INSERT INTO #GIVING
 	LEFT JOIN congregations con ON con.congregation_id = dd.congregation_id
 	WHERE don.donation_date BETWEEN @startdate AND @enddate
 	AND dd.program_id IN (SELECT Item FROM dbo.dp_Split(@programid, ','))
+	AND dd.congregation_id IN (SELECT Item FROM dbo.dp_Split(@congregationid, ','))
 
 	--update the congregation for the soft credit donations
 	UPDATE g

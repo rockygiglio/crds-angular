@@ -112,7 +112,9 @@
       projectPrefThree: {},
       privateGroup: false,
       skills: [],
-      spouse: {},
+      spouse: {
+        fromDb: false
+      },
       spouseAttending: false,
       myPrepTime: false,
       spousePrepTime: false,
