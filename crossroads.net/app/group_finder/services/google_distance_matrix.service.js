@@ -115,7 +115,6 @@
 
     function handleResponse(response, status, deferred) {
       var err;
-      $log.debug('handleResponse ' + moment().format('HH:mm:ss:SSS'));
 
       if (status !== google.maps.DistanceMatrixStatus.OK) {
         err = 'Google maps could not process the request and resulted in status:' + status;
@@ -153,8 +152,7 @@
       }
 
       var matrixService = new google.maps.DistanceMatrixService();
-
-      $log.debug('calling getDistanceMatrix ' + moment().format('HH:mm:ss:SSS'));
+      
       matrixService.getDistanceMatrix({
         origins: [startingAddress],
         destinations: destinationAddressList,
