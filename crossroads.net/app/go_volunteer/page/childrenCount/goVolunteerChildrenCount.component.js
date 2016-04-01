@@ -24,9 +24,6 @@
       vm.totalChildren = totalChildren;
 
       function submit() {
-        //GoVolunteerService.childrenAttending.childTwoSeven = vm.childTwoSeven;
-        //GoVolunteerService.childrenAttending.childEightTwelve = vm.childEightTwelve;
-        //GoVolunteerService.childrenAttending.childThirteenEighteen = vm.childThirteenEighteen;
         vm.onSubmit({nextState: 'group-connector'});
       }
 
