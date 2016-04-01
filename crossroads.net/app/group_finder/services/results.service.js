@@ -3,12 +3,13 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService', '$timeout'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService, $timeout) {
     var requestPromise = null;
     var results = {};
     var groups = [];
+    var retryCount = 0;
 
     results.loadResults = loadResults;
     results.clearData = clearData;
@@ -68,46 +69,79 @@
           groups = sortByDistance(groups);
         });
 
+
         requestPromise = sortPromise;
       }
 
       return requestPromise;
     }
 
-    function loadDistance(groups, participant) {
-      var promises = [];
+    function getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred) {
+      GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
+        .then(function(result) {
 
+          _.forEach(chunk, function (group, index) {
+            var resultDistance = result[index].distance;
+            if (resultDistance) {
+              group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
+            }
+          });
+
+          deferred.resolve();
+        })
+        .catch(function(reason) {
+          var isOverLimit =  reason.indexOf('OVER_QUERY_LIMIT') > -1;
+
+          if (!isOverLimit) {
+            deferred.reject('Failed to load distance due to error ' + reason);
+            return;
+          }
+
+          if (retryCount >= 150) {
+            deferred.reject('Failed to load distance after ' + retryCount + ' retries.');
+            return;
+          }
+
+          $timeout(function (chunk, participantAddress, hostAddresses, deferred) {
+            getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
+          }, 2000, true, chunk, participantAddress, hostAddresses, deferred);
+
+          retryCount++;
+        });
+
+      return deferred.promise;
+    }
+
+    function loadDistance(groups, participant) {
       var chunkedGroups = _.chunk(groups, 25);
+      retryCount = 0;
+
+      var previousDeferred = $q.defer();
+      previousDeferred.resolve();
 
       _.forEach(chunkedGroups, function(chunk) {
         var participantAddress = participant.address.addressLine1 + ', ' +
-            participant.address.city + ', ' +
-            participant.address.state + ', ' +
-            participant.address.zip;
+          participant.address.city + ', ' +
+          participant.address.state + ', ' +
+          participant.address.zip;
 
-        var hostAddresses = _.map(chunk, function(group) {
+        var hostAddresses = _.map(chunk, function (group) {
           return group.address.addressLine1 + ', ' +
             group.address.city + ', ' +
             group.address.state + ', ' +
             group.address.zip;
         });
 
-        var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
-          .then(function(result) {
-            _.forEach(chunk, function(group, index) {
-              var resultDistance = result[index].distance;
-              if (resultDistance) {
-                group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
-              }
-            });
-          }, function() {
-            // TODO: What can we do if this failed?
-          });
+        var deferred = $q.defer();
 
-        promises.push(googlePromise);
+        previousDeferred.promise.then(function () {
+          getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
+        });
+
+        previousDeferred = deferred;
       });
 
-      return $q.all(promises);
+      return previousDeferred.promise;
     }
 
     function sortByDistance(groups) {
