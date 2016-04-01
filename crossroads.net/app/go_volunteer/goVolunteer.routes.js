@@ -267,7 +267,7 @@
       deferred.resolve();
     }
 
-    return deferred.$promise;
+    return deferred.promise;
   }
 
   function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
