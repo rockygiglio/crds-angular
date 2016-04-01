@@ -9,7 +9,7 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IGoSkillsService
     {
-        List<GoSkills> RetrieveGoSkills();
+        List<GoSkills> RetrieveGoSkills(string token);
     }
 
 }
