@@ -30,6 +30,7 @@
       this.initialized = false;
       this.last4 = '';
       this.message = null;
+      this.name = null;
       this.processing = false;
       this.processingChange = false;
       this.program = undefined;
@@ -68,6 +69,7 @@
       this.initialized = true;
       this.last4 = '';
       this.message = null;
+      this.name = null;
       this.processing = false;
       this.processingChange = false;
       this.routing = '';
