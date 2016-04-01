@@ -3,9 +3,9 @@
 
   module.exports = ResultsService;
 
-  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService'];
+  ResultsService.$inject = ['Group', 'Address', 'GROUP_API_CONSTANTS', '$q', 'GoogleDistanceMatrixService', '$timeout', '$log'];
 
-  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService) {
+  function ResultsService(Group, Address, GROUP_API_CONSTANTS, $q, GoogleDistanceMatrixService, $timeout, $log) {
     var requestPromise = null;
     var results = {};
     var groups = [];
@@ -68,6 +68,7 @@
           groups = sortByDistance(groups);
         });
 
+
         requestPromise = sortPromise;
       }
 
@@ -79,11 +80,11 @@
 
       var chunkedGroups = _.chunk(groups, 25);
 
-      _.forEach(chunkedGroups, function(chunk) {
+      _.forEach(chunkedGroups, function(chunk, index) {
         var participantAddress = participant.address.addressLine1 + ', ' +
-            participant.address.city + ', ' +
-            participant.address.state + ', ' +
-            participant.address.zip;
+          participant.address.city + ', ' +
+          participant.address.state + ', ' +
+          participant.address.zip;
 
         var hostAddresses = _.map(chunk, function(group) {
           return group.address.addressLine1 + ', ' +
@@ -92,20 +93,38 @@
             group.address.zip;
         });
 
-        var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
-          .then(function(result) {
-            _.forEach(chunk, function(group, index) {
-              var resultDistance = result[index].distance;
-              if (resultDistance) {
-                group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
-              }
-            });
-          }, function() {
-            // TODO: What can we do if this failed?
-          });
+        var wait = 1000 * index;
+        var deferred = $q.defer();
 
-        promises.push(googlePromise);
+        $timeout(function(chunk, participantAddress, hostAddresses, deferred) {
+            // TODO: Do we need to pass in deferred?
+            var googlePromise = GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
+              .then(function(result) {
+                $log.debug('Starting distanceFromAddress.then at ' + moment());
+
+                _.forEach(chunk, function(group, index) {
+                  var resultDistance = result[index].distance;
+                  if (resultDistance) {
+                    group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
+                  }
+                });
+
+                $log.debug('Finishing distanceFromAddress.then at ' + moment());
+                //deferred.resolve(group);
+                deferred.resolve();
+              }, function() {
+                // TODO: What can we do if this failed?
+                $log.debug('Finishing with Errors distanceFromAddress.then at ' + moment());
+                deferred.reject();
+              });
+
+            //promises.push(googlePromise);
+          }, wait, true, chunk, participantAddress, hostAddresses, deferred);
+
+        promises.push(deferred);
       });
+
+      $log.debug('returning promises', promises);
 
       return $q.all(promises);
     }
