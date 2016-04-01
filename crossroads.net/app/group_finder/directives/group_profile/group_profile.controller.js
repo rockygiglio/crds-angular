@@ -1,4 +1,4 @@
-(function(){
+(function() {
   'use strict';
 
   module.exports = GroupProfileCtrl;
@@ -21,7 +21,6 @@
         'We\'ll meet at my house in Pleasant Ridge.'
     };
 
-
     var responses = Responses.data;
 
     $scope.displayDefaultGroup = !angular.isDefined($scope.group);
@@ -29,7 +28,7 @@
     $scope.host = $scope.group.host;
 
     $scope.getProfileImage = function() {
-      if($scope.displayDefaultGroup) {
+      if ($scope.displayDefaultGroup) {
         return $scope.defaultGroup.imageUrl;
       } else {
         return ImageService.ProfileImageBaseURL + $scope.group.contactId;
@@ -41,7 +40,7 @@
     };
 
     if ($scope.group.distance) {
-      $scope.getGroupDistance = function (result) {
+      $scope.getGroupDistance = function(result) {
         return $scope.group.distance + ' miles away from you';
       };
     } else if (!$scope.displayDefaultGroup && $scope.group.address && responses.location) {
@@ -57,8 +56,8 @@
 
       GoogleDistanceMatrixService.distanceFromAddress(hostAddress, [
         participantAddress
-      ]).then(function (result) {
-        $scope.getGroupDistance = function () {
+      ]).then(function(result) {
+        $scope.getGroupDistance = function() {
           if (result[0].distance) {
             var distance = Math.round((result[0].distance.value / 1609.344) * 10) / 10;
             return distance + ' miles away from you';

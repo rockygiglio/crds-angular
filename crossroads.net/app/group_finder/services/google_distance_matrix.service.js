@@ -1,5 +1,5 @@
 /* globals google */
-(function () {
+(function() {
   'use strict';
 
   /*
@@ -129,7 +129,7 @@
       if (response.rows.length && response.rows[0].elements) {
         result = response.rows[0].elements;
 
-        angular.forEach(response.destinationAddresses, function (value, key) {
+        angular.forEach(response.destinationAddresses, function(value, key) {
           result[key].destination = value;
         });
       } else {
@@ -152,7 +152,7 @@
       }
 
       var matrixService = new google.maps.DistanceMatrixService();
-      
+
       matrixService.getDistanceMatrix({
         origins: [startingAddress],
         destinations: destinationAddressList,

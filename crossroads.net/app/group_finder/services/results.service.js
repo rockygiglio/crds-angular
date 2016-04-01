@@ -1,4 +1,4 @@
-(function(){
+(function() {
   'use strict';
 
   module.exports = ResultsService;
@@ -30,11 +30,11 @@
             group.groupTitle = groupTitle(group.contactName);
             group.mapLink = Address.mapLink(group.address);
 
-            if (_.has(group.singleAttributes, '73' ) ) {
+            if (_.has(group.singleAttributes, '73')) {
               group.groupType = group.singleAttributes[73].attribute.description;
             }
-            group.attributes = [];
 
+            group.attributes = [];
 
             //
             // check attributes for pets and kids
@@ -44,15 +44,17 @@
                 _.each(attribute.attributes, function(type) {
                   if (type.selected && type.name) {
                     if (type.name.indexOf('dog') !== -1) { group.attributes.push('has a dog'); }
+
                     if (type.name.indexOf('cat') !== -1) { group.attributes.push('has a cat'); }
                   }
                 });
               }
             });
 
-            if (_.has(group.singleAttributes, '75' ) && group.singleAttributes[75].attribute.attributeId === 7017) {
+            if (_.has(group.singleAttributes, '75') && group.singleAttributes[75].attribute.attributeId === 7017) {
               group.attributes.push('kids welcome');
             }
+
             return group;
           });
 
@@ -69,7 +71,6 @@
           groups = sortByDistance(groups);
         });
 
-
         requestPromise = sortPromise;
       }
 
@@ -80,7 +81,7 @@
       GoogleDistanceMatrixService.distanceFromAddress(participantAddress, hostAddresses)
         .then(function(result) {
 
-          _.forEach(chunk, function (group, index) {
+          _.forEach(chunk, function(group, index) {
             var resultDistance = result[index].distance;
             if (resultDistance) {
               group.distance = Math.round((resultDistance.value / 1609.344) * 10) / 10;
@@ -102,7 +103,7 @@
             return;
           }
 
-          $timeout(function (chunk, participantAddress, hostAddresses, deferred) {
+          $timeout(function(chunk, participantAddress, hostAddresses, deferred) {
             getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
           }, 2000, true, chunk, participantAddress, hostAddresses, deferred);
 
@@ -125,7 +126,7 @@
           participant.address.state + ', ' +
           participant.address.zip;
 
-        var hostAddresses = _.map(chunk, function (group) {
+        var hostAddresses = _.map(chunk, function(group) {
           return group.address.addressLine1 + ', ' +
             group.address.city + ', ' +
             group.address.state + ', ' +
@@ -134,7 +135,7 @@
 
         var deferred = $q.defer();
 
-        previousDeferred.promise.then(function () {
+        previousDeferred.promise.then(function() {
           getDistanceForChunk(participantAddress, hostAddresses, chunk, deferred);
         });
 
@@ -156,6 +157,7 @@
       if (parseInt(_time[1]) === 0) {
         format = 'dddd[s] @ h a';
       }
+
       return moment().isoWeekday(day - 1).hour(_time[0]).minute(_time[1]).format(format);
     }
 
