@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
@@ -45,7 +46,7 @@ namespace crds_angular.Services
             }
 
             // get skills using the logged in users token
-            var contactSkills = ContactSkills(token);
+            var contactSkills = ContactSkills(token, skills);
 
             // match our list to the users, update "checked" to true when appropriate
             if (contactSkills != null)
@@ -58,17 +59,13 @@ namespace crds_angular.Services
 
             return new GoSkills().ToGoSkills(skills);
         }
-
-        private ObjectAttributeTypeDTO ContactSkills(string token)
+        
+        private ObjectAttributeTypeDTO ContactSkills(string token, List<MpGoVolunteerSkill> skills)
         {
             var contact = _contactService.GetMyProfile(token);
             var configuration = ObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
-
             ObjectAttributeTypeDTO contactSkills;
-            // not in love with this next part
-            // alternatives?
-            // we could iterate over the whole set, knowing we should only find matches in "Skills"
             var skillsAttributeTypeId = _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills");
             attributesTypes.MultiSelect.TryGetValue(skillsAttributeTypeId, out contactSkills);
             return contactSkills;
