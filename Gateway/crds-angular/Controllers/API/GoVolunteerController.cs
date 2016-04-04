@@ -87,9 +87,14 @@ namespace crds_angular.Controllers.API
         [Route("api/govolunteer/skills")]
         public IHttpActionResult GetGoSkills()
         {
+            return (Authorized(Skills,() => Skills(string.Empty)));
+        }
+
+        private IHttpActionResult Skills(string token)
+        {
             try
             {
-                var skills = _skillsService.RetrieveGoSkills();
+                var skills = _skillsService.RetrieveGoSkills(token);
                 return Ok(skills);
             }
             catch (Exception e)

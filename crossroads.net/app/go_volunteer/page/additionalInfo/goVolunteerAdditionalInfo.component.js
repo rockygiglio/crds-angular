@@ -21,8 +21,16 @@
       var vm = this;
       vm.submit = submit;
 
+      activate();
+
+      function activate() {
+        if (GoVolunteerService.additionalInformation) {
+          vm.additionalInfo = angular.copy(GoVolunteerService.additionalInformation);
+        }
+      }
+
       function submit() {
-        GoVolunteerService.additionalInformation = vm.additionalInfo;
+        GoVolunteerService.additionalInformation = angular.copy(vm.additionalInfo);
         vm.onSubmit({nextState: 'available-prep'});
       }
     }

@@ -5,6 +5,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface ISkillsService
     {
-        List<MPGoVolunteerSkill> GetGoVolunteerSkills(string token);
+        List<MpGoVolunteerSkill> GetGoVolunteerSkills(string token);
     }    
 }

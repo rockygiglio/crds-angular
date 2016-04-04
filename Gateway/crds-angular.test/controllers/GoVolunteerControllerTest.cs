@@ -59,7 +59,7 @@ namespace crds_angular.test.controllers
         {
             const int listSize = 20;
             var skills = TestHelpers.ListOfGoSkills(listSize);
-            _skillsService.Setup(m => m.RetrieveGoSkills()).Returns(skills);
+            _skillsService.Setup(m => m.RetrieveGoSkills(string.Empty)).Returns(skills);
             var response = _fixture.GetGoSkills();
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);

@@ -9,12 +9,13 @@ namespace crds_angular.test
 {
     public static class TestHelpers
     {
-        public static List<MPGoVolunteerSkill> MPSkills(int size = 10)
+        public static List<MpGoVolunteerSkill> MPSkills(int size = 10)
         {
-            return Enumerable.Repeat<MPGoVolunteerSkill>(new MPGoVolunteerSkill(
+            return Enumerable.Repeat<MpGoVolunteerSkill>(new MpGoVolunteerSkill(
                 Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
                 Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault), size).ToList();        
+                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault), size).ToList();        
         }
 
         public static List<GoSkills> ListOfGoSkills(int size = 10)
@@ -22,7 +23,8 @@ namespace crds_angular.test
             return Enumerable.Repeat<GoSkills>(new GoSkills(
                 Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
                 Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault), size).ToList();           
+                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault), size).ToList();           
         }
 
         public static List<AttributeTypeDTO> ListOfAttributeTypeDtos(int size = 10, int attributeListSize = 10)
