@@ -102,8 +102,12 @@
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
+    <Compile Include="Models\GoCincinnati\MpGroupConnector.cs" />
+    <Compile Include="Models\GoCincinnati\ProjectType.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Lookups\MPOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MPWorkTeams.cs" />
+    <Compile Include="Models\MPGoVolunteerSkill.cs" />
     <Compile Include="Models\MPOrganization.cs" />
     <Compile Include="Models\MPServeReminder.cs" />
     <Compile Include="Models\Opportunities\MPResponse.cs" />
@@ -124,7 +128,12 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\GoVolunteerService.cs" />
+    <Compile Include="Services\Interfaces\IGoVolunteerService.cs" />
+    <Compile Include="Services\GroupConnectorService.cs" />
+    <Compile Include="Services\Interfaces\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
+    <Compile Include="Services\Interfaces\ISkillsService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />
     <Compile Include="Services\ObjectAttributeService.cs" />
     <Compile Include="Services\ContactRelationshipService.cs" />
@@ -186,6 +195,7 @@
     <Compile Include="Services\ResponseService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\SelectionService.cs" />
+    <Compile Include="Services\SkillsService.cs" />
     <Compile Include="Services\TaskRepository.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />

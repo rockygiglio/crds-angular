@@ -7,5 +7,6 @@ namespace crds_angular.Services.Interfaces
     {
         Organization GetOrganizationByName(string name);
         List<Organization> GetOrganizations();
+        List<OrgLocation> GetLocationsForOrganization(int orgId);
     }
 }

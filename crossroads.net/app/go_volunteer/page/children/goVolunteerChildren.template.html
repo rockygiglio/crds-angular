@@ -1,7 +1,9 @@
 <div class="row">
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
-<h2>Will any children be serving with you?</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerChildrenQuestion.content | html"></div>
+
 <div class="row">
   <div class="col-xs-6">
     <button type="submit" class="btn btn-block btn-standard" ng-click="goChildren.submit(false)" >No

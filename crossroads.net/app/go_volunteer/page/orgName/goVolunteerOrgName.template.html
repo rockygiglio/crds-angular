@@ -1,16 +1,18 @@
 <div class="row">
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
-<h2>What is the name of your church or organization?</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerOrgNameQuestion.content | html"></div>
+
 <div class="row" >
   <div class="form-group col-xs-12">
-    <input type="text" 
-           ng-model="goOrgName.otherOrgName" 
-           typeahead="option.name for option in goOrgName.availableOptions | filter:$viewValue | limitTo:8" 
+    <input type="text"
+           ng-model="goOrgName.otherOrgName"
+           typeahead="option.name for option in goOrgName.availableOptions | filter:$viewValue | limitTo:8"
            class="form-control">
   </div>
   <div class="col-xs-12">
-    <button type="submit" 
+    <button type="submit"
             class="btn btn-primary-gc pull-right"
             ng-click="goOrgName.submit()"
             > Next

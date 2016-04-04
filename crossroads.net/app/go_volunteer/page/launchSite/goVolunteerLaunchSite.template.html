@@ -1,73 +1,19 @@
 <div class="row">
   <div class="col-sm-12"><progressbar value="15"></progressbar></div>
 </div>
-<h2>Which launch site would you like to volunteer from?</h2>
+
+<div dynamic-content="$root.MESSAGES.goVolunteerLaunchSiteQuestion.content | html"></div>
 
 <div class="row">
   <div class="form-group col-xs-12">
-    <a ui-sref="go-volunteer.crossroadspage({page: 'project-preference-one'})">
+    <a ng-repeat="locs in goLaunchSite.locations" ng-click="goLaunchSite.submit(locs.locationId)">
       <div class="media card-item media-card-link">
         <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" data-src="//crds-cms-uploads.imgix.net/content/images/oakley.jpg" alt="Demo" title="" />
+          <img class="media-object img-responsive imgix-fluid" data-src="{{locs.imageUrl}}" alt="{{locs.location}}" title="" />
         </div>
         <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">Oakley</h3>
-          <p class="flush-bottom small">3500 Madison Road<br>Cincinnati, OH 45209</p>
-        </div>
-      </div>
-    </a>
-    <a ui-sref="go-volunteer.page({page: 'project-preference-one'})">
-      <div class="media card-item media-card-link">
-        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/florence.jpg" alt="Demo" title="" />
-        </div>
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">Florence</h3>
-          <p class="flush-bottom small">828 Heights Blvd<br>Florence KY, 41042</p>
-        </div>
-      </div>
-    </a>
-    <a ui-sref="go-volunteer.page({page: 'project-preference-one'})">
-      <div class="media card-item media-card-link">
-        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/mason.jpg" alt="Demo" title="" />
-        </div>
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">Mason</h3>
-          <p class="flush-bottom small">990 Reading Road<br>Mason, OH 45040</p>
-        </div>
-      </div>
-    </a>
-    <a ui-sref="go-volunteer.page({page: 'project-preference-one'})">
-      <div class="media card-item media-card-link">
-        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/westside.jpg" alt="Demo" title="" />
-        </div>
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">West Side</h3>
-          <p class="flush-bottom small">8575 Bridgetown Road<br>Cleves, Ohio 45002</p>
-        </div>
-      </div>
-    </a>
-    <a ui-sref="go-volunteer.page({page: 'project-preference-one'})">
-      <div class="media card-item media-card-link">
-        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/bogarts.jpg" alt="Demo" title="" />
-        </div>
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">Uptown</h3>
-          <p class="flush-bottom small">2621 Vine Street<br>Cincinnati, OH 45219</p>
-        </div>
-      </div>
-    </a>
-    <a ui-sref="go-volunteer.page({page: 'project-preference-one'})">
-      <div class="media card-item media-card-link">
-        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-          <img class="media-object img-responsive imgix-fluid" src="//crds-cms-uploads.imgix.net/content/images/oxford.jpg" alt="Demo" title="" />
-        </div>
-        <div class="media-body soft-half-ends soft-half-right">
-          <h3 class="media-heading flush-bottom">Oxford</h3>
-          <p class="flush-bottom small">510 E. High Street<br>Oxford, OH 45056</p>
+          <h3 class="media-heading flush-bottom">{{locs.location}}</h3>
+          <p class="flush-bottom small">{{locs.address}}<br>{{locs.city}}, {{locs.state}} {{locs.zip}}</p>
         </div>
       </div>
     </a>
