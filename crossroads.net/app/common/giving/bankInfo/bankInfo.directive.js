@@ -11,7 +11,6 @@
       replace: true,
       scope: {
         account: '=',
-        accountHolderName: '=',
         bankinfoSubmitted: '=',
         changeAccountInfo: '=',
         defaultSource: '=',
@@ -49,10 +48,8 @@
             scope.resetDefaultBankPlaceholderValues();
           } else if (scope.defaultSource.bank_account.last4) {
             scope.bankAccount.account = '';
-            scope.bankAccount.accountHolderName = '';
             scope.bankAccount.routing = '';
             scope.defaultBankPlaceholderValues = {
-              accountHolderName: scope.defaultSource.bank_account.account_holder_name,
               routing: scope.defaultSource.bank_account.routing,
               maskedAccount: 'XXXXXXXXXXX' + scope.defaultSource.bank_account.last4
             };
