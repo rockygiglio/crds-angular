@@ -46,7 +46,7 @@ namespace crds_angular.Services
             }
 
             // get skills using the logged in users token
-            var contactSkills = ContactSkills(token, skills);
+            var contactSkills = ContactSkills(token, apiToken, skills);
 
             // match our list to the users, update "checked" to true when appropriate
             if (contactSkills != null)
@@ -60,11 +60,11 @@ namespace crds_angular.Services
             return new GoSkills().ToGoSkills(skills);
         }
         
-        private ObjectAttributeTypeDTO ContactSkills(string token, List<MpGoVolunteerSkill> skills)
+        private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken, List<MpGoVolunteerSkill> skills)
         {
             var contact = _contactService.GetMyProfile(token);
             var configuration = ObjectAttributeConfigurationFactory.Contact();
-            var attributesTypes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contact.Contact_ID, configuration);
             ObjectAttributeTypeDTO contactSkills;
             var skillsAttributeTypeId = _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills");
             attributesTypes.MultiSelect.TryGetValue(skillsAttributeTypeId, out contactSkills);
