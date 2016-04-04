@@ -1,14 +1,11 @@
 ﻿using System;
-using crds_angular.Models.Crossroads.GoVolunteer;
-using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
-using log4net;
-using MinistryPlatform.Translation.Services.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
+using log4net;
+using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
@@ -17,21 +14,24 @@ namespace crds_angular.Services
     public class GoVolunteerService : IGoVolunteerService
 
     {
+        private readonly IAttributeService _attributeService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly IContactService _contactService;
+        private readonly MPInterfaces.IContactRelationshipService _contactRelationshipService;
+        private readonly MPInterfaces.IContactService _contactService;
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
-        private readonly IParticipantService _participantService;
+        private readonly MPInterfaces.IParticipantService _participantService;
+        private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
-        private readonly IProjectTypeService _projectTypeService;
 
-        public GoVolunteerService(IParticipantService participantService,
+        public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
-                                  IContactService contactService,
+                                  MPInterfaces.IContactService contactService,
                                   IGroupConnectorService groupConnectorService,
                                   IConfigurationWrapper configurationWrapper,
-                                  IContactRelationshipService contactRelationshipService, IProjectTypeService projectTypeService)
+                                  MPInterfaces.IContactRelationshipService contactRelationshipService,
+                                  MPInterfaces.IProjectTypeService projectTypeService,
+                                  IAttributeService attributeService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -40,6 +40,21 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _contactRelationshipService = contactRelationshipService;
             _projectTypeService = projectTypeService;
+            _attributeService = attributeService;
+        }
+
+        public List<ChildrenOptions> ChildrenOptions()
+        {
+            var attributeTypeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiRegistrationChildrenAttributeType");
+            var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
+            var attributes = attributeTypes.Single().Attributes;
+            return attributes.Select(attribute => new ChildrenOptions
+            {
+                AttributeId = attribute.AttributeId,
+                PluralLabel = string.Concat("Children Ages ", attribute.Name),
+                SingularLabel = string.Concat("Child Age ", attribute.Name),
+                Value = 0
+            }).ToList();
         }
 
         public bool CreateRegistration(Registration registration, string token)
@@ -61,6 +76,18 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        public List<ProjectType> GetProjectTypes()
+        {
+            //var apiUserToken = _mpApiUserService.GetToken();
+
+            var pTypes = _projectTypeService.GetProjectTypes();
+            return pTypes.Select(pt =>
+            {
+                var projType = new ProjectType();
+                return projType.FromMpProjectType(pt);
+            }).ToList();
         }
 
         private void Attributes(Registration registration, int registrationId)
@@ -195,18 +222,6 @@ namespace crds_angular.Services
                 throw new ApplicationException("Nooooooo");
             }
             return participantId;
-        }
-
-        public List<ProjectType> GetProjectTypes()
-        {
-            //var apiUserToken = _mpApiUserService.GetToken();
-
-            var pTypes = _projectTypeService.GetProjectTypes();
-            return pTypes.Select(pt =>
-            {
-                var projType = new ProjectType();
-                return projType.FromMpProjectType(pt);
-            }).ToList();
         }
     }
 }

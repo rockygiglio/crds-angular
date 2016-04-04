@@ -7,7 +7,7 @@
 <div dynamic-content="$root.MESSAGES.goVolunteerChildrenCountQuestion.content | html"></div>
 
 <div class="row">
-  <div class="col-xs-12 soft-half-bottom">
+  <!-- <div class="col-xs-12 soft-half-bottom">
     <h-number value="goChildrenCount.childrenAttending.childTwoSeven" singular="Child Age 2-7" plural="Children Ages 2-7" min="0" max="15" step="1"></h-number>
   </div>
   <div class="col-xs-12 soft-half-bottom">
@@ -15,6 +15,13 @@
   </div>
   <div class="col-xs-12 soft-half-bottom">
     <h-number value="goChildrenCount.childrenAttending.childThirteenEighteen" singular="Child Age 13-18" plural="Children Ages 13-18" min="0" max="15" step="1"></h-number>
+  </div> -->
+
+
+
+
+  <div class="col-xs-12 soft-half-bottom" ng-repeat="item in goChildrenCount.childrenOptions">
+    <h-number value="item.value" singular="{{item.singularLabel}}" plural="{{item.pluralLabel}}" min="0" max="15" step="1"></h-number>
   </div>
 </div>
 <hr />

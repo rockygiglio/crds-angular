@@ -8,5 +8,6 @@ namespace crds_angular.Services.Interfaces
         bool CreateRegistration(Registration registration, string token);
 
         List<ProjectType> GetProjectTypes();
+        List<ChildrenOptions> ChildrenOptions();
     }
 }

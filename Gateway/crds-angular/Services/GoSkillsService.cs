@@ -5,7 +5,6 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
@@ -46,7 +45,7 @@ namespace crds_angular.Services
             }
 
             // get skills using the logged in users token
-            var contactSkills = ContactSkills(token, apiToken, skills);
+            var contactSkills = ContactSkills(token, apiToken);
 
             // match our list to the users, update "checked" to true when appropriate
             if (contactSkills != null)
@@ -60,7 +59,7 @@ namespace crds_angular.Services
             return new GoSkills().ToGoSkills(skills);
         }
         
-        private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken, List<MpGoVolunteerSkill> skills)
+        private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken)
         {
             var contact = _contactService.GetMyProfile(token);
             var configuration = ObjectAttributeConfigurationFactory.Contact();

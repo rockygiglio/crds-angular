@@ -43,14 +43,31 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
+        [ResponseType(typeof (List<ChildrenOptions>))]
+        [Route("api/govolunteer/children")]
+        public IHttpActionResult GetGoChildrenOptions()
+        {
+            try
+            {
+                // GO Cincinnati - Registration Children
+                var options = _goVolunteerService.ChildrenOptions();
+                return Ok(options);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Go Volunteer Children Options failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
         [ResponseType(typeof (List<AttributeDTO>))]
         [Route("api/govolunteer/prep-times")]
         public IHttpActionResult GetPrepTimes()
         {
             try
             {
-                var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
-                return Ok(GetAttributesByType(prepTypeId));
+                return Ok(GetAttributesByType("PrepWorkAttributeTypeId"));
             }
             catch (Exception e)
             {
@@ -66,8 +83,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var attributeTypeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiEquipmentAttributeType");
-                return Ok(GetAttributesByType(attributeTypeId));
+                return Ok(GetAttributesByType("GoCincinnatiEquipmentAttributeType"));
             }
             catch (Exception e)
             {
@@ -76,8 +92,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        private List<AttributeDTO> GetAttributesByType(int attributeTypeId)
+        private List<AttributeDTO> GetAttributesByType(string attributeType)
         {
+            var attributeTypeId = _configurationWrapper.GetConfigIntValue(attributeType);
             var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
             return attributeTypes.Single().Attributes;
         }
@@ -87,7 +104,7 @@ namespace crds_angular.Controllers.API
         [Route("api/govolunteer/skills")]
         public IHttpActionResult GetGoSkills()
         {
-            return (Authorized(Skills,() => Skills(string.Empty)));
+            return (Authorized(Skills, () => Skills(string.Empty)));
         }
 
         private IHttpActionResult Skills(string token)
