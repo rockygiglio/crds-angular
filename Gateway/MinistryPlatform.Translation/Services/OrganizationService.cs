@@ -36,7 +36,7 @@ namespace MinistryPlatform.Translation.Services
 
             return result.Select(record => new Location
             {
-                LocationId = record.ToInt("dp_RecordID"),
+                LocationId = record.ToInt("Location ID"),
                 LocationName = record.ToString("Location Name"),
                 LocationTypeId = record.ToInt("Location Type ID"),
                 OrganizationId = record.ToInt("Organization ID"),
