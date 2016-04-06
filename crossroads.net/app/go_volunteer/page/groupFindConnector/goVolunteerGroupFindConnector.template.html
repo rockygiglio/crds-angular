@@ -3,51 +3,47 @@
     <progressbar value="15"></progressbar>
   </div>
 </div>
-<h2>Find your group</h2>
-<p>
-  Can’t find a fit? <a ui-sref="go-volunteer.crossroadspage({page: 'unique-skills'})">Create your own group.</a>
-</p>
 
-<div class="row">
+<div dynamic-content="$root.MESSAGES.goVolunteerGroupFindConnectorQuestion.content | html"></div>
 
-  <div class="form-group col-sm-12 push-bottom">
-    <input type="text"
-           class="form-control"
-           placeholder="Search">
+<div class="col-sm-12" ng-if="!goGroupFindConnector.loaded()">
+  <preloader full-screen="false" > </preloader>
+</div>
+
+
+<div ng-if="goGroupFindConnector.showGroups()">
+
+   <div class="row">
+    <div class="form-group col-sm-12 push-bottom">
+      <input type="text" class="form-control" placeholder="Search" ng-model="query">
+    </div>
+
+     <div class="col-sm-12">
+      <a ng-click="goGroupFindConnector.submit(g)"
+         ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
+        <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
+          <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
+            <profile-picture contact-id="g.primaryContactRegistrationId"
+                             wrapper-class="embed-responsive embed-responsive-1by1"
+                             image-class="media-object img-responsive imgix-fluid embed-responsive-item"
+                             disallow-change="false">
+            </profile-picture>
+          </div>
+          <div class="media-body soft-half-ends soft-half-right">
+            <h3 class="media-heading flush-bottom">{{g.name}}</h3>
+            <p class="flush-bottom">
+              <span ng-if="g.projectType !== null">Project Type: {{g.projectType}}<br /></span>
+              Launch Site: {{g.preferredLaunchSite}}
+            </p>
+          </div>
+          <div class="triangle">
+            <span>Age {{g.projectMinimumAge}} </span>
+          </div>
+          <div class="disabled-reason" ng-if="goGroupFindConnector.disableCard(g)">
+            <span>{{goGroupFindConnector.disabledReason(g)}}</span>
+          </div>
+        </div>
+      </a>
+    </div>
   </div>
-
-<div class="col-sm-12">
-  <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
-    <div class="media card-item media-card-link">
-      <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-        <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
-      </div>
-      <div class="media-body soft-half-ends soft-half-right">
-        <h3 class="media-heading flush-bottom">John Doe</h3>
-        <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-      </div>
-    </div>
-  </a>
-  <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
-    <div class="media card-item media-card-link">
-      <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-        <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
-      </div>
-      <div class="media-body soft-half-ends soft-half-right">
-        <h3 class="media-heading flush-bottom">John Doe &amp; Susie Doe</h3>
-        <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-      </div>
-    </div>
-  </a>
-  <a ui-sref="go-volunteer.crossroadspage({page: 'be-a-connector'})">
-    <div class="media card-item media-card-link">
-      <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
-        <img class="media-object img-responsive imgix-fluid" data-src="//crossroads-media.imgix.net/images/styeguide-images-4.jpg" alt="Demo" title="" />
-      </div>
-      <div class="media-body soft-half-ends soft-half-right">
-        <h3 class="media-heading flush-bottom">Joe Doe &amp; Brent Stevenson</h3>
-        <p class="flush-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-      </div>
-    </div>
-  </a>
 </div>

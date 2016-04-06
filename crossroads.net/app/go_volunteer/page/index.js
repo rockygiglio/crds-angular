@@ -26,7 +26,6 @@
   require('./equipment');
   require('./additionalInfo');
   require('./availablePrep');
-  require('./availablePrepSpouse');
   require('./waiver');
   require('./thankYou');
 })();

@@ -3,21 +3,19 @@
     <progressbar value="15"></progressbar>
   </div>
 </div>
-<h2>Do you have any unique skills or experience?</h2>
 
+<div dynamic-content="$root.MESSAGES.goVolunteerUniqueSkillsQuestion.content | html"></div>
 <div class="row push-half-bottom">
-  <div class="col-xs-10 col-xs-offset-1">
+  <div class="col-xs-12 col-sm-10 col-sm-offset-1">
 
-    <a class="btn btn-standard btn-block btn-multi-line push-half-bottom {{item.state}}" ui-sref="go-volunteer.crossroadspage({page: 'project-preference-two'})" ng-repeat="item in goProjectPrefOne.list">
-      {{item.title}}
-      <br>
-      <span class="">Ages {{item.age}}&plus;</span>
-    </a>
-    <div class="checkbox" ng-repeat="item in goUniqueSkills.list">
+    <div class="checkbox" ng-repeat="item in goUniqueSkills.skills">
       <!-- / Shouldn't use the title here. Should use an ID from MT -->
-      <label for="{{item.title}}" class="control-label">
-        <input type="checkbox" value="" id="{{item.title}}">
-        {{item.title}}
+      <label for="{{item.skillId}}" class="control-label">
+        <input type="checkbox"
+               ng-value="item.skillId"
+               id="{{item.skillId}}"
+               ng-model="item.checked">
+        {{item.label}}
       </label>
     </div>
   </div>
@@ -25,7 +23,9 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'equipment'})">Next
+    <button type="submit"
+            class="btn btn-block btn-primary-gc"
+            ng-click="goUniqueSkills.submit()"> Next
       <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
         <use xlink:href="#arrow-right9"></use>
       </svg>

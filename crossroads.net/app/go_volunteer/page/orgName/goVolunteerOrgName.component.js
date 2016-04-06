@@ -21,6 +21,7 @@
       var vm = this;
       vm.activate = activate;
       vm.availableOptions = [];
+      vm.otherOrgName = GoVolunteerService.otherOrgName;
       vm.submit = submit;
 
       vm.activate();

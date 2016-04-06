@@ -9,7 +9,14 @@
     var volunteerService =  {
       // private, don't use these
       cmsInfo: {},
-      childrenAttending: {},
+      childrenAttending: {
+        childTwoSeven: 0,
+        childEightTwelve: 0,
+        childThirteenEighteen: 0
+      },
+      equipment: [],
+      otherEquipment: [],
+      launchSites: {},
       person: {
         nickName: '',
         lastName: '',
@@ -17,10 +24,22 @@
         dateOfBirth: null,
         mobilePhone: null
       },
-      spouse: {},
+      preferredLaunchSite: {},
+      projectPrefOne: {},
+      projectPrefTwo: {},
+      projectPrefThree: {},
+      privateGroup: false,
+      skills: [],
+      spouse: {
+        fromDb: false
+      },
       spouseAttending: false,
+      myPrepTime: false,
+      spousePrepTime: false,
       organization: {},
-      otherOrgName: null
+      otherOrgName: null,
+      prepWork: [],
+
     };
 
     return volunteerService;

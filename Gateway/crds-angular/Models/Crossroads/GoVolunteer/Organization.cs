@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
@@ -9,8 +6,11 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 {
     public class Organization
     {
-        [JsonProperty(PropertyName = "organizationId")]
-        public int OrganizationId { get; set; }
+        [JsonProperty(PropertyName = "contactId")]
+        public int ContactId { get; set; }
+
+        [JsonProperty(PropertyName = "endDate")]
+        public DateTime EndDate { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
@@ -18,14 +18,11 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "openSignup")]
         public bool OpenSignup { get; set; }
 
+        [JsonProperty(PropertyName = "organizationId")]
+        public int OrganizationId { get; set; }
+
         [JsonProperty(PropertyName = "startDate")]
         public DateTime StartDate { get; set; }
-
-        [JsonProperty(PropertyName = "endDate")]
-        public DateTime EndDate { get; set; }
-
-        [JsonProperty(PropertyName = "contactId")]
-        public int ContactId { get; set; }
 
         public Organization FromMpOrganization(MPOrganization mpOrg)
         {

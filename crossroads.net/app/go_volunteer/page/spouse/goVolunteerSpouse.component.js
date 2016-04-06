@@ -25,7 +25,7 @@
       vm.submit = submit;
 
       function spouseName() {
-        if (vm.spouse.preferredName !== '' && vm.spouse.preferredName !== undefined) {
+        if (vm.spouse.fromDb) {
           return vm.spouse.preferredName + ' ' + vm.spouse.lastName;
         } else {
           vm.spouseKnown = false;

@@ -13,7 +13,8 @@
         contactId: '=?',
         wrapperClass: '@?',
         imageClass: '@?',
-        buttonText: '@?'
+        buttonText: '@?',
+        disallowChange: '@?'
       },
       controller: 'ProfilePictureController as picture',
       bindToController: true,
