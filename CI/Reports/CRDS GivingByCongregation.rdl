@@ -517,7 +517,8 @@ order by congregation_name</CommandText>
                 <TablixMember>
                   <Group Name="MonthLabel2">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!MonthLabel.Value</GroupExpression>
+                      <GroupExpression>=Fields!MonthNumber.Value</GroupExpression>
+                      <GroupExpression>=Fields!YearNumber.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
