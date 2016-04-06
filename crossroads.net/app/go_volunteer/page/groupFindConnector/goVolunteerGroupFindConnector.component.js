@@ -94,7 +94,6 @@
       function registrationCount() {
         return 1 +
           GoVolunteerService.spouseAttending +
-          GoVolunteerService.childrenAttending.childTwoSeven +
           GoVolunteerService.childrenAttending.childEightTwelve +
           GoVolunteerService.childrenAttending.childThirteenEighteen;
       }
