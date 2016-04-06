@@ -56,6 +56,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "self")]
         public Registrant Self { get; set; }
 
+        [JsonProperty(PropertyName = "skills")]
+        public GoSkills Skills { get; set; }
+
         [JsonProperty(PropertyName = "spouse")]
         public Registrant Spouse { get; set; }
 
