@@ -9,7 +9,7 @@ DECLARE @DonationIdTbl TABLE (ID INT, New_Status INT, Prev_Status INT)
 Update Donations 
 SET donation_status_id = 2 --deposited
 OUTPUT INSERTED.donation_id, INSERTED.donation_status_id, DELETED.donation_status_id INTO @DonationIdTbl
-WHERE d.donation_date between '2016-01-25' and (DATEADD(DAY,  -7, GETDATE()))
+WHERE donation_date between '2016-01-25' and (DATEADD(DAY,  -7, GETDATE()))
 AND donation_status_id = 4  --succeeded
 AND payment_type_Id IN (1,5) --check and bank
 AND Batch_ID IS NOT NULL
