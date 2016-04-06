@@ -40,32 +40,34 @@
       otherOrgName: null,
       prepWork: [],
 
-      getRegistrationDto: function(data) {
-        return registrationDto(data);
+      getRegistrationDto: function() {
+        return registrationDto();
       }
     };
 
-    return volunteerService;
-  }
+    function registrationDto() {
+      return {
+        additionalInformation: volunteerService.additionalInformation,
+        children: children(volunteerService.childrenOptions),
+        createGroupConnector: createGroupConnector(volunteerService.groupConnectorId),
+        equipment: equipment(volunteerService.equipment, volunteerService.otherEquipment),
+        groupConnectorId: volunteerService.groupConnectorId,
+        // need something for private group connector flag
+        initiativeId: 0, //TODO: how will we get this?  user doesn't input, part of CMS page?
+        organizationId: volunteerService.organization.organizationId,
+        preferredLaunchSiteId: preferredLaunchSite(volunteerService.preferredLaunchSite),
+        prepWork: prepWork(volunteerService.myPrepTime, volunteerService.spousePrepTime),
+        projectPreferences: projectPreferences(volunteerService.projectPrefOne,
+                                               volunteerService.projectPrefTwo,
+                                               volunteerService.projectPrefThree),
+        self: personDto(volunteerService.person),
+        spouse: personDto(volunteerService.spouse),
+        spouseParticipation: volunteerService.spouseAttending,
+        waiverSigned: true
+      };
+    }
 
-  function registrationDto(data) {
-    return {
-      additionalInformation: data.additionalInformation,
-      children: children(data.childrenOptions),
-      createGroupConnector: createGroupConnector(data.groupConnectorId),
-      equipment: equipment(data.equipment, data.otherEquipment),
-      groupConnectorId: data.groupConnectorId,
-      // need something for private group connector flag
-      initiativeId: 0, // how will we get this?  user doesn't input, part of CMS page?
-      organizationId: data.organization.organizationId,
-      preferredLaunchSiteId: preferredLaunchSite(data.preferredLaunchSite),
-      prepWork: prepWork(data.myPrepTime, data.spousePrepTime),
-      projectPreferences: projectPreferences(data.projectPrefOne, data.projectPrefTwo, data.projectPrefThree),
-      self: personDto(data.person),
-      spouse: personDto(data.spouse),
-      spouseParticipation: data.spouseAttending,
-      waiverSigned: true
-    };
+    return volunteerService;
   }
 
   function children(options) {
@@ -99,7 +101,6 @@
 
     var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e); });
 
-    debugger;
     if (!_.isEmpty(other)) {
       return equip;
     } else {
@@ -130,7 +131,6 @@
   }
 
   function prepWork(myPrepTime, spousePrepTime) {
-    // debugger;
     var dto = [];
     if (myPrepTime) {
       var my  = {id: myPrepTime.attributeId, spouse: false};

@@ -19,12 +19,10 @@
       var vm = this;
       vm.waiver = null;
 
-      vm.temp = GoVolunteerService;
-
       activate();
 
       function activate() {
-        var dto = GoVolunteerService.getRegistrationDto(vm.temp);
+        var dto = GoVolunteerService.getRegistrationDto();
         vm.dto = dto;
         if (GoVolunteerService.cmsInfo && GoVolunteerService.cmsInfo.pages.length > 0) {
           vm.waiver = GoVolunteerService.cmsInfo.pages[0].content;
