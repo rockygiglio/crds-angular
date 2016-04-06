@@ -245,7 +245,6 @@ namespace crds_angular.Controllers.API
         [Route("api/govolunteer/registration")]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {
-            return BadRequest("testing...");
             if (ModelState.IsValid)
             {
                 return Authorized(token =>

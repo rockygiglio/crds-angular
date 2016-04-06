@@ -135,8 +135,6 @@
     <Compile Include="Services\Interfaces\GoCincinnati\IRegistrationService.cs" />
     <Compile Include="Services\ProjectTypeService.cs" />
     <Compile Include="Services\Interfaces\IProjectTypeService.cs" />
-    <Compile Include="Services\GroupConnectorService.cs" />
-    <Compile Include="Services\Interfaces\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\ISkillsService.cs" />
     <Compile Include="Services\Interfaces\ITaskRepository.cs" />

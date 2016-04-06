@@ -38,7 +38,13 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         public List<GroupConnector> FromMpGroupConnectorList(List<MpGroupConnector> mpGroupConnectors)
         {
-            return mpGroupConnectors.Select(r => new GroupConnector
+            return mpGroupConnectors.Select(r => FromMpGroupConnector(r)).ToList();
+        }
+
+        public GroupConnector FromMpGroupConnector(MpGroupConnector mpGroupConnectors)
+        {
+            var r = mpGroupConnectors;
+            return new GroupConnector
             {
                 GroupConnectorId = r.Id,
                 Name = r.Name,
@@ -49,7 +55,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 ProjectType = r.ProjectType,
                 PreferredLaunchSite = r.PreferredLaunchSite,
                 VolunteerCount = r.VolunteerCount
-            }).ToList();
+            };
         }
     }
 }

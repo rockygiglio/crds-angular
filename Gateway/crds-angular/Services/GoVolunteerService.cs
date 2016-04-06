@@ -5,9 +5,12 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using ProjectType = crds_angular.Models.Crossroads.GoVolunteer.ProjectType;
+using Registration = crds_angular.Models.Crossroads.GoVolunteer.Registration;
 
 namespace crds_angular.Services
 {
@@ -173,12 +176,18 @@ namespace crds_angular.Services
 
         private int CreateRegistration(Registration registration, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
         {
+            var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
             registrationDto.InitiativeId = registration.InitiativeId;
             registrationDto.OrganizationId = registration.OrganizationId;
-            registrationDto.PreferredLaunchSiteId = registration.PreferredLaunchSiteId;
+            registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
             registrationDto.RoleId = registration.RoleId;
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
+            return Registration(registrationDto);
+        }
+
+        private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        {
             int registrationId;
             try
             {
@@ -190,6 +199,23 @@ namespace crds_angular.Services
                 throw;
             }
             return registrationId;
+        }
+
+        private int PreferredLaunchSite(Registration registration)
+        {
+            int preferredLaunchSiteId;
+            if (registration.PreferredLaunchSiteId == 0)
+            {
+                // use group connector
+                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
+                preferredLaunchSiteId = groupConnector.PreferredLaunchSiteId;
+            }
+            else
+            {
+                // use preferred id
+                preferredLaunchSiteId = registration.PreferredLaunchSiteId;
+            }
+            return preferredLaunchSiteId;
         }
 
         private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
