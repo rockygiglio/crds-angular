@@ -152,11 +152,11 @@
     }
 
     if (pref2 != null) {
-      projectPrefs.push(projectPreferenceDto(pref2, 1));
+      projectPrefs.push(projectPreferenceDto(pref2, 2));
     }
 
     if (pref3 != null) {
-      projectPrefs.push(projectPreferenceDto(pref3, 1));
+      projectPrefs.push(projectPreferenceDto(pref3, 3));
     }
 
     return projectPrefs;
