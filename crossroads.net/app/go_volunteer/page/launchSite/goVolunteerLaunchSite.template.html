@@ -5,10 +5,8 @@
 <div dynamic-content="$root.MESSAGES.goVolunteerLaunchSiteQuestion.content | html"></div>
 
 <div class="row">
-  <div><pre>{{goLaunchSite.locations}}</pre></div>
   <div class="form-group col-xs-12">
     <a ng-repeat="locs in goLaunchSite.locations" ng-click="goLaunchSite.submit(locs.locationId)">
-      <pre>{{locs.locationId}}</pre>
       <div class="media card-item media-card-link">
         <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
           <img class="media-object img-responsive imgix-fluid" data-src="{{locs.imageUrl}}" alt="{{locs.location}}" title="" />

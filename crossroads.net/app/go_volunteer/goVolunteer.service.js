@@ -25,9 +25,9 @@
         mobilePhone: null
       },
       preferredLaunchSite: null,
-      projectPrefOne: {},
-      projectPrefTwo: {},
-      projectPrefThree: {},
+      projectPrefOne: null,
+      projectPrefTwo: null,
+      projectPrefThree: null,
       privateGroup: false,
       skills: [],
       spouse: {
@@ -99,7 +99,6 @@
 
     var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e); });
 
-    debugger;
     if (!_.isEmpty(other)) {
       return equip;
     } else {
@@ -130,7 +129,6 @@
   }
 
   function prepWork(myPrepTime, spousePrepTime) {
-    // debugger;
     var dto = [];
     if (myPrepTime) {
       var my  = {id: myPrepTime.attributeId, spouse: false};
@@ -146,16 +144,25 @@
   }
 
   function projectPreferences(pref1, pref2, pref3) {
-    return [
-      projectPreferenceDto(pref1, 1),
-      projectPreferenceDto(pref2, 2),
-      projectPreferenceDto(pref3, 3)
-    ];
+    var projectPrefs = [];
+    if (pref1 != null) {
+      projectPrefs.push(projectPreferenceDto(pref1, 1));
+    }
+
+    if (pref2 != null) {
+      projectPrefs.push(projectPreferenceDto(pref2, 1));
+    }
+
+    if (pref3 != null) {
+      projectPrefs.push(projectPreferenceDto(pref3, 1));
+    }
+
+    return projectPrefs;
   }
 
   function projectPreferenceDto(preferenceId, priority) {
-    if ((preferenceId === undefined) || (_.isEmpty(preferenceId))) {
-      return {id: 0, priority: priority};
+    if (preferenceId === null || preferenceId === undefined) {
+      return null;
     }
 
     return {id: preferenceId, priority: priority};
