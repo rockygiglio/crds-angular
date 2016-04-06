@@ -1,4 +1,7 @@
-<preloader full-screen='true' ng-show="result.loading"> </preloader>
+<preloader full-screen='true' ng-show="result.loading"></preloader>
+<div class="text-center lead" ng-if="result.loading">
+  Sweet! We're finding a bunch of great groups for you. This can take up to one minute, so hang tight.
+</div>
 <div ng-if="!result.loading">
   <div ng-if="result.error">
     <h3>Oops, something went wrong.</h3>

@@ -52,19 +52,22 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Go_Volunteer_Skills_ID", 2},
                     {"Label", "some label" },
-                    {"Attribute_Name", "Skill Attribute" }
+                    {"Attribute_Name", "Skill Attribute" },
+                    {"Attribute_ID", 2}
                 },
                 new Dictionary<string, object>()
                 {
                     {"Go_Volunteer_Skills_ID", 3},
                     {"Label", "some label 2" },
-                    {"Attribute_Name", "Skill Attribute two" }
+                    {"Attribute_Name", "Skill Attribute two" },
+                    {"Attribute_ID", 3}
                 },
                 new Dictionary<string, object>()
                 {
                     {"Go_Volunteer_Skills_ID", 4},
                     {"Label", null },
-                    {"Attribute_Name", "Skill Attribute four" }
+                    {"Attribute_Name", "Skill Attribute four" },
+                    {"Attribute_ID", 4}
                 }
             };
         }

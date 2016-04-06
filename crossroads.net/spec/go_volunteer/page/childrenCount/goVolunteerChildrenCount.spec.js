@@ -53,9 +53,9 @@ describe('Go Volunteer Children Count Page Component', function() {
   it('should call the onSubmit callback', function() {
     scope.$digest();
     var isolatedScope = element.isolateScope().goChildrenCount;
-    isolatedScope.childTwoSeven = 1;
-    isolatedScope.childEightTwelve = 2;
-    isolatedScope.childThirteenEighteen = 3;
+    isolatedScope.childrenAttending.childTwoSeven = 1;
+    isolatedScope.childrenAttending.childEightTwelve = 2;
+    isolatedScope.childrenAttending.childThirteenEighteen = 3;
 
     isolatedScope.submit();
 

@@ -11,21 +11,21 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public SkillsService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
-        {            
+        public SkillsService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
+            : base(authenticationService, configurationWrapper)
+        {
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<MPGoVolunteerSkill> GetGoVolunteerSkills(string token)
+        public List<MpGoVolunteerSkill> GetGoVolunteerSkills(string token)
         {
             var goSkillsPageId = _configurationWrapper.GetConfigIntValue("GoVolunteerSkills");
             var records = _ministryPlatformService.GetRecordsDict(goSkillsPageId, token);
 
-            return records.Select(record => new MPGoVolunteerSkill(record.ToInt("Go_Volunteer_Skills_ID"),
-                                                            record.ToString("Label"),
-                                                            record.ToString("Attribute_Name"))).ToList();
+            return records.Select(record => new MpGoVolunteerSkill(record.ToInt("Go_Volunteer_Skills_ID"),
+                                                                   record.ToString("Label"),
+                                                                   record.ToString("Attribute_Name"),
+                                                                   record.ToInt("Attribute_ID"))).ToList();
         }
-
-        
     }
 }

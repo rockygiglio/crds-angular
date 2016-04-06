@@ -34,6 +34,7 @@ require('../lib/select.css');
   require('./explore');
   require('./gotrips');
   require('./my_serve');
+  require('./brave_at_home');
   require('./volunteer_signup');
   require('./volunteer_application');
   require('./giving_history');
