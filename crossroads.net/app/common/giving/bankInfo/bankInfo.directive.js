@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
 
   module.exports = bankInfo;
 
@@ -10,6 +11,7 @@
       replace: true,
       scope: {
         account: '=',
+        accountHolderName: '=',
         bankinfoSubmitted: '=',
         changeAccountInfo: '=',
         defaultSource: '=',
@@ -27,8 +29,11 @@
       scope.bankAccount = scope;
       scope.accountError = accountError;
       scope.blurAccountError = blurAccountError;
+      scope.blurAccountHolderNameError = blurAccountHolderNameError;
       scope.blurRoutingError = blurRoutingError;
       scope.resetDefaultBankPlaceholderValues = resetDefaultBankPlaceholderValues;
+
+      scope.accountHolderNameError = accountHolderError;
       scope.routingError = routingError;
       scope.useExistingAccountInfo = useExistingAccountInfo;
 
@@ -44,8 +49,10 @@
             scope.resetDefaultBankPlaceholderValues();
           } else if (scope.defaultSource.bank_account.last4) {
             scope.bankAccount.account = '';
+            scope.bankAccount.accountHolderName = '';
             scope.bankAccount.routing = '';
             scope.defaultBankPlaceholderValues = {
+              accountHolderName: scope.defaultSource.bank_account.account_holder_name,
               routing: scope.defaultSource.bank_account.routing,
               maskedAccount: 'XXXXXXXXXXX' + scope.defaultSource.bank_account.last4
             };
@@ -60,10 +67,24 @@
         }
 
         return (scope.bankinfoSubmitted &&
-            scope.bankAccountForm.account.$error.invalidAccount &&
-            scope.bankAccountForm.$invalid  ||
-            scope.bankAccountForm.account.$error.invalidAccount &&
-            scope.bankAccountForm.account.$dirty);
+          scope.bankAccountForm.account.$error.invalidAccount &&
+          scope.bankAccountForm.$invalid ||
+          scope.bankAccountForm.account.$error.invalidAccount &&
+          scope.bankAccountForm.account.$dirty
+        );
+      }
+
+      function accountHolderError() {
+        if (scope.useExistingAccountInfo()) {
+          return false;
+        }
+
+        return (scope.bankinfoSubmitted &&
+          scope.bankAccountForm.accountHolderName.$error.required &&
+          scope.bankAccountForm.$invalid ||
+          scope.bankAccountForm.accountHolderName.$error.required &&
+          scope.bankAccountForm.accountHolderName.$dirty
+        );
       }
 
       function blurAccountError() {
@@ -72,6 +93,15 @@
         }
 
         return (scope.bankAccountForm.account.$dirty && scope.bankAccountForm.account.$error.invalidAccount);
+      }
+
+      function blurAccountHolderNameError() {
+        if (scope.useExistingAccountInfo()) {
+          return false;
+        }
+
+        var accountHolderName = scope.bankAccountForm.accountHolderName;
+        return (accountHolderName.$dirty && accountHolderName.$error.required);
       }
 
       function blurRoutingError() {
@@ -93,18 +123,16 @@
         }
 
         return (scope.bankinfoSubmitted &&
-            scope.bankAccountForm.routing.$error.invalidRouting &&
-            scope.bankAccountForm.$invalid  ||
-            scope.bankAccountForm.routing.$error.invalidRouting &&
-            scope.bankAccountForm.routing.$dirty);
+          scope.bankAccountForm.routing.$error.invalidRouting &&
+          scope.bankAccountForm.$invalid ||
+          scope.bankAccountForm.routing.$error.invalidRouting &&
+          scope.bankAccountForm.routing.$dirty
+        );
       }
 
-      
       function useExistingAccountInfo() {
         return scope.changeAccountInfo && scope.bankAccountForm.$pristine;
       }
-
-     
     }
   }
 })();
