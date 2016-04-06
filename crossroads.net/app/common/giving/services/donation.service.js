@@ -42,9 +42,7 @@
         country: 'US',
         currency: 'USD',
         routing_number: GiveTransferService.donor.default_source.routing,
-        account_number: GiveTransferService.donor.default_source.bank_account_number,
-        account_holder_name: GiveTransferService.donor.default_source.account_holder_name,
-        account_holder_type: 'individual'
+        account_number: GiveTransferService.donor.default_source.bank_account_number
       };
     }
 
