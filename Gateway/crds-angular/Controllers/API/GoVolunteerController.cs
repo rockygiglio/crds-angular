@@ -242,9 +242,10 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("POST")]
-        [Route("api/goVolunteerRegistration")]
+        [Route("api/govolunteer/registration")]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {
+            return BadRequest("testing...");
             if (ModelState.IsValid)
             {
                 return Authorized(token =>
@@ -253,6 +254,7 @@ namespace crds_angular.Controllers.API
                     {
                         // for testing
                         goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                        goVolunteerRegistration.InitiativeId = 1;
                         // end for testing
                         _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                         return Ok();
@@ -267,7 +269,7 @@ namespace crds_angular.Controllers.API
                 });
             }
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-            var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
+            var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
     }

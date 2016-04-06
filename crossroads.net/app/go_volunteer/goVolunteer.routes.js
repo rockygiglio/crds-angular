@@ -140,7 +140,6 @@
   function ChildrenOptions(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
     var deferred = $q.defer();
     if ($stateParams.page === 'children-count' && _.isEmpty(GoVolunteerService.childrenOptions)) {
-      debugger;
       GoVolunteerDataService.Children.query(function(d) {
         GoVolunteerService.childrenOptions = d;
         deferred.resolve();

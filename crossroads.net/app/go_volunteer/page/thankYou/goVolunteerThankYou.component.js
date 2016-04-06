@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerThankYou;
 
-  GoVolunteerThankYou.$inject = [];
+  GoVolunteerThankYou.$inject = ['GoVolunteerService', 'GoVolunteerDataService'];
 
-  function GoVolunteerThankYou() {
+  function GoVolunteerThankYou(GoVolunteerService, GoVolunteerDataService) {
     return {
       restrict: 'E',
       scope: {},
@@ -17,6 +17,24 @@
 
     function GoVolunteerThankYouController() {
       var vm = this;
+      vm.svc = GoVolunteerService;
+      vm.tmp = {};
+
+      activate();
+
+      function activate() {
+        var dto = GoVolunteerService.getRegistrationDto(vm.svc);
+        console.log(dto);
+        vm.tmp = dto;
+        GoVolunteerDataService.Create.save(dto, function(result) {
+          console.log('success');
+        },
+
+        function(result) {
+          // $log.error(result);
+          console.log(result);
+        });
+      }
 
     }
   }

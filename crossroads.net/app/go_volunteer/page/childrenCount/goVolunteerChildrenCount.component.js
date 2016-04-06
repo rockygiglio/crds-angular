@@ -29,11 +29,6 @@
       }
 
       function totalChildren() {
-        // var total = 0;
-        // _.forEach(vm.childrenOptions, function(item, key) {
-        //   total = total + item.value;
-        // });
-
         var total = _.reduce(vm.childrenOptions, function(total, item) {
           return total + item.value;
         }, 0);

@@ -24,7 +24,7 @@
         dateOfBirth: null,
         mobilePhone: null
       },
-      preferredLaunchSite: {},
+      preferredLaunchSite: null,
       projectPrefOne: {},
       projectPrefTwo: {},
       projectPrefThree: {},
@@ -51,21 +51,39 @@
   function registrationDto(data) {
     return {
       additionalInformation: data.additionalInformation,
-      children: [],
+      children: children(data.childrenOptions),
       createGroupConnector: createGroupConnector(data.groupConnectorId),
       equipment: equipment(data.equipment, data.otherEquipment),
       groupConnectorId: data.groupConnectorId,
       // need something for private group connector flag
       initiativeId: 0, // how will we get this?  user doesn't input, part of CMS page?
-      organizationId: data.organizationId, // really location
-      preferredLaunchSiteId: data.preferredLaunchSite,
+      organizationId: data.organization.organizationId,
+      preferredLaunchSiteId: preferredLaunchSite(data.preferredLaunchSite),
       prepWork: prepWork(data.myPrepTime, data.spousePrepTime),
       projectPreferences: projectPreferences(data.projectPrefOne, data.projectPrefTwo, data.projectPrefThree),
       self: personDto(data.person),
       spouse: personDto(data.spouse),
       spouseParticipation: data.spouseAttending,
-      waiver: true
+      waiverSigned: true
     };
+  }
+
+  function children(options) {
+    return _.map(options, function(c) {return getChildrenDto(c); });
+  }
+
+  function getChildrenDto(data) {
+    var childDto = {};
+
+    if (_.has(data, 'attributeId')) {
+      childDto.id = data.attributeId;
+    }
+
+    if (_.has(data, 'value')) {
+      childDto.count = data.value;
+    }
+
+    return childDto;
   }
 
   function createGroupConnector(groupConnectorId) {
@@ -77,13 +95,16 @@
   }
 
   function equipment(myEquipment, otherEquipment) {
-    var equip = _.map(myEquipment, function(e) { return getEquipmentDto(e.equipment); });
+    var equip = _.map(myEquipment, function(e) { return getEquipmentDto(e); });
 
-    var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e.equipment); });
+    var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e); });
 
-    var dto = equip.concat(other);
-
-    return dto;
+    debugger;
+    if (!_.isEmpty(other)) {
+      return equip;
+    } else {
+      return equip.concat(other);
+    }
   }
 
   function getEquipmentDto(equipment) {
@@ -100,16 +121,25 @@
     return equipmentDto;
   }
 
+  function preferredLaunchSite(siteId) {
+    if (siteId === null || siteId === undefined) {
+      return 0;
+    }
+
+    return siteId;
+  }
+
   function prepWork(myPrepTime, spousePrepTime) {
+    // debugger;
     var dto = [];
     if (myPrepTime) {
       var my  = {id: myPrepTime.attributeId, spouse: false};
-      dto.add(my);
+      dto.push(my);
     }
 
     if (spousePrepTime) {
       var spouse  = {id: spousePrepTime.attributeId, spouse: true};
-      dto.add(spouse);
+      dto.push(spouse);
     }
 
     return dto;
@@ -124,6 +154,10 @@
   }
 
   function projectPreferenceDto(preferenceId, priority) {
+    if ((preferenceId === undefined) || (_.isEmpty(preferenceId))) {
+      return {id: 0, priority: priority};
+    }
+
     return {id: preferenceId, priority: priority};
   }
 

@@ -100,7 +100,7 @@ namespace crds_angular.Services
 
         private void ProjectPreferences(Registration registration, int registrationId)
         {
-            foreach (var projectPreference in registration.ProjectPreferences)
+            foreach (var projectPreference in registration.ProjectPreferences.Where(pref => pref.Id != 0))
             {
                 _registrationService.AddProjectPreferences(registrationId, projectPreference.Id, projectPreference.Priority);
             }
@@ -108,7 +108,7 @@ namespace crds_angular.Services
 
         private void Equipment(Registration registration, int registrationId)
         {
-            foreach (var equipment in registration.Equipment)
+            foreach (var equipment in registration.Equipment.Where(equipment => equipment.Id != 0))
             {
                 _registrationService.AddEquipment(registrationId, equipment.Id, equipment.Notes);
             }
