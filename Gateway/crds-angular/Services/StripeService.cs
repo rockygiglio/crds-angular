@@ -255,7 +255,8 @@ namespace crds_angular.Services
                 {
                     defaultSource.routing_number = source.routing_number;
                     defaultSource.bank_last4 = source.last4;
-                    defaultSource.name = source.name;
+                    defaultSource.account_holder_name = source.account_holder_name;
+                    defaultSource.account_holder_type = source.account_holder_type;
                 }
                 else
                 {

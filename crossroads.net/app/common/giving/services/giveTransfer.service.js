@@ -14,6 +14,8 @@
 
     function reset() {
       this.account = '';
+      this.account_holder_name = null;
+      this.account_holder_type = 'individual';
       this.amount = undefined;
       this.amountSubmitted = false;
       this.anonymous = false;
@@ -30,7 +32,6 @@
       this.initialized = false;
       this.last4 = '';
       this.message = null;
-      this.name = null;
       this.processing = false;
       this.processingChange = false;
       this.program = undefined;
@@ -54,6 +55,8 @@
 
     function resetForConvert() {
       this.account = '';
+      this.account_holder_name = null;
+      this.account_holder_type = 'individual';
       this.amountSubmitted = false;
       this.anonymous = false;
       this.bankinfoSubmitted = false;
@@ -69,7 +72,6 @@
       this.initialized = true;
       this.last4 = '';
       this.message = null;
-      this.name = null;
       this.processing = false;
       this.processingChange = false;
       this.routing = '';

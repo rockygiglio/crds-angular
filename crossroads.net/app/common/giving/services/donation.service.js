@@ -341,7 +341,8 @@
             GiveTransferService.brand = CC_BRAND_CODES[donor.default_source.credit_card.brand];
             GiveTransferService.view = 'cc';
           } else {
-            GiveTransferService.account_holder_name = donor.default_source.bank_account.name;
+            GiveTransferService.account_holder_name = donor.default_source.bank_account.account_holder_name;
+            GiveTransferService.account_holder_type = donor.default_source.bank_account.account_holder_type;
             GiveTransferService.last4 = donor.default_source.bank_account.last4;
             GiveTransferService.brand = '#library';
             GiveTransferService.view = 'bank';
