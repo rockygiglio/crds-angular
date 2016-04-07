@@ -12,6 +12,7 @@
       scope: {
         account: '=',
         accountHolderName: '=',
+        accountHolderType: '=',
         bankinfoSubmitted: '=',
         changeAccountInfo: '=',
         defaultSource: '=',
@@ -33,7 +34,8 @@
       scope.blurRoutingError = blurRoutingError;
       scope.resetDefaultBankPlaceholderValues = resetDefaultBankPlaceholderValues;
 
-      scope.accountHolderNameError = accountHolderError;
+      scope.accountHolderNameError = accountHolderNameError;
+      scope.accountHolderTypeError = accountHolderTypeError;
       scope.routingError = routingError;
       scope.useExistingAccountInfo = useExistingAccountInfo;
 
@@ -50,7 +52,9 @@
           } else if (scope.defaultSource.bank_account.last4) {
             scope.bankAccount.account = '';
             scope.bankAccount.accountHolderName = '';
+            scope.bankAccount.accountHolderType = scope.defaultSource.bank_account.account_holder_type || 'individual';
             scope.bankAccount.routing = '';
+
             scope.defaultBankPlaceholderValues = {
               accountHolderName: scope.defaultSource.bank_account.account_holder_name,
               accountHolderType: scope.defaultSource.bank_account.account_holder_type,
@@ -75,7 +79,7 @@
         );
       }
 
-      function accountHolderError() {
+      function accountHolderNameError() {
         if (scope.useExistingAccountInfo()) {
           return false;
         }
@@ -85,6 +89,19 @@
           scope.bankAccountForm.$invalid ||
           scope.bankAccountForm.accountHolderName.$error.required &&
           scope.bankAccountForm.accountHolderName.$dirty
+        );
+      }
+
+      function accountHolderTypeError() {
+        if (scope.useExistingAccountInfo()) {
+          return false;
+        }
+
+        return (scope.bankinfoSubmitted &&
+          scope.bankAccountForm.accountHolderType.$error.required &&
+          scope.bankAccountForm.$invalid ||
+          scope.bankAccountForm.accountHolderType.$error.required &&
+          scope.bankAccountForm.accountHolderType.$dirty
         );
       }
 
@@ -114,6 +131,10 @@
       }
 
       function resetDefaultBankPlaceholderValues() {
+        if (scope.useExistingAccountInfo()) {
+          scope.bankAccount.accountHolderType = 'individual';
+        }
+
         scope.defaultBankPlaceholderValues = {};
         scope.declinedPayment = false;
       }
