@@ -9,9 +9,7 @@
     .directive('invalidAccount', require('./invalidAccount.validation.directive'))
     .directive('invalidRouting', require('./invalidRouting.validation.directive'))
     .directive('naturalNumber', require('./naturalNumber.validation.directive'))
-    .run(function() {
-      Stripe._customHeaders = { 'Stripe-Version': '2015-04-07' };
-    });
+    .run(require('./giving.run'));
 
   require('./services');
   require('./bankCreditCardDetails');
