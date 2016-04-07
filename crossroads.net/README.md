@@ -28,6 +28,7 @@ Mac and Linux (replace the prefix value below with the path to your NodeJS insta
 ###Configuration
 By default webpack inserts `http://localhost:49380` everywhere it finds `__API_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_API_ENDPOINT**. 
 By default webpack inserts `http://content.crossroads.net` everywhere it finds `__CMS_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_CMS_ENDPOINT**. By default webpack inserts Crossroads Stripe Publishable Key as `pk_test_TR1GulD113hGh2RgoLhFqO0M` everywhere it find `__STRIPE_PUBKEY__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_STRIPE_PUBKEY**.
+By default webpack defaults to use the API Version of Stripe as configured in the account. This can be overridden by creating an environment variable named CRDS_STRIPE_API_VERSION and setting to a particular verion. (i.e. 2015-04-07) 
 
 For windows users:
 
