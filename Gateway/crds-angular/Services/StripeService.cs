@@ -24,17 +24,21 @@ namespace crds_angular.Services
 
         private const string StripeNetworkErrorResponseCode = "abort";
 
-        private readonly string _stripeAPIVersion;
-
         private readonly int _maxQueryResultsPerPage;
 
         private readonly IContentBlockService _contentBlockService;
 
         public StripeService(IRestClient stripeRestClient, IConfigurationWrapper configuration, IContentBlockService contentBlockService)
         {
-            _stripeRestClient = stripeRestClient;
+            _stripeRestClient = stripeRestClient;            
             _maxQueryResultsPerPage = configuration.GetConfigIntValue("MaxStripeQueryResultsPerPage");
-            _stripeAPIVersion = configuration.GetConfigValue("StripeAPIVersion");
+
+            var stripeApiVersion = configuration.GetEnvironmentVarAsString("CRDS_STRIPE_API_VERSION", false);
+            if (stripeApiVersion != null)
+            {
+                _stripeRestClient.AddDefaultHeader("Stripe-Version", stripeApiVersion);
+            }
+
             _contentBlockService = contentBlockService;
         }
 
@@ -109,7 +113,6 @@ namespace crds_angular.Services
             {
                 request.AddParameter("source", customerToken);
             }
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
@@ -120,7 +123,6 @@ namespace crds_angular.Services
         public StripeCustomer GetCustomer(string customerId)
         {
             var request = new RestRequest(string.Format("/customers/{0}", customerId));
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
@@ -131,7 +133,6 @@ namespace crds_angular.Services
         public StripeCustomer DeleteCustomer(string customerId)
         {
             var request = new RestRequest(string.Format("/customers/{0}", customerId), Method.DELETE);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer delete failed", response);
@@ -146,7 +147,7 @@ namespace crds_angular.Services
             request.AddParameter("bank_account[routing_number]", routingNumber);
             request.AddParameter("bank_account[country]", "US");
             request.AddParameter("bank_account[currency]", "USD");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
+
             // TODO Should be able to use request.AddJsonBody here, but that seems to ignore the property annotations
             //request.RequestFormat = DataFormat.Json;
             //request.AddJsonBody(new StripeBankAccount
@@ -168,7 +169,6 @@ namespace crds_angular.Services
             //Passing source will create a new source object, make it the new customer default source, and delete the old customer default if one exist
             var request = new RestRequest("customers/" + customerToken, Method.POST);
             request.AddParameter("source", cardToken);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer update to add source failed", response);
@@ -186,7 +186,6 @@ namespace crds_angular.Services
             //Passing source will create a new source object, make it the new customer default source, and delete the old customer default if one exist
             var request = new RestRequest("customers/" + customerToken + "/sources", Method.POST);
             request.AddParameter("source", cardToken);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer update to add source failed", response);
@@ -198,7 +197,6 @@ namespace crds_angular.Services
         public StripeSubscription CancelSubscription(string customerId, string subscriptionId)
         {
             var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.DELETE);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Stripe Subscription Cancel failed", response, true);
@@ -212,7 +210,6 @@ namespace crds_angular.Services
             // part of the URI, which means it will not work properly if not encoded.
             // For example: "2015344 10/13/2015 10:57:17"
             var request = new RestRequest(string.Format("plans/{0}", planId.Replace("/", "%2F")), Method.DELETE);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripePlan>(request);
             CheckStripeResponse("Stripe Plan Cancel failed", response);
@@ -224,7 +221,6 @@ namespace crds_angular.Services
         {
             var request = new RestRequest("customers/" + customerToken, Method.POST);
             request.AddParameter("description", string.Format(StripeCustomerDescription, donorId));
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer update failed", response);
@@ -235,7 +231,6 @@ namespace crds_angular.Services
         public SourceData GetDefaultSource(string customerToken)
         {
             var request = new RestRequest("customers/" + customerToken, Method.GET);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Could not get default source information because customer lookup failed", response);
@@ -294,7 +289,6 @@ namespace crds_angular.Services
             request.AddParameter("customer", customerToken);
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response);
@@ -311,7 +305,6 @@ namespace crds_angular.Services
             request.AddParameter("source", customerSourceId);
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response);
@@ -324,7 +317,6 @@ namespace crds_angular.Services
             var url = string.Format("transfers/{0}/transactions", transferId);
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("count", _maxQueryResultsPerPage);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var charges = new List<StripeCharge>();
             StripeCharges nextPage;
@@ -350,7 +342,6 @@ namespace crds_angular.Services
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("expand[]", "charge");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge refund", response);
@@ -367,7 +358,6 @@ namespace crds_angular.Services
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("expand[]", "invoice");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge", response);
@@ -384,7 +374,6 @@ namespace crds_angular.Services
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "charge");
             request.AddParameter("expand[]", "balance_transaction");
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query refund", response);
@@ -406,7 +395,6 @@ namespace crds_angular.Services
             request.AddParameter("name", string.Format("Donor ID #{0} {1}ly", contactDonor.DonorId, interval));
             request.AddParameter("currency", "usd");
             request.AddParameter("id", contactDonor.DonorId + " " + DateTime.Now);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripePlan>(request);
             CheckStripeResponse("Invalid plan creation request", response);
@@ -422,7 +410,6 @@ namespace crds_angular.Services
             {
                 request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription creation request", response);
@@ -433,7 +420,6 @@ namespace crds_angular.Services
         public StripeSubscription GetSubscription(string customerId, string subscriptionId)
         {
             var request = new RestRequest(string.Format("customers/{0}/subscriptions/{1}", customerId, subscriptionId), Method.GET);
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription get request", response);
@@ -450,7 +436,6 @@ namespace crds_angular.Services
             {
                 request.AddParameter("trial_end", trialEndDate.Value.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription update request", response);
@@ -470,7 +455,6 @@ namespace crds_angular.Services
             {
                 request.AddParameter("trial_end", "now");
             }
-            request.AddHeader("Stripe-Version", _stripeAPIVersion);
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription update request", response);
