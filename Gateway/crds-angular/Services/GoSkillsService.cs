@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
@@ -6,6 +7,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
+using WebGrease.Css.Extensions;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
@@ -58,7 +60,57 @@ namespace crds_angular.Services
 
             return new GoSkills().ToGoSkills(skills);
         }
-        
+
+        public bool UpdateSkills(int participantId, List<GoSkills> skills, string token)
+        {
+            var contact = _contactService.GetContactByParticipantId(participantId);
+            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var currentAttributes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
+            var currentSkills = currentAttributes.MultiSelect
+               .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes;
+
+            var skillsEndDate = SkillsToEndDate(skills, currentSkills).Select(sk =>
+            {
+                sk.EndDate = DateTime.Now;
+                return sk;
+            });
+
+
+            var skillsToAdd = SkillsToAdd(skills, currentSkills);
+            var allSkills = skillsToAdd.Concat(skillsEndDate);
+
+            allSkills.ForEach(skill =>
+            {
+                _objectAttributeService.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, configuration);
+            });
+           
+
+            return true;
+        }        
+
+        public List<ObjectAttributeDTO> SkillsToEndDate(List<GoSkills> skills, List<ObjectAttributeDTO> currentSkills)
+        {
+            return currentSkills.Where(sk =>
+            {
+                var contains = skills.Where(s => s.AttributeId == sk.AttributeId).ToList();
+                return contains.Count == 0;
+            }).ToList();
+        }
+
+        public List<ObjectAttributeDTO> SkillsToAdd(List<GoSkills> skills, List<ObjectAttributeDTO> currentSkills)
+        {
+            return skills.Where(s =>
+            {
+                var contains = currentSkills.Where(c => c.AttributeId == s.AttributeId);
+                return !contains.Any();
+            }).Select(s => new ObjectAttributeDTO()
+            {
+                AttributeId = s.AttributeId,
+                Name = s.Name,
+                StartDate = DateTime.Now
+            }).ToList();
+        } 
+
         private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken)
         {
             var contact = _contactService.GetMyProfile(token);

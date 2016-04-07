@@ -10,6 +10,7 @@ namespace crds_angular.Services.Interfaces
     public interface IGoSkillsService
     {
         List<GoSkills> RetrieveGoSkills(string token);
+        bool UpdateSkills(int participantId, List<GoSkills> skills, string token);
     }
 
 }

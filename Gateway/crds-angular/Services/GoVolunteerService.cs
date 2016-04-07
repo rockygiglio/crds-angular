@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 using ProjectType = crds_angular.Models.Crossroads.GoVolunteer.ProjectType;
 using Registration = crds_angular.Models.Crossroads.GoVolunteer.Registration;
+
 
 namespace crds_angular.Services
 {
@@ -27,6 +30,7 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly int _otherEquipmentId;
+        private readonly IGoSkillsService _skillsService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -35,7 +39,8 @@ namespace crds_angular.Services
                                   IConfigurationWrapper configurationWrapper,
                                   MPInterfaces.IContactRelationshipService contactRelationshipService,
                                   MPInterfaces.IProjectTypeService projectTypeService,
-                                  IAttributeService attributeService)
+                                  IAttributeService attributeService,
+                                  IGoSkillsService skillsService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -46,6 +51,7 @@ namespace crds_angular.Services
             _projectTypeService = projectTypeService;
             _attributeService = attributeService;
             _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
+            _skillsService = skillsService;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -72,6 +78,8 @@ namespace crds_angular.Services
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
                 SpouseInformation(registration);
+                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);
+                //Skills(registrationDto.ParticipantId, registration.Skills, token);
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
@@ -135,6 +143,8 @@ namespace crds_angular.Services
                 _registrationService.AddAgeGroup(registrationId, ageGroup.Id, ageGroup.Count);
             }
         }
+
+        
 
         private void SpouseInformation(Registration registration)
         {
