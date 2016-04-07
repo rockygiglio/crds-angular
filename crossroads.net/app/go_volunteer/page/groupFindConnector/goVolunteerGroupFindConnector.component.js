@@ -52,20 +52,18 @@
       }
 
       function disableCard(group) {
-        if (group.projectMinimumAge === 0) {
-          return false;
-        }
-
         if (group.projectMinimumAge > vm.youngestInRegistration) {
           return true;
         }
 
-        if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
-          return true;
-        }
+        if (group.projectName !== null) {
+          if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
+            return true;
+          }
 
-        if (registrationCount() > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
-          return true;
+          if (registrationCount() > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+            return true;
+          }
         }
 
         return false;

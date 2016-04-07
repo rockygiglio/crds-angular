@@ -41,7 +41,7 @@ namespace MinistryPlatform.Translation.Services
                 PrimaryRegistrationID = r.ToInt("Primary_Registration_Contact_ID"),
                 ProjectMaximumVolunteers = r.ToInt("Project_Maximum_Volunteers"),
                 AbsoluteMaximumVolunteers = r.ToInt("Absolute_Maximum_Volunteers"),
-                ProjectMinimumAge = r.ToInt("Project_Minimum_Age"),
+                ProjectMinimumAge = r.ToInt("_Minimum_Age"),
                 ProjectName = r.ToString("Project_Name"),
                 ProjectType = r.ToString("Project_Type"),
                 PreferredLaunchSite = r.ToString("Preferred_Launch_Site"),
