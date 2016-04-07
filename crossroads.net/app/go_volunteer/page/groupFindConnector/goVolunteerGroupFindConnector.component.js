@@ -28,7 +28,6 @@
       vm.loneWolf = loneWolf;
       vm.showGroups = showGroups;
       vm.organization = GoVolunteerService.organization;
-      vm.registrationCount = registrationCount();
       vm.submit = submit;
       vm.youngestInRegistration = youngestInRegistration();
 
@@ -53,16 +52,18 @@
       }
 
       function disableCard(group) {
-        if (group.projectMinimumAge === 0) {
-          return false;
-        }
-
         if (group.projectMinimumAge > vm.youngestInRegistration) {
           return true;
         }
 
-        if (vm.registrationCount > (group.projectMaximumVolunteers - group.volunteerCount)) {
-          return true;
+        if (group.projectName !== null) {
+          if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
+            return true;
+          }
+
+          if (registrationCount() > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+            return true;
+          }
         }
 
         return false;
@@ -73,7 +74,7 @@
           return 'Minimum age is ' + g.projectMinimumAge;
         }
 
-        if (vm.registrationCount > (g.projectMaximumVolunteers - g.volunteerCount)) {
+        if (registrationCount() > (g.projectMaximumVolunteers - g.volunteerCount)) {
           return 'Group is full';
         }
       }
@@ -94,7 +95,6 @@
       function registrationCount() {
         return 1 +
           GoVolunteerService.spouseAttending +
-          GoVolunteerService.childrenAttending.childTwoSeven +
           GoVolunteerService.childrenAttending.childEightTwelve +
           GoVolunteerService.childrenAttending.childThirteenEighteen;
       }
