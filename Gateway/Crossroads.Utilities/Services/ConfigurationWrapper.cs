@@ -32,8 +32,13 @@ namespace Crossroads.Utilities.Services
 
         public string GetEnvironmentVarAsString(string variable)
         {
+            return GetEnvironmentVarAsString(variable, true);
+        }
+
+        public string GetEnvironmentVarAsString(string variable, bool throwIfNotFound)
+        {
             var value = Environment.GetEnvironmentVariable(variable);
-            if (value == null)
+            if (value == null && throwIfNotFound)
             {
                 throw new ApplicationException(string.Format("Invalid Environment Variable: {0}", variable));
             }

@@ -32,6 +32,13 @@ namespace crds_angular.Services
         {
             _stripeRestClient = stripeRestClient;
             _maxQueryResultsPerPage = configuration.GetConfigIntValue("MaxStripeQueryResultsPerPage");
+
+            var stripeApiVersion = configuration.GetEnvironmentVarAsString("CRDS_STRIPE_API_VERSION", false);
+            if (stripeApiVersion != null)
+            {
+                _stripeRestClient.AddDefaultHeader("Stripe-Version", stripeApiVersion);
+            }
+
             _contentBlockService = contentBlockService;
         }
 
@@ -140,6 +147,7 @@ namespace crds_angular.Services
             request.AddParameter("bank_account[routing_number]", routingNumber);
             request.AddParameter("bank_account[country]", "US");
             request.AddParameter("bank_account[currency]", "USD");
+
             // TODO Should be able to use request.AddJsonBody here, but that seems to ignore the property annotations
             //request.RequestFormat = DataFormat.Json;
             //request.AddJsonBody(new StripeBankAccount
@@ -241,6 +249,7 @@ namespace crds_angular.Services
             {
                 return (null);
             }
+
             return (customer.sources.data.Find(src => src.id.Equals(sourceId)));
         }
 
