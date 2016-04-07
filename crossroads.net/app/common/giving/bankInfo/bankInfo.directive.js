@@ -53,6 +53,7 @@
             scope.bankAccount.routing = '';
             scope.defaultBankPlaceholderValues = {
               accountHolderName: scope.defaultSource.bank_account.account_holder_name,
+              accountHolderType: scope.defaultSource.bank_account.account_holder_type,
               routing: scope.defaultSource.bank_account.routing,
               maskedAccount: 'XXXXXXXXXXX' + scope.defaultSource.bank_account.last4
             };

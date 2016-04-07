@@ -12,6 +12,8 @@ namespace crds_angular.Models.Crossroads
     {
         public string routing { get; set; }
         public string last4 { get; set; }
+        public string account_holder_name { get; set; }
+        public string account_holder_type { get; set; }
     }
 
     public class CreditCardDTO
