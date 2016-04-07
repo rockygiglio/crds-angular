@@ -26,6 +26,7 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IParticipantService _participantService;
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
+        private readonly int _otherEquipmentId;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -44,6 +45,7 @@ namespace crds_angular.Services
             _contactRelationshipService = contactRelationshipService;
             _projectTypeService = projectTypeService;
             _attributeService = attributeService;
+            _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -109,11 +111,12 @@ namespace crds_angular.Services
             }
         }
 
-        private void Equipment(Registration registration, int registrationId)
+        private void  Equipment(Registration registration, int registrationId)
         {
-            foreach (var equipment in registration.Equipment.Where(equipment => equipment.Id != 0))
+            foreach (var equipment in registration.Equipment)
             {
-                _registrationService.AddEquipment(registrationId, equipment.Id, equipment.Notes);
+                var id = equipment.Id != 0 ? equipment.Id : _otherEquipmentId;
+                _registrationService.AddEquipment(registrationId, id, equipment.Notes);
             }
         }
 

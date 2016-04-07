@@ -97,11 +97,13 @@
   }
 
   function equipment(myEquipment, otherEquipment) {
+    debugger;
     var equip = _.map(myEquipment, function(e) { return getEquipmentDto(e); });
 
-    var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e); });
+    var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e.equipment); });
 
-    if (!_.isEmpty(other)) {
+    debugger;
+    if (_.isEmpty(other)) {
       return equip;
     } else {
       return equip.concat(other);
