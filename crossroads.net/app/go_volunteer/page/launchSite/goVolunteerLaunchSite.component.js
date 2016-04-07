@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerLaunchSite;
 
-  GoVolunteerLaunchSite.$inject = ['GoVolunteerService'];
+  GoVolunteerLaunchSite.$inject = ['GoVolunteerService', '$state'];
 
-  function GoVolunteerLaunchSite(GoVolunteerService) {
+  function GoVolunteerLaunchSite(GoVolunteerService, $state) {
     return {
       restrict: 'E',
       scope: {
@@ -21,10 +21,15 @@
       var vm = this;
       vm.locations = GoVolunteerService.launchSites;
       vm.submit = submit;
+      vm.isCrossroadsSite = isCrossroadsSite;
 
       function submit(locationId) {
         GoVolunteerService.preferredLaunchSite = locationId;
         vm.onSubmit({nextState: 'project-preference-one'});
+      }
+
+      function isCrossroadsSite() {
+        return ($state.current.name === 'go-volunteer.crossroadspage');
       }
     }
   }
