@@ -8,7 +8,9 @@
   function GoVolunteerConnectorInfo() {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerConnectorInfoController,
       controllerAs: 'goVolunteerConnectorInfo',
@@ -17,7 +19,11 @@
 
     function GoVolunteerConnectorInfoController() {
       var vm = this;
+      vm.submit = submit;
 
+      function submit() {
+        vm.onSubmit({nextState: 'launch-site'});
+      }
     }
   }
 

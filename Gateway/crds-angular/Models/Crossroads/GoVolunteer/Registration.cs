@@ -37,6 +37,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "prepWork")]
         public List<PrepWork> PrepWork { get; set; }
 
+        [JsonProperty(PropertyName = "privateGroup")]
+        public bool PrivateGroup { get; set; }
+
         [JsonProperty(PropertyName = "projectPreferences")]
         public List<ProjectPreference> ProjectPreferences { get; set; }
 

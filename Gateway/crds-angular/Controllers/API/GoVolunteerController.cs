@@ -247,29 +247,32 @@ namespace crds_angular.Controllers.API
         {
             if (ModelState.IsValid)
             {
-                return Authorized(token =>
-                {
-                    try
-                    {
-                        // for testing
-                        goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-                        goVolunteerRegistration.InitiativeId = 1;
-                        // end for testing
-                        _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
-                        return Ok();
-                    }
-                    catch (Exception e)
-                    {
-                        var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
-                        logger.Error(msg, e);
-                        var apiError = new ApiErrorDto(msg, e);
-                        throw new HttpResponseException(apiError.HttpResponseMessage);
-                    }
-                });
+                return Authorized(token => SaveRegistration(token, goVolunteerRegistration),
+                                  () => SaveRegistration(string.Empty, goVolunteerRegistration));
             }
-            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
             var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
+        {
+            try
+            {
+                // for testing
+                goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                goVolunteerRegistration.InitiativeId = 1;
+                // end for testing
+                _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
+                logger.Error(msg, e);
+                var apiError = new ApiErrorDto(msg, e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
     }
 }

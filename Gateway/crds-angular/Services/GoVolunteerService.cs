@@ -147,7 +147,7 @@ namespace crds_angular.Services
                 return;
             }
 
-            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName, registration.Spouse.LastName, registration.Spouse.EmailAddress);
+            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName, registration.Spouse.LastName, registration.Spouse.EmailAddress, registration.Spouse.DateOfBirth,registration.Spouse.MobilePhone);
 
             // create relationship
             var relationship = new MinistryPlatform.Models.Relationship
@@ -163,7 +163,7 @@ namespace crds_angular.Services
         {
             if (registration.CreateGroupConnector)
             {
-                _groupConnectorService.CreateGroupConnector(registrationId);
+                _groupConnectorService.CreateGroupConnector(registrationId, registration.PrivateGroup);
             }
             else if (registration.GroupConnectorId != 0)
             {
@@ -239,7 +239,7 @@ namespace crds_angular.Services
             else
             {
                 //create contact & participant
-                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName, registration.Self.LastName, registration.Self.EmailAddress);
+                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName, registration.Self.LastName, registration.Self.EmailAddress, registration.Self.DateOfBirth,registration.Self.MobilePhone);
                 registration.Self.ContactId = contactId;
                 participantId = _participantService.CreateParticipantRecord(contactId);
                 //registrationDto.ParticipantId = participantId;

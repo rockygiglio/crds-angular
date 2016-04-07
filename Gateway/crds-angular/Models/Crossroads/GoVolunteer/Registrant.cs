@@ -7,6 +7,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
 
+        [JsonProperty(PropertyName = "dob")]
+        public string DateOfBirth { get; set; }
+
         [JsonProperty(PropertyName = "emailAddress")]
         public string EmailAddress { get; set; }
 
@@ -15,5 +18,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "lastName")]
         public string LastName { get; set; }
+
+        [JsonProperty(PropertyName = "mobile")]
+        public string MobilePhone { get; set; }
     }
 }

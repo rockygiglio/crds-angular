@@ -21,16 +21,24 @@
       var vm = this;
       vm.addEquipment = addEquipment;
       vm.equipment = GoVolunteerService.availableEquipment;
-      vm.otherEquipment = [{equipment: {name: null}}];
+      vm.otherField = false;
+      vm.otherEquipment = [];
+      vm.showOtherEquipment = showOtherEquipment;
       vm.submit = submit;
 
       function addEquipment() {
         vm.otherEquipment.push({equipment: {name: null}});
       }
 
+      function showOtherEquipment() {
+        vm.otherField = !vm.otherField;
+        vm.addEquipment();
+      }
+
       function submit() {
         GoVolunteerService.equipment = _.where(vm.equipment, {checked: true});
         GoVolunteerService.otherEquipment = vm.otherEquipment;
+
         vm.onSubmit({nextState: 'additional-info'});
       }
     }

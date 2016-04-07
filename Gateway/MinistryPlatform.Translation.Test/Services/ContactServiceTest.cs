@@ -257,13 +257,15 @@ namespace MinistryPlatform.Translation.Test.Services
             var firstname = "Mary";
             var lastname = "richard";
             var email = "mary.richard@gmail.com";
+            var dob = new DateTime().ToString();
+            var mobile = "5554441111";
 
            
             _ministryPlatformService.Setup(
                 mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), "ABC", false))
                 .Returns(123);
 
-            var contactId = _fixture.CreateSimpleContact(firstname, lastname, email);
+            var contactId = _fixture.CreateSimpleContact(firstname, lastname, email, dob, mobile);
 
             Assert.AreEqual(123, contactId);
 
@@ -291,7 +293,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             try
             {
-                _fixture.CreateSimpleContact("mary", "richard", "mary.richard@gmail.com");
+                _fixture.CreateSimpleContact("mary", "richard", "mary.richard@gmail.com", "08/09/1981","5554441111");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)

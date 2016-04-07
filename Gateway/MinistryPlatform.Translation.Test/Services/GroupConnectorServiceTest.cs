@@ -46,7 +46,7 @@ namespace MinistryPlatform.Translation.Test.Services
              mocked => mocked.CreateSubRecord("GroupConnectorRegistrationPageId", expGroupConnectorId, It.IsAny<Dictionary<string, object>>(), "ABC", true))
              .Returns(123);
 
-            var groupConnector = _fixture.CreateGroupConnector(registrationId);
+            var groupConnector = _fixture.CreateGroupConnector(registrationId, false);
             Assert.AreEqual(expGroupConnectorId, groupConnector);
 
             _ministryPlatformService.VerifyAll();
@@ -62,7 +62,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             try
             {
-                _fixture.CreateGroupConnector(9999);
+                _fixture.CreateGroupConnector(9999, false);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)

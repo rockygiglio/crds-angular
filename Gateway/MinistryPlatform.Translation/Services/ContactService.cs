@@ -330,13 +330,15 @@ namespace MinistryPlatform.Translation.Services
             return null;
         }
 
-        public int CreateSimpleContact(string firstName, string lastName, string email)
+        public int CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile)
         {
             return CreateContact(new MyContact
             {
+                Date_Of_Birth = dob,
                 First_Name = firstName,
                 Last_Name = lastName,
-                Email_Address = email
+                Email_Address = email,
+                Mobile_Phone = mobile
             });
         }
 
@@ -375,6 +377,16 @@ namespace MinistryPlatform.Translation.Services
                 contactDictionary.Add("Household_Position_ID", _householdPositionDefaultId);
             }
 
+            if (contact.Mobile_Phone != string.Empty)
+            {
+                contactDictionary.Add("Mobile_Phone", contact.Mobile_Phone);
+            }
+
+            if (contact.Date_Of_Birth != string.Empty)
+            {
+                contactDictionary.Add("Date_Of_Birth", contact.Date_Of_Birth);
+            }
+
             try
             {
                 var token = ApiLogin();
@@ -382,7 +394,7 @@ namespace MinistryPlatform.Translation.Services
             }
             catch (Exception e)
             {
-                var msg = string.Format("Error creating Sponsered Child Contact, firstName: {0} lastName: {1} idCard: {2}",
+                var msg = string.Format("Error creating Contact, firstName: {0} lastName: {1} idCard: {2}",
                                         contact.First_Name,
                                         contact.Last_Name,
                                         contact.ID_Number);

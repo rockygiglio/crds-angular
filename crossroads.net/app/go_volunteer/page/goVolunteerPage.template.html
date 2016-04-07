@@ -20,6 +20,6 @@
                                for-spouse="goVolunteerPage.showAvailablePrepSpouse()">
   </go-volunteer-available-prep>
   <!--<go-volunteer-available-prep-spouse ng-if="goVolunteerPage.showAvailablePrepSpouse()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-available-prep-spouse>-->
-  <go-volunteer-waiver ng-if="goVolunteerPage.showWaiver()"></go-volunteer-waiver>
+  <go-volunteer-waiver ng-if="goVolunteerPage.showWaiver()" on-submit="goVolunteerPage.handlePageChange(nextState)"></go-volunteer-waiver>
   <go-volunteer-thank-you ng-if="goVolunteerPage.showThankYou()"></go-volunteer-thank-you>
 </form>

@@ -52,11 +52,11 @@
         createGroupConnector: createGroupConnector(volunteerService.groupConnectorId),
         equipment: equipment(volunteerService.equipment, volunteerService.otherEquipment),
         groupConnectorId: volunteerService.groupConnectorId,
-        // need something for private group connector flag
         initiativeId: 0, //TODO: how will we get this?  user doesn't input, part of CMS page?
         organizationId: volunteerService.organization.organizationId,
         preferredLaunchSiteId: preferredLaunchSite(volunteerService.preferredLaunchSite),
         prepWork: prepWork(volunteerService.myPrepTime, volunteerService.spousePrepTime),
+        privateGroup: volunteerService.privateGroup,
         projectPreferences: projectPreferences(volunteerService.projectPrefOne,
                                                volunteerService.projectPrefTwo,
                                                volunteerService.projectPrefThree),
@@ -97,12 +97,10 @@
   }
 
   function equipment(myEquipment, otherEquipment) {
-    debugger;
     var equip = _.map(myEquipment, function(e) { return getEquipmentDto(e); });
 
     var other = _.map(otherEquipment, function(e) { return getEquipmentDto(e.equipment); });
 
-    debugger;
     if (_.isEmpty(other)) {
       return equip;
     } else {
@@ -111,17 +109,21 @@
   }
 
   function getEquipmentDto(equipment) {
-    var equipmentDto = {};
-
-    if (_.has(equipment, 'attributeId')) {
-      equipmentDto.id = equipment.attributeId;
-    }
 
     if (_.has(equipment, 'name')) {
-      equipmentDto.notes = equipment.name;
-    }
+      if (equipment.name !== null) {
+        var equipmentDto = {};
+        equipmentDto.notes = equipment.name;
 
-    return equipmentDto;
+        if (_.has(equipment, 'attributeId')) {
+          equipmentDto.id = equipment.attributeId;
+        }
+
+        return equipmentDto;
+      }
+    } else {
+      return null;
+    }
   }
 
   function preferredLaunchSite(siteId) {

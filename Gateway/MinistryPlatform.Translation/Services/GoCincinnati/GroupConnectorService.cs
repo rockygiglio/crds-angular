@@ -24,13 +24,14 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
             _apiToken = ApiLogin();
         }
 
-        public int CreateGroupConnector(int registrationId)
+        public int CreateGroupConnector(int registrationId, bool privateGroup)
         {
             var t = ApiLogin();
             var pageId = _configurationWrapper.GetConfigIntValue("GroupConnectorPageId");
             var dictionary = new Dictionary<string, object>
             {
-                {"Primary_Registration", registrationId}
+                {"Primary_Registration", registrationId},
+                {"Private", privateGroup}
             };
 
             try

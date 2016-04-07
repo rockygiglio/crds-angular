@@ -1,5 +1,5 @@
-
-﻿using Newtonsoft.Json;
+﻿
+ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using MinistryPlatform.Translation.Models.GoCincinnati;
