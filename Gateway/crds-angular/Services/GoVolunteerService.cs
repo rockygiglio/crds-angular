@@ -62,18 +62,16 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        public bool CreateRegistration(Registration registration, string token)
+        public Registration CreateRegistration(Registration registration, string token)
         {
             var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
-
             try
             {
                 registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
                 SpouseInformation(registration);
-                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);
-                //Skills(registrationDto.ParticipantId, registration.Skills, token);
+                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
@@ -82,7 +80,7 @@ namespace crds_angular.Services
                 _logger.Error(msg, ex);
                 throw new Exception(msg, ex);
             }
-            return true;
+            return registration;
         }
 
         public List<ProjectType> GetProjectTypes()

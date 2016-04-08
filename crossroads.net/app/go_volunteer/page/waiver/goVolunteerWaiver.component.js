@@ -19,7 +19,7 @@
 
     function GoVolunteerWaiverController() {
       var vm = this;
-      vm.processing = false;
+      vm.processing = false; 
       vm.submit = submit;
       vm.waiver = null;
 
@@ -38,15 +38,16 @@
         var dto = GoVolunteerService.getRegistrationDto();
         GoVolunteerDataService.Create.save(dto, function(result) {
           console.log('success');
+          vm.processing = false;
           vm.onSubmit({nextState: 'thank-you'});
         },
 
         function(err) {
           $log.error(err);
+          vm.processing = false;
           $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
         });
 
-        vm.processing = false;
       }
     }
   }
