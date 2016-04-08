@@ -39,14 +39,7 @@ namespace crds_angular.test
                     Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                     Gen.Sample(100, 2, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault
                     )
-            ).ToList();
-                                          
-            //return Enumerable.Repeat<int>(1, size).Select(i => new GoSkills(
-            //    Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
-            //    Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
-            //    Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).OrderBy(x => Guid.NewGuid()).Take(1).Single(),
-            //    Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).OrderBy(x => Guid.NewGuid()).Take(1).Single(),
-            //    Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).OrderBy(x => Guid.NewGuid()).Take(1).Single())).ToList();           
+            ).ToList();                                          
         }
 
         public static List<AttributeTypeDTO> ListOfAttributeTypeDtos(int size = 10, int attributeListSize = 10)
