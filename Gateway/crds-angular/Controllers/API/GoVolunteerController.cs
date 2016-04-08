@@ -49,7 +49,6 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                // GO Cincinnati - Registration Children
                 var options = _goVolunteerService.ChildrenOptions();
                 return Ok(options);
             }
@@ -260,10 +259,6 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                // for testing
-                goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-                goVolunteerRegistration.InitiativeId = 1;
-                // end for testing
                 var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                 return Ok(reg);
             }
