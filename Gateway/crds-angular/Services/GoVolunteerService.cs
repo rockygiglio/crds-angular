@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
-using ProjectType = crds_angular.Models.Crossroads.GoVolunteer.ProjectType;
-using Registration = crds_angular.Models.Crossroads.GoVolunteer.Registration;
-
 
 namespace crds_angular.Services
 {
@@ -26,10 +20,10 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IContactService _contactService;
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
+        private readonly int _otherEquipmentId;
         private readonly MPInterfaces.IParticipantService _participantService;
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
-        private readonly int _otherEquipmentId;
         private readonly IGoSkillsService _skillsService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
@@ -84,7 +78,7 @@ namespace crds_angular.Services
             }
             catch (Exception ex)
             {
-                var msg = "Go Volunteer Service: CreateRegistration";
+                const string msg = "Go Volunteer Service: CreateRegistration";
                 _logger.Error(msg, ex);
                 throw new Exception(msg, ex);
             }
@@ -93,8 +87,6 @@ namespace crds_angular.Services
 
         public List<ProjectType> GetProjectTypes()
         {
-            //var apiUserToken = _mpApiUserService.GetToken();
-
             var pTypes = _projectTypeService.GetProjectTypes();
             return pTypes.Select(pt =>
             {
@@ -119,7 +111,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void  Equipment(Registration registration, int registrationId)
+        private void Equipment(Registration registration, int registrationId)
         {
             foreach (var equipment in registration.Equipment)
             {
@@ -144,8 +136,6 @@ namespace crds_angular.Services
             }
         }
 
-        
-
         private void SpouseInformation(Registration registration)
         {
             if (!registration.SpouseParticipation)
@@ -157,7 +147,11 @@ namespace crds_angular.Services
                 return;
             }
 
-            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName, registration.Spouse.LastName, registration.Spouse.EmailAddress, registration.Spouse.DateOfBirth,registration.Spouse.MobilePhone);
+            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
+                                                                registration.Spouse.LastName,
+                                                                registration.Spouse.EmailAddress,
+                                                                registration.Spouse.DateOfBirth,
+                                                                registration.Spouse.MobilePhone);
 
             // create relationship
             var relationship = new MinistryPlatform.Models.Relationship
@@ -227,14 +221,12 @@ namespace crds_angular.Services
 
         private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
         {
-            // do we need to create a contact?
-            // how do we know that we need to create a contact?
             // Create or Update Contact
-            //MinistryPlatform.Models.Participant participant = null;
             int participantId;
             if (registration.Self.ContactId != 0)
             {
-                // update name/email
+                // update name/email/dob/mobile
+                // missing stuff here...
 
                 //get participant
                 var participant = _participantService.GetParticipantRecord(token);
@@ -243,16 +235,18 @@ namespace crds_angular.Services
             else
             {
                 //create contact & participant
-                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName, registration.Self.LastName, registration.Self.EmailAddress, registration.Self.DateOfBirth,registration.Self.MobilePhone);
+                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName,
+                                                                    registration.Self.LastName,
+                                                                    registration.Self.EmailAddress,
+                                                                    registration.Self.DateOfBirth,
+                                                                    registration.Self.MobilePhone);
                 registration.Self.ContactId = contactId;
                 participantId = _participantService.CreateParticipantRecord(contactId);
-                //registrationDto.ParticipantId = participantId;
             }
 
-            //why do i care about this?
             if (participantId == 0)
             {
-                throw new ApplicationException("Nooooooo");
+                throw new ApplicationException("Registration Participant Not Found");
             }
             return participantId;
         }
