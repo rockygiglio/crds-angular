@@ -61,6 +61,7 @@
                                                volunteerService.projectPrefTwo,
                                                volunteerService.projectPrefThree),
         self: personDto(volunteerService.person),
+        skills: volunteerService.skills.filter(function(skill) { return skill.checked; }),
         spouse: personDto(volunteerService.spouse),
         spouseParticipation: volunteerService.spouseAttending,
         waiverSigned: true

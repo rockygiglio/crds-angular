@@ -17,15 +17,11 @@
 
     function GoVolunteerThankYouController() {
       var vm = this;
-      //vm.svc = GoVolunteerService;
-      vm.tmp = {};
 
       activate();
 
       function activate() {
         var dto = GoVolunteerService.getRegistrationDto();
-        console.log(dto);
-        vm.tmp = dto;
         GoVolunteerDataService.Create.save(dto, function(result) {
           console.log('success');
         },
@@ -35,7 +31,6 @@
           console.log(result);
         });
       }
-
     }
   }
 

@@ -8,7 +8,9 @@
   function GoVolunteerWaiver($rootScope, GoVolunteerService) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&' 
+      },
       bindToController: true,
       controller: GoVolunteerWaiverController,
       controllerAs: 'goWaiver',
@@ -17,6 +19,7 @@
 
     function GoVolunteerWaiverController() {
       var vm = this;
+      vm.submit = submit;
       vm.waiver = null;
 
       activate();
@@ -29,6 +32,10 @@
         } else {
           vm.waiver = $rootScope.MESSAGES.goVolunteerWaiverTerms.content;
         }
+      }
+
+      function submit() {
+        vm.onSubmit({nextState:'thank-you'});
       }
     }
   }
