@@ -48,6 +48,7 @@
              placeholder="Enter email address*"
              required
              unique-email
+             validate-unique="volunteerProfile.requireUnique()"
              ng-model="volunteerProfile.person.emailAddress">
       <ng-messages for="volunteerProfile.profileForm.email.$error" ng-if="volunteerProfile.validate('email')">
         <span ng-message="required">

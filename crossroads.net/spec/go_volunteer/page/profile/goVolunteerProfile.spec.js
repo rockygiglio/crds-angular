@@ -24,7 +24,7 @@ describe('Go Volunteer Profile Page Component', function() {
   });
 
   beforeEach(angular.mock.module(function($provide) {
-    $provide.value('$state', { get: function() {} });
+    $provide.value('$state', { get: function() {}, current: {name: 'go-volunteer.crossroadspage'} });
   }));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, $injector) {
