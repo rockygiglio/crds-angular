@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using Random = System.Random;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -130,6 +133,33 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void ReallyRandom()
+        {
+            var x = RandomProvider.GetThreadRandom();
+            var y = x.Next();
+            var z = x.Next();
+            Assert.AreNotEqual(y,z);
+
+            var list = Enumerable.Repeat(getNum(x), 5).ToList();
+            Assert.IsNotNull(list);
+        }
+
+        private int getNum(Random rnd)
+        {
+            return rnd.Next();
+        }
+
+        [Test]
+        public void NotReallyRandom()
+        {
+            var rnd1 = new Random();
+            var y = rnd1.Next();
+            var rnd2 = new Random();
+            var z = rnd2.Next();
+            Assert.AreEqual(y, z);
+        }
+
+        [Test]
         public void ShouldGetAListOfOrgs()
         {
             var fakeToken = "randomString";
@@ -229,6 +259,20 @@ namespace MinistryPlatform.Translation.Test.Services
                 It.IsAny<string>())
                 ).Returns(ListOfOrganizationsWithSameName());
             Assert.Throws<InvalidOperationException>(() => _fixture.GetOrganization(name, fakeToken));
+        }
+    }
+
+    public static class RandomProvider
+    {
+        private static int _seed = Environment.TickCount;
+
+        private static readonly ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() =>
+            new Random(Interlocked.Increment(ref _seed))
+        );
+
+        public static Random GetThreadRandom()
+        {
+            return RandomWrapper.Value;
         }
     }
 }

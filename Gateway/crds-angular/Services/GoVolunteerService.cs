@@ -169,12 +169,6 @@ namespace crds_angular.Services
             {
                 _groupConnectorService.CreateGroupConnectorRegistration(registration.GroupConnectorId, registrationId);
             }
-            // TODO add a flag for lone wolfs to make the group connector private vs. public
-            //else // lone wolf
-            //{
-            //    //var loneWolf = true;
-            //    //_groupConnectorService.CreateGroupConnector(registrationId, loneWolf);
-            //}
         }
 
         private int CreateRegistration(Registration registration, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)

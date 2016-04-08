@@ -15,7 +15,11 @@
 </div>
 <div class="row push-top">
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc" ng-click="goWaiver.submit()">I agree, submit my registration
+    <button type="submit"
+        class="btn btn-block btn-primary-gc"
+        ng-click="goWaiver.submit()"
+        ng-class="{disabled: goWaiver.processing}">
+      I agree, submit my registration
       <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
       	<use xlink:href="#arrow-right9"></use>
       </svg>

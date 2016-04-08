@@ -29,7 +29,6 @@
       /////////////////////////
 
       function activate() {
-        debugger;
         Organizations.Others.query(function(data) {
           vm.availableOptions = data;
         },
