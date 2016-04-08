@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Crossroads.Utilities.Interfaces;
-using FsCheck;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Random = System.Random;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -26,7 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
-            _configWrapper.Setup(m => m.GetConfigIntValue("OrganizationsPage")).Returns(ORGPAGE);
+            _configWrapper.Setup(m => m.GetConfigIntValue("OrganizationsPage")).Returns(OrgPage);
             _configWrapper.Setup(m => m.GetConfigIntValue("LocationsForOrg")).Returns(LocPage);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
@@ -38,15 +35,16 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
-        private const int ORGPAGE = 1234;
+        private const int OrgPage = 1234;
         private const int LocPage = 180;
+        private const string FakeToken = "randomString";
 
         private List<Dictionary<string, object>> ListOfValidOrganizations()
         {
             return new List<Dictionary<string, object>>()
             {
-                ValidMPOrganization("Ingage"),
-                ValidMPOrganization("Crossroads")
+                ValidMpOrganization("Ingage"),
+                ValidMpOrganization("Crossroads")
             };
         }
 
@@ -56,12 +54,12 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 return new List<Dictionary<string, object>>()
                 {
-                    ValidMPOrganization("Ingage")
+                    ValidMpOrganization("Ingage")
                 };
             }
             return new List<Dictionary<string, object>>()
             {
-                InvalidMPOrganization("Ingage")
+                InvalidMpOrganization("Ingage")
             };
         }
 
@@ -69,12 +67,12 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             return new List<Dictionary<string, object>>()
             {
-                ValidMPOrganization("Ingage"),
-                ValidMPOrganization("Ingage")
+                ValidMpOrganization("Ingage"),
+                ValidMpOrganization("Ingage")
             };
         }
 
-        private static Dictionary<string, object> ValidMPOrganization(string name)
+        private static Dictionary<string, object> ValidMpOrganization(string name)
         {
             return new Dictionary<string, object>()
             {
@@ -87,7 +85,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
         }
 
-        private static Dictionary<string, object> InvalidMPOrganization(string name)
+        private static Dictionary<string, object> InvalidMpOrganization(string name)
         {
             return new Dictionary<string, object>()
             {
@@ -135,23 +133,21 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldGetAListOfOrgs()
         {
-            var fakeToken = "randomString";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 It.IsAny<string>(),
                 It.IsAny<string>())
                 ).Returns(ListOfValidOrganizations);
-            var ret = _fixture.GetOrganizations(fakeToken);
+            var ret = _fixture.GetOrganizations(FakeToken);
             Assert.IsInstanceOf<List<MPOrganization>>(ret, "The return value is not an instance of an MPOrganization");
         }
 
         [Test]
-        public void shouldGetLocations()
+        public void ShouldGetLocations()
         {
-            var fakeToken = "randomString";
-            _mpServiceMock.Setup(m => m.GetSubpageViewRecords(LocPage, It.IsAny<int>(), fakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
-            var ret = _fixture.GetLocationsForOrganization(1, fakeToken);
+            _mpServiceMock.Setup(m => m.GetSubpageViewRecords(LocPage, It.IsAny<int>(), FakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
+            var ret = _fixture.GetLocationsForOrganization(1, FakeToken);
             Assert.IsInstanceOf<List<Location>>(ret);
             Assert.IsNotNull(ret);
         }
@@ -160,15 +156,14 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldGetOrganization()
         {
             var orgs = ListOfOneUniquelyNamedOrganization();
-            var fakeToken = "randomString";
-            var name = "Ingage";
+            const string name = "Ingage";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 string.Format("{0},", name),
                 It.IsAny<string>())
                 ).Returns(orgs);
-            var ret = _fixture.GetOrganization(name, fakeToken);
+            var ret = _fixture.GetOrganization(name, FakeToken);
 
             Assert.IsInstanceOf<MPOrganization>(ret, "The return value is not an instance of an MPOrganization");
             Assert.AreEqual(orgs.FirstOrDefault().ToString("Name"), ret.Name);
@@ -178,28 +173,26 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldHandleAnInvalidOrg()
         {
             var orgs = ListOfOneUniquelyNamedOrganization(false);
-            var fakeToken = "randomString";
-            var name = "Ingage";
+            const string name = "Ingage";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 string.Format("{0},", name),
                 It.IsAny<string>())
                 ).Returns(orgs);
-            Assert.Throws<KeyNotFoundException>(() => _fixture.GetOrganization(name, fakeToken));
+            Assert.Throws<KeyNotFoundException>(() => _fixture.GetOrganization(name, FakeToken));
         }
 
         [Test]
         public void ShouldHandleEmptyListOfOrgs()
         {
-            var fakeToken = "randomString";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 It.IsAny<string>(),
                 It.IsAny<string>())
                 ).Returns(new List<Dictionary<string, object>>());
-            var ret = _fixture.GetOrganizations(fakeToken);
+            var ret = _fixture.GetOrganizations(FakeToken);
             Assert.IsInstanceOf<List<MPOrganization>>(ret, "The return value is not an instance of an MPOrganization");
             Assert.IsEmpty(ret);
         }
@@ -208,30 +201,28 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldHandleNoOrgs()
         {
             var emptyList = new List<Dictionary<string, object>>();
-            var fakeToken = "randomString";
-            var name = "Ingage";
+            const string name = "Ingage";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 string.Format("{0},", name),
                 It.IsAny<string>())
                 ).Returns(emptyList);
-            var ret = _fixture.GetOrganization(name, fakeToken);
+            var ret = _fixture.GetOrganization(name, FakeToken);
             Assert.IsNull(ret);
         }
 
         [Test]
         public void ShouldThrowExceptionIfMultipleOrgsReturned()
         {
-            var fakeToken = "randomString";
-            var name = "Ingage";
+            const string name = "Ingage";
             _mpServiceMock.Setup(m => m.GetRecordsDict(
-                ORGPAGE,
-                fakeToken,
+                OrgPage,
+                FakeToken,
                 string.Format("{0},", name),
                 It.IsAny<string>())
                 ).Returns(ListOfOrganizationsWithSameName());
-            Assert.Throws<InvalidOperationException>(() => _fixture.GetOrganization(name, fakeToken));
+            Assert.Throws<InvalidOperationException>(() => _fixture.GetOrganization(name, FakeToken));
         }
     }
 }
