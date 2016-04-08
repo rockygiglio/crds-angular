@@ -22,6 +22,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "projectMaximumVolunteers")]
         public int ProjectMaximumVolunteers { get; set; }
 
+        [JsonProperty(PropertyName = "absoluteMaximumVolunteers")]
+        public int AbsoluteMaximumVolunteers { get; set; }
+
         [JsonProperty(PropertyName = "projectMinimumAge")]
         public int ProjectMinimumAge { get; set; }
 
@@ -42,6 +45,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 Name = r.Name,
                 PrimaryRegistraionContactId = r.PrimaryRegistrationID,
                 ProjectMaximumVolunteers = r.ProjectMaximumVolunteers,
+                AbsoluteMaximumVolunteers = r.AbsoluteMaximumVolunteers,
                 ProjectMinimumAge = r.ProjectMinimumAge,
                 ProjectName = r.ProjectName,
                 ProjectType = r.ProjectType,

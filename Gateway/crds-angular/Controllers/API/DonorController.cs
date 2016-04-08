@@ -164,7 +164,9 @@ namespace crds_angular.Controllers.API
                             bank_account = new BankAccountDTO
                             {
                               last4 = defaultSource.bank_last4,
-                              routing = defaultSource.routing_number
+                              routing = defaultSource.routing_number,
+                              account_holder_name = defaultSource.account_holder_name,
+                              account_holder_type = defaultSource.account_holder_type
                             }
                          },
                          RegisteredUser = donor.RegisteredUser,

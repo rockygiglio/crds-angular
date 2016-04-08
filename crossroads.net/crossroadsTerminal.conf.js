@@ -6,7 +6,8 @@ var definePlugin = new webpack.DefinePlugin({
   __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
   __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
   __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
-  __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M')
+  __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M'),
+  __STRIPE_API_VERSION__: JSON.stringify(process.env.CRDS_STRIPE_API_VERSION),
 });
 
 module.exports = function(config) {
@@ -66,21 +67,21 @@ module.exports = function(config) {
               path.resolve(__dirname, 'app'),
               path.resolve(__dirname, './node_modules/angular-stripe')
             ], loader: 'babel-loader' },
-          { test: /\.scss$/, 
-            loader: ExtractTextPlugin.extract('style-loader', 
-                         'css-loader!autoprefixer-loader!sass-loader') 
+          { test: /\.scss$/,
+            loader: ExtractTextPlugin.extract('style-loader',
+                         'css-loader!autoprefixer-loader!sass-loader')
           },
           { test: /\.(jpe?g|png|gif|svg)$/i, loaders: [
-            'image?bypassOnDebug&optimizationLevel=7&interlaced=false'] 
+            'image?bypassOnDebug&optimizationLevel=7&interlaced=false']
           },
-          { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
-            loader: 'url-loader?limit=10000&minetype=application/font-woff' 
+          { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: 'url-loader?limit=10000&minetype=application/font-woff'
           },
           { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' },
           { test: /\.html$/, loader: 'ng-cache?prefix=[dir]' }
         ]
       },
-      plugins: [ new ExtractTextPlugin('[name].css'), definePlugin ]
+      plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
     },
 
     webpackMiddleware: {

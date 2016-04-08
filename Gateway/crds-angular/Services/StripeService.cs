@@ -32,6 +32,13 @@ namespace crds_angular.Services
         {
             _stripeRestClient = stripeRestClient;
             _maxQueryResultsPerPage = configuration.GetConfigIntValue("MaxStripeQueryResultsPerPage");
+
+            var stripeApiVersion = configuration.GetEnvironmentVarAsString("CRDS_STRIPE_API_VERSION", false);
+            if (stripeApiVersion != null)
+            {
+                _stripeRestClient.AddDefaultHeader("Stripe-Version", stripeApiVersion);
+            }
+
             _contentBlockService = contentBlockService;
         }
 
@@ -39,6 +46,7 @@ namespace crds_angular.Services
         {
             return (response.ResponseStatus != ResponseStatus.Completed
                     || (errorNotFound && response.StatusCode == HttpStatusCode.NotFound)
+                    || response.StatusCode == HttpStatusCode.Unauthorized
                     || response.StatusCode == HttpStatusCode.BadRequest
                     || response.StatusCode == HttpStatusCode.PaymentRequired);
         }
@@ -138,7 +146,6 @@ namespace crds_angular.Services
             request.AddParameter("bank_account[account_number]", accountNumber);
             request.AddParameter("bank_account[routing_number]", routingNumber);
             request.AddParameter("bank_account[country]", "US");
-            request.AddParameter("bank_account[currency]", "USD");
             request.AddParameter("bank_account[account_holder_name]", accountHolderName);
             request.AddParameter("bank_account[account_holder_type]", "individual");
 
@@ -243,6 +250,7 @@ namespace crds_angular.Services
             {
                 return (null);
             }
+
             return (customer.sources.data.Find(src => src.id.Equals(sourceId)));
         }
 
@@ -257,6 +265,8 @@ namespace crds_angular.Services
                 {
                     defaultSource.routing_number = source.routing_number;
                     defaultSource.bank_last4 = source.last4;
+                    defaultSource.account_holder_name = source.account_holder_name;
+                    defaultSource.account_holder_type = source.account_holder_type;
                 }
                 else
                 {

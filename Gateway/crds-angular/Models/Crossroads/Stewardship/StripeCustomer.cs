@@ -32,7 +32,6 @@ namespace crds_angular.Models.Crossroads.Stewardship
         public string exp_year { get; set; }
         public string fingerprint { get; set; }
         public string country { get; set; }
-        public string name { get; set; }
         public string address_line1 { get; set; }
         public string address_line2 { get; set; }
         public string address_city { get; set; }
@@ -49,6 +48,8 @@ namespace crds_angular.Models.Crossroads.Stewardship
         public string status { get; set; }
         public string routing_number { get; set; }
         public string bank_name { get; set; }
+        public string account_holder_name { get; set; }
+        public string account_holder_type { get; set; }
     }
 
     public class Sources
