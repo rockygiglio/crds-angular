@@ -884,7 +884,7 @@ namespace crds_angular.test.Services
 
             _restClient.Setup(mocked => mocked.Execute<StripeToken>(It.IsAny<IRestRequest>())).Returns(response.Object);
 
-            var result = _fixture.CreateToken("123", "456");
+            var result = _fixture.CreateToken("123", "456", "AccountHolderFirstName LastName");
 
             _restClient.Verify(mocked => mocked.Execute<StripeToken>(
                 It.Is<RestRequest>(o =>

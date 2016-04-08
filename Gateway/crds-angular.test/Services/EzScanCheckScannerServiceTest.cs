@@ -276,7 +276,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout + "88");
-            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct + "88", decryptRout + "88")).Returns(new StripeToken { Id = "tok986" });
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct + "88", decryptRout + "88", "newAccountHolderName")).Returns(new StripeToken { Id = "tok986" });
             _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString() + " Scanned Checks")).Returns(stripeCustomer);
             _paymentService.Setup(mocked => mocked.AddSourceToCustomer(stripeCustomer.id, "tok986")).Returns(nonAccountStripeCustomer);
 
@@ -530,11 +530,12 @@ namespace crds_angular.test.Services
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
+            const string accountHolderName = "FirstName LastName";
       
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
-            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout)).Returns(token);
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, accountHolderName)).Returns(token);
 
             _donorService.Setup(
                 mocked =>
@@ -605,12 +606,13 @@ namespace crds_angular.test.Services
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
+            const string accountHolderName = "FirstName LastName";
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns((ContactDonor)null);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
-            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout)).Returns(token);
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, accountHolderName)).Returns(token);
 
             _donorService.Setup(
                 mocked =>
@@ -687,12 +689,13 @@ namespace crds_angular.test.Services
             const string encryptedKey = "PH/rty1234";
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
+            const string accountHolderName = "FirstName LastName";
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns(contactDonorByDonorId);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
-            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout)).Returns(token);
+            _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, accountHolderName)).Returns(token);
 
             _donorService.Setup(
                 mocked =>
