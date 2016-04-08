@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using MvcContrib.TestHelper.Ui;
@@ -83,9 +79,9 @@ namespace crds_angular.test.Services
                     skill.EndDate = It.IsAny<DateTime>();
                 }
                 _objectAttributeService.Setup(m => m.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, It.IsAny<ObjectAttributeConfiguration>()));
+                _objectAttributeService.Verify();
             });
-            _fixture.UpdateSkills(participantId, skills, token);
-            _objectAttributeService.VerifyAll();
+            _fixture.UpdateSkills(participantId, skills, token);            
             _contactService.Verify();
             
         }
