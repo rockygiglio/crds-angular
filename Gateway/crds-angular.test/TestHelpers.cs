@@ -6,18 +6,124 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using FsCheck;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models;
-using MvcContrib;
-using NUnit.Framework;
+using Equipment = crds_angular.Models.Crossroads.GoVolunteer.Equipment;
 using Random = System.Random;
 
 namespace crds_angular.test
 {
     public static class TestHelpers
     {
-        public static Random rnd = new Random(Guid.NewGuid().GetHashCode());           
+        public static Random rnd = new Random(Guid.NewGuid().GetHashCode());
+
         public static int RandomInt()
         {
             return Gen.Sample(10000, 10000, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault;
+        }
+
+        public static Registration RegistrationNoSpouse()
+        {
+            return new Registration()
+            {
+                AdditionalInformation = Gen.Sample(1, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                ChildAgeGroup = ListOfChildrenAttending(2, 0, 1),
+                CreateGroupConnector = true,
+                Equipment = ListOfEquipment(),
+                GroupConnectorId = 0,
+                InitiativeId = RandomInt(),
+                OrganizationId = RandomInt(),
+                PreferredLaunchSiteId = RandomInt(),
+                PrepWork = ListOfPrepWork(true, false),
+                PrivateGroup = true,
+                SpouseParticipation = false,
+                Spouse = null,
+                ProjectPreferences = ListOfProjectPreferences(),
+                RegistrationId = RandomInt(),
+                Self = Registrant(),
+                RoleId = RandomInt(),
+                WaiverSigned = true
+            };
+        }
+
+        public static MinistryPlatform.Models.Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        {
+            return new Communication()
+            {
+                AuthorUserId = RandomInt(),
+                DomainId = RandomInt(),
+                EmailBody = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                EmailSubject = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                FromContact = new Contact() {ContactId = sender.Contact_ID, EmailAddress = sender.Email_Address},
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = new Contact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
+                TemplateId = templateId
+            };
+        }        
+
+        public static Registrant Registrant()
+        {
+            return new Registrant()
+            {
+                ContactId = RandomInt(),
+                DateOfBirth = "02/21/1980",
+                EmailAddress = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                MobilePhone = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+            };
+        }
+
+        public static List<ProjectPreference> ListOfProjectPreferences(int size = 3)
+        {
+            return Enumerable.Range(0, size).Select(_ => new ProjectPreference()
+            {
+                Id = RandomInt(),
+                Priority = RandomInt()
+            }).ToList();
+        }
+
+        public static List<PrepWork> ListOfPrepWork(bool registrant, bool spouse)
+        {
+            var prepwork = new List<PrepWork>();
+            if (registrant)
+            {
+                prepwork.Add(new PrepWork() {Id = RandomInt(), Spouse = false});
+            }
+            if (spouse)
+            {
+                prepwork.Add(new PrepWork() {Id = RandomInt(), Spouse = true});
+            }
+            return prepwork;
+        } 
+
+        public static List<Equipment> ListOfEquipment(int size = 2)
+        {
+            return Enumerable.Range(0, size).Select(_ => new Equipment()
+            {
+                Id = RandomInt(),
+                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+            }).ToList();
+        }
+
+        public static List<ChildrenAttending> ListOfChildrenAttending(int numberOf2, int numberOf8, int numberOf13)
+        {
+            return new List<ChildrenAttending>()
+            {
+                new ChildrenAttending()
+                {
+                    Id = 1000,
+                    Count = numberOf2
+                },
+                new ChildrenAttending()
+                {
+                    Id = 1001,
+                    Count = numberOf8
+                },
+                new ChildrenAttending()
+                {
+                    Id = 1002,
+                    Count = numberOf13
+                }
+            };
         }
 
         public static List<MpGoVolunteerSkill> MPSkills(int size = 10)
@@ -67,9 +173,9 @@ namespace crds_angular.test
             }, size).ToList();
         }
 
-        public static MyContact MyContact()
+        public static MyContact MyContact(int contactId = 0)
         {
-            return new MyContact()
+            var contact = new MyContact()
             {
                 Address_ID = RandomInt(),
                 Address_Line_1 = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
@@ -78,6 +184,11 @@ namespace crds_angular.test
                 Contact_ID = RandomInt(),
                 County = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
             };
+            if (contactId != 0)
+            {
+                contact.Contact_ID = contactId;
+            }
+            return contact;            
         }
     }
 }
