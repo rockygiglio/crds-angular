@@ -160,16 +160,6 @@ namespace crds_angular.Services
             _ministryPlatformService.CreateSubRecord(_configurationWrapper.GetConfigIntValue("Users_Roles"),userRecordId, userRoleDictionary, token);
         }
 
-        //private void CreateParticipantRecord(string token, int contactRecordId)
-        //{
-        //    var participantDictionary = new Dictionary<string, object>();
-        //    participantDictionary["Participant_Type_ID"] = _configurationWrapper.GetConfigIntValue("Participant_Type_Default_ID");
-
-        //    participantDictionary["Participant_Start_Date"] = DateTime.Now;
-        //    participantDictionary["Contact_Id"] = contactRecordId;
-
-        //    _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Participants"), participantDictionary, token);
-        //}
         /*
          * Not needed as long as the triggers are in place on Ministry Platform
          */
