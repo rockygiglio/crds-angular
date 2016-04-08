@@ -222,32 +222,37 @@ namespace crds_angular.Services
         private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
         {
             // Create or Update Contact
-            int participantId;
-            if (registration.Self.ContactId != 0)
-            {
-                // update name/email/dob/mobile
-                // missing stuff here...
-
-                //get participant
-                var participant = _participantService.GetParticipantRecord(token);
-                participantId = participant.ParticipantId;
-            }
-            else
-            {
-                //create contact & participant
-                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName,
-                                                                    registration.Self.LastName,
-                                                                    registration.Self.EmailAddress,
-                                                                    registration.Self.DateOfBirth,
-                                                                    registration.Self.MobilePhone);
-                registration.Self.ContactId = contactId;
-                participantId = _participantService.CreateParticipantRecord(contactId);
-            }
+            var participantId = registration.Self.ContactId != 0 ? ExistingParticipant(registration, token) : CreateParticipant(registration);
 
             if (participantId == 0)
             {
                 throw new ApplicationException("Registration Participant Not Found");
             }
+            return participantId;
+        }
+
+        private int CreateParticipant(Registration registration)
+        {
+            //create contact & participant
+            var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName,
+                                                                registration.Self.LastName,
+                                                                registration.Self.EmailAddress,
+                                                                registration.Self.DateOfBirth,
+                                                                registration.Self.MobilePhone);
+            registration.Self.ContactId = contactId;
+            var participantId = _participantService.CreateParticipantRecord(contactId);
+            return participantId;
+        }
+
+        private int ExistingParticipant(Registration registration, string token)
+        {
+            // update name/email/dob/mobile
+            var dict = registration.Self.GetDictionary();
+            _contactService.UpdateContact(registration.Self.ContactId, dict);
+
+            //get participant
+            var participant = _participantService.GetParticipantRecord(token);
+            var participantId = participant.ParticipantId;
             return participantId;
         }
     }

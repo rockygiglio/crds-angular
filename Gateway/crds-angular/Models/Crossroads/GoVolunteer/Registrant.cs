@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
@@ -21,5 +22,19 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "mobile")]
         public string MobilePhone { get; set; }
+
+        public Dictionary<string, object> GetDictionary()
+        {
+            var dictionary = new Dictionary<string, object>
+            {
+                {"Contact_ID", ContactId},
+                {"Date_Of_Birth", DateOfBirth},
+                {"Email_Address", EmailAddress},
+                {"Nickname", FirstName},
+                {"Last_Name", LastName},
+                {"Mobile_Phone", MobilePhone}
+            };
+            return dictionary;
+        }
     }
 }
