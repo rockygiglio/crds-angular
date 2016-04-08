@@ -243,6 +243,7 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("POST")]
         [Route("api/govolunteer/registration")]
+        [ResponseType(typeof(Registration))]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {
             if (ModelState.IsValid)
@@ -263,8 +264,8 @@ namespace crds_angular.Controllers.API
                 goVolunteerRegistration.Self.FirstName = DateTime.Now.ToString(CultureInfo.CurrentCulture);
                 goVolunteerRegistration.InitiativeId = 1;
                 // end for testing
-                _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
-                return Ok();
+                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
+                return Ok(reg);
             }
             catch (Exception e)
             {

@@ -63,6 +63,10 @@ namespace crds_angular.Services
 
         public void UpdateSkills(int participantId, List<GoSkills> skills, string token)
         {
+            if (token == String.Empty)
+            {
+                token = _apiUserService.GetToken();
+            }
             var contact = _contactService.GetContactByParticipantId(participantId);
             var configuration = ObjectAttributeConfigurationFactory.Contact();
             var currentAttributes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
