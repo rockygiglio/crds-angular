@@ -54,20 +54,21 @@ namespace crds_angular.Services
             {
                 foreach (var skill in skills.Where(skill => contactSkills.Attributes.Any(s => s.AttributeId == skill.AttributeId && s.Selected)))
                 {
-                    skill.Checked = true;
+                    skill.Checked = true;                    
                 }
             }
 
             return new GoSkills().ToGoSkills(skills);
         }
 
-        public bool UpdateSkills(int participantId, List<GoSkills> skills, string token)
+        public void UpdateSkills(int participantId, List<GoSkills> skills, string token)
         {
             var contact = _contactService.GetContactByParticipantId(participantId);
             var configuration = ObjectAttributeConfigurationFactory.Contact();
             var currentAttributes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
             var currentSkills = currentAttributes.MultiSelect
-               .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes;
+               .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes
+               .Where(attribute => attribute.Selected).ToList();
 
             var skillsEndDate = SkillsToEndDate(skills, currentSkills).Select(sk =>
             {
@@ -78,14 +79,18 @@ namespace crds_angular.Services
 
             var skillsToAdd = SkillsToAdd(skills, currentSkills);
             var allSkills = skillsToAdd.Concat(skillsEndDate);
-
-            allSkills.ForEach(skill =>
+            try
             {
-                _objectAttributeService.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, configuration);
-            });
-           
+                allSkills.ForEach(skill =>
+                {
+                    _objectAttributeService.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, configuration);
+                });
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Updating skills caused an error");   
+            }
 
-            return true;
         }        
 
         public List<ObjectAttributeDTO> SkillsToEndDate(List<GoSkills> skills, List<ObjectAttributeDTO> currentSkills)

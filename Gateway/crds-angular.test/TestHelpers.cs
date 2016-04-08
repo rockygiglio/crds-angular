@@ -17,11 +17,7 @@ namespace crds_angular.test
         public static Random rnd = new Random(Guid.NewGuid().GetHashCode());           
         public static int RandomInt()
         {
-            //var sample =  Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<int>()));
-            
-            return rnd.Next();
-            //var elem = rnd.Next(sample.Length -1);
-            //return sample[elem];
+            return Gen.Sample(10000, 10000, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault;
         }
 
         public static List<MpGoVolunteerSkill> MPSkills(int size = 10)

@@ -35,6 +35,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "skillId")]
         public int SkillId { get; set; }
 
+        [JsonProperty(PropertyName = "currentlySet")]
+        public bool CurrentlySet { get; set; }
+
         public List<GoSkills> ToGoSkills(List<MpGoVolunteerSkill> skills)
         {
             return skills.Select(skill => new GoSkills(skill.GoVolunteerSkillId,skill.AttributeId, skill.Label, skill.AttributeName, skill.Checked)).ToList();
