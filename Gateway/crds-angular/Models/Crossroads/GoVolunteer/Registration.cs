@@ -6,8 +6,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 {
     public class Registration
     {
-        // how are we doing skills? - should we reuse attributes on Person object?
-
         [JsonProperty(PropertyName = "additionalInformation")]
         public string AdditionalInformation { get; set; }
 
@@ -49,10 +47,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "roleId")]
         public int RoleId { get; set; }
 
-        // had the existing Person object, but it felt way too heavy
-        // and Ministry-Platformy, rolling my own specific person class
-        // revisit this decision once intergration starts
-        // also, haven't figured out skills yet
         [JsonProperty(PropertyName = "self")]
         public Registrant Self { get; set; }
 
