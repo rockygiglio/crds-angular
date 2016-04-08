@@ -36,7 +36,7 @@ namespace MinistryPlatform.Translation.Services
 
             return result.Select(r => new MpGroupConnector
             {
-                Id = r.ToInt("GroupConnector_ID"),
+                Id = r.ToInt("Group_Connector_ID"),
                 Name = r.ToString("Primary_Registration"),
                 PrimaryRegistrationID = r.ToInt("Primary_Registration_Contact_ID"),
                 ProjectMaximumVolunteers = r.ToInt("Project_Maximum_Volunteers"),
