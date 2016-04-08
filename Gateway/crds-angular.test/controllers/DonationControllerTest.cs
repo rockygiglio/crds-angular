@@ -74,7 +74,7 @@ namespace crds_angular.test.controllers
                     {
                     SourceType = PaymentType.CreditCard,
                     CardType = CreditCardType.AmericanExpress,
-                    Name = "ending in 1234",
+                    AccountHolderName = "ending in 1234",
                     PaymentProcessorId = "tx_123",
                     },
                     Email = "me@here.com",
