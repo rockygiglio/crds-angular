@@ -18,13 +18,13 @@
     </div>
     <div class="checkbox">
       <label for="otherEquipment" class="control-label">
-        <input type="checkbox" value="" ng-click="otherField = !otherField" id="otherEquipment">
+        <input type="checkbox" value="" ng-click="goEquipment.showOtherEquipment()" id="otherEquipment">
         Other
       </label>
     </div>
   </div>
 </div>
-<div class="row push-bottom animated fadeIn" ng-show="otherField">
+<div class="row push-bottom animated fadeIn" ng-show="goEquipment.otherField">
   <div class="col-xs-10 col-xs-offset-1" ng-repeat="other in goEquipment.otherEquipment">
     <div class="form-group">
       <input type="text" class="form-control" ng-model="other.equipment.name" />

@@ -5,12 +5,9 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
-using ProjectType = crds_angular.Models.Crossroads.GoVolunteer.ProjectType;
-using Registration = crds_angular.Models.Crossroads.GoVolunteer.Registration;
 
 namespace crds_angular.Services
 {
@@ -23,9 +20,11 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IContactService _contactService;
         private readonly IGroupConnectorService _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
+        private readonly int _otherEquipmentId;
         private readonly MPInterfaces.IParticipantService _participantService;
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
+        private readonly IGoSkillsService _skillsService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -34,7 +33,8 @@ namespace crds_angular.Services
                                   IConfigurationWrapper configurationWrapper,
                                   MPInterfaces.IContactRelationshipService contactRelationshipService,
                                   MPInterfaces.IProjectTypeService projectTypeService,
-                                  IAttributeService attributeService)
+                                  IAttributeService attributeService,
+                                  IGoSkillsService skillsService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -44,6 +44,8 @@ namespace crds_angular.Services
             _contactRelationshipService = contactRelationshipService;
             _projectTypeService = projectTypeService;
             _attributeService = attributeService;
+            _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
+            _skillsService = skillsService;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -70,11 +72,13 @@ namespace crds_angular.Services
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
                 SpouseInformation(registration);
+                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);
+                //Skills(registrationDto.ParticipantId, registration.Skills, token);
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
             {
-                var msg = "Go Volunteer Service: CreateRegistration";
+                const string msg = "Go Volunteer Service: CreateRegistration";
                 _logger.Error(msg, ex);
                 throw new Exception(msg, ex);
             }
@@ -83,8 +87,6 @@ namespace crds_angular.Services
 
         public List<ProjectType> GetProjectTypes()
         {
-            //var apiUserToken = _mpApiUserService.GetToken();
-
             var pTypes = _projectTypeService.GetProjectTypes();
             return pTypes.Select(pt =>
             {
@@ -111,9 +113,10 @@ namespace crds_angular.Services
 
         private void Equipment(Registration registration, int registrationId)
         {
-            foreach (var equipment in registration.Equipment.Where(equipment => equipment.Id != 0))
+            foreach (var equipment in registration.Equipment)
             {
-                _registrationService.AddEquipment(registrationId, equipment.Id, equipment.Notes);
+                var id = equipment.Id != 0 ? equipment.Id : _otherEquipmentId;
+                _registrationService.AddEquipment(registrationId, id, equipment.Notes);
             }
         }
 
@@ -144,7 +147,11 @@ namespace crds_angular.Services
                 return;
             }
 
-            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName, registration.Spouse.LastName, registration.Spouse.EmailAddress);
+            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
+                                                                registration.Spouse.LastName,
+                                                                registration.Spouse.EmailAddress,
+                                                                registration.Spouse.DateOfBirth,
+                                                                registration.Spouse.MobilePhone);
 
             // create relationship
             var relationship = new MinistryPlatform.Models.Relationship
@@ -160,18 +167,12 @@ namespace crds_angular.Services
         {
             if (registration.CreateGroupConnector)
             {
-                _groupConnectorService.CreateGroupConnector(registrationId);
+                _groupConnectorService.CreateGroupConnector(registrationId, registration.PrivateGroup);
             }
             else if (registration.GroupConnectorId != 0)
             {
                 _groupConnectorService.CreateGroupConnectorRegistration(registration.GroupConnectorId, registrationId);
             }
-            // TODO add a flag for lone wolfs to make the group connector private vs. public
-            //else // lone wolf
-            //{
-            //    //var loneWolf = true;
-            //    //_groupConnectorService.CreateGroupConnector(registrationId, loneWolf);
-            //}
         }
 
         private int CreateRegistration(Registration registration, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
@@ -220,14 +221,12 @@ namespace crds_angular.Services
 
         private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
         {
-            // do we need to create a contact?
-            // how do we know that we need to create a contact?
             // Create or Update Contact
-            //MinistryPlatform.Models.Participant participant = null;
             int participantId;
             if (registration.Self.ContactId != 0)
             {
-                // update name/email
+                // update name/email/dob/mobile
+                // missing stuff here...
 
                 //get participant
                 var participant = _participantService.GetParticipantRecord(token);
@@ -236,16 +235,18 @@ namespace crds_angular.Services
             else
             {
                 //create contact & participant
-                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName, registration.Self.LastName, registration.Self.EmailAddress);
+                var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName,
+                                                                    registration.Self.LastName,
+                                                                    registration.Self.EmailAddress,
+                                                                    registration.Self.DateOfBirth,
+                                                                    registration.Self.MobilePhone);
                 registration.Self.ContactId = contactId;
                 participantId = _participantService.CreateParticipantRecord(contactId);
-                //registrationDto.ParticipantId = participantId;
             }
 
-            //why do i care about this?
             if (participantId == 0)
             {
-                throw new ApplicationException("Nooooooo");
+                throw new ApplicationException("Registration Participant Not Found");
             }
             return participantId;
         }
