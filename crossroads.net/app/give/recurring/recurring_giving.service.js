@@ -121,6 +121,8 @@
         GiveTransferService.program = $filter('filter')(programsInput, {ProgramId: donation.program})[0];
         GiveTransferService.recurringStartDate = donation.start_date;
         GiveTransferService.view = donation.source.type === 'CreditCard' ? 'cc' : 'bank';
+        GiveTransferService.donor.default_source.bank_account.accountHolderType = donation.source.account_holder_type;
+        GiveTransferService.donor.default_source.bank_account.accountHolderName = donation.source.account_holder_name;
         setupInterval(donation);
       }
     }
@@ -138,6 +140,8 @@
           bank_account: {
             routing: null,
             last4: null,
+            accountHolderName: null,
+            accountHolderType: null
           },
         },
       };
@@ -150,6 +154,8 @@
       } else if (donation !== null) {
         GiveTransferService.donor.default_source.bank_account.last4 = donation.source.last4;
         GiveTransferService.donor.default_source.bank_account.routing = donation.source.routing;
+        GiveTransferService.donor.default_source.bank_account.accountHolderName = donation.source.account_holder_name;
+        GiveTransferService.donor.default_source.bank_account.accountHolderType = donation.source.account_holder_type;
       }
     }
 
