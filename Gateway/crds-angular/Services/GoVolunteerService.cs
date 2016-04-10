@@ -25,6 +25,7 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly IGoSkillsService _skillsService;
+        private readonly MPInterfaces.ICommunicationService _communicationService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -34,7 +35,8 @@ namespace crds_angular.Services
                                   MPInterfaces.IContactRelationshipService contactRelationshipService,
                                   MPInterfaces.IProjectTypeService projectTypeService,
                                   IAttributeService attributeService,
-                                  IGoSkillsService skillsService)
+                                  IGoSkillsService skillsService,
+                                  MPInterfaces.ICommunicationService comunicationService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -46,6 +48,7 @@ namespace crds_angular.Services
             _attributeService = attributeService;
             _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
             _skillsService = skillsService;
+            _communicationService = comunicationService;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -91,6 +94,47 @@ namespace crds_angular.Services
                 var projType = new ProjectType();
                 return projType.FromMpProjectType(pt);
             }).ToList();
+        }
+
+        public bool SendMail(Registration registration)
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
+            var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
+            var fromContact = _contactService.GetContactById(fromContactId);
+
+          
+
+            var mergeData = SetupMergeData(registration);
+
+            var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                             fromContactId,
+                                                             fromContact.Email_Address,
+                                                             fromContactId,
+                                                             fromContact.Email_Address,
+                                                             registration.Self.ContactId,
+                                                             registration.Self.EmailAddress,
+                                                             mergeData);
+            var returnVal = _communicationService.SendMessage(communication);
+            if (registration.SpouseParticipation && returnVal > 0)
+            {
+                var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");                
+                var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
+                                                                                           fromContactId,
+                                                                                           fromContact.Email_Address,
+                                                                                           fromContactId,
+                                                                                           fromContact.Email_Address,
+                                                                                           registration.Spouse.ContactId,
+                                                                                           registration.Spouse.EmailAddress,
+                                                                                           mergeData);
+                _communicationService.SendMessage(spouseCommunication);
+            }
+            return returnVal > 0;
+        }
+
+        public Dictionary<string, object> SetupMergeData(Registration registration)
+        {
+              
+            return new Dictionary<string, object>();
         }
 
         private void Attributes(Registration registration, int registrationId)

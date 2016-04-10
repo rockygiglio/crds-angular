@@ -44,8 +44,16 @@ namespace crds_angular.test
             };
         }
 
-        public static MinistryPlatform.Models.Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        public static Registration RegistrationWithSpouse()
         {
+            var registration = RegistrationNoSpouse();
+            registration.SpouseParticipation = true;
+            registration.Spouse = Registrant();
+            return registration;
+        }
+
+        public static MinistryPlatform.Models.Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        {           
             return new Communication()
             {
                 AuthorUserId = RandomInt(),
@@ -57,7 +65,17 @@ namespace crds_angular.test
                 ReplyToContact = new Contact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
                 TemplateId = templateId
             };
-        }        
+        }
+
+        public static MyContact ContactFromRegistrant(Registrant r)
+        {
+            return new MyContact()
+            {
+                Age = RandomInt(),
+                Contact_ID = r.ContactId,
+                Email_Address = r.EmailAddress
+            };
+        }  
 
         public static Registrant Registrant()
         {

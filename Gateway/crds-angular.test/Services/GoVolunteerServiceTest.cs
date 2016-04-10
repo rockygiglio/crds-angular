@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Utilities.Services;
 using FsCheck;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using Moq;
@@ -61,13 +63,14 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldSendEmailOnlyToVolunteer()
         {
-            Prop.ForAll<string, int>((token,registrationContactId) =>
+            Prop.ForAll<string, int>((token, sendMailResult) =>
             {
                 const int templateId = 123456789;
                 const int fromContactId = 0987;                
                 var fromContact = TestHelpers.MyContact(fromContactId);
                 var registration = TestHelpers.RegistrationNoSpouse();
-                
+                var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
+                var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
 
                 _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
                 _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
@@ -77,19 +80,131 @@ namespace crds_angular.test.Services
                                                                               fromContact.Email_Address,
                                                                               fromContact.Contact_ID,
                                                                               fromContact.Email_Address,
-                                                                              registrationContactId,
+                                                                              registration.Self.ContactId,
                                                                               registration.Self.EmailAddress,
-                                                                              It.IsAny<Dictionary<string, object>>())).Returns();
-
-                var success = _fixture.SendMail(registrationContactId, registration);
-                Assert.IsTrue(success);
+                                                                              It.IsAny<Dictionary<string, object>>())).Returns(communication);
+                _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(sendMailResult);
+                var success = _fixture.SendMail(registration);
+                _commnuicationService.Verify();
+                if (sendMailResult > 0)
+                {
+                    Assert.IsTrue(success);
+                }
+                else
+                {
+                    Assert.IsFalse(success);
+                }                
             }).QuickCheckThrowOnFailure();
         }
 
         [Test]
         public void ShouldSendEmailToVolunteerAndSpouse()
         {
-            
+            Prop.ForAll<string, int>((token, sendMailResult) =>
+            {
+                const int templateId = 123456789;
+                const int spouseTemplateId = 98765432;
+
+                const int fromContactId = 0987;
+                var fromContact = TestHelpers.MyContact(fromContactId);
+                var registration = TestHelpers.RegistrationWithSpouse();
+                var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
+                var spouseFromRegistration = TestHelpers.ContactFromRegistrant(registration.Spouse);
+
+                var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
+                var spouseCommunication = TestHelpers.Communication(fromContact, spouseFromRegistration, spouseTemplateId);
+
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
+                
+
+                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
+                _contactService.Setup(m => m.GetContactById(fromContactId)).Returns(fromContact);
+
+                _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
+                                                                              fromContactId,
+                                                                              fromContact.Email_Address,
+                                                                              fromContact.Contact_ID,
+                                                                              fromContact.Email_Address,
+                                                                              registration.Self.ContactId,
+                                                                              registration.Self.EmailAddress,
+                                                                              It.IsAny<Dictionary<string, object>>())).Returns(communication);
+
+                if (sendMailResult > 0)
+                {
+                    _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailSpouseTemplate")).Returns(spouseTemplateId);
+                    _commnuicationService.Setup(m => m.GetTemplateAsCommunication(spouseTemplateId,
+                                                                                  fromContactId,
+                                                                                  fromContact.Email_Address,
+                                                                                  fromContact.Contact_ID,
+                                                                                  fromContact.Email_Address,
+                                                                                  registration.Spouse.ContactId,
+                                                                                  registration.Spouse.EmailAddress,
+                                                                                  It.IsAny<Dictionary<string, object>>())).Returns(spouseCommunication);
+                    _commnuicationService.Setup(m => m.SendMessage(spouseCommunication, false)).Returns(1);
+                }
+                _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(sendMailResult);
+               
+                
+                var success = _fixture.SendMail(registration);                
+                _configurationWrapper.VerifyAll();
+                _commnuicationService.VerifyAll();
+                if (sendMailResult > 0)
+                {
+                    Assert.IsTrue(success);
+                }
+                else
+                {
+                    Assert.IsFalse(success);
+                }
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldSetupMergeDataCorrectly()
+        {
+            var registration = TestHelpers.RegistrationNoSpouse();
+            var mergeData = _fixture.SetupMergeData(registration);
+
+            var tableAttrs = new Dictionary<string, string>()
+            {
+                {"width", "100%"},
+                {"border", "1"},
+                {"cellspacing", "0"},
+                {"cellpadding", "5"}
+            };
+
+            var cellAttrs = new Dictionary<string, string>()
+            {
+                {"align", "center"}
+            };
+
+            var headers = new List<string>()
+            {
+                "Question",
+                "Answer"
+            }.Select(el => new HtmlElement("th", el)).ToList();
+
+            var htmlTable = new HtmlElement("table", tableAttrs)
+                .Append(new HtmlElement("tr", headers))
+                .Append(new HtmlElement("tr"))
+                .Append(new HtmlElement("td", cellAttrs, "Organization"))
+                .Append(new HtmlElement("td", cellAttrs, registration.OrganizationId.ToString()))
+                .Append(new HtmlElement("tr"))
+                .Append(new HtmlElement("td", cellAttrs, "Spouse Participating"))
+                .Append(new HtmlElement("td", cellAttrs, registration.SpouseParticipation.ToString()));
+
+            if (registration.SpouseParticipation)
+            {
+                htmlTable.Append(new HtmlElement("tr"))
+                    .Append(new HtmlElement("td", cellAttrs, "Spouse Name"))
+                    .Append(new HtmlElement("td", cellAttrs, registration.Spouse.FirstName + " " + registration.Spouse.LastName))
+                    ;
+            }
+               
+
+
+            Assert.AreEqual(registration.RegistrationId, mergeData["registrationId"]);
+
         }
 
     }
