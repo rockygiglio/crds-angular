@@ -68,7 +68,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
         public MpGroupConnector GetGroupConnectorById(int groupConnectorId)
         {
-            var searchString = string.Format(",,,,,,,,,,,{0}", groupConnectorId);
+            var searchString = string.Format(",,,,,,,,,,,\"{0}\"", groupConnectorId);
             var groupConnectors = GetGroupConnectors(searchString, _apiToken);
             var groupConnector = groupConnectors.SingleOrDefault();
             return groupConnector;
