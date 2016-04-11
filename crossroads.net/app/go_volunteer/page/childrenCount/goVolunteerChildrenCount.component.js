@@ -19,6 +19,7 @@
 
     function GoVolunteerChildrenCountController() {
       var vm = this;
+      vm.childrenOptions = GoVolunteerService.childrenOptions;
       vm.childrenAttending = GoVolunteerService.childrenAttending;
       vm.submit = submit;
       vm.totalChildren = totalChildren;
@@ -28,7 +29,11 @@
       }
 
       function totalChildren() {
-        return vm.childrenAttending.childTwoSeven + vm.childrenAttending.childEightTwelve + vm.childrenAttending.childThirteenEighteen;
+        var total = _.reduce(vm.childrenOptions, function(total, item) {
+          return total + item.value;
+        }, 0);
+
+        return total;
       }
     }
   }

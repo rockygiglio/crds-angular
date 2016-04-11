@@ -15,10 +15,19 @@
 </div>
 <div class="row push-top">
   <div class="col-xs-12">
-    <button type="submit" class="btn btn-block btn-primary-gc" ui-sref="go-volunteer.crossroadspage({page: 'thank-you'})">I agree, submit my registration
-      <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
-      	<use xlink:href="#arrow-right9"></use>
+    <loading-button
+       loading-text='Submitting...'
+       normal-text='I agree, submit my registration'
+       input-type='button'
+       input-classes='btn btn-block btn-primary-gc'
+       loading-class='disabled'
+       ng-click='goWaiver.submit()'
+       loading='goWaiver.processing' >
+
+      <svg ng-show='!goWaiver.processing' viewBox="0 0 32 32" class="icon icon-arrow-right9">
+        <use xlink:href="#arrow-right9"></use>
       </svg>
-    </button>
+
+    </loading-button>
   </div>
 </div>

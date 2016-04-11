@@ -13,5 +13,6 @@
         public string ProjectName { get; set; }
         public string ProjectType { get; set; }
         public int VolunteerCount { get; set; }
+        public int PreferredLaunchSiteId { get; set; }
     }
 }

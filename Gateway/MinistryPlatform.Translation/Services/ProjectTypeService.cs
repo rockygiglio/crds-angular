@@ -7,17 +7,18 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GoVolunteerService : BaseService,IGoVolunteerService
+    public class ProjectTypeService : BaseService,IProjectTypeService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public GoVolunteerService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public ProjectTypeService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<ProjectType> GetProjectTypes(string token)
+        public List<ProjectType> GetProjectTypes()
         {
+            var token = ApiLogin();
             var result = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("ProjectTypes"), token);
             return MapProjectTypes(result);
         }
