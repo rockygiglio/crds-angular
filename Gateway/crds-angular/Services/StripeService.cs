@@ -146,6 +146,7 @@ namespace crds_angular.Services
             request.AddParameter("bank_account[account_number]", accountNumber);
             request.AddParameter("bank_account[routing_number]", routingNumber);
             request.AddParameter("bank_account[country]", "US");
+            request.AddParameter("bank_account[currency]", "USD");
             request.AddParameter("bank_account[account_holder_name]", accountHolderName);
             request.AddParameter("bank_account[account_holder_type]", "individual");
 

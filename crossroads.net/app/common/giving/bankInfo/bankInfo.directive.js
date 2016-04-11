@@ -52,12 +52,12 @@
           } else if (scope.defaultSource.bank_account.last4) {
             scope.bankAccount.account = '';
             scope.bankAccount.accountHolderName = '';
-            scope.bankAccount.accountHolderType = scope.defaultSource.bank_account.account_holder_type || 'individual';
+            scope.bankAccount.accountHolderType = scope.defaultSource.bank_account.accountHolderType || 'individual';
             scope.bankAccount.routing = '';
 
             scope.defaultBankPlaceholderValues = {
-              accountHolderName: scope.defaultSource.bank_account.account_holder_name,
-              accountHolderType: scope.defaultSource.bank_account.account_holder_type,
+              accountHolderName: scope.defaultSource.bank_account.accountHolderName,
+              accountHolderType: scope.defaultSource.bank_account.accountHolderType,
               routing: scope.defaultSource.bank_account.routing,
               maskedAccount: 'XXXXXXXXXXX' + scope.defaultSource.bank_account.last4
             };
