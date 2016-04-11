@@ -19,6 +19,7 @@ namespace crds_angular.test.Services
         private Mock<ISubscriptionsService> _subscriptionService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IApiUserService> _apiUserService;
+        private Mock<IParticipantService> _participantService;
 
         private AccountService _fixture;
 
@@ -32,6 +33,7 @@ namespace crds_angular.test.Services
             _subscriptionService = new Mock<ISubscriptionsService>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _apiUserService = new Mock<IApiUserService>();
+            _participantService = new Mock<IParticipantService>();
 
             _fixture = new AccountService(_configurationWrapper.Object,
                                           _comunicationService.Object,
@@ -39,7 +41,8 @@ namespace crds_angular.test.Services
                                           _subscriptionService.Object,
                                           _ministryPlatformService.Object,
                                           _lookupService.Object,
-                                          _apiUserService.Object);
+                                          _apiUserService.Object,
+                                          _participantService.Object);
         }
 
         [Test]
@@ -97,14 +100,14 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Users_Roles")).Returns(345);
             _ministryPlatformService.Setup(mocked => mocked.CreateSubRecord(345, 987, It.IsAny<Dictionary<string, object>>(), "1234567890", false)).Returns(543);
 
-            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Participants")).Returns(567);
-            _ministryPlatformService.Setup(mocked => mocked.CreateRecord(567, It.IsAny<Dictionary<string, object>>(), "1234567890", false)).Returns(765);
+            _participantService.Setup(m => m.CreateParticipantRecord(654)).Returns(567);
 
             _subscriptionService.Setup(mocked => mocked.SetSubscriptions(It.IsAny<Dictionary<string, object>>(), 654, "1234567890")).Returns(999);
 
             _fixture.RegisterPerson(newUserData);
 
             _ministryPlatformService.VerifyAll();
+            _participantService.VerifyAll();
             _subscriptionService.VerifyAll();
         }
     }
