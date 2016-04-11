@@ -63,6 +63,8 @@
             };
 
           }
+        } else {
+          scope.bankAccount.accountHolderType = 'individual';
         }
       }
 
