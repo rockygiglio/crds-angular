@@ -80,16 +80,16 @@
           isProtected: true
         },
         resolve: {
+          loggedin: crds_utilities.checkLoggedin,
           Meta: Meta,
           Profile: 'Profile',
           Organizations: 'Organizations',
           $cookies: '$cookies',
           $stateParams: '$stateParams',
           SkillsService: 'SkillsService',
-          loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
-          Person: Person,
+          GoPerson: GoPerson,
           PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
@@ -226,14 +226,18 @@
     $state.next.data.meta.title = 'GO ' + city;
   }
 
-  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+  function GoPerson(Profile, $cookies, $q, GoVolunteerService, $stateParams, Session) {
     var deferred = $q.defer();
 
     if ($stateParams.page === 'profile') {
+      debugger;
       var cid = $cookies.get('userId');
-      if (!cid) {
-        deferred.reject();
-      } else if (GoVolunteerService.person.nickName === '') {
+      var s = Session.exists('userId');
+      console.log(cid);
+      // if (!cid) {
+      //   deferred.reject();
+      // } else
+      if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
           GoVolunteerService.person = data;
           deferred.resolve();
