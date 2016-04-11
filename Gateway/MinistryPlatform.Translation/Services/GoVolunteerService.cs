@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Services
                 ProjectTypeId = record.ToInt("dp_RecordID"),
                 Description = record.ToString("Description"),
                 MinAge = record.ToInt("Minimum_Age"),
-                SortOrder = record.ToInt("SortOrder"),
+                SortOrder = record.ToInt("Sort_Order"),
                 ImageUrl = record.ToString("Image_URL")
             }).ToList();
         }
