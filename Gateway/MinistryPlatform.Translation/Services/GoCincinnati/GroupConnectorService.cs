@@ -69,26 +69,26 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
         public MpGroupConnector GetGroupConnectorById(int groupConnectorId)
         {
             var searchString = string.Format(",,,,,,,,,,,\"{0}\"", groupConnectorId);
-            var groupConnectors = GetGroupConnectors(searchString, _apiToken);
+            var groupConnectors = GetGroupConnectors(searchString);
             var groupConnector = groupConnectors.SingleOrDefault();
             return groupConnector;
         }
 
-        public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId, string token)
+        public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId)
         {
             var searchString = string.Format(",,,,,true,{0}", initiativeId);
-            return GetGroupConnectors(searchString, token);
+            return GetGroupConnectors(searchString);
         }
 
-        public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId, string token)
+        public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId)
         {
             var searchString = string.Format(",,,,{0},,{1}", organizationId, initiativeId);
-            return GetGroupConnectors(searchString, token);
+            return GetGroupConnectors(searchString);
         }
 
-        private List<MpGroupConnector> GetGroupConnectors(string searchString, string token)
+        private List<MpGroupConnector> GetGroupConnectors(string searchString)
         {
-            var result = _ministryPlatformService.GetPageViewRecords("GroupConnectorPageView", token, searchString);
+            var result = _ministryPlatformService.GetPageViewRecords("GroupConnectorPageView", _apiToken, searchString);
 
             return result.Select(r => new MpGroupConnector
             {
