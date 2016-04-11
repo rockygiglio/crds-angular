@@ -49,12 +49,12 @@
       return {
         additionalInformation: volunteerService.additionalInformation,
         children: children(volunteerService.childrenOptions),
-        createGroupConnector: createGroupConnector(volunteerService.groupConnectorId),
+        createGroupConnector: createGroupConnector(volunteerService.groupConnector),
         equipment: equipment(volunteerService.equipment, volunteerService.otherEquipment),
-        groupConnectorId: volunteerService.groupConnectorId,
+        groupConnector: volunteerService.groupConnector,
         initiativeId: 0, //TODO: how will we get this?  user doesn't input, part of CMS page?
         organizationId: volunteerService.organization.organizationId,
-        preferredLaunchSiteId: preferredLaunchSite(volunteerService.preferredLaunchSite),
+        preferredLaunchSite: preferredLaunchSite(volunteerService.preferredLaunchSite),
         prepWork: prepWork(volunteerService.myPrepTime, volunteerService.spousePrepTime),
         privateGroup: volunteerService.privateGroup,
         projectPreferences: projectPreferences(volunteerService.projectPrefOne,
@@ -93,8 +93,8 @@
     return childDto;
   }
 
-  function createGroupConnector(groupConnectorId) {
-    if (groupConnectorId === null || groupConnectorId === undefined) {
+  function createGroupConnector(groupConnector) {
+    if (groupConnector === null || groupConnector === undefined) {
       return true;
     }
 
@@ -131,23 +131,23 @@
     return null;
   }
 
-  function preferredLaunchSite(siteId) {
-    if (siteId === null || siteId === undefined) {
-      return 0;
+  function preferredLaunchSite(site) {
+    if (site === null || site === undefined) {
+      return null;
     }
 
-    return siteId;
+    return {id: site.locationId, name: site.location};
   }
 
   function prepWork(myPrepTime, spousePrepTime) {
     var dto = [];
     if (myPrepTime) {
-      var my  = {id: myPrepTime.attributeId, spouse: false};
+      var my  = {id: myPrepTime.attributeId, spouse: false, name: myPrepTime.name};
       dto.push(my);
     }
 
     if (spousePrepTime) {
-      var spouse  = {id: spousePrepTime.attributeId, spouse: true};
+      var spouse  = {id: spousePrepTime.attributeId, spouse: true, name: spousePrepTime.name};
       dto.push(spouse);
     }
 
@@ -171,12 +171,12 @@
     return projectPrefs;
   }
 
-  function projectPreferenceDto(preferenceId, priority) {
-    if (preferenceId === null || preferenceId === undefined) {
+  function projectPreferenceDto(preference, priority) {
+    if (preference === null || preference === undefined) {
       return null;
     }
 
-    return {id: preferenceId, priority: priority};
+    return {id: preference.projectTypeId, priority: priority, name: preference.desc};
   }
 
   function personDto(person) {

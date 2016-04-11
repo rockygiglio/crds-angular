@@ -8,7 +8,7 @@
 
 <div class="row">
   <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefTwo.projectTypes">
-    <a class="push-bottom gradiant-text-background border" ng-class="goProjectPrefTwo.alreadySelected(item.projectTypeId)"  href="#" ng-click="goProjectPrefTwo.submit(item.projectTypeId)">
+    <a class="push-bottom gradiant-text-background border" ng-class="goProjectPrefTwo.alreadySelected(item.projectTypeId)"  href="#" ng-click="goProjectPrefTwo.submit(item)">
       <img src="{{item.imageUrl}}" class="img-responsive img-full-width" />
       <div class="img-link-text">
         {{item.desc}}
