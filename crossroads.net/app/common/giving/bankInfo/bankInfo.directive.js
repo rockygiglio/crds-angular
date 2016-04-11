@@ -64,7 +64,7 @@
 
           }
         } else {
-        scope.bankAccount.accountHolderType = 'individual';
+          scope.bankAccount.accountHolderType = 'individual';
         }
       }
 
