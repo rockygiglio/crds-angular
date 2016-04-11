@@ -233,7 +233,8 @@
   function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'launch-site') {
+    if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
+      debugger;
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
