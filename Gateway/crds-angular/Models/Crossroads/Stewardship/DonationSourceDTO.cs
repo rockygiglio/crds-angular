@@ -12,8 +12,11 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty(PropertyName = "type", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(StringEnumConverter))]
         public PaymentType SourceType { get; set; }
 
-        [JsonProperty(PropertyName = "name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
+        [JsonProperty(PropertyName = "account_holder_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string AccountHolderName { get; set; }
+
+        [JsonProperty(PropertyName = "account_holder_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string AccountHolderType { get; set; }
 
         [JsonProperty(PropertyName = "routing", NullValueHandling = NullValueHandling.Ignore)]
         public string RoutingNumber { get; set; }
