@@ -231,9 +231,6 @@
 
     if ($stateParams.page === 'profile') {
       var cid = $cookies.get('userId');
-      // if (!cid) {
-      //   deferred.reject();
-      // } else
       if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
           GoVolunteerService.person = data;
