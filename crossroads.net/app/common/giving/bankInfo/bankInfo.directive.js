@@ -46,6 +46,8 @@
       ////////////////////////////////
 
       function activate() {
+        scope.bankAccount.accountHolderType = 'individual';
+
         if (scope.defaultSource !== undefined) {
           if (!scope.defaultSource.bank_account) {
             scope.resetDefaultBankPlaceholderValues();
@@ -61,10 +63,7 @@
               routing: scope.defaultSource.bank_account.routing,
               maskedAccount: 'XXXXXXXXXXX' + scope.defaultSource.bank_account.last4
             };
-
           }
-        } else {
-          scope.bankAccount.accountHolderType = 'individual';
         }
       }
 
