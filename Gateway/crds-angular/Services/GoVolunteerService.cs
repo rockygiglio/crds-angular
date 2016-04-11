@@ -136,22 +136,21 @@ namespace crds_angular.Services
 
         private void SpouseInformation(Registration registration)
         {
-            if (!registration.SpouseParticipation)
+            if (!AddSpouse(registration))
             {
                 return;
             }
-            if (registration.Spouse.ContactId != 0)
-            {
-                return;
-            }
-
             var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
                                                                 registration.Spouse.LastName,
                                                                 registration.Spouse.EmailAddress,
                                                                 registration.Spouse.DateOfBirth,
                                                                 registration.Spouse.MobilePhone);
 
-            // create relationship
+            CreateRelationship(registration, contactId);
+        }
+
+        private void CreateRelationship(Registration registration, int contactId)
+        {
             var relationship = new MinistryPlatform.Models.Relationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
@@ -159,6 +158,15 @@ namespace crds_angular.Services
                 StartDate = DateTime.Today
             };
             _contactRelationshipService.AddRelationship(relationship, registration.Self.ContactId);
+        }
+
+        private static bool AddSpouse(Registration registration)
+        {
+            if (!registration.SpouseParticipation)
+            {
+                return false;
+            }
+            return registration.Spouse.ContactId == 0;
         }
 
         private void GroupConnector(Registration registration, int registrationId)
