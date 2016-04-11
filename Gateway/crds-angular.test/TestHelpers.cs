@@ -27,11 +27,10 @@ namespace crds_angular.test
                 AdditionalInformation = Gen.Sample(1, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                 ChildAgeGroup = ListOfChildrenAttending(2, 0, 1),
                 CreateGroupConnector = true,
-                Equipment = ListOfEquipment(),
-                GroupConnectorId = 0,
+                Equipment = ListOfEquipment(),                
                 InitiativeId = RandomInt(),
                 OrganizationId = RandomInt(),
-                PreferredLaunchSiteId = RandomInt(),
+                PreferredLaunchSite = PreferredLaunchSite(),
                 PrepWork = ListOfPrepWork(true, false),
                 PrivateGroup = true,
                 SpouseParticipation = false,
@@ -49,6 +48,22 @@ namespace crds_angular.test
             var registration = RegistrationNoSpouse();
             registration.SpouseParticipation = true;
             registration.Spouse = Registrant();
+            return registration;
+        }
+
+        public static Registration RegistrationWithSpouseLimited()
+        {
+            var registration = RegistrationNoSpouse();
+            registration.SpouseParticipation = true;
+            registration.Spouse = RegistrantOnlyRequired();
+            return registration;
+        }
+
+        public static Registration RegistrationWithGroupConnector()
+        {
+            var registration = RegistrationNoSpouse();
+            registration.CreateGroupConnector = false;
+            registration.GroupConnector = GroupConnector();
             return registration;
         }
 
@@ -90,12 +105,46 @@ namespace crds_angular.test
             };
         }
 
+        public static Registrant RegistrantOnlyRequired()
+        {
+            return new Registrant()
+            {
+                ContactId = RandomInt(),
+                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+            };
+        }
+
+        public static GroupConnector GroupConnector()
+        {
+            return new GroupConnector()
+            {
+                AbsoluteMaximumVolunteers = 100,
+                GroupConnectorId = 1234,
+                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                PreferredLaunchSite = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                PrimaryRegistraionContactId = RandomInt(),
+                ProjectMaximumVolunteers = 1000,
+                ProjectMinimumAge = 2
+            };
+        }
+
+        public static PreferredLaunchSite PreferredLaunchSite()
+        {
+            return new PreferredLaunchSite()
+            {
+                Id = RandomInt(),
+                Name = Gen.Sample(1, 20, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+            };
+        }
+
         public static List<ProjectPreference> ListOfProjectPreferences(int size = 3)
         {
             return Enumerable.Range(0, size).Select(_ => new ProjectPreference()
             {
                 Id = RandomInt(),
-                Priority = RandomInt()
+                Priority = RandomInt(),
+                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
             }).ToList();
         }
 
@@ -104,11 +153,11 @@ namespace crds_angular.test
             var prepwork = new List<PrepWork>();
             if (registrant)
             {
-                prepwork.Add(new PrepWork() {Id = RandomInt(), Spouse = false});
+                prepwork.Add(new PrepWork() {Id = RandomInt(), Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault, Spouse = false});
             }
             if (spouse)
             {
-                prepwork.Add(new PrepWork() {Id = RandomInt(), Spouse = true});
+                prepwork.Add(new PrepWork() {Id = RandomInt(), Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault, Spouse = true});
             }
             return prepwork;
         } 
@@ -118,7 +167,8 @@ namespace crds_angular.test
             return Enumerable.Range(0, size).Select(_ => new Equipment()
             {
                 Id = RandomInt(),
-                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
             }).ToList();
         }
 
@@ -128,17 +178,17 @@ namespace crds_angular.test
             {
                 new ChildrenAttending()
                 {
-                    Id = 1000,
+                    Id = 7040,
                     Count = numberOf2
                 },
                 new ChildrenAttending()
                 {
-                    Id = 1001,
+                    Id = 7041,
                     Count = numberOf8
                 },
                 new ChildrenAttending()
                 {
-                    Id = 1002,
+                    Id = 7042,
                     Count = numberOf13
                 }
             };
