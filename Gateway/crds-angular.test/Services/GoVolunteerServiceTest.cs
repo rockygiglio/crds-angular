@@ -193,7 +193,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Number of Children Ages 13-18: ", registration.ChildAgeGroup[2].Count.ToString()),
                 BuildParagraph("Group Connector: ", registration.GroupConnector.Name),
                 BuildParagraph("Preferred Launch Site: ", registration.GroupConnector.PreferredLaunchSite),                                
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -250,7 +250,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -309,7 +309,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -366,7 +366,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")

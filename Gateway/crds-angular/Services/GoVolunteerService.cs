@@ -154,7 +154,7 @@ namespace crds_angular.Services
             }
             if (registration.Equipment.Count > 0)
             {
-                listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Name).Aggregate((first, next) => first + ", " + next)));
+                listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Notes).Aggregate((first, next) => first + ", " + next)));
             }
             if (registration.AdditionalInformation != null)
             {
