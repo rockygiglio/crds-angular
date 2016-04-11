@@ -94,6 +94,7 @@
           Spouse: GetSpouse,
           Organization: Organization,
           Equipment: Equipment,
+          ChildrenOptions: ChildrenOptions,
           CmsInfo: CmsInfo,
           Locations: Locations,
           ProjectTypes: ProjectTypes,
@@ -120,6 +121,7 @@
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills,
+          ChildrenOptions: ChildrenOptions,
           Equipment: Equipment,
           PrepWork: PrepWork
         }
@@ -133,6 +135,26 @@
     }
 
     return link;
+  }
+
+  function ChildrenOptions(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
+    var deferred = $q.defer();
+    if ($stateParams.page === 'children-count' && _.isEmpty(GoVolunteerService.childrenOptions)) {
+      GoVolunteerDataService.Children.query(function(d) {
+        GoVolunteerService.childrenOptions = d;
+        deferred.resolve();
+      },
+
+      function(err) {
+
+        console.error(err);
+        deferred.reject();
+      });
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.promise;
   }
 
   function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
@@ -231,9 +253,7 @@
 
     if ($stateParams.page === 'profile') {
       var cid = $cookies.get('userId');
-      if (!cid) {
-        deferred.reject();
-      } else if (GoVolunteerService.person.nickName === '') {
+      if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
           GoVolunteerService.person = data;
           deferred.resolve();
