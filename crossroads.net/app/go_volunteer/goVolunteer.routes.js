@@ -80,13 +80,13 @@
           isProtected: true
         },
         resolve: {
-          loggedin: crds_utilities.checkLoggedin,
           Meta: Meta,
           Profile: 'Profile',
           Organizations: 'Organizations',
           $cookies: '$cookies',
           $stateParams: '$stateParams',
           SkillsService: 'SkillsService',
+          loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           GoPerson: GoPerson,
