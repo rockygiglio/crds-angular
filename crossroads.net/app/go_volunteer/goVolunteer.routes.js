@@ -49,7 +49,13 @@
         },
         resolve: {
           CmsInfo: CmsInfo,
-          Meta: Meta
+          Meta: Meta,
+          $state: '$state',
+          LoggedIn: function($state, Session) {
+            if (Session.exists('userId')) {
+              $state.go('go-volunteer.crossroadspage', {page: 'profile'});
+            }
+          }
         }
       })
       .state('go-volunteer.signinpage', {
