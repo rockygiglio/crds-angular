@@ -89,7 +89,7 @@
           loggedin: crds_utilities.checkLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
-          GoPerson: GoPerson,
+          Person: Person,
           PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
@@ -226,14 +226,11 @@
     $state.next.data.meta.title = 'GO ' + city;
   }
 
-  function GoPerson(Profile, $cookies, $q, GoVolunteerService, $stateParams, Session) {
+  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
     var deferred = $q.defer();
 
     if ($stateParams.page === 'profile') {
-      debugger;
       var cid = $cookies.get('userId');
-      var s = Session.exists('userId');
-      console.log(cid);
       // if (!cid) {
       //   deferred.reject();
       // } else
