@@ -894,6 +894,8 @@ namespace crds_angular.test.Services
                     && o.Parameters.Matches("bank_account[routing_number]", "456")
                     && o.Parameters.Matches("bank_account[country]", "US")
                     && o.Parameters.Matches("bank_account[currency]", "USD")
+                    && o.Parameters.Matches("bank_account[account_holder_name]", "AccountHolderFirstName LastName")
+                    && o.Parameters.Matches("bank_account[account_holder_type]", "individual")
             )));
 
             _restClient.VerifyAll();
