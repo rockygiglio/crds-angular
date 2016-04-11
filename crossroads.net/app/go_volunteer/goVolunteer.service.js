@@ -61,7 +61,11 @@
                                                volunteerService.projectPrefTwo,
                                                volunteerService.projectPrefThree),
         self: personDto(volunteerService.person),
-        skills: volunteerService.skills.filter(function(skill) { return skill.checked; }),
+        skills: volunteerService.skills.filter(
+          function(skill) {
+            return skill.checked;
+          }
+        ),
         spouse: personDto(volunteerService.spouse),
         spouseParticipation: volunteerService.spouseAttending,
         waiverSigned: true
@@ -104,9 +108,9 @@
 
     if (_.isEmpty(other)) {
       return equip;
-    } else {
-      return equip.concat(other);
     }
+
+    return equip.concat(other);
   }
 
   function getEquipmentDto(equipment) {
@@ -122,9 +126,9 @@
 
         return equipmentDto;
       }
-    } else {
-      return null;
     }
+
+    return null;
   }
 
   function preferredLaunchSite(siteId) {

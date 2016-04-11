@@ -26,7 +26,6 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
         public int CreateGroupConnector(int registrationId, bool privateGroup)
         {
-            var t = ApiLogin();
             var pageId = _configurationWrapper.GetConfigIntValue("GroupConnectorPageId");
             var dictionary = new Dictionary<string, object>
             {
@@ -36,7 +35,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
             try
             {
-                var groupConnectorId = _ministryPlatformService.CreateRecord(pageId, dictionary, t, true);
+                var groupConnectorId = _ministryPlatformService.CreateRecord(pageId, dictionary, _apiToken, true);
                 CreateGroupConnectorRegistration(groupConnectorId, registrationId);
                 return groupConnectorId;
             }
@@ -50,7 +49,6 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
         public int CreateGroupConnectorRegistration(int groupConnectorId, int registrationId)
         {
-            var t = ApiLogin();
             var dictionary = new Dictionary<string, object>
             {
                 {"Registration_ID", registrationId}
@@ -58,7 +56,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
             try
             {
-                return _ministryPlatformService.CreateSubRecord("GroupConnectorRegistrationPageId", groupConnectorId, dictionary, t, true);
+                return _ministryPlatformService.CreateSubRecord("GroupConnectorRegistrationPageId", groupConnectorId, dictionary, _apiToken, true);
             }
             catch (Exception e)
             {
@@ -70,28 +68,27 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 
         public MpGroupConnector GetGroupConnectorById(int groupConnectorId)
         {
-            var searchString = string.Format(",,,,,,,,,,,{0}", groupConnectorId);
-            var groupConnectors = GetGroupConnectors(searchString, _apiToken);
+            var searchString = string.Format(",,,,,,,,,,,\"{0}\"", groupConnectorId);
+            var groupConnectors = GetGroupConnectors(searchString);
             var groupConnector = groupConnectors.SingleOrDefault();
             return groupConnector;
         }
 
-        public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId, string token)
+        public List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId)
         {
             var searchString = string.Format(",,,,,true,{0}", initiativeId);
-            return GetGroupConnectors(searchString, token);
+            return GetGroupConnectors(searchString);
         }
 
-        public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId, string token)
+        public List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId)
         {
             var searchString = string.Format(",,,,{0},,{1}", organizationId, initiativeId);
-            return GetGroupConnectors(searchString, token);
+            return GetGroupConnectors(searchString);
         }
 
-        private List<MpGroupConnector> GetGroupConnectors(string searchString, string token)
+        private List<MpGroupConnector> GetGroupConnectors(string searchString)
         {
-            //var token = ApiLogin();
-            var result = _ministryPlatformService.GetPageViewRecords("GroupConnectorPageView", token, searchString);
+            var result = _ministryPlatformService.GetPageViewRecords("GroupConnectorPageView", _apiToken, searchString);
 
             return result.Select(r => new MpGroupConnector
             {

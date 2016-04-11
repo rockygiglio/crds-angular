@@ -74,7 +74,11 @@ namespace crds_angular.Services
                 registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
-                SpouseInformation(registration);
+                if (registration.SpouseParticipation)
+                {
+                    registration.Spouse.ContactId = SpouseInformation(registration);
+                    registration.Spouse.EmailAddress = _contactService.GetContactEmail(registration.Spouse.ContactId);
+                }
                 _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
                 Attributes(registration, registrationId);
             }
@@ -170,8 +174,16 @@ namespace crds_angular.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},               
             };
+
+            if (registration.SpouseParticipation)
+            {
+                dict.Add("Spouse_Nickname", registration.Spouse.FirstName);
+                dict.Add("Spouse_Lastname", registration.Spouse.LastName);
+            }
 
             return dict;
         }
@@ -332,24 +344,24 @@ namespace crds_angular.Services
             }
         }
 
-        private void SpouseInformation(Registration registration)
+        private int SpouseInformation(Registration registration)
         {
-            if (!registration.SpouseParticipation)
+            if (!AddSpouse(registration))
             {
-                return;
+                return registration.Spouse.ContactId;
             }
-            if (registration.Spouse.ContactId != 0)
-            {
-                return;
-            }
-
             var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
                                                                 registration.Spouse.LastName,
                                                                 registration.Spouse.EmailAddress,
                                                                 registration.Spouse.DateOfBirth,
                                                                 registration.Spouse.MobilePhone);
 
-            // create relationship
+            CreateRelationship(registration, contactId);
+            return contactId;
+        }
+
+        private void CreateRelationship(Registration registration, int contactId)
+        {
             var relationship = new MinistryPlatform.Models.Relationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
@@ -357,6 +369,15 @@ namespace crds_angular.Services
                 StartDate = DateTime.Today
             };
             _contactRelationshipService.AddRelationship(relationship, registration.Self.ContactId);
+        }
+
+        private static bool AddSpouse(Registration registration)
+        {
+            if (!registration.SpouseParticipation)
+            {
+                return false;
+            }
+            return registration.Spouse.ContactId == 0;
         }
 
         private void GroupConnector(Registration registration, int registrationId)

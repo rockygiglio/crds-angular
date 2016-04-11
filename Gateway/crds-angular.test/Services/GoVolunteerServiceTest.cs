@@ -208,10 +208,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName}
             };
             Assert.AreEqual(dict, mergeData);   
-
         }
 
         [Test]
@@ -265,7 +266,9 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName}
             };
             Assert.AreEqual(dict, mergeData);
         }
@@ -324,7 +327,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},
+                {"Spouse_Nickname", registration.Spouse.FirstName },
+                {"Spouse_Lastname", registration.Spouse.LastName }
             };
             Assert.AreEqual(dict, mergeData);
         }
@@ -381,7 +388,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},
+                {"Spouse_Nickname", registration.Spouse.FirstName },
+                {"Spouse_Lastname", registration.Spouse.LastName }
             };
             Assert.AreEqual(dict, mergeData);
         }

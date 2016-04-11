@@ -167,8 +167,7 @@ namespace crds_angular.test
             return Enumerable.Range(0, size).Select(_ => new Equipment()
             {
                 Id = RandomInt(),
-                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault                
             }).ToList();
         }
 
