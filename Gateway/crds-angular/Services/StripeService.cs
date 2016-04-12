@@ -360,6 +360,7 @@ namespace crds_angular.Services
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("expand[]", "invoice");
+            request.AddParameter("expand[]", "customer");
 
             var response = _stripeRestClient.Execute(request);
             CheckStripeResponse("Could not query charge", response);
