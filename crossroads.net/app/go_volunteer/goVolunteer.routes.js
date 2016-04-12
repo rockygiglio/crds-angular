@@ -90,9 +90,10 @@
           Profile: 'Profile',
           Organizations: 'Organizations',
           $cookies: '$cookies',
+          Session: 'Session',
           $stateParams: '$stateParams',
           SkillsService: 'SkillsService',
-          loggedin: crds_utilities.checkLoggedin,
+          loggedin: crds_utilities.optimisticallyCheckLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
@@ -105,6 +106,25 @@
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills
+        }
+      })
+      .state('go-volunteer.cms', {
+        parent: 'goCincinnati',
+        url: '/go-volunteer/:city/:cmsPage',
+        template: '<go-volunteer-page></go-volunteer-page>',
+        data: {
+          meta: {
+            title: 'Some Title',
+            description: ''
+          }
+        },
+        resolve: {
+          $stateParams: '$stateParams',
+          $q: '$q',
+          CmsInfo: CmsInfo,
+          Meta: Meta,
+          Organization: Organization,
+          Locations: Locations,
         }
       })
       .state('go-volunteer.page', {
@@ -257,13 +277,14 @@
     $state.next.data.meta.title = 'GO ' + city;
   }
 
-  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams, Session) {
     var deferred = $q.defer();
 
     if ($stateParams.page === 'profile' && _.isEmpty(GoVolunteerService.person.emailAddress)) {
       var cid = $cookies.get('userId');
       if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
+          Session.beOptimistic = true;
           GoVolunteerService.person = data;
           deferred.resolve();
         }, function(err) {
@@ -384,6 +405,10 @@
 
     if (org) {
       return base + addTrailingSlashIfNecessary(org);
+    }
+
+    if (state.next.name === 'go-volunteer.cms') {
+      return base + addTrailingSlashIfNecessary(stateParams.cmsPage);
     }
 
     if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {

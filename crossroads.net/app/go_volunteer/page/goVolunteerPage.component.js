@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerPage;
 
-  GoVolunteerPage.$inject = ['$state', '$stateParams'];
+  GoVolunteerPage.$inject = ['$state', '$stateParams', 'GoVolunteerService'];
 
-  function GoVolunteerPage($state, $stateParams) {
+  function GoVolunteerPage($state, $stateParams, GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -18,6 +18,7 @@
     function GoVolunteerPageController() {
       var vm = this;
 
+      vm.cmsInfo = ''; 
       vm.handlePageChange = handlePageChange;
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
@@ -26,6 +27,7 @@
       vm.showSpouseName = showSpouseName;
       vm.showChildren = showChildren;
       vm.showChildrenCount = showChildrenCount;
+      vm.showCms = showCms;
       vm.showGroupConnector = showGroupConnector;
       vm.showGroupFindConnector = showGroupFindConnector;
       vm.showConnectorInfo = showConnectorInfo;
@@ -40,6 +42,14 @@
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
+      
+      activate();
+
+      function activate() {
+        if (GoVolunteerService.cmsInfo && GoVolunteerService.cmsInfo.pages.length > 0) {
+          vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0].content;
+        } 
+      }
 
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
@@ -78,6 +88,10 @@
 
       function showChildren() {
         return $stateParams.page === 'children';
+      }
+      
+      function showCms() {
+        return $state.current.name === 'go-volunteer.cms';
       }
 
       function showChildrenCount() {
