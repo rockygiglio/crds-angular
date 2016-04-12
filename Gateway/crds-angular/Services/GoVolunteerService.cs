@@ -164,6 +164,11 @@ namespace crds_angular.Services
                 listOfP.Add(BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name));
                 listOfP.Add(BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name));
             }
+            if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
+            {
+                listOfP.Add(BuildParagraph("Unique Skills: ", registration.Skills.Where(sk => sk.Checked).Select(sk => sk.Name).Aggregate((first, next) => first + ", " + next)));
+            }
+
             if (registration.Equipment.Count > 0)
             {
                 listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Notes).Aggregate((first, next) => first + ", " + next)));
@@ -484,9 +489,15 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        private HtmlElement BuildParagraph(String label, String value)
+        private static HtmlElement BuildParagraph(string label, string value)
         {
-            return new HtmlElement("p", new HtmlElement("strong", label).Append(new HtmlElement("span", value)));
+            var els = new List<HtmlElement>()
+            {
+                new HtmlElement("strong", label),
+                new HtmlElement("span", value)
+            }
+           ;
+            return new HtmlElement("p", els);            
         }
     }
 }
