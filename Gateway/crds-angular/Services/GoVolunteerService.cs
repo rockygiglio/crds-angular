@@ -200,14 +200,15 @@ namespace crds_angular.Services
         {
 
             var prepWork = new List<HtmlElement>();
-            if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse)
-            {
-                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
-                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
-            } else if (registration.PrepWork.Count == 0)
+            if (registration.PrepWork.Count == 0)
             {
                 prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
                 prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            } else if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse) 
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
+                
             }
             else if (registration.PrepWork.Count < 2 && !registration.PrepWork[0].Spouse)
             {
