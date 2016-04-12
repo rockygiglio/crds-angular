@@ -18,8 +18,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "equipment")]
         public List<Equipment> Equipment { get; set; }
 
-        [JsonProperty(PropertyName = "groupConnectorId")]
-        public int GroupConnectorId { get; set; }
+        [JsonProperty(PropertyName = "groupConnector")]
+        public GroupConnector GroupConnector { get; set; }
 
         [JsonProperty(PropertyName = "initiativeId")]
         [Required]
@@ -29,8 +29,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [Required]
         public int OrganizationId { get; set; }
 
-        [JsonProperty(PropertyName = "preferredLaunchSiteId")]
-        public int PreferredLaunchSiteId { get; set; }
+        [JsonProperty(PropertyName = "preferredLaunchSite")]
+        public PreferredLaunchSite PreferredLaunchSite { get; set; }
 
         [JsonProperty(PropertyName = "prepWork")]
         public List<PrepWork> PrepWork { get; set; }

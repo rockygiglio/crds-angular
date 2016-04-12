@@ -23,8 +23,8 @@
       vm.submit = submit;
       vm.isCrossroadsSite = isCrossroadsSite;
 
-      function submit(locationId) {
-        GoVolunteerService.preferredLaunchSite = locationId;
+      function submit(location) {
+        GoVolunteerService.preferredLaunchSite = location;
         vm.onSubmit({nextState: 'project-preference-one'});
       }
 
