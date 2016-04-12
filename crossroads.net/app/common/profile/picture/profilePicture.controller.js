@@ -20,7 +20,7 @@
     vm.openModal = openModal;
     // Manage directive style and text defaults
     vm.wrapperClass = vm.wrapperClass || 'col-xs-3 col-sm-2';
-    vm.imageClass = vm.imageClass || 'pull-left img-square img-responsive';
+    vm.imageClass = vm.imageClass || '';
     vm.buttonText = vm.buttonText || 'Change Photo';
 
     function openModal() {
