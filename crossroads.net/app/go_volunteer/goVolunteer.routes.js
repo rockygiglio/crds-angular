@@ -111,7 +111,7 @@
       .state('go-volunteer.cms', {
         parent: 'goCincinnati',
         url: '/go-volunteer/:city/:cmsPage',
-        template: '<go-volunteer-page></go-volunteer-page>',
+        template: '<go-volunteer-cms></go-volunteer-cms>',
         data: {
           meta: {
             title: 'Some Title',
