@@ -98,6 +98,18 @@
             }
           },
         })
+        .state('braveathome', {
+          parent: 'brave',
+          url: '/braveathome',
+          templateUrl: 'brave_at_home/braveAtHome.html',
+          controller: 'BraveHomeController as brave_home_controller',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          },
+        })
         .state('brave-intro-two', {
           parent: 'brave',
           url: '/brave-intro-two',
