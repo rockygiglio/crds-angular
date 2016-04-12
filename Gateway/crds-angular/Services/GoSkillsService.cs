@@ -7,7 +7,6 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using WebGrease.Css.Extensions;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
@@ -82,7 +81,7 @@ namespace crds_angular.Services
 
 
             var skillsToAdd = SkillsToAdd(skills, currentSkills);
-            var allSkills = skillsToAdd.Concat(skillsEndDate);
+            var allSkills = skillsToAdd.Concat(skillsEndDate).ToList();
             try
             {
                 allSkills.ForEach(skill =>

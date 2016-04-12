@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using FsCheck;
-using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using Moq;
@@ -186,14 +182,14 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ", "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
                 BuildParagraph("Number of Children Ages 13-18: ", registration.ChildAgeGroup[2].Count.ToString()),
                 BuildParagraph("Group Connector: ", registration.GroupConnector.Name),
                 BuildParagraph("Preferred Launch Site: ", registration.GroupConnector.PreferredLaunchSite),                                
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -208,10 +204,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName}
             };
             Assert.AreEqual(dict, mergeData);   
-
         }
 
         [Test]
@@ -241,7 +238,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -250,7 +247,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -265,7 +262,9 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName}
             };
             Assert.AreEqual(dict, mergeData);
         }
@@ -296,11 +295,11 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
                 BuildParagraph("Spouse Email: ", registration.Spouse.EmailAddress),
-                BuildParagraph("Spouse Birthdate: ", registration.Spouse.DateOfBirth),
+                BuildParagraph("Spouse Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Spouse Mobile Phone: ", registration.Spouse.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -309,7 +308,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -324,7 +323,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},
+                {"Spouse_Nickname", registration.Spouse.FirstName },
+                {"Spouse_Lastname", registration.Spouse.LastName }
             };
             Assert.AreEqual(dict, mergeData);
         }
@@ -356,7 +359,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
@@ -366,7 +369,7 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
@@ -381,7 +384,11 @@ namespace crds_angular.test.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},
+                {"Spouse_Nickname", registration.Spouse.FirstName },
+                {"Spouse_Lastname", registration.Spouse.LastName }
             };
             Assert.AreEqual(dict, mergeData);
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -242,7 +241,7 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("POST")]
         [Route("api/govolunteer/registration")]
-        [ResponseType(typeof(Registration))]
+        [ResponseType(typeof (Registration))]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {
             if (ModelState.IsValid)
@@ -259,7 +258,9 @@ namespace crds_angular.Controllers.API
         {
             try
             {
+                goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
                 var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
+                _goVolunteerService.SendMail(reg);
                 return Ok(reg);
             }
             catch (Exception e)

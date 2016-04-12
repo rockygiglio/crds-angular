@@ -74,7 +74,11 @@ namespace crds_angular.Services
                 registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
-                SpouseInformation(registration);
+                if (registration.SpouseParticipation)
+                {
+                    registration.Spouse.ContactId = SpouseInformation(registration);
+                    registration.Spouse.EmailAddress = _contactService.GetContactEmail(registration.Spouse.ContactId);
+                }
                 _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
                 Attributes(registration, registrationId);
             }
@@ -99,37 +103,45 @@ namespace crds_angular.Services
 
         public bool SendMail(Registration registration)
         {
-            var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
-            var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
-            var fromContact = _contactService.GetContactById(fromContactId);
-
-          
-
-            var mergeData = SetupMergeData(registration);
-
-            var communication = _communicationService.GetTemplateAsCommunication(templateId,
-                                                             fromContactId,
-                                                             fromContact.Email_Address,
-                                                             fromContactId,
-                                                             fromContact.Email_Address,
-                                                             registration.Self.ContactId,
-                                                             registration.Self.EmailAddress,
-                                                             mergeData);
-            var returnVal = _communicationService.SendMessage(communication);
-            if (registration.SpouseParticipation && returnVal > 0)
+            try
             {
-                var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");                
-                var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
-                                                                                           fromContactId,
-                                                                                           fromContact.Email_Address,
-                                                                                           fromContactId,
-                                                                                           fromContact.Email_Address,
-                                                                                           registration.Spouse.ContactId,
-                                                                                           registration.Spouse.EmailAddress,
-                                                                                           mergeData);
-                _communicationService.SendMessage(spouseCommunication);
+                var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
+                var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
+                var fromContact = _contactService.GetContactById(fromContactId);
+
+
+
+                var mergeData = SetupMergeData(registration);
+
+                var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     registration.Self.ContactId,
+                                                                                     registration.Self.EmailAddress,
+                                                                                     mergeData);
+                var returnVal = _communicationService.SendMessage(communication);
+                if (registration.SpouseParticipation && returnVal > 0)
+                {
+                    var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");
+                    var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               registration.Spouse.ContactId,
+                                                                                               registration.Spouse.EmailAddress,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(spouseCommunication);
+                }
+                return returnVal > 0;
             }
-            return returnVal > 0;
+            catch (Exception e)
+            {
+                _logger.Error("Sending email failed");
+                return false;
+            }
         }
 
         public Dictionary<string, object> SetupMergeData(Registration registration)
@@ -154,7 +166,7 @@ namespace crds_angular.Services
             }
             if (registration.Equipment.Count > 0)
             {
-                listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Name).Aggregate((first, next) => first + ", " + next)));
+                listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Notes).Aggregate((first, next) => first + ", " + next)));
             }
             if (registration.AdditionalInformation != null)
             {
@@ -170,8 +182,16 @@ namespace crds_angular.Services
 
             var dict = new Dictionary<string, object>()
             {
-                {"HtmlTable", htmlTable.Build()}
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},               
             };
+
+            if (registration.SpouseParticipation)
+            {
+                dict.Add("Spouse_Nickname", registration.Spouse.FirstName);
+                dict.Add("Spouse_Lastname", registration.Spouse.LastName);
+            }
 
             return dict;
         }
@@ -205,11 +225,12 @@ namespace crds_angular.Services
 
         private List<HtmlElement> ProfileDetails(Registration registration)
         {
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
             return new List<HtmlElement>
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone)
             };
         }
@@ -226,7 +247,8 @@ namespace crds_angular.Services
             }
             if (registration.Spouse.DateOfBirth != null)
             {
-                spouse.Add(BuildParagraph("Spouse Birthdate: ", registration.Spouse.DateOfBirth));
+                var birthDate = DateTime.Parse(registration.Spouse.DateOfBirth);
+                spouse.Add(BuildParagraph("Spouse Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year));
             }
             if (registration.Spouse.MobilePhone != null)
             {
@@ -332,24 +354,24 @@ namespace crds_angular.Services
             }
         }
 
-        private void SpouseInformation(Registration registration)
+        private int SpouseInformation(Registration registration)
         {
-            if (!registration.SpouseParticipation)
+            if (!AddSpouse(registration))
             {
-                return;
+                return registration.Spouse.ContactId;
             }
-            if (registration.Spouse.ContactId != 0)
-            {
-                return;
-            }
-
             var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
                                                                 registration.Spouse.LastName,
                                                                 registration.Spouse.EmailAddress,
                                                                 registration.Spouse.DateOfBirth,
                                                                 registration.Spouse.MobilePhone);
 
-            // create relationship
+            CreateRelationship(registration, contactId);
+            return contactId;
+        }
+
+        private void CreateRelationship(Registration registration, int contactId)
+        {
             var relationship = new MinistryPlatform.Models.Relationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
@@ -357,6 +379,15 @@ namespace crds_angular.Services
                 StartDate = DateTime.Today
             };
             _contactRelationshipService.AddRelationship(relationship, registration.Self.ContactId);
+        }
+
+        private static bool AddSpouse(Registration registration)
+        {
+            if (!registration.SpouseParticipation)
+            {
+                return false;
+            }
+            return registration.Spouse.ContactId == 0;
         }
 
         private void GroupConnector(Registration registration, int registrationId)

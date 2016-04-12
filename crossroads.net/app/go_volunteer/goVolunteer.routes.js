@@ -49,7 +49,13 @@
         },
         resolve: {
           CmsInfo: CmsInfo,
-          Meta: Meta
+          Meta: Meta,
+          $state: '$state',
+          LoggedIn: function($state, Session) {
+            if (Session.exists('userId')) {
+              $state.go('go-volunteer.crossroadspage', {page: 'profile'});
+            }
+          }
         }
       })
       .state('go-volunteer.signinpage', {
@@ -253,9 +259,7 @@
 
     if ($stateParams.page === 'profile') {
       var cid = $cookies.get('userId');
-      if (!cid) {
-        deferred.reject();
-      } else if (GoVolunteerService.person.nickName === '') {
+      if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
           GoVolunteerService.person = data;
           deferred.resolve();
