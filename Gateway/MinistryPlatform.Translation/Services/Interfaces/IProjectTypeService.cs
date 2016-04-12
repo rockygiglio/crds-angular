@@ -3,8 +3,8 @@ using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IGoVolunteerService
+    public interface IProjectTypeService
     {
-        List<ProjectType> GetProjectTypes(string token);
+        List<ProjectType> GetProjectTypes();
     }
 }

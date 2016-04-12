@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
-using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
@@ -14,11 +12,6 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ContactServiceTest
     {
-        private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
-        private ContactService _fixture;
-        private Mock<IConfigurationWrapper> _configuration;
-
         [SetUp]
         public void SetUp()
         {
@@ -35,11 +28,16 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
 
             _fixture = new ContactService(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
         }
+
+        private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IAuthenticationService> _authService;
+        private ContactService _fixture;
+        private Mock<IConfigurationWrapper> _configuration;
 
         [Test]
         public void GetContactByParticipantId()
@@ -63,10 +61,10 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Last_Name", expectedContact.Last_Name}
                 }
             };
-            var searchString = participantId+",";
+            var searchString = participantId + ",";
             _ministryPlatformService.Setup(m => m.GetPageViewRecords("ContactByParticipantId", It.IsAny<string>(), searchString, "", 0)).Returns(mockContactDictionary);
 
-            var returnedContact =_fixture.GetContactByParticipantId(participantId);
+            var returnedContact = _fixture.GetContactByParticipantId(participantId);
 
             _ministryPlatformService.VerifyAll();
 
@@ -115,7 +113,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Passport_Lastname", "last-name"},
                     {"Passport_Country", "USA"},
                     {"Passport_Middlename", "middle-name"},
-                    {"Passport_Expiration", "02/21/2020"}             
+                    {"Passport_Expiration", "02/21/2020"}
                 }
             };
 
@@ -192,7 +190,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void shouldCreateContactForGuestGiver()
+        public void ShouldCreateContactForGuestGiver()
         {
             _ministryPlatformService.Setup(
                 mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
@@ -215,9 +213,55 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void shouldThrowApplicationExceptionWhenGuestGiverCreationFails()
+        public void ShouldCreateSimpleContact()
         {
-            Exception ex = new Exception("Danger, Will Robinson!");
+            const string firstname = "Mary";
+            const string lastname = "richard";
+            const string email = "mary.richard@gmail.com";
+            var dob = new DateTime().ToString();
+            const string mobile = "5554441111";
+
+
+            _ministryPlatformService.Setup(
+                mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), "ABC", false))
+                .Returns(123);
+
+            var contactId = _fixture.CreateSimpleContact(firstname, lastname, email, dob, mobile);
+
+            Assert.AreEqual(123, contactId);
+
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,
+                                                                          It.Is<Dictionary<string, object>>(d =>
+                                                                                                                d["Company"].Equals(false)
+                                                                                                                && d["Last_Name"].Equals(lastname)
+                                                                                                                && d["First_Name"].Equals(firstname)
+                                                                                                                && d["Display_Name"].Equals(lastname + ", " + firstname)
+                                                                                                                && d["Nickname"].Equals(firstname)
+                                                                              ),
+                                                                          It.IsAny<string>(),
+                                                                          false));
+        }
+
+        [Test]
+        public void ShouldGetContactFromParticipant()
+        {
+            const int participantId = 2375529;
+            const int contactId = 2562386;
+            var mockContact = new Dictionary<string, object>
+            {
+                {"Contact_ID", contactId}
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(It.IsAny<int>(), participantId, It.IsAny<string>(), It.IsAny<bool>())).Returns(mockContact);
+
+            var result = _fixture.GetContactIdByParticipantId(participantId);
+            Assert.AreEqual(contactId, result);
+        }
+
+        [Test]
+        public void ShouldThrowApplicationExceptionWhenGuestGiverCreationFails()
+        {
+            var ex = new Exception("Danger, Will Robinson!");
             _ministryPlatformService.Setup(
                 mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
                 .Throws(ex);
@@ -235,19 +279,23 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void shouldGetContactFromParticipant()
+        public void ShouldThrowApplicationExceptionWhenSimpleContactCreationFails()
         {
-            var participantId = 2375529;
-            var contactId = 2562386;
-            var mockContact = new Dictionary<string, object>
+            var ex = new Exception("Simple contact creation failed");
+            _ministryPlatformService.Setup(
+                mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Throws(ex);
+
+            try
             {
-                {"Contact_ID", contactId}
-            };
-
-            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(It.IsAny<int>(), participantId, It.IsAny<string>(), It.IsAny<bool>())).Returns(mockContact);
-
-            var result = _fixture.GetContactIdByParticipantId(participantId);
-            Assert.AreEqual(contactId, result);
+                _fixture.CreateSimpleContact("mary", "richard", "mary.richard@gmail.com", "08/09/1981", "5554441111");
+                Assert.Fail("Expected exception was not thrown");
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof (ApplicationException), e);
+                Assert.AreSame(ex, e.InnerException);
+            }
         }
     }
 }

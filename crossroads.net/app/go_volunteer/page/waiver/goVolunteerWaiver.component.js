@@ -3,12 +3,14 @@
 
   module.exports = GoVolunteerWaiver;
 
-  GoVolunteerWaiver.$inject = ['$rootScope', 'GoVolunteerService'];
+  GoVolunteerWaiver.$inject = ['$rootScope', 'GoVolunteerService', 'GoVolunteerDataService', '$log'];
 
-  function GoVolunteerWaiver($rootScope, GoVolunteerService) {
+  function GoVolunteerWaiver($rootScope, GoVolunteerService, GoVolunteerDataService, $log) {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        onSubmit: '&'
+      },
       bindToController: true,
       controller: GoVolunteerWaiverController,
       controllerAs: 'goWaiver',
@@ -17,6 +19,8 @@
 
     function GoVolunteerWaiverController() {
       var vm = this;
+      vm.processing = false; 
+      vm.submit = submit;
       vm.waiver = null;
 
       activate();
@@ -27,6 +31,23 @@
         } else {
           vm.waiver = $rootScope.MESSAGES.goVolunteerWaiverTerms.content;
         }
+      }
+
+      function submit() {
+        vm.processing = true;
+        var dto = GoVolunteerService.getRegistrationDto();
+        GoVolunteerDataService.Create.save(dto, function(result) {
+          console.log('success');
+          vm.processing = false;
+          vm.onSubmit({nextState: 'thank-you'});
+        },
+
+        function(err) {
+          $log.error(err);
+          vm.processing = false;
+          $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
+        });
+
       }
     }
   }
