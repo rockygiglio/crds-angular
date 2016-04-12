@@ -105,7 +105,7 @@
           return -1;
         }
 
-        GoVolunteerService.groupConnectorId = g.groupConnectorId;
+        GoVolunteerService.groupConnector = g;
         vm.onSubmit({nextState: 'unique-skills'});
       }
 

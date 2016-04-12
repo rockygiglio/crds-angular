@@ -276,6 +276,7 @@
     <Compile Include="Models\Crossroads\Events\RoomLayout.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\ChildrenAttending.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Equipment.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\PreferredLaunchSite.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\PrepWork.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\ProjectPreference.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Registrant.cs" />

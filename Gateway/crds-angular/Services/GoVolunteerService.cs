@@ -4,6 +4,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
@@ -25,6 +26,7 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly IGoSkillsService _skillsService;
+        private readonly MPInterfaces.ICommunicationService _communicationService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -34,7 +36,8 @@ namespace crds_angular.Services
                                   MPInterfaces.IContactRelationshipService contactRelationshipService,
                                   MPInterfaces.IProjectTypeService projectTypeService,
                                   IAttributeService attributeService,
-                                  IGoSkillsService skillsService)
+                                  IGoSkillsService skillsService,
+                                  MPInterfaces.ICommunicationService comunicationService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -46,6 +49,7 @@ namespace crds_angular.Services
             _attributeService = attributeService;
             _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
             _skillsService = skillsService;
+            _communicationService = comunicationService;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -70,7 +74,11 @@ namespace crds_angular.Services
                 registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
                 var registrationId = CreateRegistration(registration, registrationDto);
                 GroupConnector(registration, registrationId);
-                SpouseInformation(registration);
+                if (registration.SpouseParticipation)
+                {
+                    registration.Spouse.ContactId = SpouseInformation(registration);
+                    registration.Spouse.EmailAddress = _contactService.GetContactEmail(registration.Spouse.ContactId);
+                }
                 _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
                 Attributes(registration, registrationId);
             }
@@ -92,6 +100,218 @@ namespace crds_angular.Services
                 return projType.FromMpProjectType(pt);
             }).ToList();
         }
+
+        public bool SendMail(Registration registration)
+        {
+            try
+            {
+                var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
+                var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
+                var fromContact = _contactService.GetContactById(fromContactId);
+
+
+
+                var mergeData = SetupMergeData(registration);
+
+                var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     registration.Self.ContactId,
+                                                                                     registration.Self.EmailAddress,
+                                                                                     mergeData);
+                var returnVal = _communicationService.SendMessage(communication);
+                if (registration.SpouseParticipation && returnVal > 0)
+                {
+                    var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");
+                    var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               registration.Spouse.ContactId,
+                                                                                               registration.Spouse.EmailAddress,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(spouseCommunication);
+                }
+                return returnVal > 0;
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Sending email failed");
+                return false;
+            }
+        }
+
+        public Dictionary<string, object> SetupMergeData(Registration registration)
+        {
+            var tableAttrs = TableAttributes();
+            var listOfP = ProfileDetails(registration);
+            if (registration.SpouseParticipation)
+            {
+                listOfP = listOfP.Concat(SpouseDetails(registration)).ToList();
+            }
+            listOfP = listOfP.Concat(ChildrenDetails(registration)).ToList();
+            if (registration.GroupConnector != null)
+            {
+                listOfP = listOfP.Concat(GroupConnectorDetails(registration)).ToList();
+            }
+            else
+            {
+                listOfP.Add(BuildParagraph("Preferred Launch Site: ", registration.PreferredLaunchSite.Name));
+                listOfP.Add(BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name));
+                listOfP.Add(BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name));
+                listOfP.Add(BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name));
+            }
+            if (registration.Equipment.Count > 0)
+            {
+                listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Notes).Aggregate((first, next) => first + ", " + next)));
+            }
+            if (registration.AdditionalInformation != null)
+            {
+                listOfP.Add(BuildParagraph("Additional Info: ", registration.AdditionalInformation));
+            }
+            listOfP = listOfP.Concat(PrepWorkDetails(registration)).ToList();
+                
+            var htmlTable = new HtmlElement("table", tableAttrs)
+               .Append(new HtmlElement("tbody"))
+               .Append(new HtmlElement("tr"))
+               .Append(new HtmlElement("td"))
+               .Append(listOfP);
+
+            var dict = new Dictionary<string, object>()
+            {
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName},               
+            };
+
+            if (registration.SpouseParticipation)
+            {
+                dict.Add("Spouse_Nickname", registration.Spouse.FirstName);
+                dict.Add("Spouse_Lastname", registration.Spouse.LastName);
+            }
+
+            return dict;
+        }
+
+        private List<HtmlElement> PrepWorkDetails(Registration registration)
+        {
+
+            var prepWork = new List<HtmlElement>();
+            if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse)
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
+            } else if (registration.PrepWork.Count == 0)
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            }
+            else if (registration.PrepWork.Count < 2 && !registration.PrepWork[0].Spouse)
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            }
+            else
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[1].Name));
+            }
+
+            return prepWork;
+        } 
+
+        private List<HtmlElement> ProfileDetails(Registration registration)
+        {
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
+            return new List<HtmlElement>
+            {
+                BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
+                BuildParagraph("Email: ", registration.Self.EmailAddress),
+                BuildParagraph("Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year),
+                BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone)
+            };
+        }
+
+        private List<HtmlElement> SpouseDetails(Registration registration)
+        {
+            var spouse = new List<HtmlElement>()
+            {
+                BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
+            };
+            if (registration.Spouse.EmailAddress != null)
+            {
+                spouse.Add(BuildParagraph("Spouse Email: ", registration.Spouse.EmailAddress));
+            }
+            if (registration.Spouse.DateOfBirth != null)
+            {
+                var birthDate = DateTime.Parse(registration.Spouse.DateOfBirth);
+                spouse.Add(BuildParagraph("Spouse Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year));
+            }
+            if (registration.Spouse.MobilePhone != null)
+            {
+                spouse.Add(BuildParagraph("Spouse Mobile Phone: ", registration.Spouse.MobilePhone));
+            }
+            return spouse;
+        }
+
+        private List<HtmlElement> ChildrenDetails(Registration registration)
+        {
+            return registration.ChildAgeGroup.Select(c =>
+            {
+                if (c.Id == _configurationWrapper.GetConfigIntValue("Children2To7") && c.Count > 0)
+                {
+                    return BuildParagraph("Number of Children Ages 2-7: ", c.Count.ToString());
+                }
+                else if (c.Id == _configurationWrapper.GetConfigIntValue("Children8To12") && c.Count > 0)
+                {
+                    return BuildParagraph("Number of Children Ages 8-12: ", c.Count.ToString());
+                }
+                else if (c.Id == _configurationWrapper.GetConfigIntValue("Children13To18") && c.Count > 0)
+                {
+                    return BuildParagraph("Number of Children Ages 13-18: ", c.Count.ToString());
+                }
+                return new HtmlElement("p");
+
+            }).ToList();
+        }
+
+        private List<HtmlElement> GroupConnectorDetails(Registration registration)
+        {
+            var ret = new List<HtmlElement>();
+            if (!registration.CreateGroupConnector)
+            {
+                ret.Add(BuildParagraph("Group Connector: ", registration.GroupConnector.Name));
+                if (registration.GroupConnector.ProjectType != null)
+                {
+                    ret.Add(BuildParagraph("Project Type: ", registration.GroupConnector.ProjectType));
+                }
+                ret.Add(BuildParagraph("Preferred Launch Site: ", registration.GroupConnector.PreferredLaunchSite));
+            }
+            else
+            {
+                ret.Add(BuildParagraph("Preferred Launch Site: ", registration.PreferredLaunchSite.Name));
+                ret.Add(BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name));
+                ret.Add(BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name));
+                ret.Add(BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name));
+            }
+
+            return ret;
+        } 
+
+        private Dictionary<string, string> TableAttributes()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"width", "100%"},
+                {"border", "1"},
+                {"cellspacing", "0"},
+                {"cellpadding", "5"},
+                {"style", "font-size: medium; font-weight: normal;" }
+            };
+        } 
 
         private void Attributes(Registration registration, int registrationId)
         {
@@ -134,11 +354,11 @@ namespace crds_angular.Services
             }
         }
 
-        private void SpouseInformation(Registration registration)
+        private int SpouseInformation(Registration registration)
         {
             if (!AddSpouse(registration))
             {
-                return;
+                return registration.Spouse.ContactId;
             }
             var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
                                                                 registration.Spouse.LastName,
@@ -147,6 +367,7 @@ namespace crds_angular.Services
                                                                 registration.Spouse.MobilePhone);
 
             CreateRelationship(registration, contactId);
+            return contactId;
         }
 
         private void CreateRelationship(Registration registration, int contactId)
@@ -175,9 +396,9 @@ namespace crds_angular.Services
             {
                 _groupConnectorService.CreateGroupConnector(registrationId, registration.PrivateGroup);
             }
-            else if (registration.GroupConnectorId != 0)
+            else if (registration.GroupConnector.GroupConnectorId != 0)
             {
-                _groupConnectorService.CreateGroupConnectorRegistration(registration.GroupConnectorId, registrationId);
+                _groupConnectorService.CreateGroupConnectorRegistration(registration.GroupConnector.GroupConnectorId, registrationId);
             }
         }
 
@@ -211,16 +432,16 @@ namespace crds_angular.Services
         private int PreferredLaunchSite(Registration registration)
         {
             int preferredLaunchSiteId;
-            if (registration.PreferredLaunchSiteId == 0)
+            if (registration.PreferredLaunchSite.Id == 0)
             {
                 // use group connector
-                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
+                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnector.GroupConnectorId);
                 preferredLaunchSiteId = groupConnector.PreferredLaunchSiteId;
             }
             else
             {
                 // use preferred id
-                preferredLaunchSiteId = registration.PreferredLaunchSiteId;
+                preferredLaunchSiteId = registration.PreferredLaunchSite.Id;
             }
             return preferredLaunchSiteId;
         }
@@ -260,6 +481,11 @@ namespace crds_angular.Services
             var participant = _participantService.GetParticipantRecord(token);
             var participantId = participant.ParticipantId;
             return participantId;
+        }
+
+        private HtmlElement BuildParagraph(String label, String value)
+        {
+            return new HtmlElement("p", new HtmlElement("strong", label).Append(new HtmlElement("span", value)));
         }
     }
 }
