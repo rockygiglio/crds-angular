@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using FsCheck;
-using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using Moq;
@@ -186,7 +182,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ", "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -242,7 +238,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -299,11 +295,11 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
                 BuildParagraph("Spouse Email: ", registration.Spouse.EmailAddress),
-                BuildParagraph("Spouse Birthdate: ", registration.Spouse.DateOfBirth),
+                BuildParagraph("Spouse Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Spouse Mobile Phone: ", registration.Spouse.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -363,7 +359,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),

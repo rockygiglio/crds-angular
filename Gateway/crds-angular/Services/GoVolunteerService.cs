@@ -225,11 +225,12 @@ namespace crds_angular.Services
 
         private List<HtmlElement> ProfileDetails(Registration registration)
         {
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
             return new List<HtmlElement>
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ", registration.Self.DateOfBirth),
+                BuildParagraph("Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone)
             };
         }
@@ -246,7 +247,8 @@ namespace crds_angular.Services
             }
             if (registration.Spouse.DateOfBirth != null)
             {
-                spouse.Add(BuildParagraph("Spouse Birthdate: ", registration.Spouse.DateOfBirth));
+                var birthDate = DateTime.Parse(registration.Spouse.DateOfBirth);
+                spouse.Add(BuildParagraph("Spouse Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year));
             }
             if (registration.Spouse.MobilePhone != null)
             {
