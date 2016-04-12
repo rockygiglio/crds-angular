@@ -136,6 +136,9 @@
   }
 
   function addTrailingSlashIfNecessary(link) {
+    if (link === '') {
+      return link;
+    }
     if (_.endsWith(link, '/') === false) {
       return link + '/';
     }
@@ -234,7 +237,6 @@
     var deferred = $q.defer();
 
     if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
-      debugger;
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
@@ -258,7 +260,7 @@
   function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'profile') {
+    if ($stateParams.page === 'profile' && _.isEmpty(GoVolunteerService.person.emailAddress)) {
       var cid = $cookies.get('userId');
       if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
@@ -347,7 +349,7 @@
   function ProjectTypes(GoVolunteerService, $state, $stateParams, $q, GoVolunteerDataService) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'project-preference-one') {
+    if ($stateParams.page === 'project-preference-one' && _.isEmpty(GoVolunteerService.projectTypes)) {
       GoVolunteerDataService.ProjectTypes.query(function(data) {
         GoVolunteerService.projectTypes = data;
         deferred.resolve();
