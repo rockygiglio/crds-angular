@@ -1,5 +1,3 @@
-<div ng-if="goVolunteerPage.showCms" dynamic-content="goVolunteerPage.cmsInfo | html"> </div>
-
 <form name="goVolunteerPage.parentForm" novalidate>
   <go-volunteer-spouse ng-if="goVolunteerPage.showSpouse()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-spouse>
   <go-volunteer-profile ng-if="goVolunteerPage.showProfile()" on-submit="goVolunteerPage.handlePageChange(nextState)"> </go-volunteer-profile>

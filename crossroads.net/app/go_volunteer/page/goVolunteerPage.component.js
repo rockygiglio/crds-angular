@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerPage;
 
-  GoVolunteerPage.$inject = ['$state', '$stateParams', 'GoVolunteerService'];
+  GoVolunteerPage.$inject = ['$state', '$stateParams'];
 
-  function GoVolunteerPage($state, $stateParams, GoVolunteerService) {
+  function GoVolunteerPage($state, $stateParams) {
     return {
       restrict: 'E',
       scope: {},
@@ -18,7 +18,6 @@
     function GoVolunteerPageController() {
       var vm = this;
 
-      vm.cmsInfo = ''; 
       vm.handlePageChange = handlePageChange;
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
@@ -43,14 +42,6 @@
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
       
-      activate();
-
-      function activate() {
-        if (GoVolunteerService.cmsInfo && GoVolunteerService.cmsInfo.pages.length > 0) {
-          vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0].content;
-        } 
-      }
-
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
