@@ -103,37 +103,45 @@ namespace crds_angular.Services
 
         public bool SendMail(Registration registration)
         {
-            var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
-            var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
-            var fromContact = _contactService.GetContactById(fromContactId);
-
-          
-
-            var mergeData = SetupMergeData(registration);
-
-            var communication = _communicationService.GetTemplateAsCommunication(templateId,
-                                                             fromContactId,
-                                                             fromContact.Email_Address,
-                                                             fromContactId,
-                                                             fromContact.Email_Address,
-                                                             registration.Self.ContactId,
-                                                             registration.Self.EmailAddress,
-                                                             mergeData);
-            var returnVal = _communicationService.SendMessage(communication);
-            if (registration.SpouseParticipation && returnVal > 0)
+            try
             {
-                var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");                
-                var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
-                                                                                           fromContactId,
-                                                                                           fromContact.Email_Address,
-                                                                                           fromContactId,
-                                                                                           fromContact.Email_Address,
-                                                                                           registration.Spouse.ContactId,
-                                                                                           registration.Spouse.EmailAddress,
-                                                                                           mergeData);
-                _communicationService.SendMessage(spouseCommunication);
+                var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
+                var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
+                var fromContact = _contactService.GetContactById(fromContactId);
+
+
+
+                var mergeData = SetupMergeData(registration);
+
+                var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     fromContactId,
+                                                                                     fromContact.Email_Address,
+                                                                                     registration.Self.ContactId,
+                                                                                     registration.Self.EmailAddress,
+                                                                                     mergeData);
+                var returnVal = _communicationService.SendMessage(communication);
+                if (registration.SpouseParticipation && returnVal > 0)
+                {
+                    var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");
+                    var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContactId,
+                                                                                               fromContact.Email_Address,
+                                                                                               registration.Spouse.ContactId,
+                                                                                               registration.Spouse.EmailAddress,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(spouseCommunication);
+                }
+                return returnVal > 0;
             }
-            return returnVal > 0;
+            catch (Exception e)
+            {
+                _logger.Error("Sending email failed");
+                return false;
+            }
         }
 
         public Dictionary<string, object> SetupMergeData(Registration registration)
