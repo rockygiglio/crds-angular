@@ -208,7 +208,9 @@ namespace crds_angular.test.Services
                 {"Nickname", registration.Self.FirstName},
                 {"Lastname", registration.Self.LastName}
             };
-            Assert.AreEqual(dict, mergeData);   
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);   
         }
 
         [Test]
@@ -266,7 +268,10 @@ namespace crds_angular.test.Services
                 {"Nickname", registration.Self.FirstName},
                 {"Lastname", registration.Self.LastName}
             };
-            Assert.AreEqual(dict, mergeData);
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
         }
 
         [Test]
@@ -329,7 +334,13 @@ namespace crds_angular.test.Services
                 {"Spouse_Nickname", registration.Spouse.FirstName },
                 {"Spouse_Lastname", registration.Spouse.LastName }
             };
-            Assert.AreEqual(dict, mergeData);
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
+            Assert.AreEqual(dict["Spouse_Nickname"], mergeData["Spouse_Nickname"]);
+            Assert.AreEqual(dict["Spouse_Lastname"], mergeData["Spouse_Lastname"]);
         }
 
         [Test]
@@ -390,7 +401,13 @@ namespace crds_angular.test.Services
                 {"Spouse_Nickname", registration.Spouse.FirstName },
                 {"Spouse_Lastname", registration.Spouse.LastName }
             };
-            Assert.AreEqual(dict, mergeData);
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
+            Assert.AreEqual(dict["Spouse_Nickname"], mergeData["Spouse_Nickname"]);
+            Assert.AreEqual(dict["Spouse_Lastname"], mergeData["Spouse_Lastname"]);
         }
 
         private HtmlElement BuildParagraph(String label, String value)
