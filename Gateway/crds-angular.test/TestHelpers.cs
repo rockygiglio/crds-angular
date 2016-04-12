@@ -98,10 +98,10 @@ namespace crds_angular.test
             {
                 ContactId = RandomInt(),
                 DateOfBirth = "1980-02-21T05:00:00.000Z",
-                EmailAddress = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                MobilePhone = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                EmailAddress = "randomEmail@crossroads.net",
+                FirstName = "stupid",
+                LastName = "name",
+                MobilePhone = "0987654321"
             };
         }
 
@@ -110,8 +110,8 @@ namespace crds_angular.test
             return new Registrant()
             {
                 ContactId = RandomInt(),
-                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                FirstName = "asdfasdfasdf",
+                LastName = "asdkjhiensdfie"
             };
         }
 
