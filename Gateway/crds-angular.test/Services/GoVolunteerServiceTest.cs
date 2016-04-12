@@ -208,6 +208,8 @@ namespace crds_angular.test.Services
                 {"Nickname", registration.Self.FirstName},
                 {"Lastname", registration.Self.LastName}
             };
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
             Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
             Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
             Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);   
