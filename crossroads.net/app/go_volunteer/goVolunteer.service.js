@@ -54,7 +54,7 @@
         groupConnector: volunteerService.groupConnector,
         initiativeId: 0, //TODO: how will we get this?  user doesn't input, part of CMS page?
         organizationId: volunteerService.organization.organizationId,
-        preferredLaunchSite: preferredLaunchSite(volunteerService.preferredLaunchSite),
+        preferredLaunchSite: preferredLaunchSite(volunteerService.preferredLaunchSite, volunteerService.groupConnector),
         prepWork: prepWork(volunteerService.myPrepTime, volunteerService.spousePrepTime),
         privateGroup: volunteerService.privateGroup,
         projectPreferences: projectPreferences(volunteerService.projectPrefOne,
@@ -127,9 +127,9 @@
     }
   }
 
-  function preferredLaunchSite(site) {
+  function preferredLaunchSite(site, groupConnector) {
     if (site === null || site === undefined) {
-      return null;
+      return {id: 0, name: groupConnector.preferredLaunchSite};
     }
 
     return {id: site.locationId, name: site.location};
