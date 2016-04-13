@@ -58,10 +58,11 @@
           return true;
         }
 
-        if (group.projectName !== null) {
+        if (group.projectType !== null) {
           if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
             return true;
           }
+
           var regCount = registrationCount();
           if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers && regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
             return true;
@@ -130,18 +131,22 @@
          * attribute 7042 = 14-18
          */
 
-        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next){
+        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next) {
           if (next.attributeId === 7040) {
             return 2;
           }
+
           if (next.attributeId === 7041 && curr > 8) {
             return 8;
           }
+
           if (next.attributeId === 7042 && curr > 13) {
             return 13;
           }
+
           return curr;
         }, 18);
+
         return youngest;
       }
     }
