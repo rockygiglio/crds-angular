@@ -65,11 +65,7 @@
         }
       }
 
-      function displayResults() {        
-        if (vm.groupConnectors.length < 100) {
-          return true;
-        }
-
+      function displayResults() {
         if (vm.query === null || vm.query.length < 3) {
           return false;
         }
