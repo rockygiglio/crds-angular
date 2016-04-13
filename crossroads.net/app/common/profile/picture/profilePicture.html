@@ -1,12 +1,14 @@
 <div ng-class="picture.wrapperClass">
-  <div class="embed-responsive embed-responsive-1by1 profile-background-image" style="background-image: url(//crossroads-media.imgix.net/images/avatar.svg);background-color:#eee;" >
-    <div class="embed-responsive embed-responsive-1by1 profile-background-image" ng-style="{'background-image':'url({{picture.path}})'}">
-      <div class="profile-image-bg embed-responsive-item" ng-class="picture.imageClass">
-        <label for="fileInputModal" class="profile-pic" ng-click="picture.openModal()" ng-hide="picture.disallowChange" >
-          <img src="//s3.amazonaws.com/crds-cms-uploads/blankpixel.png" alt="Profile Photo" class="img-full-size" />
-          <span class="change-photo">{{picture.buttonText}}</span>
-        </label>
-      </div><!--/embed-responsive-item-->
-    </div>
+  <div class="embed-responsive embed-responsive-1by1 profile-background-image profile-image-default-background">
+    <div class="embed-responsive-item" ng-class="picture.imageClass">
+      <div class="embed-responsive embed-responsive-1by1">
+        <div class="embed-responsive-item profile-background-image" ng-class="picture.imageClass" ng-style="{'background-image':'url({{picture.path}})'}">
+        </div>
+      </div>
+
+      <label for="fileInputModal" class="profile-pic" ng-click="picture.openModal()" ng-hide="picture.disallowChange" >
+        <span class="change-photo">{{picture.buttonText}}</span>
+      </label>
+    </div><!--/embed-responsive-item-->
   </div><!--/embed-responsive embed-responsive-1by1-->
 </div><!--/picture.wrapperClass-->
