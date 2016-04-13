@@ -22,8 +22,8 @@
       vm.projectTypes = GoVolunteerService.projectTypes;
       vm.submit = submit;
 
-      function submit(projectTypeId) {
-        GoVolunteerService.projectPrefOne = projectTypeId;
+      function submit(projectType) {
+        GoVolunteerService.projectPrefOne = projectType;
         vm.onSubmit({nextState: 'project-preference-two'});
       }
 

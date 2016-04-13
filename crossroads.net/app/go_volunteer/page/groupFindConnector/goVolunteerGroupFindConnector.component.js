@@ -26,10 +26,10 @@
       vm.groupConnectors = [];
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
-      vm.showGroups = showGroups;
       vm.organization = GoVolunteerService.organization;
+      vm.showGroups = showGroups;
       vm.submit = submit;
-      vm.youngestInRegistration = youngestInRegistration();
+      vm.youngest = youngestInRegistration();
 
       vm.activate();
 
@@ -52,7 +52,7 @@
       }
 
       function disableCard(group) {
-        if (group.projectMinimumAge > vm.youngestInRegistration) {
+        if (group.projectMinimumAge > vm.youngest) {
           return true;
         }
 
@@ -60,8 +60,8 @@
           if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
             return true;
           }
-
-          if (registrationCount() > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+          var regCount = registrationCount();
+          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers && regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
             return true;
           }
         }
@@ -70,7 +70,7 @@
       }
 
       function disabledReason(g) {
-        if (g.projectMinimumAge > vm.youngestInRegistration) {
+        if (g.projectMinimumAge > vm.youngest) {
           return 'Minimum age is ' + g.projectMinimumAge;
         }
 
@@ -105,7 +105,7 @@
           return -1;
         }
 
-        GoVolunteerService.groupConnectorId = g.groupConnectorId;
+        GoVolunteerService.groupConnector = g;
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
@@ -114,20 +114,25 @@
       }
 
       function youngestInRegistration() {
-        if (GoVolunteerService.childrenAttending.childTwoSeven > 0) {
-          return 2;
-        }
+        /*
+         * attribute 7040 = 2-7 year olds
+         * attribute 7041 = 8-13
+         * attribute 7042 = 14-18
+         */ 
 
-        if (GoVolunteerService.childrenAttending.childEightTwelve > 0) {
-          return 8;
-        }
-
-        if (GoVolunteerService.childrenAttending.childThirteenEighteen > 0) {
-          return 13;
-        }
-
-        // should this really be registrant or spouse age?
-        return 18;
+        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next){
+          if (next.attributeId === 7040) {
+            return 2;
+          }
+          if (next.attributeId === 7041 && curr > 8) {
+            return 8;
+          }
+          if (next.attributeId === 7042 && curr > 13) {
+            return 13;
+          }
+          return curr;
+        }, 18);
+        return youngest;
       }
     }
   }

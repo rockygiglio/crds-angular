@@ -49,7 +49,13 @@
         },
         resolve: {
           CmsInfo: CmsInfo,
-          Meta: Meta
+          Meta: Meta,
+          $state: '$state',
+          LoggedIn: function($state, Session) {
+            if (Session.exists('userId')) {
+              $state.go('go-volunteer.crossroadspage', {page: 'profile'});
+            }
+          }
         }
       })
       .state('go-volunteer.signinpage', {
@@ -84,9 +90,10 @@
           Profile: 'Profile',
           Organizations: 'Organizations',
           $cookies: '$cookies',
+          Session: 'Session',
           $stateParams: '$stateParams',
           SkillsService: 'SkillsService',
-          loggedin: crds_utilities.checkLoggedin,
+          loggedin: crds_utilities.optimisticallyCheckLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
@@ -99,6 +106,25 @@
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills
+        }
+      })
+      .state('go-volunteer.cms', {
+        parent: 'goCincinnati',
+        url: '/go-volunteer/:city/:cmsPage',
+        template: '<go-volunteer-page></go-volunteer-page>',
+        data: {
+          meta: {
+            title: 'Some Title',
+            description: ''
+          }
+        },
+        resolve: {
+          $stateParams: '$stateParams',
+          $q: '$q',
+          CmsInfo: CmsInfo,
+          Meta: Meta,
+          Organization: Organization,
+          Locations: Locations,
         }
       })
       .state('go-volunteer.page', {
@@ -130,6 +156,9 @@
   }
 
   function addTrailingSlashIfNecessary(link) {
+    if (link === '') {
+      return link;
+    }
     if (_.endsWith(link, '/') === false) {
       return link + '/';
     }
@@ -227,7 +256,7 @@
   function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'launch-site') {
+    if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
@@ -248,13 +277,14 @@
     $state.next.data.meta.title = 'GO ' + city;
   }
 
-  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams, Session) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'profile') {
+    if ($stateParams.page === 'profile' && _.isEmpty(GoVolunteerService.person.emailAddress)) {
       var cid = $cookies.get('userId');
       if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
+          Session.beOptimistic = true;
           GoVolunteerService.person = data;
           deferred.resolve();
         }, function(err) {
@@ -340,7 +370,7 @@
   function ProjectTypes(GoVolunteerService, $state, $stateParams, $q, GoVolunteerDataService) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'project-preference-one') {
+    if ($stateParams.page === 'project-preference-one' && _.isEmpty(GoVolunteerService.projectTypes)) {
       GoVolunteerDataService.ProjectTypes.query(function(data) {
         GoVolunteerService.projectTypes = data;
         deferred.resolve();
@@ -375,6 +405,10 @@
 
     if (org) {
       return base + addTrailingSlashIfNecessary(org);
+    }
+
+    if (state.next.name === 'go-volunteer.cms') {
+      return base + addTrailingSlashIfNecessary(stateParams.cmsPage);
     }
 
     if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {
