@@ -19,35 +19,17 @@
 
     function GoVolunteerGroupFindConnectorController() {
       var vm = this;
-      vm.activate = activate;
       vm.createGroup = createGroup;
       vm.disableCard = disableCard;
       vm.disabledReason = disabledReason;
       vm.displayResults = displayResults;
-      vm.groupConnectors = [];
+      vm.groupConnectors = GoVolunteerService.groupConnectors;
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
-      vm.organization = GoVolunteerService.organization;
       vm.query = null;
       vm.showGroups = showGroups;
       vm.submit = submit;
       vm.youngest = youngestInRegistration();
-
-      vm.activate();
-
-      /////////////////////////
-
-      function activate() {
-        if (vm.organization.openSignup) {
-          GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        } else {
-          GroupConnectors.ByOrgId.query({orgId: vm.organization.organizationId, initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        }
-      }
 
       function createGroup() {
         vm.onSubmit({nextState: 'be-a-connector'});
@@ -63,7 +45,8 @@
             return true;
           }
           var regCount = registrationCount();
-          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers && regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers &&
+              regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
             return true;
           }
         }
@@ -81,8 +64,8 @@
         }
       }
 
-      function displayResults() {
-        if (vm.query.length < 3) {
+      function displayResults() {        
+        if (vm.query === null || vm.query.length < 3) {
           return false;
         }
 
