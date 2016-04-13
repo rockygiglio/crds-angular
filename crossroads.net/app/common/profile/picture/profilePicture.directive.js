@@ -14,7 +14,8 @@
         wrapperClass: '@?',
         imageClass: '@?',
         buttonText: '@?',
-        disallowChange: '@?'
+        disallowChange: '@?',
+        useDefault: '@?'
       },
       controller: 'ProfilePictureController as picture',
       bindToController: true,

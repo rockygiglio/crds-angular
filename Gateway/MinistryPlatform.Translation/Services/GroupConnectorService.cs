@@ -36,11 +36,12 @@ namespace MinistryPlatform.Translation.Services
 
             return result.Select(r => new MpGroupConnector
             {
-                Id = r.ToInt("GroupConnector_ID"),
+                Id = r.ToInt("Group_Connector_ID"),
                 Name = r.ToString("Primary_Registration"),
                 PrimaryRegistrationID = r.ToInt("Primary_Registration_Contact_ID"),
                 ProjectMaximumVolunteers = r.ToInt("Project_Maximum_Volunteers"),
-                ProjectMinimumAge = r.ToInt("Project_Minimum_Age"),
+                AbsoluteMaximumVolunteers = r.ToInt("Absolute_Maximum_Volunteers"),
+                ProjectMinimumAge = r.ToInt("_Minimum_Age"),
                 ProjectName = r.ToString("Project_Name"),
                 ProjectType = r.ToString("Project_Type"),
                 PreferredLaunchSite = r.ToString("Preferred_Launch_Site"),

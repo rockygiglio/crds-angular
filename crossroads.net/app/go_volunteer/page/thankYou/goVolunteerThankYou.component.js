@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerThankYou;
 
-  GoVolunteerThankYou.$inject = [];
+  GoVolunteerThankYou.$inject = ['$rootScope', 'GoVolunteerService'];
 
-  function GoVolunteerThankYou() {
+  function GoVolunteerThankYou($rootScope, GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -17,7 +17,13 @@
 
     function GoVolunteerThankYouController() {
       var vm = this;
+      vm.success = null;
 
+      activate();
+
+      function activate() {
+        vm.success = (GoVolunteerService.saveSuccessful === true);
+      }
     }
   }
 

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
@@ -46,21 +46,85 @@ namespace crds_angular.Services
             }
 
             // get skills using the logged in users token
-            var contactSkills = ContactSkills(token, apiToken, skills);
+            var contactSkills = ContactSkills(token, apiToken);
 
             // match our list to the users, update "checked" to true when appropriate
             if (contactSkills != null)
             {
                 foreach (var skill in skills.Where(skill => contactSkills.Attributes.Any(s => s.AttributeId == skill.AttributeId && s.Selected)))
                 {
-                    skill.Checked = true;
+                    skill.Checked = true;                    
                 }
             }
 
             return new GoSkills().ToGoSkills(skills);
         }
-        
-        private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken, List<MpGoVolunteerSkill> skills)
+
+        public void UpdateSkills(int participantId, List<GoSkills> skills, string token)
+        {
+            ObjectAttributeConfiguration configuration;
+            if (token == String.Empty)
+            {
+                token = _apiUserService.GetToken();
+                configuration = ObjectAttributeConfigurationFactory.Contact();
+            }
+            else
+            {
+                configuration = ObjectAttributeConfigurationFactory.MyContact();
+            }
+            var contact = _contactService.GetContactByParticipantId(participantId);
+            var currentAttributes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
+            var currentSkills = currentAttributes.MultiSelect
+               .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes
+               .Where(attribute => attribute.Selected).ToList();
+
+            var skillsEndDate = SkillsToEndDate(skills, currentSkills).Select(sk =>
+            {
+                sk.EndDate = DateTime.Now;
+                return sk;
+            });
+
+
+            var skillsToAdd = SkillsToAdd(skills, currentSkills);
+            var allSkills = skillsToAdd.Concat(skillsEndDate).ToList();
+            try
+            {
+                allSkills.ForEach(skill =>
+                {
+                    _objectAttributeService.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, configuration);
+                });
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Updating skills caused an error");   
+            }
+
+        }        
+
+        public List<ObjectAttributeDTO> SkillsToEndDate(List<GoSkills> skills, List<ObjectAttributeDTO> currentSkills)
+        {
+            return currentSkills.Where(sk =>
+            {
+                var contains = skills.Where(s => s.AttributeId == sk.AttributeId).ToList();
+                return contains.Count == 0;
+            }).ToList();
+        }
+
+        public List<ObjectAttributeDTO> SkillsToAdd(List<GoSkills> skills, List<ObjectAttributeDTO> currentSkills)
+        {
+            return skills.Where(s =>
+            {
+                var contains = currentSkills.Where(c => c.AttributeId == s.AttributeId);
+                return !contains.Any();
+            }).Select(s => new ObjectAttributeDTO()
+            {
+                AttributeId = s.AttributeId,
+                Name = s.Name,
+                StartDate = DateTime.Now
+            }).ToList();
+        } 
+
+        private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken)
         {
             var contact = _contactService.GetMyProfile(token);
             var configuration = ObjectAttributeConfigurationFactory.Contact();

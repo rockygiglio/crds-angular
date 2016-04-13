@@ -98,6 +98,18 @@
             }
           },
         })
+        .state('braveathome', {
+          parent: 'brave',
+          url: '/braveathome',
+          templateUrl: 'brave_at_home/braveAtHome.html',
+          controller: 'BraveHomeController as brave_home_controller',
+          data: {
+            meta: {
+              title: 'Brave at Home',
+              description: ''
+            }
+          },
+        })
         .state('brave-intro-two', {
           parent: 'brave',
           url: '/brave-intro-two',
@@ -142,7 +154,7 @@
           templateUrl: 'brave_at_home/braveRoom1.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "1/6",
+            bravePage: "1/5",
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -156,7 +168,7 @@
           templateUrl: 'brave_at_home/braveRoom2.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "2/6",
+            bravePage: "2/5",
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -170,7 +182,7 @@
           templateUrl: 'brave_at_home/braveRoom3.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "3/6",
+            bravePage: "3/5",
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -184,7 +196,7 @@
           templateUrl: 'brave_at_home/braveRoom4.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "4/6",
+            bravePage: "4/5",
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -198,7 +210,7 @@
           templateUrl: 'brave_at_home/braveRoom5.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "5/6",
+            bravePage: "5/5",
             isProtected: true,
             meta: {
               title: 'Brave at Home',

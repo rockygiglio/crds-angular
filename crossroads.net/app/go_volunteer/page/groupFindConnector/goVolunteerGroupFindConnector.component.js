@@ -19,63 +19,58 @@
 
     function GoVolunteerGroupFindConnectorController() {
       var vm = this;
-      vm.activate = activate;
       vm.createGroup = createGroup;
       vm.disableCard = disableCard;
       vm.disabledReason = disabledReason;
-      vm.groupConnectors = [];
+      vm.displayResults = displayResults;
+      vm.groupConnectors = GoVolunteerService.groupConnectors;
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
+      vm.query = null;
       vm.showGroups = showGroups;
-      vm.organization = GoVolunteerService.organization;
-      vm.registrationCount = registrationCount();
       vm.submit = submit;
-      vm.youngestInRegistration = youngestInRegistration();
-
-      vm.activate();
-
-      /////////////////////////
-
-      function activate() {
-        if (vm.organization.openSignup) {
-          GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        } else {
-          GroupConnectors.ByOrgId.query({orgId: vm.organization.organizationId, initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        }
-      }
+      vm.youngest = youngestInRegistration();
 
       function createGroup() {
         vm.onSubmit({nextState: 'be-a-connector'});
       }
 
       function disableCard(group) {
-        if (group.projectMinimumAge === 0) {
-          return false;
-        }
-
-        if (group.projectMinimumAge > vm.youngestInRegistration) {
+        if (group.projectMinimumAge > vm.youngest) {
           return true;
         }
 
-        if (vm.registrationCount > (group.projectMaximumVolunteers - group.volunteerCount)) {
-          return true;
+        if (group.projectType !== null) {
+          if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
+            return true;
+          }
+
+          var regCount = registrationCount();
+          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers &&
+              regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+            return true;
+          }
         }
 
         return false;
       }
 
       function disabledReason(g) {
-        if (g.projectMinimumAge > vm.youngestInRegistration) {
+        if (g.projectMinimumAge > vm.youngest) {
           return 'Minimum age is ' + g.projectMinimumAge;
         }
 
-        if (vm.registrationCount > (g.projectMaximumVolunteers - g.volunteerCount)) {
+        if (registrationCount() > (g.projectMaximumVolunteers - g.volunteerCount)) {
           return 'Group is full';
         }
+      }
+
+      function displayResults() {
+        if (vm.query === null || vm.query.length < 3) {
+          return false;
+        }
+
+        return true;
       }
 
       function handleError(err) {
@@ -94,7 +89,6 @@
       function registrationCount() {
         return 1 +
           GoVolunteerService.spouseAttending +
-          GoVolunteerService.childrenAttending.childTwoSeven +
           GoVolunteerService.childrenAttending.childEightTwelve +
           GoVolunteerService.childrenAttending.childThirteenEighteen;
       }
@@ -105,7 +99,7 @@
           return -1;
         }
 
-        GoVolunteerService.groupConnectorId = g.groupConnectorId;
+        GoVolunteerService.groupConnector = g;
         vm.onSubmit({nextState: 'unique-skills'});
       }
 
@@ -114,20 +108,31 @@
       }
 
       function youngestInRegistration() {
-        if (GoVolunteerService.childrenAttending.childTwoSeven > 0) {
-          return 2;
-        }
+        /*
+         * attribute 7040 = 2-7 year olds
+         * attribute 7041 = 8-13
+         * attribute 7042 = 14-18
+         */
 
-        if (GoVolunteerService.childrenAttending.childEightTwelve > 0) {
-          return 8;
-        }
+        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next) {
+          if (next.attributeId === 7040) {
+            return 2;
+          }
 
-        if (GoVolunteerService.childrenAttending.childThirteenEighteen > 0) {
-          return 13;
-        }
+          if (next.attributeId === 7041 && curr > 8) {
+            return 8;
+          }
 
-        // should this really be registrant or spouse age?
-        return 18;
+          if (next.attributeId === 7042 && curr > 13) {
+            return 13;
+          }
+
+          return curr;
+        },
+
+        18);
+
+        return youngest;
       }
     }
   }

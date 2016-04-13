@@ -5,9 +5,9 @@
 
   module.exports = VolunteerProfile;
 
-  VolunteerProfile.$Inject = ['GoVolunteerService', 'Validation', '$rootScope'];
+  VolunteerProfile.$Inject = ['GoVolunteerService', 'Validation', '$rootScope', '$state'];
 
-  function VolunteerProfile(GoVolunteerService, Validation, $rootScope) {
+  function VolunteerProfile(GoVolunteerService, Validation, $rootScope, $state) {
     return {
       restrict: 'E',
       scope: {
@@ -31,6 +31,7 @@
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.person = GoVolunteerService.person;
       vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+      vm.requireUnique = requireUnique;
       vm.submit = submit;
       vm.validate = validate;
 
@@ -47,6 +48,10 @@
         $event.stopPropagation();
 
         vm.birthdateOpen = true;
+      }
+
+      function requireUnique() {
+        return ($state.current.name === 'go-volunteer.crossroadspage');
       }
 
       function submit() {

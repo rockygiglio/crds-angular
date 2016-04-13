@@ -25,19 +25,21 @@
       vm.submit = submit;
 
       function alreadySelected(projectTypeId) {
-        if ((GoVolunteerService.projectPrefOne === projectTypeId) || (GoVolunteerService.projectPrefTwo === projectTypeId)) {
+        if ((GoVolunteerService.projectPrefOne.projectTypeId === projectTypeId) ||
+            (GoVolunteerService.projectPrefTwo.projectTypeId === projectTypeId)) {
           return ['disabled', 'checked'];
         }
 
         return [];
       }
 
-      function submit(projectTypeId) {
-        if ((GoVolunteerService.projectPrefOne === projectTypeId) || (GoVolunteerService.projectPrefTwo === projectTypeId)) {
+      function submit(projectType) {
+        if ((GoVolunteerService.projectPrefOne === projectType) ||
+            (GoVolunteerService.projectPrefTwo === projectType)) {
           return;
         }
 
-        GoVolunteerService.projectPrefThree = projectTypeId;
+        GoVolunteerService.projectPrefThree = projectType;
         vm.onSubmit({nextState: 'unique-skills'});
       }
 

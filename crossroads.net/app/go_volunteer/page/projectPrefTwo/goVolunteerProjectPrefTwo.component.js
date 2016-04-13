@@ -24,19 +24,19 @@
       vm.submit = submit;
 
       function alreadySelected(projectTypeId) {
-        if (GoVolunteerService.projectPrefOne === projectTypeId) {
+        if (GoVolunteerService.projectPrefOne.projectTypeId === projectTypeId) {
           return ['disabled', 'checked'];
         }
 
         return [];
       }
 
-      function submit(projectTypeId) {
-        if (GoVolunteerService.projectPrefOne == projectTypeId) {
+      function submit(projectType) {
+        if (GoVolunteerService.projectPrefOne === projectType) {
           return;
         }
 
-        GoVolunteerService.projectPrefTwo = projectTypeId;
+        GoVolunteerService.projectPrefTwo = projectType;
         vm.onSubmit({nextState: 'project-preference-three'});
       }
 

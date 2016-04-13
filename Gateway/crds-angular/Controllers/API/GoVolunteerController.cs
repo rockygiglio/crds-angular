@@ -42,14 +42,30 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
+        [ResponseType(typeof (List<ChildrenOptions>))]
+        [Route("api/govolunteer/children")]
+        public IHttpActionResult GetGoChildrenOptions()
+        {
+            try
+            {
+                var options = _goVolunteerService.ChildrenOptions();
+                return Ok(options);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Go Volunteer Children Options failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [HttpGet]
         [ResponseType(typeof (List<AttributeDTO>))]
         [Route("api/govolunteer/prep-times")]
         public IHttpActionResult GetPrepTimes()
         {
             try
             {
-                var prepTypeId = _configurationWrapper.GetConfigIntValue("PrepWorkAttributeTypeId");
-                return Ok(GetAttributesByType(prepTypeId));
+                return Ok(GetAttributesByType("PrepWorkAttributeTypeId"));
             }
             catch (Exception e)
             {
@@ -65,8 +81,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var attributeTypeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiEquipmentAttributeType");
-                return Ok(GetAttributesByType(attributeTypeId));
+                return Ok(GetAttributesByType("GoCincinnatiEquipmentAttributeType"));
             }
             catch (Exception e)
             {
@@ -75,8 +90,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        private List<AttributeDTO> GetAttributesByType(int attributeTypeId)
+        private List<AttributeDTO> GetAttributesByType(string attributeType)
         {
+            var attributeTypeId = _configurationWrapper.GetConfigIntValue(attributeType);
             var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
             return attributeTypes.Single().Attributes;
         }
@@ -86,7 +102,7 @@ namespace crds_angular.Controllers.API
         [Route("api/govolunteer/skills")]
         public IHttpActionResult GetGoSkills()
         {
-            return (Authorized(Skills,() => Skills(string.Empty)));
+            return (Authorized(Skills, () => Skills(string.Empty)));
         }
 
         private IHttpActionResult Skills(string token)
@@ -219,6 +235,39 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Unable to get project types", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("api/govolunteer/registration")]
+        [ResponseType(typeof (Registration))]
+        public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
+        {
+            if (ModelState.IsValid)
+            {
+                return Authorized(token => SaveRegistration(token, goVolunteerRegistration),
+                                  () => SaveRegistration(string.Empty, goVolunteerRegistration));
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+            var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
+        {
+            try
+            {
+                goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
+                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);                
+                _goVolunteerService.SendMail(reg);
+                return Ok(reg);
+            }
+            catch (Exception e)
+            {
+                var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
+                logger.Error(msg, e);
+                var apiError = new ApiErrorDto(msg, e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

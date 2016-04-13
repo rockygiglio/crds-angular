@@ -1,14 +1,8 @@
-<div class="row">
-  <div class="col-sm-12">
-    <progressbar value="15"></progressbar>
-  </div>
-</div>
-
 <div dynamic-content="$root.MESSAGES.goVolunteerProjectPrefThreeQuestion.content | html"></div>
 
 <div class="row">
   <div class="col-xs-6 img-link" ng-repeat="item in goProjectPrefThree.projectTypes">
-    <a class="push-bottom gradiant-text-background border" ng-class="goProjectPrefThree.alreadySelected(item.projectTypeId)"  href="#" ng-click="goProjectPrefThree.submit(item.projectTypeId)">
+    <a class="push-bottom gradiant-text-background border" ng-class="goProjectPrefThree.alreadySelected(item.projectTypeId)"  href="#" ng-click="goProjectPrefThree.submit(item)">
       <img src="{{item.imageUrl}}" class="img-responsive img-full-width" />
       <div class="img-link-text">
         {{item.desc}}
