@@ -64,7 +64,8 @@
           }
 
           var regCount = registrationCount();
-          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers && regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers &&
+            regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
             return true;
           }
         }
@@ -145,7 +146,9 @@
           }
 
           return curr;
-        }, 18);
+        },
+
+        18);
 
         return youngest;
       }
