@@ -23,10 +23,12 @@
       vm.createGroup = createGroup;
       vm.disableCard = disableCard;
       vm.disabledReason = disabledReason;
+      vm.displayResults = displayResults;
       vm.groupConnectors = [];
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
       vm.organization = GoVolunteerService.organization;
+      vm.query = null;
       vm.showGroups = showGroups;
       vm.submit = submit;
       vm.youngest = youngestInRegistration();
@@ -79,6 +81,14 @@
         }
       }
 
+      function displayResults() {
+        if (vm.query.length < 3) {
+          return false;
+        }
+
+        return true;
+      }
+
       function handleError(err) {
         // show error page?
         // console.log(err);
@@ -118,7 +128,7 @@
          * attribute 7040 = 2-7 year olds
          * attribute 7041 = 8-13
          * attribute 7042 = 14-18
-         */ 
+         */
 
         var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next){
           if (next.attributeId === 7040) {
