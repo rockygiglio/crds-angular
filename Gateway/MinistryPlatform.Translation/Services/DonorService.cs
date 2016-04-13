@@ -893,7 +893,7 @@ namespace MinistryPlatform.Translation.Services
             string searchStr;
             if (!string.IsNullOrEmpty(optionalSourceId))
             {
-                searchStr = string.Format(",\"{0}\",,,,,,,,,,{1}", subscription, optionalSourceId);
+                searchStr = string.Format(",{0},,,,,,,,,,{1}", subscription, optionalSourceId);
             }
             else
             {
