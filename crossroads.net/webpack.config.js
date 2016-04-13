@@ -5,7 +5,7 @@ var AssetsPlugin = require('assets-webpack-plugin');
 var assetsPluginInstance = new AssetsPlugin();
 
 var endpoint = {
-  'url': 'http://localhost:49380'
+  url: 'http://localhost:49380'
 };
 
 var definePlugin = new webpack.DefinePlugin({
@@ -13,12 +13,12 @@ var definePlugin = new webpack.DefinePlugin({
   __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
   __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
   __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M'),
+  __STRIPE_API_VERSION__: JSON.stringify(process.env.CRDS_STRIPE_API_VERSION),
   __SOUNDCLOUD_API_KEY__: JSON.stringify(process.env.CRDS_SOUNDCLOUD_KEY || '67723f3ff9ea6bda29331ac06ce2960c'),
   __AWS_SEARCH_ENDPOINT__:
     JSON.stringify(process.env.CRDS_AWS_SEARCH_ENDPOINT ||
        'https://vs9gac5tz7.execute-api.us-east-1.amazonaws.com/prod/')
 });
-
 
 module.exports = {
   entry: {
@@ -57,7 +57,7 @@ module.exports = {
                 path.resolve(__dirname, 'node_modules/angular-stripe')
               ],
               loader: 'babel-loader'
-          },
+            },
           {
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')

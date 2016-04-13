@@ -42,7 +42,9 @@
         country: 'US',
         currency: 'USD',
         routing_number: GiveTransferService.donor.default_source.routing,
-        account_number: GiveTransferService.donor.default_source.bank_account_number
+        account_number: GiveTransferService.donor.default_source.bank_account_number,
+        account_holder_name: GiveTransferService.donor.default_source.account_holder_name,
+        account_holder_type: GiveTransferService.donor.default_source.account_holder_type
       };
     }
 
@@ -339,6 +341,8 @@
             GiveTransferService.brand = CC_BRAND_CODES[donor.default_source.credit_card.brand];
             GiveTransferService.view = 'cc';
           } else {
+            GiveTransferService.accountHolderName = donor.default_source.bank_account.account_holder_name;
+            GiveTransferService.accountHolderType = donor.default_source.bank_account.account_holder_type;
             GiveTransferService.last4 = donor.default_source.bank_account.last4;
             GiveTransferService.brand = '#library';
             GiveTransferService.view = 'bank';

@@ -197,7 +197,7 @@ namespace crds_angular.Services
         {
             if (donation.Source.SourceType == PaymentType.Cash)
             {
-                donation.Source.Name = "cash";
+                donation.Source.AccountHolderName = "cash";
             }
             else if (charge != null && charge.Source != null)
             {
