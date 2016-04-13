@@ -30,7 +30,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         public int OrganizationId { get; set; }
 
         [JsonProperty(PropertyName = "otherOrganizationName")]
-        [Required]
         public string OtherOrganizationName { get; set; }
 
         [JsonProperty(PropertyName = "preferredLaunchSite")]
