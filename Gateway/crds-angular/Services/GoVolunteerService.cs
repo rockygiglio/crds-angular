@@ -415,6 +415,7 @@ namespace crds_angular.Services
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
             registrationDto.InitiativeId = registration.InitiativeId;
             registrationDto.OrganizationId = registration.OrganizationId;
+            registrationDto.OtherOrganizationName = registration.OtherOrganizationName;
             registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
             registrationDto.RoleId = registration.RoleId;
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
