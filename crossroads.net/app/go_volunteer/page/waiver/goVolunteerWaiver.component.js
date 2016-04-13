@@ -34,6 +34,10 @@
       }
 
       function submit() {
+        if (vm.processing) {
+          return false;
+        }
+
         vm.processing = true;
         GoVolunteerService.saveSuccessful = false;
         try {
