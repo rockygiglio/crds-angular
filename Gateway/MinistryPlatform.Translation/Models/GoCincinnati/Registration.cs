@@ -5,6 +5,7 @@
         public string AdditionalInformation { get; set; }
         public int InitiativeId { get; set; }
         public int OrganizationId { get; set; }
+        public string OtherOrganizationName { get; set; }
         public int ParticipantId { get; set; }
         public int PreferredLaunchSiteId { get; set; }
         public int RegistrationId { get; set; }
