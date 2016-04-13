@@ -5,16 +5,19 @@
 </div>
 
 
-<div ng-if="goGroupFindConnector.showGroups()">
 
-   <div class="row">
+<div ng-if="goGroupFindConnector.showGroups()">
+  <div class="row">
     <div class="form-group col-sm-12 push-bottom">
-      <input type="text" class="form-control" placeholder="Search" ng-model="query">
+      <input type="text" class="form-control" placeholder="Search" ng-model="goGroupFindConnector.query">
     </div>
 
-     <div class="col-sm-12">
+
+    <div ng-if="!goGroupFindConnector.displayResults()" dynamic-content="$root.MESSAGES.goVolunteerGroupConnectorSearchInstructions.content | html"> </div>
+
+    <div class="col-sm-12" ng-if="goGroupFindConnector.displayResults()">
       <a ng-click="goGroupFindConnector.submit(g)"
-         ng-repeat="g in goGroupFindConnector.groupConnectors | filter:query">
+         ng-repeat="g in goGroupFindConnector.groupConnectors | filter:goGroupFindConnector.query">
         <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
           <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
             <profile-picture contact-id="g.primaryContactRegistrationId"

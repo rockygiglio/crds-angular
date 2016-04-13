@@ -19,33 +19,17 @@
 
     function GoVolunteerGroupFindConnectorController() {
       var vm = this;
-      vm.activate = activate;
       vm.createGroup = createGroup;
       vm.disableCard = disableCard;
       vm.disabledReason = disabledReason;
-      vm.groupConnectors = [];
+      vm.displayResults = displayResults;
+      vm.groupConnectors = GoVolunteerService.groupConnectors;
       vm.loaded = loaded;
       vm.loneWolf = loneWolf;
-      vm.organization = GoVolunteerService.organization;
+      vm.query = null;
       vm.showGroups = showGroups;
       vm.submit = submit;
       vm.youngest = youngestInRegistration();
-
-      vm.activate();
-
-      /////////////////////////
-
-      function activate() {
-        if (vm.organization.openSignup) {
-          GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        } else {
-          GroupConnectors.ByOrgId.query({orgId: vm.organization.organizationId, initiativeId: 1}, function(data) {
-            vm.groupConnectors = data;
-          }, handleError);
-        }
-      }
 
       function createGroup() {
         vm.onSubmit({nextState: 'be-a-connector'});
@@ -56,12 +40,14 @@
           return true;
         }
 
-        if (group.projectName !== null) {
+        if (group.projectType !== null) {
           if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
             return true;
           }
+
           var regCount = registrationCount();
-          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers && regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
+          if (group.absoluteMaximumVolunteers > group.projectMaximumVolunteers &&
+              regCount > (group.absoluteMaximumVolunteers - group.volunteerCount)) {
             return true;
           }
         }
@@ -77,6 +63,14 @@
         if (registrationCount() > (g.projectMaximumVolunteers - g.volunteerCount)) {
           return 'Group is full';
         }
+      }
+
+      function displayResults() {
+        if (vm.query === null || vm.query.length < 3) {
+          return false;
+        }
+
+        return true;
       }
 
       function handleError(err) {
@@ -118,20 +112,26 @@
          * attribute 7040 = 2-7 year olds
          * attribute 7041 = 8-13
          * attribute 7042 = 14-18
-         */ 
+         */
 
-        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next){
+        var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next) {
           if (next.attributeId === 7040) {
             return 2;
           }
+
           if (next.attributeId === 7041 && curr > 8) {
             return 8;
           }
+
           if (next.attributeId === 7042 && curr > 13) {
             return 13;
           }
+
           return curr;
-        }, 18);
+        },
+
+        18);
+
         return youngest;
       }
     }

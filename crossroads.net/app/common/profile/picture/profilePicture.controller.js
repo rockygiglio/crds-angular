@@ -22,6 +22,16 @@
     vm.wrapperClass = vm.wrapperClass || 'col-xs-3 col-sm-2';
     vm.imageClass = vm.imageClass || '';
     vm.buttonText = vm.buttonText || 'Change Photo';
+    vm.useDefault = vm.useDefault || false;
+
+    activate();
+
+    function activate() {
+      if (vm.useDefault) {
+        // debugger;
+        vm.path = vm.defaultImage;
+      }
+    }
 
     function openModal() {
       var changeProfileImage = $modal.open({

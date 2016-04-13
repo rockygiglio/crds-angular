@@ -67,19 +67,18 @@ namespace crds_angular.Services
         }
 
         public Registration CreateRegistration(Registration registration, string token)
-        {
-            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
+        {            
             try
             {
-                registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
-                var registrationId = CreateRegistration(registration, registrationDto);
+                var participantId = RegistrationContact(registration, token);
+                var registrationId = CreateRegistration(registration, participantId);
                 GroupConnector(registration, registrationId);
                 if (registration.SpouseParticipation)
                 {
                     registration.Spouse.ContactId = SpouseInformation(registration);
-                    registration.Spouse.EmailAddress = _contactService.GetContactEmail(registration.Spouse.ContactId);
+                    registration.Spouse.EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId);
                 }
-                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
+                _skillsService.UpdateSkills(participantId, registration.Skills, token);               
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
@@ -371,7 +370,7 @@ namespace crds_angular.Services
                                                                 registration.Spouse.EmailAddress,
                                                                 registration.Spouse.DateOfBirth,
                                                                 registration.Spouse.MobilePhone);
-
+            _participantService.CreateParticipantRecord(contactId);
             CreateRelationship(registration, contactId);
             return contactId;
         }
@@ -408,12 +407,15 @@ namespace crds_angular.Services
             }
         }
 
-        private int CreateRegistration(Registration registration, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int CreateRegistration(Registration registration, int participantId)
         {
+            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
+            registrationDto.ParticipantId = participantId;
             var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
             registrationDto.InitiativeId = registration.InitiativeId;
             registrationDto.OrganizationId = registration.OrganizationId;
+            registrationDto.OtherOrganizationName = registration.OtherOrganizationName;
             registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
             registrationDto.RoleId = registration.RoleId;
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
@@ -452,7 +454,7 @@ namespace crds_angular.Services
             return preferredLaunchSiteId;
         }
 
-        private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int RegistrationContact(Registration registration, string token)
         {
             // Create or Update Contact
             var participantId = registration.Self.ContactId != 0 ? ExistingParticipant(registration, token) : CreateParticipant(registration);
