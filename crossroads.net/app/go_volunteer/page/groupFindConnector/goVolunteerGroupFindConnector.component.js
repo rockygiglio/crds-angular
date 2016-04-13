@@ -40,7 +40,7 @@
           return true;
         }
 
-        if (group.projectName !== null) {
+        if (group.projectType !== null) {
           if ((group.projectMaximumVolunteers - group.volunteerCount) < 1) {
             return true;
           }
@@ -135,6 +135,7 @@
         },
 
         18);
+
         return youngest;
       }
     }
