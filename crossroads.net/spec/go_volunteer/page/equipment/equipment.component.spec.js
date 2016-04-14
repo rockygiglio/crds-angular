@@ -34,6 +34,7 @@ describe('Go Volunteer Equipment Component', function() {
 
     GoVolunteerService = $injector.get('GoVolunteerService');
     GoVolunteerService.availableEquipment = angular.copy(helpers.equipment);
+    GoVolunteerService.otherEquipment = [];
     scope = $rootScope.$new();
 
     scope.ctrl = {
@@ -63,10 +64,9 @@ describe('Go Volunteer Equipment Component', function() {
   it('should set my other equipment and continue to additional info', function() {
     scope.$digest();
     isolated = element.isolateScope().goEquipment;
-    isolated.otherEquipment = [{equipment: {name: 'test shovel'}}];
+    isolated.otherEquipment.push({equipment: {name: 'test shovel'}});
     isolated.submit();
     expect(GoVolunteerService.otherEquipment.length).toEqual(1);
-    console.log(GoVolunteerService.otherEquipment[0]);
     expect(GoVolunteerService.otherEquipment[0].equipment.name).toEqual('test shovel');
     expect(scope.ctrl.onSubmit).toHaveBeenCalledWith('additional-info');
   });
