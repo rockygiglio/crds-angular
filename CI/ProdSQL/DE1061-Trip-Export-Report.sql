@@ -47,6 +47,6 @@ ORDER BY Contact_ID, Attribute_ID;
 
 
 -- uncomment this when you are ready to update everything
-UPDATE [dbo].[Contact_Attributes]
-   SET [End_Date] = GETDATE()
-   WHERE Contact_Attribute_ID IN (SELECT Contact_Attribute_ID FROM @FinalCountDown)
+--UPDATE [dbo].[Contact_Attributes]
+--   SET [End_Date] = GETDATE()
+--   WHERE Contact_Attribute_ID IN (SELECT Contact_Attribute_ID FROM @FinalCountDown)
