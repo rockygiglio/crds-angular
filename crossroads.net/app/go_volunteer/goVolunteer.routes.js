@@ -349,13 +349,7 @@
     if ($state.next.name === 'go-volunteer.page') {
       param = $stateParams.organization;
     }
-    
-    if ($stateParams.page === 'profile') {
-      // clear the groupConnectors because we are likely 
-      // changing orgs
-      GoVolunteerService.groupConnectors = [];
-    }
-
+   
     // did we already get this information?
     if (useCachedOrg(param, GoVolunteerService.organization)) {
       deferred.resolve();
@@ -378,7 +372,7 @@
   function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, GroupConnectors) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'group-find-connector' && _.isEmpty(GoVolunteerService.groupConnectors)) {
+    if ($stateParams.page === 'group-find-connector')  {
       if (GoVolunteerService.organization.openSignup) {
         GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
           GoVolunteerService.groupConnectors = data;
