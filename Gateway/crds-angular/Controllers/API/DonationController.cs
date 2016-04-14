@@ -142,7 +142,7 @@ namespace crds_angular.Controllers.API
         }
 
 
-        [Route("api/gpexport/file/{selectionId}/{depostid}")]
+        [Route("api/gpexport/file/{selectionId}/{depositId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFile(int selectionId, int depositId)
         {

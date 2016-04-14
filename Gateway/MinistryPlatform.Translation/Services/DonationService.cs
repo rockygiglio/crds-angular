@@ -524,7 +524,7 @@ namespace MinistryPlatform.Translation.Services
 
         private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
-            processorFee = processorFee<0 ? -1*processorFee : processorFee;
+            processorFee = processorFee < 0 ? -1*processorFee : processorFee;
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
@@ -541,7 +541,7 @@ namespace MinistryPlatform.Translation.Services
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
                 CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
                 ReceivableAccount = datum.ReceivableAccount,
-                DistributionAccount = datum.DistributionAccount,
+                DistributionAccount = processingFeeGLMapping.ToString("Distribution_Account"),
                 ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
                 Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,

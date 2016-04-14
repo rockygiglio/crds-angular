@@ -749,7 +749,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     CheckbookId = "PNC001",
                     CashAccount = "77777-031-20",
                     ReceivableAccount = "90287-031-21",
-                    DistributionAccount = "90287-031-22",
+                    DistributionAccount = "77777-031-22",
                     Amount = Convert.ToDecimal(".13") + Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
