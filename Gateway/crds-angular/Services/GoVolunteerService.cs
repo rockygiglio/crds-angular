@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Optimization;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -144,7 +145,8 @@ namespace crds_angular.Services
 
         public Dictionary<string, object> SetupMergeData(Registration registration)
         {
-            var tableAttrs = TableAttributes();
+            var styles = Styles();
+            
             var listOfP = ProfileDetails(registration);
             if (registration.SpouseParticipation)
             {
@@ -177,11 +179,11 @@ namespace crds_angular.Services
             }
             listOfP = listOfP.Concat(PrepWorkDetails(registration)).ToList();
 
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
+            
 
             var dict = new Dictionary<string, object>()
             {
@@ -303,17 +305,13 @@ namespace crds_angular.Services
             return ret;
         }
 
-        private Dictionary<string, string> TableAttributes()
+        private Dictionary<string, string> Styles()
         {
             return new Dictionary<string, string>()
             {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;"}
+                {"style", "border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0; border:none; border-color:#ffffff;font-size: medium; font-weight: normal;" }
             };
-        }
+        } 
 
         private void Attributes(Registration registration, int registrationId)
         {
