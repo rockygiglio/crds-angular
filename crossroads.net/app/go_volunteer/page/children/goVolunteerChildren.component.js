@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerChildren;
 
-  GoVolunteerChildren.$inject = [];
+  GoVolunteerChildren.$inject = ['GoVolunteerService'];
 
-  function GoVolunteerChildren() {
+  function GoVolunteerChildren(GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {
@@ -25,6 +25,9 @@
         if (childrenServing) {
           vm.onSubmit({nextState: 'children-count'});
         } else {
+          _.forEach(GoVolunteerService.childrenOptions, function(co) {
+            co.value = 0;  
+          });
           vm.onSubmit({nextState: 'group-connector'});
         }
       }
