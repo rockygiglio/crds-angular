@@ -26,6 +26,7 @@
       vm.showSpouseName = showSpouseName;
       vm.showChildren = showChildren;
       vm.showChildrenCount = showChildrenCount;
+      vm.showCms = showCms;
       vm.showGroupConnector = showGroupConnector;
       vm.showGroupFindConnector = showGroupFindConnector;
       vm.showConnectorInfo = showConnectorInfo;
@@ -40,7 +41,7 @@
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
-
+      
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
@@ -78,6 +79,10 @@
 
       function showChildren() {
         return $stateParams.page === 'children';
+      }
+      
+      function showCms() {
+        return $state.current.name === 'go-volunteer.cms';
       }
 
       function showChildrenCount() {

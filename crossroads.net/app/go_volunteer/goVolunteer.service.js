@@ -54,6 +54,7 @@
         groupConnector: volunteerService.groupConnector,
         initiativeId: 0, //TODO: how will we get this?  user doesn't input, part of CMS page?
         organizationId: volunteerService.organization.organizationId,
+        otherOrganizationName: volunteerService.otherOrgName ? volunteerService.otherOrgName : null,
         preferredLaunchSite: preferredLaunchSite(volunteerService.preferredLaunchSite, volunteerService.groupConnector),
         prepWork: prepWork(volunteerService.myPrepTime, volunteerService.spousePrepTime),
         privateGroup: volunteerService.privateGroup,

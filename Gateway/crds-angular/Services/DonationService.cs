@@ -515,10 +515,10 @@ namespace crds_angular.Services
                 _logger.Info(string.Format("Donation not located for charge id {0}, this is expected", invoice.Charge));
             }
 
-            var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription);
-            _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
             var charge = _paymentService.GetCharge(invoice.Charge);
-
+            var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription, charge.ProcessorId);
+            _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
+           
             var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
             var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
             var amount = charge.Amount / Constants.StripeDecimalConversionValue;

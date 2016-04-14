@@ -90,12 +90,14 @@
           Profile: 'Profile',
           Organizations: 'Organizations',
           $cookies: '$cookies',
+          Session: 'Session',
           $stateParams: '$stateParams',
           SkillsService: 'SkillsService',
-          loggedin: crds_utilities.checkLoggedin,
+          loggedin: crds_utilities.optimisticallyCheckLoggedin,
           $q: '$q',
           GoVolunteerService: 'GoVolunteerService',
           Person: Person,
+          GroupFindConnectors: GroupFindConnectors,
           PrepWork: PrepWork,
           Spouse: GetSpouse,
           Organization: Organization,
@@ -105,6 +107,25 @@
           Locations: Locations,
           ProjectTypes: ProjectTypes,
           Skills: Skills
+        }
+      })
+      .state('go-volunteer.cms', {
+        parent: 'goCincinnati',
+        url: '/go-volunteer/:city/:cmsPage',
+        template: '<go-volunteer-cms></go-volunteer-cms>',
+        data: {
+          meta: {
+            title: 'Some Title',
+            description: ''
+          }
+        },
+        resolve: {
+          $stateParams: '$stateParams',
+          $q: '$q',
+          CmsInfo: CmsInfo,
+          Meta: Meta,
+          Organization: Organization,
+          Locations: Locations,
         }
       })
       .state('go-volunteer.page', {
@@ -123,6 +144,7 @@
           SkillsService: 'SkillsService',
           CmsInfo: CmsInfo,
           Meta: Meta,
+          GroupFindConnectors: GroupFindConnectors,
           Organization: Organization,
           Locations: Locations,
           ProjectTypes: ProjectTypes,
@@ -136,6 +158,9 @@
   }
 
   function addTrailingSlashIfNecessary(link) {
+    if (link === '') {
+      return link;
+    }
     if (_.endsWith(link, '/') === false) {
       return link + '/';
     }
@@ -233,7 +258,7 @@
   function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'launch-site') {
+    if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
@@ -254,13 +279,14 @@
     $state.next.data.meta.title = 'GO ' + city;
   }
 
-  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
+  function Person(Profile, $cookies, $q, GoVolunteerService, $stateParams, Session) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'profile') {
+    if ($stateParams.page === 'profile' && _.isEmpty(GoVolunteerService.person.emailAddress)) {
       var cid = $cookies.get('userId');
       if (GoVolunteerService.person.nickName === '') {
         Profile.Person.get({contactId: cid}, function(data) {
+          Session.beOptimistic = true;
           GoVolunteerService.person = data;
           deferred.resolve();
         }, function(err) {
@@ -323,6 +349,12 @@
     if ($state.next.name === 'go-volunteer.page') {
       param = $stateParams.organization;
     }
+    
+    if ($stateParams.page === 'profile') {
+      // clear the groupConnectors because we are likely 
+      // changing orgs
+      GoVolunteerService.groupConnectors = [];
+    }
 
     // did we already get this information?
     if (useCachedOrg(param, GoVolunteerService.organization)) {
@@ -343,10 +375,38 @@
     return deferred.promise;
   }
 
+  function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, GroupConnectors) {
+    var deferred = $q.defer();
+
+    if ($stateParams.page === 'group-find-connector' && _.isEmpty(GoVolunteerService.groupConnectors)) {
+      if (GoVolunteerService.organization.openSignup) {
+        GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+          GoVolunteerService.groupConnectors = data;
+          deferred.resolve();
+        }, function(err) {
+          console.log(err);
+          deferred.reject();
+        });
+      } else {
+        GroupConnectors.ByOrgId.query(
+          {orgId: GoVolunteerService.organization.organizationId, initiativeId: 1}, function(data) {
+          GoVolunteerService.groupConnectors = data;
+          deferred.resolve();
+        }, function(err) {
+          console.log(err);
+          deferred.reject();
+        });
+      }
+    } else {
+      deferred.resolve();
+    }
+    return deferred.promise;
+  }
+
   function ProjectTypes(GoVolunteerService, $state, $stateParams, $q, GoVolunteerDataService) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'project-preference-one') {
+    if ($stateParams.page === 'project-preference-one' && _.isEmpty(GoVolunteerService.projectTypes)) {
       GoVolunteerDataService.ProjectTypes.query(function(data) {
         GoVolunteerService.projectTypes = data;
         deferred.resolve();
@@ -381,6 +441,10 @@
 
     if (org) {
       return base + addTrailingSlashIfNecessary(org);
+    }
+
+    if (state.next.name === 'go-volunteer.cms') {
+      return base + addTrailingSlashIfNecessary(stateParams.cmsPage);
     }
 
     if (state.next.name === 'go-volunteer.page' || state.next.name === 'go-volunteer.crossroadspage') {

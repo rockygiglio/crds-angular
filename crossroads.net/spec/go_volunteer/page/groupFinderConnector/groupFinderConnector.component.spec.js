@@ -57,15 +57,6 @@ describe('Go Volunteer Group Finder Component', function() {
       .respond(200, helpers.crossroads_group_connectors);
       
     });
-
-    it('should get group connectors & set loading state', function() {
-      isolated.activate(); 
-      $httpBackend.flush();
-      expect(isolated.groupConnectors.length)
-        .toBe(helpers.crossroads_group_connectors.length);
-       expect(isolated.loaded()).toBeTruthy();
-    });
-    
   });
 
   describe('Organization is Other', function() {
@@ -77,14 +68,6 @@ describe('Go Volunteer Group Finder Component', function() {
                            'api/group-connectors/open-orgs/1')
       .respond(200, helpers.crossroads_group_connectors);
       
-    });
-
-    it('should get group connectors & set loading state', function() {
-      isolated.activate(); 
-      $httpBackend.flush();
-      expect(isolated.groupConnectors.length)
-        .toBe(helpers.crossroads_group_connectors.length);
-      expect(isolated.loaded()).toBeTruthy();
     });
   });
 
@@ -98,14 +81,6 @@ describe('Go Volunteer Group Finder Component', function() {
       .respond(200, helpers.crossroads_group_connectors);
     });
 
-    it('should get group connectors & set loading state', function() {
-      isolated.activate();
-      $httpBackend.flush();
-      expect(isolated.groupConnectors.length)
-        .toBe(helpers.crossroads_group_connectors.length);
-      expect(isolated.loaded()).toBeTruthy();
-
-    });
   });
 
   it('should go to unique-skills', function() {
