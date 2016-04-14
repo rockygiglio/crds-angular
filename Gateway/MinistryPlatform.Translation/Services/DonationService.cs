@@ -503,8 +503,8 @@ namespace MinistryPlatform.Translation.Services
             {
                 //always a refund that is initated by Crossroads
                 datum.DocumentType = "RETURNS";
-                datum.DonationAmount = (datum.DonationAmount * -1) + processorFee;
-                datum.Amount = datum.Amount * -1;
+                datum.DonationAmount = (datum.DonationAmount*-1);// + processorFee;
+                datum.Amount = (datum.Amount  - processorFee) * -1 ;
             }
             else if (datum.Amount < 0)
             {
@@ -539,9 +539,9 @@ namespace MinistryPlatform.Translation.Services
                 DepositAmount = datum.DepositAmount,
                 DonationAmount = datum.DonationAmount,
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
-                CashAccount = datum.DocumentType == "SALES" ? processingFeeGLMapping.ToString("Distribution_Account") : processingFeeGLMapping.ToString("Cash_Account"),
+                CashAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount< 0) ? processingFeeGLMapping.ToString("Distribution_Account") : processingFeeGLMapping.ToString("Cash_Account"),
                 ReceivableAccount = datum.ReceivableAccount,
-                DistributionAccount = datum.DocumentType == "SALES" ? datum.DistributionAccount : processingFeeGLMapping.ToString("Distribution_Account"),
+                DistributionAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount < 0) ? datum.DistributionAccount : processingFeeGLMapping.ToString("Distribution_Account"),
                 ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
                 Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
