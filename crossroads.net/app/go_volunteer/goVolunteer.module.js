@@ -13,6 +13,7 @@
     .factory('GoVolunteerDataService', require('./goVolunteerData.service'))
     ;
 
+  require('./cms');
   require('./city');
   require('./organizations');
   require('./page');

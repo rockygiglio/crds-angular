@@ -208,7 +208,11 @@ namespace crds_angular.test.Services
                 {"Nickname", registration.Self.FirstName},
                 {"Lastname", registration.Self.LastName}
             };
-            Assert.AreEqual(dict, mergeData);   
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);   
         }
 
         [Test]
@@ -266,7 +270,10 @@ namespace crds_angular.test.Services
                 {"Nickname", registration.Self.FirstName},
                 {"Lastname", registration.Self.LastName}
             };
-            Assert.AreEqual(dict, mergeData);
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
         }
 
         [Test]
@@ -329,7 +336,13 @@ namespace crds_angular.test.Services
                 {"Spouse_Nickname", registration.Spouse.FirstName },
                 {"Spouse_Lastname", registration.Spouse.LastName }
             };
-            Assert.AreEqual(dict, mergeData);
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
+            Assert.AreEqual(dict["Spouse_Nickname"], mergeData["Spouse_Nickname"]);
+            Assert.AreEqual(dict["Spouse_Lastname"], mergeData["Spouse_Lastname"]);
         }
 
         [Test]
@@ -390,12 +403,87 @@ namespace crds_angular.test.Services
                 {"Spouse_Nickname", registration.Spouse.FirstName },
                 {"Spouse_Lastname", registration.Spouse.LastName }
             };
-            Assert.AreEqual(dict, mergeData);
+
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
+            Assert.AreEqual(dict["Spouse_Nickname"], mergeData["Spouse_Nickname"]);
+            Assert.AreEqual(dict["Spouse_Lastname"], mergeData["Spouse_Lastname"]);
         }
 
-        private HtmlElement BuildParagraph(String label, String value)
+        [Test]
+        public void ShouldSetupMergeDataWithSkills()
         {
-            return new HtmlElement("p", new HtmlElement("strong", label).Append(new HtmlElement("span", value)));
+            var registration = TestHelpers.RegistrationWithSkills();
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Children2To7")).Returns(registration.ChildAgeGroup[0].Id);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Children8To12")).Returns(registration.ChildAgeGroup[1].Id);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Children13To18")).Returns(registration.ChildAgeGroup[2].Id);
+
+            var mergeData = _fixture.SetupMergeData(registration);
+
+            _configurationWrapper.VerifyAll();
+
+            var tableAttrs = new Dictionary<string, string>()
+            {
+                {"width", "100%"},
+                {"border", "1"},
+                {"cellspacing", "0"},
+                {"cellpadding", "5"},
+                {"style", "font-size: medium; font-weight: normal;" }
+            };
+
+
+            var listOfP = new List<HtmlElement>
+            {
+                BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
+                BuildParagraph("Email: ", registration.Self.EmailAddress),
+                BuildParagraph("Birthdate: ",  "2/21/1980"),
+                BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
+                BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
+                new HtmlElement("p"),
+                BuildParagraph("Number of Children Ages 13-18: ", registration.ChildAgeGroup[2].Count.ToString()),
+                BuildParagraph("Preferred Launch Site: ", registration.PreferredLaunchSite.Name), // need to get the site name...
+                BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
+                BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
+                BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
+                BuildParagraph("Unique Skills: ", registration.Skills.Where(sk => sk.Checked).Select(sk => sk.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Additional Info: ", registration.AdditionalInformation),
+                BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
+                BuildParagraph("Spouse Available for Prep Work: ", "No")
+            };
+
+
+            var htmlTable = new HtmlElement("table", tableAttrs)
+                .Append(new HtmlElement("tbody"))
+                .Append(new HtmlElement("tr"))
+                .Append(new HtmlElement("td"))
+                .Append(listOfP);
+
+            var dict = new Dictionary<string, object>()
+            {
+                {"HTML_TABLE", htmlTable.Build()},
+                {"Nickname", registration.Self.FirstName},
+                {"Lastname", registration.Self.LastName}
+            };
+            Assert.AreEqual(dict.Count, mergeData.Count);
+            Assert.AreEqual(dict["HTML_TABLE"], mergeData["HTML_TABLE"]);
+            Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
+            Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
+
+        }
+
+        private static HtmlElement BuildParagraph(string label, string value)
+        {
+            var els = new List<HtmlElement>()
+            {
+                new HtmlElement("strong", label),
+                new HtmlElement("span", value)
+            }
+            ;
+            return new HtmlElement("p", els);
         } 
 
     }

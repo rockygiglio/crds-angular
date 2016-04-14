@@ -67,6 +67,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
             var registrationDictionary = new Dictionary<string, object>
             {
                 {"Organization_ID", registration.OrganizationId},
+                {"Other_Organization_Name", registration.OtherOrganizationName},
                 {"Preferred_Launch_Site_ID", registration.PreferredLaunchSiteId},
                 {"Participant_ID", registration.ParticipantId},
                 {"Initiative_ID", registration.InitiativeId},

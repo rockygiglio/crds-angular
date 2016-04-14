@@ -24,7 +24,7 @@ namespace crds_angular.test
         {
             return new Registration()
             {
-                AdditionalInformation = Gen.Sample(1, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                AdditionalInformation = "something profound",
                 ChildAgeGroup = ListOfChildrenAttending(2, 0, 1),
                 CreateGroupConnector = true,
                 Equipment = ListOfEquipment(),                
@@ -41,6 +41,13 @@ namespace crds_angular.test
                 RoleId = RandomInt(),
                 WaiverSigned = true
             };
+        }
+
+        public static Registration RegistrationWithSkills()
+        {
+            var reg = RegistrationNoSpouse();
+            reg.Skills = ListOfGoSkills(3);
+            return reg;
         }
 
         public static Registration RegistrationWithSpouse()
@@ -96,12 +103,12 @@ namespace crds_angular.test
         {
             return new Registrant()
             {
-                ContactId = RandomInt(),
+                ContactId = 1234,
                 DateOfBirth = "1980-02-21T05:00:00.000Z",
-                EmailAddress = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                MobilePhone = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                EmailAddress = "randomEmail@crossroads.net",
+                FirstName = "stupid",
+                LastName = "name",
+                MobilePhone = "0987654321"
             };
         }
 
@@ -110,8 +117,8 @@ namespace crds_angular.test
             return new Registrant()
             {
                 ContactId = RandomInt(),
-                FirstName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                LastName = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                FirstName = "asdfasdfasdf",
+                LastName = "asdkjhiensdfie"
             };
         }
 

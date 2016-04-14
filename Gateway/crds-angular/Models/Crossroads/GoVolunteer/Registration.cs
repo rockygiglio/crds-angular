@@ -7,6 +7,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
     public class Registration
     {
         [JsonProperty(PropertyName = "additionalInformation")]
+        [StringLength(500, ErrorMessage = "AdditionalInformation value cannot exceed 500 characters. ")]
         public string AdditionalInformation { get; set; }
 
         [JsonProperty(PropertyName = "children")]
@@ -28,6 +29,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "organizationId")]
         [Required]
         public int OrganizationId { get; set; }
+
+        [JsonProperty(PropertyName = "otherOrganizationName")]
+        public string OtherOrganizationName { get; set; }
 
         [JsonProperty(PropertyName = "preferredLaunchSite")]
         public PreferredLaunchSite PreferredLaunchSite { get; set; }

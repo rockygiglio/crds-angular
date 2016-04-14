@@ -259,7 +259,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
-                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
+                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);                
                 _goVolunteerService.SendMail(reg);
                 return Ok(reg);
             }

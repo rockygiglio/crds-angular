@@ -16,6 +16,7 @@ namespace crds_angular.Services
 
     {
         private readonly IAttributeService _attributeService;
+        private readonly MPInterfaces.ICommunicationService _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly MPInterfaces.IContactRelationshipService _contactRelationshipService;
         private readonly MPInterfaces.IContactService _contactService;
@@ -26,7 +27,6 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly IGoSkillsService _skillsService;
-        private readonly MPInterfaces.ICommunicationService _communicationService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -68,18 +68,17 @@ namespace crds_angular.Services
 
         public Registration CreateRegistration(Registration registration, string token)
         {
-            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
             try
             {
-                registrationDto.ParticipantId = RegistrationContact(registration, token, registrationDto);
-                var registrationId = CreateRegistration(registration, registrationDto);
+                var participantId = RegistrationContact(registration, token);
+                var registrationId = CreateRegistration(registration, participantId);
                 GroupConnector(registration, registrationId);
                 if (registration.SpouseParticipation)
                 {
                     registration.Spouse.ContactId = SpouseInformation(registration);
-                    registration.Spouse.EmailAddress = _contactService.GetContactEmail(registration.Spouse.ContactId);
+                    registration.Spouse.EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId);
                 }
-                _skillsService.UpdateSkills(registrationDto.ParticipantId, registration.Skills, token);               
+                _skillsService.UpdateSkills(participantId, registration.Skills, token);
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
@@ -108,7 +107,6 @@ namespace crds_angular.Services
                 var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
                 var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
                 var fromContact = _contactService.GetContactById(fromContactId);
-
 
 
                 var mergeData = SetupMergeData(registration);
@@ -164,6 +162,11 @@ namespace crds_angular.Services
                 listOfP.Add(BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name));
                 listOfP.Add(BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name));
             }
+            if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
+            {
+                listOfP.Add(BuildParagraph("Unique Skills: ", registration.Skills.Where(sk => sk.Checked).Select(sk => sk.Name).Aggregate((first, next) => first + ", " + next)));
+            }
+
             if (registration.Equipment.Count > 0)
             {
                 listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equip => equip.Notes).Aggregate((first, next) => first + ", " + next)));
@@ -173,18 +176,18 @@ namespace crds_angular.Services
                 listOfP.Add(BuildParagraph("Additional Info: ", registration.AdditionalInformation));
             }
             listOfP = listOfP.Concat(PrepWorkDetails(registration)).ToList();
-                
+
             var htmlTable = new HtmlElement("table", tableAttrs)
-               .Append(new HtmlElement("tbody"))
-               .Append(new HtmlElement("tr"))
-               .Append(new HtmlElement("td"))
-               .Append(listOfP);
+                .Append(new HtmlElement("tbody"))
+                .Append(new HtmlElement("tr"))
+                .Append(new HtmlElement("td"))
+                .Append(listOfP);
 
             var dict = new Dictionary<string, object>()
             {
                 {"HTML_TABLE", htmlTable.Build()},
                 {"Nickname", registration.Self.FirstName},
-                {"Lastname", registration.Self.LastName},               
+                {"Lastname", registration.Self.LastName},
             };
 
             if (registration.SpouseParticipation)
@@ -198,16 +201,16 @@ namespace crds_angular.Services
 
         private List<HtmlElement> PrepWorkDetails(Registration registration)
         {
-
             var prepWork = new List<HtmlElement>();
-            if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse)
-            {
-                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
-                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
-            } else if (registration.PrepWork.Count == 0)
+            if (registration.PrepWork.Count == 0)
             {
                 prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
                 prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            }
+            else if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse)
+            {
+                prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
+                prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
             }
             else if (registration.PrepWork.Count < 2 && !registration.PrepWork[0].Spouse)
             {
@@ -221,7 +224,7 @@ namespace crds_angular.Services
             }
 
             return prepWork;
-        } 
+        }
 
         private List<HtmlElement> ProfileDetails(Registration registration)
         {
@@ -274,7 +277,6 @@ namespace crds_angular.Services
                     return BuildParagraph("Number of Children Ages 13-18: ", c.Count.ToString());
                 }
                 return new HtmlElement("p");
-
             }).ToList();
         }
 
@@ -299,7 +301,7 @@ namespace crds_angular.Services
             }
 
             return ret;
-        } 
+        }
 
         private Dictionary<string, string> TableAttributes()
         {
@@ -309,9 +311,9 @@ namespace crds_angular.Services
                 {"border", "1"},
                 {"cellspacing", "0"},
                 {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
+                {"style", "font-size: medium; font-weight: normal;"}
             };
-        } 
+        }
 
         private void Attributes(Registration registration, int registrationId)
         {
@@ -331,7 +333,7 @@ namespace crds_angular.Services
 
         private void Equipment(Registration registration, int registrationId)
         {
-            foreach (var equipment in registration.Equipment)
+            foreach (var equipment in registration.Equipment.Where(e => e != null))
             {
                 var id = equipment.Id != 0 ? equipment.Id : _otherEquipmentId;
                 _registrationService.AddEquipment(registrationId, id, equipment.Notes);
@@ -365,7 +367,7 @@ namespace crds_angular.Services
                                                                 registration.Spouse.EmailAddress,
                                                                 registration.Spouse.DateOfBirth,
                                                                 registration.Spouse.MobilePhone);
-
+            _participantService.CreateParticipantRecord(contactId);
             CreateRelationship(registration, contactId);
             return contactId;
         }
@@ -402,12 +404,15 @@ namespace crds_angular.Services
             }
         }
 
-        private int CreateRegistration(Registration registration, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int CreateRegistration(Registration registration, int participantId)
         {
+            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
+            registrationDto.ParticipantId = participantId;
             var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
             registrationDto.InitiativeId = registration.InitiativeId;
             registrationDto.OrganizationId = registration.OrganizationId;
+            registrationDto.OtherOrganizationName = registration.OtherOrganizationName;
             registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
             registrationDto.RoleId = registration.RoleId;
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
@@ -446,7 +451,7 @@ namespace crds_angular.Services
             return preferredLaunchSiteId;
         }
 
-        private int RegistrationContact(Registration registration, string token, MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int RegistrationContact(Registration registration, string token)
         {
             // Create or Update Contact
             var participantId = registration.Self.ContactId != 0 ? ExistingParticipant(registration, token) : CreateParticipant(registration);
@@ -483,9 +488,15 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        private HtmlElement BuildParagraph(String label, String value)
+        private static HtmlElement BuildParagraph(string label, string value)
         {
-            return new HtmlElement("p", new HtmlElement("strong", label).Append(new HtmlElement("span", value)));
+            var els = new List<HtmlElement>()
+            {
+                new HtmlElement("strong", label),
+                new HtmlElement("span", value)
+            }
+                ;
+            return new HtmlElement("p", els);
         }
     }
 }

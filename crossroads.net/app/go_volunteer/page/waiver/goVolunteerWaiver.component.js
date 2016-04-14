@@ -19,7 +19,7 @@
 
     function GoVolunteerWaiverController() {
       var vm = this;
-      vm.processing = false; 
+      vm.processing = false;
       vm.submit = submit;
       vm.waiver = null;
 
@@ -34,20 +34,30 @@
       }
 
       function submit() {
+        if (vm.processing) {
+          return false;
+        }
+
         vm.processing = true;
-        var dto = GoVolunteerService.getRegistrationDto();
-        GoVolunteerDataService.Create.save(dto, function(result) {
-          console.log('success');
-          vm.processing = false;
+        GoVolunteerService.saveSuccessful = false;
+        try {
+          var dto = GoVolunteerService.getRegistrationDto();
+          GoVolunteerDataService.Create.save(dto, function(result) {
+            console.log('success');
+            vm.processing = false;
+            GoVolunteerService.saveSuccessful = true;
+            vm.onSubmit({nextState: 'thank-you'});
+          },
+
+          function(err) {
+            $log.error(err);
+            vm.processing = false;
+            vm.onSubmit({nextState: 'thank-you'});
+          });
+        } catch (err) {
+          console.log(err);
           vm.onSubmit({nextState: 'thank-you'});
-        },
-
-        function(err) {
-          $log.error(err);
-          vm.processing = false;
-          $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
-        });
-
+        }
       }
     }
   }
