@@ -141,9 +141,8 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [RequiresAuthorization]
-        [Route("api/gpexport/file/{selectionId}/{depositId}")]
-        [HttpGet]
+
+        [Route("api/gpexport/file/{selectionId}/{depostid}")]
         public IHttpActionResult GetGPExportFile(int selectionId, int depositId)
         {
             return Authorized(token =>
@@ -164,7 +163,6 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [RequiresAuthorization]
         [ResponseType(typeof (List<DepositDTO>))]
         [Route("api/gpexport/filenames/{selectionId}")]
         [HttpGet]

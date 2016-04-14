@@ -508,7 +508,7 @@ namespace MinistryPlatform.Translation.Services
             }
             else if (datum.Amount < 0)
             {
-                //always a refund due to processing problems: nsf, etc
+                //always a refund due to processing problems: nsf, etcgit
                 datum.DocumentType = "RETURNS";
                 datum.DonationAmount = (datum.DonationAmount * -1) + processorFee;
                 datum.Amount = (datum.Amount * -1);
