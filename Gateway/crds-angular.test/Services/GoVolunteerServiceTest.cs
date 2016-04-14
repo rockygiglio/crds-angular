@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -168,15 +169,7 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.VerifyAll();
 
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
-            };
-
+            var styles = Styles();
 
             var listOfP = new List<HtmlElement>
             {
@@ -195,12 +188,11 @@ namespace crds_angular.test.Services
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
             };
 
-            
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
             var dict = new Dictionary<string, object>()
             {
@@ -228,15 +220,7 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.VerifyAll();
 
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
-            };
-
+            var styles = Styles();
 
             var listOfP = new List<HtmlElement>
             {
@@ -257,12 +241,11 @@ namespace crds_angular.test.Services
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
             };
 
-            
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
             var dict = new Dictionary<string, object>()
             {
@@ -288,15 +271,7 @@ namespace crds_angular.test.Services
 
             var mergeData = _fixture.SetupMergeData(registration);
 
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
-            };
-
+            var styles = Styles();
 
             var listOfP = new List<HtmlElement>
             {
@@ -321,12 +296,11 @@ namespace crds_angular.test.Services
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
             };
 
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
 
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
             var dict = new Dictionary<string, object>()
             {
@@ -358,15 +332,7 @@ namespace crds_angular.test.Services
 
             var mergeData = _fixture.SetupMergeData(registration);
 
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
-            };
-
+            var styles = Styles();
 
             var listOfP = new List<HtmlElement>
             {
@@ -388,12 +354,11 @@ namespace crds_angular.test.Services
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
             };
 
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
 
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
             var dict = new Dictionary<string, object>()
             {
@@ -425,15 +390,7 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.VerifyAll();
 
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
-            };
-
+            var styles = Styles();
 
             var listOfP = new List<HtmlElement>
             {
@@ -448,19 +405,17 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Unique Skills: ", registration.Skills.Where(sk => sk.Checked).Select(sk => sk.Name).Aggregate((first, next) => first + ", " + next)),
+                BuildParagraph("Unique Skills: ", Skills(registration)),
                 BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
                 BuildParagraph("Additional Info: ", registration.AdditionalInformation),
                 BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
                 BuildParagraph("Spouse Available for Prep Work: ", "No")
             };
 
-
-            var htmlTable = new HtmlElement("table", tableAttrs)
-                .Append(new HtmlElement("tbody"))
-                .Append(new HtmlElement("tr"))
-                .Append(new HtmlElement("td"))
-                .Append(listOfP);
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
             var dict = new Dictionary<string, object>()
             {
@@ -473,6 +428,23 @@ namespace crds_angular.test.Services
             Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
             Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
 
+        }
+
+        private string Skills(Registration registration)
+        {
+            if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
+            {
+                return registration.Skills.Where(sk => sk.Checked).Select(sk => sk.Name).Aggregate((first, next) => first + ", " + next);                
+            }
+            return "";
+        } 
+
+        private Dictionary<string, string> Styles()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"style", "border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0; border:none; border-color:#ffffff;font-size: medium; font-weight: normal;" }
+            };
         }
 
         private static HtmlElement BuildParagraph(string label, string value)
