@@ -32,7 +32,9 @@
 
       function showOtherEquipment() {
         vm.otherField = !vm.otherField;
-        vm.addEquipment();
+        if (vm.otherField && vm.otherEquipment.length === 0) {
+          vm.addEquipment();
+        }
       }
 
       function submit() {
