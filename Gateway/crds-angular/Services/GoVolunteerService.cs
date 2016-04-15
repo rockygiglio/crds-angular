@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Optimization;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -16,6 +17,7 @@ namespace crds_angular.Services
 
     {
         private readonly IAttributeService _attributeService;
+        private readonly MPInterfaces.ICommunicationService _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly MPInterfaces.IContactRelationshipService _contactRelationshipService;
         private readonly MPInterfaces.IContactService _contactService;
@@ -26,7 +28,6 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly IGoSkillsService _skillsService;
-        private readonly MPInterfaces.ICommunicationService _communicationService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -67,7 +68,7 @@ namespace crds_angular.Services
         }
 
         public Registration CreateRegistration(Registration registration, string token)
-        {            
+        {
             try
             {
                 var participantId = RegistrationContact(registration, token);
@@ -78,7 +79,7 @@ namespace crds_angular.Services
                     registration.Spouse.ContactId = SpouseInformation(registration);
                     registration.Spouse.EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId);
                 }
-                _skillsService.UpdateSkills(participantId, registration.Skills, token);               
+                _skillsService.UpdateSkills(participantId, registration.Skills, token);
                 Attributes(registration, registrationId);
             }
             catch (Exception ex)
@@ -107,7 +108,6 @@ namespace crds_angular.Services
                 var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
                 var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
                 var fromContact = _contactService.GetContactById(fromContactId);
-
 
 
                 var mergeData = SetupMergeData(registration);
@@ -145,7 +145,8 @@ namespace crds_angular.Services
 
         public Dictionary<string, object> SetupMergeData(Registration registration)
         {
-            var tableAttrs = TableAttributes();
+            var styles = Styles();
+            
             var listOfP = ProfileDetails(registration);
             if (registration.SpouseParticipation)
             {
@@ -177,18 +178,18 @@ namespace crds_angular.Services
                 listOfP.Add(BuildParagraph("Additional Info: ", registration.AdditionalInformation));
             }
             listOfP = listOfP.Concat(PrepWorkDetails(registration)).ToList();
-                
-            var htmlTable = new HtmlElement("table", tableAttrs)
-               .Append(new HtmlElement("tbody"))
-               .Append(new HtmlElement("tr"))
-               .Append(new HtmlElement("td"))
-               .Append(listOfP);
+
+            var htmlCell = new HtmlElement("td", styles).Append(listOfP);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
+            
 
             var dict = new Dictionary<string, object>()
             {
                 {"HTML_TABLE", htmlTable.Build()},
                 {"Nickname", registration.Self.FirstName},
-                {"Lastname", registration.Self.LastName},               
+                {"Lastname", registration.Self.LastName},
             };
 
             if (registration.SpouseParticipation)
@@ -202,17 +203,16 @@ namespace crds_angular.Services
 
         private List<HtmlElement> PrepWorkDetails(Registration registration)
         {
-
             var prepWork = new List<HtmlElement>();
             if (registration.PrepWork.Count == 0)
             {
                 prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
                 prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
-            } else if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse) 
+            }
+            else if (registration.PrepWork.Count < 2 && registration.PrepWork[0].Spouse)
             {
                 prepWork.Add(BuildParagraph("Available for Prep Work: ", "No"));
                 prepWork.Add(BuildParagraph("Spouse Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
-                
             }
             else if (registration.PrepWork.Count < 2 && !registration.PrepWork[0].Spouse)
             {
@@ -226,7 +226,7 @@ namespace crds_angular.Services
             }
 
             return prepWork;
-        } 
+        }
 
         private List<HtmlElement> ProfileDetails(Registration registration)
         {
@@ -279,7 +279,6 @@ namespace crds_angular.Services
                     return BuildParagraph("Number of Children Ages 13-18: ", c.Count.ToString());
                 }
                 return new HtmlElement("p");
-
             }).ToList();
         }
 
@@ -304,17 +303,13 @@ namespace crds_angular.Services
             }
 
             return ret;
-        } 
+        }
 
-        private Dictionary<string, string> TableAttributes()
+        private Dictionary<string, string> Styles()
         {
             return new Dictionary<string, string>()
             {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"},
-                {"style", "font-size: medium; font-weight: normal;" }
+                {"style", "border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0; border:none; border-color:#ffffff;font-size: medium; font-weight: normal;" }
             };
         } 
 
@@ -336,7 +331,7 @@ namespace crds_angular.Services
 
         private void Equipment(Registration registration, int registrationId)
         {
-            foreach (var equipment in registration.Equipment)
+            foreach (var equipment in registration.Equipment.Where(e => e != null))
             {
                 var id = equipment.Id != 0 ? equipment.Id : _otherEquipmentId;
                 _registrationService.AddEquipment(registrationId, id, equipment.Notes);
@@ -498,8 +493,8 @@ namespace crds_angular.Services
                 new HtmlElement("strong", label),
                 new HtmlElement("span", value)
             }
-           ;
-            return new HtmlElement("p", els);            
+                ;
+            return new HtmlElement("p", els);
         }
     }
 }
