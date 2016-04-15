@@ -7,5 +7,6 @@
         public bool CanImpersonate { get; set; }
         public string UserEmail { get; set; }
         public int UserRecordId { get; set; }
+        public string DisplayName { get; set; }
     }
 }
