@@ -99,6 +99,20 @@ namespace MinistryPlatform.Translation.Services
             MinistryPlatformService.UpdateRecord(Convert.ToInt32(ConfigurationManager.AppSettings["Users"]), userUpdateValues, ApiLogin());
         }
 
+        public void UpdateUser(MinistryPlatformUser user)
+        {
+            var userDict = new Dictionary<string, object>()
+            {               
+                {"User_Name", user.UserId },
+                {"Display_Name", user.DisplayName },
+                {"User_Email", user.UserEmail },
+                {"User_ID", user.UserRecordId },
+                {"Can_Impersonate", user.CanImpersonate },
+                {"User_GUID", user.Guid }
+            };
+            UpdateUser(userDict);
+        }
+
         public int GetUserIdByUsername(string email)
         {
             var records = _ministryPlatformService.GetRecordsDict(Convert.ToInt32(ConfigurationManager.AppSettings["Users"]), ApiLogin(), ("," + email));

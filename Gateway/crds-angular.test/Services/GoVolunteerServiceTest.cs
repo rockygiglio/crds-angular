@@ -31,6 +31,7 @@ namespace crds_angular.test.Services
         private readonly Mock<IRegistrationService> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationService> _commnuicationService;
+        private readonly Mock<IUserService> _userService;
 
 
         public GoVolunteerServiceTest()
@@ -45,6 +46,7 @@ namespace crds_angular.test.Services
             _projectTypeService = new Mock<IProjectTypeService>();
             _registrationService = new Mock<IRegistrationService>();
             _skillsService = new Mock<IGoSkillsService>();
+            _userService = new Mock<IUserService>();
             _fixture = new GoVolunteerService(_participantService.Object, 
                 _registrationService.Object, 
                 _contactService.Object, 
@@ -54,7 +56,8 @@ namespace crds_angular.test.Services
                 _projectTypeService.Object, 
                 _attributeService.Object, 
                 _skillsService.Object,
-                _commnuicationService.Object);
+                _commnuicationService.Object,
+                _userService.Object);
         }
 
         [Test]

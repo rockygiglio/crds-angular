@@ -7,6 +7,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
@@ -28,6 +29,7 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
         private readonly IRegistrationService _registrationService;
         private readonly IGoSkillsService _skillsService;
+        private readonly MPInterfaces.IUserService _userService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
                                   IRegistrationService registrationService,
@@ -38,7 +40,8 @@ namespace crds_angular.Services
                                   MPInterfaces.IProjectTypeService projectTypeService,
                                   IAttributeService attributeService,
                                   IGoSkillsService skillsService,
-                                  MPInterfaces.ICommunicationService comunicationService)
+                                  MPInterfaces.ICommunicationService comunicationService,
+                                  MPInterfaces.IUserService userService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -51,6 +54,7 @@ namespace crds_angular.Services
             _otherEquipmentId = _configurationWrapper.GetConfigIntValue("GoCincinnatiOtherEquipmentAttributeId");
             _skillsService = skillsService;
             _communicationService = comunicationService;
+            _userService = userService;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -480,10 +484,16 @@ namespace crds_angular.Services
             var dict = registration.Self.GetDictionary();
             _contactService.UpdateContact(registration.Self.ContactId, dict);
 
+            // update the user record?
+            MinistryPlatformUser user = _userService.GetByAuthenticationToken(token);
+            user.UserId = registration.Self.EmailAddress;
+            user.UserEmail = registration.Self.EmailAddress;
+            user.DisplayName = registration.Self.LastName + ", " + registration.Self.FirstName;
+            _userService.UpdateUser(user);
+
             //get participant
             var participant = _participantService.GetParticipantRecord(token);
-            var participantId = participant.ParticipantId;
-            return participantId;
+            return participant.ParticipantId;
         }
 
         private static HtmlElement BuildParagraph(string label, string value)
