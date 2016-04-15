@@ -503,12 +503,12 @@ namespace MinistryPlatform.Translation.Services
             {
                 //always a refund that is initated by Crossroads
                 datum.DocumentType = "RETURNS";
-                datum.DonationAmount = (datum.DonationAmount*-1);// + processorFee;
+                datum.DonationAmount = (datum.DonationAmount * -1);
                 datum.Amount = (datum.Amount  - processorFee) * -1 ;
             }
             else if (datum.Amount < 0)
             {
-                //always a refund due to processing problems: nsf, etcgit
+                //always a refund due to processing problems: nsf, etc
                 datum.DocumentType = "RETURNS";
                 datum.DonationAmount = (datum.DonationAmount * -1) + processorFee;
                 datum.Amount = (datum.Amount * -1);
@@ -524,7 +524,7 @@ namespace MinistryPlatform.Translation.Services
 
         private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
-            processorFee = processorFee < 0 ? -1*processorFee : processorFee;
+            processorFee = processorFee < 0 ? -1 * processorFee : processorFee;
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
@@ -539,7 +539,7 @@ namespace MinistryPlatform.Translation.Services
                 DepositAmount = datum.DepositAmount,
                 DonationAmount = datum.DonationAmount,
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
-                CashAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount< 0) ? processingFeeGLMapping.ToString("Distribution_Account") : processingFeeGLMapping.ToString("Cash_Account"),
+                CashAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount < 0) ? processingFeeGLMapping.ToString("Distribution_Account") : processingFeeGLMapping.ToString("Cash_Account"),
                 ReceivableAccount = datum.ReceivableAccount,
                 DistributionAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount < 0) ? datum.DistributionAccount : processingFeeGLMapping.ToString("Distribution_Account"),
                 ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
