@@ -564,6 +564,8 @@ namespace crds_angular.Services
 
             donationSource.PostalCode = source.address_zip;
             donationSource.RoutingNumber = source.routing_number;
+            donationSource.AccountHolderName = source.account_holder_name;
+            donationSource.AccountHolderType = source.account_holder_type;
             if (!string.IsNullOrWhiteSpace(source.exp_month) && !string.IsNullOrWhiteSpace(source.exp_year))
             {
                 donationSource.ExpirationDate = DateTime.ParseExact(string.Format("{0}/01/{1}", source.exp_month, source.exp_year), "M/dd/yyyy", DateTimeFormatInfo.CurrentInfo);

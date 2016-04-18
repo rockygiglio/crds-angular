@@ -12,7 +12,7 @@
       <input type="text" class="form-control" placeholder="Search" ng-model="goGroupFindConnector.query">
     </div>
 
-    
+
     <div ng-if="!goGroupFindConnector.displayResults()" dynamic-content="$root.MESSAGES.goVolunteerGroupConnectorSearchInstructions.content | html"> </div>
 
     <div class="col-sm-12" ng-if="goGroupFindConnector.displayResults()">
@@ -21,10 +21,9 @@
         <div class="media card-item media-card-link" ng-class="{'disabled': goGroupFindConnector.disableCard(g)}" >
           <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
             <profile-picture contact-id="g.primaryContactRegistrationId"
-                             wrapper-class="embed-responsive embed-responsive-1by1"
-                             image-class="media-object img-responsive imgix-fluid embed-responsive-item"
-                             disallow-change="false"
-                             use-default="false">
+                             wrapper-class="media-card-profile"
+                             image-class=""
+                             disallow-change="false">
             </profile-picture>
           </div>
           <div class="media-body soft-half-ends soft-half-right">

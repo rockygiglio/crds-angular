@@ -108,7 +108,7 @@ namespace Crossroads.AsyncJobs
                     {
                         SourceType = ((src.softCreditDonorId != 0) ? PaymentType.SoftCredit : (System.Enum.IsDefined(typeof(PaymentType), src.paymentTypeId) ? (PaymentType)src.paymentTypeId : PaymentType.Other)),
                         PaymentProcessorId = src.transactionCode,
-                        Name = ((src.softCreditDonorId != 0) ? src.donorDisplayName : null),
+                        AccountHolderName = ((src.softCreditDonorId != 0) ? src.donorDisplayName : null),
                     };
                     if (src.donationAmt < 0)
                     {

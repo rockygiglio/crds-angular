@@ -115,15 +115,15 @@
          */
 
         var youngest = _.reduce(GoVolunteerService.childrenOptions, function(curr, next) {
-          if (next.attributeId === 7040) {
+          if (next.attributeId === 7040 && next.value > 0) {
             return 2;
           }
 
-          if (next.attributeId === 7041 && curr > 8) {
+          if (next.attributeId === 7041 && curr > 8 && next.value > 0) {
             return 8;
           }
 
-          if (next.attributeId === 7042 && curr > 13) {
+          if (next.attributeId === 7042 && curr > 13 && next.value > 0) {
             return 13;
           }
 

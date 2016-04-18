@@ -9,6 +9,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         MinistryPlatformUser GetByUserId(string userId);
         MinistryPlatformUser GetByAuthenticationToken(string authToken);
         void UpdateUser(Dictionary<string, object> userUpdateValues);
+        void UpdateUser(MinistryPlatformUser user);
         int GetUserIdByUsername(string username);
         int GetContactIdByUserId(int userId);
         MinistryPlatformUser GetUserByResetToken(string resetToken);
