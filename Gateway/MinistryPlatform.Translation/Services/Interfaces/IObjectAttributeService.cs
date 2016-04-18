@@ -7,6 +7,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         List<ObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null);
         int CreateAttribute(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
+        void CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
         void UpdateAttribute(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
+        void UpdateAttributeAsync(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
     }
 }

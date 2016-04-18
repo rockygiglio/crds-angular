@@ -66,6 +66,23 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
+        public void CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        {
+            var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
+            var subPageId = configuration.SubPage;
+            try {            
+                _ministryPlatformService.CreateSubRecordAsync(subPageId, objectId, attributeDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error creating object attribute, objectId: {0} attributeId: {1}",
+                                        objectId,
+                                        attribute.AttributeId);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+        }
+
         public void UpdateAttribute(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
         {
             var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
@@ -82,6 +99,25 @@ namespace MinistryPlatform.Translation.Services
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }
+        }
+
+        public void UpdateAttributeAsync(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        {
+            var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
+            var subPageId = configuration.SubPage;
+
+            try
+            {
+                _ministryPlatformService.UpdateSubRecordAsync(subPageId, attributeDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error updating object attribute, objectAttributeId: {0} attributeId: {1}",
+                                        attribute.ObjectAttributeId, attribute.AttributeId);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+
         }
 
         private Dictionary<string, object> TranslateAttributeToDictionary(ObjectAttribute attribute, ObjectAttributeConfiguration configuration)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Web.Optimization;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
@@ -77,14 +78,36 @@ namespace crds_angular.Services
             {
                 var participantId = RegistrationContact(registration, token);
                 var registrationId = CreateRegistration(registration, participantId);
-                GroupConnector(registration, registrationId);
+
+               
+
+                var asyncTasks = Observable.CombineLatest(
+                    Observable.Start(() => GroupConnector(registration, registrationId)),
+                    Observable.Start(() => _skillsService.UpdateSkills(participantId, registration.Skills, token)),
+                    Observable.Start(() => Attributes(registration, registrationId))
+                    );
+
+
                 if (registration.SpouseParticipation)
                 {
-                    registration.Spouse.ContactId = SpouseInformation(registration);
-                    registration.Spouse.EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId);
+                    var spouse = Observable.Start<Contact>(() => SpouseInformation(registration));
+                    spouse.Subscribe(contact =>
+                    {
+                        if (contact != null)
+                        {
+                            registration.Spouse.ContactId = contact.ContactId;
+                            registration.Spouse.EmailAddress = contact.EmailAddress;
+                        }
+                        Observable.Start(() => SendMail(registration));
+                    });
                 }
-                _skillsService.UpdateSkills(participantId, registration.Skills, token);
-                Attributes(registration, registrationId);
+                else
+                {
+                    Observable.Start(() => SendMail(registration));
+                }
+                               
+                return registration;
+
             }
             catch (Exception ex)
             {
@@ -92,7 +115,6 @@ namespace crds_angular.Services
                 _logger.Error(msg, ex);
                 throw new Exception(msg, ex);
             }
-            return registration;
         }
 
         public List<ProjectType> GetProjectTypes()
@@ -358,20 +380,36 @@ namespace crds_angular.Services
             }
         }
 
-        private int SpouseInformation(Registration registration)
+        private Contact SpouseInformation(Registration registration)
         {
+            
+
             if (!AddSpouse(registration))
             {
-                return registration.Spouse.ContactId;
+                return new Contact()
+                {
+                    ContactId = registration.Spouse.ContactId,
+                    EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId)
+                };
             }
-            var contactId = _contactService.CreateSimpleContact(registration.Spouse.FirstName,
-                                                                registration.Spouse.LastName,
-                                                                registration.Spouse.EmailAddress,
-                                                                registration.Spouse.DateOfBirth,
-                                                                registration.Spouse.MobilePhone);
-            _participantService.CreateParticipantRecord(contactId);
-            CreateRelationship(registration, contactId);
-            return contactId;
+            else
+            {
+                var contact = Observable.Start(() => _contactService.CreateSimpleContact(registration.Spouse.FirstName,
+                                                                                         registration.Spouse.LastName,
+                                                                                         registration.Spouse.EmailAddress,
+                                                                                         registration.Spouse.DateOfBirth,
+                                                                                         registration.Spouse.MobilePhone));
+                contact.Subscribe<Contact>(c =>
+                {
+                    Observable.CombineLatest(
+                        Observable.Start(() => { _participantService.CreateParticipantRecord(c.ContactId); }),
+                        Observable.Start(() => CreateRelationship(registration, c.ContactId))
+                        );
+                });
+
+                return contact.Wait();
+            }
+            
         }
 
         private void CreateRelationship(Registration registration, int contactId)
@@ -468,13 +506,13 @@ namespace crds_angular.Services
         private int CreateParticipant(Registration registration)
         {
             //create contact & participant
-            var contactId = _contactService.CreateSimpleContact(registration.Self.FirstName,
+            var contact = _contactService.CreateSimpleContact(registration.Self.FirstName,
                                                                 registration.Self.LastName,
                                                                 registration.Self.EmailAddress,
                                                                 registration.Self.DateOfBirth,
                                                                 registration.Self.MobilePhone);
-            registration.Self.ContactId = contactId;
-            var participantId = _participantService.CreateParticipantRecord(contactId);
+            registration.Self.ContactId = contact.ContactId;
+            var participantId = _participantService.CreateParticipantRecord(contact.ContactId);
             return participantId;
         }
 
