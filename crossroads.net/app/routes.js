@@ -27,11 +27,11 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: function (SystemPage, $state) {
+            Meta: function(SystemPage, $state) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
-                  function (systemPage) {
+                  function(systemPage) {
                     if (systemPage.systemPages[0]) {
                       if (!$state.next.data) {
                         $state.next.data = {};
@@ -42,8 +42,8 @@
                   });
             },
 
-            SiteConfig: function (SiteConfig, ContentSiteConfigService) {
-              return SiteConfig.get({id: 1}).$promise.then(function (result) {
+            SiteConfig: function(SiteConfig, ContentSiteConfigService) {
+              return SiteConfig.get({id: 1}).$promise.then(function(result) {
                     ContentSiteConfigService.siteconfig = result.siteConfig;
                   }
               );
@@ -154,7 +154,7 @@
           templateUrl: 'brave_at_home/braveRoom1.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "1/5",
+            bravePage: '1/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -168,7 +168,7 @@
           templateUrl: 'brave_at_home/braveRoom2.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "2/5",
+            bravePage: '2/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -182,7 +182,7 @@
           templateUrl: 'brave_at_home/braveRoom3.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "3/5",
+            bravePage: '3/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -196,7 +196,7 @@
           templateUrl: 'brave_at_home/braveRoom4.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "4/5",
+            bravePage: '4/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -210,7 +210,7 @@
           templateUrl: 'brave_at_home/braveRoom5.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "5/5",
+            bravePage: '5/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -224,7 +224,7 @@
           templateUrl: 'brave_at_home/braveRoom6.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "6/6",
+            bravePage: '6/6',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -347,7 +347,7 @@
           resolve: {
             PasswordService: 'PasswordService',
             $stateParams: '$stateParams',
-            TokenStatus: function (PasswordService, $stateParams) {
+            TokenStatus: function(PasswordService, $stateParams) {
               var token = {token: $stateParams.token};
               return PasswordService.VerifyResetToken.get(token).$promise;
             }
@@ -413,7 +413,7 @@
             loggedin: crds_utilities.checkLoggedin,
             ServeOpportunities: 'ServeOpportunities',
             $cookies: '$cookies',
-            Groups: function (ServeOpportunities, $cookies) {
+            Groups: function(ServeOpportunities, $cookies) {
               return ServeOpportunities.ServeDays.query({
                 id: $cookies.get('userId')
               }).$promise;
@@ -452,10 +452,10 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            CmsInfo: function (Page, $stateParams) {
-            var link = addTrailingSlashIfNecessary($stateParams.link);
+            CmsInfo: function(Page, $stateParams) {
+              var link = addTrailingSlashIfNecessary($stateParams.link);
               return Page.get({
-              url: link
+                url: link
               }).$promise;
             }
           }
@@ -475,14 +475,14 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            PageInfo: function ($q, Profile, Page, $stateParams) {
+            PageInfo: function($q, Profile, Page, $stateParams) {
               var deferred = $q.defer();
               var contactId = $stateParams.id;
 
               Profile.Person.get({
                 contactId: contactId
               }).$promise.then(
-                  function (contact) {
+                  function(contact) {
                     var age = contact.age;
                     var cmsPath = '/volunteer-application/adult-applicant-form/';
                     if ((age >= 10) && (age <= 15)) {
@@ -491,7 +491,7 @@
 
                     Page.get({
                       url: cmsPath
-                    }).$promise.then(function (cmsInfo) {
+                    }).$promise.then(function(cmsInfo) {
                           deferred.resolve({
                             contact, cmsInfo
                           });
@@ -503,7 +503,7 @@
             },
 
             Volunteer: 'VolunteerService',
-            Family: function (Volunteer) {
+            Family: function(Volunteer) {
               return Volunteer.Family.query({
                 contactId: crds_utilities.getCookie('userId')
               }).$promise;
@@ -566,7 +566,7 @@
             loggedin: crds_utilities.checkLoggedin,
             MPTools: 'MPTools',
             Page: 'Page',
-            CmsInfo: function (Page, $stateParams) {
+            CmsInfo: function(Page, $stateParams) {
               return Page.get({
                 url: '/volunteer-application/kids-club/'
               }).$promise;
@@ -580,16 +580,16 @@
           resolve: {
             MPTools: 'MPTools',
             Trip: 'Trip',
-            PageInfo: function (MPTools, Trip) {
+            PageInfo: function(MPTools, Trip) {
               var params = MPTools.getParams();
               return Trip.TripFormResponses.get({
                 selectionId: params.selectedRecord,
                 selectionCount: params.selectedCount,
                 recordId: params.recordId
-              }).$promise.then(function (data) {
+              }).$promise.then(function(data) {
                     // promise fulfilled
                     return data;
-                  }, function (error) {
+                  }, function(error) {
                     // promise rejected, could log the error with: console.log('error', error);
                     var data = {};
                     data.errors = error;
@@ -650,17 +650,17 @@
           views: {
             '': {
               controller: 'ContentCtrl',
-              templateProvider: function ($rootScope,
-                                          $templateFactory,
-                                          $stateParams,
-                                          Page,
-                                          ContentPageService) {
+              templateProvider: function($rootScope,
+                                         $templateFactory,
+                                         $stateParams,
+                                         Page,
+                                         ContentPageService) {
                 var promise;
 
                 var link = addTrailingSlashIfNecessary($stateParams.link);
                 promise = Page.get({url: link}).$promise;
 
-                var childPromise = promise.then(function (originalPromise) {
+                var childPromise = promise.then(function(originalPromise) {
                   if (originalPromise.pages.length > 0) {
                     ContentPageService.page = originalPromise.pages[0];
                     return originalPromise;
@@ -668,7 +668,7 @@
 
                   var notFoundPromise = Page.get({url: '/page-not-found/'}).$promise;
 
-                  notFoundPromise.then(function (promise) {
+                  notFoundPromise.then(function(promise) {
                     if (promise.pages.length > 0) {
                       ContentPageService.page = promise.pages[0];
                     } else {
@@ -683,7 +683,8 @@
                   return notFoundPromise;
                 });
 
-                return childPromise.then(function () {
+                return childPromise.then(function() {
+                  //compilePage(ContentPageService, $rootScope, $templateFactory)
                   var metaDescription = ContentPageService.page.metaDescription;
                   if (!metaDescription) {
                     //If a meta description is not provided we'll use the Content
@@ -699,7 +700,6 @@
                     image: ContentPageService.page.image,
                     statusCode: ContentPageService.page.errorCode
                   };
-
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
                       return $templateFactory.fromUrl('templates/noHeaderOrFooter.html');
@@ -750,6 +750,33 @@
     }
 
     return link;
+  }
+
+  function compilePage(ContentPageService, $rootScope, $templateFactory) {
+    setupMetaData(ContentPageService, $rootScope);
+    return chooseTempalte(ContentPageService, $templateFactory);
+  }
+
+  function setupMetaData(ContentPageService, $rootScope) {
+    var metaDescription = ContentPageService.page.metaDescription;
+    if (!metaDescription) {
+      //If a meta description is not provided we'll use the Content
+      //The description gets html stripped and shortened to 155 characters
+      metaDescription = ContentPageService.page.content;
+    }
+
+    $rootScope.meta = {
+      title: ContentPageService.page.title,
+      description: metaDescription,
+      card: ContentPageService.page.card,
+      type: ContentPageService.page.type,
+      image: ContentPageService.page.image,
+      statusCode: ContentPageService.page.errorCode
+    };
+  }
+
+  function chooseTempalte(ContentPageService, $templateFactory) {
+
   }
 
 })();

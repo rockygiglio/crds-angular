@@ -5,7 +5,6 @@
   FormBuilderRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider', '$locationProvider'];
 
   function FormBuilderRoutes($stateProvider, $urlMatcherFactory, $locationProvider) {
-    crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'goVolunteerRouteType', /\/go-volunteer\/.*$/);
     $urlMatcherFactory.caseInsensitive(true);
 
     $stateProvider
