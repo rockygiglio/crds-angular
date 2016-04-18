@@ -1620,7 +1620,6 @@ namespace crds_angular.test.Services
             const string processorId = "cus_123";
             const string subscriptionId = "sub_123";
             const string chargeId = "ch_123";
-
             DateTime invoiceDate = new DateTime(2016, 3, 16);
 
             var invoice = new StripeInvoice
@@ -1643,8 +1642,7 @@ namespace crds_angular.test.Services
                     Amount = 78900,
                     Fee = feeAmount
                 },
-                Status = "succeeded",
-                ProcessorId = processorId
+                Status = "succeeded"
             };
 
             _paymentService.Setup(mocked => mocked.GetCharge(chargeId)).Returns(charge);
@@ -1664,12 +1662,10 @@ namespace crds_angular.test.Services
                 DonorId = donorId,
                 PaymentType = paymentType,
                 ProgramId = programId,
-                RecurringGiftId = recurringGiftId,
-                SubscriptionId = subscriptionId, 
-                StripeCustomerId = processorId 
+                RecurringGiftId = recurringGiftId
             };
             _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId(chargeId, false)).Throws(new DonationNotFoundException(chargeId));
-            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, processorId)).Returns(recurringGift);
+            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(recurringGift);
             _mpDonorService.Setup(mocked => mocked.UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, Constants.ResetFailCount));
 
             _mpDonorService.Setup(
