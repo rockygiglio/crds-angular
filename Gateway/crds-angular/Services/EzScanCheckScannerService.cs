@@ -188,7 +188,7 @@ namespace crds_angular.Services
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
 
-            var token = _paymentService.CreateToken(account, routing);
+            var token = _paymentService.CreateToken(account, routing, checkDetails.Name1);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
 
             contactDonor.Details = new ContactDetails

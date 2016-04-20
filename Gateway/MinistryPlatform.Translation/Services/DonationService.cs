@@ -499,8 +499,23 @@ namespace MinistryPlatform.Translation.Services
 
         private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, decimal processorFee)
         {
-            if (!datum.DocumentType.Equals("RETURNS"))
+            if (datum.ProcessorFeeAmount < 0)
             {
+                //always a refund that is initated by Crossroads
+                datum.DocumentType = "RETURNS";
+                datum.DonationAmount = (datum.DonationAmount * -1);
+                datum.Amount = (datum.Amount  - processorFee) * -1 ;
+            }
+            else if (datum.Amount < 0)
+            {
+                //always a refund due to processing problems: nsf, etc
+                datum.DocumentType = "RETURNS";
+                datum.DonationAmount = (datum.DonationAmount * -1) + processorFee;
+                datum.Amount = (datum.Amount * -1);
+            }
+            else
+            {
+                //not a refund
                 datum.Amount = datum.Amount - processorFee;
             }
 
@@ -509,7 +524,7 @@ namespace MinistryPlatform.Translation.Services
 
         private GPExportDatum CreateProcessorFee(GPExportDatum datum, decimal processorFee, Dictionary<string, object> processingFeeGLMapping)
         {
-            processorFee = processorFee<0 ? -1*processorFee : processorFee;
+            processorFee = processorFee < 0 ? -1 * processorFee : processorFee;
             return new GPExportDatum
             {
                 ProccessFeeProgramId = _processingProgramId,
@@ -524,9 +539,9 @@ namespace MinistryPlatform.Translation.Services
                 DepositAmount = datum.DepositAmount,
                 DonationAmount = datum.DonationAmount,
                 CheckbookId = processingFeeGLMapping.ToString("Checkbook_ID"),
-                CashAccount = processingFeeGLMapping.ToString("Cash_Account"),
+                CashAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount < 0) ? processingFeeGLMapping.ToString("Distribution_Account") : processingFeeGLMapping.ToString("Cash_Account"),
                 ReceivableAccount = datum.ReceivableAccount,
-                DistributionAccount = datum.DistributionAccount,
+                DistributionAccount = (datum.DocumentType == "SALES" || datum.ProcessorFeeAmount < 0) ? datum.DistributionAccount : processingFeeGLMapping.ToString("Distribution_Account"),
                 ScholarshipExpenseAccount = datum.ScholarshipExpenseAccount,
                 Amount = processorFee,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
@@ -564,20 +579,20 @@ namespace MinistryPlatform.Translation.Services
                         ProccessFeeProgramId = _processingProgramId,
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
-                        DocumentType = (amount < 0) ? "RETURNS" : result.ToString("Document_Type"),
+                        DocumentType = result.ToString("Document_Type"),
                         DonationId = result.ToInt("Donation_ID"),
                         BatchName = result.ToString("Batch_Name"),
                         DonationDate = result.ToDate("Donation_Date"),
                         DepositDate = result.ToDate("Deposit_Date"),
                         CustomerId = result.ToString("Customer_ID"),
-                        DonationAmount = (amount < 0) ? -1 * amount : amount,
+                        DonationAmount =  amount,
                         DepositAmount = result.ToString("Deposit_Amount"),
                         CheckbookId = result.ToString("Checkbook_ID"),
                         CashAccount = result.ToString("Cash_Account"),
                         ReceivableAccount = result.ToString("Receivable_Account"),
                         DistributionAccount = result.ToString("Distribution_Account"),
                         ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
-                        Amount = (amount < 0) ? -1*amount : amount,
+                        Amount = amount,
                         ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
                         PaymentTypeId = result.ToInt("Payment_Type_ID"),
                         ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
