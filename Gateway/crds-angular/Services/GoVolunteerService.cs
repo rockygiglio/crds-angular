@@ -79,14 +79,11 @@ namespace crds_angular.Services
                 var participantId = RegistrationContact(registration, token);
                 var registrationId = CreateRegistration(registration, participantId);
 
-               
-
                 var asyncTasks = Observable.CombineLatest(
                     Observable.Start(() => GroupConnector(registration, registrationId)),
                     Observable.Start(() => _skillsService.UpdateSkills(participantId, registration.Skills, token)),
                     Observable.Start(() => Attributes(registration, registrationId))
                     );
-
 
                 if (registration.SpouseParticipation)
                 {
