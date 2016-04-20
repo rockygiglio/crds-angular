@@ -152,7 +152,7 @@ namespace crds_angular.Services
             }
         }
 
-        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration)
+        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration, bool parallel)
         {
             objectAttribute.StartDate = ConvertToServerDate(objectAttribute.StartDate);
             if (objectAttribute.EndDate != null)
@@ -167,8 +167,8 @@ namespace crds_angular.Services
             {
                 mpObjectAttribute.ObjectAttributeId = persistedAttributes[0].ObjectAttributeId;
             }
-
-            SaveAttribute(objectId, mpObjectAttribute, token, configuration);
+             
+            SaveAttribute(objectId, mpObjectAttribute, token, configuration, parallel);
         }
 
         private DateTime ConvertToServerDate(DateTime source)
@@ -186,7 +186,37 @@ namespace crds_angular.Services
             return result;
         }
 
-        private void SaveAttribute(int objectId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration)
+        private void SaveAttribute(int objectId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration, bool parallel = false)
+        {
+            if (attribute.ObjectAttributeId == 0)
+            {
+                // These are new so add them
+                if (parallel)
+                {
+                    var obs = _mpObjectAttributeService.CreateAttributeAsync(token, objectId, attribute, configuration);
+                    obs.Subscribe();
+                }
+                else
+                {
+                    _mpObjectAttributeService.CreateAttribute(token, objectId, attribute, configuration);
+                }
+            }
+            else
+            {
+                // These are existing so update them
+                if (parallel)
+                {
+                    _mpObjectAttributeService.UpdateAttributeAsync(token, attribute, configuration);
+                }
+                else
+                {
+                    _mpObjectAttributeService.UpdateAttribute(token, attribute, configuration);
+                }
+                
+            }
+        }
+
+        private void SaveAttributeAsync(int objectId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration)
         {
             if (attribute.ObjectAttributeId == 0)
             {

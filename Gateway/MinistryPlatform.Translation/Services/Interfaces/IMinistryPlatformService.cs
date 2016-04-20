@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using MinistryPlatform.Translation.PlatformService;
 using Newtonsoft.Json.Linq;
 
@@ -43,6 +44,12 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int CreateSubRecord(string subPageKey, int parentRecordId, Dictionary<string, object> dictionary,
             String token, bool quickadd = false);
 
+        Task<int> CreateSubRecordAsync(int subPageId,
+                                       int parentRecordId,
+                                       Dictionary<string, object> dictionary,
+                                       String token,
+                                       bool quickadd = false);
+
         void RemoveSelection(int selectionId, int[] records, String token);
 
         int DeleteRecord(int pageId, int recordId, DeleteOption[] deleteOptions, String token);
@@ -51,6 +58,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void UpdateSubRecord(int subPageId, Dictionary<string, object> dictionary, String token);
 
         void UpdateSubRecord(string subPageKey, Dictionary<string, object> subscription, string token);
+
+        
 
         void UpdateFile(Int32 fileId, String fileName, String description, Boolean isDefaultImage, Int32 longestDimension, Byte[] file, String token);
         
@@ -80,5 +89,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         SelectQueryResult GetSelectionRecords(int selectionId, String token, String search = "", String sort = "");
         UserInfo GetContactInfo(string token);
         void CompleteTask(string token, int taskId, bool rejected, string comments);
+        void UpdateSubRecordAsync(int subPageId, Dictionary<string, object> attributeDictionary, string token);
     }
 }
