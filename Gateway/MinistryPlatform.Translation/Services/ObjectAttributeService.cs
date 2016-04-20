@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Reflection;
+using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Models;
@@ -66,21 +71,27 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        public IObservable<int> CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
         {
-            var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
-            var subPageId = configuration.SubPage;
-            try {            
-                _ministryPlatformService.CreateSubRecordAsync(subPageId, objectId, attributeDictionary, token);
-            }
-            catch (Exception e)
+
+            return Observable.Create<int>(o =>
             {
-                var msg = string.Format("Error creating object attribute, objectId: {0} attributeId: {1}",
+                var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
+                var subPageId = configuration.SubPage;
+                var task = _ministryPlatformService.CreateSubRecordAsync(subPageId, objectId, attributeDictionary, token).ToObservable<int>();
+                task.Subscribe();
+                task.Catch<int, Exception>(tx =>
+                {
+                    var msg = string.Format("Error creating object attribute, objectId: {0} attributeId: {1}",
                                         objectId,
                                         attribute.AttributeId);
-                _logger.Error(msg, e);
-                throw (new ApplicationException(msg, e));
-            }
+                    _logger.Error(msg, tx);
+                    o.OnError(new ApplicationException());
+                    return Observable.Return(-1);
+                });
+                o.OnNext(task.Wait());
+                return Disposable.Empty;
+            });
         }
 
         public void UpdateAttribute(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)

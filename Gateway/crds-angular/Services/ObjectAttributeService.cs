@@ -193,7 +193,8 @@ namespace crds_angular.Services
                 // These are new so add them
                 if (parallel)
                 {
-                    _mpObjectAttributeService.CreateAttributeAsync(token, objectId, attribute, configuration);
+                    var obs = _mpObjectAttributeService.CreateAttributeAsync(token, objectId, attribute, configuration);
+                    obs.Subscribe();
                 }
                 else
                 {
