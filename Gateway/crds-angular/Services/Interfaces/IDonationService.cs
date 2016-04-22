@@ -26,7 +26,7 @@ namespace crds_angular.Services.Interfaces
         int? CreateDonationForBankAccountErrorRefund(StripeRefund refund);
         
             // ReSharper disable once InconsistentNaming
-        List<GPExportDatumDTO> GetGPExport(int depositId, string token);
+        List<GPExportDatumDTO> GetGpExport(int depositId, string token);
         // ReSharper disable once InconsistentNaming
         MemoryStream CreateGPExport(int selectionId, int depositId, string token);
         // ReSharper disable once InconsistentNaming
