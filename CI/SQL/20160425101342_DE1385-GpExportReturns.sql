@@ -1,3 +1,6 @@
+USE MinistryPlatform
+GO
+
 UPDATE dp_Page_Views
 SET Field_List = 'Donation_ID_Table_Batch_ID_Table_Deposit_ID_Table.[Deposit_ID] AS [Deposit_ID]
 , Donation_ID_Table_Batch_ID_Table.[Batch_ID] AS [Batch_ID]
