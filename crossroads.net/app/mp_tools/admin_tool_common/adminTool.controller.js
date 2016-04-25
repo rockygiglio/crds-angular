@@ -20,7 +20,7 @@
         return;
       }
 
-      vm.service.getSelectedId(goToFunction);
+      MPTools.getSelectedId(goToFunction);
     }
   }
 })();

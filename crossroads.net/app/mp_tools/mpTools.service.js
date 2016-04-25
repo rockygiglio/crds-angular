@@ -57,6 +57,10 @@
     function getSelectedId(goToFunction) {
       reset();
 
+      if (goToFunction.length == 0) {
+        goToFunction();
+      }
+
       var params = service.getParams();
       var selectedId = getInt(params.recordId);
       if (selectedId > 0) {
