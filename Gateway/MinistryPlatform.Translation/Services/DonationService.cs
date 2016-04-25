@@ -510,7 +510,7 @@ namespace MinistryPlatform.Translation.Services
             
             return new GPExportDatum 
             {
-                DocumentNumber = datum.DocumentNumber,// string.Format("{0}000{1}", datum.DepositId, index),
+                DocumentNumber = datum.DocumentNumber,
                 ProccessFeeProgramId = _processingProgramId,
                 ProgramId = _processingProgramId,
                 DocumentType = datum.DocumentType,
