@@ -587,5 +587,33 @@ namespace crds_angular.Services
             }
             return childcareEvents.First();
         }
+
+        public bool CopyEventGroups(int eventTemplateId, int eventId)
+        {
+            // step one - get event groups for the event and delete them all
+            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId);
+
+            foreach (var eventGroup in discardedEventGroups)
+            {
+                _eventService.DeleteEventGroup(eventGroup);
+            }
+
+            // step two - get event groups for the template and copy them all onto the new event
+            var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
+
+            foreach (var eventGroup in eventGroups)
+            {
+                _eventService.CopyEventGroup(eventGroup);
+            }
+
+            return true;
+        }
+
+        public List<Event> GetEventsBySite(string site, bool template)
+        {
+            var eventTemplates = _eventService.GetEventsBySite(site, template);
+
+            return eventTemplates;
+        }
     }
 }

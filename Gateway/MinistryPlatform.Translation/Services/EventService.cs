@@ -17,6 +17,7 @@ namespace MinistryPlatform.Translation.Services
 
         private readonly int _eventParticipantSubPageId = Convert.ToInt32(AppSettings("EventsParticipants"));
         private readonly int _eventParticipantPageId = Convert.ToInt32(AppSettings("EventParticipant"));
+        private readonly int _eventGroupsPageViewId = Convert.ToInt32(AppSettings("GroupsByEventId"));
 
         private readonly int _eventParticipantStatusDefaultId =
             Convert.ToInt32(AppSettings("Event_Participant_Status_Default_ID"));
@@ -333,6 +334,68 @@ namespace MinistryPlatform.Translation.Services
         public List<Group> GetGroupsForEvent(int eventId)
         {
             return _groupService.GetGroupsForEvent(eventId);
+        }
+
+        public List<EventGroup> GetEventGroupsForEvent(int eventId)
+        {
+            var searchString = eventId + ",";
+            var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
+            var token = ApiLogin();
+            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+
+            if (records == null)
+            {
+                return null;
+            }
+
+            return records.Select(record => new EventGroup
+            {
+                Event_Group_ID = record.ToInt("Event_Group_ID"),
+                Event_ID = record.ToInt("Event_ID"),
+                Group_ID = record.ToInt("Group_ID"),
+                Room_ID = record.ToInt("Room_ID"),
+                Domain_ID = record.ToInt("Domain_ID"),
+                Closed = record.ToBool("Closed")
+            }).ToList();
+        }
+
+        public void CopyEventGroup(EventGroup eventGroup)
+        {
+            _ministryPlatformService.CopyPageRecord(_eventGroupsPageViewId, eventGroup.Event_Group_ID, null, null, false, ApiLogin());
+        }
+
+        public void DeleteEventGroup(EventGroup eventGroup)
+        {
+            _ministryPlatformService.DeleteRecord(_eventGroupsPageViewId, eventGroup.Event_Group_ID, null, ApiLogin());
+        }
+
+        // this is coded for site right now, using location - is this right?
+        public List<Event> GetEventsBySite(string site, bool template)
+        {
+            var searchString = ",,," + site + "," + template;
+            //var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
+            var pageViewId = 92715; // TODO: Change to a correct id value!!!
+            var token = ApiLogin();
+            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+
+            if (records == null)
+            {
+                return null;
+            }
+
+            return records.Select(record => new Event
+            {
+                // this isn't a complete list of all event fields - we may need more
+                EventId = record.ToInt("Event_ID"),
+                Congregation = record.ToString("Congregation"),
+                Site = record.ToString("Location"),
+                EventTitle = record.ToString("Event_Title"),
+                EventType = record.ToString("Event_Type"),
+                EventStartDate = record.ToDate("Event_Start_Date"),
+                EventEndDate = record.ToDate("Event_End_Date"),
+                ParentEventId = record.ToInt("Parent_Event_ID"),
+                Template = record.ToBool("Template")
+            }).ToList();
         }
     }
 }

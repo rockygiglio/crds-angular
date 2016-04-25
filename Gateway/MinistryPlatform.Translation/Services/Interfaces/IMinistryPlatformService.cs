@@ -78,6 +78,11 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<Dictionary<string, object>> GetSelectionsForPageDict(int pageId, int selectionId, String token);
         List<Dictionary<string, object>> GetSelectionsDict(int selectionId, String token, String search = "", String sort = "");
         SelectQueryResult GetSelectionRecords(int selectionId, String token, String search = "", String sort = "");
+
+        void CopyPageRecord(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token);
+
+        void CopyPageRecordAsync(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token);
+
         UserInfo GetContactInfo(string token);
         void CompleteTask(string token, int taskId, bool rejected, string comments);
     }

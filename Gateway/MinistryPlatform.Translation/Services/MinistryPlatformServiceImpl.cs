@@ -267,6 +267,21 @@ namespace MinistryPlatform.Translation.Services
             UpdateSubRecord(subPageId, subscription, token);
         }
 
+        //public void CopyPageRecord(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord)
+        //{
+        //    base.Channel.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord);
+        //}
+
+        public void CopyPageRecord(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token)
+        {
+            VoidCall(token, platformClient => platformClient.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord));
+        }
+
+        public void CopyPageRecordAsync(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token)
+        {
+            VoidCall(token, platformClient => platformClient.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord));
+        }
+
         public UserInfo GetContactInfo(string token)
         {
             return Call<UserInfo>(token, platformClient => platformClient .GetCurrentUserInfo());

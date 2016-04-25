@@ -1,0 +1,74 @@
+<!--<div ng-if="!admin_giving_history_controller.allowAdminAccess()" class="alert alert-danger" role="alert">
+    <div dynamic-content="$root.MESSAGES.mptool_invalid_access.content | html"></div>
+</div>-->
+
+<html>
+<head>
+    <title>Learning Code</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!--<div ng-if="!admin_giving_history_controller.impersonation_error && admin_giving_history_controller.allowAdminAccess()" class="row giving-history">-->
+    <div>
+        <!--<div class="row">
+            <div class="col-sm-6">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Action <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                world
+            </div>
+        </div>-->
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label> Site </label>
+                <select class="form-control col-sm-12"
+                        ng-model="profile.profileData.person.maritalStatusId"
+                        ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                    <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-6">
+                <label> Event Template </label>
+                <select class="form-control col-sm-12"
+                        ng-model="profile.profileData.person.maritalStatusId"
+                        ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                    <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label> Event </label>
+                <select class="form-control col-sm-12"
+                        ng-model="profile.profileData.person.maritalStatusId"
+                        ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                    <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <button class="btn btn-primary btn-sm" ng-click="trip.cancel()">Cancel</button>
+                <button class="btn btn-primary btn-sm"
+                        ng-class="{disabled: trip.processing}"
+                        ng-disabled="!tripForm.$valid"
+                        ng-click="trip.save()">
+                    <span ng-if="trip.processing">Saving...</span>
+                    <span ng-if="!trip.processing">Save</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+

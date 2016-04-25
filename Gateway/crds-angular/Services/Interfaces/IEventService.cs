@@ -20,5 +20,8 @@ namespace crds_angular.Services.Interfaces
         Event GetMyChildcareEvent(int parentEventId, string token);
         Event GetChildcareEvent(int parentEventId);
         bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token);
+
+        bool CopyEventGroups(int eventTemplateId, int eventId);
+        List<Event> GetEventsBySite(string site, bool template);
     }
 }
