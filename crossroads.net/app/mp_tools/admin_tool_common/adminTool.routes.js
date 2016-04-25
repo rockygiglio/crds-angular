@@ -84,6 +84,40 @@
             description: ''
           }
         }
+      })
+      .state('tools.adminCheckinDashboard', {
+        // This is a "launch" page for the tool, it will check access, etc, then forward
+        // on to the actual page with the history.
+        url: '/adminCheckinDashboard',
+        controller: 'AdminToolController as AdminToolController',
+        templateUrl: 'admin_tool_common/adminTool.html',
+        resolve: {
+          $state: '$state',
+          CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
+          GiveTransferService: 'GiveTransferService',
+          role: function(CRDS_TOOLS_CONSTANTS) {
+            return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
+          },
+
+          goToFunction: function(GiveTransferService, $state) {
+            return function(donorId) {
+              GiveTransferService.impersonateDonorId = donorId;
+              $state.go('tools.adminManageCheckinDashboard');
+            };
+          }
+        }
+      })
+      .state('tools.adminManageCheckinDashboard', {
+        url: '/adminManageCheckinDashboard',
+        controller: 'AdminCheckinDashboardController as checkinDashboard',
+        templateUrl: 'templates/adminCheckinDashboard.html',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Checkin Dashboard - Admin',
+            description: ''
+          }
+        }
       });
   }
 
