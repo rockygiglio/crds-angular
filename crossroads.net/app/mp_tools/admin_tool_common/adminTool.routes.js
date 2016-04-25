@@ -60,7 +60,7 @@
         resolve: {
           $state: '$state',
           CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
-          GivingHistoryService: 'GiveTransferService',
+          GiveTransferService: 'GiveTransferService',
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.FinanceTools;
           },
