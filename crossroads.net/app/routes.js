@@ -638,14 +638,6 @@
           controller: 'GPExportController as gpExport',
           templateUrl: 'gp_export/gpExport.html'
         })
-        .state('tools.eventSetup', {
-          url: '/eventSetup',
-          controller: 'EventSetupController as EventSetupCtrl',
-          templateUrl: 'event_setup_tool/eventSetup.html',
-          resolve: {
-            MPTools: 'MPTools'
-          }
-        })
         .state('thedaily', {
           parent: 'noSideBar',
           url: '/thedaily',

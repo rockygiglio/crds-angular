@@ -84,6 +84,14 @@
             description: ''
           }
         }
+      })
+      .state('tools.eventSetup', {
+        url: '/eventSetup',
+        controller: 'EventSetupController as EventSetupCtrl',
+        templateUrl: 'event_setup_tool/eventSetup.html',
+        resolve: {
+          MPTools: 'MPTools'
+        }
       });
   }
 
