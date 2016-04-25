@@ -73,6 +73,7 @@
 
       function onBeforeUnload() {
         if (!GoVolunteerService.saveSuccessful) {
+          $window.sessionStorage.setItem('goVol.reload', angular.toJson(true));
           return '';
         }
       }
