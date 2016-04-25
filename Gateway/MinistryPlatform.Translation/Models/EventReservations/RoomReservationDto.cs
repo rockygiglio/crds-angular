@@ -9,5 +9,8 @@ namespace MinistryPlatform.Translation.Models.EventReservations
         public string Notes { get; set; }
         public bool Hidden { get; set; }
         public bool Cancelled { get; set; }
+        public int Capacity { get; set; }
+        public string Label { get; set; }
+        public bool Allow_Checkin { get; set; }
     }
 }

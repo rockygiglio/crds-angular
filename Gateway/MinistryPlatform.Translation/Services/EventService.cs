@@ -359,6 +359,24 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
+        public List<RoomReservationDto> GetEventRoomsForEvent(int eventId)
+        {
+            var searchString = eventId + ",";
+            var pageViewId = _configurationWrapper.GetConfigIntValue("RoomsByEventId");
+            var token = ApiLogin();
+            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+
+            if (records == null)
+            {
+                return null;
+            }
+
+            return records.Select(record => new RoomReservationDto
+            {
+                
+            }).ToList();
+        }
+
         public void CopyEventGroup(EventGroup eventGroup)
         {
             _ministryPlatformService.CopyPageRecord(_eventGroupsPageViewId, eventGroup.Event_Group_ID, null, null, false, ApiLogin());

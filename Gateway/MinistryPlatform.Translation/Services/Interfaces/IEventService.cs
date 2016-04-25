@@ -27,5 +27,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void DeleteEventGroup(EventGroup eventGroup);
 
         List<Event> GetEventsBySite(string site, bool template);
+        List<RoomReservationDto> GetEventRoomsForEvent(int eventId);
     }
 }

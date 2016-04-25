@@ -588,7 +588,7 @@ namespace crds_angular.Services
             return childcareEvents.First();
         }
 
-        public bool CopyEventGroups(int eventTemplateId, int eventId)
+        public bool CopyEventSetup(int eventTemplateId, int eventId)
         {
             // step one - get event groups for the event and delete them all
             var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId);
@@ -598,11 +598,17 @@ namespace crds_angular.Services
                 _eventService.DeleteEventGroup(eventGroup);
             }
 
-            // step two - get event groups for the template and copy them all onto the new event
+            // step two - get event groups for the template and copy them all onto the new event -- need
+            // to make sure that updating the event id on the event group will persist when the copy occurs (i.e.
+            // what's MP's source of truth for doing a copy? Does it just get the id and then copy directly from
+            // the db record or does it use what's being passed in?)
+            // 
+            // If MP is copying based off of the db record, this will need to be changed from a copy to a create
             var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
 
             foreach (var eventGroup in eventGroups)
             {
+                eventGroup.Event_ID = eventId;
                 _eventService.CopyEventGroup(eventGroup);
             }
 
