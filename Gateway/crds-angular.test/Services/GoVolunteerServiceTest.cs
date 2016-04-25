@@ -410,14 +410,15 @@ namespace crds_angular.test.Services
                 BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name)
             };
             var skills = Skills(registration);
-            if (skills.Length > 0)
+            if (skills != String.Empty)
             {
                 listOfP.Add(BuildParagraph("Unique Skills: ", Skills(registration)));
             }
             listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)));
             listOfP.Add(BuildParagraph("Additional Info: ", registration.AdditionalInformation));           
             listOfP.Add(BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
-            listOfP.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));            
+            listOfP.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            
 
             var htmlCell = new HtmlElement("td", styles).Append(listOfP);
             var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
