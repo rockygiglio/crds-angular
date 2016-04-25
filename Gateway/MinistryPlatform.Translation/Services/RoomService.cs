@@ -48,7 +48,10 @@ namespace MinistryPlatform.Translation.Services
                 {"Room_Layout_ID", roomReservation.RoomLayoutId},
                 {"Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
-                {"Cancelled", roomReservation.Cancelled}
+                {"Cancelled", roomReservation.Cancelled},
+                {"Capacity", roomReservation.Capacity},
+                {"Label", roomReservation.Label},
+                {"Allow_Checkin", roomReservation.Allow_Checkin}
             };
 
             try
@@ -74,7 +77,10 @@ namespace MinistryPlatform.Translation.Services
                 {"Room_Layout_ID", roomReservation.RoomLayoutId},
                 {"Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
-                {"Cancelled", roomReservation.Cancelled}
+                {"Cancelled", roomReservation.Cancelled},
+                {"Capacity", roomReservation.Capacity},
+                {"Label", roomReservation.Label},
+                {"Allow_Checkin", roomReservation.Allow_Checkin}
             };
 
             try
@@ -87,6 +93,13 @@ namespace MinistryPlatform.Translation.Services
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }
+        }
+
+        public void DeleteRoomReservation(RoomReservationDto roomReservation)
+        {
+            // TODO: Move this to a classwide variable to support testing, dry it up, etc
+            var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
+            _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, ApiLogin());
         }
 
         public List<Room> GetRoomsByLocationId(int locationId)

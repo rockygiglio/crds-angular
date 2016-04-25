@@ -23,10 +23,12 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         IEnumerable<Participant> EventParticipants(string token, int eventId);
         void SetReminderFlag(int eventId, string token);
         List<EventGroup> GetEventGroupsForEvent(int eventId);
-        void CopyEventGroup(EventGroup eventGroup);
+        //void CopyEventGroup(EventGroup eventGroup);
         void DeleteEventGroup(EventGroup eventGroup);
+        int CreateEventGroup(EventGroup eventGroup, string token);
+        void UpdateEventGroup(EventGroup eventGroup, string token);
 
         List<Event> GetEventsBySite(string site, bool template);
-        List<RoomReservationDto> GetEventRoomsForEvent(int eventId);
+        //List<RoomReservationDto> GetEventRoomsForEvent(int eventId);
     }
 }

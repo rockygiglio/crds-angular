@@ -88,7 +88,7 @@ namespace crds_angular.Controllers.API
             return Authorized(token => {
                 try
                 {
-                    return Ok(_eventService.CopyEventSetup(request.EventTemplateId, request.EventId));
+                    return Ok(_eventService.CopyEventSetup(request.EventTemplateId, request.EventId, token));
                 }
                 catch (Exception e)
                 {

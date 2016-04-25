@@ -6,13 +6,14 @@ using Crossroads.Utilities.Functions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
-using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
 using Event = MinistryPlatform.Models.Event;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using Participant = MinistryPlatform.Translation.Models.People.Participant;
 using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 
 namespace crds_angular.Services
@@ -588,9 +589,9 @@ namespace crds_angular.Services
             return childcareEvents.First();
         }
 
-        public bool CopyEventSetup(int eventTemplateId, int eventId)
+        public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            // step one - get event groups for the event and delete them all
+            // step 0 - delete existing data on the event, for eventgroups and eventrooms
             var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId);
 
             foreach (var eventGroup in discardedEventGroups)
@@ -598,18 +599,34 @@ namespace crds_angular.Services
                 _eventService.DeleteEventGroup(eventGroup);
             }
 
-            // step two - get event groups for the template and copy them all onto the new event -- need
-            // to make sure that updating the event id on the event group will persist when the copy occurs (i.e.
-            // what's MP's source of truth for doing a copy? Does it just get the id and then copy directly from
-            // the db record or does it use what's being passed in?)
-            // 
-            // If MP is copying based off of the db record, this will need to be changed from a copy to a create
-            var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
+            var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
 
-            foreach (var eventGroup in eventGroups)
+            foreach (var roomEvent in discardedRoomReservations)
             {
-                eventGroup.Event_ID = eventId;
-                _eventService.CopyEventGroup(eventGroup);
+                _roomService.DeleteRoomReservation(roomEvent);
+            }
+
+            // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
+            List<RoomReservationDto> eventRooms = _roomService.GetRoomReservations(eventTemplateId);
+            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
+
+            // step 2 - create new room reservations and assign event groups to them
+            foreach (var eventRoom in eventRooms)
+            {
+                // TODO: Is this the right approach? -- other options kinda suck, too
+                eventRoom.EventId = eventId;
+                int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
+
+                // get the template event group which matched the template event room, and assign the reservation id to this object
+                var eventGroup = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r).FirstOrDefault();
+
+                // check for matching event group
+                if (eventGroup.Event_Room_ID != eventRoom.EventRoomId)
+                {
+                    eventGroup.Event_ID = eventId;
+                    eventGroup.Event_Room_ID = roomReservationId;
+                    _eventService.CreateEventGroup(eventGroup, token);
+                }
             }
 
             return true;
