@@ -42,5 +42,8 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "capacity")]
         public int Capacity { get; set; }
+
+        [JsonProperty(PropertyName = "participantsAssigned")]
+        public int ParticipantsAssigned { get; set; }
     }
 }
