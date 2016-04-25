@@ -379,16 +379,16 @@ namespace crds_angular.Services
         }
 
 
-        public List<GPExportDatumDTO> GetGPExport(int depositId, string token)
+        public List<GPExportDatumDTO> GetGpExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationService.GetGPExport(depositId, token);
+            var gpExportData = _mpDonationService.GetGpExport(depositId, token);
 
             return gpExportData.Select(Mapper.Map<GPExportDatum, GPExportDatumDTO>).ToList();
         }
 
         public MemoryStream CreateGPExport(int selectionId, int depositId, string token)
         {
-            var gpExport = GetGPExport(depositId, token);
+            var gpExport = GetGpExport(depositId, token);
             var stream = new MemoryStream();
             CSV.Create(gpExport, GPExportDatumDTO.Headers, stream, "\t");
             UpdateDepositToExported(selectionId, depositId, token);

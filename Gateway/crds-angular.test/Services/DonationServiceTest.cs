@@ -358,9 +358,9 @@ namespace crds_angular.test.Services
             var mockedExport = MockGPExport();
             var expectedReturn = MockExpectedGpExportDto();
 
-            _mpDonationService.Setup(mocked => mocked.GetGPExport(depositId, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, It.IsAny<string>())).Returns(mockedExport);
 
-            var result = _fixture.GetGPExport(depositId, "asdfafasdfas");
+            var result = _fixture.GetGpExport(depositId, "asdfafasdfas");
 
             _mpDonationService.VerifyAll();
 
