@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerPage;
 
-  GoVolunteerPage.$inject = ['$state', '$stateParams'];
+  GoVolunteerPage.$inject = ['$state', '$stateParams', '$window', 'GoVolunteerService'];
 
-  function GoVolunteerPage($state, $stateParams) {
+  function GoVolunteerPage($state, $stateParams, $window, GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -41,7 +41,21 @@
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
-      
+
+      $window.onbeforeunload = onBeforeUnload;
+
+      activate();
+
+      function activate() {
+        var fromReload = angular.fromJson($window.sessionStorage.getItem('goVol.reload')) || false;
+
+        if (fromReload) {
+          console.log('reloaded');
+          $window.sessionStorage.setItem('goVol.reload', angular.toJson(false));
+          $state.go('go-volunteer.crossroadspage', {page: 'profile'});
+        }
+      }
+
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
@@ -54,6 +68,12 @@
             organization: $stateParams.organization,
             page: nextState
           });
+        }
+      }
+
+      function onBeforeUnload() {
+        if (!GoVolunteerService.saveSuccessful) {
+          return '';
         }
       }
 
@@ -80,7 +100,7 @@
       function showChildren() {
         return $stateParams.page === 'children';
       }
-      
+
       function showCms() {
         return $state.current.name === 'go-volunteer.cms';
       }
