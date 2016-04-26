@@ -31,13 +31,7 @@
         </div>-->
         <div class="row">
             <div class="form-group col-sm-4">
-                <label> Site </label>
-                <select class="form-control col-sm-12"
-                                ng-change="EventSetupCtrl.loadEvents()"
-                                 ng-model="EventSetupCtrl.locationID"
-                                 ng-options="location.dp_RecordID as location.dp_RecordName for location in EventSetupCtrl.locations">
-                    <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-                </select>
+              <site-filter site-id="EventSetupCtrl.siteId" on-change="EventSetupCtrl.loadEvents"></site-filter>
             </div>
             <div class="form-group col-sm-6">
                 <label> Event Template </label>

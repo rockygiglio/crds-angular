@@ -49,23 +49,15 @@
         vm.showError = showError;
         vm.viewReady = false;
 
-        vm.locations = {};
-        vm.locationID = undefined;
+        vm.siteId = undefined;
         vm.loadEvents = loadEvents;
-
-        //$scope.$watch(vm.locationID, loadEvents);
 
         activate();
 
         ////////////////////////////////////////////
 
         function activate() {
-            vm.multipleRecordsSelected = showError();
-
-            LookupService.Congregations.query({
-             }, function(cong) {
-                vm.locations = cong;
-            });
+          vm.multipleRecordsSelected = showError();
         }
 
         function loadEvents() {
