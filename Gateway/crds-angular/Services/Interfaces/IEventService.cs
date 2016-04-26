@@ -9,6 +9,7 @@ namespace crds_angular.Services.Interfaces
     {
         bool CreateEventReservation(EventToolDto eventTool, string token);
         EventToolDto GetEventReservation(int eventId);
+        EventToolDto GetEventRoomDetails(int eventId);
         Event GetEvent(int eventId);
         void RegisterForEvent(EventRsvpDto eventDto, string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForPrimaryContactReminder(string token);
