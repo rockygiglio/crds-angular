@@ -13,6 +13,12 @@
     activate();
 
     function activate() {
+      vm.eventRooms = [
+        {name: 'KC101', label: '0-2 year olds', checkinAllowed: true, capacity: 21, assigned: 10},
+        {name: 'KC201', label: '11-12 year olds', checkinAllowed: false, capacity: 21, assigned: 10},
+        {name: 'KC301', label: '3-4 year olds', checkinAllowed: true, capacity: 21, assigned: 20},
+      ]
+      vm.viewReady = true;
     }
 
     vm.allowAdminAccess = function() {

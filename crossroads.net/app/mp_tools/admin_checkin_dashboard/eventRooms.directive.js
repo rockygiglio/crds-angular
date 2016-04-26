@@ -3,20 +3,24 @@
 
   module.exports = EventRooms;
 
-  DonationDetails.$inject = ['$log'];
+  EventRooms.$inject = ['$log', 'Focus'];
 
-  function EventRooms($log) {
+  function EventRooms($log, Focus) {
     return {
       restrict: 'EA',
       replace: true,
       scope: {
-        eventRooms: '=',
+        rooms: '=',
       },
       templateUrl: 'templates/eventRooms.html',
       link: link
     };
 
     function link(scope, element, attrs) {
+      scope.ratio = ratio;
+      scope.editRoom = editRoom;
+      scope.editCheckinAllowed = editCheckinAllowed;
+
       activate();
 
       /////////////////////////////////
@@ -25,5 +29,33 @@
 
       function activate() {
       }
+
+      function ratio(room) {
+        if (room.volunteers == undefined || room.volunteers == 0) {
+          return 'N/A';
+        }
+        else if (room.assigned % room.volunteers == 0) {
+          return room.assigned/room.volunteers + '/1';
+        }
+
+        return room.assigned + '/' + room.volunteers;
+      }
+
+      function editRoom(room, indx) {
+        room.editLabel = !room.editLabel;
+
+        if (room.editLabel) {
+          Focus.focus('label' + indx);
+        }
+      }
+
+      function editCheckinAllowed(room, indx) {
+        room.editCheckinAllowed = !room.editCheckinAllowed;
+
+        if (room.editCheckinAllowed) {
+          Focus.focus('checkinAllowed' + indx);
+        }
+      }
+    }
   }
 })();
