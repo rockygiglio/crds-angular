@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.App_Start;
-using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
@@ -10,7 +9,6 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using Event = MinistryPlatform.Models.Event;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
-using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
@@ -24,7 +22,6 @@ namespace crds_angular.test.Services
         private Mock<IContactRelationshipService> _contactRelationshipService;
         private Mock<IContactService> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
-        private Mock<IAuthenticationService> _authenticationService;
         private Mock<IEventService> _eventService;
         private Mock<IParticipantService> _participantService;
         private Mock<IGroupParticipantService> _groupParticipantService;
@@ -47,7 +44,6 @@ namespace crds_angular.test.Services
             _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
             _contactService = new Mock<IContactService>(MockBehavior.Strict);
-            _authenticationService = new Mock<IAuthenticationService>(MockBehavior.Strict);
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
             _communicationService = new Mock<ICommunicationService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
