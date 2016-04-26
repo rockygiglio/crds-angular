@@ -1,3 +1,10 @@
-/**
- * Created by JP Cleaver on 4/20/2016.
- */
+(function() {
+    'use strict()';
+
+    var MODULE = 'crossroads.mptools';
+
+    require('./eventSetup.html');
+
+    var app = angular.module(MODULE);
+    app.controller('EventSetupController', require('./eventSetup.controller'));
+})();

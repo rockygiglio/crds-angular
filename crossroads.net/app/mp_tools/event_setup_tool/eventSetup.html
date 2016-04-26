@@ -31,12 +31,7 @@
         </div>-->
         <div class="row">
             <div class="form-group col-sm-4">
-                <label> Site </label>
-                <select class="form-control col-sm-12"
-                        ng-model="profile.profileData.person.maritalStatusId"
-                        ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
-                    <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-                </select>
+              <site-filter site-id="EventSetupCtrl.siteId" on-change="EventSetupCtrl.loadEvents"></site-filter>
             </div>
             <div class="form-group col-sm-6">
                 <label> Event Template </label>

@@ -6,13 +6,14 @@ using Crossroads.Utilities.Functions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
-using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
 using Event = MinistryPlatform.Models.Event;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using Participant = MinistryPlatform.Translation.Models.People.Participant;
 using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 
 namespace crds_angular.Services
@@ -616,30 +617,52 @@ namespace crds_angular.Services
             return childcareEvents.First();
         }
 
-        public bool CopyEventGroups(int eventTemplateId, int eventId)
+        public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            // step one - get event groups for the event and delete them all
-            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId);
+            // step 0 - delete existing data on the event, for eventgroups and eventrooms
+            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
 
             foreach (var eventGroup in discardedEventGroups)
             {
                 _eventService.DeleteEventGroup(eventGroup);
             }
 
-            // step two - get event groups for the template and copy them all onto the new event
-            var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
+            var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
 
-            foreach (var eventGroup in eventGroups)
+            foreach (var roomEvent in discardedRoomReservations)
             {
-                _eventService.CopyEventGroup(eventGroup);
+                _roomService.DeleteRoomReservation(roomEvent);
+            }
+
+            // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
+            List<RoomReservationDto> eventRooms = _roomService.GetRoomReservations(eventTemplateId);
+            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
+
+            // step 2 - create new room reservations and assign event groups to them
+            foreach (var eventRoom in eventRooms)
+            {
+                // TODO: Is this the right approach? -- other options kinda suck, too
+                eventRoom.EventId = eventId;
+                int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
+
+                // get the template event group which matched the template event room, and assign the reservation id to this object
+                var eventGroup = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r).FirstOrDefault();
+
+                // check for matching event group
+                if (eventGroup.Event_Room_ID != eventRoom.EventRoomId)
+                {
+                    eventGroup.Event_ID = eventId;
+                    eventGroup.Event_Room_ID = roomReservationId;
+                    _eventService.CreateEventGroup(eventGroup, token);
+                }
             }
 
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, bool template)
+        public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var eventTemplates = _eventService.GetEventsBySite(site, template);
+            var eventTemplates = _eventService.GetEventsBySite(site, template, token);
 
             return eventTemplates;
         }

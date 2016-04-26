@@ -139,7 +139,7 @@
       .state('tools.eventSetup', {
         url: '/eventSetup',
         controller: 'EventSetupController as EventSetupCtrl',
-        templateUrl: 'eventSetup.html',
+        templateUrl: 'event_setup_tool/eventSetup.html',
         data: {
           isProtected: true,
           meta: {

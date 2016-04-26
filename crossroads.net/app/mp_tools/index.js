@@ -49,4 +49,7 @@
   // The Add Events Tool
   require('./admin_checkin_dashboard');
 
+  // Event Setup Tool
+  require('./event_setup_tool');
+
 })();
