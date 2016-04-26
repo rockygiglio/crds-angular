@@ -50,7 +50,10 @@
         vm.viewReady = false;
 
         vm.locations = {};
+        vm.locationID = undefined;
+        vm.loadEvents = loadEvents;
 
+        //$scope.$watch(vm.locationID, loadEvents);
 
         activate();
 
@@ -59,47 +62,14 @@
         function activate() {
             vm.multipleRecordsSelected = showError();
 
-            //vm.locations = LookupService.Congregations.get({});
-
             LookupService.Congregations.query({
              }, function(cong) {
-                debugger;
                 vm.locations = cong;
             });
+        }
 
-            //function getDonations() {
-            //    vm.donation_view_ready = false;
-            //    GivingHistoryService.donations.get({ donationYear: vm.selected_giving_year.key,
-            //            softCredit: false,
-            //            impersonateDonorId: vm.impersonate_donor_id },
-            //        function (data) {
-            //            vm.donations = data.donations;
-            //            vm.donation_total_amount = data.donation_total_amount;
-            //            vm.donation_statement_total_amount = data.donation_statement_total_amount;
-            //            vm.donation_view_ready = true;
-            //            vm.donation_history = true;
-            //            vm.donations_all = vm.selected_giving_year.key === '' ? true : false;
-            //            vm.beginning_donation_date = data.beginning_donation_date;
-            //            vm.ending_donation_date = data.ending_donation_date;
-            //        },
-            //
-            //        function (error) {
-            //            vm.donation_history = false;
-            //            vm.donation_view_ready = true;
-            //            setErrorState(error);
-            //        });
-            //}
-
-            //EventService.eventsBySite.get({})
-
-            //Su2sData.get({
-            //    'oppId': vm.params.recordId
-            //}, function(g) {
-            //    vm.group = g;
-            //    vm.allParticipants = g.Participants;
-            //    vm.ready = true;
-            //});
-            //populateDates();
+        function loadEvents() {
+            debugger;
         }
 
         function allowAccess() {

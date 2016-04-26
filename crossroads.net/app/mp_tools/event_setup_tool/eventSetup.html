@@ -33,8 +33,9 @@
             <div class="form-group col-sm-4">
                 <label> Site </label>
                 <select class="form-control col-sm-12"
-                        ng-model="profile.profileData.person.maritalStatusId"
-                        ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                                ng-change="EventSetupCtrl.loadEvents()"
+                                 ng-model="EventSetupCtrl.locationID"
+                                 ng-options="location.dp_RecordID as location.dp_RecordName for location in EventSetupCtrl.locations">
                     <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
                 </select>
             </div>
