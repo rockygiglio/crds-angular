@@ -9,6 +9,7 @@
       COMMON: 'crossroads.common',
       COMMUNITY_GROUPS: 'crossroads.community',
       CROSSROADS: 'crossroads',
+      FORM_BUILDER: 'crossroads.form_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       GROUP_FINDER: 'crossroads.group_finder',

@@ -14,6 +14,7 @@ require('../lib/select.css');
       constants.MODULES.CHILDCARE,
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
+      constants.MODULES.FORM_BUILDER,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
       constants.MODULES.GROUP_FINDER,
@@ -26,7 +27,7 @@ require('../lib/select.css');
    ]);
 
   angular.module(constants.MODULES.CROSSROADS).config(require('./routes'));
-    require('./events');
+  require('./events');
   require('./signup');
   require('./styleguide');
   require('./superbowl');
