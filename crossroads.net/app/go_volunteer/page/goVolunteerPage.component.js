@@ -76,7 +76,6 @@
         if (!GoVolunteerService.saveSuccessful) {
           setTimeout(function() {
             setTimeout(function() {
-              console.log('you stayed ');
               $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
             }, 100);
           }, 1);
