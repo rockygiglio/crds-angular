@@ -46,4 +46,7 @@
   // The Add Events Tool
   require('./add_event_tool');
 
+  // The Add Events Tool
+  require('./admin_checkin_dashboard');
+
 })();

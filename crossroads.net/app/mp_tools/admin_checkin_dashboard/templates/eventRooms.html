@@ -1,0 +1,50 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <th>Room</th>
+      <th style="white-space: nowrap">Room Label</th>
+      <th style="white-space: nowrap">Can Checkin</th>
+      <th># of Volunteers</th>
+      <th>Capacity</th>
+      <th style="white-space: nowrap">Total Kids<br>Signed/Checked In</th>
+      <th>Kids/Volunteers ratio</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="room in rooms track by $index">
+        <td>
+          {{ room.name }}
+        </td>
+        <td>
+          <div ng-show="!room.editLabel" ng-click="editRoom(room, $index)">
+            {{ room.label }}
+          </div>
+          <div ng-show="room.editLabel">
+            <input type="text" id="label{{$index}}" ng-model="room.label" ng-blur="editRoom(room, $index)"/>
+          </div>
+        </td>
+        <td>
+          <div ng-show="!room.editCheckinAllowed" ng-click="editCheckinAllowed(room, $index)">
+            {{ room.checkinAllowed==true ? 'Yes' : 'No' }}
+          </div>
+          <div ng-show="room.editCheckinAllowed">
+            <input type="checkbox" id="checkinAllowed{{$index}}" ng-model="room.checkinAllowed" ng-blur="editCheckinAllowed(room, $index)"/>
+          </div>
+        </td>
+        <td>
+          <input type="text" ng-model="room.volunteers"/>
+        </td>
+        <td>
+          <button type="button" class="btn btn-primary" style="font-size: 8px"><i class="glyphicon glyphicon-minus"></i></button>
+          <span>{{ room.capacity }}<span>
+          <button type="button" class="btn btn-primary" style="font-size: 8px"><i class="glyphicon glyphicon-plus"></i></button>
+        </td>
+        <td>
+          {{ room.assigned }}
+        </td>
+        <td>
+          {{ ratio(room) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
