@@ -97,7 +97,6 @@
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
           },
-
           goToFunction: function($state) {
             return function() {
               $state.go('tools.eventSetup');

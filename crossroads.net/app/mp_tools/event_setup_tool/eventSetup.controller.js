@@ -12,10 +12,11 @@
         '$rootScope',
         'AuthService',
         'EventService',
-        'CRDS_TOOLS_CONSTANTS'
+        'CRDS_TOOLS_CONSTANTS',
+        'LookupService'
     ];
 
-    function EventSetupController($log, $location, $window, MPTools, $rootScope, AuthService, EventService, CRDS_TOOLS_CONSTANTS) {
+    function EventSetupController($log, $location, $window, MPTools, $rootScope, AuthService, EventService, CRDS_TOOLS_CONSTANTS, LookupService) {
 
 
         //
@@ -48,6 +49,7 @@
         vm.showError = showError;
         vm.viewReady = false;
 
+        vm.locations = {};
 
 
         activate();
@@ -56,6 +58,14 @@
 
         function activate() {
             vm.multipleRecordsSelected = showError();
+
+            //vm.locations = LookupService.Congregations.get({});
+
+            LookupService.Congregations.query({
+             }, function(cong) {
+                debugger;
+                vm.locations = cong;
+            });
 
             //function getDonations() {
             //    vm.donation_view_ready = false;

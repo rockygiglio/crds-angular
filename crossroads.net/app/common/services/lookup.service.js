@@ -7,7 +7,7 @@
 
     function LookupService($resource) {
         return {
-            Congregations: $resource(__API_ENDPOINT__ + 'api/lookup/:crossroadslocations')
+            Congregations: $resource(__API_ENDPOINT__ + 'api/lookup/crossroadslocations')
         };
     }
 
