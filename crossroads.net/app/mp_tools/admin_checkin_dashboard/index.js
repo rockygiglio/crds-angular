@@ -7,8 +7,9 @@
   require('./templates/eventRooms.html');
 
   var app = angular.module(MODULE);
-  app.directive('eventRooms', require('./eventRooms.directive'));
+  app.factory('AdminCheckinDashboardService', require('./adminCheckinDashboard.service'));
   app.factory('Focus', require('./focus.service'));
+  app.directive('eventRooms', require('./eventRooms.directive'));
   app.controller('AdminCheckinDashboardController', require('./adminCheckinDashboard.controller'));
 
 })();

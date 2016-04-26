@@ -3,22 +3,25 @@
 
   module.exports = AdminCheckinDashboardController;
 
-  AdminCheckinDashboardController.$inject = ['$log', 'AuthService', 'CRDS_TOOLS_CONSTANTS'];
+  AdminCheckinDashboardController.$inject = ['$log', 'AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService'];
 
-  function AdminCheckinDashboardController($log, AuthService, CRDS_TOOLS_CONSTANTS) {
+  function AdminCheckinDashboardController($log, AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService) {
     var vm = this;
     vm.viewReady = false;
-    vm.eventRooms
+    vm.eventRooms = [];
 
     activate();
 
     function activate() {
-      vm.eventRooms = [
-        {name: 'KC101', label: '0-2 year olds', checkinAllowed: true, capacity: 21, assigned: 10},
-        {name: 'KC201', label: '11-12 year olds', checkinAllowed: false, capacity: 21, assigned: 10},
-        {name: 'KC301', label: '3-4 year olds', checkinAllowed: true, capacity: 21, assigned: 20},
-      ]
-      vm.viewReady = true;
+        AdminCheckinDashboardService.checkinDashboard.get({ eventId: 4515378},
+          function (data) {
+            debugger;
+            vm.eventRooms = data.rooms;
+            vm.viewReady = true;
+          },
+          function (error) {
+            setErrorState(error);
+        });
     }
 
     vm.allowAdminAccess = function() {

@@ -34,11 +34,11 @@
         if (room.volunteers == undefined || room.volunteers == 0) {
           return 'N/A';
         }
-        else if (room.assigned % room.volunteers == 0) {
-          return room.assigned/room.volunteers + '/1';
+        else if (room.participantsAssigned % room.volunteers == 0) {
+          return room.participantsAssigned/room.volunteers + '/1';
         }
 
-        return room.assigned + '/' + room.volunteers;
+        return room.participantsAssigned + '/' + room.volunteers;
       }
 
       function editRoom(room, indx) {
