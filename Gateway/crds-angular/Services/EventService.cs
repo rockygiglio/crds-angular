@@ -592,7 +592,7 @@ namespace crds_angular.Services
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
             // step 0 - delete existing data on the event, for eventgroups and eventrooms
-            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId);
+            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
 
             foreach (var eventGroup in discardedEventGroups)
             {
@@ -608,7 +608,7 @@ namespace crds_angular.Services
 
             // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
             List<RoomReservationDto> eventRooms = _roomService.GetRoomReservations(eventTemplateId);
-            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId);
+            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
 
             // step 2 - create new room reservations and assign event groups to them
             foreach (var eventRoom in eventRooms)
@@ -632,9 +632,9 @@ namespace crds_angular.Services
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, bool template)
+        public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var eventTemplates = _eventService.GetEventsBySite(site, template);
+            var eventTemplates = _eventService.GetEventsBySite(site, template, token);
 
             return eventTemplates;
         }

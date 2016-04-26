@@ -105,7 +105,7 @@ namespace crds_angular.Controllers.API
             return Authorized(token => {
                 try
                 {
-                    return Ok(_eventService.GetEventsBySite(request.Site, request.Template));
+                    return Ok(_eventService.GetEventsBySite(request.Site, request.Template, token));
                 }
                 catch (Exception e)
                 {

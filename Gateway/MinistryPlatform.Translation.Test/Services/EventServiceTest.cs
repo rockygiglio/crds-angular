@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
@@ -14,20 +15,21 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationService>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _groupService = new Mock<IGroupService>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupsByEventId")).Returns(2221);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            fixture = new EventService(ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
+            _fixture = new EventService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
         }
 
-        private EventService fixture;
-        private Mock<IMinistryPlatformService> ministryPlatformService;
+        private EventService _fixture;
+        private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupService> _groupService;
@@ -153,13 +155,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             var searchString = eventId + ",";
-            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), searchString, string.Empty, 0)).Returns(mockEventDictionary);
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), searchString, string.Empty, 0)).Returns(mockEventDictionary);
 
             //Act
-            var theEvent = fixture.GetEvent(eventId);
+            var theEvent = _fixture.GetEvent(eventId);
 
             //Assert
-            ministryPlatformService.VerifyAll();
+            _ministryPlatformService.VerifyAll();
 
             Assert.AreEqual(eventId, theEvent.EventId);
             Assert.AreEqual("event-title-100", theEvent.EventTitle);
@@ -189,11 +191,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), searchString, string.Empty, 0)).Returns(mockEventDictionary);
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), searchString, string.Empty, 0)).Returns(mockEventDictionary);
 
-            var events = fixture.GetEventsByParentEventId(parentEventId);
+            var events = _fixture.GetEventsByParentEventId(parentEventId);
 
-            ministryPlatformService.VerifyAll();
+            _ministryPlatformService.VerifyAll();
 
             Assert.AreEqual(1, events.Count);
             var theEvent = events[0];
@@ -211,12 +213,12 @@ namespace MinistryPlatform.Translation.Test.Services
             const string pageKey = "EventParticipantByEventIdAndParticipantId";
             var mockEventParticipants = MockEventParticipantsByEventIdAndParticipantId();
 
-            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(mockEventParticipants);
 
-            var participant = fixture.GetEventParticipantRecordId(eventId, participantId);
+            var participant = _fixture.GetEventParticipantRecordId(eventId, participantId);
 
-            ministryPlatformService.VerifyAll();
+            _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(participant);
             Assert.AreEqual(8634, participant);
         }
@@ -227,10 +229,10 @@ namespace MinistryPlatform.Translation.Test.Services
             const string eventType = "Oakley: Saturday at 4:30";
 
             var search = ",," + eventType;
-            ministryPlatformService.Setup(mock => mock.GetRecordsDict(EventsPageId, It.IsAny<string>(), search, ""))
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(EventsPageId, It.IsAny<string>(), search, ""))
                 .Returns(MockEventsDictionary());
 
-            var events = fixture.GetEvents(eventType, It.IsAny<string>());
+            var events = _fixture.GetEvents(eventType, It.IsAny<string>());
             Assert.IsNotNull(events);
         }
 
@@ -239,12 +241,12 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var eventTypeId = 1;
             var search = ",," + eventTypeId;
-            ministryPlatformService.Setup(mock => mock.GetPageViewRecords(EventsWithEventTypeId, It.IsAny<string>(), search, "", 0))
+            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(EventsWithEventTypeId, It.IsAny<string>(), search, "", 0))
                 .Returns(MockEventsDictionaryByEventTypeId());
 
             var startDate = new DateTime(2015, 4, 1);
             var endDate = new DateTime(2015, 4, 30);
-            var events = fixture.GetEventsByTypeForRange(eventTypeId, startDate, endDate, It.IsAny<string>());
+            var events = _fixture.GetEventsByTypeForRange(eventTypeId, startDate, endDate, It.IsAny<string>());
             Assert.IsNotNull(events);
             Assert.AreEqual(3, events.Count);
             Assert.AreEqual("event-title-200", events[0].EventTitle);
@@ -253,7 +255,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestRegisterParticipantForEvent()
         {
-            ministryPlatformService.Setup(mocked => mocked.CreateSubRecord(
+            _ministryPlatformService.Setup(mocked => mocked.CreateSubRecord(
                 It.IsAny<int>(),
                 It.IsAny<int>(),
                 It.IsAny<Dictionary<string, object>>(),
@@ -267,9 +269,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Participation_Status_ID", EventParticipantStatusDefaultID}
             };
 
-            var eventParticipantId = fixture.RegisterParticipantForEvent(123, 456);
+            var eventParticipantId = _fixture.RegisterParticipantForEvent(123, 456);
 
-            ministryPlatformService.Verify(mocked => mocked.CreateSubRecord(
+            _ministryPlatformService.Verify(mocked => mocked.CreateSubRecord(
                 EventParticipantPageId,
                 456,
                 expectedValues,
@@ -277,6 +279,82 @@ namespace MinistryPlatform.Translation.Test.Services
                 true));
 
             Assert.AreEqual(987, eventParticipantId);
+        }
+
+        [Test]
+        public void ShouldGetEventGroupsForEvent()
+        {
+            var eventGroupPageViewId = _configWrapper.Object.GetConfigIntValue("GroupsByEventId");
+
+            Prop.ForAll<string, int>((token, eventId) =>
+            {
+                var searchString = eventId + ",";
+
+                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(GetMockedEventGroups(3));
+                _fixture.GetEventGroupsForEvent(eventId, token);
+                _ministryPlatformService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldGetEventsBySite()
+        {
+            var eventsBySitePageViewId = _configWrapper.Object.GetConfigIntValue("EventsBySite");
+
+            Prop.ForAll<string, bool, string>((site, template, token) =>
+            {
+                var searchString = ",,," + site + "," + template;
+
+                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
+                _fixture.GetEventsBySite(site, template, token);
+                _ministryPlatformService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
+        }
+
+        private List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)
+        {
+            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+
+            for (int i = 0; i < recordsToGenerate; i++)
+            {
+                recordsList.Add(new Dictionary<string, object>
+                {
+                    { "Event_Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Domain_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Closed", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault },
+                    { "Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
+                });
+            }
+
+            return recordsList;
+        }
+
+        private List<Dictionary<string, object>> GetMockedEvents(int recordsToGenerate)
+        {
+            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+
+            for (int i = 0; i < recordsToGenerate; i++)
+            {
+                recordsList.Add(new Dictionary<string, object>
+                {
+                    //ParentEventId = record.ToInt("Parent_Event_ID"),
+                    //Template = record.ToBool("Template")
+                    { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Congregation_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Site", Gen.Sample(10, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
+                    { "Event_Title", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
+                    { "Event_Type_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_Start_Date", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<DateTime>())).HeadOrDefault },
+                    { "Event_End_Date", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<DateTime>())).HeadOrDefault },
+                    { "Parent_Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Template", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault }
+                });
+            }
+
+            return recordsList;
         }
     }
 }

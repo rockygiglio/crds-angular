@@ -46,4 +46,7 @@
   // The Add Events Tool
   require('./add_event_tool');
 
+  // Event Setup Tool
+  require('./event_setup_tool');
+
 })();
