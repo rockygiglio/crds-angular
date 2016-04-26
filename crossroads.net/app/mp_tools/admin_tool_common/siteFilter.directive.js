@@ -19,6 +19,7 @@
 
     function link(scope, element, attrs) {
       scope.sites = [];
+      scope.change = change;
 
       activate();
 
@@ -31,6 +32,12 @@
           function(data) {
             scope.sites = data;
         });
+      }
+
+      function change() {
+        debugger;
+        //scope.siteId = scope.siteId;
+        scope.onChange({siteId:scope.siteId});
       }
 
     }

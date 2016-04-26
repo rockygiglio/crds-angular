@@ -368,7 +368,7 @@ namespace MinistryPlatform.Translation.Services
         // this is coded for site right now, using location - is this right?
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var searchString = ",,," + site + "," + template;
+            var searchString = ",," + site + ",," + template;
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 

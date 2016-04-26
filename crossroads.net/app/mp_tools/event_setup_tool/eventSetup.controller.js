@@ -60,8 +60,15 @@
           vm.multipleRecordsSelected = showError();
         }
 
-        function loadEvents() {
+        function loadEvents(siteId) {
+
+            vm.siteId = siteId;
             debugger;
+            // load templates first
+            EventService.eventsBySite.query({ site : vm.siteId, template: true }, function(data) {
+                debugger;
+            });
+
         }
 
         function allowAccess() {
