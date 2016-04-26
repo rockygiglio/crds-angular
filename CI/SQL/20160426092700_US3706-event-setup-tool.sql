@@ -9,8 +9,8 @@ DECLARE @PageId INT = 308;
 DECLARE @PageViewTitle VARCHAR(50) = 'EventsBySite';
 DECLARE @FieldList VARCHAR(1000) = 'Events.[Event_ID] AS [Event ID], 
 	Events.[Event_Title] AS [Event Title], 
-	Location_ID_Table.[Location_ID] AS [Location ID], 
-	Location_ID_Table.[Location_Name] AS [Location Name], 
+	Congregation_ID_Table.[Congregation_ID] AS [Congregation ID], 
+	Congregation_ID_Table.[Congregation_Name] AS [Congregation Name], 
 	Events.[Template] AS [Template]';
 DECLARE @ViewClause VARCHAR(1000) = '1=1';
 DECLARE @Description VARCHAR(1000) = 'API View';
