@@ -19,6 +19,7 @@
       var vm = this;
 
       vm.handlePageChange = handlePageChange;
+      vm.reload = 'goVol.reload';
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
       vm.showSpouse = showSpouse;
@@ -47,11 +48,11 @@
       activate();
 
       function activate() {
-        var fromReload = angular.fromJson($window.sessionStorage.getItem('goVol.reload')) || false;
-
+        // if page is loaded with goVol.reload = true, then send to begining of flow
+        // should only occur if user refreshes
+        var fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
         if (fromReload) {
-          console.log('reloaded');
-          $window.sessionStorage.setItem('goVol.reload', angular.toJson(false));
+          $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
           $state.go('go-volunteer.crossroadspage', {page: 'profile'});
         }
       }
@@ -73,7 +74,14 @@
 
       function onBeforeUnload() {
         if (!GoVolunteerService.saveSuccessful) {
-          $window.sessionStorage.setItem('goVol.reload', angular.toJson(true));
+          setTimeout(function() {
+            setTimeout(function() {
+              console.log('you stayed ');
+              $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
+            }, 100);
+          }, 1);
+
+          $window.sessionStorage.setItem(vm.reload, angular.toJson(true));
           return '';
         }
       }
