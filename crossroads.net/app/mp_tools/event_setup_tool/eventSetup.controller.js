@@ -69,7 +69,9 @@
         }
 
         function loadEvents() {
-            debugger;
+
+            EventService.eventsBySite.query({  })
+
         }
 
         function allowAccess() {
