@@ -60,5 +60,42 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.IsNotNull(returnVal);
             Assert.AreEqual(true, returnVal);
         }
+
+        [Test]
+        public void TestGetEventParticipants()
+        {
+            var p = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", 1},
+                    {"Participant_ID", 11},
+                    {"Participation_Status_ID", 111},
+                    {"Room_ID", 1111}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", 2},
+                    {"Participant_ID", 22},
+                    {"Participation_Status_ID", 222},
+                    {"Room_ID", 2222}
+                }
+
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", 123, "abc", ",,,\"987\"", "", 0)).Returns(p);
+            var result = _fixture.GetEventParticipants("abc", 123, 987);
+
+            _ministryPlatformService.VerifyAll();
+            Assert.NotNull(result);
+            Assert.AreEqual(p.Count, result.Count);
+            for (var i = 0; i < p.Count; i++)
+            {
+                Assert.AreEqual(p[i]["Event_Participant_ID"], result[i].EventParticipantId);
+                Assert.AreEqual(p[i]["Participant_ID"], result[i].ParticipantId);
+                Assert.AreEqual(p[i]["Participation_Status_ID"], result[i].ParticipantStatus);
+                Assert.AreEqual(p[i]["Room_ID"], result[i].RoomId);
+            }
+        }
     }
 }
