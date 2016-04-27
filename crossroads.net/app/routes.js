@@ -703,14 +703,13 @@
                     image: ContentPageService.page.image,
                     statusCode: ContentPageService.page.errorCode
                   };
-                                 
+                                
                   if (ContentPageService.page.canViewType === "LoggedInUsers" ) {                    
-                  
+                       $state.next.data.isProtected = true;
                        if (Session.isActive()) {
                         $http({
                           method: 'GET',
-                          //url: __API_ENDPOINT__ + 'api/authenticated',
-                          url: 'https://gatewayint.crossroads.net/gateway/api/authenticated',
+                          url: __API_ENDPOINT__ + 'api/authenticated',
                           withCredentials: true,
                           headers: {
                             Authorization: $cookies.get('sessionId'),
@@ -722,15 +721,11 @@
                           $rootScope.email = user.userEmail;
                           $rootScope.roles = user.roles;
                         }).error(function(e) {
-                          clearAndRedirect(event, $state.toState, $state.toParams);
+                          clearAndRedirect(event, $state.next.name, $state.toParams);
                         });
                       } else  {
-                        clearAndRedirect(event, $state.toState, $state.toParams);                    
-                      }
-                      
-                                     
-
-                                  
+                        clearAndRedirect(event, $state.next.name, $state.toParams);                    
+                      }                                                                                           
                   }
                   
                       function clearAndRedirect(event, toState, toParams) {                       
