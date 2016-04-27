@@ -72,7 +72,7 @@ namespace MinistryPlatform.Translation.Test.Extensions
         [Test]
         public void NullStringToNullableBool_Failure_Ok()
         {
-            Assert.AreEqual(null, _mockDictionary.ToNullableBool("Invalid_Nullable_Bool"));
+            Assert.AreEqual(false, _mockDictionary.ToNullableBool("Invalid_Nullable_Bool"));
         }
 
         [Test]
