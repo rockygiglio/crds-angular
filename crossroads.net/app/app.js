@@ -26,7 +26,10 @@ require('../lib/select.css');
       constants.MODULES.TRIPS,
    ]);
 
-  angular.module(constants.MODULES.CROSSROADS).config(require('./routes'));
+  angular.module(constants.MODULES.CROSSROADS)
+    .config(require('./routes'))
+    .config(require('./routes.content'));    
+
   require('./events');
   require('./signup');
   require('./styleguide');

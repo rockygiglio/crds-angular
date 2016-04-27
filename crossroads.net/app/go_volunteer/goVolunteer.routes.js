@@ -357,6 +357,7 @@
     } else {
       Organizations.ByName.get({name: param}, function(data) {
         GoVolunteerService.organization = data;
+        GoVolunteerService.launchSites = {};
         deferred.resolve();
       },
 
