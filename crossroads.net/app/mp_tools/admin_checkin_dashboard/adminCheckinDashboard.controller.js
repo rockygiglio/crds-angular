@@ -3,29 +3,49 @@
 
   module.exports = AdminCheckinDashboardController;
 
-  AdminCheckinDashboardController.$inject = ['$log', 'AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService'];
+  AdminCheckinDashboardController.$inject = ['AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService', 'EventService'];
 
-  function AdminCheckinDashboardController($log, AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService) {
+  function AdminCheckinDashboardController(AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService, EventService) {
     var vm = this;
-    vm.viewReady = false;
+    vm.site = {id: undefined};
+    vm.eventsReady = false;
+    vm.eventsLoading = false;
+    vm.event = {id: undefined};
+    vm.events = [];
     vm.eventRooms = [];
-
-    activate();
-
-    function activate() {
-        AdminCheckinDashboardService.checkinDashboard.get({ eventId: 4515378},
-          function (data) {
-            debugger;
-            vm.eventRooms = data.rooms;
-            vm.viewReady = true;
-          },
-          function (error) {
-            setErrorState(error);
-        });
-    }
+    vm.loadEvents = loadEvents;
+    vm.loadRooms = loadRooms;
 
     vm.allowAdminAccess = function() {
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
     };
+
+    function loadRooms() {
+      vm.roomsLoading = true;
+      vm.eventRooms = [];
+
+      AdminCheckinDashboardService.checkinDashboard.get({ eventId: event.id},
+        function (data) {
+          vm.eventRooms = data.rooms;
+          vm.roomsLoading = false;
+        }
+      );
+    }
+
+    function loadEvents() {
+      reset();
+
+      EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
+        vm.events = data;
+        vm.eventsLoading = false;
+      });
+    }
+
+    function reset() {
+      vm.eventsReady = true;
+      vm.eventsLoading = true;
+      vm.roomsLoading = false;
+      vm.eventRooms = [];
+    }
   }
 })();
