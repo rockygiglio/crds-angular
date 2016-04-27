@@ -9,29 +9,20 @@
     return {
       restrict: 'E',
       scope: {
-        field: '=?',
-        className: '='
+        field: '=?'
       },
       link: function(scope, element) {
-        var templateUrl = getTemplateUrl(scope.className);
+        var templateUrl = getTemplateUrl(scope.formField.field.className);
+        if (templateUrl == null) {
+          return;
+        }
+
         $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);
           element.append(template);
           $compile(template)(scope);
         });
-
       },
-/*
-      templateUrl: function(elem, attrs) {
-        console.log(attrs);
-        switch (attrs.className) {
-          case 'EditableTextField':
-            return 'templates/textField.html';
-          default:
-            return 'templates/formField.html';
-        }
-      },
-*/
       controller: FormFieldController,
       controllerAs: 'formField',
       bindToController: true
@@ -44,10 +35,20 @@
 
     function getTemplateUrl(className) {
       switch (className) {
+        case 'EditableCheckbox':
+          return 'templates/editableCheckbox.html';
+        case 'EditableCheckboxGroupField':
+          return 'templates/editableCheckboxGroupField.html';
+        case 'EditableNumericField':
+          return 'templates/editableNumericField.html';
         case 'EditableTextField':
-          return 'templates/textField.html';
+          return 'templates/editableTextField.html';
+        case 'EditableRadioField':
+          return 'templates/editableRadioField.html';
+        case 'EditableFormStep':
+          return null;
         default:
-          return 'templates/formField.html';
+          return 'templates/defaultField.html';
       }
     }
   }

@@ -19,7 +19,6 @@
 
     function FormBuilderController() {
       var vm = this;
-
     }
   }
 
