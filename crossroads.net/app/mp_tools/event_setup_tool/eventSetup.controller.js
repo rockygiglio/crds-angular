@@ -49,7 +49,14 @@
         vm.showError = showError;
         vm.viewReady = false;
 
-        vm.siteId = undefined;
+        vm.site = {id: undefined};
+        vm.template = {id: undefined};
+        vm.event = {id: undefined};
+        vm.eventTemplates = undefined;
+        vm.events = undefined;
+
+        vm.setup = setup;
+
         vm.loadEvents = loadEvents;
 
         activate();
@@ -60,15 +67,16 @@
           vm.multipleRecordsSelected = showError();
         }
 
-        function loadEvents(siteId) {
+        function loadEvents() {
+          // load templates first
+          EventService.eventsBySite.query({ site : vm.site.id, template: true }, function(data) {
+              vm.eventTemplates = data;
+          });
 
-            vm.siteId = siteId;
-            debugger;
-            // load templates first
-            EventService.eventsBySite.query({ site : vm.siteId, template: true }, function(data) {
-                debugger;
-            });
-
+          // load events
+          EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
+              vm.events = data;
+          });
         }
 
         function allowAccess() {
@@ -91,6 +99,17 @@
                 return true;
             }
             return false;
+        }
+
+        function setup() {
+            debugger;
+            EventService.eventSetup.save({eventtemplateid: vm.template.id, eventid: vm.event.id}).$promise.then(function(response) {
+                //$rootScope.$emit('notify', $rootScope.MESSAGES.);
+                vm.saving = false;
+            }, function(error) {
+                $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+                vm.saving = false;
+            });
         }
     }
 

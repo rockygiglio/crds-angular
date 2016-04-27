@@ -1,9 +1,8 @@
 <div>
-  <label> Site </label>
+  <label> {{label}} </label>
   <select class="form-control col-sm-12"
-      ng-change="change()"
-      ng-model="site.id"
-      ng-options="site.dp_RecordID as site.dp_RecordName for site in sites">
+      ng-model="event.id"
+      ng-options="event.EventId as event.EventTitle for event in events">
     <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
   </select>
 </div>

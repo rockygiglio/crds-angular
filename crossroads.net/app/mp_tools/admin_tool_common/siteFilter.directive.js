@@ -10,7 +10,7 @@
       restrict: 'EA',
       replace: true,
       scope: {
-        siteId: '=',
+        site: '=',
         onChange: '&'
       },
       templateUrl: 'templates/siteFilter.html',
@@ -35,9 +35,7 @@
       }
 
       function change() {
-        debugger;
-        //scope.siteId = scope.siteId;
-        scope.onChange({siteId:scope.siteId});
+        scope.onChange();
       }
 
     }

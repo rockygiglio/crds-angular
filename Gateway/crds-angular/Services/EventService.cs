@@ -622,6 +622,8 @@ namespace crds_angular.Services
 
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
+            eventId = 4515464; // hardcoded for testing
+
             // step 0 - delete existing data on the event, for eventgroups and eventrooms
             var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
 

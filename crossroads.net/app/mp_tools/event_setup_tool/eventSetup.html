@@ -1,37 +1,28 @@
  <div>
     <div class="row">
         <div class="form-group col-sm-4">
-          <site-filter site-id="EventSetupCtrl.siteId" on-change="EventSetupCtrl.loadEvents(siteId)"></site-filter>
+          <site-filter site="EventSetupCtrl.site" on-change="EventSetupCtrl.loadEvents()"></site-filter>
         </div>
         <div class="form-group col-sm-6">
-            <label> Event Template </label>
-            <select class="form-control col-sm-12"
-                    ng-model="profile.profileData.person.maritalStatusId"
-                    ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
-                <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-            </select>
+          <event-filter label="Event Template" event="EventSetupCtrl.template" events="EventSetupCtrl.eventTemplates"></event-filter>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-6">
-            <label> Event </label>
-            <select class="form-control col-sm-12"
-                    ng-model="profile.profileData.person.maritalStatusId"
-                    ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
-                <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-            </select>
+          <event-filter label="Event" event="EventSetupCtrl.event" events="EventSetupCtrl.events"></event-filter>
         </div>
     </div>
     <div class="row">
         <div class="form-group">
-            <button class="btn btn-primary btn-sm" ng-click="trip.cancel()">Cancel</button>
-            <button class="btn btn-primary btn-sm"
-                    ng-class="{disabled: trip.processing}"
-                    ng-disabled="!tripForm.$valid"
-                    ng-click="trip.save()">
-                <span ng-if="trip.processing">Saving...</span>
-                <span ng-if="!trip.processing">Save</span>
-            </button>
+            <!--<button class="btn btn-primary btn-sm" ng-click="trip.cancel()">Cancel</button>-->
+            <!--<button class="btn btn-primary btn-sm"-->
+                    <!--ng-class="{disabled: trip.processing}"-->
+                    <!--ng-disabled="!tripForm.$valid"-->
+                    <!--ng-click="trip.save()">-->
+                <!--<span ng-if="trip.processing">Saving...</span>-->
+                <!--<span ng-if="!trip.processing">Save</span>-->
+            <!--</button>-->
+            <button class="btn btn-primary btn-sm" ng-click="EventSetupCtrl.setup()">Setup</button>
         </div>
     </div>
 </div>
