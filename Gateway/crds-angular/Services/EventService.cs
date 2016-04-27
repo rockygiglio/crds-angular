@@ -34,6 +34,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IRoomService _roomService;
         private readonly IEquipmentService _equipmentService;
+        private readonly IEventParticipantService _eventParticipantService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -56,7 +57,8 @@ namespace crds_angular.Services
                             IGroupParticipantService groupParticipantService,
                             IParticipantService participantService,
                             IRoomService roomService,
-                            IEquipmentService equipmentService)
+                            IEquipmentService equipmentService,
+                            IEventParticipantService eventParticipantService)
         {
             _eventService = eventService;
             _groupService = groupService;
@@ -70,6 +72,7 @@ namespace crds_angular.Services
             _participantService = participantService;
             _roomService = roomService;
             _equipmentService = equipmentService;
+            _eventParticipantService = eventParticipantService;
         }
 
         public EventToolDto GetEventRoomDetails(int eventId)
@@ -144,8 +147,8 @@ namespace crds_angular.Services
 
                 if (includeParticipants)
                 {
-                    // TODO Need to calculate number of participants currently assigned to this room
-                    r.ParticipantsAssigned = 1;
+                    var p = _eventParticipantService.GetEventParticipants(eventId, room.RoomId);
+                    r.ParticipantsAssigned = p == null ? 0 : p.Count;
                 }
 
                 roomDto.Add(r);

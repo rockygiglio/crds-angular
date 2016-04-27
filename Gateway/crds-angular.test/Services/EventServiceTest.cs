@@ -31,6 +31,7 @@ namespace crds_angular.test.Services
         private Mock<IApiUserService> _apiUserService;
         private Mock<IRoomService> _roomService;
         private Mock<IEquipmentService> _equipmentService;
+        private Mock<IEventParticipantService> _eventParticipantService;
 
         private EventService _fixture;
 
@@ -53,6 +54,7 @@ namespace crds_angular.test.Services
             _eventService = new Mock<IEventService>();
             _roomService = new Mock<IRoomService>();
             _equipmentService= new Mock<IEquipmentService>();
+            _eventParticipantService = new Mock<IEventParticipantService>(MockBehavior.Strict);
 
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
@@ -68,7 +70,10 @@ namespace crds_angular.test.Services
                                         _apiUserService.Object,
                                         _contactRelationshipService.Object,
                                         _groupParticipantService.Object,
-                                        _participantService.Object, _roomService.Object, _equipmentService.Object);
+                                        _participantService.Object,
+                                        _roomService.Object,
+                                        _equipmentService.Object,
+                                        _eventParticipantService.Object);
         }
         
         [Test]
@@ -206,10 +211,26 @@ namespace crds_angular.test.Services
             };
             _roomService.Setup(mocked => mocked.GetRoomReservations(123)).Returns(r);
 
+            var p = new List<List<EventParticipant>>
+            {
+                new List<EventParticipant>
+                {
+                    new EventParticipant()
+                },
+                new List<EventParticipant>
+                {
+                    new EventParticipant(),
+                    new EventParticipant()
+                }
+            };
+            _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);
+            _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 22)).Returns(p[1]);
+
             var response = _fixture.GetEventRoomDetails(123);
             _eventService.VerifyAll();
             _roomService.VerifyAll();
             _equipmentService.VerifyAll();
+            _eventParticipantService.VerifyAll();
 
             Assert.NotNull(response);
             Assert.AreEqual(e.EventTitle, response.Title);
@@ -231,6 +252,7 @@ namespace crds_angular.test.Services
                 Assert.AreEqual(r[i].CheckinAllowed, response.Rooms[i].CheckinAllowed);
                 Assert.AreEqual(r[i].Name, response.Rooms[i].Name);
                 Assert.AreEqual(r[i].Label, response.Rooms[i].Label);
+                Assert.AreEqual(p[i].Count, response.Rooms[i].ParticipantsAssigned);
             }
         }
 
