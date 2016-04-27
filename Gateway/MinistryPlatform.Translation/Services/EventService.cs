@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _eventParticipantSubPageId = Convert.ToInt32(AppSettings("EventsParticipants"));
         private readonly int _eventParticipantPageId = Convert.ToInt32(AppSettings("EventParticipant"));
         private readonly int _eventGroupsPageViewId = Convert.ToInt32(AppSettings("GroupsByEventId"));
-        private readonly int _eventsBySitePageViewId = Convert.ToInt32(AppSettings("EventsBySite"));
+        private readonly int _eventGroupsPageId = Convert.ToInt32(AppSettings("EventsGroups"));
 
         private readonly int _eventParticipantStatusDefaultId =
             Convert.ToInt32(AppSettings("Event_Participant_Status_Default_ID"));
@@ -339,7 +339,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
-            var searchString = eventId + ",";
+            var searchString =  "," + eventId;
             var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 
@@ -350,25 +350,30 @@ namespace MinistryPlatform.Translation.Services
 
             return records.Select(record => new EventGroup
             {
-                Event_Group_ID = record.ToInt("Event_Group_ID"),
-                Event_ID = record.ToInt("Event_ID"),
-                Group_ID = record.ToInt("Group_ID"),
-                Room_ID = record.ToInt("Room_ID"),
-                Domain_ID = record.ToInt("Domain_ID"),
+                Event_Group_ID = record.ToInt("Event Group ID"),
+                Event_ID = record.ToInt("Event ID"),
+                Group_ID = record.ToInt("Group ID"),
+                Room_ID = record.ToInt("Room ID"),
                 Closed = record.ToBool("Closed"),
-                Event_Room_ID = record.ToInt("Event_Room_ID")
+                Event_Room_ID = record.ToInt("Event Room ID")
             }).ToList();
         }
 
-        public void DeleteEventGroup(EventGroup eventGroup)
+        public void DeleteEventGroup(EventGroup eventGroup, string token)
         {
-            _ministryPlatformService.DeleteRecord(_eventGroupsPageViewId, eventGroup.Event_Group_ID, null, ApiLogin());
+            _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.Event_Group_ID, null, token);
         }
 
-        // this is coded for site right now, using location - is this right?
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
             var searchString = ",," + site + ",," + template;
+
+            //// TODO: Get rid of this hardcoded value - just returning one event for speed during coding
+            //if (template == false)
+            //{
+            //    searchString = "4515464,," + site + ",," + template;
+            //}
+
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 
@@ -379,7 +384,7 @@ namespace MinistryPlatform.Translation.Services
 
             return records.Select(record => new Event
             {
-                // this isn't a complete list of all event fields - we may need more
+                // this isn't a complete list of all event fields - we may need more for user info purposes
                 EventId = record.ToInt("Event ID"),
                 Congregation = record.ToString("Congregation Name"),
                 EventTitle = record.ToString("Event Title"),
@@ -394,14 +399,14 @@ namespace MinistryPlatform.Translation.Services
                 {"Event_ID", eventGroup.Event_ID},
                 {"Group_ID", eventGroup.Group_ID},
                 {"Room_ID", eventGroup.Room_ID},
-                {"Domain_ID", eventGroup.Domain_ID},
+                {"Domain_ID", 1},
                 {"Closed", eventGroup.Closed},
                 {"Event_Room_ID", eventGroup.Event_Room_ID}
             };
 
             try
             {
-                return (_ministryPlatformService.CreateRecord(_eventGroupsPageViewId, groupDictionary, token, true));
+                return (_ministryPlatformService.CreateRecord(_eventGroupsPageId, groupDictionary, token, true));
             }
             catch (Exception e)
             {

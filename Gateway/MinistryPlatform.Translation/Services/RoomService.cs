@@ -41,18 +41,35 @@ namespace MinistryPlatform.Translation.Services
         public int CreateRoomReservation(RoomReservationDto roomReservation, string token)
         {
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
-            var reservationDictionary = new Dictionary<string, object>
+
+            var reservationDictionary = new Dictionary<string, object>();
+            reservationDictionary.Add("Event_ID", roomReservation.EventId);
+            reservationDictionary.Add("Room_ID", roomReservation.RoomId);
+
+            if (roomReservation.RoomLayoutId != 0)
             {
-                {"Event_ID", roomReservation.EventId},
-                {"Room_ID", roomReservation.RoomId},
-                {"Room_Layout_ID", roomReservation.RoomLayoutId},
-                {"Notes", roomReservation.Notes},
-                {"Hidden", roomReservation.Hidden},
-                {"Cancelled", roomReservation.Cancelled},
-                {"Capacity", roomReservation.Capacity},
-                {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.Allow_Checkin}
-            };
+                reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+            }
+
+            reservationDictionary.Add("Notes", roomReservation.Notes);
+            reservationDictionary.Add("Hidden", roomReservation.Hidden);
+            reservationDictionary.Add("Cancelled", roomReservation.Cancelled);
+            reservationDictionary.Add("Capacity", roomReservation.Capacity);
+            reservationDictionary.Add("Label", roomReservation.Label);
+            reservationDictionary.Add("Allow_Checkin", roomReservation.Allow_Checkin);
+
+            //var reservationDictionary = new Dictionary<string, object>
+            //{
+            //    {"Event_ID", roomReservation.EventId},
+            //    {"Room_ID", roomReservation.RoomId},
+            //    {"Room_Layout_ID", roomReservation.RoomLayoutId},
+            //    {"Notes", roomReservation.Notes},
+            //    {"Hidden", roomReservation.Hidden},
+            //    {"Cancelled", roomReservation.Cancelled},
+            //    {"Capacity", roomReservation.Capacity},
+            //    {"Label", roomReservation.Label},
+            //    {"Allow_Checkin", roomReservation.Allow_Checkin}
+            //};
 
             try
             {
@@ -95,11 +112,11 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void DeleteRoomReservation(RoomReservationDto roomReservation)
+        public void DeleteRoomReservation(RoomReservationDto roomReservation, string token)
         {
             // TODO: Move this to a classwide variable to support testing, dry it up, etc
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
-            _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, ApiLogin());
+            _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, token);
         }
 
         public List<Room> GetRoomsByLocationId(int locationId)

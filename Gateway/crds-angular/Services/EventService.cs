@@ -591,21 +591,21 @@ namespace crds_angular.Services
 
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            eventId = 4515464; // hardcoded for testing
+            //eventId = 4515464; // hardcoded for testing
 
             // step 0 - delete existing data on the event, for eventgroups and eventrooms
             var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
 
             foreach (var eventGroup in discardedEventGroups)
             {
-                _eventService.DeleteEventGroup(eventGroup);
+                _eventService.DeleteEventGroup(eventGroup, token);
             }
 
             var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
 
             foreach (var roomEvent in discardedRoomReservations)
             {
-                _roomService.DeleteRoomReservation(roomEvent);
+                _roomService.DeleteRoomReservation(roomEvent, token);
             }
 
             // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
@@ -617,14 +617,16 @@ namespace crds_angular.Services
             {
                 // TODO: Is this the right approach? -- other options kinda suck, too
                 eventRoom.EventId = eventId;
+
+                // this is the new room reservation id for the copied room
                 int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
 
                 // get the template event group which matched the template event room, and assign the reservation id to this object
-                var eventGroup = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r).FirstOrDefault();
+                var eventGroupsForRoom = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r);
 
-                // check for matching event group
-                if (eventGroup.Event_Room_ID != eventRoom.EventRoomId)
+                foreach (var eventGroup in eventGroupsForRoom)
                 {
+                    // create the copied event group and assign the new room reservation id here
                     eventGroup.Event_ID = eventId;
                     eventGroup.Event_Room_ID = roomReservationId;
                     _eventService.CreateEventGroup(eventGroup, token);

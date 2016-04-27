@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void SetReminderFlag(int eventId, string token);
         List<EventGroup> GetEventGroupsForEvent(int eventId, string token);
         //void CopyEventGroup(EventGroup eventGroup);
-        void DeleteEventGroup(EventGroup eventGroup);
+        void DeleteEventGroup(EventGroup eventGroup, string token);
         int CreateEventGroup(EventGroup eventGroup, string token);
         void UpdateEventGroup(EventGroup eventGroup, string token);
 
