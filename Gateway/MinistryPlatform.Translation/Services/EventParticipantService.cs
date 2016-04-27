@@ -114,13 +114,15 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public List<EventParticipant> GetEventParticipants(string authToken, int eventId, int? roomId = null)
+        public List<EventParticipant> GetEventParticipants(int eventId, int? roomId = null)
         {
             var searchString = roomId == null ? null : string.Format(",,,\"{0}\"", roomId);
 
             try
             {
-                var records = _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, authToken, searchString);
+                var records = 
+                    WithApiLogin(
+                        apiToken => _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, apiToken, searchString));
                 return records.Select(viewRecord => new EventParticipant
                 {
                     EventParticipantId = viewRecord.ToInt("Event_Participant_ID"),
