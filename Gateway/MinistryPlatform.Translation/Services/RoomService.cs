@@ -55,7 +55,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
                 {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.Allow_Checkin}
+                {"Allow_Checkin", roomReservation.CheckinAllowed}
             };
 
             try
@@ -84,7 +84,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
                 {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.Allow_Checkin}
+                {"Allow_Checkin", roomReservation.CheckinAllowed}
             };
 
             try
