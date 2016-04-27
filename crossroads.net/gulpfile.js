@@ -39,7 +39,7 @@ function htmlReplace(devBuild) {
       give: { js: '/assets/give.js' },
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
-      formbuilder: { js: 'assets/formbuilder.js' }
+      formbuilder: { js: '/assets/formbuilder.js' }
     };
   } else {
     assets = require('./webpack-assets.json');
