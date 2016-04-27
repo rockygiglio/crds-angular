@@ -24,7 +24,6 @@
       vm.roomsLoading = true;
       vm.eventRooms = [];
 
-      event.id = 4515378;
       AdminCheckinDashboardService.checkinDashboard.get({ eventId: event.id},
         function (data) {
           vm.eventRooms = data.rooms;
