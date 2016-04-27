@@ -6,8 +6,8 @@
         <div class="form-group col-sm-6">
             <label> Event Template </label>
             <select class="form-control col-sm-12"
-                    ng-model="profile.profileData.person.maritalStatusId"
-                    ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                    ng-model="EventSetupCtrl.templateId"
+                    ng-options="eventTemplate.EventId as eventTemplate.EventTitle for eventTemplate in EventSetupCtrl.eventTemplates">
                 <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
             </select>
         </div>
@@ -16,8 +16,8 @@
         <div class="form-group col-sm-6">
             <label> Event </label>
             <select class="form-control col-sm-12"
-                    ng-model="profile.profileData.person.maritalStatusId"
-                    ng-options="status.dp_RecordID as status.dp_RecordName for status in profile.maritalStatuses">
+                    ng-model="EventSetupCtrl.eventId"
+                    ng-options="event.EventId as event.EventTitle for event in EventSetupCtrl.events">
                 <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
             </select>
         </div>

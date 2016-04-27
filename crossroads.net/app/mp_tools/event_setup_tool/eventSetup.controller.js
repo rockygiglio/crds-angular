@@ -50,6 +50,11 @@
         vm.viewReady = false;
 
         vm.siteId = undefined;
+        vm.templateId = undefined;
+        vm.eventId = undefined;
+        vm.eventTemplates = undefined;
+        vm.events = undefined;
+
         vm.loadEvents = loadEvents;
 
         activate();
@@ -66,9 +71,13 @@
             debugger;
             // load templates first
             EventService.eventsBySite.query({ site : vm.siteId, template: true }, function(data) {
-                debugger;
+                vm.eventTemplates = data;
             });
 
+            // load events
+            EventService.eventsBySite.query({ site : vm.siteId, template: false }, function(data) {
+                vm.events = data;
+            });
         }
 
         function allowAccess() {
