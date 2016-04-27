@@ -12,6 +12,14 @@
 
         <div ng-show="checkinDashboard.viewReady">
           <div class="row">
+            <div class="col-lg-6">
+              <site-filter site="checkinDashboard.site" on-change="checkinDashboard.loadEvents()"></site-filter>
+            </div>
+            <div class="col-lg-6">
+              <event-filter label="Event" event="checkinDashboard.event" events="checkinDashboard.events"></event-filter>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-lg-12">
               <event-rooms rooms="checkinDashboard.eventRooms"></event-rooms>
             </div>
