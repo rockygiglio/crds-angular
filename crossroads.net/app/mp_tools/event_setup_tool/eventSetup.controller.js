@@ -50,6 +50,11 @@
         vm.viewReady = false;
 
         vm.siteId = undefined;
+        vm.templateId = undefined;
+        vm.eventId = undefined;
+        vm.eventTemplates = undefined;
+        vm.events = undefined;
+
         vm.loadEvents = loadEvents;
 
         activate();
@@ -60,8 +65,19 @@
           vm.multipleRecordsSelected = showError();
         }
 
-        function loadEvents() {
+        function loadEvents(siteId) {
+
+            vm.siteId = siteId;
             debugger;
+            // load templates first
+            EventService.eventsBySite.query({ site : vm.siteId, template: true }, function(data) {
+                vm.eventTemplates = data;
+            });
+
+            // load events
+            EventService.eventsBySite.query({ site : vm.siteId, template: false }, function(data) {
+                vm.events = data;
+            });
         }
 
         function allowAccess() {

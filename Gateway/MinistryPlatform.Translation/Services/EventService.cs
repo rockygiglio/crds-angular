@@ -368,11 +368,11 @@ namespace MinistryPlatform.Translation.Services
         // this is coded for site right now, using location - is this right?
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var searchString = ",,," + site + "," + template;
+            var searchString = ",," + site + ",," + template;
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 
-            if (records == null)
+            if (records == null || records.Count == 0)
             {
                 return null;
             }
@@ -380,14 +380,9 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(record => new Event
             {
                 // this isn't a complete list of all event fields - we may need more
-                EventId = record.ToInt("Event_ID"),
-                Congregation = record.ToString("Congregation"),
-                Site = record.ToString("Location"),
-                EventTitle = record.ToString("Event_Title"),
-                EventType = record.ToString("Event_Type"),
-                EventStartDate = record.ToDate("Event_Start_Date"),
-                EventEndDate = record.ToDate("Event_End_Date"),
-                ParentEventId = record.ToInt("Parent_Event_ID"),
+                EventId = record.ToInt("Event ID"),
+                Congregation = record.ToString("Congregation Name"),
+                EventTitle = record.ToString("Event Title"),
                 Template = record.ToBool("Template")
             }).ToList();
         }

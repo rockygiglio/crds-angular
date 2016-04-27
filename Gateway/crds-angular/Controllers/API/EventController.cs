@@ -99,17 +99,17 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/event/eventsbysite")]
-        public IHttpActionResult GetEventTemplates(EventSearchRequest request)
+        [Route("api/event/eventsbysite/{site}")]
+        public IHttpActionResult GetEventsBySite(string site, [FromUri(Name = "template")] bool template = false)
         {
             return Authorized(token => {
                 try
                 {
-                    return Ok(_eventService.GetEventsBySite(request.Site, request.Template, token));
+                    return Ok(_eventService.GetEventsBySite(site, template, token));
                 }
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("GetEventTemplates failed for Site=" + request.Site + ", Template:" + request.Template, e);
+                    var apiError = new ApiErrorDto("GetEventTemplates failed for Site=" + site + ", Template:" + template, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
