@@ -21,14 +21,9 @@
       scope.editRoom = editRoom;
       scope.editCheckinAllowed = editCheckinAllowed;
 
-      activate();
-
       /////////////////////////////////
       ////// IMPLMENTATION DETAILS ////
       /////////////////////////////////
-
-      function activate() {
-      }
 
       function update() {
       }
