@@ -49,9 +49,9 @@
         vm.showError = showError;
         vm.viewReady = false;
 
-        vm.siteId = undefined;
-        vm.templateId = undefined;
-        vm.eventId = undefined;
+        vm.site = {id: undefined};
+        vm.template = {id: undefined};
+        vm.event = {id: undefined};
         vm.eventTemplates = undefined;
         vm.events = undefined;
 
@@ -65,19 +65,16 @@
           vm.multipleRecordsSelected = showError();
         }
 
-        function loadEvents(siteId) {
+        function loadEvents() {
+          // load templates first
+          EventService.eventsBySite.query({ site : vm.site.id, template: true }, function(data) {
+              vm.eventTemplates = data;
+          });
 
-            vm.siteId = siteId;
-            debugger;
-            // load templates first
-            EventService.eventsBySite.query({ site : vm.siteId, template: true }, function(data) {
-                vm.eventTemplates = data;
-            });
-
-            // load events
-            EventService.eventsBySite.query({ site : vm.siteId, template: false }, function(data) {
-                vm.events = data;
-            });
+          // load events
+          EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
+              vm.events = data;
+          });
         }
 
         function allowAccess() {

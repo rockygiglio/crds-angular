@@ -1,25 +1,15 @@
  <div>
     <div class="row">
         <div class="form-group col-sm-4">
-          <site-filter site-id="EventSetupCtrl.siteId" on-change="EventSetupCtrl.loadEvents(siteId)"></site-filter>
+          <site-filter site="EventSetupCtrl.site" on-change="EventSetupCtrl.loadEvents()"></site-filter>
         </div>
         <div class="form-group col-sm-6">
-            <label> Event Template </label>
-            <select class="form-control col-sm-12"
-                    ng-model="EventSetupCtrl.templateId"
-                    ng-options="eventTemplate.EventId as eventTemplate.EventTitle for eventTemplate in EventSetupCtrl.eventTemplates">
-                <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-            </select>
+          <event-filter label="Event Template" event="EventSetupCtrl.template" events="EventSetupCtrl.eventTemplates"></event-filter>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-6">
-            <label> Event </label>
-            <select class="form-control col-sm-12"
-                    ng-model="EventSetupCtrl.eventId"
-                    ng-options="event.EventId as event.EventTitle for event in EventSetupCtrl.events">
-                <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-            </select>
+          <event-filter label="Event" event="EventSetupCtrl.event" events="EventSetupCtrl.events"></event-filter>
         </div>
     </div>
     <div class="row">
