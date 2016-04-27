@@ -661,31 +661,4 @@
     return link;
   }
 
-  function compilePage(ContentPageService, $rootScope, $templateFactory) {
-    setupMetaData(ContentPageService, $rootScope);
-    return chooseTempalte(ContentPageService, $templateFactory);
-  }
-
-  function setupMetaData(ContentPageService, $rootScope) {
-    var metaDescription = ContentPageService.page.metaDescription;
-    if (!metaDescription) {
-      //If a meta description is not provided we'll use the Content
-      //The description gets html stripped and shortened to 155 characters
-      metaDescription = ContentPageService.page.content;
-    }
-
-    $rootScope.meta = {
-      title: ContentPageService.page.title,
-      description: metaDescription,
-      card: ContentPageService.page.card,
-      type: ContentPageService.page.type,
-      image: ContentPageService.page.image,
-      statusCode: ContentPageService.page.errorCode
-    };
-  }
-
-  function chooseTempalte(ContentPageService, $templateFactory) {
-
-  }
-
 })();
