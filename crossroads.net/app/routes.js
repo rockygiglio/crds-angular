@@ -706,26 +706,27 @@
                                 
                   if (ContentPageService.page.canViewType === "LoggedInUsers" ) {                    
                        $state.next.data.isProtected = true;
-                       if (Session.isActive()) {
-                        $http({
-                          method: 'GET',
-                          url: __API_ENDPOINT__ + 'api/authenticated',
-                          withCredentials: true,
-                          headers: {
-                            Authorization: $cookies.get('sessionId'),
-                            RefreshToken: $cookies.get('refreshToken')
-                          }
-                        }).success(function(user) {
-                          $rootScope.userid = user.userId;
-                          $rootScope.username = user.username;
-                          $rootScope.email = user.userEmail;
-                          $rootScope.roles = user.roles;
-                        }).error(function(e) {
-                          clearAndRedirect(event, $state.next.name, $state.toParams);
-                        });
-                      } else  {
-                        clearAndRedirect(event, $state.next.name, $state.toParams);                    
-                      }                                                                                           
+                       Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);
+                    //    if (Session.isActive()) {
+                    //     $http({
+                    //       method: 'GET',
+                    //       url: __API_ENDPOINT__ + 'api/authenticated',
+                    //       withCredentials: true,
+                    //       headers: {
+                    //         Authorization: $cookies.get('sessionId'),
+                    //         RefreshToken: $cookies.get('refreshToken')
+                    //       }
+                    //     }).success(function(user) {
+                    //       $rootScope.userid = user.userId;
+                    //       $rootScope.username = user.username;
+                    //       $rootScope.email = user.userEmail;
+                    //       $rootScope.roles = user.roles;
+                    //     }).error(function(e) {
+                    //       clearAndRedirect(event, $state.next.name, $state.toParams);
+                    //     });
+                    //   } else  {
+                    //     clearAndRedirect(event, $state.next.name, $state.toParams);                    
+                    //   }                                                                                           
                   }
                   
                       function clearAndRedirect(event, toState, toParams) {                       
