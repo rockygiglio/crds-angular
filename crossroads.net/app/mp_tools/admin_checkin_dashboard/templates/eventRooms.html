@@ -2,10 +2,10 @@
   <table class="table">
     <thead>
       <th>Room</th>
-      <th style="white-space: nowrap">Room Label</th>
+      <th class="col-lg-2" style="white-space: nowrap">Room Label</th>
       <th style="white-space: nowrap">Can Checkin</th>
-      <th># of Volunteers</th>
-      <th>Capacity</th>
+      <th class="col-lg-2"># of Volunteers</th>
+      <th class="col-lg-2">Capacity</th>
       <th style="white-space: nowrap">Total Kids<br>Signed/Checked In</th>
       <th>Kids/Volunteers ratio</th>
     </thead>
@@ -31,12 +31,10 @@
           </div>
         </td>
         <td>
-          <input type="text" ng-model="room.volunteers"/>
+          <input type="text" ng-model="room.volunteers" class="form-control"/>
         </td>
         <td>
-          <button type="button" class="btn btn-primary" style="font-size: 8px"><i class="glyphicon glyphicon-minus"></i></button>
-          <span>{{ room.capacity }}<span>
-          <button type="button" class="btn btn-primary" style="font-size: 8px"><i class="glyphicon glyphicon-plus"></i></button>
+          <h-number value="room.capacity" min="1" max="1000" step="1" change="update()"></h-number>
         </td>
         <td>
           {{ room.participantsAssigned }}

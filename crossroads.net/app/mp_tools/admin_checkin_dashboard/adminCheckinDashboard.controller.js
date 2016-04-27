@@ -3,38 +3,50 @@
 
   module.exports = AdminCheckinDashboardController;
 
-  AdminCheckinDashboardController.$inject = ['$log', '$scope', 'AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService'];
+  AdminCheckinDashboardController.$inject = ['AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService', 'EventService'];
 
-  function AdminCheckinDashboardController($log, $scope, AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService) {
+  function AdminCheckinDashboardController(AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService, EventService) {
     var vm = this;
     vm.site = {id: undefined};
+    vm.eventsReady = false;
+    vm.eventsLoading = false;
     vm.event = {id: undefined};
     vm.events = [];
-    vm.viewReady = false;
     vm.eventRooms = [];
     vm.loadEvents = loadEvents;
-
-    activate();
-
-    function activate() {
-      AdminCheckinDashboardService.checkinDashboard.get({ eventId: 4515378},
-        function (data) {
-          vm.eventRooms = data.rooms;
-          vm.viewReady = true;
-        },
-        function (error) {
-          setErrorState(error);
-      });
-    }
-
-    function loadEvents() {
-      EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
-        vm.events = data;
-      });
-    }
+    vm.loadRooms = loadRooms;
 
     vm.allowAdminAccess = function() {
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
     };
+
+    function loadRooms() {
+      vm.roomsLoading = true;
+      vm.eventRooms = [];
+
+      event.id = 4515378;
+      AdminCheckinDashboardService.checkinDashboard.get({ eventId: event.id},
+        function (data) {
+          vm.eventRooms = data.rooms;
+          vm.roomsLoading = false;
+        }
+      );
+    }
+
+    function loadEvents() {
+      reset();
+
+      EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
+        vm.events = data;
+        vm.eventsLoading = false;
+      });
+    }
+
+    function reset() {
+      vm.eventsReady = true;
+      vm.eventsLoading = true;
+      vm.roomsLoading = false;
+      vm.eventRooms = [];
+    }
   }
 })();
