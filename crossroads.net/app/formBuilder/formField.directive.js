@@ -9,11 +9,12 @@
     return {
       restrict: 'E',
       scope: {
-        field: '=?'
+        field: '=?',
+        className: '='
       },
       link: function(scope, element) {
-        //var templateUrl = getTemplateUrl(newValue);
-        $templateRequest('templates/textField.html').then(function(html) {
+        var templateUrl = getTemplateUrl(scope.className);
+        $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);
           element.append(template);
           $compile(template)(scope);
