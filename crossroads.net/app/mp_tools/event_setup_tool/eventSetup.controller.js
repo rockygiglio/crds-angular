@@ -103,7 +103,7 @@
 
         function setup() {
             debugger;
-            EventService.eventSetup.save({eventtemplateid: vm.templateId, eventid: vm.eventId}).$promise.then(function(response) {
+            EventService.eventSetup.save({eventtemplateid: vm.template.id, eventid: vm.event.id}).$promise.then(function(response) {
                 //$rootScope.$emit('notify', $rootScope.MESSAGES.);
                 vm.saving = false;
             }, function(error) {

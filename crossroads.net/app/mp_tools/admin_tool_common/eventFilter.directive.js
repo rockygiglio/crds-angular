@@ -10,7 +10,7 @@
       restrict: 'EA',
       replace: true,
       scope: {
-        label: '=',
+        label: '@',
         event: '=',
         events: '='
       },
