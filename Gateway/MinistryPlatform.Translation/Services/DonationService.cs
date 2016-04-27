@@ -483,9 +483,6 @@ namespace MinistryPlatform.Translation.Services
             }
         }
         
-          
-      
-
         private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, int indx)
         {
             if (datum.ProcessorFeeAmount < 0)
