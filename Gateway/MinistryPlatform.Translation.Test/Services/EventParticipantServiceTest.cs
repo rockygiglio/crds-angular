@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             };
 
-            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", 123, "abc", ",,,\"987\"", "", 0)).Returns(p);
+            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", 123, "ABC", ",,,\"987\"", "", 0)).Returns(p);
             var result = _fixture.GetEventParticipants(123, 987);
 
             _ministryPlatformService.VerifyAll();
