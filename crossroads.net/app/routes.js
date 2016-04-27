@@ -655,9 +655,7 @@
                                           $stateParams,
                                           Page,
                                           ContentPageService,
-                                          Session,
-                                          $cookies,
-                                          $http,
+                                          Session,                                          
                                           $state) {
                 var promise;
 
