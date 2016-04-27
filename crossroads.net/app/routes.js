@@ -650,11 +650,21 @@
           views: {
             '': {
               controller: 'ContentCtrl',
+<<<<<<< HEAD
               templateProvider: function($rootScope,
                                          $templateFactory,
                                          $stateParams,
                                          Page,
                                          ContentPageService) {
+=======
+              templateProvider: function ($rootScope,
+                                          $templateFactory,
+                                          $stateParams,
+                                          Page,
+                                          ContentPageService,
+                                          Session,                                          
+                                          $state) {
+>>>>>>> feature/US3666-UndivivdedAuth
                 var promise;
 
                 var link = addTrailingSlashIfNecessary($stateParams.link);
@@ -700,6 +710,12 @@
                     image: ContentPageService.page.image,
                     statusCode: ContentPageService.page.errorCode
                   };
+                        
+                  if (ContentPageService.page.canViewType === "LoggedInUsers" ) {                    
+                       $state.next.data.isProtected = true;
+                       Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);                                                                                         
+                  }                                    
+
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
                       return $templateFactory.fromUrl('templates/noHeaderOrFooter.html');
@@ -731,7 +747,7 @@
             }
 
           }, data: {
-            resolve: true
+            resolve: true          
           }
         });
 
