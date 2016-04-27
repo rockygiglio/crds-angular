@@ -654,7 +654,11 @@
                                           $templateFactory,
                                           $stateParams,
                                           Page,
-                                          ContentPageService) {
+                                          ContentPageService,
+                                          Session,
+                                          $cookies,
+                                          $http,
+                                          $state) {
                 var promise;
 
                 var link = addTrailingSlashIfNecessary($stateParams.link);
@@ -699,6 +703,45 @@
                     image: ContentPageService.page.image,
                     statusCode: ContentPageService.page.errorCode
                   };
+                                 
+                  if (ContentPageService.page.canViewType === "LoggedInUsers" ) {                    
+                  
+                       if (Session.isActive()) {
+                        $http({
+                          method: 'GET',
+                          //url: __API_ENDPOINT__ + 'api/authenticated',
+                          url: 'https://gatewayint.crossroads.net/gateway/api/authenticated',
+                          withCredentials: true,
+                          headers: {
+                            Authorization: $cookies.get('sessionId'),
+                            RefreshToken: $cookies.get('refreshToken')
+                          }
+                        }).success(function(user) {
+                          $rootScope.userid = user.userId;
+                          $rootScope.username = user.username;
+                          $rootScope.email = user.userEmail;
+                          $rootScope.roles = user.roles;
+                        }).error(function(e) {
+                          clearAndRedirect(event, $state.toState, $state.toParams);
+                        });
+                      } else  {
+                        clearAndRedirect(event, $state.toState, $state.toParams);                    
+                      }
+                      
+                                     
+
+                                  
+                  }
+                  
+                      function clearAndRedirect(event, toState, toParams) {                       
+                        Session.clear();
+                        $rootScope.userid = null;
+                        $rootScope.username = null;
+                        Session.addRedirectRoute(toState, toParams);
+                        event.preventDefault();
+                        $state.go('login');
+                      }
+                  
 
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
@@ -731,7 +774,7 @@
             }
 
           }, data: {
-            resolve: true
+            resolve: true          
           }
         });
 
