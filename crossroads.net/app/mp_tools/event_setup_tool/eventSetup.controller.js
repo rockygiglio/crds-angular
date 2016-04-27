@@ -55,6 +55,8 @@
         vm.eventTemplates = undefined;
         vm.events = undefined;
 
+        vm.setup = setup;
+
         vm.loadEvents = loadEvents;
 
         activate();
@@ -100,6 +102,17 @@
                 return true;
             }
             return false;
+        }
+
+        function setup() {
+            debugger;
+            EventService.eventSetup.save({eventtemplateid: vm.templateId, eventid: vm.eventId}).$promise.then(function(response) {
+                //$rootScope.$emit('notify', $rootScope.MESSAGES.);
+                vm.saving = false;
+            }, function(error) {
+                $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+                vm.saving = false;
+            });
         }
     }
 

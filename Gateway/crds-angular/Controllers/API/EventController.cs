@@ -83,7 +83,7 @@ namespace crds_angular.Controllers.API
         }
 
         [Route("api/event/copyeventsetup")]
-        public IHttpActionResult CopyEventGroups(EventCopyRequest request)
+        public IHttpActionResult CopyEventSetup(EventCopyRequest request)
         {
             return Authorized(token => {
                 try
