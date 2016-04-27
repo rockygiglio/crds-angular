@@ -10,7 +10,7 @@
       restrict: 'EA',
       replace: true,
       scope: {
-        siteId: '=',
+        site: '=',
         onChange: '&'
       },
       templateUrl: 'templates/siteFilter.html',
@@ -19,6 +19,7 @@
 
     function link(scope, element, attrs) {
       scope.sites = [];
+      scope.change = change;
 
       activate();
 
@@ -31,6 +32,10 @@
           function(data) {
             scope.sites = data;
         });
+      }
+
+      function change() {
+        scope.onChange();
       }
 
     }
