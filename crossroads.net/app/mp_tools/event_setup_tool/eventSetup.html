@@ -14,14 +14,15 @@
     </div>
     <div class="row">
         <div class="form-group">
-            <button class="btn btn-primary btn-sm" ng-click="trip.cancel()">Cancel</button>
-            <button class="btn btn-primary btn-sm"
-                    ng-class="{disabled: trip.processing}"
-                    ng-disabled="!tripForm.$valid"
-                    ng-click="trip.save()">
-                <span ng-if="trip.processing">Saving...</span>
-                <span ng-if="!trip.processing">Save</span>
-            </button>
+            <!--<button class="btn btn-primary btn-sm" ng-click="trip.cancel()">Cancel</button>-->
+            <!--<button class="btn btn-primary btn-sm"-->
+                    <!--ng-class="{disabled: trip.processing}"-->
+                    <!--ng-disabled="!tripForm.$valid"-->
+                    <!--ng-click="trip.save()">-->
+                <!--<span ng-if="trip.processing">Saving...</span>-->
+                <!--<span ng-if="!trip.processing">Save</span>-->
+            <!--</button>-->
+            <button class="btn btn-primary btn-sm" ng-click="EventSetupCtrl.setup()">Setup</button>
         </div>
     </div>
 </div>
