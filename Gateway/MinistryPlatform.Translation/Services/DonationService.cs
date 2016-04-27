@@ -476,8 +476,15 @@ namespace MinistryPlatform.Translation.Services
         private void GenerateGLLevelGpExport(List<GPExportDatum> gpExportGLLevel, GPExportDatum gpExportDistLevel, Dictionary<string, object> processingFeeGLMapping,int indx)
         {
             gpExportGLLevel.Add(AdjustGPExportDatumAmount(gpExportDistLevel, indx));
-            gpExportGLLevel.Add(CreateProcessorFee(gpExportDistLevel, processingFeeGLMapping));
+
+            if (gpExportDistLevel.ProcessorFeeAmount != 0)
+            {
+                gpExportGLLevel.Add(CreateProcessorFee(gpExportDistLevel, processingFeeGLMapping));
+            }
         }
+        
+          
+      
 
         private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, int indx)
         {
