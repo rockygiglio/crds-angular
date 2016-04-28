@@ -15,6 +15,7 @@
     vm.eventRooms = [];
     vm.loadEvents = loadEvents;
     vm.loadRooms = loadRooms;
+    vm.reset = reset;
 
     vm.allowAdminAccess = function() {
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
@@ -24,8 +25,8 @@
       vm.roomsLoading = true;
       vm.eventRooms = [];
 
-      AdminCheckinDashboardService.checkinDashboard.get({ eventId: event.id},
-        function (data) {
+      AdminCheckinDashboardService.checkinDashboard.get({ eventId: vm.event.id},
+        function(data) {
           vm.eventRooms = data.rooms;
           vm.roomsLoading = false;
         }
@@ -35,7 +36,7 @@
     function loadEvents() {
       reset();
 
-      EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
+      EventService.eventsBySite.query({ site: vm.site.id, template: false }, function(data) {
         vm.events = data;
         vm.eventsLoading = false;
       });

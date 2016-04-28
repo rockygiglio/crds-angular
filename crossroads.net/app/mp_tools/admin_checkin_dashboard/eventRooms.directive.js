@@ -31,9 +31,8 @@
       function ratio(room) {
         if (room.volunteers == undefined || room.volunteers == 0) {
           return 'N/A';
-        }
-        else if (room.participantsAssigned % room.volunteers == 0 && room.participantsAssigned != 0) {
-          return room.participantsAssigned/room.volunteers + '/1';
+        } else if (room.participantsAssigned % room.volunteers == 0 && room.participantsAssigned != 0) {
+          return room.participantsAssigned / room.volunteers + '/1';
         }
 
         return room.participantsAssigned + '/' + room.volunteers;

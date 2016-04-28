@@ -31,7 +31,7 @@
         LookupService.Congregations.query({},
           function(data) {
             scope.sites = data;
-        });
+          });
       }
 
       function change() {

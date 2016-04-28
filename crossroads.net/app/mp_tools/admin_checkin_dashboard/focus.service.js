@@ -12,8 +12,9 @@
     function focus(id) {
       $timeout(function() {
         var element = $window.document.getElementById(id);
-        if(element)
+        if (element) {
           element.focus();
+        }
       });
     }
 
