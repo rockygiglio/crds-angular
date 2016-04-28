@@ -20,6 +20,7 @@
     function link(scope, element, attrs) {
       scope.sites = [];
       scope.change = change;
+      scope.activate = activate;
 
       activate();
 

@@ -3,9 +3,9 @@
 
   module.exports = EventFilter;
 
-  EventFilter.$inject = ['$log', 'EventService'];
+  EventFilter.$inject = ['$log'];
 
-  function EventFilter($log, EventService) {
+  function EventFilter($log) {
     return {
       restrict: 'EA',
       replace: true,
