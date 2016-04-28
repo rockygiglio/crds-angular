@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -35,7 +36,6 @@ namespace MinistryPlatform.Translation.Test.Services
         public void AddDocumentsToTripParticipantTest()
         {
             const int eventParticipantId = 9;
-            const int eventId = 7;
             var docs = new List<TripDocuments>
             {
                 new TripDocuments
@@ -68,17 +68,17 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new Dictionary<string, object>
                 {
-                    {"Event_Participant_ID", 1},
-                    {"Participant_ID", 11},
-                    {"Participation_Status_ID", 111},
-                    {"Room_ID", 1111}
+                    {"Event_Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participation_Status_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault}
                 },
                 new Dictionary<string, object>
                 {
-                    {"Event_Participant_ID", 2},
-                    {"Participant_ID", 22},
-                    {"Participation_Status_ID", 222},
-                    {"Room_ID", 2222}
+                    {"Event_Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participation_Status_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault}
                 }
 
             };
