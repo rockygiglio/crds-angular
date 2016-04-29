@@ -141,7 +141,7 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-
+        [RequiresAuthorization]
         [Route("api/gpexport/file/{selectionId}/{depositId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFile(int selectionId, int depositId)

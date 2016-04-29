@@ -62,9 +62,9 @@
       }
 
       var params = service.getParams();
-      var getSelectedId = getInt(params.recordId);
-      if (getSelectedId > 0) {
-        goToFunction(getSelectedId);
+      var selectedId = getInt(params.recordId);
+      if (selectedId > 0) {
+        goToFunction(selectedId);
         return;
       }
 
@@ -79,7 +79,7 @@
         });
       }
 
-      service.dto.noSelection = getSelectedId <= 0 && (selectedCount <= 0 || selectionId <= 0);
+      service.dto.noSelection = selectedId <= 0 && (selectedCount <= 0 || selectionId <= 0);
       service.dto.tooManySelections = selectedCount > 1;
     }
 

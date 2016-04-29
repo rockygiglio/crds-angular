@@ -2,6 +2,16 @@
 USE [MinistryPlatform]
 GO
 
+if((select url from dp_bookmarks where name = 'crossroads.net') = "https://demo.crossroads.net")
+{
+ DECLARE @processorID as varchar(255)
+ SET @processorID = 'cus_6YjXxCzFsV300g';
+}
+ELSE
+{
+ DECLARE @processorID as varchar(255)
+ SET @processorID = 'cus_8Lez4HV887Qnwo';
+}
 --Guest Giving ACCOUNT
 --Contact Record
 SET IDENTITY_INSERT [dbo].[Contacts] ON;
@@ -23,7 +33,7 @@ set @donor_id =IDENT_CURRENT('Donors')+1;
 
 INSERT INTO [dbo].Donors 
 ( Donor_ID,Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID        ) VALUES
-(@donor_id,@contactID,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'cus_6YjXxCzFsV300g');
+(@donor_id,@contactID,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,);
 
 SET IDENTITY_INSERT [dbo].[Donors] OFF;
 
@@ -32,12 +42,23 @@ UPDATE [dbo].Contacts set Donor_Record = @donor_id where contact_id = @contactID
 GO
 
 --Registered Account - Mpcrds+20@gmail.com contact record
+if((select url from dp_bookmarks where name = 'crossroads.net') = "https://demo.crossroads.net")
+{
+ DECLARE @processorID as varchar(255)
+ SET @processorID = 'cus_6Woe7iX2PlkGeb';
+}
+ELSE
+{
+ DECLARE @processorID as varchar(255)
+ SET @processorID = 'cus_8Lf397wd4AxozZ';
+}
+
 DECLARE @contactID as int
 set @contactID = (select contact_id from contacts where Email_Address = 'mpcrds+20@gmail.com' and Last_Name = 'Kendricks');
 
 INSERT INTO [dbo].Donors 
-(Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID        ) VALUES
-(@contactID,1                     ,1                ,2                  ,{ts '2015-07-01 09:13:17'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'cus_6Woe7iX2PlkGeb');
+(Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID) VALUES
+(@contactID,1                     ,1                ,2                  ,{ts '2015-07-01 09:13:17'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,@processorID);
 
 DECLARE @donor_id as int
 set @donor_id = (Select donor_ID from donors where contact_id = @contactID);

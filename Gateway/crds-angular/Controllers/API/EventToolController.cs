@@ -24,7 +24,7 @@ namespace crds_angular.Controllers.API
         [AcceptVerbs("GET")]
         [Route("api/eventTool/{eventId}")]
         [ResponseType(typeof (EventToolDto))]
-        public IHttpActionResult Get(int eventId)
+        public IHttpActionResult GetEventReservation(int eventId)
         {
             return Authorized(token =>
             {
@@ -36,6 +36,28 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     var msg = "EventToolController: GET " + eventId;
+                    logger.Error(msg, e);
+                    var apiError = new ApiErrorDto(msg, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/eventTool/{eventId:int}/rooms")]
+        [ResponseType(typeof(EventToolDto))]
+        public IHttpActionResult GetEventRoomDetails(int eventId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var eventReservation = _eventService.GetEventRoomDetails(eventId);
+                    return Ok(eventReservation);
+                }
+                catch (Exception e)
+                {
+                    var msg = "EventToolController: GetEventRoomDetails " + eventId;
                     logger.Error(msg, e);
                     var apiError = new ApiErrorDto(msg, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);

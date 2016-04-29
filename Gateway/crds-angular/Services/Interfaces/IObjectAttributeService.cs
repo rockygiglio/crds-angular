@@ -14,6 +14,6 @@ namespace crds_angular.Services.Interfaces
                                   Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes,
                                   ObjectAttributeConfiguration configuration);
 
-        void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration);
+        void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration, bool parallel=false);
     }
 }

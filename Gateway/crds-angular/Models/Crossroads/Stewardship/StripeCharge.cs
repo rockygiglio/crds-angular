@@ -72,5 +72,8 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("refunds")]
         public StripeList<StripeRefund> Refunds { get; set; }
+
+        [JsonProperty("customer")]
+        public string ProcessorId { get; set; }
     }
 }

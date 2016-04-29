@@ -888,9 +888,17 @@ namespace MinistryPlatform.Translation.Services
             return createDonation;
         }
 
-        public CreateDonationDistDto GetRecurringGiftForSubscription(string subscription)
+        public CreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "")
         {
-            var searchStr = string.Format(",\"{0}\",", subscription);
+            string searchStr;
+            if (!string.IsNullOrEmpty(optionalSourceId))
+            {
+                searchStr = string.Format(",{0},,,,,,,,,,{1}", subscription, optionalSourceId);
+            }
+            else
+            {
+                searchStr = string.Format(",\"{0}\",", subscription);
+            }
             CreateDonationDistDto createDonation = null;
             try
             {
