@@ -660,7 +660,16 @@ namespace crds_angular.Services
                     eventGroup.Event_ID = eventId;
                     eventGroup.Event_Room_ID = roomReservationId;
                     _eventService.CreateEventGroup(eventGroup, token);
+                    eventGroup.Created = true;
                 }
+            }
+
+            foreach (var eventGroup in (from groups in eventGroups where groups.Created != true select groups))
+            {
+                // create the copied event group and assign the new room reservation id here
+                eventGroup.Event_ID = eventId;
+                _eventService.CreateEventGroup(eventGroup, token);
+                eventGroup.Created = true;
             }
 
             return true;

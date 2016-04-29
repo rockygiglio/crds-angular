@@ -15,5 +15,6 @@ namespace MinistryPlatform.Models
         public int Domain_ID { get; set; }
         public bool Closed { get; set; }
         public int Event_Room_ID { get; set; }
+        public bool Created { get; set; }
     }
 }
