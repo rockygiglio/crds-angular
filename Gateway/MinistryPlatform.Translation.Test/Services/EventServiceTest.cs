@@ -318,13 +318,13 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
-                    { "Event Group ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Event ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Group ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Room ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Domain ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Domain_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Closed", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault },
-                    { "Event Room ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
+                    { "Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
                 });
             }
 

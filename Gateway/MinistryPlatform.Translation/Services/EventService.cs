@@ -340,8 +340,7 @@ namespace MinistryPlatform.Translation.Services
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
             var searchString =  string.Format(",\"{0}\"", eventId);
-            var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
-            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+            var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
             if (records == null)
             {
@@ -350,12 +349,12 @@ namespace MinistryPlatform.Translation.Services
 
             return records.Select(record => new EventGroup
             {
-                Event_Group_ID = record.ToInt("Event Group ID"),
-                Event_ID = record.ToInt("Event ID"),
-                Group_ID = record.ToInt("Group ID"),
-                Room_ID = record.ToInt("Room ID"),
+                Event_Group_ID = record.ToInt("Event_Group_ID"),
+                Event_ID = record.ToInt("Event_ID"),
+                Group_ID = record.ToInt("Group_ID"),
+                Room_ID = record.ToInt("Room_ID"),
                 Closed = record.ToBool("Closed"),
-                Event_Room_ID = record.ToInt("Event Room ID")
+                Event_Room_ID = record.ToInt("Event_Room_ID")
             }).ToList();
         }
 
