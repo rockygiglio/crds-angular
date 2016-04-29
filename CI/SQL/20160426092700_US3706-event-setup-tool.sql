@@ -11,7 +11,7 @@ DECLARE @FieldList VARCHAR(1000) = 'Events.[Event_ID] AS [Event_ID],
   CASE COALESCE(Events.[Template], 0)
       WHEN 1 THEN Events.[Event_Title]
     ELSE CONCAT(Events.[Event_Title], '' - '', Events.[Event_Start_Date])
-  END AS [Event Title],
+  END AS [Event_Title],
   Congregation_ID_Table.[Congregation_ID] AS [Congregation_ID],
   Congregation_ID_Table.[Congregation_Name] AS [Congregation_Name],
   COALESCE(Events.[Template], ''False'') AS [Template]';
