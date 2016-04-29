@@ -349,18 +349,18 @@ namespace MinistryPlatform.Translation.Services
 
             return records.Select(record => new EventGroup
             {
-                Event_Group_ID = record.ToInt("Event_Group_ID"),
-                Event_ID = record.ToInt("Event_ID"),
-                Group_ID = record.ToInt("Group_ID"),
-                Room_ID = record.ToInt("Room_ID"),
+                EventGroupId = record.ToInt("Event_Group_ID"),
+                EventId = record.ToInt("Event_ID"),
+                GroupId = record.ToInt("Group_ID"),
+                RoomId = record.ToNullableInt("Room_ID"),
                 Closed = record.ToBool("Closed"),
-                Event_Room_ID = record.ToInt("Event_Room_ID")
+                EventRoomId = record.ToInt("Event_Room_ID")
             }).ToList();
         }
 
         public void DeleteEventGroup(EventGroup eventGroup, string token)
         {
-            _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.Event_Group_ID, null, token);
+            _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
         }
 
         public List<Event> GetEventsBySite(string site, bool template, string token)
@@ -389,12 +389,12 @@ namespace MinistryPlatform.Translation.Services
         {
             var groupDictionary = new Dictionary<string, object>
             {
-                {"Event_ID", eventGroup.Event_ID},
-                {"Group_ID", eventGroup.Group_ID},
-                {"Room_ID", eventGroup.Room_ID},
+                {"Event_ID", eventGroup.EventId},
+                {"Group_ID", eventGroup.GroupId},
+                {"Room_ID", eventGroup.RoomId},
                 {"Domain_ID", 1},
                 {"Closed", eventGroup.Closed},
-                {"Event_Room_ID", eventGroup.Event_Room_ID}
+                {"Event_Room_ID", eventGroup.EventRoomId}
             };
 
             try
@@ -413,12 +413,12 @@ namespace MinistryPlatform.Translation.Services
         {
             var groupDictionary = new Dictionary<string, object>
             {
-                {"Event_ID", eventGroup.Event_ID},
-                {"Group_ID", eventGroup.Group_ID},
-                {"Room_ID", eventGroup.Room_ID},
-                {"Domain_ID", eventGroup.Domain_ID},
+                {"Event_ID", eventGroup.EventId},
+                {"Group_ID", eventGroup.GroupId},
+                {"Room_ID", eventGroup.RoomId},
+                {"Domain_ID", eventGroup.DomainId},
                 {"Closed", eventGroup.Closed},
-                {"Event_Room_ID", eventGroup.Event_Room_ID}
+                {"Event_Room_ID", eventGroup.EventRoomId}
             };
 
             try
