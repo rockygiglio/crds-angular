@@ -339,7 +339,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
-            var searchString =  "," + eventId;
+            var searchString =  string.Format(",\"{0}\"", eventId);
             var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 
@@ -366,13 +366,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var searchString = ",," + site + ",," + template;
-
-            //// TODO: Get rid of this hardcoded value - just returning one event for speed during coding
-            //if (template == false)
-            //{
-            //    searchString = "4515464,," + site + ",," + template;
-            //}
+            var searchString = string.Format(",,,\"{0}\",\"{1}\"", site, template);
 
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
