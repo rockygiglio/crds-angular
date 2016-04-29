@@ -1,6 +1,4 @@
-USE MinistryPlatform
-GO
+USE [MinistryPlatform];
 
-ALTER TABLE Events
-	ADD Template BIT,
-GO
+ALTER TABLE [dbo].[Events]
+	ADD [Template] BIT;
