@@ -366,7 +366,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var searchString = string.Format(",,,\"{0}\",\"{1}\"", site, template);
+            var searchString = string.Format(",,\"{0}\",,\"{1}\"", site, template);
 
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);

@@ -303,7 +303,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, bool, string>((site, template, token) =>
             {
-                var searchString = ",,,\"" + site + "\",\"" + template + "\"";
+                var searchString = ",,\"" + site + "\",,\"" + template + "\"";
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
                 _fixture.GetEventsBySite(site, template, token);
