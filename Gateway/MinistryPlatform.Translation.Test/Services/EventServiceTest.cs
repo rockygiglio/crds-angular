@@ -33,11 +33,10 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupService> _groupService;
-        private const int EventParticipantId = 12345;
-        private readonly int EventParticipantPageId = 281;
-        private readonly int EventParticipantStatusDefaultID = 2;
-        private readonly int EventsPageId = 308;
-        private readonly string EventsWithEventTypeId = "EventsWithEventTypeId";
+        private const int EventParticipantPageId = 281;
+        private const int EventParticipantStatusDefaultId = 2;
+        private const int EventsPageId = 308;
+        private const string EventsWithEventTypeId = "EventsWithEventTypeId";
 
         private List<Dictionary<string, object>> MockEventsDictionaryByEventTypeId()
         {
@@ -266,7 +265,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 {"Participant_ID", 123},
                 {"Event_ID", 456},
-                {"Participation_Status_ID", EventParticipantStatusDefaultID}
+                {"Participation_Status_ID", EventParticipantStatusDefaultId}
             };
 
             var eventParticipantId = _fixture.RegisterParticipantForEvent(123, 456);
@@ -288,7 +287,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, int>((token, eventId) =>
             {
-                var searchString = eventId + ",";
+                var searchString = ",\"" + eventId + "\"";
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(GetMockedEventGroups(3));
                 _fixture.GetEventGroupsForEvent(eventId, token);
@@ -297,15 +296,13 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        // TODO This test is failing, but from another branch.  Will fix in that branch
-        [Ignore]
         public void ShouldGetEventsBySite()
         {
             var eventsBySitePageViewId = _configWrapper.Object.GetConfigIntValue("EventsBySite");
 
             Prop.ForAll<string, bool, string>((site, template, token) =>
             {
-                var searchString = ",,," + site + "," + template;
+                var searchString = ",," + site + ",," + template ;
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
                 _fixture.GetEventsBySite(site, template, token);
@@ -313,11 +310,11 @@ namespace MinistryPlatform.Translation.Test.Services
             }).QuickCheckThrowOnFailure();
         }
 
-        private List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)
+        private static List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)
         {
-            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+            var recordsList = new List<Dictionary<string, object>>();
 
-            for (int i = 0; i < recordsToGenerate; i++)
+            for (var i = 0; i < recordsToGenerate; i++)
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
@@ -334,17 +331,16 @@ namespace MinistryPlatform.Translation.Test.Services
             return recordsList;
         }
 
-        private List<Dictionary<string, object>> GetMockedEvents(int recordsToGenerate)
+        private static List<Dictionary<string, object>> GetMockedEvents(int recordsToGenerate)
         {
-            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+            var recordsList = new List<Dictionary<string, object>>();
 
-            for (int i = 0; i < recordsToGenerate; i++)
+            for (var i = 0; i < recordsToGenerate; i++)
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
-                    //ParentEventId = record.ToInt("Parent_Event_ID"),
-                    //Template = record.ToBool("Template")
                     { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Congregation_Name", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
                     { "Congregation_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Site", Gen.Sample(10, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
                     { "Event_Title", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },

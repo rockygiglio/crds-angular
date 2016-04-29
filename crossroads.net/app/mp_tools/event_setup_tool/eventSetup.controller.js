@@ -1,116 +1,73 @@
 (function() {
 
-    'use strict()';
+  'use strict()';
 
-    module.exports = EventSetupController;
+  module.exports = EventSetupController;
 
-    EventSetupController.$inject = [
-        '$log',
-        '$location',
-        '$window',
-        'MPTools',
-        '$rootScope',
-        'AuthService',
-        'EventService',
-        'CRDS_TOOLS_CONSTANTS',
-        'LookupService'
-    ];
+  EventSetupController.$inject = [
+      '$rootScope',
+      'AuthService',
+      'EventService',
+      'CRDS_TOOLS_CONSTANTS',
+  ];
 
-    function EventSetupController($log, $location, $window, MPTools, $rootScope, AuthService, EventService, CRDS_TOOLS_CONSTANTS, LookupService) {
+  function EventSetupController($rootScope, AuthService, EventService, CRDS_TOOLS_CONSTANTS) {
 
+    var vm = this;
+    vm.viewReady = false;
+    vm.site = {id: undefined};
+    vm.template = {id: undefined};
+    vm.event = {id: undefined};
+    vm.eventTemplates = [];
+    vm.events = [];
+    vm.setup = setup;
+    vm.loadEvents = loadEvents;
+    vm.reset = reset;
+    vm.eventsReady = false;
+    vm.eventsLoading = true;
+    vm.eventTemplatesLoading = true;
 
-        //
-        //vm.allParticipants = [];
-        //vm.cancel = cancel;
-        //vm.eventDates = [];
-        //vm.format = 'MM/dd/yyyy';
-        //vm.frequencies = [
-        //    { value: 0, text: 'Once' },
-        //    { value: 1, text: 'Every Week' },
-        //    { value: 2, text: 'Every Other Week' }
-        //];
-        //vm.fromOpened = false;
-        //vm.group = {};
-        //vm.isFrequencyOnce = isFrequencyOnce;
-        //vm.isFrequencyMoreThanOnce = isFrequencyMoreThanOnce;
-        //vm.open = openDatePicker;
+    vm.allowAdminAccess = function() {
+      return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
+    };
 
-        //vm.populateDates = populateDates;
-        //vm.saveRsvp = saveRsvp;
-        //vm.showError = showError;
-        //vm.ready = false;
+    ////////////////////////////////////////////
 
-        var vm = this;
-        vm.allowAccess = allowAccess;
-        vm.errorMessage = $rootScope.MESSAGES.toolsError;
-        //vm.group = {};
-        vm.multipleRecordsSelected = true;
-        vm.params = MPTools.getParams();
-        vm.showError = showError;
-        vm.viewReady = false;
+    function loadEvents() {
+      reset();
 
-        vm.site = {id: undefined};
-        vm.template = {id: undefined};
-        vm.event = {id: undefined};
-        vm.eventTemplates = undefined;
-        vm.events = undefined;
+      // load templates first
+      EventService.eventsBySite.query({ site: vm.site.id, template: true }, function(data) {
+        vm.eventTemplates = data;
+        vm.eventTemplatesLoading = false;
+      });
 
-        vm.setup = setup;
-
-        vm.loadEvents = loadEvents;
-
-        activate();
-
-        ////////////////////////////////////////////
-
-        function activate() {
-          vm.multipleRecordsSelected = showError();
-        }
-
-        function loadEvents() {
-          // load templates first
-          EventService.eventsBySite.query({ site : vm.site.id, template: true }, function(data) {
-              vm.eventTemplates = data;
-          });
-
-          // load events
-          EventService.eventsBySite.query({ site : vm.site.id, template: false }, function(data) {
-              vm.events = data;
-          });
-        }
-
-        function allowAccess() {
-            return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.EventSetupTool));
-        }
-
-        function cancel() {
-            $window.close();
-        }
-
-        function showError() {
-            return vm.params.selectedCount > 1 || vm.params.recordDescription === undefined || vm.params.recordId === '-1';
-        }
-
-        function showError() {
-            if (vm.params.selectedCount > 1 ||
-                vm.params.recordDescription === undefined ||
-                vm.params.recordId === '-1') {
-                vm.viewReady = true;
-                return true;
-            }
-            return false;
-        }
-
-        function setup() {
-            debugger;
-            EventService.eventSetup.save({eventtemplateid: vm.template.id, eventid: vm.event.id}).$promise.then(function(response) {
-                //$rootScope.$emit('notify', $rootScope.MESSAGES.);
-                vm.saving = false;
-            }, function(error) {
-                $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-                vm.saving = false;
-            });
-        }
+      // load events
+      EventService.eventsBySite.query({ site: vm.site.id, template: false }, function(data) {
+        vm.events = data;
+        vm.eventsLoading = false;
+      });
     }
 
+    function setup() {
+      EventService.eventSetup.save({eventtemplateid: vm.template.id, eventid: vm.event.id},
+        function(response) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
+          vm.saving = false;
+        },
+
+        function(error) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          vm.saving = false;
+        });
+    }
+
+    function reset() {
+      vm.eventsReady = true;
+      vm.eventsLoading = true;
+      vm.eventTemplatesLoading = true;
+      vm.events = [];
+      vm.eventTemplates = [];
+    }
+  }
 })();
