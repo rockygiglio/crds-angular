@@ -6,13 +6,14 @@ using Crossroads.Utilities.Functions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
-using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
 using Event = MinistryPlatform.Models.Event;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using Participant = MinistryPlatform.Translation.Models.People.Participant;
 using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 
 namespace crds_angular.Services
@@ -33,6 +34,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IRoomService _roomService;
         private readonly IEquipmentService _equipmentService;
+        private readonly IEventParticipantService _eventParticipantService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -55,7 +57,8 @@ namespace crds_angular.Services
                             IGroupParticipantService groupParticipantService,
                             IParticipantService participantService,
                             IRoomService roomService,
-                            IEquipmentService equipmentService)
+                            IEquipmentService equipmentService,
+                            IEventParticipantService eventParticipantService)
         {
             _eventService = eventService;
             _groupService = groupService;
@@ -69,25 +72,64 @@ namespace crds_angular.Services
             _participantService = participantService;
             _roomService = roomService;
             _equipmentService = equipmentService;
+            _eventParticipantService = eventParticipantService;
+        }
+
+        public EventToolDto GetEventRoomDetails(int eventId)
+        {
+            return GetEventDetails(eventId, false, true);
         }
 
         public EventToolDto GetEventReservation(int eventId)
+        {
+            return GetEventDetails(eventId, true, false);
+        }
+
+        private EventToolDto GetEventDetails(int eventId, bool includeEquipment, bool includeParticipants)
         {
             try
             {
                 var dto = new EventToolDto();
 
-                var e = this.GetEvent(eventId);
+                var e = GetEvent(eventId);
                 dto.Title = e.EventTitle;
                 dto.CongregationId = e.CongregationId;
                 dto.EndDateTime = e.EventEndDate;
                 dto.StartDateTime = e.EventStartDate;
                 dto.ReminderDaysId = e.ReminderDaysPriorId;
 
-                var rooms = _roomService.GetRoomReservations(eventId);
-                var roomDto = new List<EventRoomDto>();
+                dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
 
-                foreach (var room in rooms)
+                return dto;
+            }
+            catch (Exception ex)
+            {
+                var msg = "Event Service: CreateEventReservation";
+                _logger.Error(msg, ex);
+                throw new Exception(msg, ex);
+            }
+        }
+
+        private List<EventRoomDto> PopulateRoomReservations(int eventId, bool includeEquipment, bool includeParticipants)
+        {
+            var rooms = _roomService.GetRoomReservations(eventId);
+            var roomDto = new List<EventRoomDto>();
+
+            foreach (var room in rooms)
+            {
+                var r = new EventRoomDto();
+                r.Cancelled = room.Cancelled;
+                r.Hidden = room.Hidden;
+                r.LayoutId = room.RoomLayoutId;
+                r.Notes = room.Notes;
+                r.RoomId = room.RoomId;
+                r.RoomReservationId = room.EventRoomId;
+                r.Capacity = room.Capacity;
+                r.CheckinAllowed = room.CheckinAllowed;
+                r.Name = room.Name;
+                r.Label = room.Label;
+
+                if (includeEquipment)
                 {
                     var equipmentDto = new List<EventRoomEquipmentDto>();
                     var equipment = _equipmentService.GetEquipmentReservations(eventId, room.RoomId);
@@ -100,28 +142,18 @@ namespace crds_angular.Services
                         eq.EquipmentReservationId = equipmentReservation.EventEquipmentId;
                         equipmentDto.Add(eq);
                     }
-
-                    var r = new EventRoomDto();
-                    r.Cancelled = room.Cancelled;
                     r.Equipment = equipmentDto;
-                    r.Hidden = room.Hidden;
-                    r.LayoutId = room.RoomLayoutId;
-                    r.Notes = room.Notes;
-                    r.RoomId = room.RoomId;
-                    r.RoomReservationId = room.EventRoomId;
-
-                    roomDto.Add(r);
                 }
-                dto.Rooms = roomDto;
 
-                return dto;
+                if (includeParticipants)
+                {
+                    var p = _eventParticipantService.GetEventParticipants(eventId, room.RoomId);
+                    r.ParticipantsAssigned = p == null ? 0 : p.Count;
+                }
+
+                roomDto.Add(r);
             }
-            catch (Exception ex)
-            {
-                var msg = "Event Service: CreateEventReservation";
-                _logger.Error(msg, ex);
-                throw new Exception(msg, ex);
-            }
+            return roomDto;
         }
 
         public bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token)
@@ -586,6 +618,58 @@ namespace crds_angular.Services
                 throw new ApplicationException(string.Format("Mulitple Childcare Events Exist, parent event id: {0}", parentEventId));
             }
             return childcareEvents.First();
+        }
+
+        public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
+        {
+            eventId = 4515464; // hardcoded for testing
+
+            // step 0 - delete existing data on the event, for eventgroups and eventrooms
+            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
+
+            foreach (var eventGroup in discardedEventGroups)
+            {
+                _eventService.DeleteEventGroup(eventGroup);
+            }
+
+            var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
+
+            foreach (var roomEvent in discardedRoomReservations)
+            {
+                _roomService.DeleteRoomReservation(roomEvent);
+            }
+
+            // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
+            List<RoomReservationDto> eventRooms = _roomService.GetRoomReservations(eventTemplateId);
+            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
+
+            // step 2 - create new room reservations and assign event groups to them
+            foreach (var eventRoom in eventRooms)
+            {
+                // TODO: Is this the right approach? -- other options kinda suck, too
+                eventRoom.EventId = eventId;
+                int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
+
+                // get the template event group which matched the template event room, and assign the reservation id to this object
+                var eventGroup = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r).FirstOrDefault();
+
+                // check for matching event group
+                if (eventGroup.Event_Room_ID != eventRoom.EventRoomId)
+                {
+                    eventGroup.Event_ID = eventId;
+                    eventGroup.Event_Room_ID = roomReservationId;
+                    _eventService.CreateEventGroup(eventGroup, token);
+                }
+            }
+
+            return true;
+        }
+
+        public List<Event> GetEventsBySite(string site, bool template, string token)
+        {
+            var eventTemplates = _eventService.GetEventsBySite(site, template, token);
+
+            return eventTemplates;
         }
     }
 }

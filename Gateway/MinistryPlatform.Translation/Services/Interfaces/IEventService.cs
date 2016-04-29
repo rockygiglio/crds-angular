@@ -22,5 +22,12 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         IEnumerable<Event> EventsByPageViewId(string token, int pageViewId, string search);
         IEnumerable<Participant> EventParticipants(string token, int eventId);
         void SetReminderFlag(int eventId, string token);
+        List<EventGroup> GetEventGroupsForEvent(int eventId, string token);
+        //void CopyEventGroup(EventGroup eventGroup);
+        void DeleteEventGroup(EventGroup eventGroup);
+        int CreateEventGroup(EventGroup eventGroup, string token);
+        void UpdateEventGroup(EventGroup eventGroup, string token);
+
+        List<Event> GetEventsBySite(string site, bool template, string token);
     }
 }

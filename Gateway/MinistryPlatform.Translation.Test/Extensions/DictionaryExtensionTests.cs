@@ -26,7 +26,9 @@ namespace MinistryPlatform.Translation.Test.Extensions
                 {"Null_Date_As_String", null},
                 {"Invalid_Date_As_String", "NotADate"},
                 {"Bool", true},
-                {"NullBool", null}
+                {"NullBool", null},
+                {"Null_Nullable_Bool", null},
+                {"Invalid_Nullable_Bool", "yeppers"},
             };
         }
 
@@ -53,6 +55,31 @@ namespace MinistryPlatform.Translation.Test.Extensions
         public void NullStringToBool_Success()
         {
             Assert.AreEqual(false, _mockDictionary.ToBool("NullBool"));
+        }
+
+        [Test]
+        public void StringToNullableBool_Success()
+        {
+            Assert.AreEqual(true, _mockDictionary.ToNullableBool("Bool"));
+        }
+
+        [Test]
+        public void NullStringToNullableBool_Success()
+        {
+            Assert.AreEqual(null, _mockDictionary.ToNullableBool("Null_Nullable_Bool"));
+        }
+
+        [Test]
+        public void NullStringToNullableBool_Failure_Ok()
+        {
+            Assert.AreEqual(false, _mockDictionary.ToNullableBool("Invalid_Nullable_Bool"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException))]
+        public void NullStringToNullableBool_Failure_Exception()
+        {
+            Assert.AreEqual(null, _mockDictionary.ToNullableBool("Invalid_Nullable_Bool", true));
         }
 
         [Test]
