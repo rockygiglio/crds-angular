@@ -12,8 +12,8 @@ DECLARE @FieldList VARCHAR(1000) = 'Events.[Event_ID] AS [Event_ID],
       WHEN 1 THEN Events.[Event_Title]
     ELSE CONCAT(Events.[Event_Title], '' - '', Events.[Event_Start_Date])
   END AS [Event Title],
-  Location_ID_Table.[Location_ID] AS [Location_ID],
-  Location_ID_Table.[Location_Name] AS [Location_Name],
+  Congregation_ID_Table.[Congregation_ID] AS [Congregation_ID],
+  Congregation_ID_Table.[Congregation_Name] AS [Congregation_Name],
   COALESCE(Events.[Template], ''False'') AS [Template]';
 DECLARE @ViewClause VARCHAR(1000) = '(Events.Event_Start_Date >= GetDate() AND Events.Event_End_Date <= DATEADD(month,1,GetDate()) AND Events.Cancelled = 0) OR COALESCE(Events.[Template], 0) = 1';
 DECLARE @Description VARCHAR(1000) = 'API View';
