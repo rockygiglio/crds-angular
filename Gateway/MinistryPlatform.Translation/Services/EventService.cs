@@ -366,7 +366,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Event> GetEventsBySite(string site, bool template, string token)
         {
-            var searchString = string.Format(",,,\"{0}\",\"{1}\"", site, template);
+            var searchString = string.Format(",,{0},,{1}", site, template);
 
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
@@ -379,9 +379,9 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(record => new Event
             {
                 // this isn't a complete list of all event fields - we may need more for user info purposes
-                EventId = record.ToInt("Event ID"),
-                Congregation = record.ToString("Congregation Name"),
-                EventTitle = record.ToString("Event Title"),
+                EventId = record.ToInt("Event_ID"),
+                Congregation = record.ToString("Congregation_Name"),
+                EventTitle = record.ToString("Event_Title"),
                 Template = record.ToBool("Template")
             }).ToList();
         }
