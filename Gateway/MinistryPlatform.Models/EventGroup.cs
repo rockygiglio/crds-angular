@@ -14,7 +14,7 @@ namespace MinistryPlatform.Models
         public int? RoomId { get; set; }
         public int DomainId { get; set; }
         public bool Closed { get; set; }
-        public int EventRoomId { get; set; }
+        public int? EventRoomId { get; set; }
         public bool Created { get; set; }
     }
 }

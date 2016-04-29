@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>(/*MockBehavior.Strict*/);
+            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationService>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _groupService = new Mock<IGroupService>();
