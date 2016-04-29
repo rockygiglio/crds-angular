@@ -1,10 +1,10 @@
 (function() {
-    'use strict()';
+  'use strict()';
 
-    var MODULE = 'crossroads.mptools';
+  var MODULE = 'crossroads.mptools';
 
-    require('./eventSetup.html');
+  require('./eventSetup.html');
 
-    var app = angular.module(MODULE);
-    app.controller('EventSetupController', require('./eventSetup.controller'));
+  var app = angular.module(MODULE);
+  app.controller('EventSetupController', require('./eventSetup.controller'));
 })();
