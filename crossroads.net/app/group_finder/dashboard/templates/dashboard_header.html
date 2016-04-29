@@ -1,8 +1,12 @@
 <div class="dashboard-header page-header text-center">
-  <profile-picture contact-id="dashboard.person.contactId"
-                   wrapper-class="dashboard-profile-picture"
-                   image-class="profile-image img-circle"
-                   button-text="Change"></profile-picture>
+
+
+      <profile-picture contact-id="dashboard.person.contactId"
+                        wrapper-class="media-card-profile"
+                        image-class=""
+                        disallow-change="false">
+      </profile-picture>
+
   <h2>
     {{dashboard.person.displayName()}}
     <small ng-if="dashboard.group">{{dashboard.group.time}}</small>

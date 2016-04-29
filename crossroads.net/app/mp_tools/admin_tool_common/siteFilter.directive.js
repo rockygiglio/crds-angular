@@ -20,6 +20,7 @@
     function link(scope, element, attrs) {
       scope.sites = [];
       scope.change = change;
+      scope.activate = activate;
 
       activate();
 
@@ -31,7 +32,7 @@
         LookupService.Congregations.query({},
           function(data) {
             scope.sites = data;
-        });
+          });
       }
 
       function change() {

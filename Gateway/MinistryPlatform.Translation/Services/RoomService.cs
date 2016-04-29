@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Services
         public List<RoomReservationDto> GetRoomReservations(int eventId)
         {
             var token = ApiLogin();
-            var search = string.Format(",{0}", eventId);
+            var search = string.Format(",\"{0}\"", eventId);
             var records = _ministryPlatformService.GetPageViewRecords("GetRoomReservations", token, search);
 
             return records.Select(record => new RoomReservationDto
@@ -34,7 +34,11 @@ namespace MinistryPlatform.Translation.Services
                 Hidden = record.ToBool("Hidden"),
                 Notes = record.ToString("Notes"),
                 RoomId = record.ToInt("Room_ID"),
-                RoomLayoutId = record.ToInt("Room_Layout_ID")
+                RoomLayoutId = record.ToInt("Room_Layout_ID"),
+                Capacity = record.ToNullableInt("Capacity") ?? 0,
+                Label = record.ToString("Label"),
+                Name = record.ToString("Room_Name"),
+                CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false
             }).ToList();
         }
 
@@ -97,7 +101,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
                 {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.Allow_Checkin}
+                {"Allow_Checkin", roomReservation.CheckinAllowed}
             };
 
             try
