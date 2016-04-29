@@ -303,7 +303,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, bool, string>((site, template, token) =>
             {
-                var searchString = ",,\"" + site + "\",,\"" + template + "\"";
+                var searchString = ",," + site + ",," + template ;
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
                 _fixture.GetEventsBySite(site, template, token);
@@ -340,11 +340,11 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
-                    { "Event ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Congregation Name", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
+                    { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Congregation_Name", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
                     { "Congregation_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Site", Gen.Sample(10, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
-                    { "Event Title", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
+                    { "Event_Title", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault },
                     { "Event_Type_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Event_Start_Date", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<DateTime>())).HeadOrDefault },
                     { "Event_End_Date", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<DateTime>())).HeadOrDefault },
