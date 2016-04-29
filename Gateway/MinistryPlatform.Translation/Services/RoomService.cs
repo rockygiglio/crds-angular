@@ -60,20 +60,7 @@ namespace MinistryPlatform.Translation.Services
             reservationDictionary.Add("Cancelled", roomReservation.Cancelled);
             reservationDictionary.Add("Capacity", roomReservation.Capacity);
             reservationDictionary.Add("Label", roomReservation.Label);
-            reservationDictionary.Add("Allow_Checkin", roomReservation.Allow_Checkin);
-
-            //var reservationDictionary = new Dictionary<string, object>
-            //{
-            //    {"Event_ID", roomReservation.EventId},
-            //    {"Room_ID", roomReservation.RoomId},
-            //    {"Room_Layout_ID", roomReservation.RoomLayoutId},
-            //    {"Notes", roomReservation.Notes},
-            //    {"Hidden", roomReservation.Hidden},
-            //    {"Cancelled", roomReservation.Cancelled},
-            //    {"Capacity", roomReservation.Capacity},
-            //    {"Label", roomReservation.Label},
-            //    {"Allow_Checkin", roomReservation.Allow_Checkin}
-            //};
+            reservationDictionary.Add("Allow_Checkin", roomReservation.CheckinAllowed);
 
             try
             {
