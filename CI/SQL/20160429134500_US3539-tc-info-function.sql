@@ -37,7 +37,7 @@ BEGIN
 		END
 	ELSE
 		BEGIN
-			SELECT @ReturnString = COALESCE (@ReturnString + ' or ','') + RTRIM(email_address) + '/' + RTRIM(mobile_phone)
+			SELECT @ReturnString = COALESCE (@ReturnString + ' or ','') + COALESCE (RTRIM(email_address),'') + '/' + COALESCE (RTRIM(mobile_phone),'')
 						FROM Contacts WHERE  Contact_id in 
 						(select c.contact_id
 							from cr_projects p
