@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -35,7 +36,6 @@ namespace MinistryPlatform.Translation.Test.Services
         public void AddDocumentsToTripParticipantTest()
         {
             const int eventParticipantId = 9;
-            const int eventId = 7;
             var docs = new List<TripDocuments>
             {
                 new TripDocuments
@@ -59,6 +59,43 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(returnVal);
             Assert.AreEqual(true, returnVal);
+        }
+
+        [Test]
+        public void TestGetEventParticipants()
+        {
+            var p = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participation_Status_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participant_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Participation_Status_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault}
+                }
+
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", 123, "ABC", ",,,\"987\"", "", 0)).Returns(p);
+            var result = _fixture.GetEventParticipants(123, 987);
+
+            _ministryPlatformService.VerifyAll();
+            Assert.NotNull(result);
+            Assert.AreEqual(p.Count, result.Count);
+            for (var i = 0; i < p.Count; i++)
+            {
+                Assert.AreEqual(p[i]["Event_Participant_ID"], result[i].EventParticipantId);
+                Assert.AreEqual(p[i]["Participant_ID"], result[i].ParticipantId);
+                Assert.AreEqual(p[i]["Participation_Status_ID"], result[i].ParticipantStatus);
+                Assert.AreEqual(p[i]["Room_ID"], result[i].RoomId);
+            }
         }
     }
 }

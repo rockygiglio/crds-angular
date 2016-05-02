@@ -13,6 +13,7 @@ using System.Web.Security;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -196,6 +197,16 @@ namespace MinistryPlatform.Translation.Services
                 platformClient => platformClient.CreateSubpageRecord(subPageId, parentRecordId, dictionary, quickadd));
         }
 
+        public Task<int> CreateSubRecordAsync(int subPageId,
+                                              int parentRecordId,
+                                              Dictionary<string, object> dictionary,
+                                              String token,
+                                              bool quickadd = false)
+        {
+            return Call<Task<int>>(token,
+                platformClient => platformClient.CreateSubpageRecordAsync(subPageId, parentRecordId, dictionary, quickadd));
+        }
+
         public int CreateSubRecord(string subPageKey, int parentRecordId, Dictionary<string, object> dictionary,
             String token, bool quickadd = false)
         {
@@ -267,6 +278,21 @@ namespace MinistryPlatform.Translation.Services
             UpdateSubRecord(subPageId, subscription, token);
         }
 
+        //public void CopyPageRecord(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord)
+        //{
+        //    base.Channel.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord);
+        //}
+
+        public void CopyPageRecord(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token)
+        {
+            VoidCall(token, platformClient => platformClient.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord));
+        }
+
+        public void CopyPageRecordAsync(int pageId, int recordId, int[] subpages, System.DateTime[] startDateTimes, bool updateOriginalRecord, string token)
+        {
+            VoidCall(token, platformClient => platformClient.CopyPageRecord(pageId, recordId, subpages, startDateTimes, updateOriginalRecord));
+        }
+
         public UserInfo GetContactInfo(string token)
         {
             return Call<UserInfo>(token, platformClient => platformClient .GetCurrentUserInfo());
@@ -275,6 +301,11 @@ namespace MinistryPlatform.Translation.Services
         public void CompleteTask(string token, int taskId, bool rejected, string comments)
         {
             VoidCall(token, platformClient => platformClient.CompleteTask(taskId, rejected, comments));
+        }
+
+        public void UpdateSubRecordAsync(int subPageId, Dictionary<string, object> attributeDictionary, string token)
+        {
+            Call<Task>(token, platformClient => platformClient.UpdateSubpageRecordAsync(subPageId, attributeDictionary, false));
         }
 
         private int GetMinistryPlatformId(string mpKey)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
@@ -72,32 +73,42 @@ namespace crds_angular.Services
             {
                 configuration = ObjectAttributeConfigurationFactory.MyContact();
             }
-            var contact = _contactService.GetContactByParticipantId(participantId);
-            var currentAttributes = _objectAttributeService.GetObjectAttributes(token, contact.Contact_ID, configuration);
-            var currentSkills = currentAttributes.MultiSelect
-               .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes
-               .Where(attribute => attribute.Selected).ToList();
 
-            var skillsEndDate = SkillsToEndDate(skills, currentSkills).Select(sk =>
+            var contactObs = Observable.Start(() => _contactService.GetContactByParticipantId(participantId));
+            contactObs.Subscribe(con =>
             {
-                sk.EndDate = DateTime.Now;
-                return sk;
-            });
+                var attrs = Observable.Start(() => _objectAttributeService.GetObjectAttributes(token, con.Contact_ID, configuration));
 
-
-            var skillsToAdd = SkillsToAdd(skills, currentSkills);
-            var allSkills = skillsToAdd.Concat(skillsEndDate).ToList();
-            try
-            {
-                allSkills.ForEach(skill =>
+                attrs.Subscribe(attr =>
                 {
-                    _objectAttributeService.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, configuration);
+                    var curSk = attr.MultiSelect
+                        .FirstOrDefault(kvp => kvp.Value.AttributeTypeId == _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills")).Value.Attributes
+                        .Where(attribute => attribute.Selected).ToList();
+
+                    var skillsEndDate = SkillsToEndDate(skills, curSk).Select(sk =>
+                    {
+                        sk.EndDate = DateTime.Now;
+                        return sk;
+                    });
+
+                    var addSkills = SkillsToAdd(skills, curSk).ToList();
+                    var allSkills = addSkills.Concat(skillsEndDate).ToList();
+                    var allSkillsObs = allSkills.ToObservable();
+                    try
+                    {
+                        allSkillsObs.ForEachAsync(skill =>
+                        {
+                            _objectAttributeService.SaveObjectMultiAttribute(token, con.Contact_ID, skill, configuration, true);
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ApplicationException("Updating skills caused an error");
+                    }
                 });
-            }
-            catch (Exception e)
-            {
-                throw new ApplicationException("Updating skills caused an error");   
-            }
+            });                        
+          
+            
 
         }        
 

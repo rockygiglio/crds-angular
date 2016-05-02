@@ -60,7 +60,7 @@
         resolve: {
           $state: '$state',
           CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
-          GivingHistoryService: 'GiveTransferService',
+          GiveTransferService: 'GiveTransferService',
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.FinanceTools;
           },
@@ -81,6 +81,69 @@
           isProtected: true,
           meta: {
             title: 'Manage Recurring Gifts - Admin',
+            description: ''
+          }
+        }
+      })
+      .state('tools.adminCheckinDashboard', {
+        // This is a "launch" page for the tool, it will check access, etc, then forward
+        // on to the actual page with the history.
+        url: '/adminCheckinDashboard',
+        controller: 'AdminToolController as AdminToolController',
+        templateUrl: 'admin_tool_common/adminTool.html',
+        resolve: {
+          $state: '$state',
+          CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
+          role: function(CRDS_TOOLS_CONSTANTS) {
+            return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
+          },
+          goToFunction: function(GiveTransferService, $state) {
+            return function(donorId) {
+              GiveTransferService.impersonateDonorId = donorId;
+              $state.go('tools.adminManageCheckinDashboard');
+            }
+          }
+        }
+      })
+      .state('tools.adminManageCheckinDashboard', {
+        url: '/adminManageCheckinDashboard',
+        controller: 'AdminCheckinDashboardController as checkinDashboard',
+        templateUrl: 'templates/adminCheckinDashboard.html',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Checkin Dashboard - Admin',
+            description: ''
+          }
+        }
+      })
+      .state('tools.adminEventSetup', {
+        // This is a "launch" page for the tool, it will check access, etc, then forward
+        // on to the actual page with the history.
+        url: '/adminEventSetup',
+        controller: 'AdminToolController as AdminToolController',
+        templateUrl: 'admin_tool_common/adminTool.html',
+        resolve: {
+          $state: '$state',
+          CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
+          role: function(CRDS_TOOLS_CONSTANTS) {
+            return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
+          },
+          goToFunction: function($state) {
+            return function() {
+              $state.go('tools.eventSetup');
+            };
+          }
+        }
+      })
+      .state('tools.eventSetup', {
+        url: '/eventSetup',
+        controller: 'EventSetupController as EventSetupCtrl',
+        templateUrl: 'event_setup_tool/eventSetup.html',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Manage Event Setup - Admin',
             description: ''
           }
         }

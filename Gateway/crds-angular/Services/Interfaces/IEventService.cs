@@ -9,6 +9,7 @@ namespace crds_angular.Services.Interfaces
     {
         bool CreateEventReservation(EventToolDto eventTool, string token);
         EventToolDto GetEventReservation(int eventId);
+        EventToolDto GetEventRoomDetails(int eventId);
         Event GetEvent(int eventId);
         void RegisterForEvent(EventRsvpDto eventDto, string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForPrimaryContactReminder(string token);
@@ -20,5 +21,8 @@ namespace crds_angular.Services.Interfaces
         Event GetMyChildcareEvent(int parentEventId, string token);
         Event GetChildcareEvent(int parentEventId);
         bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token);
+
+        bool CopyEventSetup(int eventTemplateId, int eventId, string token);
+        List<Event> GetEventsBySite(string site, bool template, string token);
     }
 }

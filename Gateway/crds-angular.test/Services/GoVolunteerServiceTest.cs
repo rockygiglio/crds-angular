@@ -399,7 +399,7 @@ namespace crds_angular.test.Services
             {
                 BuildParagraph("Name: ", registration.Self.FirstName + " " + registration.Self.LastName),
                 BuildParagraph("Email: ", registration.Self.EmailAddress),
-                BuildParagraph("Birthdate: ",  "2/21/1980"),
+                BuildParagraph("Birthdate: ", "2/21/1980"),
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
@@ -407,13 +407,18 @@ namespace crds_angular.test.Services
                 BuildParagraph("Preferred Launch Site: ", registration.PreferredLaunchSite.Name), // need to get the site name...
                 BuildParagraph("Project Preference 1: ", registration.ProjectPreferences[0].Name),
                 BuildParagraph("Project Preference 2: ", registration.ProjectPreferences[1].Name),
-                BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name),
-                BuildParagraph("Unique Skills: ", Skills(registration)),
-                BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)),
-                BuildParagraph("Additional Info: ", registration.AdditionalInformation),
-                BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name),
-                BuildParagraph("Spouse Available for Prep Work: ", "No")
+                BuildParagraph("Project Preference 3: ", registration.ProjectPreferences[2].Name)
             };
+            var skills = Skills(registration);
+            if (skills != String.Empty)
+            {
+                listOfP.Add(BuildParagraph("Unique Skills: ", Skills(registration)));
+            }
+            listOfP.Add(BuildParagraph("Special Equipment: ", registration.Equipment.Select(equipment => equipment.Notes).Aggregate((first, next) => first + ", " + next)));
+            listOfP.Add(BuildParagraph("Additional Info: ", registration.AdditionalInformation));           
+            listOfP.Add(BuildParagraph("Available for Prep Work: ", "Yes, from " + registration.PrepWork[0].Name));
+            listOfP.Add(BuildParagraph("Spouse Available for Prep Work: ", "No"));
+            
 
             var htmlCell = new HtmlElement("td", styles).Append(listOfP);
             var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);

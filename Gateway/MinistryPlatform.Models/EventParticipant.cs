@@ -15,5 +15,7 @@ namespace MinistryPlatform.Models
         public int GroupParticipantId { get; set; }
         public int ParticipantId { get; set; }
         public string ParticipantEmail { get; set; }
+        public int ParticipantStatus { get; set; }
+        public int RoomId { get; set; }
     }
 }
