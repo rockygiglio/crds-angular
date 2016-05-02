@@ -6,7 +6,6 @@ using Crossroads.Utilities.Functions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
@@ -36,7 +35,7 @@ namespace crds_angular.Services
         private readonly IEquipmentService _equipmentService;
         private readonly IEventParticipantService _eventParticipantService;
 
-        private readonly List<string> TABLE_HEADERS = new List<string>()
+        private readonly List<string> _tableHeaders = new List<string>()
         {
             "Event Date",
             "Registered User",
@@ -226,7 +225,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            var equipmentReservationId = _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
+            _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
         }
 
         private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -250,7 +249,7 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
-            var roomReservationId = _roomService.CreateRoomReservation(roomReservation, token);
+            _roomService.CreateRoomReservation(roomReservation, token);
         }
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
@@ -462,6 +461,7 @@ namespace crds_angular.Services
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string token)
         {
             try
@@ -580,12 +580,13 @@ namespace crds_angular.Services
 
         private HtmlElement SetupTableHeader()
         {
-            var headers = TABLE_HEADERS.Select(el => new HtmlElement("th", el)).ToList();
+            var headers = _tableHeaders.Select(el => new HtmlElement("th", el)).ToList();
             return new HtmlElement("tr", headers);
         }
 
         private class RegisterEventObj
         {
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public int RegisterResult { get; set; }
             public int ParticipantId { get; set; }
             public int EventId { get; set; }
@@ -622,8 +623,6 @@ namespace crds_angular.Services
 
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            //eventId = 4515464; // hardcoded for testing
-
             // step 0 - delete existing data on the event, for eventgroups and eventrooms
             var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
 
@@ -640,8 +639,8 @@ namespace crds_angular.Services
             }
 
             // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
-            List<RoomReservationDto> eventRooms = _roomService.GetRoomReservations(eventTemplateId);
-            List<EventGroup> eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
+            var eventRooms = _roomService.GetRoomReservations(eventTemplateId);
+            var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
 
             // step 2 - create new room reservations and assign event groups to them
             foreach (var eventRoom in eventRooms)
@@ -653,15 +652,24 @@ namespace crds_angular.Services
                 int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
 
                 // get the template event group which matched the template event room, and assign the reservation id to this object
-                var eventGroupsForRoom = (from r in eventGroups where r.Event_Room_ID == eventRoom.EventRoomId select r);
+                var eventGroupsForRoom = (from r in eventGroups where r.EventRoomId == eventRoom.EventRoomId select r);
 
                 foreach (var eventGroup in eventGroupsForRoom)
                 {
                     // create the copied event group and assign the new room reservation id here
-                    eventGroup.Event_ID = eventId;
-                    eventGroup.Event_Room_ID = roomReservationId;
+                    eventGroup.EventId = eventId;
+                    eventGroup.EventRoomId = roomReservationId;
                     _eventService.CreateEventGroup(eventGroup, token);
+                    eventGroup.Created = true;
                 }
+            }
+
+            foreach (var eventGroup in (from groups in eventGroups where groups.Created != true select groups))
+            {
+                // create the copied event group and assign the new room reservation id here
+                eventGroup.EventId = eventId;
+                _eventService.CreateEventGroup(eventGroup, token);
+                eventGroup.Created = true;
             }
 
             return true;

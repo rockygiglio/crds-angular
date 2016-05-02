@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>(/*MockBehavior.Strict*/);
+            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationService>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _groupService = new Mock<IGroupService>();
@@ -33,11 +33,10 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupService> _groupService;
-        private const int EventParticipantId = 12345;
-        private readonly int EventParticipantPageId = 281;
-        private readonly int EventParticipantStatusDefaultID = 2;
-        private readonly int EventsPageId = 308;
-        private readonly string EventsWithEventTypeId = "EventsWithEventTypeId";
+        private const int EventParticipantPageId = 281;
+        private const int EventParticipantStatusDefaultId = 2;
+        private const int EventsPageId = 308;
+        private const string EventsWithEventTypeId = "EventsWithEventTypeId";
 
         private List<Dictionary<string, object>> MockEventsDictionaryByEventTypeId()
         {
@@ -266,7 +265,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 {"Participant_ID", 123},
                 {"Event_ID", 456},
-                {"Participation_Status_ID", EventParticipantStatusDefaultID}
+                {"Participation_Status_ID", EventParticipantStatusDefaultId}
             };
 
             var eventParticipantId = _fixture.RegisterParticipantForEvent(123, 456);
@@ -311,32 +310,32 @@ namespace MinistryPlatform.Translation.Test.Services
             }).QuickCheckThrowOnFailure();
         }
 
-        private List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)
+        private static List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)
         {
-            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+            var recordsList = new List<Dictionary<string, object>>();
 
-            for (int i = 0; i < recordsToGenerate; i++)
+            for (var i = 0; i < recordsToGenerate; i++)
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
-                    { "Event Group ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Event ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Group ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Room ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
-                    { "Domain ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Event_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Group_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Domain_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Closed", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault },
-                    { "Event Room ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
+                    { "Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
                 });
             }
 
             return recordsList;
         }
 
-        private List<Dictionary<string, object>> GetMockedEvents(int recordsToGenerate)
+        private static List<Dictionary<string, object>> GetMockedEvents(int recordsToGenerate)
         {
-            List<Dictionary<string, object>> recordsList = new List<Dictionary<string, object>>();
+            var recordsList = new List<Dictionary<string, object>>();
 
-            for (int i = 0; i < recordsToGenerate; i++)
+            for (var i = 0; i < recordsToGenerate; i++)
             {
                 recordsList.Add(new Dictionary<string, object>
                 {
