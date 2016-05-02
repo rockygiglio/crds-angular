@@ -17,6 +17,8 @@ namespace MinistryPlatform.Translation.Services
 
         private readonly int _eventParticipantSubPageId = Convert.ToInt32(AppSettings("EventsParticipants"));
         private readonly int _eventParticipantPageId = Convert.ToInt32(AppSettings("EventParticipant"));
+        private readonly int _eventGroupsPageViewId = Convert.ToInt32(AppSettings("GroupsByEventId"));
+        private readonly int _eventGroupsPageId = Convert.ToInt32(AppSettings("EventsGroups"));
 
         private readonly int _eventParticipantStatusDefaultId =
             Convert.ToInt32(AppSettings("Event_Participant_Status_Default_ID"));
@@ -333,6 +335,102 @@ namespace MinistryPlatform.Translation.Services
         public List<Group> GetGroupsForEvent(int eventId)
         {
             return _groupService.GetGroupsForEvent(eventId);
+        }
+
+        public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
+        {
+            var searchString =  string.Format(",\"{0}\"", eventId);
+            var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
+
+            if (records == null)
+            {
+                return null;
+            }
+
+            return records.Select(record => new EventGroup
+            {
+                EventGroupId = record.ToInt("Event_Group_ID"),
+                EventId = record.ToInt("Event_ID"),
+                GroupId = record.ToInt("Group_ID"),
+                RoomId = record.ToNullableInt("Room_ID"),
+                Closed = record.ToBool("Closed"),
+                EventRoomId = record.ToNullableInt("Event_Room_ID")
+            }).ToList();
+        }
+
+        public void DeleteEventGroup(EventGroup eventGroup, string token)
+        {
+            _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
+        }
+
+        public List<Event> GetEventsBySite(string site, bool template, string token)
+        {
+            var searchString = string.Format(",,{0},,{1}", site, template);
+
+            var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
+            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+
+            if (records == null || records.Count == 0)
+            {
+                return null;
+            }
+
+            return records.Select(record => new Event
+            {
+                // this isn't a complete list of all event fields - we may need more for user info purposes
+                EventId = record.ToInt("Event_ID"),
+                Congregation = record.ToString("Congregation_Name"),
+                EventTitle = record.ToString("Event_Title"),
+                Template = record.ToBool("Template")
+            }).ToList();
+        }
+
+        public int CreateEventGroup(EventGroup eventGroup, string token)
+        {
+            var groupDictionary = new Dictionary<string, object>
+            {
+                {"Event_ID", eventGroup.EventId},
+                {"Group_ID", eventGroup.GroupId},
+                {"Room_ID", eventGroup.RoomId},
+                {"Domain_ID", 1},
+                {"Closed", eventGroup.Closed},
+                {"Event_Room_ID", eventGroup.EventRoomId}
+            };
+
+            try
+            {
+                return (_ministryPlatformService.CreateRecord(_eventGroupsPageId, groupDictionary, token, true));
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error creating Event Group, eventGroup: {0}", eventGroup);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+        }
+
+        public void UpdateEventGroup(EventGroup eventGroup, string token)
+        {
+            var groupDictionary = new Dictionary<string, object>
+            {
+                {"Event_ID", eventGroup.EventId},
+                {"Group_ID", eventGroup.GroupId},
+                {"Room_ID", eventGroup.RoomId},
+                {"Domain_ID", eventGroup.DomainId},
+                {"Closed", eventGroup.Closed},
+                {"Event_Room_ID", eventGroup.EventRoomId}
+            };
+
+            try
+            {
+                _ministryPlatformService.UpdateRecord(_eventGroupsPageViewId, groupDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error updating Event Group, eventGroup: {0}", eventGroup);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
         }
     }
 }

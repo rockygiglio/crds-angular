@@ -7,7 +7,7 @@ namespace crds_angular.Models.Crossroads.Events
     {
         public EventRoomDto()
         {
-            this.Equipment = new List<EventRoomEquipmentDto>();
+            Equipment = new List<EventRoomEquipmentDto>();
         }
 
         [JsonProperty(PropertyName = "cancelled")]
@@ -30,5 +30,20 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "roomReservationId")]
         public int RoomReservationId { get; set; }
+
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+
+        [JsonProperty(PropertyName = "label")]
+        public string Label { get; set; }
+
+        [JsonProperty(PropertyName = "checkinAllowed")]
+        public bool CheckinAllowed { get; set; }
+
+        [JsonProperty(PropertyName = "capacity")]
+        public int Capacity { get; set; }
+
+        [JsonProperty(PropertyName = "participantsAssigned")]
+        public int ParticipantsAssigned { get; set; }
     }
 }

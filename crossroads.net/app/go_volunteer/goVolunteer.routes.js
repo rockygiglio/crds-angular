@@ -189,8 +189,9 @@
     return deferred.promise;
   }
 
-  function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
+  function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q, $window) {
     var city = $stateParams.city || 'cincinnati';
+    $window.sessionStorage.setItem('go-volunteer.city', city);
     var organization = $stateParams.organizations || undefined;
     var link = buildLink(city, organization, $state, $stateParams);
     var deferred = $q.defer();
@@ -259,7 +260,9 @@
   function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
+    if ($stateParams.page === 'launch-site' && 
+        _.isEmpty(GoVolunteerService.launchSites) && 
+        GoVolunteerService.organization.organizationId) {
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
@@ -357,6 +360,7 @@
     } else {
       Organizations.ByName.get({name: param}, function(data) {
         GoVolunteerService.organization = data;
+        GoVolunteerService.launchSites = {};
         deferred.resolve();
       },
 
