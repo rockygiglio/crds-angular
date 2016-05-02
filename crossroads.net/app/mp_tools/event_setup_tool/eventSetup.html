@@ -29,8 +29,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
-        <button class="btn btn-primary btn-sm" ng-click="EventSetupCtrl.setup()">Setup</button>
+      <div class="form-group  col-sm-4">
+        <div ng-show="EventSetupCtrl.eventsReady">
+          <button class="btn btn-primary btn-sm" ng-class="{disabled: EventSetupCtrl.saving}" ng-click="EventSetupCtrl.setup()">Setup</button>
+        </div>
       </div>
     </div>
   </div>
