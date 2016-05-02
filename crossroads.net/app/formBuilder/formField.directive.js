@@ -30,7 +30,12 @@
 
     function FormFieldController() {
       var vm = this;
-
+      
+      // TODO: See if moving the radiobutton specific code to another directive is better than this
+      if (vm.field && vm.field.attributeType) {
+        vm.attributeType = vm.field.attributeType;
+        vm.attributes = vm.attributeType.attributes;
+      }
     }
 
     function getTemplateUrl(className) {
