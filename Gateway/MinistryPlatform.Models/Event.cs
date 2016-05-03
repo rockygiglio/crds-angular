@@ -9,6 +9,7 @@ namespace MinistryPlatform.Models
 
         public int EventId { get; set; }
         public string Congregation { get; set; }
+        public string Site { get; set; }
         public string EventTitle { get; set; }
         public string EventType { get; set; }
         public DateTime EventStartDate { get; set; }
@@ -23,5 +24,6 @@ namespace MinistryPlatform.Models
 
         public int CongregationId { get; set; }
         public int ReminderDaysPriorId { get; set; }
+        public bool Template { get; set; }
     }
 }

@@ -53,7 +53,7 @@
         var fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
         if (fromReload) {
           $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
-          $state.go('go-volunteer.crossroadspage', {page: 'profile'});
+          $state.go('go-volunteer.city.organizations', {city: $window.sessionStorage.getItem('go-volunteer.city')});
         }
       }
 

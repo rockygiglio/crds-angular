@@ -205,6 +205,28 @@ namespace MinistryPlatform.Translation.Extensions
             return result;
         }
 
+        public static bool? ToNullableBool(this Dictionary<string, object> input, string key, bool throwExceptionIfFailed = false)
+        {
+            var dictVal = DictVal(input, key);
+            if (dictVal == null)
+            {
+                return null;
+            }
+
+            bool result;
+            var valid = bool.TryParse(dictVal.ToString(), out result);
+            if (valid)
+            {
+                return result;
+            }
+
+            if (throwExceptionIfFailed)
+            {
+                throw new FormatException(string.Format("'{0}' cannot be converted as bool", key));
+            }
+            return result;
+        }
+
         private static object DictVal(IReadOnlyDictionary<string, object> input, string key)
         {
             object dictVal;

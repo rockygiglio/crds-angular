@@ -1,0 +1,13 @@
+USE [MinistryPlatform]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER TABLE [dbo].[Event_Rooms]
+ADD Capacity INT NULL, Label VARCHAR(50) NULL, Allow_Checkin bit NOT NULL DEFAULT(0)
+
+Go

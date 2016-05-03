@@ -20,7 +20,7 @@
         return;
       }
 
-      MPTools.getDonorId(goToFunction);
+      MPTools.getSelectedId(goToFunction);
     }
   }
 })();
