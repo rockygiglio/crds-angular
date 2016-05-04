@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
   'use strict';
 
   var MODULE = require('crds-constants').MODULES.FORM_BUILDER;
@@ -18,4 +18,4 @@
   require('./templates/editableNumericField.html');
   require('./templates/editableRadioField.html');
   require('./templates/editableTextField.html');
-})(this);
+})();

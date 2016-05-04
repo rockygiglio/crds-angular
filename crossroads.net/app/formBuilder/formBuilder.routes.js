@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
   'use strict';
   module.exports = FormBuilderRoutes;
 
@@ -13,4 +13,4 @@
         abstract: true
       });
   }
-})(this);
+})();

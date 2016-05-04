@@ -48,10 +48,10 @@
           return 'templates/editableCheckboxGroupField.html';
         case 'EditableNumericField':
           return 'templates/editableNumericField.html';
-        case 'EditableTextField':
-          return 'templates/editableTextField.html';
         case 'EditableRadioField':
           return 'templates/editableRadioField.html';
+        case 'EditableTextField':
+          return 'templates/editableTextField.html';
         case 'EditableFormStep':
           return null;
         default:
