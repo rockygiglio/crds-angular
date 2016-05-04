@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <hr>
+    <hr id="giveInfo">
       <p>You are giving <strong>{{give.dto.amount | currency}}</strong>  to <strong>{{give.dto.program['Name']}}</strong>. <a href="" ng-click="give.service.processChange()" tabindex="-1" class="text-secondary">Change</a></p>
     <hr>
 
@@ -39,7 +39,7 @@
         account-state-name='give.account'>
       </bank-credit-card-details>
 	</ng-form>
-    <button ng-click="give.service.submitBankInfo(give.giveForm, give.programsInput)" ng-disabled="give.dto.processing" class="btn btn-primary btn-lg btn-block-mobile give-button">
+    <button id="confirmGift" ng-click="give.service.submitBankInfo(give.giveForm, give.programsInput)" ng-disabled="give.dto.processing" class="btn btn-primary btn-lg btn-block-mobile give-button">
       <span ng-if="give.dto.processing">Giving...</span>
       <span ng-if="!give.dto.processing">Give {{give.dto.amount | currency}}</span>
       <span>
