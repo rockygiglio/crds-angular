@@ -12,6 +12,7 @@
   //Require Templates
   require('./templates/formBuilder.html');
   require('./templates/defaultField.html');
+  require('./templates/editableBooleanField.html');
   require('./templates/editableCheckbox.html');
   require('./templates/editableCheckboxGroupField.html');
   require('./templates/editableNumericField.html');
