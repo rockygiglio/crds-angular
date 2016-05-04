@@ -40,6 +40,8 @@
 
     function getTemplateUrl(className) {
       switch (className) {
+        case 'EditableBooleanField':
+          return 'templates/editableBooleanField.html';
         case 'EditableCheckbox':
           return 'templates/editableCheckbox.html';
         case 'EditableCheckboxGroupField':

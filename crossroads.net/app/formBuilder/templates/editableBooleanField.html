@@ -1,0 +1,15 @@
+<label ng-show="formField.field.label">{{formField.field.label}}</label>
+<div class="bordered">
+    <div class="radio">
+        <input type="radio" id="attribute_{{formField.field.title}}_true" name="attribute_{{formField.field.title}}_true" value="true" ng-model="responses[formField.field.title]" />
+        <label for="attribute_{{formField.field.title}}_true">
+            Yes
+        </label>
+    </div>
+    <div class="radio">
+        <input type="radio" id="attribute_{{formField.field.title}}_false" name="attribute_{{formField.field.title}}_false" value="false" ng-model="responses[formField.field.title]" />
+        <label for="attribute_{{formField.field.title}}_false">
+            No
+        </label>
+    </div>
+</div>
