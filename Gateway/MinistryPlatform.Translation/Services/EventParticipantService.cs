@@ -114,6 +114,27 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
+        public List<EventParticipant> GetEventParticipants(int eventId, int? roomId = null)
+        {
+            var searchString = roomId == null ? null : string.Format(",,,\"{0}\"", roomId);
 
+            try
+            {
+                var records = 
+                    WithApiLogin(
+                        apiToken => _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, apiToken, searchString));
+                return records.Select(viewRecord => new EventParticipant
+                {
+                    EventParticipantId = viewRecord.ToInt("Event_Participant_ID"),
+                    ParticipantId = viewRecord.ToInt("Participant_ID"),
+                    ParticipantStatus = viewRecord.ToInt("Participation_Status_ID"),
+                    RoomId = viewRecord.ToInt("Room_ID")
+                }).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("GetEventParticipants failed", e);
+            }
+        }
     }
 }

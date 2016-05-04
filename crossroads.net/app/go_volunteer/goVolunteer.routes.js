@@ -51,8 +51,8 @@
           CmsInfo: CmsInfo,
           Meta: Meta,
           $state: '$state',
-          LoggedIn: function($state, Session) {
-            if (Session.exists('userId')) {
+          LoggedIn: function($state) {
+            if (crds_utilities.getCookie('sessionId') !== undefined) {
               $state.go('go-volunteer.crossroadspage', {page: 'profile'});
             }
           }
@@ -161,6 +161,7 @@
     if (link === '') {
       return link;
     }
+
     if (_.endsWith(link, '/') === false) {
       return link + '/';
     }
@@ -188,8 +189,9 @@
     return deferred.promise;
   }
 
-  function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q) {
+  function CmsInfo(Page, $state, $stateParams, GoVolunteerService, $q, $window) {
     var city = $stateParams.city || 'cincinnati';
+    $window.sessionStorage.setItem('go-volunteer.city', city);
     var organization = $stateParams.organizations || undefined;
     var link = buildLink(city, organization, $state, $stateParams);
     var deferred = $q.defer();
@@ -258,7 +260,9 @@
   function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
     var deferred = $q.defer();
 
-    if ($stateParams.page === 'launch-site' && _.isEmpty(GoVolunteerService.launchSites)) {
+    if ($stateParams.page === 'launch-site' && 
+        _.isEmpty(GoVolunteerService.launchSites) && 
+        GoVolunteerService.organization.organizationId) {
       Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
         GoVolunteerService.launchSites = data;
         deferred.resolve();
@@ -349,13 +353,14 @@
     if ($state.next.name === 'go-volunteer.page') {
       param = $stateParams.organization;
     }
-   
+
     // did we already get this information?
     if (useCachedOrg(param, GoVolunteerService.organization)) {
       deferred.resolve();
     } else {
       Organizations.ByName.get({name: param}, function(data) {
         GoVolunteerService.organization = data;
+        GoVolunteerService.launchSites = {};
         deferred.resolve();
       },
 
@@ -377,23 +382,30 @@
         GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
           GoVolunteerService.groupConnectors = data;
           deferred.resolve();
-        }, function(err) {
-          console.log(err);
-          deferred.reject();
-        });
+        },
+
+          function(err) {
+            console.log(err);
+            deferred.reject();
+          }
+        );
       } else {
         GroupConnectors.ByOrgId.query(
           {orgId: GoVolunteerService.organization.organizationId, initiativeId: 1}, function(data) {
           GoVolunteerService.groupConnectors = data;
           deferred.resolve();
-        }, function(err) {
-          console.log(err);
-          deferred.reject();
-        });
+        },
+
+          function(err) {
+            console.log(err);
+            deferred.reject();
+          }
+        );
       }
     } else {
       deferred.resolve();
     }
+
     return deferred.promise;
   }
 

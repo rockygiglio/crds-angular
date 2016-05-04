@@ -23,7 +23,7 @@ namespace crds_angular.test.Services
         private Mock<IPaymentService> _paymentService;
         private Mock<IDonationService> _donationService;
         private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService> _mpDonorService;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -503,11 +503,12 @@ namespace crds_angular.test.Services
             var gift = new CreateDonationDistDto
             {
                 Frequency = 1,
-                RecurringGiftId = recurringGiftId
+                RecurringGiftId = recurringGiftId,
+                StripeCustomerId = processorId
             };
 
             _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId));
-            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(gift);
+            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, "")).Returns(gift);
            
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _fixture.ProcessStripeEvent(e);
@@ -566,11 +567,11 @@ namespace crds_angular.test.Services
              };
 
             _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId));
-            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId)).Returns(gift);
+            _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, "")).Returns(gift);
             _paymentService.Setup(mocked => mocked.CancelSubscription(donorAccountProcessorId, subscriptionId)).Returns(subscription);
             _paymentService.Setup(mocked => mocked.CancelPlan(subscription.Plan.Id)).Returns(plan);
             _mpDonorService.Setup(mocked => mocked.CancelRecurringGift(recurringGiftId));
-           
+
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _fixture.ProcessStripeEvent(e);

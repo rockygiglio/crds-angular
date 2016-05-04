@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Json;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
@@ -78,6 +79,40 @@ namespace crds_angular.Controllers.API
                                                throw new HttpResponseException(apiError.HttpResponseMessage);   
                                            }
                 
+            });
+        }
+
+        [Route("api/event/copyeventsetup")]
+        public IHttpActionResult CopyEventSetup(EventCopyRequest request)
+        {
+            return Authorized(token => {
+                try
+                {
+                    return Ok(_eventService.CopyEventSetup(request.EventTemplateId, request.EventId, token));
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Copy Event Groups Failed for Event " + request.EventId + " With Template ID: " + request.EventTemplateId, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        [Route("api/event/eventsbysite/{site}")]
+        public IHttpActionResult GetEventsBySite(string site, [FromUri(Name = "template")] bool template = false)
+        {
+            return Authorized(token => {
+                try
+                {
+                    return Ok(_eventService.GetEventsBySite(site, template, token));
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("GetEventTemplates failed for Site=" + site + ", Template:" + template, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
             });
         }
 

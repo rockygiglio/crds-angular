@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerPage;
 
-  GoVolunteerPage.$inject = ['$state', '$stateParams'];
+  GoVolunteerPage.$inject = ['$state', '$stateParams', '$window', 'GoVolunteerService'];
 
-  function GoVolunteerPage($state, $stateParams) {
+  function GoVolunteerPage($state, $stateParams, $window, GoVolunteerService) {
     return {
       restrict: 'E',
       scope: {},
@@ -19,6 +19,7 @@
       var vm = this;
 
       vm.handlePageChange = handlePageChange;
+      vm.reload = 'goVol.reload';
       vm.showProfile = showProfile;
       vm.showSignin = showSignin;
       vm.showSpouse = showSpouse;
@@ -41,7 +42,21 @@
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
-      
+
+      $window.onbeforeunload = onBeforeUnload;
+
+      activate();
+
+      function activate() {
+        // if page is loaded with goVol.reload = true, then send to begining of flow
+        // should only occur if user refreshes
+        var fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
+        if (fromReload) {
+          $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
+          $state.go('go-volunteer.city.organizations', {city: $window.sessionStorage.getItem('go-volunteer.city')});
+        }
+      }
+
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
           $state.go('go-volunteer.crossroadspage', {
@@ -54,6 +69,19 @@
             organization: $stateParams.organization,
             page: nextState
           });
+        }
+      }
+
+      function onBeforeUnload() {
+        if (!GoVolunteerService.saveSuccessful) {
+          setTimeout(function() {
+            setTimeout(function() {
+              $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
+            }, 100);
+          }, 1);
+
+          $window.sessionStorage.setItem(vm.reload, angular.toJson(true));
+          return '';
         }
       }
 
@@ -80,7 +108,7 @@
       function showChildren() {
         return $stateParams.page === 'children';
       }
-      
+
       function showCms() {
         return $state.current.name === 'go-volunteer.cms';
       }

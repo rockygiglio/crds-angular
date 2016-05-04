@@ -159,7 +159,8 @@ namespace crds_angular.Controllers.API
             try
             {
                 // Get Participant
-                var participant = _tripService.Search(tripParticipantId).FirstOrDefault();
+                var searchString = tripParticipantId + ',';
+                var participant = _tripService.Search(searchString).FirstOrDefault();
                 return Ok(participant);
             }
             catch (Exception ex)
