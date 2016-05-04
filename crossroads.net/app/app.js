@@ -28,7 +28,7 @@ require('../lib/select.css');
 
   angular.module(constants.MODULES.CROSSROADS)
     .config(require('./routes'))
-    .config(require('./routes.content'));    
+    .config(require('./routes.content'));
 
   require('./events');
   require('./signup');
