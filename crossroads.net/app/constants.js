@@ -11,7 +11,7 @@
       CROSSROADS: 'crossroads',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
-      GROUP_FINDER: 'crossroads.group_finder',
+      //GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
       MPTOOLS: 'crossroads.mptools',
       ONETIME_SIGNUP: 'crossroads.onetime',
