@@ -1,4 +1,4 @@
-require('./group_finder');
+//require('./group_finder');
 
 require('./childcare');
 require('./mp_tools');
@@ -16,7 +16,7 @@ require('../lib/select.css');
       constants.MODULES.COMMON,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
-      constants.MODULES.GROUP_FINDER,
+      //constants.MODULES.GROUP_FINDER,
       constants.MODULES.MEDIA,
       constants.MODULES.MPTOOLS,
       constants.MODULES.PROFILE,
