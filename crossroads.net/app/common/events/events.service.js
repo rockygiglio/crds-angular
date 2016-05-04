@@ -24,7 +24,9 @@
         return events;
       },
 
-      create: $resource(__API_ENDPOINT__ + 'api/eventTool')
+      create: $resource(__API_ENDPOINT__ + 'api/eventTool'),
+      eventSetup: $resource(__API_ENDPOINT__ + 'api/event/copyeventsetup'),
+      eventsBySite: $resource(__API_ENDPOINT__ + 'api/event/eventsbysite/:site')
     };
     return eventsService;
   }

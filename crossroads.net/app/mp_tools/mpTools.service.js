@@ -12,7 +12,7 @@
       setParams: setParams,
       getParams: getParams,
       allowAccess: allowAccess,
-      getDonorId: getDonorId,
+      getSelectedId: getSelectedId,
       Selection: $resource(__API_ENDPOINT__ + 'api/mptools/selection/:selectionId'),
       dto: {
         noSelection: undefined,
@@ -54,13 +54,17 @@
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(role));
     }
 
-    function getDonorId(goToFunction) {
+    function getSelectedId(goToFunction) {
       reset();
 
+      if (goToFunction.length == 0) {
+        goToFunction();
+      }
+
       var params = service.getParams();
-      var donorId = getInt(params.recordId);
-      if (donorId > 0) {
-        goToFunction(donorId);
+      var selectedId = getInt(params.recordId);
+      if (selectedId > 0) {
+        goToFunction(selectedId);
         return;
       }
 
@@ -75,7 +79,7 @@
         });
       }
 
-      service.dto.noSelection = donorId <= 0 && (selectedCount <= 0 || selectionId <= 0);
+      service.dto.noSelection = selectedId <= 0 && (selectedCount <= 0 || selectionId <= 0);
       service.dto.tooManySelections = selectedCount > 1;
     }
 

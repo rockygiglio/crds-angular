@@ -321,6 +321,7 @@
     <Compile Include="Models\Crossroads\Stewardship\StripeList.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
+    <Compile Include="Models\Json\EventCopyRequest.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />

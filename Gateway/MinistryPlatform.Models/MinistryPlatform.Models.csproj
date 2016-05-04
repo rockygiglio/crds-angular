@@ -62,6 +62,7 @@
     <Compile Include="Contact.cs" />
     <Compile Include="DonationAndDistributionRecord.cs" />
     <Compile Include="DonorStatement.cs" />
+    <Compile Include="EventGroup.cs" />
     <Compile Include="EventParticipant.cs" />
     <Compile Include="GroupSearchResult.cs" />
     <Compile Include="GroupSearchAttributes.cs" />

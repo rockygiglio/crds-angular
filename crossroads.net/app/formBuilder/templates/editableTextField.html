@@ -1,1 +1,11 @@
-<div>TEXT FIELD: {{formField.field | json}}</div>
+<label ng-show="formField.field.label">{{formField.field.label}}</label>
+<div class="bordered">
+    <div class="form-group">
+        <input type="text" id="attribute_{{formField.attributeType.name}}_{{$index}}" name="{{formField.attributeType.name}}"  class="form-control"
+               value="{{attribute.id}}" ng-model="responses[formField.attributeType.name]" />
+        <label for="attribute_{{formField.attributeType.name}}_{{$index}}" >
+            {{attribute.name}}
+        </label>
+    </div>
+</div>
+<br>
