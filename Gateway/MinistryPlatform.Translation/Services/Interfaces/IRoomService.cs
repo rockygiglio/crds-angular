@@ -12,5 +12,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<RoomReservationDto> GetRoomReservations(int eventId);
         void UpdateRoomReservation(RoomReservationDto roomReservation, string token);
         void DeleteRoomReservation(RoomReservationDto roomReservation, string token);
+        void DeleteEventRoomsForEvent(int eventId, string token);
     }
 }

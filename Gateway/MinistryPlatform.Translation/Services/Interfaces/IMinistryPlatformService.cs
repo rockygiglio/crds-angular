@@ -50,7 +50,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
                                        String token,
                                        bool quickadd = false);
 
-        void RemoveSelection(int selectionId, int[] records, String token);
 
         int DeleteRecord(int pageId, int recordId, DeleteOption[] deleteOptions, String token);
 
@@ -95,5 +94,10 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         UserInfo GetContactInfo(string token);
         void CompleteTask(string token, int taskId, bool rejected, string comments);
         void UpdateSubRecordAsync(int subPageId, Dictionary<string, object> attributeDictionary, string token);
+        int CreateSelection(SelectionDescription selectionDescription, string token);
+        void DeleteSelection(int selectionId, string token);
+        void DeleteSelectionRecords(int selectionId, string token);
+        void RemoveSelection(int selectionId, int[] records, String token);
+        void AddToSelection(int selectionId, int[] recordIds, string token);
     }
 }
