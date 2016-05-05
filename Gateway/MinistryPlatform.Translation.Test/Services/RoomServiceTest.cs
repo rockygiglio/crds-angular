@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services;
 using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Test.Helpers;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -86,6 +89,52 @@ namespace MinistryPlatform.Translation.Test.Services
                 Assert.AreEqual(l[i]["Room_Name"], reservations[i].Name);
                 Assert.AreEqual(l[i]["Allow_Checkin"], reservations[i].CheckinAllowed);
             }
+        }
+
+        [Test]
+        public void ShouldDeleteEventRoomsForEvent()
+        {
+            Prop.ForAll<string, int, int>((token, selectionId, eventId) =>
+            {
+                var searchString = string.Format(",\"{0}\"", eventId);
+                var eventRooms = GetMockedEventRooms(3);
+
+                _ministryPlatformService.Setup(m => m.GetPageViewRecords(It.IsAny<string>(), It.IsAny<string>(), searchString, "", 0)).Returns(eventRooms);
+
+                var eventRoomIds = Conversions.BuildIntArrayFromKeyValue(eventRooms, "Event_Room_ID").ToArray();
+
+                _ministryPlatformService.Setup(m => m.CreateSelection(It.IsAny<SelectionDescription>(), token)).Returns(selectionId);
+                _ministryPlatformService.Setup(m => m.AddToSelection(selectionId, eventRoomIds, token));
+                _ministryPlatformService.Setup(m => m.DeleteSelectionRecords(selectionId, token));
+                _ministryPlatformService.Setup(m => m.DeleteSelection(selectionId, token));
+
+                _fixture.DeleteEventRoomsForEvent(eventId, token);
+                _ministryPlatformService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
+        }
+
+        private List<Dictionary<string, object>> GetMockedEventRooms(int recordsToGenerate)
+        {
+            var recordsList = new List<Dictionary<string, object>>();
+
+            for (var i = 0; i < recordsToGenerate; i++)
+            {
+                recordsList.Add(new Dictionary<string, object>
+                {
+                    {"Cancelled", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault},
+                    {"Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Hidden", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault},
+                    {"Notes", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault},
+                    {"Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Room_Layout_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Capacity", Gen.Sample(3, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
+                    {"Label", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault},
+                    {"Room_Name", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault},
+                    {"Allow_Checkin", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault}
+                });
+            }
+
+            return recordsList;
         }
     }
 }

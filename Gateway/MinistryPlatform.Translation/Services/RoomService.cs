@@ -6,6 +6,7 @@ using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -139,6 +140,35 @@ namespace MinistryPlatform.Translation.Services
                 LayoutId = record.ToInt("Room_Layout_ID"),
                 LayoutName = record.ToString("Layout_Name")
             }).ToList();
+        }
+
+        public void DeleteEventRoomsForEvent(int eventId, string token)
+        {
+            // get event room ids
+            var discardedEventRoomIds = GetRoomReservations(eventId).Select(r => r.EventRoomId).ToArray();
+
+            // MP will throw an error if there are no elements to delete, so we need to exit the function before then
+            if (discardedEventRoomIds.Length == 0)
+            {
+                return;
+            }
+
+            // create selection for event groups
+            SelectionDescription eventRoomSelDesc = new SelectionDescription();
+            eventRoomSelDesc.DisplayName = "DiscardedEventRooms " + DateTime.Now;
+            eventRoomSelDesc.Kind = SelectionKind.Normal;
+            eventRoomSelDesc.PageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
+            var eventRoomSelId = _ministryPlatformService.CreateSelection(eventRoomSelDesc, token);
+
+
+            // add events to selection
+            _ministryPlatformService.AddToSelection(eventRoomSelId, discardedEventRoomIds, token);
+
+            // delete the selection records
+            _ministryPlatformService.DeleteSelectionRecords(eventRoomSelId, token);
+
+            // delete the selection
+            _ministryPlatformService.DeleteSelection(eventRoomSelId, token);
         }
     }
 }
