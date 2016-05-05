@@ -64,7 +64,7 @@ INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
 	(@Attribute_ID_Base, 'Yes, I will be there!', '(childcare is NOT available)', 1),
-	(@Attribute_ID_Base+1, 'Can''t Make it',null, 2)
+	(@Attribute_ID_Base+1, 'Can''t make it',null, 2)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
