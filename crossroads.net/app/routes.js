@@ -26,11 +26,11 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: function (SystemPage, $state) {
+            Meta: function(SystemPage, $state) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
-                  function (systemPage) {
+                  function(systemPage) {
                     if (systemPage.systemPages[0]) {
                       if (!$state.next.data) {
                         $state.next.data = {};
@@ -41,8 +41,8 @@
                   });
             },
 
-            SiteConfig: function (SiteConfig, ContentSiteConfigService) {
-              return SiteConfig.get({id: 1}).$promise.then(function (result) {
+            SiteConfig: function(SiteConfig, ContentSiteConfigService) {
+              return SiteConfig.get({id: 1}).$promise.then(function(result) {
                     ContentSiteConfigService.siteconfig = result.siteConfig;
                   }
               );
@@ -153,7 +153,7 @@
           templateUrl: 'brave_at_home/braveRoom1.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "1/5",
+            bravePage: '1/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -167,7 +167,7 @@
           templateUrl: 'brave_at_home/braveRoom2.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "2/5",
+            bravePage: '2/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -181,7 +181,7 @@
           templateUrl: 'brave_at_home/braveRoom3.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "3/5",
+            bravePage: '3/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -195,7 +195,7 @@
           templateUrl: 'brave_at_home/braveRoom4.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "4/5",
+            bravePage: '4/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -209,7 +209,7 @@
           templateUrl: 'brave_at_home/braveRoom5.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "5/5",
+            bravePage: '5/5',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -223,7 +223,7 @@
           templateUrl: 'brave_at_home/braveRoom6.html',
           controller: 'BraveHomeController as brave_home_controller',
           data: {
-            bravePage: "6/6",
+            bravePage: '6/6',
             isProtected: true,
             meta: {
               title: 'Brave at Home',
@@ -346,7 +346,7 @@
           resolve: {
             PasswordService: 'PasswordService',
             $stateParams: '$stateParams',
-            TokenStatus: function (PasswordService, $stateParams) {
+            TokenStatus: function(PasswordService, $stateParams) {
               var token = {token: $stateParams.token};
               return PasswordService.VerifyResetToken.get(token).$promise;
             }
@@ -412,7 +412,7 @@
             loggedin: crds_utilities.checkLoggedin,
             ServeOpportunities: 'ServeOpportunities',
             $cookies: '$cookies',
-            Groups: function (ServeOpportunities, $cookies) {
+            Groups: function(ServeOpportunities, $cookies) {
               return ServeOpportunities.ServeDays.query({
                 id: $cookies.get('userId')
               }).$promise;
@@ -451,10 +451,10 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            CmsInfo: function (Page, $stateParams) {
-            var link = addTrailingSlashIfNecessary($stateParams.link);
+            CmsInfo: function(Page, $stateParams) {
+              var link = addTrailingSlashIfNecessary($stateParams.link);
               return Page.get({
-              url: link
+                url: link
               }).$promise;
             }
           }
@@ -474,14 +474,14 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            PageInfo: function ($q, Profile, Page, $stateParams) {
+            PageInfo: function($q, Profile, Page, $stateParams) {
               var deferred = $q.defer();
               var contactId = $stateParams.id;
 
               Profile.Person.get({
                 contactId: contactId
               }).$promise.then(
-                  function (contact) {
+                  function(contact) {
                     var age = contact.age;
                     var cmsPath = '/volunteer-application/adult-applicant-form/';
                     if ((age >= 10) && (age <= 15)) {
@@ -490,7 +490,7 @@
 
                     Page.get({
                       url: cmsPath
-                    }).$promise.then(function (cmsInfo) {
+                    }).$promise.then(function(cmsInfo) {
                           deferred.resolve({
                             contact, cmsInfo
                           });
@@ -502,7 +502,7 @@
             },
 
             Volunteer: 'VolunteerService',
-            Family: function (Volunteer) {
+            Family: function(Volunteer) {
               return Volunteer.Family.query({
                 contactId: crds_utilities.getCookie('userId')
               }).$promise;
@@ -565,7 +565,7 @@
             loggedin: crds_utilities.checkLoggedin,
             MPTools: 'MPTools',
             Page: 'Page',
-            CmsInfo: function (Page, $stateParams) {
+            CmsInfo: function(Page, $stateParams) {
               return Page.get({
                 url: '/volunteer-application/kids-club/'
               }).$promise;
@@ -579,16 +579,16 @@
           resolve: {
             MPTools: 'MPTools',
             Trip: 'Trip',
-            PageInfo: function (MPTools, Trip) {
+            PageInfo: function(MPTools, Trip) {
               var params = MPTools.getParams();
               return Trip.TripFormResponses.get({
                 selectionId: params.selectedRecord,
                 selectionCount: params.selectedCount,
                 recordId: params.recordId
-              }).$promise.then(function (data) {
+              }).$promise.then(function(data) {
                     // promise fulfilled
                     return data;
-                  }, function (error) {
+                  }, function(error) {
                     // promise rejected, could log the error with: console.log('error', error);
                     var data = {};
                     data.errors = error;

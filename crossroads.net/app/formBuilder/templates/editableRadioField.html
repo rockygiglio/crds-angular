@@ -1,0 +1,10 @@
+<label ng-show="formField.field.label">{{formField.field.label}}</label>
+<div class="bordered">
+    <div class="form-group" ng-repeat="attribute in formField.attributes track by $index">
+        <input type="radio" id="attribute_{{formField.attributeType.name}}_{{$index}}" name="{{formField.attributeType.name}}" value="{{attribute.id}}" ng-model="responses[formField.attributeType.name]" />
+        <label for="attribute_{{formField.attributeType.name}}_{{$index}}">
+            {{attribute.name}} {{attribute.description}}
+        </label>
+    </div>
+</div>
+<br>

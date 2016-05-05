@@ -340,7 +340,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
-            var searchString =  string.Format(",\"{0}\"", eventId);
+            var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
             if (records == null)
