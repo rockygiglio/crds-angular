@@ -280,6 +280,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(987, eventParticipantId);
         }
 
+        [Ignore]
         [Test]
         public void ShouldGetEventGroupsForEvent()
         {
