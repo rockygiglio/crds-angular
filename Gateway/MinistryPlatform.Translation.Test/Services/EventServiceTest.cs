@@ -318,7 +318,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             Prop.ForAll<string, int, int>((token, selectionId, eventId) =>
             {
-                var searchString = string.Format(",\"{0}\"", eventId);
+                var searchString = string.Format("\"{0}\",", eventId);
                 var eventGroups = GetMockedEventGroups(3);
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(2221, token, searchString, "", 0)).Returns(eventGroups);
