@@ -6,6 +6,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.EventReservations;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -339,7 +340,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
-            var searchString =  string.Format(",\"{0}\"", eventId);
+            var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
             if (records == null)
@@ -361,6 +362,34 @@ namespace MinistryPlatform.Translation.Services
         public void DeleteEventGroup(EventGroup eventGroup, string token)
         {
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
+        }
+
+        public void DeleteEventGroupsForEvent(int eventId, string token)
+        {
+            // get event group ids
+            var discardedEventGroupIds = GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray();
+
+            // MP will throw an error if there are no elements to delete, so we need to exit the function before then
+            if (discardedEventGroupIds.Length == 0)
+            {
+                return;
+            }
+
+            // create selection for event groups
+            SelectionDescription eventGroupSelDesc = new SelectionDescription();
+            eventGroupSelDesc.DisplayName = "DiscardedEventGroups " + DateTime.Now;
+            eventGroupSelDesc.Kind = SelectionKind.Normal;
+            eventGroupSelDesc.PageId = _eventGroupsPageId;
+            var eventGroupSelId = _ministryPlatformService.CreateSelection(eventGroupSelDesc, token);
+
+            // add events to selection
+            _ministryPlatformService.AddToSelection(eventGroupSelId, discardedEventGroupIds, token);
+
+            // delete the selection records
+            _ministryPlatformService.DeleteSelectionRecords(eventGroupSelId, token);
+
+            // delete the selection
+            _ministryPlatformService.DeleteSelection(eventGroupSelId, token);
         }
 
         public List<Event> GetEventsBySite(string site, bool template, string token)

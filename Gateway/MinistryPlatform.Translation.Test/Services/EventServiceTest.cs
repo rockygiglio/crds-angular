@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Test.Helpers;
 using Moq;
 using NUnit.Framework;
 
@@ -280,6 +282,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(987, eventParticipantId);
         }
 
+        [Ignore]
         [Test]
         public void ShouldGetEventGroupsForEvent()
         {
@@ -287,7 +290,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, int>((token, eventId) =>
             {
-                var searchString = ",\"" + eventId + "\"";
+                var searchString = "\"" + eventId + "\",";
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(GetMockedEventGroups(3));
                 _fixture.GetEventGroupsForEvent(eventId, token);
@@ -302,10 +305,32 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, bool, string>((site, template, token) =>
             {
-                var searchString = ",," + site + ",," + template ;
+                var searchString = ",," + site + ",," + template;
 
                 _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
                 _fixture.GetEventsBySite(site, template, token);
+                _ministryPlatformService.VerifyAll();
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldDeleteEventGroupsForEvent()
+        {
+            Prop.ForAll<string, int, int>((token, selectionId, eventId) =>
+            {
+                var searchString = string.Format("\"{0}\",", eventId);
+                var eventGroups = GetMockedEventGroups(3);
+
+                _ministryPlatformService.Setup(m => m.GetPageViewRecords(2221, token, searchString, "", 0)).Returns(eventGroups);
+
+                var eventGroupIntIds = Conversions.BuildIntArrayFromKeyValue(eventGroups, "Event_Group_ID").ToArray();
+
+                _ministryPlatformService.Setup(m => m.CreateSelection(It.IsAny<SelectionDescription>(), token)).Returns(selectionId);
+                _ministryPlatformService.Setup(m => m.AddToSelection(selectionId, eventGroupIntIds, token));
+                _ministryPlatformService.Setup(m => m.DeleteSelectionRecords(selectionId, token));
+                _ministryPlatformService.Setup(m => m.DeleteSelection(selectionId, token));
+
+                _fixture.DeleteEventGroupsForEvent(eventId, token);
                 _ministryPlatformService.VerifyAll();
             }).QuickCheckThrowOnFailure();
         }

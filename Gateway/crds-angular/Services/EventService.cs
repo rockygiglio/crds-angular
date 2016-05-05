@@ -623,29 +623,17 @@ namespace crds_angular.Services
 
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            // step 0 - delete existing data on the event, for eventgroups and eventrooms
-            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
+            // event groups and event rooms need to be removed before adding new ones
+            _eventService.DeleteEventGroupsForEvent(eventId, token);
+            _roomService.DeleteEventRoomsForEvent(eventId, token);
 
-            foreach (var eventGroup in discardedEventGroups)
-            {
-                _eventService.DeleteEventGroup(eventGroup, token);
-            }
-
-            var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
-
-            foreach (var roomEvent in discardedRoomReservations)
-            {
-                _roomService.DeleteRoomReservation(roomEvent, token);
-            }
-
-            // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
+            // get event rooms (room reservation DTOs) and event groups for the template
             var eventRooms = _roomService.GetRoomReservations(eventTemplateId);
             var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
 
             // step 2 - create new room reservations and assign event groups to them
             foreach (var eventRoom in eventRooms)
             {
-                // TODO: Is this the right approach? -- other options kinda suck, too
                 eventRoom.EventId = eventId;
 
                 // this is the new room reservation id for the copied room

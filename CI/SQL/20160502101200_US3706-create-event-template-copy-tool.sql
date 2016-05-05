@@ -2,9 +2,9 @@ USE [MinistryPlatform]
 GO
 
 declare @toolids table (id int);
-declare @ToolName varchar(30) = 'Checkin Dashboard';
-declare @LaunchPage varchar(100) = '/CRDStools/adminManageCheckinDashboard';
-declare @Description varchar(50) = 'Manage Kids Club rooms during a service or event';
+declare @ToolName varchar(30) = 'Event Setup';
+declare @LaunchPage varchar(100) = '/CRDStools/adminEventSetup';
+declare @Description varchar(50) = 'Setup a Kids Club event based on pre-defined templates';
 declare @ToolId int;
 
 declare @PageToolAppearsOn int = 308 -- Events Page

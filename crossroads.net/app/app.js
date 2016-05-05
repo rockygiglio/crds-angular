@@ -1,4 +1,4 @@
-require('./group_finder');
+//require('./group_finder');
 
 require('./childcare');
 require('./mp_tools');
@@ -14,9 +14,10 @@ require('../lib/select.css');
       constants.MODULES.CHILDCARE,
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
+      constants.MODULES.FORM_BUILDER,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
-      constants.MODULES.GROUP_FINDER,
+      //constants.MODULES.GROUP_FINDER,
       constants.MODULES.MEDIA,
       constants.MODULES.MPTOOLS,
       constants.MODULES.PROFILE,
@@ -28,7 +29,7 @@ require('../lib/select.css');
   angular.module(constants.MODULES.CROSSROADS)
     .config(require('./routes'))
     .config(require('./routes.content'));
-    
+
   require('./events');
   require('./signup');
   require('./styleguide');

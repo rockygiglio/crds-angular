@@ -412,7 +412,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Group> GetGroupsForEvent(int eventId)
         {
-            var searchString = eventId + ",";
+            var searchString = string.Format("\"{0}\",", eventId);
             var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
             var token = ApiLogin();
             var records = ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
