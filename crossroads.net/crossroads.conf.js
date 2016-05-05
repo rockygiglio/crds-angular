@@ -34,6 +34,7 @@ module.exports = function(config) {
       './assets/search*.js',
       './assets/profile*.js',
       './assets/media*.js',
+      './assets/formbuilder*.js',
       'spec/spec_index.js'
     ],
 

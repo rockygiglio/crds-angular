@@ -31,6 +31,7 @@ module.exports = function(config) {
       './assets/profile*.js',
       './assets/media*.js',
       './assets/govolunteer*.js',
+      './assets/formbuilder*.js',
       'spec/spec_index.js'
     ],
 

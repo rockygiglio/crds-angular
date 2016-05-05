@@ -77,9 +77,9 @@
                     statusCode: ContentPageService.page.errorCode
                   };
                                 
-                  if (ContentPageService.page.canViewType === "LoggedInUsers" ) {                    
-                       $state.next.data.isProtected = true;
-                       Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);                                                                                         
+                  if (ContentPageService.page.canViewType === 'LoggedInUsers') {
+                    $state.next.data.isProtected = true;
+                    Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);
                   }
                                     
                   switch (ContentPageService.page.pageType) {
