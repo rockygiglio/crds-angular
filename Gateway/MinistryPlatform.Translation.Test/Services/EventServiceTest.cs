@@ -282,7 +282,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(987, eventParticipantId);
         }
 
-        [Ignore]
         [Test]
         public void ShouldGetEventGroupsForEvent()
         {
@@ -290,11 +289,24 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Prop.ForAll<string, int>((token, eventId) =>
             {
-                var searchString = "\"" + eventId + "\",";
+                var searchString = string.Format("\"{0}\",", eventId);
+                var eventGroups = GetMockedEventGroups(new System.Random(DateTime.Now.Millisecond).Next(10));
 
-                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(GetMockedEventGroups(3));
-                _fixture.GetEventGroupsForEvent(eventId, token);
+                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(eventGroups);
+                var result = _fixture.GetEventGroupsForEvent(eventId, token);
                 _ministryPlatformService.VerifyAll();
+
+                Assert.IsNotNull(result);
+                Assert.AreEqual(eventGroups.Count, result.Count);
+                for (var i = 0; i < eventGroups.Count; i++)
+                {
+                    Assert.AreEqual(eventGroups[i]["Event_Group_ID"], result[i].EventGroupId);
+                    Assert.AreEqual(eventGroups[i]["Event_ID"], result[i].EventId);
+                    Assert.AreEqual(eventGroups[i]["Group_ID"], result[i].GroupId);
+                    Assert.AreEqual(eventGroups[i]["Room_ID"], result[i].RoomId);
+                    Assert.AreEqual(eventGroups[i]["Closed"], result[i].Closed);
+                    Assert.AreEqual(eventGroups[i]["Event_Room_ID"], result[i].EventRoomId);
+                }
             }).QuickCheckThrowOnFailure();
         }
 
