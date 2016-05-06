@@ -266,6 +266,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.CreateRoomReservation(roomReservation, token);
         }
 
@@ -279,6 +283,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
