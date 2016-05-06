@@ -21,15 +21,16 @@
       scope.ratio = ratio;
       scope.editRoom = editRoom;
       scope.updateRoom = updateRoom;
+      scope.update = update;
 
       /////////////////////////////////
       ////// IMPLMENTATION DETAILS ////
       /////////////////////////////////
 
-      function update(room) {
-        return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, room).$promise.then(function(result) {
+      function update(indx) {
+        return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
                 $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
-                room = result;
+                scope.rooms[indx] = result;
               },
 
               function(err) {
@@ -50,7 +51,7 @@
 
       function editRoom(room, indx) {
         if (room.editLabel) {
-          update(room).then(function() {
+          update(indx).then(function() {
               room.editLabel = !room.editLabel;
             });
         } else {
@@ -59,8 +60,8 @@
         }
       }
 
-      function updateRoom(room) {
-        update(room);
+      function updateRoom(indx) {
+        update(indx);
       }
     }
   }

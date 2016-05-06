@@ -24,13 +24,13 @@
           </div>
         </td>
         <td>
-          <input type="checkbox" ng-model="room.checkinAllowed" ng-model-options="{ debounce: 500 }" ng-change="updateRoom(room)"/>
+          <input type="checkbox" ng-model="room.checkinAllowed" ng-model-options="{ debounce: 500 }" ng-change="updateRoom($index)"/>
         </td>
         <td>
-          <h-number value="room.volunteers" min="0" max="1000" step="1" change="updateRoom(room)"></h-number>
+          <h-number value="room.volunteers" min="0" max="1000" step="1" change="updateRoom($index)"></h-number>
         </td>
         <td>
-          <h-number value="room.capacity" min="0" max="1000" step="1" change="updateRoom(room)"></h-number>
+          <h-number value="room.capacity" min="0" max="1000" step="1" change="updateRoom($index)"></h-number>
         </td>
         <td>
           {{ room.participantsSignedIn }}
