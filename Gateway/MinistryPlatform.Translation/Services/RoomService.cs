@@ -39,7 +39,8 @@ namespace MinistryPlatform.Translation.Services
                 Capacity = record.ToNullableInt("Capacity") ?? 0,
                 Label = record.ToString("Label"),
                 Name = record.ToString("Room_Name"),
-                CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false
+                CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false,
+                Volunteers = record.ToInt("Volunteers")
             }).ToList();
         }
 
@@ -62,6 +63,7 @@ namespace MinistryPlatform.Translation.Services
             reservationDictionary.Add("Capacity", roomReservation.Capacity);
             reservationDictionary.Add("Label", roomReservation.Label);
             reservationDictionary.Add("Allow_Checkin", roomReservation.CheckinAllowed);
+            reservationDictionary.Add("Volunteers", roomReservation.Volunteers);
 
             try
             {
@@ -89,7 +91,8 @@ namespace MinistryPlatform.Translation.Services
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
                 {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.CheckinAllowed}
+                {"Allow_Checkin", roomReservation.CheckinAllowed},
+                {"Volunteers", roomReservation.Volunteers}
             };
 
             try

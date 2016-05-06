@@ -49,7 +49,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Capacity", 1111},
                     {"Label", "Label 1"},
                     {"Room_Name", "Name 1"},
-                    {"Allow_Checkin", false}
+                    {"Allow_Checkin", false},
+                    {"Volunteers", 1}
                 },
                 new Dictionary<string, object>
                 {
@@ -62,7 +63,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Capacity", 2222},
                     {"Label", "Label 2"},
                     {"Room_Name", "Name 2"},
-                    {"Allow_Checkin", true}
+                    {"Allow_Checkin", true},
+                    {"Volunteers", 10}
                 },
             };
 
@@ -88,6 +90,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Assert.AreEqual(l[i]["Label"], reservations[i].Label);
                 Assert.AreEqual(l[i]["Room_Name"], reservations[i].Name);
                 Assert.AreEqual(l[i]["Allow_Checkin"], reservations[i].CheckinAllowed);
+                Assert.AreEqual(l[i]["Volunteers"], reservations[i].Volunteers);
             }
         }
 

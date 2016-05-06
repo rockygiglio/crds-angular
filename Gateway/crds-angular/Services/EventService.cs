@@ -148,6 +148,8 @@ namespace crds_angular.Services
                 {
                     var p = _eventParticipantService.GetEventParticipants(eventId, room.RoomId);
                     r.ParticipantsAssigned = p == null ? 0 : p.Count;
+                    r.ParticipantsCheckedIn = p == null ? 0 : p.Where(participant => participant.ParticipantStatus == 3).ToList().Count;
+                    r.ParticipantsSignedIn = p == null ? 0 : p.Where(participant => participant.ParticipantStatus == 4).ToList().Count;
                 }
 
                 roomDto.Add(r);
