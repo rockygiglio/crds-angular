@@ -163,25 +163,40 @@ namespace crds_angular.Services
             {
                 foreach (var room in eventReservation.Rooms)
                 {
-                    if (room.RoomReservationId == 0)
+                    UpdateEventRoom(room, eventId, token);
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = "Event Service: UpdateEventReservation";
+                _logger.Error(msg, ex);
+                throw new Exception(msg, ex);
+            }
+            return true;
+        }
+
+        public bool UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
+        {
+            try
+            {
+                if (eventRoom.RoomReservationId == 0)
+                {
+                    AddRoom(eventId, eventRoom, token);
+                }
+                else
+                {
+                    UpdateRoom(eventId, eventRoom, token);
+                }
+
+                foreach (var equipment in eventRoom.Equipment)
+                {
+                    if (equipment.EquipmentReservationId == 0)
                     {
-                        AddRoom(eventId, room, token);
+                        AddEquipment(equipment, eventId, eventRoom, token);
                     }
                     else
                     {
-                        UpdateRoom(eventId, room, token);
-                    }
-
-                    foreach (var equipment in room.Equipment)
-                    {
-                        if (equipment.EquipmentReservationId == 0)
-                        {
-                            AddEquipment(equipment, eventId, room, token);
-                        }
-                        else
-                        {
-                            UpdateEquipment(equipment, eventId, room, token);
-                        }
+                        UpdateEquipment(equipment, eventId, eventRoom, token);
                     }
                 }
             }
