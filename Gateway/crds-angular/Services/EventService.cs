@@ -127,6 +127,7 @@ namespace crds_angular.Services
                 r.CheckinAllowed = room.CheckinAllowed;
                 r.Name = room.Name;
                 r.Label = room.Label;
+                r.Volunteers = room.Volunteers;
 
                 if (includeEquipment)
                 {
