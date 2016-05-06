@@ -127,6 +127,7 @@ namespace crds_angular.Services
                 r.CheckinAllowed = room.CheckinAllowed;
                 r.Name = room.Name;
                 r.Label = room.Label;
+                r.Volunteers = room.Volunteers;
 
                 if (includeEquipment)
                 {
@@ -163,26 +164,7 @@ namespace crds_angular.Services
             {
                 foreach (var room in eventReservation.Rooms)
                 {
-                    if (room.RoomReservationId == 0)
-                    {
-                        AddRoom(eventId, room, token);
-                    }
-                    else
-                    {
-                        UpdateRoom(eventId, room, token);
-                    }
-
-                    foreach (var equipment in room.Equipment)
-                    {
-                        if (equipment.EquipmentReservationId == 0)
-                        {
-                            AddEquipment(equipment, eventId, room, token);
-                        }
-                        else
-                        {
-                            UpdateEquipment(equipment, eventId, room, token);
-                        }
-                    }
+                    UpdateEventRoom(room, eventId, token);
                 }
             }
             catch (Exception ex)
@@ -192,6 +174,41 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
+        {
+            try
+            {
+                if (eventRoom.RoomReservationId == 0)
+                {
+                    AddRoom(eventId, eventRoom, token);
+                }
+                else
+                {
+                    UpdateRoom(eventId, eventRoom, token);
+                }
+
+                foreach (var equipment in eventRoom.Equipment)
+                {
+                    if (equipment.EquipmentReservationId == 0)
+                    {
+                        AddEquipment(equipment, eventId, eventRoom, token);
+                    }
+                    else
+                    {
+                        UpdateEquipment(equipment, eventId, eventRoom, token);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = "Event Service: UpdateEventReservation";
+                _logger.Error(msg, ex);
+                throw new Exception(msg, ex);
+            }
+
+            return eventRoom;
         }
 
         public bool CreateEventReservation(EventToolDto eventTool, string token)
@@ -251,6 +268,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.CreateRoomReservation(roomReservation, token);
         }
 
@@ -264,6 +285,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 

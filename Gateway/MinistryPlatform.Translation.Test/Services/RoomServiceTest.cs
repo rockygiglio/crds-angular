@@ -133,7 +133,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Capacity", Gen.Sample(3, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault},
                     {"Label", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault},
                     {"Room_Name", Gen.Sample(75, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault},
-                    {"Allow_Checkin", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault}
+                    {"Allow_Checkin", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault},
+                    {"Volunteers", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault}
                 });
             }
 

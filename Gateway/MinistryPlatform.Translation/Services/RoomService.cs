@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Services
                 Hidden = record.ToBool("Hidden"),
                 Notes = record.ToString("Notes"),
                 RoomId = record.ToInt("Room_ID"),
-                RoomLayoutId = record.ToInt("Room_Layout_ID"),
+                RoomLayoutId = record.ToNullableInt("Room_Layout_ID") ?? 0,
                 Capacity = record.ToNullableInt("Capacity") ?? 0,
                 Label = record.ToString("Label"),
                 Name = record.ToString("Room_Name"),
@@ -85,8 +85,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Event_ID", roomReservation.EventId},
                 {"Event_Room_ID", roomReservation.EventRoomId},
                 {"Room_ID", roomReservation.RoomId},
-                {"Room_Layout_ID", roomReservation.RoomLayoutId},
-                {"Notes", roomReservation.Notes},
+                { "Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
@@ -94,6 +93,11 @@ namespace MinistryPlatform.Translation.Services
                 {"Allow_Checkin", roomReservation.CheckinAllowed},
                 {"Volunteers", roomReservation.Volunteers}
             };
+
+            if (roomReservation.RoomLayoutId != 0)
+            {
+                reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+            }
 
             try
             {
