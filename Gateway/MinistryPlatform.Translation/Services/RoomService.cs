@@ -51,7 +51,12 @@ namespace MinistryPlatform.Translation.Services
             var reservationDictionary = new Dictionary<string, object>();
             reservationDictionary.Add("Event_ID", roomReservation.EventId);
             reservationDictionary.Add("Room_ID", roomReservation.RoomId);
-            reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+
+            if (roomReservation.RoomLayoutId != 0)
+            {
+                reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+            }
+
             reservationDictionary.Add("Notes", roomReservation.Notes);
             reservationDictionary.Add("Hidden", roomReservation.Hidden);
             reservationDictionary.Add("Cancelled", roomReservation.Cancelled);
@@ -80,8 +85,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Event_ID", roomReservation.EventId},
                 {"Event_Room_ID", roomReservation.EventRoomId},
                 {"Room_ID", roomReservation.RoomId},
-                {"Room_Layout_ID", roomReservation.RoomLayoutId},
-                {"Notes", roomReservation.Notes},
+                { "Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
@@ -89,6 +93,11 @@ namespace MinistryPlatform.Translation.Services
                 {"Allow_Checkin", roomReservation.CheckinAllowed},
                 {"Volunteers", roomReservation.Volunteers}
             };
+
+            if (roomReservation.RoomLayoutId != 0)
+            {
+                reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+            }
 
             try
             {
