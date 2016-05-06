@@ -175,7 +175,7 @@ namespace crds_angular.Services
             return true;
         }
 
-        public bool UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
+        public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
         {
             try
             {
@@ -206,7 +206,8 @@ namespace crds_angular.Services
                 _logger.Error(msg, ex);
                 throw new Exception(msg, ex);
             }
-            return true;
+
+            return eventRoom;
         }
 
         public bool CreateEventReservation(EventToolDto eventTool, string token)

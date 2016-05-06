@@ -138,8 +138,8 @@ namespace crds_angular.Controllers.API
                         {
                             throw new ApplicationException("Invalid Event Id");
                         }
-                        _eventService.UpdateEventRoom(room, eventId, token);
-                        return Ok();
+                        
+                        return Ok(_eventService.UpdateEventRoom(room, eventId, token));
                     }
                     catch (Exception e)
                     {
