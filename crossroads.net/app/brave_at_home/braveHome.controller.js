@@ -2,9 +2,9 @@
   'use strict';
   module.exports = BraveHomeController;
 
-  BraveHomeController.$inject = ['$scope', '$rootScope', '$window', '$stateParams', '$log', '$location', '$anchorScroll', 'Email', 'Session', '$state'];
+  BraveHomeController.$inject = ['$scope', '$rootScope', '$window', '$stateParams', '$log', '$location', '$anchorScroll', 'Session', '$state'];
 
-function BraveHomeController($scope, $rootScope, $window, $stateParams, $log, $location, $anchorScroll, Email, Session, $state) {
+function BraveHomeController($scope, $rootScope, $window, $stateParams, $log, $location, $anchorScroll, Session, $state) {
 		var vm = this;
 
     var userid = Session.exists('userId') !== undefined ? Session.exists('userId') : 0;
