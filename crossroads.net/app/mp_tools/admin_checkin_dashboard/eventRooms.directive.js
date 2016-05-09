@@ -3,14 +3,15 @@
 
   module.exports = EventRooms;
 
-  EventRooms.$inject = ['$log', 'Focus'];
+  EventRooms.$inject = ['$log', '$rootScope', 'Focus', 'AdminCheckinDashboardService'];
 
-  function EventRooms($log, Focus) {
+  function EventRooms($log, $rootScope, Focus, AdminCheckinDashboardService) {
     return {
       restrict: 'EA',
       replace: true,
       scope: {
-        rooms: '=',
+        eventId: '=',
+        rooms: '='
       },
       templateUrl: 'templates/eventRooms.html',
       link: link
@@ -19,13 +20,23 @@
     function link(scope, element, attrs) {
       scope.ratio = ratio;
       scope.editRoom = editRoom;
-      scope.editCheckinAllowed = editCheckinAllowed;
+      scope.updateRoom = updateRoom;
+      scope.update = update;
 
       /////////////////////////////////
       ////// IMPLMENTATION DETAILS ////
       /////////////////////////////////
 
-      function update() {
+      function update(indx) {
+        return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
+                $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
+                scope.rooms[indx] = result;
+              },
+
+              function(err) {
+                $log.error(err);
+                $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
+              });
       }
 
       function ratio(room) {
@@ -39,19 +50,18 @@
       }
 
       function editRoom(room, indx) {
-        room.editLabel = !room.editLabel;
-
         if (room.editLabel) {
+          update(indx).then(function() {
+              room.editLabel = !room.editLabel;
+            });
+        } else {
+          room.editLabel = !room.editLabel;
           Focus.focus('label' + indx);
         }
       }
 
-      function editCheckinAllowed(room, indx) {
-        room.editCheckinAllowed = !room.editCheckinAllowed;
-
-        if (room.editCheckinAllowed) {
-          Focus.focus('checkinAllowed' + indx);
-        }
+      function updateRoom(indx) {
+        update(indx);
       }
     }
   }
