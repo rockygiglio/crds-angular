@@ -27,8 +27,8 @@
     vm.eventsLoading = true;
     vm.eventTemplatesLoading = true;
     vm.saving = false;
-    vm.startDate = '';
-    vm.endDate = '';
+    vm.startDate = new Date();
+    vm.endDate = new Date();
     vm.filterEvents = filterEvents;
 
     vm.allowAdminAccess = function() {
