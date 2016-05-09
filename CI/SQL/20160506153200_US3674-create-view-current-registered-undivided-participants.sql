@@ -30,7 +30,7 @@ VALUES(92145,'Undivided - Registered Participants',316,'Staff members can view t
       WHERE GPA.Attribute_ID = A.Attribute_ID
 	  AND GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID
 	  AND GETDATE() BETWEEN GPA.Start_Date AND ISNULL(GPA.End_Date,GETDATE()) 
-	  AND Attribute_Type_ID = 87) AS [Preferred Co-Participant]	
+	  AND Attribute_Type_ID = 88) AS [Preferred Co-Participant]	
 	,Group_Participants.[Child_Care_Requested] AS [Requested Child Care]'
     ,'Group_ID_Table.Group_ID = 166571 AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL)'
     ,'Group_Participants.[Start_Date]' 
