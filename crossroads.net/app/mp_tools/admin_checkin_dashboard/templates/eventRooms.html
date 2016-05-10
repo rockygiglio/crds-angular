@@ -25,7 +25,7 @@
             </div>
           </td>
           <td>
-            <input type="checkbox" ng-model="room.checkinAllowed" ng-model-options="{ debounce: 500 }" ng-change="updateRoom($index)"/>
+            <input type="checkbox" ng-model="room.checkinAllowed" ng-change="updateRoom($index)"/>
           </td>
           <td>
             <h-number value="room.volunteers" min="0" max="1000" step="1" change="updateRoom($index)"></h-number>
