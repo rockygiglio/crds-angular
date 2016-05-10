@@ -40,13 +40,13 @@
       reset();
 
       // load templates first
-      EventService.eventsBySite.query({ site: vm.site.id, template: true }, function(data) {
+      EventService.eventsTemplatesBySite.query({ site: vm.site.id, startDate: vm.startDate, endDate: vm.endDate }, function(data) {
         vm.eventTemplates = data;
         vm.eventTemplatesLoading = false;
       });
 
       // load events
-      EventService.eventsBySite.query({ site: vm.site.id, template: false }, function(data) {
+      EventService.eventsBySite.query({ site: vm.site.id }, function(data) {
         vm.events = data;
         vm.eventsLoading = false;
       });
