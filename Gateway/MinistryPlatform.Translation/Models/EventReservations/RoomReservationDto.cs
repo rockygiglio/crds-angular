@@ -19,5 +19,6 @@ namespace MinistryPlatform.Translation.Models.EventReservations
         public string Label { get; set; }
         public bool CheckinAllowed { get; set; }
         public int Capacity { get; set; }
+        public int Volunteers { get; set; }
     }
 }

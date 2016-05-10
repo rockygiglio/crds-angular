@@ -122,5 +122,37 @@ namespace crds_angular.Controllers.API
             var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
+
+
+        [AcceptVerbs("PUT")]
+        [Route("api/eventTool/{eventId:int}/rooms")]
+        public IHttpActionResult UpdateEventRoom([FromBody] EventRoomDto room, int eventId)
+        {
+            if (ModelState.IsValid)
+            {
+                return Authorized(token =>
+                {
+                    try
+                    {
+                        if (eventId == 0)
+                        {
+                            throw new ApplicationException("Invalid Event Id");
+                        }
+                        
+                        return Ok(_eventService.UpdateEventRoom(room, eventId, token));
+                    }
+                    catch (Exception e)
+                    {
+                        var msg = "EventToolController: UpdateEventRoom " + room.Name;
+                        logger.Error(msg, e);
+                        var apiError = new ApiErrorDto(msg, e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                });
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+            var dataError = new ApiErrorDto("Event Data Invalid", new InvalidOperationException("Invalid Event Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
     }
 }
