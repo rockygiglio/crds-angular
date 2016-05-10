@@ -27,7 +27,7 @@
       create: $resource(__API_ENDPOINT__ + 'api/eventTool'),
       eventSetup: $resource(__API_ENDPOINT__ + 'api/event/copyeventsetup'),
       eventsBySite: $resource(__API_ENDPOINT__ + 'api/event/eventsbysite/:site'),
-      eventTemplatesBySite: $resource(__API_ENDPOINT__ + 'api/event/eventstemplatesbysite/:site')
+      eventTemplatesBySite: $resource(__API_ENDPOINT__ + 'api/event/eventtemplatesbysite/:site')
     };
     return eventsService;
   }

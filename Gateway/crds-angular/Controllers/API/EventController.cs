@@ -101,7 +101,7 @@ namespace crds_angular.Controllers.API
 
         [Route("api/event/eventsbysite/{site}")]
         public IHttpActionResult GetEventsBySite(string site, 
-            [FromUri(Name = "startDate")] DateTime startDate, [FromUri(Name = "startDate")] DateTime endDate)
+            [FromUri(Name = "startDate")] DateTime startDate, [FromUri(Name = "endDate")] DateTime endDate)
         {
             return Authorized(token => {
                 try

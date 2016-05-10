@@ -402,31 +402,31 @@ namespace MinistryPlatform.Translation.Services
             // if the days at the same, this is done to create the basic search string
             if (dayOffset.Days == 0)
             {
-                dateSearchString.Append(startDate);
+                dateSearchString.Append(startDate.ToShortDateString());
             }
 
             for (int day = 0; day < dayOffset.Days; day++)
             {
-                DateTime newDate = startDate.AddDays(day);
+                DateTime newDate = startDate.Date.AddDays(day);
 
                 if (day != (dayOffset.Days - 1))
                 {
-                    dateSearchString.Append(newDate.Date + " OR ");
+                    dateSearchString.Append(newDate.ToShortDateString() + " OR ");
                 }
                 else if (day == (dayOffset.Days - 1))
                 {
-                    dateSearchString.Append(newDate.Date);
+                    dateSearchString.Append(newDate.ToShortDateString());
                 }
             }
 
-            var searchString = string.Format(",,,\"{0}\",False,{1},{1}", site, dateSearchString);
+            var searchString = string.Format(",,\"{0}\",,False,{1},{1}", site, dateSearchString);
 
             return GetEventsData(token, searchString);
         }
 
         public List<Event> GetEventTemplatesBySite(string site, string token)
         {
-            var searchString = string.Format(",,,\"{0}\",True,", site);
+            var searchString = string.Format(",,\"{0}\",,True,", site);
 
             return GetEventsData(token, searchString);
         }
