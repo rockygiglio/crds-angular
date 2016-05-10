@@ -29,7 +29,6 @@
     vm.saving = false;
     vm.startDate = new Date();
     vm.endDate = new Date();
-    vm.filterEvents = filterEvents;
 
     vm.allowAdminAccess = function() {
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
@@ -73,12 +72,6 @@
       vm.eventTemplatesLoading = true;
       vm.events = [];
       vm.eventTemplates = [];
-    }
-
-    function filterEvents() {
-      var x = vm.startDate;
-      var y = vm.endDate;
-      debugger;
     }
   }
 })();
