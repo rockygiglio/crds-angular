@@ -663,9 +663,16 @@ namespace crds_angular.Services
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, bool template, string token)
+        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
         {
-            var eventTemplates = _eventService.GetEventsBySite(site, template, token);
+            var eventTemplates = _eventService.GetEventsBySite(site, token, startDate, endDate);
+
+            return eventTemplates;
+        }
+
+        public List<Event> GetEventTemplatesBySite(string site, string token)
+        {
+            var eventTemplates = _eventService.GetEventTemplatesBySite(site, token);
 
             return eventTemplates;
         }

@@ -100,16 +100,34 @@ namespace crds_angular.Controllers.API
         }
 
         [Route("api/event/eventsbysite/{site}")]
-        public IHttpActionResult GetEventsBySite(string site, [FromUri(Name = "template")] bool template = false)
+        public IHttpActionResult GetEventsBySite(string site, 
+            [FromUri(Name = "startDate")] DateTime startDate, [FromUri(Name = "startDate")] DateTime endDate)
         {
             return Authorized(token => {
                 try
                 {
-                    return Ok(_eventService.GetEventsBySite(site, template, token));
+                    return Ok(_eventService.GetEventsBySite(site, token, startDate, endDate));
                 }
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("GetEventTemplates failed for Site=" + site + ", Template:" + template, e);
+                    var apiError = new ApiErrorDto("GetEventsBySite failed for Site=" + site, e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        [Route("api/event/eventtemplatesbysite/{site}")]
+        public IHttpActionResult GetEventTemplatesBySite(string site)
+        {
+            return Authorized(token => {
+                try
+                {
+                    return Ok(_eventService.GetEventTemplatesBySite(site, token));
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("GetEventTemplatesBySite failed for Site=" + site, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
