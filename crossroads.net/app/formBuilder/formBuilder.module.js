@@ -7,6 +7,8 @@
     .config(require('./formBuilder.routes'))
     .directive('formBuilder', require('./formBuilder.directive'))
     .directive('formField', require('./formField.directive'))
+    .controller('FormBuilderDefaultCtrl', require('./formBuilderDefault.controller'))
+    .controller('UndividedFacilitatorCtrl', require('./undividedFacilitator.controller'))
     ;
 
   //Require Templates
