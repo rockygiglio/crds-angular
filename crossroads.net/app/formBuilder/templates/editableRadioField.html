@@ -2,9 +2,9 @@
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div class="bordered">
     <div class="form-group" ng-repeat="attribute in formField.attributes track by $index">
-        <input type="radio" id="attribute_{{formField.attributeType.name}}_{{$index}}" name="{{formField.attributeType.name}}" value="{{attribute.id}}" ng-model="responses[formField.attributeType.name]" />
+        <input type="radio" id="attribute_{{formField.attributeType.name}}_{{$index}}" name="{{formField.attributeType.name}}" ng-value="{{attribute.attributeId}}" ng-model="responses[attribute.attributeId]" />
         <label for="attribute_{{formField.attributeType.name}}_{{$index}}">
-            {{attribute.name}} {{attribute.description}}
+    {{attribute.name}} {{attribute.description}}  {{attribute.attributeId}}
         </label>
     </div>
 </div>

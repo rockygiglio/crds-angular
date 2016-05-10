@@ -12,13 +12,12 @@
     vm.save = save;
     vm.groupId = 166572;
     vm.groupRole = require('crds-constants').GROUP_ROLES;
-    vm.responses = [];
-
+    vm.responses = {};
+    
     function save() {
       vm.save = true;
-      // TODO: Implement save to MP
       
-       var participant = [{
+      var participant = [{
               capacity: 1,
               contactId: parseInt(Session.exists('userId')),
               groupRoleId: vm.groupRole.LEADER,             
@@ -27,22 +26,17 @@
               sendConfirmationEmail: false
               //attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
        }];
-
-      
-      
+              
       //Add Person to group
       Group.Participant.save({
-        groupId: vm.groupId
-        //participant: participant
-      }, participant[0]).$promise.then(function(response) {       
+        groupId: vm.groupId 
+      }, participant).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-
       }, function(error) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);             
-
+          vm.save = false; 
       });
-      
-      vm.save = false;
+    
     }
   }
 
