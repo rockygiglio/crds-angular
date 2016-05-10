@@ -12,10 +12,11 @@
     vm.save = save;
     vm.groupId = 166572;
     vm.groupRole = require('crds-constants').GROUP_ROLES;
-    vm.responses = {};
-    
+    vm.responses = [];
+
     function save() {
       vm.save = true;
+      debugger;
       
       var participant = [{
               capacity: 1,
@@ -32,6 +33,7 @@
         groupId: vm.groupId 
       }, participant).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+          vm.save = false; 
       }, function(error) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);             
           vm.save = false; 
