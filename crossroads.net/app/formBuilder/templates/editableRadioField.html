@@ -4,7 +4,7 @@
     <div class="form-group" ng-repeat="attribute in formField.attributes track by $index">
         <input type="radio" id="attribute_{{formField.attributeType.name}}_{{$index}}" name="{{formField.attributeType.name}}" ng-value="{{attribute.attributeId}}" ng-model="formField.responses[formField.attributeType.name]" />
         <label for="attribute_{{formField.attributeType.name}}_{{$index}}">
-    {{attribute.name}} {{attribute.description}}  {{attribute.attributeId}}
+    {{attribute.name}} {{attribute.description}}  
         </label>
     </div>
 </div>

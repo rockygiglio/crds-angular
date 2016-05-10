@@ -23,7 +23,7 @@
               contactId: parseInt(Session.exists('userId')),
               groupRoleId: vm.groupRole.LEADER,             
              // singleAttributes: vm.responses.getSingleAttributes(vm.lookup),
-             // childCareNeeded: vm.responses.data.childcare,
+              childCareNeeded: vm.responses.Childcare,
               sendConfirmationEmail: false
               //attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
        }];
