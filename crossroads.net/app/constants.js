@@ -62,6 +62,10 @@
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
       }
-    }
+    },
+    GROUP_ROLES: {
+      MEMBER: 16,
+      LEADER: 22
+    },
   };
 })();
