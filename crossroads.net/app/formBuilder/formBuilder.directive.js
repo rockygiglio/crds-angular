@@ -9,22 +9,28 @@
     return {
       restrict: 'E',
       scope: {
-        form: '=?'
+        form: '=?',
+        cmsPage: '=?'
       },
       templateUrl: 'templates/formBuilder.html',
-      controller: function($scope, $attrs, $transclude) {
-        var controllerName = 'FormBuilderDefaultCtrl';
-        // TODO: Need something in form builder to tell us the controller to use
-        if ($scope.formBuilder.form[0].name === "EditableFormStep_cf42d") {
-          controllerName = 'UndividedFacilitatorCtrl';
-        }
-
-        return $controller(controllerName, $scope, $attrs, $transclude);
-      },
-
+      controller: getController,
       controllerAs: 'formBuilder',
       bindToController: true
     };
+
+    function getController($scope, $attrs, $transclude) {
+      var controllerName = getControllerName($scope);
+      return $controller(controllerName, $scope, $attrs, $transclude);
+    }
+
+    function getControllerName($scope) {
+      var controllerName = 'FormBuilderDefaultCtrl';
+      if ($scope.formBuilder && $scope.formBuilder.cmsPage && $scope.formBuilder.cmsPage.controllerName) {
+        controllerName = $scope.formBuilder.cmsPage.controllerName;
+      }
+
+      return controllerName;
+    }
   }
 
 })();
