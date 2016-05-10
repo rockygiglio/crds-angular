@@ -3,9 +3,9 @@
 
   module.exports = EventRooms;
 
-  EventRooms.$inject = ['$log', '$rootScope', 'Focus', 'AdminCheckinDashboardService'];
+  EventRooms.$inject = ['$q', '$log', '$rootScope', 'Focus', 'AdminCheckinDashboardService'];
 
-  function EventRooms($log, $rootScope, Focus, AdminCheckinDashboardService) {
+  function EventRooms($q, $log, $rootScope, Focus, AdminCheckinDashboardService) {
     return {
       restrict: 'EA',
       replace: true,
@@ -28,15 +28,22 @@
       /////////////////////////////////
 
       function update(indx) {
-        return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
-                $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
-                scope.rooms[indx] = result;
-              },
+        if (scope.roomsForm.$dirty) {
+          return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
+                  $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
+                  scope.rooms[indx] = result;
+                  scope.roomsForm.$setPristine();
+                },
 
-              function(err) {
-                $log.error(err);
-                $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
-              });
+                function(err) {
+                  $log.error(err);
+                  $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
+                });
+        }
+
+        var deferred = $q.defer();
+        deferred.resolve({ });
+        return deferred.promise;
       }
 
       function ratio(room) {
