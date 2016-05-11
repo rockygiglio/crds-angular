@@ -6,9 +6,23 @@
   <h1 class="page-header">Event Setup</h1>
   <div class="push-top">
     <div class="row">
-      <div class="form-group col-sm-4">
-        <site-filter site="EventSetupCtrl.site" on-change="EventSetupCtrl.loadEvents()"></site-filter>
+      <div class="form-group col-sm-6">
+        <!--<site-filter site="EventSetupCtrl.site" on-change="EventSetupCtrl.loadEvents()"></site-filter>-->
+        <site-filter site="EventSetupCtrl.site" ></site-filter>
       </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <date-range start-date="EventSetupCtrl.startDate" end-date="EventSetupCtrl.endDate" no-past-date="true" >Date Range Goes Here</date-range>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <input type="submit" value="Filter" class="btn btn-primary btn-sm" ng-click="EventSetupCtrl.loadEvents()"
+               ng-enabled="EventSetupCtrl.site.id !== undefined && EventSetupCtrl.saving === false && EventSetupCtrl.eventTemplatesLoading === false && EventSetupCtrl.eventsLoading === false"  />
+      </div>
+    </div>
+    <div class="row">
       <div class="form-group col-sm-6">
         <div ng-show="EventSetupCtrl.eventsReady">
           <preloader full-screen='false' ng-show="EventSetupCtrl.eventTemplatesLoading"> </preloader>
@@ -29,7 +43,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group  col-sm-4">
+      <div class="form-group  col-sm-6">
         <div ng-show="EventSetupCtrl.eventsReady">
           <button class="btn btn-primary btn-sm" ng-class="{disabled: EventSetupCtrl.saving}" ng-click="EventSetupCtrl.setup()">Setup</button>
         </div>

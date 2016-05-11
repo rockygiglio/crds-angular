@@ -9,7 +9,8 @@
     return {
       restrict: 'E',
       scope: {
-        field: '=?'
+        field: '=?',
+        responses: '=?'
       },
       link: function(scope, element) {
         var templateUrl = getTemplateUrl(scope.formField.field.className);
@@ -30,11 +31,16 @@
 
     function FormFieldController() {
       var vm = this;
-      
+
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
         vm.attributeType = vm.field.attributeType;
-        vm.attributes = vm.attributeType.attributes;
+
+        vm.singleAttributes = _.map(vm.attributeType.attributes, function(attribute) {
+          var singleAttribute = {};
+          singleAttribute[vm.attributeType.attributeTypeId] = {attribute: attribute};
+          return singleAttribute;
+        });
       }
     }
 
