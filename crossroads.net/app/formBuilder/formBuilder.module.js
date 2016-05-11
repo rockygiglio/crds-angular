@@ -18,4 +18,6 @@
   require('./templates/editableNumericField.html');
   require('./templates/editableRadioField.html');
   require('./templates/editableTextField.html');
+  require('./templates/textFieldReadOnly.html');
+  require('./templates/editableDatetimeField.html');
 })();

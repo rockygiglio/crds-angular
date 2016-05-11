@@ -46,12 +46,16 @@
           return 'templates/editableCheckbox.html';
         case 'EditableCheckboxGroupField':
           return 'templates/editableCheckboxGroupField.html';
+        case 'EditableDatetimeField':
+          return 'templates/editableDatetimeField.html';          
         case 'EditableNumericField':
           return 'templates/editableNumericField.html';
         case 'EditableRadioField':
           return 'templates/editableRadioField.html';
         case 'EditableTextField':
           return 'templates/editableTextField.html';
+        case 'TextFieldReadOnly':
+          return 'templates/textFieldReadOnly.html';          
         case 'EditableFormStep':
           return null;
         default:
