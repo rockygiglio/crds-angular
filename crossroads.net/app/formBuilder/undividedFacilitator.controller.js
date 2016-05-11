@@ -12,8 +12,6 @@
 
     vm.saving = false;
     vm.save = save;
-    // TODO: Make this a constant
-    vm.groupId = 166572;
 
     vm.responses = {};
 
@@ -21,8 +19,8 @@
       vm.save = true;
 
       try {
-        // TODO: Determine way to remove this hardcoded value here
-        var coFacilitator = vm.responses[167];
+        var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
+        var coFacilitator = vm.responses[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
         if (coFacilitator && coFacilitator !== '') {
 
@@ -33,7 +31,7 @@
             notes: coFacilitator,
           };
 
-          vm.responses.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+          singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
         }
 
         var participant = [{
@@ -42,18 +40,17 @@
           groupRoleId: constants.GROUP.ROLES.LEADER,
           childCareNeeded: vm.responses.Childcare,
           sendConfirmationEmail: false,
-          singleAttributes: vm.responses.singleAttributes,
+          singleAttributes: singleAttributes,
           attributeTypes: {},
         }];
 
         //Add Person to group
         Group.Participant.save({
-          groupId: vm.groupId
+          groupId: constants.GROUP.GROUP_ID.UNDIVIDED_FACILITATOR,
         }, participant).$promise.then(function (response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.save = false;
         }, function (error) {
-
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           vm.save = false;
         });
@@ -62,13 +59,6 @@
         vm.save = false;
         throw (error);
       }
-      finally {
-        // cleanup objects we temporarily added
-        if (constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR in vm.responses.singleAttributes) {
-          delete vm.responses.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR];
-        }
-      }
-
     }
   }
 
