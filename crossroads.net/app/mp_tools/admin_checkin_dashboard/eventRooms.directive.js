@@ -3,9 +3,9 @@
 
   module.exports = EventRooms;
 
-  EventRooms.$inject = ['$log', '$rootScope', 'Focus', 'AdminCheckinDashboardService'];
+  EventRooms.$inject = ['$q', '$log', '$rootScope', '$timeout', 'Focus', 'AdminCheckinDashboardService'];
 
-  function EventRooms($log, $rootScope, Focus, AdminCheckinDashboardService) {
+  function EventRooms($q, $log, $rootScope, $timeout, Focus, AdminCheckinDashboardService) {
     return {
       restrict: 'EA',
       replace: true,
@@ -23,20 +23,37 @@
       scope.updateRoom = updateRoom;
       scope.update = update;
 
+      // When the DOM element is removed from the page,
+      // AngularJS will trigger the $destroy event on
+      // the scope. This gives us a chance to cancel any
+      // pending timer that we may have.
+      scope.$on("$destroy", function(event) {
+        for (var i=0; i<room.length; i++) {
+          $timeout.cancel(scope.rooms[i].updateTimeout);
+        }
+      });
+
       /////////////////////////////////
       ////// IMPLMENTATION DETAILS ////
       /////////////////////////////////
 
       function update(indx) {
-        return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
-                $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
-                scope.rooms[indx] = result;
-              },
+        if (scope.roomsForm.$dirty) {
+          return AdminCheckinDashboardService.checkinDashboard.update({eventId: scope.eventId}, scope.rooms[indx]).$promise.then(function(result) {
+                  $rootScope.$emit('notify', $rootScope.MESSAGES.eventUpdateSuccess);
+                  scope.rooms[indx] = result;
+                  scope.roomsForm.$setPristine();
+                },
 
-              function(err) {
-                $log.error(err);
-                $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
-              });
+                function(err) {
+                  $log.error(err);
+                  $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
+                });
+        }
+
+        var deferred = $q.defer();
+        deferred.resolve({ });
+        return deferred.promise;
       }
 
       function ratio(room) {
@@ -61,7 +78,12 @@
       }
 
       function updateRoom(indx) {
-        update(indx);
+        $timeout.cancel(scope.rooms[indx].updateTimeout);
+
+        scope.rooms[indx].updateTimeout = $timeout(function() {
+          scope.roomsForm.$setDirty();
+          update(indx);
+        }, 1000);
       }
     }
   }

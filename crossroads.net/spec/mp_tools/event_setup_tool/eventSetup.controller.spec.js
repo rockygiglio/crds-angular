@@ -74,11 +74,13 @@ describe('EventSetupController', function() {
   describe('loadEvents()', function() {
     beforeEach(function() {
       vm.site = {id: 1};
+      vm.startDate = new Date('2016-05-10T17:30:06.445Z');
+      vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?template=true')
+      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventtemplatesbysite/1')
                              .respond(mockEventTemplateResponse);
 
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?template=false')
+      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
                              .respond(mockEventResponse);
 
       $httpBackend.flush();

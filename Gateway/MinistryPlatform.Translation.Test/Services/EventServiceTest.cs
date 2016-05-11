@@ -17,14 +17,15 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
-            _configWrapper = new Mock<IConfigurationWrapper>();
-            _groupService = new Mock<IGroupService>();
+            _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationService>(MockBehavior.Strict);
+            _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
+            _groupService = new Mock<IGroupService>(MockBehavior.Strict);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupsByEventId")).Returns(2221);
+            _configWrapper.Setup(m => m.GetConfigIntValue("EventsBySite")).Returns(2222);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
             _fixture = new EventService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
@@ -313,17 +314,34 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldGetEventsBySite()
         {
-            var eventsBySitePageViewId = _configWrapper.Object.GetConfigIntValue("EventsBySite");
+            //var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
+            //var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
 
-            Prop.ForAll<string, bool, string>((site, template, token) =>
-            {
-                var searchString = ",," + site + ",," + template;
+            //var eventsBySitePageViewId = _configWrapper.Object.GetConfigIntValue("EventsBySite");
+            var currentDateTime = DateTime.Now;
+            var site = "Oakley";
+            var token = "123";
 
-                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventsBySitePageViewId, token, searchString, "", 0)).Returns(GetMockedEvents(3));
-                _fixture.GetEventsBySite(site, template, token);
-                _ministryPlatformService.VerifyAll();
-            }).QuickCheckThrowOnFailure();
+            var searchString = ",,\"" + site + "\",,False," + currentDateTime.ToShortDateString() + "," + currentDateTime.ToShortDateString(); // search string needs to match
+
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(2222, token, searchString, "", 0)).Returns(GetMockedEvents(3));
+            _fixture.GetEventsBySite(site, token, currentDateTime, currentDateTime);
+            _ministryPlatformService.VerifyAll();
         }
+
+        [Test]
+        public void ShouldGetEventTemplatesBySite()
+        {
+            var site = "Oakley";
+            var token = "123";
+
+            var searchString = ",,\"" + site + "\",,True,"; // search string needs to match
+
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(2222, token, searchString, "", 0)).Returns(GetMockedEvents(3));
+            _fixture.GetEventTemplatesBySite(site, token);
+            _ministryPlatformService.VerifyAll();
+        }
+
 
         [Test]
         public void ShouldDeleteEventGroupsForEvent()
