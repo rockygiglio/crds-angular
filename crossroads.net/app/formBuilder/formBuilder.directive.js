@@ -9,8 +9,7 @@
     return {
       restrict: 'E',
       scope: {
-        form: '=?',
-        cmsPage: '=?'
+        page: '=?',
       },
       templateUrl: 'templates/formBuilder.html',
       controller: getController,
@@ -25,8 +24,8 @@
 
     function getControllerName($scope) {
       var controllerName = 'FormBuilderDefaultCtrl';
-      if ($scope.formBuilder && $scope.formBuilder.cmsPage && $scope.formBuilder.cmsPage.controllerName) {
-        controllerName = $scope.formBuilder.cmsPage.controllerName;
+      if ($scope.formBuilder && $scope.formBuilder.page && $scope.formBuilder.page.controllerName) {
+        controllerName = $scope.formBuilder.page.controllerName;
       }
 
       return controllerName;
