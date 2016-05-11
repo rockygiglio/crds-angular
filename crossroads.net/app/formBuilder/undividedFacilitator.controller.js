@@ -7,7 +7,7 @@
 
   function UndividedFacilitatorCtrl($rootScope, Group, Session) {
     var vm = this;
-    
+
     var constants = require('crds-constants');
 
     vm.saving = false;
@@ -44,13 +44,12 @@
           attributeTypes: {},
         }];
 
-        //Add Person to group
         Group.Participant.save({
           groupId: constants.GROUP.GROUP_ID.UNDIVIDED_FACILITATOR,
-        }, participant).$promise.then(function (response) {
+        }, participant).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.save = false;
-        }, function (error) {
+        }, function(error) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           vm.save = false;
         });
