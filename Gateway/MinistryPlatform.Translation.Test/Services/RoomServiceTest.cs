@@ -66,6 +66,20 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Allow_Checkin", true},
                     {"Volunteers", 10}
                 },
+                new Dictionary<string, object>
+                {
+                    {"Cancelled", true},
+                    {"Event_Room_ID", 3},
+                    {"Hidden", true},
+                    {"Notes", "Notes 3"},
+                    {"Room_ID", 33},
+                    {"Room_Layout_ID", 333},
+                    {"Capacity", 3333},
+                    {"Label", "Label 3"},
+                    {"Room_Name", "Name 3"},
+                    {"Allow_Checkin", null},
+                    {"Volunteers", 11}
+                }
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("GetRoomReservations", It.IsAny<string>(), ",\"123\"", "", 0)).Returns(l);
@@ -89,7 +103,19 @@ namespace MinistryPlatform.Translation.Test.Services
                 Assert.AreEqual(l[i]["Capacity"], reservations[i].Capacity);
                 Assert.AreEqual(l[i]["Label"], reservations[i].Label);
                 Assert.AreEqual(l[i]["Room_Name"], reservations[i].Name);
-                Assert.AreEqual(l[i]["Allow_Checkin"], reservations[i].CheckinAllowed);
+
+                // this is to handle a null value for allow checkin values, which is getting set to false if null
+                var allowCheckinValue = l[i]["Allow_Checkin"];
+
+                if (allowCheckinValue != null)
+                {
+                    Assert.AreEqual(l[i]["Allow_Checkin"], reservations[i].CheckinAllowed);
+                }
+                else
+                {
+                    Assert.AreEqual(false, reservations[i].CheckinAllowed);
+                }
+
                 Assert.AreEqual(l[i]["Volunteers"], reservations[i].Volunteers);
             }
         }
