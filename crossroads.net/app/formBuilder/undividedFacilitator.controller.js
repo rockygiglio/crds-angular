@@ -1,4 +1,4 @@
-(function(){
+(function() {
   'use strict';
 
   module.exports = UndividedFacilitatorCtrl;
@@ -12,33 +12,34 @@
     vm.save = save;
     vm.groupId = 166572;
     vm.groupRole = require('crds-constants').GROUP_ROLES;
-    vm.responses = [];
+    vm.responses = {};
 
     function save() {
       vm.save = true;
-      debugger;
-      
+
       var participant = [{
-              capacity: 1,
-              contactId: parseInt(Session.exists('userId')),
-              groupRoleId: vm.groupRole.LEADER,             
-             // singleAttributes: vm.responses.getSingleAttributes(vm.lookup),
-              childCareNeeded: vm.responses.Childcare,
-              sendConfirmationEmail: false
-              //attributeTypes: Responses.getMultiAttributes(vm.lookup, ['date_time_week', 'date_time_weekend'])
-       }];
-              
+        capacity: 1,
+        contactId: parseInt(Session.exists('userId')),
+        groupRoleId: vm.groupRole.LEADER,
+
+        childCareNeeded: vm.responses.Childcare,
+        sendConfirmationEmail: false,
+        singleAttributes: vm.responses.singleAttributes,
+        attributeTypes: {},
+      }];
+
       //Add Person to group
       Group.Participant.save({
-        groupId: vm.groupId 
+        groupId: vm.groupId
       }, participant).$promise.then(function(response) {
-          $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-          vm.save = false; 
+        $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+        vm.save = false;
       }, function(error) {
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);             
-          vm.save = false; 
+
+        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+        vm.save = false;
       });
-    
+
     }
   }
 
