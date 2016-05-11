@@ -85,10 +85,10 @@ module.exports = {
     new ExtractTextPlugin('[name].[hash].css'),
     definePlugin,
     assetsPluginInstance,
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      mangle: false,
-      output: { ascii_only: true }
-    })
+    /*new webpack.optimize.UglifyJsPlugin({*/
+      //sourceMap: false,
+      //mangle: false,
+      //output: { ascii_only: true }
+    /*})*/
   ]
 };
