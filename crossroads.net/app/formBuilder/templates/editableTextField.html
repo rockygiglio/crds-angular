@@ -2,11 +2,7 @@
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div class="bordered">
     <div class="form-group">
-        <input type="text" id="{{formField.field.id}}" name="{{formField.field.name}}"  class="form-control"
-               ng-value="{{attribute.id}}" ng-model="responses[formField.field.id]" />
-        <label for="{{formField.field.name}}" >
-            {{attribute.name}}
-        </label>
+        <input type="text" id="{{formField.field.id}}" name="{{formField.field.name}}"  class="form-control" ng-model="formField.responses[formField.field.id]" />
     </div>
 </div>
 <br>
