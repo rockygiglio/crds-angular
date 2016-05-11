@@ -73,7 +73,8 @@ describe('AdminCheckinDashboard', function() {
     EventService = $injector.get('EventService');
 
     vm = _$controller_('AdminCheckinDashboardController',
-                           {AuthService: AuthService,
+                           {$scope: scope,
+                             AuthService: AuthService,
                              CRDS_TOOLS_CONSTANTS: CRDS_TOOLS_CONSTANTS,
                              AdminCheckinDashboardService: AdminCheckinDashboardService,
                              EventService: EventService});
@@ -107,18 +108,27 @@ describe('AdminCheckinDashboard', function() {
   });
 
   describe('loadEvents()', function() {
-    beforeEach(function() {
-      vm.site = {id: 1};
+    it('should recieve the events for the site', function() {
+      vm.site.id = 1;
+      vm.startDate = new Date('2016-05-10T17:30:06.445Z');
+      vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?template=false')
+      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
                              .respond(mockEventResponse);
       $httpBackend.flush();
-    });
 
-    it('should recieve the events for the site', function() {
       expect(vm.events.length).toBe(4);
       expect(vm.events[1].EventId).toEqual(2);
       expect(vm.events[1].EventTitle).toEqual('Mason Sunday 9:00 am');
+      expect(vm.eventsLoading).toEqual(false);
+    });
+
+    it('should not recieve the events for the site', function() {
+      vm.site.id = undefined;
+      vm.loadEvents();
+
+      expect(vm.events.length).toBe(0);
+      expect(vm.eventsReady).toEqual(false);
       expect(vm.eventsLoading).toEqual(false);
     });
   });
