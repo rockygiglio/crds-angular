@@ -5,13 +5,13 @@
 
   UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session){
+  function UndividedFacilitatorCtrl($rootScope, Group, Session) {
     var vm = this;
 
     vm.saving = false;
     vm.save = save;
     vm.groupId = 166572;
-    vm.groupRole = require('crds-constants').GROUP_ROLES;
+    vm.groupRole = require('crds-constants').GROUP.ROLES;
     vm.responses = {};
 
     function save() {

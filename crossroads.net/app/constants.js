@@ -63,9 +63,11 @@
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
       }
     },
-    GROUP_ROLES: {
-      MEMBER: 16,
-      LEADER: 22
+    GROUP: {
+      ROLES: {
+        MEMBER: 16,
+        LEADER: 22
+      },
     },
   };
 })();
