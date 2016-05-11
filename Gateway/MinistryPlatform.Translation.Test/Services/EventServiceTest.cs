@@ -310,7 +310,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var site = "Oakley";
             var token = "123";
 
-            var searchString = ",,\"" + site + "\",,False," + currentDateTime + "," + currentDateTime; // search string needs to match
+            var searchString = ",,\"" + site + "\",,False," + currentDateTime.ToShortDateString() + "," + currentDateTime.ToShortDateString(); // search string needs to match
 
             _ministryPlatformService.Setup(m => m.GetPageViewRecords(2222, token, searchString, "", 0)).Returns(GetMockedEvents(3));
             _fixture.GetEventsBySite(site, token, currentDateTime, currentDateTime);
