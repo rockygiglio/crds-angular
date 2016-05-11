@@ -20,46 +20,54 @@
     function save() {
       vm.save = true;
 
-      debugger;
+      try {
+        // TODO: Determine way to remove this hardcoded value here
+        var coFacilitator = vm.responses[167];
 
-      // TODO: Determine way to remove this hardcoded value here
-      var coFacilitator = vm.responses[167];
+        if (coFacilitator && coFacilitator !== '') {
 
-      if (coFacilitator && coFacilitator !== '') {
+          var item = {
+            attribute: {
+              attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
+            },
+            notes: coFacilitator,
+          };
 
-        var item = {
-          attribute: {
-            attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
-          },
-          notes: coFacilitator,
-        };
+          vm.responses.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+        }
 
-        // TODO: Revisit this in case save fails since we are adding stuff to model directly
-        // consider cloning before doing this, so it's clean for the next save
-        vm.responses.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+        var participant = [{
+          capacity: 1,
+          contactId: parseInt(Session.exists('userId')),
+          groupRoleId: constants.GROUP.ROLES.LEADER,
+          childCareNeeded: vm.responses.Childcare,
+          sendConfirmationEmail: false,
+          singleAttributes: vm.responses.singleAttributes,
+          attributeTypes: {},
+        }];
+
+        //Add Person to group
+        Group.Participant.save({
+          groupId: vm.groupId
+        }, participant).$promise.then(function (response) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+          vm.save = false;
+        }, function (error) {
+
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          vm.save = false;
+        });
       }
-
-      var participant = [{
-        capacity: 1,
-        contactId: parseInt(Session.exists('userId')),
-        groupRoleId: constants.GROUP.ROLES.LEADER,
-        childCareNeeded: vm.responses.Childcare,
-        sendConfirmationEmail: false,
-        singleAttributes: vm.responses.singleAttributes,
-        attributeTypes: {},
-      }];
-
-      //Add Person to group
-      Group.Participant.save({
-        groupId: vm.groupId
-      }, participant).$promise.then(function(response) {
-        $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+      catch (error) {
         vm.save = false;
-      }, function(error) {
-
-        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-        vm.save = false;
-      });
+        throw (error);
+      }
+      finally {
+        // cleanup objects we temporarily added
+        if (constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR in vm.responses.singleAttributes) {
+          delete vm.responses.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR];
+        }
+      }
 
     }
   }
