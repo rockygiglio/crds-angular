@@ -21,9 +21,9 @@ namespace MinistryPlatform.Translation.Extensions
             }
 
             // If we got a 404, and we're considering that an error, then it's an error
-            if (response.StatusCode == HttpStatusCode.NotFound && errorNotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                return true;
+                return errorNotFound;
             }
 
             // If we have a bad response code, then it's an error
