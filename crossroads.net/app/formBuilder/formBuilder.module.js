@@ -21,5 +21,6 @@
   require('./templates/editableRadioField.html');
   require('./templates/editableTextField.html');
   require('./templates/textFieldReadOnly.html');
+  require('./templates/editableDateField.html');
   require('./templates/editableDatetimeField.html');
 })();

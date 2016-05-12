@@ -1,7 +1,7 @@
 <label ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div class="profile-ethnicity">
-    <div ng-repeat="attribute in formField.attributes">
+    <div ng-repeat="attribute in formField.attributeType.attributes">
         <input type="checkbox" name="{{formField.attributeType.name}}" ng-value="{{attribute}}" ng-model="attribute.selected" />
     {{attribute.name}} {{attribute.description}}
         </label>

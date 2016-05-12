@@ -31,6 +31,7 @@
 
     function FormFieldController() {
       var vm = this;
+      vm.openBirthdatePicker = openBirthdatePicker;
 
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
@@ -52,6 +53,8 @@
           return 'templates/editableCheckbox.html';
         case 'EditableCheckboxGroupField':
           return 'templates/editableCheckboxGroupField.html';
+        case 'EditableDateField':
+          return 'templates/editableDateField.html';
         case 'EditableDatetimeField':
           return 'templates/editableDatetimeField.html';          
         case 'EditableNumericField':
@@ -68,6 +71,13 @@
           return 'templates/defaultField.html';
       }
     }
+
+    function openBirthdatePicker($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      this.birthdateOpen = !this.birthdateOpen;
+    }
+
   }
 
 })();
