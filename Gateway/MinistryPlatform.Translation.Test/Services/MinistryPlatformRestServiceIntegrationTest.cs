@@ -1,4 +1,5 @@
 ﻿using System;
+using MinistryPlatform.Models.Attributes;
 using MinistryPlatform.Translation.Services;
 using Newtonsoft.Json;
 using NUnit.Framework;
