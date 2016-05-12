@@ -1,8 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-BEGIN
-	IF NOT EXISTS (SELECT * FROM [dbo].[cr_Other_Organizations]
+IF NOT EXISTS (SELECT * FROM [dbo].[cr_Other_Organizations]
 		WHERE Other_Organization IN
 		('4 Corners',
 		'4 Corners Church',
@@ -139,10 +138,10 @@ BEGIN
 		'Xenos Christian Fellowship',
 		'Zion Global Minitries')
 	 )
-BEGIN
-	INSERT INTO IF NOT EXISTS [dbo].[cr_Other_Organizations]
+	BEGIN
+		INSERT INTO [dbo].[cr_Other_Organizations]
            ([Other_Organization])
-     VALUES
+		VALUES
 		 ('4 Corners'),
 		 ('4 Corners Church'),
 		 ('7 Hills Church'),
@@ -277,6 +276,5 @@ BEGIN
 		 ('Xenia Nazarene'),
 		 ('Xenos Christian Fellowship'),
 		 ('Zion Global Minitries')
-		END
 	END
 GO
