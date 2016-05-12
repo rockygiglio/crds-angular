@@ -7,6 +7,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
+using MinistryPlatform.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -85,12 +86,6 @@ namespace MinistryPlatform.Translation.Services
         {
             return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}&$select={1}", url, selectColumns);
         }
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public class RestApiTable : Attribute
-    {
-        public string Name { get; set; }
     }
 
     public class NoTableDefinitionException : Exception

@@ -1,94 +1,67 @@
-﻿using System;
+﻿using System.Net;
 using MinistryPlatform.Translation.Services;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
+using System.Collections.Generic;
+using MinistryPlatform.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
-    [Category("IntegrationTests")]
     public class MinistryPlatformRestServiceTest
     {
         private MinistryPlatformRestService _fixture;
 
-        private string _authToken;
-
-        [TestFixtureSetUp]
-        public void SetupAll()
-        {
-            var auth = AuthenticationService.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
-            _authToken = auth["token"].ToString();
-        }
+        private Mock<IRestClient> _restClient;
 
         [SetUp]
         public void SetUp()
         {
-            var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
-            _fixture = new MinistryPlatformRestService(restClient);
+            _restClient = new Mock<IRestClient>();
+            _fixture = new MinistryPlatformRestService(_restClient.Object);
         }
 
         [Test]
-        public void TestSearchAllPaymentTypes()
+        public void TestSearchAllRecords()
         {
-            Console.WriteLine("TestSearchAllPaymentTypes");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>();
-
-            foreach (var p in results)
+            var models = new List<TestModelWithRestApiTable>
             {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
+                new TestModelWithRestApiTable
+                {
+                    Id = 1,
+                    Name = "name 1"
+                },
+                new TestModelWithRestApiTable
+                {
+                    Id = 2,
+                    Name = "name 2"
+                },
+            };
+
+            var restResponse = new Mock<IRestResponse>(MockBehavior.Strict);
+            restResponse.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
+            restResponse.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.OK).Verifiable();
+            restResponse.SetupGet(mocked => mocked.Content).Returns(JsonConvert.SerializeObject());
+
+            _restClient.Setup(mocked => mocked.Execute(It.IsAny<IRestRequest>())).Returns(restResponse.Object);
+
+            var results = _fixture.Search<TestModelWithRestApiTable>();
         }
 
-        [Test]
-        public void TestSearchPaymentTypes()
-        {
-            Console.WriteLine("TestSearchPaymentTypes");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5");
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
-        }
-
-        [Test]
-        public void TestSearchPaymentTypesSelectColumns()
-        {
-            Console.WriteLine("TestSearchPaymentTypesSelectColumns");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5", "Payment_Type_Id,Payment_Type");
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
-        }
-
-        [Test]
-        public void TestGetPaymentType()
-        {
-            Console.WriteLine("TestGetPaymentType");
-            var p = _fixture.UsingAuthenticationToken(_authToken).Get<MyPaymentType>(2);
-            Console.WriteLine("Payment_Type\t{0}", p);
-        }
     }
 
-    [RestApiTable(Name = "Payment_Types")]
-    public class MyPaymentType
+    [RestApiTable(Name = "MP_Table_Name")]
+    internal class TestModelWithRestApiTable
     {
-        [JsonProperty(PropertyName = "Payment_Type_ID")]
+        [JsonProperty(PropertyName = "ID")]
         public int Id { get; set; }
-        [JsonProperty(PropertyName = "Payment_Type")]
+        [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
-        [JsonProperty(PropertyName = "Description")]
-        public string Description { get; set; }
-        [JsonProperty(PropertyName = "Payment_Type_Code")]
-        public string Code { get; set; }
-        [JsonProperty(PropertyName = "__ExternalPaymentTypeID", NullValueHandling = NullValueHandling.Ignore)]
-        public int? LegacyId { get; set; }
+    }
 
-        public override string ToString()
-        {
-            return string.Format("Id: {0}, Name: {1}, Description: {2}, Code: {3}, LegacyId: {4}", Id, Name, Description, Code, LegacyId);
-        }
+    internal class TestModelWithoutRestApiTable
+    {
+        
     }
 }
