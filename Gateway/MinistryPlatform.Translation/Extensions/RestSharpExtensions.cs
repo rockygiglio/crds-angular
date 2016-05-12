@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Extensions
 
     public class RestResponseException : Exception
     {
-        public IRestResponse Response { get; }
+        public IRestResponse Response { get; private set; }
 
         public RestResponseException(string message, IRestResponse response) : base(string.Format("{0} - Status: {1}, Status Code: {2}, Error: {3}, Content: {4}", message, response.ResponseStatus, response.StatusCode, response.ErrorMessage, response.Content), response.ErrorException)
         {
