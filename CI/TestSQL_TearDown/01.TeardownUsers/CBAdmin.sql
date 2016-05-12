@@ -109,6 +109,19 @@ delete from event_participants where participant_id = @participantID;
 
 delete from group_participants where participant_id = @participantID;
 
+--Go Cincinnati Stuff
+delete from cr_group_connector_registrations where group_connector_id in (select group_connector_id from cr_group_connectors where primary_registration in (select registration_id from cr_Registrations where participant_id = @participantID));
+
+delete from cr_group_connectors where primary_registration in (select registration_id from cr_Registrations where participant_id = @participantID);
+
+delete from cr_Registration_Children_Attributes where registration_id in (select registration_id from cr_Registrations where participant_id = @participantID);
+
+delete from cr_Group_Connector_Registrations where registration_id in (select registration_id from cr_Registrations where participant_id = @participantID);
+
+delete from cr_Registration_Project_Type where registration_id in (select registration_id from cr_Registrations where participant_id = @participantID);
+
+delete from cr_Registrations where participant_id = @participantID;
+
 delete from participants where participant_id = @participantID;
 GO
 
