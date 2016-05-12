@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Services.Interfaces;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class MinistryPlatformRestService
+    public class MinistryPlatformRestService : IMinistryPlatformRestService
     {
         private readonly IRestClient _ministryPlatformRestClient;
         private readonly ThreadLocal<string> _authToken = new ThreadLocal<string>();
@@ -19,7 +20,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformRestClient = ministryPlatformRestClient;
         }
 
-        public MinistryPlatformRestService UsingAuthenticationToken(string authToken)
+        public IMinistryPlatformRestService UsingAuthenticationToken(string authToken)
         {
             _authToken.Value = authToken;
             return this;
