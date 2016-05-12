@@ -28,7 +28,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int CreateEventGroup(EventGroup eventGroup, string token);
         void UpdateEventGroup(EventGroup eventGroup, string token);
 
-        List<Event> GetEventsBySite(string site, bool template, string token);
+        List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
+        List<Event> GetEventTemplatesBySite(string site, string token);
         void DeleteEventGroupsForEvent(int eventId, string token);
     }
 }
