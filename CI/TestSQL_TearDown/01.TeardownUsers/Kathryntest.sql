@@ -81,7 +81,7 @@ DECLARE @donationsTable table
 	donation_id int
 )
 
-insert into @donationsTable (donation_id) (select donation_id from donation_distributions where program_id = (select program_id from programs where program_name like '(t) GO Midgar%'));
+insert into @donationsTable (donation_id) (select donation_id from donation_distributions where program_id in (select program_id from programs where program_name like '(t) GO Midgar%'));
 
 delete from donation_distributions where donation_id in (select donation_id from @donationsTable);
 
@@ -136,6 +136,18 @@ delete from event_participants where participant_id = @participantID;
 delete from group_participants where participant_id = @participantID;
 
 delete from participants where participant_id = @participantID;
+
+--Delete User selections
+delete from dp_selected_records where selection_id in (select selection_id from dp_selections where user_id = @userAccount);
+
+delete from dp_selections where user_id = @userAccount;
+
+--Delete user tasks
+delete from dp_Tasks where assigned_user_id = @userAccount;
+
+delete from dp_Tasks where author_user_id = @userAccount;
+
+delete from dp_Process_Submissions where submitted_by = @userAccount;
 GO
 
 --Delete userAccount
