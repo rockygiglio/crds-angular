@@ -27,13 +27,13 @@ namespace MinistryPlatform.Translation.Services
 
         public T Get<T>(int recordId, string selectColumns = null)
         {
-            var url = AddColumnSelection($"/tables/{GetTableName<T>()}/{recordId}", selectColumns);
+            var url = AddColumnSelection(string.Format("/tables/{0}/{1}", GetTableName<T>(), recordId), selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors($"Error getting {GetTableName<T>()} by ID {recordId}", true);
+            response.CheckForErrors(string.Format("Error getting {0} by ID {1}", GetTableName<T>(), recordId), true);
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
             if (content == null || !content.Any())
@@ -46,15 +46,15 @@ namespace MinistryPlatform.Translation.Services
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null)
         {
-            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={searchString}";
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : string.Format("?$filter={0}", searchString);
 
-            var url = AddColumnSelection($"/tables/{GetTableName<T>()}{search}", selectColumns);
+            var url = AddColumnSelection(string.Format("/tables/{0}{1}", GetTableName<T>(), search), selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors($"Error searching {GetTableName<T>()}");
+            response.CheckForErrors(string.Format("Error searching {0}", GetTableName<T>()));
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
 
@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Services
         {
             if (_authToken.IsValueCreated)
             {
-                request.AddHeader("Authorization", $"Bearer {_authToken.Value}");
+                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.Value));
             }
         }
 
@@ -82,7 +82,7 @@ namespace MinistryPlatform.Translation.Services
 
         private static string AddColumnSelection(string url, string selectColumns)
         {
-            return string.IsNullOrWhiteSpace(selectColumns) ? url : $"{url}&$select={selectColumns}";
+            return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}&$select={1}", url, selectColumns);
         }
     }
 
@@ -94,6 +94,6 @@ namespace MinistryPlatform.Translation.Services
 
     public class NoTableDefinitionException : Exception
     {
-        public NoTableDefinitionException(Type t) : base($"No RestApiTable attribute specified on type {t}") { }
+        public NoTableDefinitionException(Type t) : base(string.Format("No RestApiTable attribute specified on type {0}", t)) { }
     }
 }

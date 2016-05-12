@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Extensions
     {
         public IRestResponse Response { get; }
 
-        public RestResponseException(string message, IRestResponse response) : base($"{message} - Status: {response.ResponseStatus}, Status Code: {response.StatusCode}, Error: {response.ErrorMessage}, Content: {response.Content}", response.ErrorException)
+        public RestResponseException(string message, IRestResponse response) : base(string.Format("{0} - Status: {1}, Status Code: {2}, Error: {3}, Content: {4}", message, response.ResponseStatus, response.StatusCode, response.ErrorMessage, response.Content), response.ErrorException)
         {
             Response = response;
         }

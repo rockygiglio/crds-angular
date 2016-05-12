@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             foreach (var p in results)
             {
-                Console.WriteLine($"Payment_Type\t{p}");
+                Console.WriteLine("Payment_Type\t{0}", p);
             }
         }
 
@@ -47,7 +47,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             foreach (var p in results)
             {
-                Console.WriteLine($"Payment_Type\t{p}");
+                Console.WriteLine("Payment_Type\t{0}", p);
             }
         }
 
@@ -59,7 +59,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             foreach (var p in results)
             {
-                Console.WriteLine($"Payment_Type\t{p}");
+                Console.WriteLine("Payment_Type\t{0}", p);
             }
         }
 
@@ -68,7 +68,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             Console.WriteLine("TestGetPaymentType");
             var p = _fixture.UsingAuthenticationToken(_authToken).Get<MyPaymentType>(2);
-            Console.WriteLine($"Payment_Type\t{p}");
+            Console.WriteLine("Payment_Type\t{0}", p);
         }
     }
 
@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
         public override string ToString()
         {
-            return $"Id: {Id}, Name: {Name}, Description: {Description}, Code: {Code}, LegacyId: {LegacyId}";
+            return string.Format("Id: {0}, Name: {1}, Description: {2}, Code: {3}, LegacyId: {4}", Id, Name, Description, Code, LegacyId);
         }
     }
 }
