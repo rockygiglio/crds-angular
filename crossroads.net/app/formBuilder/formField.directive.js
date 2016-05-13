@@ -3,7 +3,7 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Lookup'];
 
   function FormField($templateRequest, $compile) {
     return {
@@ -29,9 +29,15 @@
       bindToController: true
     };
 
-    function FormFieldController() {
+    function FormFieldController(Lookup) {
       var vm = this;
       vm.openBirthdatePicker = openBirthdatePicker;
+      vm.crossroadsLocations = [];
+
+      Lookup.query({ table: 'crossroadslocations' }, function(locations) {
+        vm.crossroadsLocations = locations;
+        vm.crossroadsLocations.splice(2, 1);
+      });
 
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
@@ -56,7 +62,9 @@
         case 'EditableDateField':
           return 'templates/editableDateField.html';
         case 'EditableDatetimeField':
-          return 'templates/editableDatetimeField.html';          
+          return 'templates/editableDatetimeField.html';
+        case 'EditableDropdown':
+          return 'templates/editableDropDownField.html';
         case 'EditableNumericField':
           return 'templates/editableNumericField.html';
         case 'EditableRadioField':

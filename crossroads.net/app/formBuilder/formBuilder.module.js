@@ -17,6 +17,7 @@
   require('./templates/editableBooleanField.html');
   require('./templates/editableCheckbox.html');
   require('./templates/editableCheckboxGroupField.html');
+  require('./templates/editableDropDownField.html');
   require('./templates/editableNumericField.html');
   require('./templates/editableRadioField.html');
   require('./templates/editableTextField.html');
