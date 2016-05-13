@@ -3,7 +3,7 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile', 'Lookup'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Lookup', 'ProfileReferenceData'];
 
   function FormField($templateRequest, $compile) {
     return {
@@ -29,7 +29,7 @@
       bindToController: true
     };
 
-    function FormFieldController(Lookup) {
+    function FormFieldController(Lookup, ProfileReferenceData) {
       var vm = this;
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.crossroadsLocations = [];
@@ -38,7 +38,9 @@
         vm.crossroadsLocations = locations;
         vm.crossroadsLocations.splice(2, 1);
       });
-
+      ProfileReferenceData.getInstance().then(function(response) {
+        vm.genders = response.genders;
+      });
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
         vm.attributeType = vm.field.attributeType;
