@@ -9,9 +9,10 @@
       COMMON: 'crossroads.common',
       COMMUNITY_GROUPS: 'crossroads.community',
       CROSSROADS: 'crossroads',
+      FORM_BUILDER: 'crossroads.form_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
-      GROUP_FINDER: 'crossroads.group_finder',
+      //GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
       MPTOOLS: 'crossroads.mptools',
       ONETIME_SIGNUP: 'crossroads.onetime',
@@ -23,6 +24,7 @@
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,
       ALLERGIES: 67,
+      COFACILITATOR: 87,
       DIETARY_RESTRICTIONS: 65,
       ETHNICITY: 20,
       EXPERIENCE_ABROAD: 68,
@@ -36,10 +38,11 @@
       START_ATTEND_REASON: 59,
       TRIP_SKILLS: 61,
       TSHIRT_SIZES: 21,
-      TRIP_EXPERIENCE: 62
+      TRIP_EXPERIENCE: 62,
     },
     ATTRIBUTE_IDS: {
       ALL_ALLERGIES: 3971,
+      COFACILITATOR: 7086,
       DELTA_FREQUENT_FLYER: 3958,
       EXPERIENCE_ABROAD: 3972,
       US_FREQUENT_FLYER: 3980,
@@ -50,7 +53,7 @@
       SOUTHAFRICA_FREQUENT_FLYER: 3959,
       PREVIOUS_TRIP_EXPERIENCE: 3949,
       VICTIM_OF_ABUSE: 3973,
-      START_ATTEND_REASON: 59
+      START_ATTEND_REASON: 59,
     },
     NON_CROSSROADS_LOCATIONS: {
       I_DO_NOT_ATTEND_CROSSROADS: 2,
@@ -60,7 +63,21 @@
       PAGENAMES: {
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
+      },
+      FORM_BUILDER: {
+        FIELD_NAME: {
+          COFACILITATOR: 'CoFacilitator',
+        }
       }
-    }
+    },
+    GROUP: {
+      GROUP_ID: {
+        UNDIVIDED_FACILITATOR: 166572,
+      },
+      ROLES: {
+        MEMBER: 16,
+        LEADER: 22
+      },
+    },
   };
 })();

@@ -11,6 +11,16 @@ describe('EventRooms Directive', function() {
   var scope;
   var callback;
   var templateString;
+  var AdminCheckinDashboardService;
+
+  var mockRoomResponse = {
+    name: 'KC101',
+    label: 'Age 0-1 year olds',
+    checkinAllowed: true,
+    volunteers: 3,
+    capacity: 21,
+    participantsAssigned: 3,
+  };
 
   beforeEach(angular.mock.module('crossroads'));
 
@@ -19,11 +29,12 @@ describe('EventRooms Directive', function() {
   }));
 
   beforeEach(
-      inject(function(_$compile_, _$rootScope_, _$httpBackend_, Focus) {
+      inject(function(_$compile_, _$rootScope_, _$httpBackend_, Focus, AdminCheckinDashboardService) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $httpBackend = _$httpBackend_;
         Focus = Focus;
+        AdminCheckinDashboardService = AdminCheckinDashboardService;
 
         scope = $rootScope.$new();
         scope.rooms = { volunteers: undefined, participantsAssigned: 0 };
@@ -57,10 +68,16 @@ describe('EventRooms Directive', function() {
       expect(isolateScope.editRoom).toEqual(jasmine.any(Function));
     });
 
-    it('should attach an editCheckinAllowed function onto isolate scope', function() {
+    it('should attach an updateRoom function onto isolate scope', function() {
       var isolateScope = element.isolateScope();
-      expect(isolateScope.editCheckinAllowed).toBeDefined();
-      expect(isolateScope.editCheckinAllowed).toEqual(jasmine.any(Function));
+      expect(isolateScope.updateRoom).toBeDefined();
+      expect(isolateScope.updateRoom).toEqual(jasmine.any(Function));
+    });
+
+    it('should attach an update function onto isolate scope', function() {
+      var isolateScope = element.isolateScope();
+      expect(isolateScope.update).toBeDefined();
+      expect(isolateScope.update).toEqual(jasmine.any(Function));
     });
 
     it('should test ratio', function() {
@@ -80,6 +97,30 @@ describe('EventRooms Directive', function() {
       room = { volunteers: 5, participantsAssigned: 4 };
       answer = isolateScope.ratio(room);
       expect(answer).toBe('4/5');
+    });
+
+    it('should update rooms', function() {
+      var isolateScope = element.isolateScope();
+
+      putData = {
+        name: 'KC101',
+        label: 'Age 0-1 year olds',
+        checkinAllowed: true,
+        volunteers: 3,
+        capacity: 2,
+        participantsAssigned: 3,
+      };
+
+      isolateScope.rooms = [putData];
+      isolateScope.eventId = 1;
+      isolateScope.roomsForm = {}
+      isolateScope.roomsForm.$dirty = true;
+      isolateScope.update(0);
+      $httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms', putData)
+                             .respond(mockRoomResponse);
+      $httpBackend.flush();
+
+      expect(isolateScope.rooms[0].capacity).toBe(mockRoomResponse.capacity);
     });
   });
 });

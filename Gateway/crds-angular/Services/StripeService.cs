@@ -293,7 +293,7 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
-            CheckStripeResponse("Invalid charge request", response);
+            CheckStripeResponse("Invalid charge request", response, true);
 
             return response.Data;
         }
@@ -309,7 +309,7 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
-            CheckStripeResponse("Invalid charge request", response);
+            CheckStripeResponse("Invalid charge request", response, true);
 
             return response.Data;
         }

@@ -111,6 +111,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
+    <Compile Include="Helpers\Conversions.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
     <Compile Include="Services\AttributeServiceTest.cs" />
@@ -119,6 +121,8 @@
     <Compile Include="Services\BulkEmailRepositoryTest.cs" />
     <Compile Include="Services\CommunicationServiceTest.cs" />
     <Compile Include="Services\LookupServiceTest.cs" />
+    <Compile Include="Services\MinistryPlatformRestServiceIntegrationTest.cs" />
+    <Compile Include="Services\MinistryPlatformRestServiceTest.cs" />
     <Compile Include="Services\ObjectAttributeServiceTest.cs" />
     <Compile Include="Services\ContactRelationshipServiceTest.cs" />
     <Compile Include="Services\EventParticipantServiceTest.cs" />

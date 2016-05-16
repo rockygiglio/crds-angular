@@ -419,11 +419,11 @@ namespace crds_angular.test.Services
             var tp = (TransferPaidResponseDTO)result;
             Assert.AreEqual(8, tp.TotalTransactionCount);
             Assert.AreEqual(6, tp.SuccessfulUpdates.Count);
-            Assert.AreEqual(charges.Take(6).Reverse().Select(charge => charge.Id), tp.SuccessfulUpdates);
+            Assert.AreEqual(charges.Take(6).Select(charge => charge.Id), tp.SuccessfulUpdates);
             Assert.AreEqual(2, tp.FailedUpdates.Count);
-            Assert.AreEqual("ch555", tp.FailedUpdates[0].Key);
-            Assert.AreEqual("ch444", tp.FailedUpdates[1].Key);
-            Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[1].Value);
+            Assert.AreEqual("ch555", tp.FailedUpdates[1].Key);
+            Assert.AreEqual("ch444", tp.FailedUpdates[0].Key);
+            Assert.AreEqual("Not gonna do it, wouldn't be prudent.", tp.FailedUpdates[0].Value);
             Assert.IsNotNull(tp.Batch);
             Assert.IsNotNull(tp.Deposit);
             Assert.IsNotNull(tp.Exception);

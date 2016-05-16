@@ -30,6 +30,7 @@ module.exports = {
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./node_modules/crds-core'],
     common: ['./app/common/common.module.js'],
+    formbuilder: ['./app/formBuilder/formBuilder.module.js']
   },
   watchPattern: 'app/**/**',
   externals: {

@@ -3,23 +3,30 @@
 
   module.exports = AdminCheckinDashboardController;
 
-  AdminCheckinDashboardController.$inject = ['AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService', 'EventService'];
+  AdminCheckinDashboardController.$inject = ['$scope', 'AuthService', 'CRDS_TOOLS_CONSTANTS', 'AdminCheckinDashboardService', 'EventService'];
 
-  function AdminCheckinDashboardController(AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService, EventService) {
+  function AdminCheckinDashboardController($scope, AuthService, CRDS_TOOLS_CONSTANTS, AdminCheckinDashboardService, EventService) {
     var vm = this;
+    vm.displayFilter = true;
     vm.site = {id: undefined};
     vm.eventsReady = false;
     vm.eventsLoading = false;
     vm.event = {id: undefined};
     vm.events = [];
     vm.eventRooms = [];
+    vm.startDate = new Date();
+    vm.endDate = new Date();
     vm.loadEvents = loadEvents;
     vm.loadRooms = loadRooms;
+    vm.toggleFilter = toggleFilter;
     vm.reset = reset;
 
     vm.allowAdminAccess = function() {
       return (AuthService.isAuthenticated() && AuthService.isAuthorized(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools));
     };
+
+    $scope.$watch('checkinDashboard.startDate', loadEvents);
+    $scope.$watch('checkinDashboard.endDate', loadEvents);
 
     function loadRooms() {
       vm.roomsLoading = true;
@@ -29,6 +36,7 @@
         function(data) {
           vm.eventRooms = data.rooms;
           vm.roomsLoading = false;
+          vm.displayFilter = false;
         }
       );
     }
@@ -36,10 +44,19 @@
     function loadEvents() {
       reset();
 
-      EventService.eventsBySite.query({ site: vm.site.id, template: false }, function(data) {
-        vm.events = data;
+      if (vm.site.id != undefined) {
+        EventService.eventsBySite.query({ site: vm.site.id, startDate: vm.startDate, endDate: vm.endDate  }, function(data) {
+          vm.events = data;
+          vm.eventsLoading = false;
+        });
+      } else {
+        vm.eventsReady = false;
         vm.eventsLoading = false;
-      });
+      }
+    }
+
+    function toggleFilter() {
+      vm.displayFilter = !vm.displayFilter;
     }
 
     function reset() {

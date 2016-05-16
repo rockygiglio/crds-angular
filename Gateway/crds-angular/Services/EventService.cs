@@ -127,6 +127,7 @@ namespace crds_angular.Services
                 r.CheckinAllowed = room.CheckinAllowed;
                 r.Name = room.Name;
                 r.Label = room.Label;
+                r.Volunteers = room.Volunteers;
 
                 if (includeEquipment)
                 {
@@ -148,6 +149,8 @@ namespace crds_angular.Services
                 {
                     var p = _eventParticipantService.GetEventParticipants(eventId, room.RoomId);
                     r.ParticipantsAssigned = p == null ? 0 : p.Count;
+                    r.ParticipantsCheckedIn = p == null ? 0 : p.Where(participant => participant.ParticipantStatus == 3).ToList().Count;
+                    r.ParticipantsSignedIn = p == null ? 0 : p.Where(participant => participant.ParticipantStatus == 4).ToList().Count;
                 }
 
                 roomDto.Add(r);
@@ -161,26 +164,7 @@ namespace crds_angular.Services
             {
                 foreach (var room in eventReservation.Rooms)
                 {
-                    if (room.RoomReservationId == 0)
-                    {
-                        AddRoom(eventId, room, token);
-                    }
-                    else
-                    {
-                        UpdateRoom(eventId, room, token);
-                    }
-
-                    foreach (var equipment in room.Equipment)
-                    {
-                        if (equipment.EquipmentReservationId == 0)
-                        {
-                            AddEquipment(equipment, eventId, room, token);
-                        }
-                        else
-                        {
-                            UpdateEquipment(equipment, eventId, room, token);
-                        }
-                    }
+                    UpdateEventRoom(room, eventId, token);
                 }
             }
             catch (Exception ex)
@@ -190,6 +174,41 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
+        {
+            try
+            {
+                if (eventRoom.RoomReservationId == 0)
+                {
+                    AddRoom(eventId, eventRoom, token);
+                }
+                else
+                {
+                    UpdateRoom(eventId, eventRoom, token);
+                }
+
+                foreach (var equipment in eventRoom.Equipment)
+                {
+                    if (equipment.EquipmentReservationId == 0)
+                    {
+                        AddEquipment(equipment, eventId, eventRoom, token);
+                    }
+                    else
+                    {
+                        UpdateEquipment(equipment, eventId, eventRoom, token);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = "Event Service: UpdateEventReservation";
+                _logger.Error(msg, ex);
+                throw new Exception(msg, ex);
+            }
+
+            return eventRoom;
         }
 
         public bool CreateEventReservation(EventToolDto eventTool, string token)
@@ -249,6 +268,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.CreateRoomReservation(roomReservation, token);
         }
 
@@ -262,6 +285,10 @@ namespace crds_angular.Services
             roomReservation.Notes = room.Notes;
             roomReservation.RoomId = room.RoomId;
             roomReservation.RoomLayoutId = room.LayoutId;
+            roomReservation.Capacity = room.Capacity;
+            roomReservation.Label = room.Label;
+            roomReservation.CheckinAllowed = room.CheckinAllowed;
+            roomReservation.Volunteers = room.Volunteers;
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
@@ -623,29 +650,17 @@ namespace crds_angular.Services
 
         public bool CopyEventSetup(int eventTemplateId, int eventId, string token)
         {
-            // step 0 - delete existing data on the event, for eventgroups and eventrooms
-            var discardedEventGroups = _eventService.GetEventGroupsForEvent(eventId, token);
+            // event groups and event rooms need to be removed before adding new ones
+            _eventService.DeleteEventGroupsForEvent(eventId, token);
+            _roomService.DeleteEventRoomsForEvent(eventId, token);
 
-            foreach (var eventGroup in discardedEventGroups)
-            {
-                _eventService.DeleteEventGroup(eventGroup, token);
-            }
-
-            var discardedRoomReservations = _roomService.GetRoomReservations(eventId);
-
-            foreach (var roomEvent in discardedRoomReservations)
-            {
-                _roomService.DeleteRoomReservation(roomEvent, token);
-            }
-
-            // step 1 - get event rooms (room reservation DTOs) for the event, and event groups
+            // get event rooms (room reservation DTOs) and event groups for the template
             var eventRooms = _roomService.GetRoomReservations(eventTemplateId);
             var eventGroups = _eventService.GetEventGroupsForEvent(eventTemplateId, token);
 
             // step 2 - create new room reservations and assign event groups to them
             foreach (var eventRoom in eventRooms)
             {
-                // TODO: Is this the right approach? -- other options kinda suck, too
                 eventRoom.EventId = eventId;
 
                 // this is the new room reservation id for the copied room
@@ -675,9 +690,16 @@ namespace crds_angular.Services
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, bool template, string token)
+        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
         {
-            var eventTemplates = _eventService.GetEventsBySite(site, template, token);
+            var eventTemplates = _eventService.GetEventsBySite(site, token, startDate, endDate);
+
+            return eventTemplates;
+        }
+
+        public List<Event> GetEventTemplatesBySite(string site, string token)
+        {
+            var eventTemplates = _eventService.GetEventTemplatesBySite(site, token);
 
             return eventTemplates;
         }

@@ -22,7 +22,7 @@
           <div class="col-sm-12">
           <label ng-show="groupsignup.response.length > 1 && !groupsignup.alreadySignedUp">Select participants:</label>
           <label ng-show="groupsignup.response.length <= 1 && !groupsignup.alreadySignedUp">Signing up:</label>
-          
+
           <form class="form-group" name="myForm" role="form" ng-submit="groupsignup.signup(myForm)" id="myForm">
               <div class="checkbox flush-top"
                    ng-repeat="person in groupsignup.response as people"
@@ -68,6 +68,7 @@
           </form>
         </div><!--/col-sm-12-->
       </div><!--row-->
+      <!--TODO this should use the Profile Modal -->
       <script type="text/ng-template" id="editProfile.html">
         <div class="modal-header">
           <a type="button" class="close" ng-click="groupsignup.modalInstance.close()">x</a>

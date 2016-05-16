@@ -291,7 +291,7 @@ namespace MinistryPlatform.Translation.Test.Services
             //Arrange
             const int eventId = 123456;
             const int pageViewId = 999;
-            var searchString = eventId + ",";
+            var searchString = string.Format("\"{0}\",", eventId);
 
             var mpResponse = new List<Dictionary<string, object>>();
 
@@ -314,7 +314,7 @@ namespace MinistryPlatform.Translation.Test.Services
             //Arrange
             const int eventId = 123456;
             const int pageViewId = 999;
-            var searchString = eventId + ",";
+            var searchString = string.Format("\"{0}\",", eventId);
 
             configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
             ministryPlatformService.Setup(m => m.GetPageViewRecords(pageViewId, It.IsAny<string>(), searchString, It.IsAny<string>(), It.IsAny<int>()))
