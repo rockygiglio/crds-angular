@@ -1,5 +1,15 @@
-<form>
-  <div ng-repeat="field in formBuilder.form">
-    <form-field field="field"></form-field>
+<form ng-submit="formBuilder.save()">
+  <div ng-repeat="field in formBuilder.page.fields">
+    <form-field field="field" responses="formBuilder.responses"></form-field>
   </div>
+
+  <loading-button
+          loading-text='Saving...'
+          normal-text='Save'
+          input-type='button'
+          input-classes='btn btn-primary'
+          loading-class='disabled'
+          loading='formBuilder.saving' >
+  </loading-button>
+  
 </form>

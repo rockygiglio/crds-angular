@@ -112,6 +112,8 @@ delete from event_participants where participant_id = @participantID;
 delete from group_participants where participant_id = @participantID;
 
 delete from participants where participant_id = @participantID;
+
+update events set primary_contact = 1 where primary_contact = @contactID;
 GO
 
 --Delete userAccount

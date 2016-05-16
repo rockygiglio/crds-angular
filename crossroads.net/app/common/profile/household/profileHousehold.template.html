@@ -22,7 +22,7 @@
                 <use xlink:href="#caret-up"></use>
               </svg>
             </a>
-            <div class="col-md-7">
+            <div ng-class="{'col-md-7':!household.modalInstance, 'col-lg-12':household.modalInstance}">
               <svg viewBox="0 0 32 32" class="icon icon-home">
                 <use xlink:href="#home"></use>
               </svg>
@@ -31,7 +31,7 @@
               </span>
               <span ng-if="!household.householdInfo.addressLine1">Set Address...</span>
             </div>
-            <div class="col-md-2">
+            <div ng-class="{'col-md-2':!household.modalInstance, 'col-lg-12':household.modalInstance}">
               <svg viewBox="0 0 32 32" class="icon icon-phone3">
                 <use xlink:href="#phone3"></use>
               </svg>
@@ -40,7 +40,7 @@
               </span>
               <span ng-if="!household.householdInfo.homePhone">Set Home Phone...</span>
             </div>
-            <div class="col-md-3">
+            <div ng-class="{'col-md-3':!household.modalInstance, 'col-lg-12':household.modalInstance}">
               <svg viewBox="0 0 32 32" class="icon icon-crossroads">
                 <use xlink:href="#crossroads"></use>
               </svg>

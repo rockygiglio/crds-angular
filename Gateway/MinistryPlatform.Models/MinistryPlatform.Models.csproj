@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="Attribute.cs" />
+    <Compile Include="Attributes\RestApiTable.cs" />
     <Compile Include="BulkEmailPublication.cs" />
     <Compile Include="BulkEmailSubscriber.cs" />
     <Compile Include="Contact.cs" />
