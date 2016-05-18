@@ -3,11 +3,9 @@
 
   module.exports = UndividedFacilitatorCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData',
-    'Profile'];
+  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData', 'Profile'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData,
-    Profile) {
+  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile) {
     var vm = this;
 
     var constants = require('crds-constants');
@@ -20,9 +18,8 @@
     activate();
 
     function activate() {
-        //TODO only load profile data if profile field in CMS form builder
+      //TODO only load profile data if profile field in CMS form builder
       ProfileReferenceData.getInstance().then(function(response) {
-        debugger;
         vm.responses.genders = response.genders;
         vm.responses.maritalStatuses = response.maritalStatuses;
         vm.responses.serviceProviders = response.serviceProviders;
@@ -31,7 +28,6 @@
         //vm.crossroadsLocations = response.crossroadsLocations;
 
         Profile.Personal.get(function(data) {
-          debugger;
           vm.responses.profileData = { person: data };
           
           vm.viewReady = true;
@@ -39,11 +35,36 @@
 
       });
     }
-
-    function save() {
+    
+    function save(){
       vm.saving = true;
-
       try {
+          // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
+          savePersonal();
+          // saveGroup();
+      }
+      catch (error) {
+        vm.saving = false;
+        throw (error);
+      }
+    }
+    
+    function savePersonal() {
+        vm.responses.profileData.person['State/Region'] = vm.responses.profileData.person.State;
+        // TODO: See if there is a better way to pass the server check for changed email address
+        vm.responses.profileData.person.oldEmail = vm.responses.profileData.person.emailAddress;
+        vm.responses.profileData.person.$save(function() {
+           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+           vm.saving = false;
+         },
+         function() {
+           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+           $log.debug('person save unsuccessful');
+           vm.saving = false;
+         });
+    }
+
+    function saveGroup() {
         var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
         var coFacilitator = vm.responses[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
@@ -78,11 +99,6 @@
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           vm.saving = false;
         });
-      }
-      catch (error) {
-        vm.saving = false;
-        throw (error);
-      }
     }
   }
 

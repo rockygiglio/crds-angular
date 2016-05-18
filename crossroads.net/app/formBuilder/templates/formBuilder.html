@@ -1,6 +1,8 @@
 <form ng-submit="formBuilder.save()"  ng-show="formBuilder.viewReady">
   <div ng-repeat="field in formBuilder.page.fields">
-    <form-field field="field" responses="formBuilder.responses"></form-field>
+    <div class="row">
+      <form-field field="field" responses="formBuilder.responses"></form-field>
+    </div>
   </div>
 
   <loading-button

@@ -13,7 +13,7 @@
         responses: '=?'
       },
       link: function(scope, element) {
-        var templateUrl = getTemplateUrl(scope.formField.field.className);
+        var templateUrl = getTemplateUrl(scope.formField.field);
         if (templateUrl == null) {
           return;
         }
@@ -44,8 +44,8 @@
       }
     }
 
-    function getTemplateUrl(className) {
-      switch (className) {
+    function getTemplateUrl(field) {
+      switch (field.className) {
         case 'EditableBooleanField':
           return 'templates/editableBooleanField.html';
         case 'EditableCheckbox':
@@ -59,13 +59,25 @@
         case 'EditableTextField':
           return 'templates/editableTextField.html';
         case 'ProfileField':
-          return 'templates/editableProfileNameTextField.html';          
+          return getProfileTemplateUrl(field);     
         case 'EditableFormStep':
           return null;
         default:
           return 'templates/defaultField.html';
       }
     }
+    
+    function getProfileTemplateUrl(field) {
+      //TODO: See if we can simplify / possibly strategy pattern
+      switch(field.mPField) {
+        case 'Name':
+          return 'templates/editableProfileNameTextField.html';
+        case 'Gender':
+          return 'templates/profileGender.html';
+        default:
+          return 'templates/defaultField.html';
+      }
+    }
   }
-
+  
 })();
