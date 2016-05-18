@@ -153,17 +153,25 @@ namespace MinistryPlatform.Translation.Services
 
         public int SubmitFormResponse(FormResponse form)
         {
-            var token = ApiLogin();
-            var responseId = CreateFormResponse(form, token);
-            foreach (var answer in form.FormAnswers)
+            try
             {
-                if (answer.Response != null)
+                var token = ApiLogin();
+                var responseId = CreateFormResponse(form, token);
+                foreach (var answer in form.FormAnswers)
                 {
-                    answer.FormResponseId = responseId;
-                    CreateFormAnswer(answer, token);
+                    if (answer.Response != null)
+                    {
+                        answer.FormResponseId = responseId;
+                        CreateFormAnswer(answer, token);
+                    }
                 }
+                return responseId;
             }
-            return responseId;
+            catch (Exception exception)
+            {
+                throw new ApplicationException(string.Format("SubmitFormResponse failed.  Pledge Campaign Id: {0}, Opportunity Response Id: {1}", 
+                    form.PledgeCampaignId, form.OpportunityResponseId), exception);
+            }
         }
 
         public DateTime? GetTripFormResponseByContactId(int contactId, int pledgeId)
@@ -195,7 +203,9 @@ namespace MinistryPlatform.Translation.Services
 
         private void CreateFormAnswer(FormAnswer answer, string token)
         {
-            var formAnswer = new Dictionary<string, object>
+            try
+            {
+                var formAnswer = new Dictionary<string, object>
             {
                 {"Form_Response_ID", answer.FormResponseId},
                 {"Form_Field_ID", answer.FieldId},
@@ -203,8 +213,6 @@ namespace MinistryPlatform.Translation.Services
                 {"Opportunity_Response", answer.OpportunityResponseId}
             };
 
-            try
-            {
                 _ministryPlatformService.CreateRecord(_formAnswerPageId, formAnswer, token, true);
             }
             catch (Exception exception)
