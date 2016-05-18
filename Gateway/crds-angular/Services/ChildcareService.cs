@@ -10,12 +10,14 @@ using Crossroads.Utilities.Services;
 using log4net;
 using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
+        private readonly IChildcareRequestService _childcareRequestService;
         private readonly ICommunicationService _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactService _contactService;
@@ -37,8 +39,9 @@ namespace crds_angular.Services
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService)
+                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService)
         {
+            _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
             _communicationService = communicationService;
             _configurationWrapper = configurationWrapper;
@@ -101,7 +104,8 @@ namespace crds_angular.Services
 
         public void CreateChildcareRequest(ChildcareRequestDto request)
         {
-            throw new NotImplementedException();
+            var mpRequest = request.ToMPChildcareRequest();
+            _childcareRequestService.CreateChildcareRequest(mpRequest);
         }
 
         private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
