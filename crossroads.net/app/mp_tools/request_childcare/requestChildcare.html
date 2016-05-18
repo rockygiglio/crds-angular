@@ -1,0 +1,14 @@
+<div ng-if="!request.allowAccess && request.viewReady" class="alert alert-danger" role="alert">
+  <div dynamic-content="$root.MESSAGES.mptool_invalid_access.content | html"></div>
+</div>
+
+<div ng-if="request.allowAccess">
+  <preloader full-screen="true" ng-show="!request.viewReady"> </preloader>
+  <div ng-if="request.viewReady"> 
+    <h1> Childcare Request </h1>
+    <form name="request.childcareRequest" novalidate ng-submit="request.submit()">
+      
+      <input type="submit" value="submit">
+    </form>
+  </div>
+</div>

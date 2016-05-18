@@ -9,6 +9,7 @@
 
   function MPTools($location, $resource, AuthService) {
     var service = {
+      allowAccess: allowAccess,
       setParams: setParams,
       getParams: getParams,
       allowAccess: allowAccess,
@@ -21,6 +22,13 @@
       },
     };
     var params =  {};
+
+    function allowAccess(toolRole) {
+      var authenticated = AuthService.isAuthenticated();
+      var authorized = AuthService.isAuthorized(toolRole);
+        return (authenticated && authorized);
+
+    }
 
     function setParams(location) {
       params = {
