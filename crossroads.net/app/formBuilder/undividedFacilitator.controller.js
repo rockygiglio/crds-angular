@@ -3,17 +3,42 @@
 
   module.exports = UndividedFacilitatorCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session'];
+  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData',
+    'Profile'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session) {
+  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData,
+    Profile) {
     var vm = this;
 
     var constants = require('crds-constants');
 
+    vm.responses = {};
     vm.saving = false;
     vm.save = save;
+    vm.viewReady = false;
+    
+    activate();
 
-    vm.responses = {};
+    function activate() {
+        //TODO only load profile data if profile field in CMS form builder
+      ProfileReferenceData.getInstance().then(function(response) {
+        debugger;
+        vm.responses.genders = response.genders;
+        vm.responses.maritalStatuses = response.maritalStatuses;
+        vm.responses.serviceProviders = response.serviceProviders;
+        //vm.states = response.states;
+        //vm.countries = response.countries;
+        //vm.crossroadsLocations = response.crossroadsLocations;
+
+        Profile.Personal.get(function(data) {
+          debugger;
+          vm.responses.profileData = { person: data };
+          
+          vm.viewReady = true;
+        });
+
+      });
+    }
 
     function save() {
       vm.saving = true;

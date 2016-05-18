@@ -58,6 +58,8 @@
           return 'templates/editableRadioField.html';
         case 'EditableTextField':
           return 'templates/editableTextField.html';
+        case 'ProfileField':
+          return 'templates/editableProfileNameTextField.html';          
         case 'EditableFormStep':
           return null;
         default:
