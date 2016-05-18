@@ -14,6 +14,7 @@
         householdInfo: '=',
         householdForm: '=',
         isCollapsed: '=?',
+        modalInstance: '=?',
         locations: '='
       },
       templateUrl: 'household/profileHousehold.template.html',

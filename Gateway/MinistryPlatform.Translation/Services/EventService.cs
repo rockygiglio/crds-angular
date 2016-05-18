@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.EventReservations;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -339,7 +341,7 @@ namespace MinistryPlatform.Translation.Services
 
         public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
-            var searchString =  string.Format(",\"{0}\"", eventId);
+            var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
             if (records == null)
@@ -363,26 +365,70 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
         }
 
-        public List<Event> GetEventsBySite(string site, bool template, string token)
+        public void DeleteEventGroupsForEvent(int eventId, string token)
         {
-            var searchString = string.Format(",,{0},,{1}", site, template);
+            // get event group ids
+            var discardedEventGroupIds = GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray();
 
-            var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
-            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
-
-            if (records == null || records.Count == 0)
+            // MP will throw an error if there are no elements to delete, so we need to exit the function before then
+            if (discardedEventGroupIds.Length == 0)
             {
-                return null;
+                return;
             }
 
-            return records.Select(record => new Event
+            // create selection for event groups
+            SelectionDescription eventGroupSelDesc = new SelectionDescription();
+            eventGroupSelDesc.DisplayName = "DiscardedEventGroups " + DateTime.Now;
+            eventGroupSelDesc.Kind = SelectionKind.Normal;
+            eventGroupSelDesc.PageId = _eventGroupsPageId;
+            var eventGroupSelId = _ministryPlatformService.CreateSelection(eventGroupSelDesc, token);
+
+            // add events to selection
+            _ministryPlatformService.AddToSelection(eventGroupSelId, discardedEventGroupIds, token);
+
+            // delete the selection records
+            _ministryPlatformService.DeleteSelectionRecords(eventGroupSelId, token);
+
+            // delete the selection
+            _ministryPlatformService.DeleteSelection(eventGroupSelId, token);
+        }
+
+        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
+        {
+            StringBuilder dateSearchString = new StringBuilder();
+
+            var dayOffset = endDate - startDate;
+
+            // if the days at the same, this is done to create the basic search string
+            if (dayOffset.Days == 0)
             {
-                // this isn't a complete list of all event fields - we may need more for user info purposes
-                EventId = record.ToInt("Event_ID"),
-                Congregation = record.ToString("Congregation_Name"),
-                EventTitle = record.ToString("Event_Title"),
-                Template = record.ToBool("Template")
-            }).ToList();
+                dateSearchString.Append(startDate.ToShortDateString());
+            }
+
+            for (int day = 0; day < dayOffset.Days; day++)
+            {
+                DateTime newDate = startDate.Date.AddDays(day);
+
+                if (day != (dayOffset.Days - 1))
+                {
+                    dateSearchString.Append(newDate.ToShortDateString() + " OR ");
+                }
+                else if (day == (dayOffset.Days - 1))
+                {
+                    dateSearchString.Append(newDate.ToShortDateString());
+                }
+            }
+
+            var searchString = string.Format(",,\"{0}\",,False,{1},{1}", site, dateSearchString);
+
+            return GetEventsData(token, searchString);
+        }
+
+        public List<Event> GetEventTemplatesBySite(string site, string token)
+        {
+            var searchString = string.Format(",,\"{0}\",,True,", site);
+
+            return GetEventsData(token, searchString);
         }
 
         public int CreateEventGroup(EventGroup eventGroup, string token)
@@ -432,5 +478,24 @@ namespace MinistryPlatform.Translation.Services
                 throw (new ApplicationException(msg, e));
             }
         }
+
+        private List<Event> GetEventsData(string token, string searchString)
+        {
+            var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
+            var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
+
+            if (records == null || records.Count == 0)
+            {
+                return null;
+            }
+
+            return records.Select(record => new Event
+            {
+                // this isn't a complete list of all event fields - we may need more for user info purposes
+                EventId = record.ToInt("Event_ID"),
+                Congregation = record.ToString("Congregation_Name"),
+                EventTitle = record.ToString("Event_Title"),
+            }).ToList();
+        } 
     }
 }

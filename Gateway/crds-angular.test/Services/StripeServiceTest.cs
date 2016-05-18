@@ -391,7 +391,8 @@ namespace crds_angular.test.Services
             var customer = new StripeCustomer
             {
                 id = "12345",
-                default_source = "some card"
+                default_source = "some card",
+
             };
             
             var getCustomerResponse = new Mock<IRestResponse<StripeCustomer>>(MockBehavior.Strict);
@@ -421,6 +422,44 @@ namespace crds_angular.test.Services
                 Assert.AreEqual(_errors["failedResponse"], e.GlobalMessage);
             }
 
+        }
+
+        [Test]
+        public void ShouldNotChargeCustomerWith404()
+        {
+            
+            var charge = new StripeCharge
+            {
+                Id = "90210",
+          
+                BalanceTransaction = new StripeBalanceTransaction
+                {
+                    Id = "txn_123",
+                    Fee = 145
+                }
+            };
+
+
+            var stripeResponse = new Mock<IRestResponse<StripeCharge>>(MockBehavior.Strict);
+            stripeResponse.SetupGet(mocked => mocked.ResponseStatus).Returns(ResponseStatus.Completed).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.StatusCode).Returns(HttpStatusCode.NotFound).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.Data).Returns(charge).Verifiable();
+            stripeResponse.SetupGet(mocked => mocked.Content).Returns("{error: {message:'Customer does not have a linked source with ID '}}").Verifiable();
+
+
+            _restClient.Setup(mocked => mocked.Execute<StripeCharge>(It.IsAny<IRestRequest>())).Returns(stripeResponse.Object);
+
+            try
+            {
+                var response = _fixture.ChargeCustomer("cust_token", "nonexistant source", 9090, 98765);
+                Assert.Fail("Should have thrown exception");
+            }
+            catch (PaymentProcessorException e)
+            {
+                Assert.AreEqual("Invalid charge request", e.Message);
+                
+            }
+            
         }
 
         [Test]

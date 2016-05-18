@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
@@ -215,11 +216,6 @@ namespace MinistryPlatform.Translation.Services
                 platformClient => platformClient.CreateSubpageRecord(subPageId, parentRecordId, dictionary, quickadd));
         }
 
-        public void RemoveSelection(int selectionId, int[] records, String token)
-        {
-            VoidCall(token, platformClient => platformClient.RemoveFromSelection(selectionId, records));
-        }
-
         public void UpdateFile(Int32 fileId, String fileName, String description, Boolean isDefaultImage, Int32 longestDimension, Byte[] file, String token)
         {
             VoidCall(token, platformClient => 
@@ -306,6 +302,38 @@ namespace MinistryPlatform.Translation.Services
         public void UpdateSubRecordAsync(int subPageId, Dictionary<string, object> attributeDictionary, string token)
         {
             Call<Task>(token, platformClient => platformClient.UpdateSubpageRecordAsync(subPageId, attributeDictionary, false));
+        }
+
+        public int CreateSelection(SelectionDescription selectionDescription, string token)
+        {
+            return Call<int>(token, platformClient => platformClient.CreateSelection(selectionDescription));
+        }
+
+        public void AddToSelection(int selectionId, int[] recordIds, string token)
+        {
+            VoidCall(token, platformClient => platformClient.AddToSelection(selectionId, false, recordIds));
+        }
+
+        public void DeleteSelection(int selectionId, string token)
+        {
+            VoidCall(token, platformClient => platformClient.DeleteSelection(selectionId));
+        }
+
+        public void DeleteSelectionRecords(int selectionId, string token)
+        {
+            DeleteOption option = new DeleteOption();
+            option.Action = DeleteAction.Delete;
+            DeleteOption[] options = new DeleteOption[]
+            {
+                option
+            };
+
+            VoidCall(token, platformClient => platformClient.DeleteSelectionRecords(selectionId, options));
+        }
+
+        public void RemoveSelection(int selectionId, int[] records, String token)
+        {
+            VoidCall(token, platformClient => platformClient.RemoveFromSelection(selectionId, records));
         }
 
         private int GetMinistryPlatformId(string mpKey)

@@ -6,6 +6,7 @@ using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
@@ -34,11 +35,12 @@ namespace MinistryPlatform.Translation.Services
                 Hidden = record.ToBool("Hidden"),
                 Notes = record.ToString("Notes"),
                 RoomId = record.ToInt("Room_ID"),
-                RoomLayoutId = record.ToInt("Room_Layout_ID"),
+                RoomLayoutId = record.ToNullableInt("Room_Layout_ID") ?? 0,
                 Capacity = record.ToNullableInt("Capacity") ?? 0,
                 Label = record.ToString("Label"),
                 Name = record.ToString("Room_Name"),
-                CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false
+                CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false,
+                Volunteers = record.ToInt("Volunteers")
             }).ToList();
         }
 
@@ -61,6 +63,7 @@ namespace MinistryPlatform.Translation.Services
             reservationDictionary.Add("Capacity", roomReservation.Capacity);
             reservationDictionary.Add("Label", roomReservation.Label);
             reservationDictionary.Add("Allow_Checkin", roomReservation.CheckinAllowed);
+            reservationDictionary.Add("Volunteers", roomReservation.Volunteers);
 
             try
             {
@@ -82,14 +85,19 @@ namespace MinistryPlatform.Translation.Services
                 {"Event_ID", roomReservation.EventId},
                 {"Event_Room_ID", roomReservation.EventRoomId},
                 {"Room_ID", roomReservation.RoomId},
-                {"Room_Layout_ID", roomReservation.RoomLayoutId},
-                {"Notes", roomReservation.Notes},
+                { "Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
                 {"Label", roomReservation.Label},
-                {"Allow_Checkin", roomReservation.CheckinAllowed}
+                {"Allow_Checkin", roomReservation.CheckinAllowed},
+                {"Volunteers", roomReservation.Volunteers}
             };
+
+            if (roomReservation.RoomLayoutId != 0)
+            {
+                reservationDictionary.Add("Room_Layout_ID", roomReservation.RoomLayoutId);
+            }
 
             try
             {
@@ -139,6 +147,35 @@ namespace MinistryPlatform.Translation.Services
                 LayoutId = record.ToInt("Room_Layout_ID"),
                 LayoutName = record.ToString("Layout_Name")
             }).ToList();
+        }
+
+        public void DeleteEventRoomsForEvent(int eventId, string token)
+        {
+            // get event room ids
+            var discardedEventRoomIds = GetRoomReservations(eventId).Select(r => r.EventRoomId).ToArray();
+
+            // MP will throw an error if there are no elements to delete, so we need to exit the function before then
+            if (discardedEventRoomIds.Length == 0)
+            {
+                return;
+            }
+
+            // create selection for event groups
+            SelectionDescription eventRoomSelDesc = new SelectionDescription();
+            eventRoomSelDesc.DisplayName = "DiscardedEventRooms " + DateTime.Now;
+            eventRoomSelDesc.Kind = SelectionKind.Normal;
+            eventRoomSelDesc.PageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
+            var eventRoomSelId = _ministryPlatformService.CreateSelection(eventRoomSelDesc, token);
+
+
+            // add events to selection
+            _ministryPlatformService.AddToSelection(eventRoomSelId, discardedEventRoomIds, token);
+
+            // delete the selection records
+            _ministryPlatformService.DeleteSelectionRecords(eventRoomSelId, token);
+
+            // delete the selection
+            _ministryPlatformService.DeleteSelection(eventRoomSelId, token);
         }
     }
 }

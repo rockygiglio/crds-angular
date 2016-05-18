@@ -15,6 +15,8 @@ DELETE FROM Opportunities WHERE Add_to_Group IN (SELECT Group_ID FROM Groups WHE
 
 DELETE FROM Event_Groups WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
 
+DELETE from Event_Groups where EVENT_ROOM_ID in (select EVENT_room_id from Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) KC Nursery Oakley weekly 11:00')));
+
 DELETE FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) KC Nursery Oakley weekly 11:00'));
 
 DELETE FROM Event_Equipment WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) KC Nursery Oakley weekly 11:00'));
@@ -40,6 +42,10 @@ DELETE FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Eve
 DELETE FROM Event_Equipment WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) Superbowl Oakley daily 3:00'));
 
 DELETE FROM Event_Participants WHERE Event_ID IN (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) Superbowl Oakley daily 3:00'));
+
+DELETE FROM EVENT_GROUPS where EVENT_ID in (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) Superbowl Oakley daily 10:00'));
+
+DELETE FROM EVENT_GROUPS where EVENT_ID in (SELECT Event_ID FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) KC Nursery Oakley weekly 11:00'));
 
 DELETE FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = '(t) Superbowl Oakley daily 10:00');
 

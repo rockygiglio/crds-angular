@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models.People;
 using Event = MinistryPlatform.Models.Event;
@@ -21,8 +22,10 @@ namespace crds_angular.Services.Interfaces
         Event GetMyChildcareEvent(int parentEventId, string token);
         Event GetChildcareEvent(int parentEventId);
         bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token);
+        EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token);
 
         bool CopyEventSetup(int eventTemplateId, int eventId, string token);
-        List<Event> GetEventsBySite(string site, bool template, string token);
+        List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
+        List<Event> GetEventTemplatesBySite(string site, string token);
     }
 }
