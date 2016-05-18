@@ -6,8 +6,8 @@
         </div>
     </div>
 
-    <hr id="giveInfo">
-      <p>You are giving <strong>{{give.dto.amount | currency}}</strong>  to <strong>{{give.dto.program['Name']}}</strong>. <a href="" ng-click="give.service.processChange()" tabindex="-1" class="text-secondary">Change</a></p>
+    <hr>
+      <p id="giveInfo">You are giving <strong>{{give.dto.amount | currency}}</strong>  to <strong>{{give.dto.program['Name']}}</strong>. <a href="" ng-click="give.service.processChange()" tabindex="-1" class="text-secondary">Change</a></p>
     <hr>
 
     <ng-form name="accountForm">
