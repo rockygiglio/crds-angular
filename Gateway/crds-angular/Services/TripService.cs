@@ -687,9 +687,6 @@ namespace crds_angular.Services
             answers.Add(new FormAnswer {Response = page4.WhyGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.WhyGroupLeader")});
 
             var page5 = applicationData.PageFive;
-            answers.Add(new FormAnswer {Response = page5.SponsorChildFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SponsorChildFirstName")});
-            answers.Add(new FormAnswer {Response = page5.SponsorChildLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SponsorChildLastName")});
-            answers.Add(new FormAnswer {Response = page5.SponsorChildNumber, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SponsorChildNumber")});
             answers.Add(new FormAnswer {Response = page5.NolaFirstChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeam")});
             answers.Add(new FormAnswer {Response = page5.NolaFirstChoiceExperience, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeamExperience")});
             answers.Add(new FormAnswer {Response = page5.NolaSecondChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SecondChoiceWorkTeam")});
