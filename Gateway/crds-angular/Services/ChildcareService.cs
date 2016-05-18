@@ -99,6 +99,11 @@ namespace crds_angular.Services
             }
         }
 
+        public void CreateChildcareRequest(ChildcareRequestDto request)
+        {
+            throw new NotImplementedException();
+        }
+
         private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareConfirmationTemplate");

@@ -11,5 +11,6 @@ namespace crds_angular.Services.Interfaces
         void SendRequestForRsvp();
         List<FamilyMember> MyChildren(string token);
         void SaveRsvp(ChildcareRsvpDto saveRsvp, string token);
+        void CreateChildcareRequest(ChildcareRequestDto request);
     }
 }
