@@ -22,4 +22,5 @@
   require('./templates/editableTextField.html');
   require('./templates/editableProfileNameTextField.html');
   require('./templates/profileGender.html');
+  require('./templates/profileEthnicity.html');
 })();

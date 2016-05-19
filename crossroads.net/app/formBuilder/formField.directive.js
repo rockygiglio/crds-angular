@@ -74,6 +74,8 @@
           return 'templates/editableProfileNameTextField.html';
         case 'Gender':
           return 'templates/profileGender.html';
+        case 'Ethnicity':
+          return 'templates/profileEthnicity.html';
         default:
           return 'templates/defaultField.html';
       }

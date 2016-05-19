@@ -9,6 +9,7 @@
     var vm = this;
 
     var constants = require('crds-constants');
+    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     vm.responses = {};
     vm.saving = false;
@@ -26,9 +27,11 @@
         //vm.states = response.states;
         //vm.countries = response.countries;
         //vm.crossroadsLocations = response.crossroadsLocations;
+        var contactId = Session.exists('userId');     
 
-        Profile.Personal.get(function(data) {
+        Profile.Person.get({contactId: contactId},function(data) {
           vm.responses.profileData = { person: data };
+          vm.responses.ethnicities = vm.responses.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
           
           vm.viewReady = true;
         });
