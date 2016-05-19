@@ -1,5 +1,5 @@
 class RequestChildcareController {
-
+  /*@ngInject*/
   constructor($rootScope, MPTools, CRDS_TOOLS_CONSTANTS, $log) {
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
     this.viewReady = false;

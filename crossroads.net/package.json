@@ -59,6 +59,7 @@
     "karma-teamcity-reporter": "^0.1.2",
     "karma-webpack": "^1.7.0",
     "ngtemplate-loader": "^1.0.0",
+    "ng-annotate-loader": "0.0.10",
     "node-sass": "~3.4.2",
     "phantomjs-polyfill": "0.0.1",
     "protractor": "^2.0.0",
