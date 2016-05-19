@@ -20,7 +20,8 @@
   require('./templates/editableNumericField.html');
   require('./templates/editableRadioField.html');
   require('./templates/editableTextField.html');
-  require('./templates/editableProfileNameTextField.html');
-  require('./templates/profileGender.html');
+  require('./templates/profileEmail.html');
   require('./templates/profileEthnicity.html');
+  require('./templates/profileGender.html');
+  require('./templates/profileName.html');
 })();

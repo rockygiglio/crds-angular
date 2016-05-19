@@ -59,27 +59,29 @@
         case 'EditableTextField':
           return 'templates/editableTextField.html';
         case 'ProfileField':
-          return getProfileTemplateUrl(field);     
+          return getProfileTemplateUrl(field);
         case 'EditableFormStep':
           return null;
         default:
           return 'templates/defaultField.html';
       }
     }
-    
+
     function getProfileTemplateUrl(field) {
       //TODO: See if we can simplify / possibly strategy pattern
       switch(field.mPField) {
-        case 'Name':
-          return 'templates/editableProfileNameTextField.html';
-        case 'Gender':
-          return 'templates/profileGender.html';
+        case 'Email':
+          return 'templates/profileEmail.html';
         case 'Ethnicity':
           return 'templates/profileEthnicity.html';
+        case 'Gender':
+          return 'templates/profileGender.html';
+        case 'Name':
+          return 'templates/profileName.html';
         default:
           return 'templates/defaultField.html';
       }
     }
   }
-  
+
 })();
