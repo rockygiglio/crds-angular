@@ -141,5 +141,17 @@ namespace MinistryPlatform.Translation.Test
             Assert.Contains(clifton, crossroadsLocations);
             crossroadsLocations.ForEach(Assert.IsInstanceOf<Dictionary<string, object>>);
         }
+
+        [Test]
+        public void ShouldFindListOfMinistries()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            List<Dictionary<string, object>> ministriesList = _lookupService.Ministries(token);
+            Assert.IsNotEmpty(ministriesList);
+            ministriesList.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
+        }
+
     }
 }

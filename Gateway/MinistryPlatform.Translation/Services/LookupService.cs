@@ -94,5 +94,11 @@ namespace MinistryPlatform.Translation.Services
         {
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("MeetingDay"), token);
         }
+
+        public List<Dictionary<string, object>> Ministries(string token)
+        {
+            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Ministries"), token);
+        }
+
     }
 }

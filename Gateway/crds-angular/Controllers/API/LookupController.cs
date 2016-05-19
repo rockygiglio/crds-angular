@@ -17,7 +17,7 @@ namespace crds_angular.Controllers.API
 
         public LookupController(IConfigurationWrapper configurationWrapper, LookupService lookupService)
         {
-            this._configurationWrapper = configurationWrapper;
+            _configurationWrapper = configurationWrapper;
             _lookupService = lookupService;
         }
 
@@ -65,6 +65,9 @@ namespace crds_angular.Controllers.API
                         break;
                     case "meetingdays":
                         ret = _lookupService.MeetingDays(t);
+                        break;
+                    case "ministries":
+                        ret = _lookupService.Ministries(t);
                         break;
                     default:
                         break;
