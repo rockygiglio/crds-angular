@@ -10,14 +10,15 @@
 
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
-    var participant = [{
+    //TODO Decide if you member or leader - now always leader
+    var participant = {
       capacity: 1,
       contactId: parseInt(Session.exists('userId')),
       groupRoleId: constants.GROUP.ROLES.LEADER,
       childCareNeeded: false,
       sendConfirmationEmail: false,
       attributeTypes: {},
-    }];
+    };
 
     vm.responses = {};
     vm.saving = false;
@@ -54,7 +55,7 @@
       try {
           // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
           savePersonal();
-          // saveGroup();
+          saveGroup();
       }
       catch (error) {
         vm.saving = false;
@@ -93,19 +94,24 @@
           singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
         }
 
-        var participant = [{
-          capacity: 1,
-          contactId: parseInt(Session.exists('userId')),
-          groupRoleId: constants.GROUP.ROLES.LEADER,
-          childCareNeeded: vm.responses.Childcare,
-          sendConfirmationEmail: false,
-          singleAttributes: singleAttributes,
-          attributeTypes: {},
-        }];
+        // var participant = [{
+        //   capacity: 1,
+        //   contactId: parseInt(Session.exists('userId')),
+        //   groupRoleId: constants.GROUP.ROLES.LEADER,
+        //   childCareNeeded: vm.responses.Childcare,
+        //   sendConfirmationEmail: false,
+        //   singleAttributes: singleAttributes,
+        //   attributeTypes: {},
+        // }];
 
+        //participant.childCareNeeded = vm.responses.groupParticipant.childCareNeeded;
+        //participant.singleAttributes = singleAttributes;
+debugger;
+        var participants = [vm.responses.groupParticipant];
+        //TODO groupId will change with new groups
         Group.Participant.save({
           groupId: constants.GROUP.GROUP_ID.UNDIVIDED_FACILITATOR,
-        }, participant).$promise.then(function(response) {
+        }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;
         }, function(error) {
