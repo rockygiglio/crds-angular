@@ -16,7 +16,8 @@ param (
 	if(![string]::IsNullOrEmpty($user.email))
 	{
 		write-host "Removing User" $user.first $user.last "with email" $user.email;
-		$output = & $SQLcmd @SQLCommonParams -Q "EXEC [MinistryPlatform].[dbo].[cr_QADeleteData] "$user.email.Trim();
+		write-host "Debug: " $SQLcmd @SQLCommonParams -Q "EXEC [MinistryPlatform].[dbo].[cr_QADeleteData] `$em -v em = '$email'"
+		$output = & $SQLcmd @SQLCommonParams -Q "EXEC [MinistryPlatform].[dbo].[cr_QADeleteData] `$em -v em = '$email'"
 		
 		if($LASTEXITCODE -ne 0){
 				write-host "User: "$user.email
