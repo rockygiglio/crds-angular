@@ -69,6 +69,9 @@ namespace crds_angular.Controllers.API
                     case "ministries":
                         ret = _lookupService.Ministries(t);
                         break;
+                    case "childcarelocations":
+                        ret = _lookupService.ChildcareLocations(t);
+                        break;
                     default:
                         break;
                 }
