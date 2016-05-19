@@ -10,35 +10,45 @@
 
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+    var participant = [{
+      capacity: 1,
+      contactId: parseInt(Session.exists('userId')),
+      groupRoleId: constants.GROUP.ROLES.LEADER,
+      childCareNeeded: false,
+      sendConfirmationEmail: false,
+      attributeTypes: {},
+    }];
 
     vm.responses = {};
     vm.saving = false;
     vm.save = save;
     vm.viewReady = false;
-    
+
     activate();
 
     function activate() {
       //TODO only load profile data if profile field in CMS form builder
       ProfileReferenceData.getInstance().then(function(response) {
+
         vm.responses.genders = response.genders;
         vm.responses.maritalStatuses = response.maritalStatuses;
         vm.responses.serviceProviders = response.serviceProviders;
+        vm.responses.groupParticipant = participant;
         //vm.states = response.states;
         //vm.countries = response.countries;
         //vm.crossroadsLocations = response.crossroadsLocations;
-        var contactId = Session.exists('userId');     
+        var contactId = Session.exists('userId');
 
         Profile.Person.get({contactId: contactId},function(data) {
           vm.responses.profileData = { person: data };
           vm.responses.ethnicities = vm.responses.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
-          
+
           vm.viewReady = true;
         });
 
       });
     }
-    
+
     function save(){
       vm.saving = true;
       try {
@@ -51,7 +61,7 @@
         throw (error);
       }
     }
-    
+
     function savePersonal() {
         vm.responses.profileData.person['State/Region'] = vm.responses.profileData.person.State;
         // TODO: See if there is a better way to pass the server check for changed email address

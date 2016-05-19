@@ -59,7 +59,8 @@
         case 'EditableTextField':
           return 'templates/editableTextField.html';
         case 'ProfileField':
-          return getProfileTemplateUrl(field);
+        case 'GroupParticipantField':
+          return getMPTemplateUrl(field);
         case 'EditableFormStep':
           return null;
         default:
@@ -67,9 +68,11 @@
       }
     }
 
-    function getProfileTemplateUrl(field) {
+    function getMPTemplateUrl(field) {
       //TODO: See if we can simplify / possibly strategy pattern
       switch(field.mPField) {
+        case 'Childcare':
+          return 'templates/groupParticipantChildcare.html';
         case 'Email':
           return 'templates/profileEmail.html';
         case 'Ethnicity':
