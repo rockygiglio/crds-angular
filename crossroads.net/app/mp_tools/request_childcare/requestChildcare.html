@@ -54,12 +54,7 @@
       </div>
 
       <div class="form-group col-sm-6">
-      	<label class="control-label required" for="startDate">Start Date</label>
-      	<input type="text" name="startDate"/>
-      </div>
-      <div class="form-group col-sm-6">
-      	<label class="control-label required" for="endDate">End Date</label>
-      	<input type="text" name="endDate"/>
+      	<date-range start-date="request.startDate" end-date="request.endDate" min-date="request.minDate">Date Range</date-range>
       </div>
       <div class="form-group col-sm-6">
       	<label class="control-label required" for="frequency">Frequency</label>
@@ -78,7 +73,7 @@
       </div>
       <div class="form-group col-sm-6">
       	<label class="control-label" for="notes">Notes</label>
-      	<input type="text" name="notes"/>
+      	<textarea name="notes"/>
       </div>
       <div class="form-group">
       	<input class="btn btn-primary btn-sm" type="submit" value="submit">

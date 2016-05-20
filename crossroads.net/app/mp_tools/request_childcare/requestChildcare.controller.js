@@ -10,6 +10,8 @@ class RequestChildcareController {
     this.params = MPTools.getParams();
     this.congregations = RequestChildcareService.getCongregations();
     this.ministries = RequestChildcareService.getMinistries();
+    this.minDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() + 7);
     this.currentRequest = Number(this.params.recordId);
     this.validation = Validation;
     this.viewReady = true;
