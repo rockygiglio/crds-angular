@@ -4,30 +4,55 @@
 
 <div ng-if="request.allowAccess">
   <preloader full-screen="true" ng-show="!request.viewReady"> </preloader>
-  <div ng-if="request.viewReady"> 
+  <div ng-if="request.viewReady"  class="col-md-6 col-md-offset-3"> 
     <h1> Childcare Request </h1>
-    <form name="request.childcareRequest" novalidate ng-submit="request.submit()">
-      <div class="form-group col-sm-6">
-      	<label class="control-label required" for="congregation">Congregation</label>
-      	<select type="text" name="congregation">
-      		<option>abcd</option>
-      		<option>efgh</option>
+    <form name="request.childcareRequestForm" novalidate ng-submit="request.submit()">
+
+      <div class="form-group" ng-class="{'has-error': request.validateField('congregation')}">
+      	<label class="control-label required" for="congregation">Site</label>
+      	<select name="congregation" 
+                class="form-control"
+                ng-options="congregation.dp_RecordName for congregation in request.congregations track by congregation.dp_RecordID" 
+                ng-model="request.choosenCongregation"
+                required 
+                ng-change="request.getGroups()">
+          <option value=""> -- Choose your Site -- </option>
       	</select>
+        <ng-messages for="request.childcareRequestForm.congregation.$error" ng-if="request.validateField('congregation')">
+          <span ng-message="required">
+            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          </span>
+        </ng-messages>
       </div>
-      <div class="form-group col-sm-6">
+
+      <div class="form-group" ng-class="{'has-error': request.validateField('ministry')}">
       	<label class="control-label required" for="ministry">Ministry</label>
-      	<select type="text" name="ministry">
-      		<option>1234</option>
-      		<option>5678</option>
+      	<select name="ministry"
+                class="form-control"
+                ng-model="request.choosenMinistry"
+                required
+                ng-change="request.getGroups()"
+                ng-options="ministry.dp_RecordName for ministry in request.ministries track by ministry.dp_RecordID">
+          <option value=""> -- Choose your Ministry -- </option>
       	</select>
+        <ng-messages for="request.childcareRequestForm.ministry.$error" ng-if="request.validateField('ministry')">
+          <span ng-message="required">
+            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          </span>
+        </ng-messages>
       </div>
-      <div class="form-group col-sm-6">
+
+      <div class="form-group" ng-class="{'has-error': request.validateField('ministry')}" ng-show="request.showGroups()">
       	<label class="control-label required" for="group">Group</label>
-      	<select type="text" name="group">
-      		<option>Cats</option>
-      		<option>Dogs</option>
+      	<select class="form-control" 
+                name="group"
+                ng-model="request.choosenGroup"
+                required
+                ng-options="ministry.dp_RecordName for ministry in request.ministries track by ministry.dp_RecordID" >
+          <option value=""> -- Choose your Group -- </option>
       	</select>
       </div>
+
       <div class="form-group col-sm-6">
       	<label class="control-label required" for="startDate">Start Date</label>
       	<input type="text" name="startDate"/>

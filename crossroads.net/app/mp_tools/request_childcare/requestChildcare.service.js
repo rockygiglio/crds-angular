@@ -1,25 +1,30 @@
 class RequestChildcareService {
   /*@ngInject*/ 
   constructor($log, LookupService) {
-    this._lookupService = LookupService;
-    this._$log = $log;
+    this.lookupService = LookupService;
+    this.log = $log;
   }
 
   getCongregations() {
-    this._lookupService.Congregations.query(function(data) {
-      return data.filter(d => {
-       
-      });
+    return this.lookupService.ChildcareLocations.query((data) => {
+      return data;
     },
     
-    function(err) {
-      this._$log.error(`Unable to get the list of Congregations: ${err}`);  
+    (err) => {
+      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);  
       return [];
     });
   }
 
   getMinistries() {
+    return this.lookupService.Ministries.query((data) => {
+      return data;
+    },
     
+    (err) => {
+      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);  
+      return [];
+    });
   }
 }
 
