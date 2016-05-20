@@ -94,14 +94,16 @@
         resolve: {
           $state: '$state',
           CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
+          GiveTransferService: 'GiveTransferService',
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
           },
+
           goToFunction: function(GiveTransferService, $state) {
             return function(donorId) {
               GiveTransferService.impersonateDonorId = donorId;
               $state.go('tools.adminManageCheckinDashboard');
-            }
+            };
           }
         }
       })
@@ -129,6 +131,7 @@
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
           },
+
           goToFunction: function($state) {
             return function() {
               $state.go('tools.eventSetup');

@@ -32,6 +32,7 @@
           StartProfileLoad: ['Person', function(Person) {
             Person.loadProfile();
           }],
+
           StartQuestionLoad: ['GroupQuestionService', 'ParticipantQuestionService',
             function(GroupQuestionService, ParticipantQuestionService) {
               GroupQuestionService.loadQuestions();
@@ -59,9 +60,11 @@
           LoadGroupInfo: ['GroupInfo', function(GroupInfo) {
             return GroupInfo.loadGroupInfo();
           }],
+
           AuthenticatedPerson: ['Person', function(Person) {
             return Person.getProfile();
           }],
+
           LookupDefinitions: ['ParticipantQuestionService', function(ParticipantQuestionService) {
             return ParticipantQuestionService;
           }]

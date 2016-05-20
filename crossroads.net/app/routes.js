@@ -15,7 +15,7 @@
                      $httpProvider,
                      $urlMatcherFactory,
                      $locationProvider) {
-                         
+
     crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'volunteerRouteType', /\/volunteer-sign-up\/.*$/);
 
     // Commented out for US2924, will be added back after Corkboard go-live
@@ -26,7 +26,7 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: function(SystemPage, $state) {
+            Meta: ['SystemPage', '$state', function(SystemPage, $state) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
@@ -39,14 +39,14 @@
                       $state.next.data.meta = systemPage.systemPages[0];
                     }
                   });
-            },
+            }],
 
-            SiteConfig: function(SiteConfig, ContentSiteConfigService) {
+            SiteConfig: ['SiteConfig', 'ContentSiteConfigService', function(SiteConfig, ContentSiteConfigService) {
               return SiteConfig.get({id: 1}).$promise.then(function(result) {
                     ContentSiteConfigService.siteconfig = result.siteConfig;
                   }
               );
-            }
+            }]
           }
         })
         .state('noSideBar', {
@@ -450,13 +450,12 @@
           },
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
-            Page: 'Page',
-            CmsInfo: function(Page, $stateParams) {
+            CmsInfo: ['Page', '$stateParams', function(Page, $stateParams) {
               var link = addTrailingSlashIfNecessary($stateParams.link);
               return Page.get({
                 url: link
               }).$promise;
-            }
+            }]
           }
         })
         .state('volunteer-application', {
@@ -474,7 +473,7 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            PageInfo: function($q, Profile, Page, $stateParams) {
+            PageInfo: ['$q', 'Profile', 'Page', '$stateParams', function($q, Profile, Page, $stateParams) {
               var deferred = $q.defer();
               var contactId = $stateParams.id;
 
@@ -499,7 +498,7 @@
                   });
 
               return deferred.promise;
-            },
+            }],
 
             Volunteer: 'VolunteerService',
             Family: function(Volunteer) {
@@ -565,6 +564,7 @@
             loggedin: crds_utilities.checkLoggedin,
             MPTools: 'MPTools',
             Page: 'Page',
+            $stateParams: '$stateParams',
             CmsInfo: function(Page, $stateParams) {
               return Page.get({
                 url: '/volunteer-application/kids-club/'
