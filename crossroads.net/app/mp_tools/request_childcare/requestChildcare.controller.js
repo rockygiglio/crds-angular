@@ -1,6 +1,6 @@
 class RequestChildcareController {
   /*@ngInject*/
-  constructor($rootScope, MPTools, CRDS_TOOLS_CONSTANTS, $log) {
+  constructor($rootScope, MPTools, CRDS_TOOLS_CONSTANTS, $log, RequestChildcareService) {
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
     this.viewReady = false;
     this.name = 'request-childcare';
@@ -9,7 +9,7 @@ class RequestChildcareController {
     this._CRDS_TOOLS_CONSTANTS = CRDS_TOOLS_CONSTANTS;
     this._$log = $log;
     this.params = MPTools.getParams();
-
+    this.congregations = RequestChildcareService.getCongregations();
     this.currentRequest = Number(this.params.recordId);
     this.viewReady = true;
   }

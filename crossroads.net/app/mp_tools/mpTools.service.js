@@ -12,23 +12,15 @@
       allowAccess: allowAccess,
       setParams: setParams,
       getParams: getParams,
-      allowAccess: allowAccess,
       getSelectedId: getSelectedId,
       Selection: $resource(__API_ENDPOINT__ + 'api/mptools/selection/:selectionId'),
       dto: {
         noSelection: undefined,
         selectionError: undefined,
-        tooManySelections: undefined,
-      },
+        tooManySelections: undefined
+      }
     };
     var params =  {};
-
-    function allowAccess(toolRole) {
-      var authenticated = AuthService.isAuthenticated();
-      var authorized = AuthService.isAuthorized(toolRole);
-        return (authenticated && authorized);
-
-    }
 
     function setParams(location) {
       params = {

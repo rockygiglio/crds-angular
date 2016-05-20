@@ -24,22 +24,18 @@ module.exports = function(config) {
     files: [
       'https://js.stripe.com/v2/',
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      './node_modules/angular/angular.js',
-      './node_modules/angular-mocks/angular-mocks.js',
-      'node_modules/moment/moment.js',
+      { pattern: 'spec/spec_index.js', watched: false },
       './assets/search*.js',
       './assets/profile*.js',
       './assets/media*.js',
       './assets/govolunteer*.js',
-      './assets/formbuilder*.js',
-      'spec/spec_index.js'
+      './assets/formbuilder*.js'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec/spec_index.js': ['webpack','env'],
-      '**/app/*.js': ['coverage']
+      'spec/spec_index.js': ['webpack','env', 'sourcemap']
     },
 
     envPreprocessor: [
@@ -50,7 +46,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha', 'coverage'],
+    reporters: ['mocha'],
 
     coverageReporter: {
       type: 'html',
@@ -61,12 +57,14 @@ module.exports = function(config) {
     port: 9876,
 
     webpack: {
+      devtool: 'inline-source-map',
       module: {
         loaders: [
           { test: /\.css$/, loader: 'style-loader!css-loader' },
           { test: /\.js$/, include: [
               path.resolve(__dirname, 'app'),
-              path.resolve(__dirname, './node_modules/angular-stripe')
+              path.resolve(__dirname, './node_modules/angular-stripe'),
+              path.resolve(__dirname, 'spec')
             ], loader: 'babel-loader' },
           { test: /\.scss$/,
             loader: ExtractTextPlugin.extract('style-loader',
@@ -85,6 +83,10 @@ module.exports = function(config) {
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
     },
 
+     webpackServer: {
+       noInfo: true // prevent console spamming when running in Karma!
+     },
+
     webpackMiddleware: {
       stats: {
         colors: true
@@ -96,7 +98,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_ERROR,
+    logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
@@ -115,7 +117,8 @@ module.exports = function(config) {
       require('karma-jasmine'),
       require('karma-mocha-reporter'),
       require('karma-phantomjs-launcher'),
-      require('karma-env-preprocessor')
+      require('karma-env-preprocessor'),
+      require('karma-sourcemap-loader')
     ]
 
   });

@@ -509,134 +509,115 @@
             }
           }
         })
-
-      // Commented out for US2924, will be added back after Corkboard go-live
-      //
-      //.state('corkboard', {
-      //  url: '{link:corkboardRouteType}',
-      //  resolve: {
-      //    RedirectToSubSite: function($window, $location) {
-      //      // Force browser to do a full reload to load corkboard's index.html
-      //      $window.location.href = $location.path();
-      //    }
-      //  },
-      //  data: {
-      //    preventRouteAuthentication: true,
-      //    meta: {
-      //      title: 'Corkboard',
-      //      description: ''
-      //    }
-      //  }
-      //})
-      /*  .state('tools', {*/
-          //parent: 'noHeaderOrFooter',
-          //abstract: true,
-          //url: '/mptools',
-          //templateUrl: 'mp_tools/tools.html',
-          //data: {
-            //hideMenu: true,
-            //isProtected: true,
-            //meta: {
-              //title: 'Tools',
-              //description: ''
-            //}
-          //},
-          //resolve: {
-            //loggedin: crds_utilities.checkLoggedin
-          //}
-        //})
-        //.state('tools.su2s', {
-          //url: '/su2s',
-          //controller: 'SignupToServeController as su2s',
-          //templateUrl: 'signup_to_serve/su2s.html'
-        //})
-        //.state('tools.kcApplicant', {
-          //url: '/kcapplicant',
-          //controller: 'KCApplicantController as applicant',
-          //templateUrl: 'kc_applicant/applicant.html',
-          //data: {
-            //isProtected: true,
-            //meta: {
-              //title: 'Kids Club Application',
-              //description: ''
-            //}
-          //},
-          //resolve: {
-            //loggedin: crds_utilities.checkLoggedin,
-            //MPTools: 'MPTools',
-            //Page: 'Page',
-            //CmsInfo: function(Page, $stateParams) {
-              //return Page.get({
-                //url: '/volunteer-application/kids-club/'
-              //}).$promise;
-            //}
-          //}
-        //})
-        //.state('tools.tripParticipants', {
-          //url: '/tripParticipants',
-          //controller: 'TripParticipantController as trip',
-          //templateUrl: 'trip_participants/trip.html',
-          //resolve: {
-            //MPTools: 'MPTools',
-            //Trip: 'Trip',
-            //PageInfo: function(MPTools, Trip) {
-              //var params = MPTools.getParams();
-              //return Trip.TripFormResponses.get({
-                //selectionId: params.selectedRecord,
-                //selectionCount: params.selectedCount,
-                //recordId: params.recordId
-              //}).$promise.then(function(data) {
-                    //// promise fulfilled
-                    //return data;
-                  //}, function(error) {
-                    //// promise rejected, could log the error with: console.log('error', error);
-                    //var data = {};
-                    //data.errors = error;
-                    //return error;
-                  //});
-            //}
-          //}
-        //})
-        //.state('tools.tripPrivateInvite', {
-          //url: '/tripPrivateInvite',
-          //controller: 'TripPrivateInviteController as invite',
-          //templateUrl: 'trip_private_invite/invite.html',
-          //resolve: {
-            //MPTools: 'MPTools',
-            //Trip: 'Trip'
-          //}
-        //})
-        //.state('tools.createEvent', {
-          //url: '/create-event',
-          //template: '<add-event-tool></add-event-tool>',
-          //resolve: {
-            //MPTools: 'MPTools'
-          //}
-        //})
-        //.state('tools.volunteerContact', {
-          //url: '/volunteer-contact',
-          //template: '<volunteer-contact></volunteer-contact>',
-          //resolve: {
-            //MPTools: 'MPTools'
-          //}
-        //})
-        //.state('tools.checkBatchProcessor', {
-          //url: '/checkBatchProcessor',
-          //controller: 'CheckBatchProcessor as checkBatchProcessor',
-          //templateUrl: 'check_batch_processor/checkBatchProcessor.html',
-          //data: {
-            //isProtected: true,
-            //meta: {
-              //title: 'Check Batch Processor',
-              //description: ''
-            //}
-          //}
-        //})
-        //.state('tools.gpExport', {
-          //url: '/gpExport',
-          //controller: 'GPExportController as gpExport',
-          //templateUrl: 'gp_export/gpExport.html'
-        /*})*/
+        .state('tools', {
+          parent: 'noHeaderOrFooter',
+          abstract: true,
+          url: '/mptools',
+          templateUrl: 'mp_tools/tools.html',
+          data: {
+            hideMenu: true,
+            isProtected: true,
+            meta: {
+              title: 'Tools',
+              description: ''
+            }
+          },
+          resolve: {
+            loggedin: crds_utilities.checkLoggedin
+          }
+        })
+        .state('tools.su2s', {
+          url: '/su2s',
+          controller: 'SignupToServeController as su2s',
+          templateUrl: 'signup_to_serve/su2s.html'
+        })
+        .state('tools.kcApplicant', {
+          url: '/kcapplicant',
+          controller: 'KCApplicantController as applicant',
+          templateUrl: 'kc_applicant/applicant.html',
+          data: {
+            isProtected: true,
+            meta: {
+              title: 'Kids Club Application',
+              description: ''
+            }
+          },
+          resolve: {
+            loggedin: crds_utilities.checkLoggedin,
+            MPTools: 'MPTools',
+            Page: 'Page',
+            CmsInfo: function(Page, $stateParams) {
+              return Page.get({
+                url: '/volunteer-application/kids-club/'
+              }).$promise;
+            }
+          }
+        })
+        .state('tools.tripParticipants', {
+          url: '/tripParticipants',
+          controller: 'TripParticipantController as trip',
+          templateUrl: 'trip_participants/trip.html',
+          resolve: {
+            MPTools: 'MPTools',
+            Trip: 'Trip',
+            PageInfo: function(MPTools, Trip) {
+              var params = MPTools.getParams();
+              return Trip.TripFormResponses.get({
+                selectionId: params.selectedRecord,
+                selectionCount: params.selectedCount,
+                recordId: params.recordId
+              }).$promise.then(function(data) {
+                    // promise fulfilled
+                    return data;
+                  }, function(error) {
+                    // promise rejected, could log the error with: console.log('error', error);
+                    var data = {};
+                    data.errors = error;
+                    return error;
+                  });
+            }
+          }
+        })
+        .state('tools.tripPrivateInvite', {
+          url: '/tripPrivateInvite',
+          controller: 'TripPrivateInviteController as invite',
+          templateUrl: 'trip_private_invite/invite.html',
+          resolve: {
+            MPTools: 'MPTools',
+            Trip: 'Trip'
+          }
+        })
+        .state('tools.createEvent', {
+          url: '/create-event',
+          template: '<add-event-tool></add-event-tool>',
+          resolve: {
+            MPTools: 'MPTools'
+          }
+        })
+        .state('tools.volunteerContact', {
+          url: '/volunteer-contact',
+          template: '<volunteer-contact></volunteer-contact>',
+          resolve: {
+            MPTools: 'MPTools'
+          }
+        })
+        .state('tools.checkBatchProcessor', {
+          url: '/checkBatchProcessor',
+          controller: 'CheckBatchProcessor as checkBatchProcessor',
+          templateUrl: 'check_batch_processor/checkBatchProcessor.html',
+          data: {
+            isProtected: true,
+            meta: {
+              title: 'Check Batch Processor',
+              description: ''
+            }
+          }
+        })
+        .state('tools.gpExport', {
+          url: '/gpExport',
+          controller: 'GPExportController as gpExport',
+          templateUrl: 'gp_export/gpExport.html'
+        })
         .state('thedaily', {
           parent: 'noSideBar',
           url: '/thedaily',
@@ -644,13 +625,7 @@
           templateUrl: 'thedaily/thedaily.html'
         });
 
-    //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
-    //will handle the routing.
-    //.state('404', {
-    //    templateUrl: __CMS_ENDPOINT__ + '/page-not-found/'
-    //});
-
-    $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/');
   }
 
   function addTrailingSlashIfNecessary(link) {
