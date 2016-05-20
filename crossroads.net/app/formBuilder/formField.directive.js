@@ -81,6 +81,8 @@
           return 'templates/profileGender.html';
         case 'Name':
           return 'templates/profileName.html';
+        case 'CoFacilitator':
+          return 'templates/groupParticipantCoFacilitator.html';
         default:
           return 'templates/defaultField.html';
       }

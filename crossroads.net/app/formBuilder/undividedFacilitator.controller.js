@@ -17,7 +17,8 @@
       groupRoleId: constants.GROUP.ROLES.LEADER,
       childCareNeeded: false,
       sendConfirmationEmail: false,
-      attributeTypes: {},
+      singleAttributes: {},
+      attributeTypes: {}
     };
 
     vm.responses = {};
@@ -79,7 +80,7 @@
     }
 
     function saveGroup() {
-        var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
+        //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
         var coFacilitator = vm.responses[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
         if (coFacilitator && coFacilitator !== '') {
@@ -90,8 +91,7 @@
             },
             notes: coFacilitator,
           };
-
-          singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+          vm.responses.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
         }
 
         // var participant = [{
