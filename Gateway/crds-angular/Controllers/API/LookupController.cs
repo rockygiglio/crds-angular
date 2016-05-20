@@ -69,12 +69,37 @@ namespace crds_angular.Controllers.API
                     case "ministries":
                         ret = _lookupService.Ministries(t);
                         break;
+                    case "childcarelocations":
+                        ret = _lookupService.ChildcareLocations(t);
+                        break;
                     default:
                         break;
                 }
                 if (ret.Count == 0)
                 {
                     return this.BadRequest(string.Format("table: {0}", table));
+                }
+                return Ok(ret);
+            });
+        }
+
+        /// <summary>
+        /// Get lookup values for table passed in
+        /// </summary>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/group/{congregationid}/{ministryid}")]
+        [HttpGet]
+        public IHttpActionResult FindGroups(string congregationid, string ministryid)
+        {
+            return Authorized(t =>
+            {
+                var ret = new List<Dictionary<string, object>>();
+                ret = _lookupService.GroupsByCongregationAndMinistry(t, congregationid, ministryid);
+
+                if (ret.Count == 0)
+                {
+                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationid, ministryid));
                 }
                 return Ok(ret);
             });

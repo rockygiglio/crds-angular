@@ -7,8 +7,57 @@
   <div ng-if="request.viewReady"> 
     <h1> Childcare Request </h1>
     <form name="request.childcareRequest" novalidate ng-submit="request.submit()">
-      
-      <input type="submit" value="submit">
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="congregation">Congregation</label>
+      	<select type="text" name="congregation">
+      		<option>abcd</option>
+      		<option>efgh</option>
+      	</select>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="ministry">Ministry</label>
+      	<select type="text" name="ministry">
+      		<option>1234</option>
+      		<option>5678</option>
+      	</select>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="group">Group</label>
+      	<select type="text" name="group">
+      		<option>Cats</option>
+      		<option>Dogs</option>
+      	</select>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="startDate">Start Date</label>
+      	<input type="text" name="startDate"/>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="endDate">End Date</label>
+      	<input type="text" name="endDate"/>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="frequency">Frequency</label>
+      	<input type="text" name="frequency"/>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="preferredTime">Preferred Time</label>
+      	<select type="text" name="preferredTime">
+      		<option>Now till Later</option>
+      		<option>Then till Later</option>
+      	</select>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label required" for="childrenAttending">Estimated # of Children</label>
+      	<input type="text" name="childrenAttending"/>
+      </div>
+      <div class="form-group col-sm-6">
+      	<label class="control-label" for="notes">Notes</label>
+      	<input type="text" name="notes"/>
+      </div>
+      <div class="form-group">
+      	<input class="btn btn-primary btn-sm" type="submit" value="submit">
+      </div>
     </form>
   </div>
 </div>

@@ -100,5 +100,18 @@ namespace MinistryPlatform.Translation.Services
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Ministries"), token);
         }
 
+        public List<Dictionary<string, object>> ChildcareLocations(string token)
+        {
+            return _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("CongregationsWithChildcarePageView"), token, "", "");
+        }
+
+        public List<Dictionary<string, object>> GroupsByCongregationAndMinistry(string token, string congregationid, string ministryid)
+        {
+            var searchString = string.Format("{0},{1},", congregationid, ministryid);
+
+            var groups =  _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("GroupsByCongregationAndMinistry"), token, searchString);
+            return groups;
+        }
+
     }
 }
