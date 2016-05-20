@@ -1,7 +1,7 @@
 USE MinistryPlatform
 GO
 
---DROP TABLE cr_Childcare_Requests;
+DROP TABLE cr_Childcare_Requests;
 
 CREATE TABLE [dbo].[cr_Childcare_Requests](
 	[Childcare_Request_ID] [int] IDENTITY(1,1) NOT NULL,
