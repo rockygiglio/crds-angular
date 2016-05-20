@@ -83,6 +83,28 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Get lookup values for table passed in
+        /// </summary>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/group/{congregationid}/{ministryid}")]
+        [HttpGet]
+        public IHttpActionResult FindGroups(string congregationid, string ministryid)
+        {
+            return Authorized(t =>
+            {
+                var ret = new List<Dictionary<string, object>>();
+                ret = _lookupService.GroupsByCongregationAndMinistry(t, congregationid, ministryid);
+
+                if (ret.Count == 0)
+                {
+                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationid, ministryid));
+                }
+                return Ok(ret);
+            });
+        }
+
         [ResponseType(typeof (Dictionary<string, object>))]
         [HttpGet]
         [Route("api/lookup/{userId}/find/{email?}")]
