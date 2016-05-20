@@ -9,6 +9,8 @@ class RequestChildcareController {
     this._CRDS_TOOLS_CONSTANTS = CRDS_TOOLS_CONSTANTS;
     this._$log = $log;
     this.params = MPTools.getParams();
+    this.minDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() + 7);
 
     this.currentRequest = Number(this.params.recordId);
     this.viewReady = true;
