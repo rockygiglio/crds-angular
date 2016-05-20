@@ -271,6 +271,7 @@
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
+    <Compile Include="Controllers\API\FormBuilderController.cs" />
     <Compile Include="Controllers\API\GoVolunteerController.cs" />
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
@@ -611,6 +612,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\FormBuilder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

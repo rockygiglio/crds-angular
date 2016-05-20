@@ -3,9 +3,9 @@
 
   module.exports = UndividedFacilitatorCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData', 'Profile'];
+  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData', 'Profile', 'FormBuilderService'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile) {
+  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile, FormBuilderService) {
     var vm = this;
 
     var constants = require('crds-constants');
@@ -48,6 +48,14 @@
         });
 
       });
+      FormBuilderService.PageView.query({pageView: 92727})
+        .$promise.then(function(data){         
+          //TODO make the fields generic
+          vm.responses.availableGroups = data;
+        }
+      );
+
+      
     }
 
     function save(){
@@ -110,7 +118,7 @@ debugger;
         var participants = [vm.responses.groupParticipant];
         //TODO groupId will change with new groups
         Group.Participant.save({
-          groupId: constants.GROUP.GROUP_ID.UNDIVIDED_FACILITATOR,
+          groupId: formField.responses.groupId,
         }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;

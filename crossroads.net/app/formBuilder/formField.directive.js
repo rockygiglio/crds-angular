@@ -73,14 +73,22 @@
       switch(field.mPField) {
         case 'Childcare':
           return 'templates/groupParticipantChildcare.html';
+        case 'CoFacilitator':
+          return 'templates/groupParticipantCoFacilitator.html';  
         case 'Email':
           return 'templates/profileEmail.html';
         case 'Ethnicity':
           return 'templates/profileEthnicity.html';
+        case 'FacilitatorTraining':
+          return 'templates/groupParticipantFacilitatorTraining.html';  
         case 'Gender':
           return 'templates/profileGender.html';
+        case 'KickOffEvent':
+          return 'templates/groupParticipantKickOffEvent.html';  
         case 'Name':
           return 'templates/profileName.html';
+        case 'Groups': //this is used to get the sessions and will need to be refactored
+          return 'templates/groupParticipantPreferredSession.html';  
         default:
           return 'templates/defaultField.html';
       }

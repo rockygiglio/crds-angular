@@ -5,7 +5,7 @@
     <input type="radio"
             name="gender"
             ng-value="genders.dp_RecordID"
-            ng-model="formField.responses.profileData.person.genderId"
+            ng-model="formField.responses.groupParticipant.coFacilitator"
             required /> {{genders.dp_RecordName}}
     </label>
     <ng-messages for="profile.pform.gender.$error" ng-if="profile.validation.showErrors(profile.pform, 'gender')">
