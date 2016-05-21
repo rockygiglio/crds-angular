@@ -22,10 +22,10 @@ DECLARE @Attribute_Names AS TABLE (Attribute_ID INT, Attribute_Name VARCHAR(75),
 INSERT INTO @Attribute_Names
 	(Attribute_ID, Attribute_Name, [Description], Sort_Order)
 	VALUES
-	(@Attribute_ID_Base, 'New Facilitator, Saturday, July 16 9-3pm Oakley', NULL, 1),
-	(@Attribute_ID_Base+1, 'New Facilitator, Saturday, July 30 9-3pm Mason', NULL, 2),
-	(@Attribute_ID_Base+2, 'Previous Facilitator, Saturday, July 16 9-11am Oakley', NULL, 3),
-	(@Attribute_ID_Base+3, 'Previous Facilitator, Saturday, July 30 9-11am Mason', NULL, 4)
+	(@Attribute_ID_Base, 'NEW Facilitator - Saturday, July 16  9:00 - 3:00pm - OAKLEY', NULL, 1),
+	(@Attribute_ID_Base+1, 'NEW Facilitator - Saturday, July 30  9:00 - 3:00pm - MASON', NULL, 2),
+	(@Attribute_ID_Base+2, 'EXPERIENCED Facilitator - Saturday, July 16  9:00 - 11:00am - OAKLEY', NULL, 3),
+	(@Attribute_ID_Base+3, 'EXPERIENCED Facilitator - Saturday, July 30  9:00 - 11:00am - MASON', NULL, 4)
 
 MERGE [dbo].[Attributes] AS a
 USING @Attribute_Names AS tmp
