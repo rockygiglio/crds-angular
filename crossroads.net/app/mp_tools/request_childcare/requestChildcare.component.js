@@ -1,4 +1,4 @@
-import controller from './requestChildcare.controller';
+import controller  from './requestChildcare.controller';
 
 RequestChildcareComponent.$inject = [ ];
 

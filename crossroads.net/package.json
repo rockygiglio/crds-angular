@@ -4,15 +4,12 @@
   "description": "Crossroads Church Web Presence",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
+    "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/crdschurch/crds-angular"
-  },
-  "scripts": {
-    "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
-    "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev"
   },
   "author": "Matt Silbernagel",
   "license": "ISC",
@@ -56,10 +53,11 @@
     "karma-jasmine-html-reporter": "^0.1.8",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
     "karma-teamcity-reporter": "^0.1.2",
     "karma-webpack": "^1.7.0",
-    "ngtemplate-loader": "^1.0.0",
     "ng-annotate-loader": "0.0.10",
+    "ngtemplate-loader": "^1.0.0",
     "node-sass": "~3.4.2",
     "phantomjs-polyfill": "0.0.1",
     "protractor": "^2.0.0",
@@ -109,7 +107,6 @@
     "angular-aside": "./lib/angular-aside.js",
     "angular-match-media": "./lib/angular-match-media.js",
     "angular-mailchimp": "./lib/angular-mailchimp.js",
-    "angular-aside": "./lib/angular-aside.js",
     "angular-image-crop": "./lib/ng-img-crop.js",
     "angulartics-gtm": "./node_modules/angulartics/src/angulartics-gtm.js",
     "angular-payments": "./lib/angular.payments.js"
