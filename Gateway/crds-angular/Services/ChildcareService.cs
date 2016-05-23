@@ -99,6 +99,20 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendChildcareRequestNotification(int childcareRequestId, ChildcareRequest request)
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareConfirmationTemplate");
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
+            var template = _communicationService.GetTemplate(templateId);
+            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            const int domainId = 1;
+
+            var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId);
+
+
+        }
+
+
         private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareConfirmationTemplate");
