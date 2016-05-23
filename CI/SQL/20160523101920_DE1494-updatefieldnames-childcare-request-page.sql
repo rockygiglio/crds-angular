@@ -9,8 +9,8 @@ SET Default_Field_List = 'Requester_ID_Table.[Display_Name] AS [Requester]
 						  , cr_Childcare_Requests.[Start_Date] AS [Start Date] 
 						  , cr_Childcare_Requests.[End_Date] AS [End Date] 
 						  , cr_Childcare_Requests.[Frequency] AS [Frequency] 
-						  , cr_Childcare_Requests.[Time_Frame] AS [Childcare Session] 
-						  , cr_Childcare_Requests.[No_of_Children_Attending] AS [Est. No of Children Attending] 
+						  , cr_Childcare_Requests.[Childcare_Session] AS [Childcare Session] 
+						  , cr_Childcare_Requests.[Est_No_of_Children] AS [Est. No of Children] 
 						  , cr_Childcare_Requests.[Notes] AS [Notes] 
 						  , Request_Status_ID_Table.[Request_Status] AS [Request Status]'
 WHERE Display_Name = 'Childcare Requests';
