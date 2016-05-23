@@ -49,14 +49,19 @@
         });
 
       });
-      FormBuilderService.PageView.query({pageView: 92727})
-        .$promise.then(function(data){         
+      // FormBuilderService.PageView.query({pageView: 92727})
+      //   .$promise.then(function(data){
+      //     //TODO make the fields generic
+      //     vm.responses.availableGroups = data;
+
+      FormBuilderService.Groups.query({templateType: "GroupsUndivided"})
+        .$promise.then(function(data){
           //TODO make the fields generic
           vm.responses.availableGroups = data;
         }
       );
 
-      
+
     }
 
     function save(){
