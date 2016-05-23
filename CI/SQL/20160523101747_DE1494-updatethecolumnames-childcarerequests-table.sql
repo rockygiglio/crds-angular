@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[cr_Childcare_Requests](
 	[End_Date] [Date] NOT NULL,
 	[Frequency] [nvarchar](50) NOT NULL,
 	[Childcare_Session] [nvarchar](100) NOT NULL,
-	[Est_No_of_Children_Attending] [int] NOT NULL,
+	[Est_No_of_Children] [int] NOT NULL,
 	[Notes] [nvarchar](250) NULL,
 	[Request_Status_ID] [int] NOT NULL,
 	[Domain_ID] [int] NOT NULL,
