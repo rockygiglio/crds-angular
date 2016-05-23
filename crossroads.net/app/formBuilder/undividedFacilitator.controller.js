@@ -47,10 +47,8 @@
         });
 
       });
-debugger;
-      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'}) //GroupsUndivided needs to come from FormBuilderService
+      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'}) //GroupsUndivided needs to come from formField.field.mpField
         .$promise.then(function(data){
-          vm.responses.availableGroups = data;
           vm.data.availableGroups = data;
         }
       );
