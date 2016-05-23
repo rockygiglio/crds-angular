@@ -8,6 +8,7 @@
     function FormBuilderService($resource) {
         return {
            Groups: $resource( __API_ENDPOINT__ +  'api/formbuilder/groups/:templateType'),
+           Attributes: $resource( __API_ENDPOINT__ +  'api/attributetype/:attributeTypeId'),
         }
     }
 

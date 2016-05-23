@@ -7,6 +7,7 @@
 
   function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile, FormBuilderService) {
     var vm = this;
+    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -47,13 +48,18 @@
         });
 
       });
+
       FormBuilderService.Groups.query({templateType: 'GroupsUndivided'}) //GroupsUndivided needs to come from formField.field.mpField
         .$promise.then(function(data){
           vm.data.availableGroups = data;
         }
       );
 
-
+      FormBuilderService.Attributes.query({attributeTypeId: '85'})
+        .$promise.then(function(data){
+          vm.data.availableFacilitatorTraining = data;
+        }
+      );
     }
 
     function save(){
