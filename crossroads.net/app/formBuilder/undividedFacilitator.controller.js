@@ -21,7 +21,7 @@
       attributeTypes: {}
     };
 
-    vm.responses = {};
+    vm.data = {};
     vm.saving = false;
     vm.save = save;
     vm.viewReady = false;
@@ -32,18 +32,16 @@
       //TODO only load profile data if profile field in CMS form builder
       ProfileReferenceData.getInstance().then(function(response) {
 
-        vm.responses.genders = response.genders;
-        vm.responses.maritalStatuses = response.maritalStatuses;
-        vm.responses.serviceProviders = response.serviceProviders;
-        vm.responses.groupParticipant = participant;
-        //vm.states = response.states;
-        //vm.countries = response.countries;
+        vm.data.genders = response.genders;
+        vm.data.maritalStatuses = response.maritalStatuses;
+        vm.data.serviceProviders = response.serviceProviders;
+        vm.data.groupParticipant = participant;   
         //vm.crossroadsLocations = response.crossroadsLocations;
         var contactId = Session.exists('userId');
 
         Profile.Person.get({contactId: contactId},function(data) {
-          vm.responses.profileData = { person: data };
-          vm.responses.ethnicities = vm.responses.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
+          vm.data.profileData = { person: data };
+          vm.data.ethnicities = vm.data.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
 
           vm.viewReady = true;
         });
@@ -57,7 +55,7 @@
       FormBuilderService.Groups.query({templateType: "GroupsUndivided"})
         .$promise.then(function(data){
           //TODO make the fields generic
-          vm.responses.availableGroups = data;
+          vm.data.availableGroups = data;
         }
       );
 
@@ -78,10 +76,10 @@
     }
 
     function savePersonal() {
-        vm.responses.profileData.person['State/Region'] = vm.responses.profileData.person.State;
+        vm.data.profileData.person['State/Region'] = vm.data.profileData.person.State;
         // TODO: See if there is a better way to pass the server check for changed email address
-        vm.responses.profileData.person.oldEmail = vm.responses.profileData.person.emailAddress;
-        vm.responses.profileData.person.$save(function() {
+        vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
+        vm.data.profileData.person.$save(function() {
            $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
            vm.saving = false;
          },
@@ -94,7 +92,7 @@
 
     function saveGroup() {
         //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
-        var coFacilitator = vm.responses[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
+        var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
         if (coFacilitator && coFacilitator !== '') {
 
@@ -104,26 +102,13 @@
             },
             notes: coFacilitator,
           };
-          vm.responses.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
-        }
-
-        // var participant = [{
-        //   capacity: 1,
-        //   contactId: parseInt(Session.exists('userId')),
-        //   groupRoleId: constants.GROUP.ROLES.LEADER,
-        //   childCareNeeded: vm.responses.Childcare,
-        //   sendConfirmationEmail: false,
-        //   singleAttributes: singleAttributes,
-        //   attributeTypes: {},
-        // }];
-
-        //participant.childCareNeeded = vm.responses.groupParticipant.childCareNeeded;
-        //participant.singleAttributes = singleAttributes;
+          vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+        }     
 debugger;
-        var participants = [vm.responses.groupParticipant];
+        var participants = [vm.data.groupParticipant];
         //TODO groupId will change with new groups
         Group.Participant.save({
-          groupId: formField.responses.groupId,
+          groupId: formField.data.groupId,
         }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;
