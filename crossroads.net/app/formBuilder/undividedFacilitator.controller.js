@@ -49,14 +49,9 @@
         });
 
       });
-      // FormBuilderService.PageView.query({pageView: 92727})
-      //   .$promise.then(function(data){
-      //     //TODO make the fields generic
-      //     vm.responses.availableGroups = data;
-
-      FormBuilderService.Groups.query({templateType: "GroupsUndivided"})
+debugger;
+      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'}) //GroupsUndivided needs to come from FormBuilderService
         .$promise.then(function(data){
-          //TODO make the fields generic
           vm.responses.availableGroups = data;
         }
       );
