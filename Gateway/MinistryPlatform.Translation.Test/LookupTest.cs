@@ -177,5 +177,18 @@ namespace MinistryPlatform.Translation.Test
             var groups = _lookupService.GroupsByCongregationAndMinistry(token,"1","11");
             Assert.IsNotEmpty(groups);
         }
+
+        [Test]
+        public void ShouldFindChildcareTimes()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            var contactId = _fixture.GetContactId(token);
+            Assert.IsNotNull(contactId);
+
+            var groups = _lookupService.ChildcareTimesByCongregation(token, "7");
+            Assert.IsNotEmpty(groups);
+        }
     }
 }

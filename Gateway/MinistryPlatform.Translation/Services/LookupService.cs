@@ -112,6 +112,12 @@ namespace MinistryPlatform.Translation.Services
             var groups =  _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("GroupsByCongregationAndMinistry"), token, searchString);
             return groups;
         }
+        public List<Dictionary<string, object>> ChildcareTimesByCongregation(string token, string congregationid)
+        {
+            var searchString = string.Format("{0},", congregationid);
 
+            var groups = _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("ChildcareTimesByCongregation"), token, searchString);
+            return groups;
+        }
     }
 }
