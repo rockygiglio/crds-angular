@@ -107,14 +107,14 @@ namespace MinistryPlatform.Translation.Services
 
         public List<Dictionary<string, object>> GroupsByCongregationAndMinistry(string token, string congregationid, string ministryid)
         {
-            var searchString = string.Format("{0},{1},", congregationid, ministryid);
+            var searchString = string.Format("\"{0}\",\"{1}\",", congregationid, ministryid);
 
             var groups =  _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("GroupsByCongregationAndMinistry"), token, searchString);
             return groups;
         }
         public List<Dictionary<string, object>> ChildcareTimesByCongregation(string token, string congregationid)
         {
-            var searchString = string.Format("{0},", congregationid);
+            var searchString = string.Format("\"{0}\",", congregationid);
 
             var groups = _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("ChildcareTimesByCongregation"), token, searchString);
             return groups;

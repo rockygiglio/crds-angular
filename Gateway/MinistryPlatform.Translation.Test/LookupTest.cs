@@ -187,7 +187,7 @@ namespace MinistryPlatform.Translation.Test
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
 
-            var groups = _lookupService.ChildcareTimesByCongregation(token, "7");
+            var groups = _lookupService.ChildcareTimesByCongregation(token, "1");
             Assert.IsNotEmpty(groups);
         }
     }
