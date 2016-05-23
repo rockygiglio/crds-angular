@@ -14,21 +14,21 @@
 
   //Require Templates
   require('./templates/formBuilder.html');
-  require('./templates/defaultField.html');
-  require('./templates/editableBooleanField.html');
-  require('./templates/editableCheckbox.html');
-  require('./templates/editableCheckboxGroupField.html');
-  require('./templates/editableNumericField.html');
-  require('./templates/editableRadioField.html');
-  require('./templates/editableTextField.html');
-  require('./templates/groupParticipantChildcare.html');
-  require('./templates/groupParticipantCoFacilitator.html');
-  require('./templates/groupParticipantFacilitatorTraining.html');  
-  require('./templates/groupParticipantKickOffEvent.html'); 
-  require('./templates/groupParticipantPreferredSession.html'); 
-  require('./templates/profileEmail.html');
-  require('./templates/profileEthnicity.html');  
-  require('./templates/profileGender.html'); 
-  require('./templates/profileName.html');
+  require('./templates/default/defaultField.html');
+  require('./templates/default/editableBooleanField.html');
+  require('./templates/default/editableCheckbox.html');
+  require('./templates/default/editableCheckboxGroupField.html');
+  require('./templates/default/editableNumericField.html');
+  require('./templates/default/editableRadioField.html');
+  require('./templates/default/editableTextField.html');
+  require('./templates/groupParticipant/Childcare.html');
+  require('./templates/groupParticipant/CoFacilitator.html');
+  require('./templates/groupParticipant/FacilitatorTraining.html');  
+  require('./templates/groupParticipant/KickOffEvent.html'); 
+  require('./templates/groupParticipant/PreferredSession.html'); 
+  require('./templates/profile/Email.html');
+  require('./templates/profile/Ethnicity.html');  
+  require('./templates/profile/Gender.html'); 
+  require('./templates/profile/Name.html');
   
 })();

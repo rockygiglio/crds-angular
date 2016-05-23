@@ -10,7 +10,7 @@
       restrict: 'E',
       scope: {
         field: '=?',
-        responses: '=?'
+        data: '=?'
       },
       link: function(scope, element) {
         var templateUrl = getTemplateUrl(scope.formField.field);
@@ -47,24 +47,24 @@
     function getTemplateUrl(field) {
       switch (field.className) {
         case 'EditableBooleanField':
-          return 'templates/editableBooleanField.html';
+          return 'default/editableBooleanField.html';
         case 'EditableCheckbox':
-          return 'templates/editableCheckbox.html';
+          return 'default/editableCheckbox.html';
         case 'EditableCheckboxGroupField':
-          return 'templates/editableCheckboxGroupField.html';
+          return 'default/editableCheckboxGroupField.html';
         case 'EditableNumericField':
-          return 'templates/editableNumericField.html';
+          return 'default/editableNumericField.html';
         case 'EditableRadioField':
-          return 'templates/editableRadioField.html';
+          return 'default/editableRadioField.html';
         case 'EditableTextField':
-          return 'templates/editableTextField.html';
+          return 'default/editableTextField.html';
         case 'ProfileField':
         case 'GroupParticipantField':
           return getMPTemplateUrl(field);
         case 'EditableFormStep':
           return null;
         default:
-          return 'templates/defaultField.html';
+          return 'default/defaultField.html';
       }
     }
 
@@ -72,25 +72,25 @@
       //TODO: See if we can simplify / possibly strategy pattern
       switch(field.mPField) {
         case 'Childcare':
-          return 'templates/groupParticipantChildcare.html';
+          return 'groupParticipant/Childcare.html';
         case 'CoFacilitator':
-          return 'templates/groupParticipantCoFacilitator.html';  
+          return 'groupParticipant/CoFacilitator.html';  
         case 'Email':
-          return 'templates/profileEmail.html';
+          return 'profile/Email.html';
         case 'Ethnicity':
-          return 'templates/profileEthnicity.html';
+          return 'profile/Ethnicity.html';
         case 'FacilitatorTraining':
-          return 'templates/groupParticipantFacilitatorTraining.html';  
+          return 'groupParticipant/FacilitatorTraining.html';  
         case 'Gender':
-          return 'templates/profileGender.html';
+          return 'profile/Gender.html';
         case 'KickOffEvent':
-          return 'templates/groupParticipantKickOffEvent.html';  
+          return 'groupParticipant/KickOffEvent.html';  
         case 'Name':
-          return 'templates/profileName.html';
+          return 'profile/Name.html';
         case 'Groups': //this is used to get the sessions and will need to be refactored
-          return 'templates/groupParticipantPreferredSession.html';  
+          return 'groupParticipant/PreferredSession.html';  
         default:
-          return 'templates/defaultField.html';
+          return 'default/defaultField.html';
       }
     }
   }
