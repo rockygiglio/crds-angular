@@ -104,6 +104,24 @@ describe('FormBuilder', function() {
 
       expect(templateRequestSpy.$templateRequest.calls.count()).toBe(0);
     });
+    
+    it('should return gender template', function() {
+      scope.field = {className: 'ProfileField', mPField: 'Gender'};
+      var templateString = '<form-field field="field"></form-field>';
+      $compile(angular.element(templateString))(scope)
+      scope.$digest();
+
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('profile/gender.html');
+    });
+    
+    it('should return childcare template', function() {
+      scope.field = {className: 'GroupParticipantField', mPField: 'Childcare'};
+      var templateString = '<form-field field="field"></form-field>';
+      $compile(angular.element(templateString))(scope)
+      scope.$digest();
+
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('groupParticipant/childcare.html');
+    });
 
     it('should return default template', function() {
       scope.field = {className: 'FakeField'};
