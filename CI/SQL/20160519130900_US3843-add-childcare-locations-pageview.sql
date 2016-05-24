@@ -13,7 +13,7 @@ INSERT INTO [dbo].[dp_Page_Views]
            (990
 		   ,'Congregations With Childcare'
            ,288
-           ,'Congregations.[Congregation_ID] AS [Congregation ID] , Congregations.[Congregation_Name] AS [Congregation Name] '
+           ,'Congregations.[Congregation_ID] , Congregations.[Congregation_Name] '
            ,'Childcare_Contact_Table.[Contact_ID] IS NOT NULL '
 		   ,'Congregations.[Congregation_Name]');
 
