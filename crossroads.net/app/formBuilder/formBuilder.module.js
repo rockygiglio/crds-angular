@@ -21,14 +21,14 @@
   require('./templates/default/editableNumericField.html');
   require('./templates/default/editableRadioField.html');
   require('./templates/default/editableTextField.html');
-  require('./templates/groupParticipant/Childcare.html');
-  require('./templates/groupParticipant/CoFacilitator.html');
-  require('./templates/groupParticipant/FacilitatorTraining.html');  
-  require('./templates/groupParticipant/KickOffEvent.html'); 
-  require('./templates/groupParticipant/PreferredSession.html'); 
-  require('./templates/profile/Email.html');
-  require('./templates/profile/Ethnicity.html');  
-  require('./templates/profile/Gender.html'); 
-  require('./templates/profile/Name.html');
+  require('./templates/groupParticipant/childcare.html');
+  require('./templates/groupParticipant/coFacilitator.html');
+  require('./templates/groupParticipant/facilitatorTraining.html');  
+  require('./templates/groupParticipant/kickOffEvent.html'); 
+  require('./templates/groupParticipant/preferredSession.html'); 
+  require('./templates/profile/email.html');
+  require('./templates/profile/ethnicity.html');  
+  require('./templates/profile/gender.html'); 
+  require('./templates/profile/name.html');
   
 })();

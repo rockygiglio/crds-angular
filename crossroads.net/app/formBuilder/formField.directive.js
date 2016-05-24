@@ -72,23 +72,23 @@
       //TODO: See if we can simplify / possibly strategy pattern
       switch(field.mPField) {
         case 'Childcare':
-          return 'groupParticipant/Childcare.html';
+          return 'groupParticipant/childcare.html';
         case 'CoFacilitator':
-          return 'groupParticipant/CoFacilitator.html';  
+          return 'groupParticipant/coFacilitator.html';  
         case 'Email':
-          return 'profile/Email.html';
+          return 'profile/email.html';
         case 'Ethnicity':
-          return 'profile/Ethnicity.html';
+          return 'profile/ethnicity.html';
         case 'FacilitatorTraining':
-          return 'groupParticipant/FacilitatorTraining.html';  
+          return 'groupParticipant/facilitatorTraining.html';  
         case 'Gender':
-          return 'profile/Gender.html';
+          return 'profile/gender.html';
         case 'KickOffEvent':
-          return 'groupParticipant/KickOffEvent.html';  
+          return 'groupParticipant/kickOffEvent.html';  
         case 'Name':
-          return 'profile/Name.html';
+          return 'profile/name.html';
         case 'Groups': //this is used to get the sessions and will need to be refactored
-          return 'groupParticipant/PreferredSession.html';  
+          return 'groupParticipant/preferredSession.html';  
         default:
           return 'default/defaultField.html';
       }
