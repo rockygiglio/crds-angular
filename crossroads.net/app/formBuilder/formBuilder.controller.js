@@ -1,11 +1,11 @@
 (function() {
   'use strict';
 
-  module.exports = UndividedFacilitatorCtrl;
+  module.exports = FormBuilderCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService'];
+  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService) {
+  function FormBuilderCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
