@@ -1,15 +1,19 @@
 (function() {
   'use strict';
 
-  module.exports = FormBuilderService;
+  //angular.module('crdsServices', ['ngResource']);
 
+  module.exports = FormBuilderService;
   FormBuilderService.$inject = ['$resource'];
 
     function FormBuilderService($resource) {
         return {
            Groups: $resource( __API_ENDPOINT__ +  'api/formbuilder/groups/:templateType'),
-           Attributes: $resource( __API_ENDPOINT__ +  'api/attributetype/:attributeTypeId'),
-        }
+           Attribute: $resource( __API_ENDPOINT__ +  'api/attributetype/:attributeTypeId', {
+        get: { method: 'GET', isArray: false }
+      }),
+
+        };
     }
 
-})()
+})();

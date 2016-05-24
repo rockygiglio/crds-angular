@@ -7,10 +7,9 @@
 
   function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile, FormBuilderService) {
     var vm = this;
-    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
-
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+
     //TODO Decide if you member or leader - now always leader
     var participant = {
       capacity: 1,
@@ -48,16 +47,22 @@
         });
 
       });
-
-      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'}) //GroupsUndivided needs to come from formField.field.mpField
+      //TODO GroupsUndivided from   vm.field.mpField  -or- formField.field.mpField
+      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'})
         .$promise.then(function(data){
           vm.data.availableGroups = data;
         }
       );
 
-      FormBuilderService.Attributes.query({attributeTypeId: '85'})
+      FormBuilderService.Attribute.get({attributeTypeId: attributeTypeIds.UNDIVIDED_FACILITATOR_TRAINING})
         .$promise.then(function(data){
           vm.data.availableFacilitatorTraining = data;
+        }
+      );
+
+      FormBuilderService.Attribute.get({attributeTypeId: attributeTypeIds.UNDIVIDED_RSVP_KICKOFF})
+        .$promise.then(function(data){
+          vm.data.availableRsvpKickoff = data;
         }
       );
     }
@@ -76,9 +81,6 @@
     }
 
     function savePersonal() {
-        vm.data.profileData.person['State/Region'] = vm.data.profileData.person.State;
-        // TODO: See if there is a better way to pass the server check for changed email address
-        vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
         vm.data.profileData.person.$save(function() {
            $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
            vm.saving = false;
@@ -104,7 +106,7 @@
           };
           vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
         }
-debugger;
+
         var participants = [vm.data.groupParticipant];
         //TODO groupId will change with new groups
         Group.Participant.save({

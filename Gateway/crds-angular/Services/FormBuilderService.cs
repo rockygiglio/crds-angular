@@ -30,22 +30,20 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupsUndivided(string templateType)
         {
-            int pageViewId;
-            GroupDTO groups;
+            var pageViewId = GetPageViewId(templateType);
+            var groupList = _mpFormBuilderService.GetGroupsUndividedSession(pageViewId);
+            return groupList.Select(Mapper.Map<Group, GroupDTO>).ToList();
+        }
 
+        private int GetPageViewId(string templateType)
+        {
             switch (templateType)
             {
                 case "GroupsUndivided":
-                    pageViewId = _undividedGroupsPageViewId;
-                    break;
+                    return _undividedGroupsPageViewId;
                 default:
                     throw new Exception();
-                    break;
             }
-
-            var groupList = _mpFormBuilderService.GetGroupsUndividedSession(pageViewId);
-            var groupDTOList = groupList.Select(Mapper.Map<Group, GroupDTO>).ToList();
-            return groupDTOList;
         }
 
     }
