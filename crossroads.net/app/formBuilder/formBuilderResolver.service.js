@@ -21,11 +21,17 @@
           return resolvedPromise();
         }
 
-        //TODO GroupsUndivided from   vm.field.mpField  -or- formField.field.mpField
-        // Can probably use lodash to find the name of the templateType
+        var cmsTemplateType = _.find(fields, function(data) {
+          {
+            if (data.templateType !== undefined)
+            {
+              return data.templateType.startsWith('Groups');
+            }
+          }
+        });
 
         return FormBuilderService.Groups.query({
-          templateType: 'GroupsUndivided'
+          templateType: cmsTemplateType.templateType
         }).$promise;
       },
 
