@@ -50,8 +50,8 @@
         });                 
 
         Lookup.query({ table: 'crossroadslocations' }, function(locations) {
-          vm.crossroadsLocations = locations;
-          vm.crossroadsLocations.splice(2, 1);
+          vm.data.crossroadsLocations = locations;
+          vm.data.crossroadsLocations.splice(2, 1);
         });
 
       });
@@ -117,7 +117,7 @@
           };
           vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
         }
-debugger;
+
         var participants = [vm.data.groupParticipant];
         //TODO groupId will change with new groups
         Group.Participant.save({

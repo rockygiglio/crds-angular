@@ -3,7 +3,7 @@
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div class="bordered">
   <select class="form-control col-sm-12"  name="crLocation"  ng-model="formField.data.profileData.person.congregationId"
-        ng-options="location.dp_RecordID as location.dp_RecordName for location in formField.crossroadsLocations | orderBy: ['OnlineSortOrder', 'name']">
+        ng-options="location.dp_RecordID as location.dp_RecordName for location in formField.data.crossroadsLocations | orderBy: ['OnlineSortOrder', 'name']">
   <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
   </select> 
 </div>  

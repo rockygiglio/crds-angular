@@ -3,7 +3,7 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile', 'Lookup', 'ProfileReferenceData'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Lookup'];
 
   function FormField($templateRequest, $compile) {
     return {
@@ -29,18 +29,9 @@
       bindToController: true
     };
 
-    function FormFieldController(Lookup, ProfileReferenceData) {
-      var vm = this;
-//TODO move
-      vm.openBirthdatePicker = openBirthdatePicker;
-      vm.crossroadsLocations = [];
-
-      Lookup.query({ table: 'crossroadslocations' }, function(locations) {
-        vm.crossroadsLocations = locations;
-        vm.crossroadsLocations.splice(2, 1);
-      });
-    
-
+    function FormFieldController(Lookup) {
+      var vm = this;         
+   
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
         vm.attributeType = vm.field.attributeType;
@@ -109,14 +100,7 @@
         default:
           return 'default/defaultField.html';
       }
-    }
-
-    function openBirthdatePicker($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-      this.birthdateOpen = !this.birthdateOpen;
-    }
-
+    } 
   }
 
 })();
