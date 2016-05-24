@@ -3,6 +3,7 @@
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div ng-repeat='attributeRsvpKickoff in formField.data.availableRsvpKickoff.attributes'>
     <label class="radio-inline">
+        <input type="radio"
             name="attributeRsvpKickoff"
             ng-value="attributeRsvpKickoff.attributeId"
             ng-model="attributeRsvpKickoff.selected" /> {{attributeRsvpKickoff.name}}

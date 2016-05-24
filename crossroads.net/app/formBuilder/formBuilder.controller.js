@@ -3,9 +3,9 @@
 
   module.exports = FormBuilderCtrl;
 
-  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService'];
+  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService', 'Lookup'];
 
-  function FormBuilderCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService) {
+  function FormBuilderCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService, Lookup) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -22,7 +22,8 @@
       attributeTypes: {}
     };
 
-    vm.data = {};
+    vm.data = {};  
+    vm.data.openBirthdatePicker = openBirthdatePicker;  
     vm.saving = false;
     vm.save = save;
 
@@ -32,7 +33,7 @@
     vm.data.genders = ContentPageService.resolvedData.genders;
     vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
     vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
-
+    vm.data.locations = ContentPageService.resolvedData.locations;
     // Person
     // TODO: Remove profileData
     vm.data.profileData = {person: ContentPageService.resolvedData.profile};
@@ -47,6 +48,12 @@
     // TODO: get rid of viewReady
     vm.viewReady = true;
 
+    function openBirthdatePicker($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      this.birthdateOpen = !this.birthdateOpen;
+    }
+    
     function save() {
       vm.saving = true;
       try {

@@ -10,7 +10,7 @@
               placeholder="mm/dd/yyyy"
               datepicker-popup="MM/dd/yyyy"
               ng-model='formField.data.profileData.person.dateOfBirth'
-              is-open='formField.birthdateOpen'
+              is-open='formField.data.birthdateOpen'
               max-date={{profile.maxBirthdate}}
               min-date={{profile.oneHundredFiftyYearsAgo}}
               init-date=profile.initDate
@@ -18,7 +18,7 @@
               datepicker-validator
               ng-change="profile.underThirteen()">
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="formField.openBirthdatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            <button type="button" class="btn btn-default" ng-click="formField.data.openBirthdatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
         </span>
       </div>   

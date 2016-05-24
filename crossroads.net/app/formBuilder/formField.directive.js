@@ -3,7 +3,7 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile', 'Lookup'];
+  FormField.$inject = ['$templateRequest', '$compile'];
 
   function FormField($templateRequest, $compile) {
     return {
@@ -29,7 +29,7 @@
       bindToController: true
     };
 
-    function FormFieldController(Lookup) {
+    function FormFieldController() {
       var vm = this;         
    
       // TODO: See if moving the radiobutton specific code to another directive is better than this
@@ -51,17 +51,17 @@
         case 'EditableCheckbox':
           return 'default/editableCheckbox.html';
         case 'EditableCheckboxGroupField':
-          return 'templates/editableCheckboxGroupField.html';        
+          return 'default/editableCheckboxGroupField.html';        
         case 'EditableDropdown':
-          return 'templates/editableDropDownField.html';     
+          return 'default/editableDropDownField.html';     
         case 'EditableNumericField':
           return 'default/editableNumericField.html';
         case 'EditableRadioField':
           return 'default/editableRadioField.html';
         case 'EditableTextField':
-          return 'templates/editableTextField.html';
+          return 'default/editableTextField.html';
         case 'TextFieldReadOnly':
-          return 'templates/textFieldReadOnly.html';  
+          return 'default/textFieldReadOnly.html';  
         case 'ProfileField':
         case 'GroupParticipantField':
           return getCMSTemplateUrl(field);

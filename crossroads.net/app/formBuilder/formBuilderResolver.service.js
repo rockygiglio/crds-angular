@@ -64,6 +64,16 @@
           table: 'genders'
         }).$promise;
       },
+      
+      locations: function(fields) {
+        if (!fieldsService.hasProfile()) {
+          return resolvedPromise();
+        }
+
+        return Lookup.query({
+          table: 'crossroadslocations'
+        }).$promise;
+      },
 
       profile: function(fields, contactId) {
         if (!fieldsService.hasProfile()) {

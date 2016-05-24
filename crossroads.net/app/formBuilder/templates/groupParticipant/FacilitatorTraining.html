@@ -3,6 +3,7 @@
 <label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
 <div ng-repeat='attributeTraining in formField.data.availableFacilitatorTraining.attributes'>
     <label class="radio-inline">
+       <input type="radio"
             name="attributeTraining"
             ng-value="attributeTraining.attributeId"
             ng-model="attributeTraining.selected" /> {{attributeTraining.name}}
