@@ -34,67 +34,7 @@ describe('FormBuilder', function() {
       })
 
     );
-
-    it('should return boolean template', function() {
-      scope.field = {className: 'EditableBooleanField'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableBooleanField.html');
-    });
-
-    it('should return editable checkbox template', function() {
-      scope.field = {className: 'EditableCheckbox'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableCheckbox.html');
-    });
-
-    it('should return editable checkbox group field template', function() {
-      scope.field = {className: 'EditableCheckboxGroupField'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableCheckboxGroupField.html');
-    });
-
-    it('should return editable numeric field template', function() {
-      scope.field = {className: 'EditableNumericField'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableNumericField.html');
-    });
-
-    it('should return editable radio field template', function() {
-      scope.field = {className: 'EditableRadioField'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableRadioField.html');
-    });
-
-    it('should return editable text field template', function() {
-      scope.field = {className: 'EditableTextField'};
-      var templateString = '<form-field field="field"></form-field>';
-
-      $compile(angular.element(templateString))(scope)
-      scope.$digest();
-
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableTextField.html');
-    });
-
+   
     it('should not return a template for editable form step field template', function() {
       scope.field = {className: 'EditableFormStep'};
       var templateString = '<form-field field="field"></form-field>';
