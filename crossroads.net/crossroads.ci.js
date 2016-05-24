@@ -52,6 +52,7 @@ module.exports = function(config) {
     port: 9876,
 
     webpack: {
+      devtool: 'inline-source-map',
       module: {
         loaders: [
           { test: /\.css$/, loader: 'style-loader!css-loader' },
@@ -75,6 +76,10 @@ module.exports = function(config) {
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
+    },
+
+    webpackServer: {
+       noInfo: true // prevent console spamming when running in Karma!
     },
 
     webpackMiddleware: {
