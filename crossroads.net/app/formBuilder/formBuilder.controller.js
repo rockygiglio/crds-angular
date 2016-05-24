@@ -15,7 +15,7 @@
     var participant = {
       capacity: 1,
       contactId: parseInt(Session.exists('userId')),
-      groupRoleId: constants.GROUP.ROLES.LEADER,
+      groupRoleId: constants.GROUP.ROLES.MEMBER,
       childCareNeeded: false,
       sendConfirmationEmail: false,
       singleAttributes: {},
@@ -30,14 +30,11 @@
 
     vm.group = {};
     vm.group.groupId = null;
-
+    
     vm.data.profileData = {person: ContentPageService.resolvedData.profile};
     vm.data.genders = ContentPageService.resolvedData.genders;
     vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
 
-    // FormBuilder
-    vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
-    vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
     vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
     
     vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
@@ -160,9 +157,15 @@
             },
             notes: coFacilitator,
           };
-        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;       
+      }
+      
+      // TODO: Need better way to determine Leader vs. Member
+      if (coFacilitator){
+         vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
       }
 
+      
       var participants = [vm.data.groupParticipant];
 
       Group.Participant.save({
