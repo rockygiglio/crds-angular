@@ -6,6 +6,7 @@
   angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
     .config(require('./formBuilder.routes'))
     .factory('FormBuilderService', require('./formBuilder.service'))
+    .factory('FormBuilderResolverService', require('./formBuilderResolver.service'))
     .directive('formBuilder', require('./formBuilder.directive'))
     .directive('formField', require('./formField.directive'))
     .controller('FormBuilderDefaultCtrl', require('./formBuilderDefault.controller'))
@@ -30,5 +31,5 @@
   require('./templates/profile/ethnicity.html');  
   require('./templates/profile/gender.html'); 
   require('./templates/profile/name.html');
-  
+
 })();

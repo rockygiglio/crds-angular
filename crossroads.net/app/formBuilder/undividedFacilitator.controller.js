@@ -3,9 +3,9 @@
 
   module.exports = UndividedFacilitatorCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ProfileReferenceData', 'Profile', 'FormBuilderService'];
+  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session, ProfileReferenceData, Profile, FormBuilderService) {
+  function UndividedFacilitatorCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -24,55 +24,36 @@
     vm.data = {};
     vm.saving = false;
     vm.save = save;
-    vm.viewReady = false;
 
-    activate();
+    // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
 
-    function activate() {
-      //TODO only load profile data if profile field in CMS form builder
-      ProfileReferenceData.getInstance().then(function(response) {
+    // ProfileReferenceData
+    vm.data.genders = ContentPageService.resolvedData.genders;
+    vm.data.maritalStatuses = ContentPageService.resolvedData.maritalStatuses;
+    vm.data.serviceProviders = ContentPageService.resolvedData.serviceProviders;
+    vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
+    vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
 
-        vm.data.genders = response.genders;
-        vm.data.maritalStatuses = response.maritalStatuses;
-        vm.data.serviceProviders = response.serviceProviders;
-        vm.data.groupParticipant = participant;
-        //vm.crossroadsLocations = response.crossroadsLocations;
-        var contactId = Session.exists('userId');
+    // Person
+    // TODO: Remove profileData
+    vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+    vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
 
-        Profile.Person.get({contactId: contactId},function(data) {
-          vm.data.profileData = { person: data };
-          vm.data.ethnicities = vm.data.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
+    // FormBuilder
+    //TODO make the fields generic
+    vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
 
-          vm.viewReady = true;
-        });
+    vm.data.groupParticipant = participant;
 
-      });
-      //TODO GroupsUndivided from   vm.field.mpField  -or- formField.field.mpField
-      FormBuilderService.Groups.query({templateType: 'GroupsUndivided'})
-        .$promise.then(function(data){
-          vm.data.availableGroups = data;
-        }
-      );
+    // TODO: get rid of viewReady
+    vm.viewReady = true;
 
-      FormBuilderService.Attribute.get({attributeTypeId: attributeTypeIds.UNDIVIDED_FACILITATOR_TRAINING})
-        .$promise.then(function(data){
-          vm.data.availableFacilitatorTraining = data;
-        }
-      );
-
-      FormBuilderService.Attribute.get({attributeTypeId: attributeTypeIds.UNDIVIDED_RSVP_KICKOFF})
-        .$promise.then(function(data){
-          vm.data.availableRsvpKickoff = data;
-        }
-      );
-    }
-
-    function save(){
+    function save() {
       vm.saving = true;
       try {
-          // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
-          savePersonal();
-          saveGroup();
+        // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
+        savePersonal();
+        saveGroup();
       }
       catch (error) {
         vm.saving = false;
@@ -81,10 +62,14 @@
     }
 
     function savePersonal() {
-        vm.data.profileData.person.$save(function() {
+      // set oldName to existing email address to work around password change dialog issue
+      vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
+
+      vm.data.profileData.person.$save(function() {
            $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
            vm.saving = false;
          },
+
          function() {
            $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
            $log.debug('person save unsuccessful');
@@ -93,28 +78,30 @@
     }
 
     function saveGroup() {
-        //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
-        var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
+      //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
+      var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
-        if (coFacilitator && coFacilitator !== '') {
+      if (coFacilitator && coFacilitator !== '') {
 
-          var item = {
+        var item = {
             attribute: {
               attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
             },
             notes: coFacilitator,
           };
-          vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
-        }
+        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+      }
 
-        var participants = [vm.data.groupParticipant];
-        //TODO groupId will change with new groups
-        Group.Participant.save({
+      var participants = [vm.data.groupParticipant];
+
+      //TODO groupId will change with new groups
+      Group.Participant.save({
           groupId: formField.data.groupId,
         }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;
         }, function(error) {
+
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           vm.saving = false;
         });
