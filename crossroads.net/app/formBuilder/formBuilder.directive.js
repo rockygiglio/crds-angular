@@ -23,12 +23,7 @@
     }
 
     function getControllerName($scope) {
-      var controllerName = 'FormBuilderDefaultCtrl';
-      if ($scope.formBuilder && $scope.formBuilder.page && $scope.formBuilder.page.controllerName) {
-        controllerName = $scope.formBuilder.page.controllerName;
-      }
-
-      return controllerName;
+      return 'UndividedFacilitatorCtrl';
     }
   }
 

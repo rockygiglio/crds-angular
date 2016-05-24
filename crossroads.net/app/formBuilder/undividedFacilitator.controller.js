@@ -30,8 +30,6 @@
 
     // ProfileReferenceData
     vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.maritalStatuses = ContentPageService.resolvedData.maritalStatuses;
-    vm.data.serviceProviders = ContentPageService.resolvedData.serviceProviders;
     vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
     vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
 
