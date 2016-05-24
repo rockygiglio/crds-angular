@@ -5,7 +5,7 @@ require('../../app/app');
 
 describe('Refine List Directive', function() {
 
-  var $compile, $rootScope, element, scope, isolateScope, filterState, $httpBackend;
+  var $compile, $rootScope, element, scope, isolateScope, filterState, $httpBackend, $q;
 
   var mockMatt = setupMatt();
   var mockLeslie = setupLeslie();
@@ -321,7 +321,7 @@ describe('Refine List Directive', function() {
     filterState.addFamilyMember(1970611);
     filterState.addTime('08:30:00');
     filterState.addTeam(34911);
-    filterState.addSignUp(yes)
+    filterState.addSignUp(yes);
     isolateScope.filterAll();
     isolateScope.clearFilters();
     expect(isolateScope.servingDays[0].serveTimes.length).toBe(2);
