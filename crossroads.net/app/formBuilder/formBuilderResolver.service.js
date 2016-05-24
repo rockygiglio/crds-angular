@@ -1,23 +1,21 @@
 (function() {
   'use strict';
   module.exports = FormBuilderResolverService;
-  FormBuilderResolverService.$inject = ['Lookup', 'Profile', '$resolve', 'FormBuilderService', '$q'];
+  FormBuilderResolverService.$inject = ['Lookup', 'Profile', '$resolve', 'FormBuilderService', '$q', 'FormBuilderFieldsService'];
 
   // Return a non-singleton object factory for getting the map of data needed
   // by the profile pages.  Controllers should use getInstance() to get a
   // a promise, which will be resolved by the Angular UI Router resolver ($resolve).
   // This is similar to the behavior implemented by the resolve property on a
   // UI Router state.
-  function FormBuilderResolverService(Lookup, Profile, $resolve, FormBuilderService, $q) {
+  function FormBuilderResolverService(Lookup, Profile, $resolve, FormBuilderService, $q, FormBuilderFieldsService) {
     var constants = require('crds-constants');
     var attributeTypeIds = constants.ATTRIBUTE_TYPE_IDS;
-    var groupParticipantField = constants.CMS.FORM_BUILDER.CLASS_NAME.GROUP_PARTICIPANT_FIELD;
-    var profileField = constants.CMS.FORM_BUILDER.CLASS_NAME.PROFILE_FILED;
+    var fieldsService = FormBuilderFieldsService;
 
     var data = {
       availableGroups: function(fields) {
-
-        if (!hasFieldSection(fields, groupParticipantField)) {
+        if (!fieldsService.hasGroupParticipant()) {
           return resolvedPromise();
         }
 
@@ -31,7 +29,7 @@
 
       // TODO: Can we make these more generic?
       undividedFacilitatorTraining: function(fields) {
-        if (!hasFieldSection(fields, groupParticipantField)) {
+        if (!fieldsService.hasGroupParticipant()) {
           return resolvedPromise();
         }
 
@@ -42,7 +40,7 @@
 
       // TODO: Can we make these more generic?
       undividedRsvpKickoff: function(fields) {
-        if (!hasFieldSection(fields, groupParticipantField)) {
+        if (!fieldsService.hasGroupParticipant()) {
           return resolvedPromise();
         }
 
@@ -52,8 +50,7 @@
       },
 
       genders: function(fields) {
-
-        if (!hasFieldSection(fields, profileField)) {
+        if (!fieldsService.hasProfile()) {
           return resolvedPromise();
         }
 
@@ -63,7 +60,7 @@
       },
 
       profile: function(fields, contactId) {
-        if (!hasFieldSection(fields, profileField)) {
+        if (!fieldsService.hasProfile()) {
           return resolvedPromise();
         }
 
@@ -77,12 +74,6 @@
       var deferred = $q.defer();
       deferred.resolve();
       return deferred.promise;
-    }
-
-    function hasFieldSection(fields, section) {
-      return _.some(fields, function(field) {
-        return field.className === section;
-      });
     }
 
     return {
