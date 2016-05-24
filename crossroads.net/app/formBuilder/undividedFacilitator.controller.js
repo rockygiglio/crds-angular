@@ -3,12 +3,13 @@
 
   module.exports = UndividedFacilitatorCtrl;
 
-  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService'];
+  UndividedFacilitatorCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService'];
 
-  function UndividedFacilitatorCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService) {
+  function UndividedFacilitatorCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+    var fieldsService = FormBuilderFieldsService;
 
     //TODO Decide if you member or leader - now always leader
     var participant = {
@@ -29,8 +30,6 @@
 
     // ProfileReferenceData
     vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.maritalStatuses = ContentPageService.resolvedData.maritalStatuses;
-    vm.data.serviceProviders = ContentPageService.resolvedData.serviceProviders;
     vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
     vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
 
@@ -54,6 +53,7 @@
         // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
         // TODO: Need to only show 1 save once all promises
         // TODO: Need to only call saves if the section is used
+
         savePersonal();
         saveGroup();
       }
@@ -64,6 +64,11 @@
     }
 
     function savePersonal() {
+
+      if (!fieldsService.hasProfile()) {
+        return;
+      }
+
       // set oldName to existing email address to work around password change dialog issue
       vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
 
@@ -80,6 +85,10 @@
     }
 
     function saveGroup() {
+      if (!fieldsService.hasGroupParticipant()) {
+        return;
+      }
+
       //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
       var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
