@@ -97,10 +97,13 @@
             },
             notes: coFacilitator,
           };
-        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
-        vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
+        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;       
       }
-
+      
+      if (coFacilitator){
+         vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
+      }
+      
       var participants = [vm.data.groupParticipant];
 
       var group = _.find(vm.data.availableGroups, function(data) {
