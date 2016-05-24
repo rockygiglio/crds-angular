@@ -9,8 +9,6 @@
   // This is similar to the behavior implemented by the resolve property on a
   // UI Router state.
   function FormBuilderResolverService(Lookup, Profile, $resolve, FormBuilderService, $q, FormBuilderFieldsService) {
-    var constants = require('crds-constants');
-    var attributeTypeIds = constants.ATTRIBUTE_TYPE_IDS;
     var fieldsService = FormBuilderFieldsService;
 
     var data = {
@@ -33,26 +31,12 @@
         }).$promise;
       },
 
-      // TODO: Can we make these more generic?
-      availableFacilitatorTraining: function(fields) {
+      attributeTypes: function(fields) {
         if (!fieldsService.hasGroupParticipant()) {
           return resolvedPromise();
         }
 
-        return FormBuilderService.Attribute.get({
-          attributeTypeId: attributeTypeIds.UNDIVIDED_FACILITATOR_TRAINING
-        }).$promise;
-      },
-
-      // TODO: Can we make these more generic?
-      availableRsvpKickoff: function(fields) {
-        if (!fieldsService.hasGroupParticipant()) {
-          return resolvedPromise();
-        }
-
-        return FormBuilderService.Attribute.get({
-          attributeTypeId: attributeTypeIds.UNDIVIDED_RSVP_KICKOFF
-        }).$promise;
+        return FormBuilderService.Attribute.query().$promise;
       },
 
       genders: function(fields) {

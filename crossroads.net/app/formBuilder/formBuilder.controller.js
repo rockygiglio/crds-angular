@@ -28,21 +28,84 @@
 
     // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
 
-    // ProfileReferenceData
-    vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
-    vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
+    vm.group = {};
+    vm.group.groupId = null;
 
-    // Person
-    // TODO: Remove profileData
     vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+    vm.data.genders = ContentPageService.resolvedData.genders;
     vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
 
     // FormBuilder
-    //TODO make the fields generic
+    vm.data.availableFacilitatorTraining = ContentPageService.resolvedData.availableFacilitatorTraining;
+    vm.data.availableRsvpKickoff = ContentPageService.resolvedData.availableRsvpKickoff;
     vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
+    
+    vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+    participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+    participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
     vm.data.groupParticipant = participant;
+
+    function convertAttributeTypes(list) {
+      var results = {}
+      _.each(list, function(item) {
+        results[item.attributeTypeId] = item;
+      });
+      return results;
+    }
+
+    function getMultiSelectAttributeTypes(attributeTypes) {
+      var multiAttributeTypes = _.filter(attributeTypes, function(attributeType) {
+        return attributeType.allowMultipleSelections;
+      });
+
+      var results = {};
+      _.each(multiAttributeTypes, function(attributeType) {
+        var attributes = getMultiAttributes(attributeType);
+
+        results[attributeType.attributeTypeId] = {
+          attributeTypeId: attributeType.attributeTypeId,
+          name: attributeType.name,
+          attributes: attributes,
+        };
+      });
+
+      return results;
+    }
+
+    function getMultiAttributes(attributeType) {
+      return _.map(attributeType.attributes, function(attribute) {
+        var result = {
+          attributeId: attribute.attributeId,
+          name: attribute.name,
+          selected: false,
+          startDate: null,
+          endDate: null,
+          notes: null,
+          sortOrder: attribute.sortOrder,
+          category: attribute.category,
+          categoryDescription: attribute.categoryDescription
+        };
+        return result;
+      });
+    }
+
+    function getSingleSelectAttributeTypes(attributeTypes) {
+      var singleAttributeTypes = _.filter(attributeTypes, function(attributeType) {
+        return !attributeType.allowMultipleSelections;
+      });
+
+      var results = {};
+      _.each(singleAttributeTypes, function(attributeType) {
+        results[attributeType.attributeTypeId] = {
+          attribute: null,
+          notes: null,
+        };
+      });
+
+      return results;
+
+    }
 
     function save() {
       vm.saving = true;
@@ -102,13 +165,8 @@
 
       var participants = [vm.data.groupParticipant];
 
-      var group = _.find(vm.data.availableGroups, function(data) {
-        return data.selected;
-      });
-
-      //TODO groupId will change with new groups
       Group.Participant.save({
-          groupId: group.groupId,
+          groupId: vm.data.group.groupId,
         }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;
