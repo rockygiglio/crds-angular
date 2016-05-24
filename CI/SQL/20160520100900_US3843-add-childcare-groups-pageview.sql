@@ -13,7 +13,7 @@ INSERT INTO [dbo].[dp_Page_Views]
            (991
 		   ,'Childcare Group Selection'
            ,322
-           ,'Congregation_ID_Table.[Congregation_ID] AS [Congregation ID] , Ministry_ID_Table.[Ministry_ID] AS [Ministry ID] , Groups.[Group_ID] AS [Group ID] , Groups.[Group_Name] AS [Group Name] '
+           ,'Congregation_ID_Table.[Congregation_ID] , Ministry_ID_Table.[Ministry_ID] , Groups.[Group_ID] , Groups.[Group_Name] '
            ,'Groups.[End_Date] IS NOT NULL '
 		   ,'Groups.[Group_Name]');
 
