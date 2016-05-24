@@ -4,7 +4,7 @@ require('../../app/formBuilder/formBuilder.module.js');
 require('../../app/app');
 
 describe('FormBuilder', function() {
-  describe('undividedFacilitator.controller', function() {
+  describe('formBuilder.controller', function() {
     var CONSTANTS = require('crds-constants');
     var MODULE = CONSTANTS.MODULES.FORM_BUILDER;
 
@@ -59,7 +59,7 @@ describe('FormBuilder', function() {
         }
       };
 
-      var controller = $controller('UndividedFacilitatorCtrl', {
+      var controller = $controller('FormBuilderCtrl', {
         $rootScope: $rootScope,
         Group: group,
         Session: Session,
@@ -71,7 +71,7 @@ describe('FormBuilder', function() {
     }
          
 
-    xit('loading state should be true while save is running and reset after successful save', function() {
+    it('loading state should be true while save is running and reset after successful save', function() {
       var controller = getController(false);
       controller.responses = {
         childCareNeeded: true,
@@ -87,7 +87,7 @@ describe('FormBuilder', function() {
       expect(controller.saving).toBe(false);
     });
 
-    xit('loading state should be true while save is running and reset after failed save', function() {
+    it('loading state should be true while save is running and reset after failed save', function() {
       var controller = getController(true);
       controller.responses = {
         Childcare: true,
@@ -102,7 +102,7 @@ describe('FormBuilder', function() {
       expect(controller.saving).toBe(false);
     });
 
-    xit('loading state should be false after exception', function() {
+    it('loading state should be false after exception', function() {
       var controller = getController(false);
 
       // Force exception by not unsetting responses object
@@ -113,7 +113,7 @@ describe('FormBuilder', function() {
       expect(controller.saving).toBe(false);
     });
 
-    xit('co-facilitator should be added to the single attributes and original object remain unchanged', function() {
+    it('co-facilitator should be added to the single attributes and original object remain unchanged', function() {
       var controller = getController(false);
       controller.responses = {
         Childcare: true,
@@ -143,7 +143,7 @@ describe('FormBuilder', function() {
       expect(actualCoFacilitator).toEqual(expectedCoFacilitator);
     });
 
-    xit('co-facilitator should not be added to the single attributes', function() {
+    it('co-facilitator should not be added to the single attributes', function() {
       var controller = getController(false);
       controller.responses = {
         Childcare: true,
@@ -163,7 +163,7 @@ describe('FormBuilder', function() {
       expect(participant.singleAttributes[CONSTANTS.ATTRIBUTE_TYPE_IDS.COFACILITATOR]).not.toBeDefined();
     });
 
-    xit('childCareNeeded should not be set', function() {
+    it('childCareNeeded should not be set', function() {
       var controller = getController(false);
       controller.responses = {
         Childcare: false,
@@ -183,7 +183,7 @@ describe('FormBuilder', function() {
       expect(participant.childCareNeeded).toBe(false);
     });
 
-    xit('childCareNeeded should be set', function() {
+    it('childCareNeeded should be set', function() {
       var controller = getController(false);
       controller.responses = {
         Childcare: true,

@@ -106,7 +106,7 @@ describe('FormBuilder', function() {
     });
     
     it('should return gender template', function() {
-      scope.field = {className: 'ProfileField', mPField: 'Gender'};
+      scope.field = {className: 'ProfileField', templateType: 'Gender'};
       var templateString = '<form-field field="field"></form-field>';
       $compile(angular.element(templateString))(scope)
       scope.$digest();
@@ -115,7 +115,7 @@ describe('FormBuilder', function() {
     });
     
     it('should return childcare template', function() {
-      scope.field = {className: 'GroupParticipantField', mPField: 'Childcare'};
+      scope.field = {className: 'GroupParticipantField', templateType: 'Childcare'};
       var templateString = '<form-field field="field"></form-field>';
       $compile(angular.element(templateString))(scope)
       scope.$digest();
