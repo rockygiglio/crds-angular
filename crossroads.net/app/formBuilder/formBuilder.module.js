@@ -6,10 +6,11 @@
   angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
     .config(require('./formBuilder.routes'))
     .factory('FormBuilderService', require('./formBuilder.service'))
+    .factory('FormBuilderFieldsService', require('./formBuilderFields.service'))
+    .factory('FormBuilderResolverService', require('./formBuilderResolver.service'))
     .directive('formBuilder', require('./formBuilder.directive'))
     .directive('formField', require('./formField.directive'))
-    .controller('FormBuilderDefaultCtrl', require('./formBuilderDefault.controller'))
-    .controller('UndividedFacilitatorCtrl', require('./undividedFacilitator.controller'))
+    .controller('FormBuilderCtrl', require('./formBuilder.controller'))
     ;
 
   //Require Templates

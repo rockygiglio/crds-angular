@@ -4,7 +4,7 @@ require('../../app/formBuilder/formBuilder.module.js');
 require('../../app/app');
 
 describe('FormBuilder', function() {
-  describe('undividedFacilitator.controller', function() {
+  describe('formBuilder.controller', function() {
     var CONSTANTS = require('crds-constants');
     var MODULE = CONSTANTS.MODULES.FORM_BUILDER;
 
@@ -14,6 +14,8 @@ describe('FormBuilder', function() {
     var Session;
     var $controller;
     var group;
+    var FormBuilderService;
+    var ContentPageService;
 
     beforeEach(angular.mock.module(function($provide) {
       $provide.value('$state', {
@@ -23,14 +25,14 @@ describe('FormBuilder', function() {
 
       Session = {exists: function() {return 45;}};
 
-      $provide.value('Session', Session);
+      $provide.value('Session', Session, 'FormBuilderService', FormBuilderService,'ContentPageService', ContentPageService );
     }));
 
     beforeEach(angular.mock.module(CONSTANTS.MODULES.COMMON));
     beforeEach(angular.mock.module(MODULE));
 
     beforeEach(
-      inject(function($injector, _$compile_, _$rootScope_, _$controller_, Session, _$q_) {
+      inject(function($injector, _$compile_, _$rootScope_, _$controller_, Session, FormBuilderService, ContentPageService, _$q_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $q = _$q_;
@@ -57,21 +59,25 @@ describe('FormBuilder', function() {
         }
       };
 
-      var controller = $controller('UndividedFacilitatorCtrl', {
+      var controller = $controller('FormBuilderCtrl', {
         $rootScope: $rootScope,
         Group: group,
-        Session: Session
+        Session: Session,
+        FormBuilderService: FormBuilderService,
+        ContentPageService: ContentPageService
       });
-
-      return controller;
+     
+      return controller;      
     }
+         
 
     it('loading state should be true while save is running and reset after successful save', function() {
       var controller = getController(false);
       controller.responses = {
-        Childcare: true,
+        childCareNeeded: true,
         singleAttributes: {},
       };
+      
       controller.responses[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'coFacilitator';
 
       controller.save();

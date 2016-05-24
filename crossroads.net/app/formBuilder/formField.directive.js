@@ -64,7 +64,7 @@
           return 'templates/textFieldReadOnly.html';  
         case 'ProfileField':
         case 'GroupParticipantField':
-          return getMPTemplateUrl(field);
+          return getCMSTemplateUrl(field);
         case 'EditableFormStep':
           return null;
         default:
@@ -72,15 +72,15 @@
       }
     }
 
-    function getMPTemplateUrl(field) {
+    function getCMSTemplateUrl(field) {
       //TODO: See if we can simplify / possibly strategy pattern
-      switch(field.mPField) {
+      switch(field.templateType) {
         case 'Birthday':
           return 'profile/birthdate.html';
         case 'Childcare':
           return 'groupParticipant/childcare.html';
         case 'CoFacilitator':
-          return 'groupParticipant/coFacilitator.html';  
+          return 'groupParticipant/coFacilitator.html';
         case 'Email':
           return 'profile/email.html';
         case 'Ethnicity':
@@ -92,11 +92,11 @@
         case 'KickOffEvent':
           return 'groupParticipant/kickOffEvent.html';  
         case 'Location':
-          return 'profile/location.html';
+          return 'profile/location.html';      
         case 'Name':
           return 'profile/name.html';
-        case 'Groups': //this is used to get the sessions and will need to be refactored
-          return 'groupParticipant/preferredSession.html';  
+        case 'GroupsUndivided':
+          return 'groupParticipant/preferredSession.html';
         default:
           return 'default/defaultField.html';
       }
