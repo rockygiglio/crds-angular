@@ -3,9 +3,8 @@
 
   module.exports = FormBuilder;
 
-  // FormBuilder.$inject = ['$controller'];
+  FormBuilder.$inject = [];
 
-  // function FormBuilder($controller) {
   function FormBuilder() {
     return {
       restrict: 'E',
@@ -17,15 +16,6 @@
       controllerAs: 'formBuilder',
       bindToController: true,
     };
-
-    // function getController($scope, $attrs, $transclude) {
-    //   var controllerName = getControllerName($scope);
-    //   return $controller(controllerName, $scope, $attrs, $transclude);
-    // }
-    //
-    // function getControllerName($scope) {
-    //   return 'UndividedFacilitatorCtrl';
-    // }
   }
 
 })();
