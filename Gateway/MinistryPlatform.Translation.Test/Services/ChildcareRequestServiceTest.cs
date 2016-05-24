@@ -55,11 +55,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Congregation_ID", request.LocationId},
                 {"Ministry_ID", request.MinistryId},
                 {"Group_ID", request.GroupId},
-                {"Childcare_Start_Date", request.StartDate},
-                {"Childcare_End_Date", request.EndDate},
+                {"Start_Date", request.StartDate},
+                {"End_Date", request.EndDate},
                 {"Frequency", request.Frequency},
-                {"Time_Frame", request.PreferredTime},
-                {"No_of_Children_Attending", request.EstimatedChildren},
+                {"Childcare_Session", request.PreferredTime},
+                {"Est_No_of_Children", request.EstimatedChildren},
                 {"Notes", request.Notes},
                 {"Request_Status_ID", _childcareRequestPending}
             };
