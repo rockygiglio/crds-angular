@@ -56,6 +56,8 @@ delete from [dbo].Groups where Group_id in (select group_id from groups where gr
 
 delete from GL_Account_Mapping where program_id in (select program_id from programs where program_name = @tripName);
 
+delete from event_rooms where event_id in (select event_id from events where program_id in (select program_id from programs where program_name = @tripName));
+
 delete from [dbo].events where program_id in (select program_id from programs where program_name = @tripName);
 
 delete from [dbo].programs where program_name = @tripName;

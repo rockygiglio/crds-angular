@@ -276,12 +276,12 @@
 
 
     <div class="row" ng-if="profile.profileData.person.householdId!==undefined">
-      <profile-household household-info='profile.profileData.person' household-form='profile.householdForm' locations='profile.locations' is-collapsed='profile.isHouseholdCollapsed'/>
+      <profile-household modal-instance='profile.modalInstance' household-info='profile.profileData.person' household-form='profile.householdForm' locations='profile.locations' is-collapsed='profile.isHouseholdCollapsed'/>
     </div>
 
     <loading-button
        loading-text='Saving...'
-       normal-text='{{ profile.buttonText }}'
+       normal-text='Save'
        input-type='button'
        input-classes='btn btn-primary'
        ng-class='profile.buttonCss'

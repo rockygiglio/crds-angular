@@ -71,6 +71,21 @@ DELETE FROM group_participants WHERE participant_id in (SELECT participant_id FR
 ---delete event participants
 DELETE FROM event_participants WHERE participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%'));
 
+--Go Cincinnati Stuff
+delete from cr_group_connector_registrations where group_connector_id in (select group_connector_id from cr_group_connectors where primary_registration in (select registration_id from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%'))));
+
+delete from cr_group_connectors where primary_registration in (select registration_id from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%')));
+
+delete from cr_Registration_Children_Attributes where registration_id in (select registration_id from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%')));
+
+delete from cr_Group_Connector_Registrations where registration_id in (select registration_id from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%')));
+
+delete from cr_Registration_Project_Type where registration_id in (select registration_id from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%')));
+
+delete from cr_Registrations where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%'));
+
+delete from participants where participant_id in (SELECT participant_id FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%'));
+
 --- delete participant record
 DELETE FROM participants WHERE Contact_ID in (SELECT Contact_ID FROM contacts WHERE email_address like 'mpcrds+tremplay%');
 

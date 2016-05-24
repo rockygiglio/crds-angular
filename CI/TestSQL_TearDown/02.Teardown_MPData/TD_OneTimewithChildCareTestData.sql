@@ -7,6 +7,10 @@ DELETE FROM Event_Groups WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Gr
 
 DELETE from EVENT_Participants where group_id in (select group_id from groups where group_name like '(t) 1Time Mason Group%');
 
+DELETE FROM Event_Equipment where event_id in (select event_id from events where Event_Title = '(t) 1Time Mason with ChildCare');
+
+DELETE FROM Event_Equipment where event_id in (select event_id from events where Event_Title = '(t) 1Time Mason with ChildCare - Childcare');
+
 DELETE FROM Events WHERE Event_Title = '(t) 1Time Mason with ChildCare';
 
 DELETE FROM Events WHERE Event_Title = '(t) 1Time Mason with ChildCare - Childcare';

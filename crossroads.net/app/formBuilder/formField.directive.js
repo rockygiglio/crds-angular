@@ -10,10 +10,10 @@
       restrict: 'E',
       scope: {
         field: '=?',
-        responses: '=?'
+        data: '=?'
       },
       link: function(scope, element) {
-        var templateUrl = getTemplateUrl(scope.formField.field.className);
+        var templateUrl = getTemplateUrl(scope.formField.field);
         if (templateUrl == null) {
           return;
         }
@@ -31,6 +31,7 @@
 
     function FormFieldController(Lookup, ProfileReferenceData) {
       var vm = this;
+//TODO move
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.crossroadsLocations = [];
 
@@ -38,9 +39,8 @@
         vm.crossroadsLocations = locations;
         vm.crossroadsLocations.splice(2, 1);
       });
-      ProfileReferenceData.getInstance().then(function(response) {
-        vm.genders = response.genders;
-      });
+    
+
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
         vm.attributeType = vm.field.attributeType;
@@ -53,32 +53,61 @@
       }
     }
 
-    function getTemplateUrl(className) {
-      switch (className) {
+    function getTemplateUrl(field) {
+      switch (field.className) {
         case 'EditableBooleanField':
-          return 'templates/editableBooleanField.html';
+          return 'default/editableBooleanField.html';
         case 'EditableCheckbox':
-          return 'templates/editableCheckbox.html';
+          return 'default/editableCheckbox.html';
         case 'EditableCheckboxGroupField':
-          return 'templates/editableCheckboxGroupField.html';
-        case 'EditableDateField':
-          return 'templates/editableDateField.html';
-        case 'EditableDatetimeField':
-          return 'templates/editableDatetimeField.html';
+          return 'templates/editableCheckboxGroupField.html';        
         case 'EditableDropdown':
-          return 'templates/editableDropDownField.html';
+          return 'templates/editableDropDownField.html';     
         case 'EditableNumericField':
-          return 'templates/editableNumericField.html';
+          return 'default/editableNumericField.html';
         case 'EditableRadioField':
-          return 'templates/editableRadioField.html';
+          return 'default/editableRadioField.html';
         case 'EditableTextField':
           return 'templates/editableTextField.html';
         case 'TextFieldReadOnly':
-          return 'templates/textFieldReadOnly.html';          
+          return 'templates/textFieldReadOnly.html';  
+        case 'ProfileField':
+        case 'GroupParticipantField':
+          return getMPTemplateUrl(field);
         case 'EditableFormStep':
           return null;
         default:
-          return 'templates/defaultField.html';
+          return 'default/defaultField.html';
+      }
+    }
+
+    function getMPTemplateUrl(field) {
+      //TODO: See if we can simplify / possibly strategy pattern
+      switch(field.mPField) {
+        case 'Birthday':
+          return 'profile/birthdate.html';
+        case 'Childcare':
+          return 'groupParticipant/childcare.html';
+        case 'CoFacilitator':
+          return 'groupParticipant/coFacilitator.html';  
+        case 'Email':
+          return 'profile/email.html';
+        case 'Ethnicity':
+          return 'profile/ethnicity.html';
+        case 'FacilitatorTraining':
+          return 'groupParticipant/facilitatorTraining.html';  
+        case 'Gender':
+          return 'profile/gender.html';
+        case 'KickOffEvent':
+          return 'groupParticipant/kickOffEvent.html';  
+        case 'Location':
+          return 'profile/location.html';
+        case 'Name':
+          return 'profile/name.html';
+        case 'Groups': //this is used to get the sessions and will need to be refactored
+          return 'groupParticipant/preferredSession.html';  
+        default:
+          return 'default/defaultField.html';
       }
     }
 

@@ -106,6 +106,9 @@ DECLARE @groupsTable table
 
 insert into @groupsTable (group_id) (select group_id from groups where PRIMARY_CONTACT = @contactID);
 
+--Update events this account is the primary contact on
+update events set Primary_contact = 1 where Primary_Contact = @contactID;
+
 --Delete participants from the GROUPS
 DELETE FROM GROUP_PARTICIPANTS where group_id in (select group_id from @groupsTable);
 
