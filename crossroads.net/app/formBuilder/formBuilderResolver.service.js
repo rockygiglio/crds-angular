@@ -30,7 +30,7 @@
       },
 
       // TODO: Can we make these more generic?
-      undividedFacilitatorTraining: function(fields) {
+      availableFacilitatorTraining: function(fields) {
         if (!hasFieldSection(fields, groupParticipantField)) {
           return resolvedPromise();
         }
@@ -41,7 +41,7 @@
       },
 
       // TODO: Can we make these more generic?
-      undividedRsvpKickoff: function(fields) {
+      availableRsvpKickoff: function(fields) {
         if (!hasFieldSection(fields, groupParticipantField)) {
           return resolvedPromise();
         }
