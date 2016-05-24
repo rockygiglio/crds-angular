@@ -42,7 +42,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableBooleanField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableBooleanField.html');
     });
 
     it('should return editable checkbox template', function() {
@@ -52,7 +52,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableCheckbox.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableCheckbox.html');
     });
 
     it('should return editable checkbox group field template', function() {
@@ -62,7 +62,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableCheckboxGroupField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableCheckboxGroupField.html');
     });
 
     it('should return editable numeric field template', function() {
@@ -72,7 +72,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableNumericField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableNumericField.html');
     });
 
     it('should return editable radio field template', function() {
@@ -82,7 +82,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableRadioField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableRadioField.html');
     });
 
     it('should return editable text field template', function() {
@@ -92,7 +92,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/editableTextField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/editableTextField.html');
     });
 
     it('should not return a template for editable form step field template', function() {
@@ -104,6 +104,24 @@ describe('FormBuilder', function() {
 
       expect(templateRequestSpy.$templateRequest.calls.count()).toBe(0);
     });
+    
+    it('should return gender template', function() {
+      scope.field = {className: 'ProfileField', mPField: 'Gender'};
+      var templateString = '<form-field field="field"></form-field>';
+      $compile(angular.element(templateString))(scope)
+      scope.$digest();
+
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('profile/gender.html');
+    });
+    
+    it('should return childcare template', function() {
+      scope.field = {className: 'GroupParticipantField', mPField: 'Childcare'};
+      var templateString = '<form-field field="field"></form-field>';
+      $compile(angular.element(templateString))(scope)
+      scope.$digest();
+
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('groupParticipant/childcare.html');
+    });
 
     it('should return default template', function() {
       scope.field = {className: 'FakeField'};
@@ -111,7 +129,7 @@ describe('FormBuilder', function() {
       $compile(angular.element(templateString))(scope)
       scope.$digest();
 
-      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('templates/defaultField.html');
+      expect(templateRequestSpy.$templateRequest).toHaveBeenCalledWith('default/defaultField.html');
     });
   });
 });
