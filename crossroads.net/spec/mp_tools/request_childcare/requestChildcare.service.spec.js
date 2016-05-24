@@ -14,7 +14,7 @@ describe('Request Childcare Service', () => {
     rootScope = $injector.get('$rootScope');
     resource = $injector.get('$resource');
     httpBackend = $injector.get('$httpBackend');
-    requestChildcareService = new RequestChildcareService(log, lookupService, rootScope, resource );
+    requestChildcareService = new RequestChildcareService(log, lookupService, rootScope, resource);
   }));
 
   afterEach(() => {

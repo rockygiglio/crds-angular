@@ -41,8 +41,8 @@ class RequestChildcareController {
   }
 
   formatPreferredTime(time) {
-    const startTimeArr = time['Childcare Start Time'].split(':');
-    const endTimeArr = time['Childcare End Time'].split(':');
+    const startTimeArr = time['Childcare_Start_Time'].split(':');
+    const endTimeArr = time['Childcare_End_Time'].split(':');
     const startTime = moment().set(
       {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
     const endTime = moment().set(
