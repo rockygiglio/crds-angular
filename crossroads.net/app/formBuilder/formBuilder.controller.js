@@ -3,9 +3,9 @@
 
   module.exports = FormBuilderCtrl;
 
-  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService'];
+  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
 
-  function FormBuilderCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService) {
+  function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -43,9 +43,6 @@
     vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
 
     vm.data.groupParticipant = participant;
-
-    // TODO: get rid of viewReady
-    vm.viewReady = true;
 
     function save() {
       vm.saving = true;
