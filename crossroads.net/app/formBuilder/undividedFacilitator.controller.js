@@ -52,6 +52,8 @@
       vm.saving = true;
       try {
         // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
+        // TODO: Need to only show 1 save once all promises
+        // TODO: Need to only call saves if the section is used
         savePersonal();
         saveGroup();
       }
@@ -94,9 +96,13 @@
 
       var participants = [vm.data.groupParticipant];
 
+      var group = _.find(vm.data.availableGroups, function(data) {
+        return data.selected;
+      });
+
       //TODO groupId will change with new groups
       Group.Participant.save({
-          groupId: formField.data.groupId,
+          groupId: group.groupId,
         }, participants).$promise.then(function(response) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
           vm.saving = false;

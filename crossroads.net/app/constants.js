@@ -67,9 +67,13 @@
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
       },
       FORM_BUILDER: {
+        CLASS_NAME: {
+          GROUP_PARTICIPANT_FIELD: 'GroupParticipantField',
+          PROFILE_FILED: 'ProfileField',
+        },
         FIELD_NAME: {
           COFACILITATOR: 'CoFacilitator',
-        }
+        },
       }
     },
     GROUP: {

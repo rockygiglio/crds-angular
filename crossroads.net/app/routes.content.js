@@ -75,10 +75,13 @@
                 });
 
                 childPromise = childPromise.then(function() {
-                  // TODO: see if we can move away from userId
-                  var contactId = Session.exists('userId');
-                  if (contactId && contactId !== -1) {
-                    return FormBuilderResolverService.getInstance({contactId: contactId});
+                  var fields = ContentPageService.page.fields;
+
+                  if (fields && fields.length > 1) {
+                    return FormBuilderResolverService.getInstance({
+                      contactId: Session.exists('userId'),
+                      fields: fields,
+                    });
                   }
 
                   var deferred = $q.defer();
