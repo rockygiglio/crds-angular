@@ -3,9 +3,9 @@
 
   module.exports = FormBuilderCtrl;
 
-  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'FormBuilderService', 'ContentPageService', 'FormBuilderFieldsService', 'Lookup'];
+  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
 
-  function FormBuilderCtrl($rootScope, Group, Session, FormBuilderService, ContentPageService, FormBuilderFieldsService, Lookup) {
+  function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
     var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -15,7 +15,7 @@
     var participant = {
       capacity: 1,
       contactId: parseInt(Session.exists('userId')),
-      groupRoleId: constants.GROUP.ROLES.LEADER,
+      groupRoleId: constants.GROUP.ROLES.MEMBER,
       childCareNeeded: false,
       sendConfirmationEmail: false,
       singleAttributes: {},
@@ -53,7 +53,7 @@
       $event.stopPropagation();
       this.birthdateOpen = !this.birthdateOpen;
     }
-    
+
     function save() {
       vm.saving = true;
       try {
@@ -108,6 +108,7 @@
             notes: coFacilitator,
           };
         vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;
+        vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
       }
 
       var participants = [vm.data.groupParticipant];

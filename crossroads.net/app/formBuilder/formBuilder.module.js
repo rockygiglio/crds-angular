@@ -16,12 +16,6 @@
   //Require Templates
   require('./templates/formBuilder.html');
   require('./templates/default/defaultField.html');
-  require('./templates/default/editableBooleanField.html');
-  require('./templates/default/editableCheckbox.html');
-  require('./templates/default/editableCheckboxGroupField.html');
-  require('./templates/default/editableNumericField.html');
-  require('./templates/default/editableRadioField.html');
-  require('./templates/default/editableTextField.html');
   require('./templates/groupParticipant/childcare.html');
   require('./templates/groupParticipant/coFacilitator.html');
   require('./templates/groupParticipant/facilitatorTraining.html');  

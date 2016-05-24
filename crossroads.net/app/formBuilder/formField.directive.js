@@ -45,23 +45,7 @@
     }
 
     function getTemplateUrl(field) {
-      switch (field.className) {
-        case 'EditableBooleanField':
-          return 'default/editableBooleanField.html';
-        case 'EditableCheckbox':
-          return 'default/editableCheckbox.html';
-        case 'EditableCheckboxGroupField':
-          return 'default/editableCheckboxGroupField.html';        
-        case 'EditableDropdown':
-          return 'default/editableDropDownField.html';     
-        case 'EditableNumericField':
-          return 'default/editableNumericField.html';
-        case 'EditableRadioField':
-          return 'default/editableRadioField.html';
-        case 'EditableTextField':
-          return 'default/editableTextField.html';
-        case 'TextFieldReadOnly':
-          return 'default/textFieldReadOnly.html';  
+      switch (field.className) {  
         case 'ProfileField':
         case 'GroupParticipantField':
           return getCMSTemplateUrl(field);
