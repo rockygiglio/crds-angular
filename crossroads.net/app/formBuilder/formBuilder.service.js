@@ -1,8 +1,6 @@
 (function() {
   'use strict';
 
-  //angular.module('crdsServices', ['ngResource']);
-
   module.exports = FormBuilderService;
   FormBuilderService.$inject = ['$resource'];
 
