@@ -8,7 +8,6 @@
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
     var constants = require('crds-constants');
-    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     var fieldsService = FormBuilderFieldsService;
 
     activate();
