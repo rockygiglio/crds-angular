@@ -35,7 +35,7 @@
     vm.data.profileData = {person: ContentPageService.resolvedData.profile};
     vm.data.genders = ContentPageService.resolvedData.genders;
     vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
-
+    vm.data.locations = ContentPageService.resolvedData.locations;
     vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
     
     vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
