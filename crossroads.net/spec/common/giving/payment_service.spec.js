@@ -382,6 +382,7 @@ describe('PaymentService', function() {
       GiveTransferService.program = { ProgramId: 1 };
       GiveTransferService.givingType = 'week';
       GiveTransferService.recurringStartDate = startDate;
+      
     });
 
     it('should call createToken and create a new recurring gift using the token', function() {
@@ -447,14 +448,14 @@ describe('PaymentService', function() {
     });
   });
 
-  describe('function donateToProgram', function() {
-    it('should successfully create a donation', function() {
-      GiveTransferService.campaign = 'ABCD';
+  describe('function donateToProgram', () => {
+    it('should successfully create a donation', () => {
+      GiveTransferService.campaign = {};
       GiveTransferService.campaign.pledgeDonorId = 111;
       var postData = {
         program_id: 'Program',
         pledge_campaign_id: 321,
-        pledge_donor_id:  GiveTransferService.campaign.pledgeDonorId,
+        pledge_donor_id: GiveTransferService.campaign.pledgeDonorId,
         amount: '1234',
         donor_id: 'Donor'
       };
