@@ -12,7 +12,7 @@
 
     vm.hasForm = hasForm;
 
-    activate()
+    activate();
 
     function activate() {
       if (!hasForm()) {

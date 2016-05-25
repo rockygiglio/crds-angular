@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 StartDate = DateTime.Today,
                 EndDate = DateTime.Today.AddDays(7),
                 Frequency = "Weekly",
-                PreferredTime = 1,
+                PreferredTime = "8:00AM to 9:00AM",
                 EstimatedChildren = 30,
                 Notes = "This is a test request"
             };
