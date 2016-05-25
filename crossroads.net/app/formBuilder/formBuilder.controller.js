@@ -1,14 +1,14 @@
 (function() {
   'use strict';
 
+  var constants = require('crds-constants');
+
   module.exports = FormBuilderCtrl;
 
   FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
 
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
-    var constants = require('crds-constants');
-    var fieldsService = FormBuilderFieldsService;
 
     activate();
 
@@ -27,15 +27,15 @@
       participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
-      vm.data = {};
+
       vm.saving = false;
       vm.save = save;
-
-      // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
 
       vm.group = {};
       vm.group.groupId = null;
 
+      // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
+      vm.data = {};
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups
@@ -122,7 +122,7 @@
     }
 
     function savePersonal() {
-      if (!fieldsService.hasProfile()) {
+      if (!FormBuilderFieldsService.hasProfile()) {
         return;
       }
 
@@ -142,7 +142,7 @@
     }
 
     function saveGroup() {
-      if (!fieldsService.hasGroupParticipant()) {
+      if (!FormBuilderFieldsService.hasGroupParticipant()) {
         return;
       }
 
