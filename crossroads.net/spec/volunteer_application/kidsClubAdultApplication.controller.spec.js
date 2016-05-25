@@ -38,7 +38,8 @@ describe('KidsClub Adult Application Controller', function() {
   var mockContactId = 12345;
   var mockResponseId = 34567;
   var mockPageInfo = {
-    accessDenied: '<p>Oops! Looks like you are not authorized to access this information. If you think this is a mistake, please contact the system administrator.</p>',
+    accessDenied: `<p>Oops! Looks like you are not authorized to access this information.
+      If you think this is a mistake, please contact the system administrator.</p>`,
     canEditType: 'Inherit',
     canViewType: 'Inherit',
     content: '<p>Please complete this application.</p>',
@@ -50,16 +51,16 @@ describe('KidsClub Adult Application Controller', function() {
     link: '/volunteer-application/kids-club/',
     menuTitle: null,
     metaDescription: null,
-    noExistingResponse: '<p>Oops! Please contact the group leader of the team you are looking to serve. Looks like we don\'t have a request from you to join this team.</p>',
+    noExistingResponse: `<p>Oops! Please contact the group leader of the team you are looking to serve. 
+      Looks like we don't have a request from you to join this team.</p>`,
     opportunity: '115',
     pageType: 'VolunteerApplicationPage',
     parent: 82,
-    content: '<p>Please complete this application.</p>',
     reportClass: null,
     showInMenus: '1',
     showInSearch: '1',
     sort: '1',
-    success: '<p>Default SUCCESS text for this page, see ApplicationPage.php to change</p>',
+    success: `<p>Default SUCCESS text for this page, see ApplicationPage.php to change</p>`,
     title: 'Kids Club',
     uRLSegment: 'kids-club',
     version: '15'
@@ -95,12 +96,7 @@ describe('KidsClub Adult Application Controller', function() {
     expect(controller.save(mockForm)).toBe(false);
   });
 
-  //TODO:
-  it('should save the form when there are no errors', function(){
-
-  });
-
- it('should be false when checking if availability has been selected', function(){
+  it('should be false when checking if availability has been selected', function(){
     expect(controller.availabilitySelected()).toBe(false);
   });
 
@@ -126,6 +122,5 @@ describe('KidsClub Adult Application Controller', function() {
     controller.open('signatureDate', null);
     expect(controller.datePickers['signatureDate']).toBe(true);
   });
-
 
 });

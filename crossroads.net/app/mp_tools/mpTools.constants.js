@@ -9,7 +9,8 @@
       ServeSignupTool: 114,
       TripTools: 113,
       VolunteerContactTool: 115,
-      EventsRoomsEquipment: 116
+      EventsRoomsEquipment: 116,
+      ChildcareRequestTool: 134
     }
   };
 })();
