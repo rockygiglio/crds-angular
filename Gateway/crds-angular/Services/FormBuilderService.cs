@@ -42,7 +42,9 @@ namespace crds_angular.Services
                 case "GroupsUndivided":
                     return _undividedGroupsPageViewId;
                 default:
-                    throw new Exception();
+                    var message = String.Format("Could not find matching template {0}", templateType);
+                    logger.Error(message);
+                    throw new ApplicationException();
             }
         }
 

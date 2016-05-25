@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  var constants = require('crds-constants');
+
   module.exports = FormBuilderFieldsService;
   FormBuilderFieldsService.$inject = ['ContentPageService'];
 
@@ -11,8 +13,8 @@
 
     var service = {
       hasFieldsSection: hasFieldSection,
-      hasProfile: hasProfile,
       hasGroupParticipant: hasGroupParticipant,
+      hasProfile: hasProfile,
     };
 
     function hasFieldSection(section) {

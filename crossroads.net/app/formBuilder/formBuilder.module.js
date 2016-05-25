@@ -27,4 +27,5 @@
   require('./templates/profile/gender.html'); 
   require('./templates/profile/location.html'); 
   require('./templates/profile/name.html');
+
 })();

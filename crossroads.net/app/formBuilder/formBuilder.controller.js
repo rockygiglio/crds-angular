@@ -1,55 +1,61 @@
 (function() {
   'use strict';
 
+  var constants = require('crds-constants');
+
   module.exports = FormBuilderCtrl;
 
   FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
 
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
-    var constants = require('crds-constants');
-    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
-    var fieldsService = FormBuilderFieldsService;
 
-    //TODO Decide if you member or leader - now always leader
-    var participant = {
-      capacity: 1,
-      contactId: parseInt(Session.exists('userId')),
-      groupRoleId: constants.GROUP.ROLES.MEMBER,
-      childCareNeeded: false,
-      sendConfirmationEmail: false,
-      singleAttributes: {},
-      attributeTypes: {}
-    };
+    vm.hasForm = hasForm;
 
-    vm.data = {};  
-    vm.data.openBirthdatePicker = openBirthdatePicker;  
-    vm.saving = false;
-    vm.save = save;
+    activate();
 
-    // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
+    function activate() {
+      if (!hasForm()) {
+        return;
+      }
 
-    vm.group = {};
-    vm.group.groupId = null;
-    
-    vm.data.profileData = {person: ContentPageService.resolvedData.profile};
-    vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
-    vm.data.locations = ContentPageService.resolvedData.locations;
-    vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
-    
-    vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-    participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-    participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      //TODO Decide if you member or leader - now always leader
+      var participant = {
+        capacity: 1,
+        contactId: parseInt(Session.exists('userId')),
+        groupRoleId: constants.GROUP.ROLES.MEMBER,
+        childCareNeeded: false,
+        sendConfirmationEmail: false,
+        singleAttributes: {},
+        attributeTypes: {}
+      };
+      participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
-    vm.data.groupParticipant = participant;
+      vm.saving = false;
+      vm.save = save;
+
+      vm.group = {};
+      vm.group.groupId = null;
+
+      // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
+      vm.data = {};  
+      vm.data.openBirthdatePicker = openBirthdatePicker;
+      vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+
+      vm.data.genders = ContentPageService.resolvedData.genders;
+      vm.data.locations = ContentPageService.resolvedData.locations;
+      vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
+      vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      vm.data.groupParticipant = participant;
+    }
 
     function openBirthdatePicker($event) {
       $event.preventDefault();
       $event.stopPropagation();
       this.birthdateOpen = !this.birthdateOpen;
     }
-      
+
     function convertAttributeTypes(list) {
       var results = {}
       _.each(list, function(item) {
@@ -111,9 +117,14 @@
 
     }
 
+    function hasForm() {
+      return (vm.page && vm.page.fields && vm.page.fields.length > 1);
+    }
+
     function save() {
       vm.saving = true;
       try {
+
         // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
         // TODO: Need to only show 1 save once all promises
         // TODO: Need to only call saves if the section is used
@@ -128,8 +139,7 @@
     }
 
     function savePersonal() {
-
-      if (!fieldsService.hasProfile()) {
+      if (!FormBuilderFieldsService.hasProfile()) {
         return;
       }
 
@@ -149,29 +159,36 @@
     }
 
     function saveGroup() {
-      if (!fieldsService.hasGroupParticipant()) {
+      if (!FormBuilderFieldsService.hasGroupParticipant()) {
         return;
       }
 
       //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
       var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
-      if (coFacilitator && coFacilitator !== '') {
+      var coFacilitatorAttribute = {
+        attribute: null,
+        notes: null,
+      };
 
-        var item = {
-            attribute: {
-              attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
-            },
-            notes: coFacilitator,
-          };
-        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;       
+      if (coFacilitator && coFacilitator !== '') {
+        coFacilitatorAttribute = {
+          attribute: {
+            attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
+          },
+          notes: coFacilitator,
+        };
       }
-      
+
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitatorAttribute;
+
+
       // TODO: Need better way to determine Leader vs. Member
-      if (coFacilitator){
-         vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
+      if (coFacilitator) {
+        vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
       }
-      
+
+
       var participants = [vm.data.groupParticipant];
 
       Group.Participant.save({

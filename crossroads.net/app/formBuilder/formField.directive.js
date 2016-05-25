@@ -17,8 +17,8 @@
         if (templateUrl == null) {
           return;
         }
-        
-        scope.constants = require('crds-constants');
+
+        scope.attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
         $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);

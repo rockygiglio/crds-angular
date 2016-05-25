@@ -118,7 +118,7 @@ describe('Request Childcare Controller', () => {
     controller.startDate = now;
     controller.endDate = now;
     controller.choosenFrequency = 'once';
-    controller.choosenPreferredTime = { dp_RecordID: 4 }; 
+    controller.choosenPreferredTime = { Childcare_Start_Time: '9:00:00' , Childcare_End_Time: '10:00:00' }; 
     controller.numberOfChildren = 12;
     controller.notes = 'some long note';
 

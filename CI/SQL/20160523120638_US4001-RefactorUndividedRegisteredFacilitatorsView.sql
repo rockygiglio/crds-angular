@@ -5,7 +5,7 @@ SET IDENTITY_INSERT [dbo].[dp_Page_Views] ON
 
 INSERT INTO [dp_page_views]([Page_View_ID],[View_Title],[Page_ID],[Description],[Field_List],[View_Clause],[Order_By],[User_ID],[User_Group_ID])
 VALUES(92146,'Undivided - Registered Facilitators',316,'Staff members can view the users that have registered to be an Undivided Facilitator.'
-	,'Group_Participants.[Start_Date] AS [Registration Date] 
+	,'Group_Participants.[Start_Date] AS [Registration_Date] 
 	,Participant_ID_Table_Contact_ID_Table.[First_Name]
 	,Participant_ID_Table_Contact_ID_Table.[Last_Name]
 	,Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.[Gender]
@@ -19,7 +19,7 @@ VALUES(92146,'Undivided - Registered Facilitators',316,'Staff members can view t
       AND ISNULL(CA.End_Date,GETDATE()) 
 	  FOR XML PATH('''')), 1, 1, '''') AS [Ethnicity]
 	,DATEDIFF(hour,Participant_ID_Table_Contact_ID_Table.[Date_of_Birth],GETDATE())/8766 AS [AGE]
-	,Group_ID_Table.Group_Name  AS [Preferred Undivided Session]
+	,Group_ID_Table.Group_Name  AS [Preferred_Undivided_Session]
 	,(SELECT Attribute_Name 
 	  FROM Group_Participant_Attributes GPA, Attributes A 
 	  WHERE GPA.Attribute_ID = A.Attribute_ID
@@ -30,8 +30,8 @@ VALUES(92146,'Undivided - Registered Facilitators',316,'Staff members can view t
 	  FROM Group_Participant_Attributes GPA, Attributes A 
 	  WHERE GPA.Attribute_ID = A.Attribute_ID and 
 	  GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-	  Attribute_Type_ID = 87) AS [Preferred Co-Facilitator]	
-	, Group_Participants.[Child_Care_Requested] AS [Requested Child Care]'
+	  Attribute_Type_ID = 87) AS [Preferred_Co-Facilitator]	
+	, Group_Participants.[Child_Care_Requested] AS [Requested_Child_Care]'
     ,'Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND Group_Role_ID_Table.Group_Role_ID = 16 AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL) AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL)'
     ,'Group_Participants.[Start_Date]' 
     ,NULL

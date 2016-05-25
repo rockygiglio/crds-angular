@@ -1,18 +1,16 @@
-<form ng-submit="formBuilder.save()" ng-if="formBuilder.page.fields && formBuilder.page.fields.length > 1">
+<form ng-submit="formBuilder.save()" ng-if="formBuilder.hasForm()">
   <div ng-repeat="field in formBuilder.page.fields">
     <div class="row">
       <form-field field="field" data="formBuilder.data"></form-field>
     </div>
   </div>
-
   <loading-button
           loading-text='Saving...'
           normal-text='Save'
           input-type='button'
           input-classes='btn btn-primary'
           loading-class='disabled'
-          loading='formBuilder.form.saving' >
-
+          loading='formBuilder.saving' >
   </loading-button>
   
 </form>
