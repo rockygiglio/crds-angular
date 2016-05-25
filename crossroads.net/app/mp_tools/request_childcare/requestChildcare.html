@@ -61,7 +61,7 @@
       </div>
 
       <div class="form-group"  ng-show="request.choosenGroup">
-      	<date-range start-date="request.startDate" end-date="request.endDate" min-date="request.minDate">Date Range</date-range>
+      	<date-range required="true" start-date="request.startDate" end-date="request.endDate" min-date="request.minDate">Date Range</date-range>
       </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('frequency')}" ng-show="request.choosenGroup">
