@@ -7,37 +7,35 @@
 
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
-    var constants = require('crds-constants');
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+    var constants = require('crds-constants');
     var fieldsService = FormBuilderFieldsService;
 
     //TODO Decide if you member or leader - now always leader
     var participant = {
       capacity: 1,
+      childCareNeeded: false,
       contactId: parseInt(Session.exists('userId')),
       groupRoleId: constants.GROUP.ROLES.MEMBER,
-      childCareNeeded: false,
       sendConfirmationEmail: false,
       singleAttributes: {},
       attributeTypes: {}
     };
 
     vm.data = {};
-    vm.saving = false;
     vm.save = save;
+    vm.saving = false;
 
     // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
 
-    vm.group = {};
-    vm.group.groupId = null;
-    
-    vm.data.profileData = {person: ContentPageService.resolvedData.profile};
-    vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
+    vm.group = { groupId: null };
 
     vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
-    
     vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+    vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
+    vm.data.genders = ContentPageService.resolvedData.genders;
+    vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+
     participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
     participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
