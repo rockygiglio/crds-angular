@@ -64,7 +64,7 @@ class RequestChildcareController {
         startDate: moment(this.startDate).utc(),
         endDate: moment(this.endDate).utc(),
         frequency: this.choosenFrequency,
-        timeframe: this.choosenPreferredTime.dp_RecordID,
+        timeframe: this.formatPreferredTime(this.choosenPreferredTime),
         estimatedChildren: this.numberOfChildren,
         notes: this.notes
       };
