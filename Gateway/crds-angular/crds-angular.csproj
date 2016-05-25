@@ -271,6 +271,7 @@
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
+    <Compile Include="Controllers\API\FormBuilderController.cs" />
     <Compile Include="Controllers\API\GoVolunteerController.cs" />
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
@@ -335,6 +336,7 @@
     <Compile Include="Services\GoVolunteerService.cs" />
     <Compile Include="Services\GoSkillsService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
+    <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
     <Compile Include="Services\Interfaces\IEquipmentService.cs" />
@@ -343,6 +345,7 @@
     <Compile Include="Services\Interfaces\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\IGroupSearchService.cs" />
     <Compile Include="Services\Interfaces\IGatewayLookupService.cs" />
+    <Compile Include="Services\Interfaces\IFormBuilerService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
     <Compile Include="Services\Interfaces\ITaskService.cs" />
@@ -612,6 +615,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\FormBuilder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

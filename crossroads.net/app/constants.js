@@ -39,6 +39,8 @@
       TRIP_SKILLS: 61,
       TSHIRT_SIZES: 21,
       TRIP_EXPERIENCE: 62,
+      UNDIVIDED_FACILITATOR_TRAINING: 85,
+      UNDIVIDED_RSVP_KICKOFF: 86,
     },
     ATTRIBUTE_IDS: {
       ALL_ALLERGIES: 3971,
@@ -65,9 +67,13 @@
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
       },
       FORM_BUILDER: {
+        CLASS_NAME: {
+          GROUP_PARTICIPANT_FIELD: 'GroupParticipantField',
+          PROFILE_FILED: 'ProfileField',
+        },
         FIELD_NAME: {
           COFACILITATOR: 'CoFacilitator',
-        }
+        },
       }
     },
     GROUP: {
