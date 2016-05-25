@@ -18,12 +18,11 @@
         }
 
         var cmsTemplateType = _.find(fields, function(data) {
-          {
-            if (data.templateType !== undefined)
-            {
-              return data.templateType.startsWith('Groups');
-            }
+          if (!data.templateType) {
+            return false;
           }
+
+          return _.startsWith(data.templateType, 'Groups');
         });
 
         return FormBuilderService.Groups.query({

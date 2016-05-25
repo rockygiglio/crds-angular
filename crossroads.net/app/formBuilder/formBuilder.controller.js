@@ -10,9 +10,14 @@
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
 
-    activate();
+    vm.hasForm = hasForm;
+
+    activate()
 
     function activate() {
+      if (!hasForm()) {
+        return;
+      }
 
       //TODO Decide if you member or leader - now always leader
       var participant = {
@@ -26,7 +31,6 @@
       };
       participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-
 
       vm.saving = false;
       vm.save = save;
@@ -102,6 +106,10 @@
 
       return results;
 
+    }
+
+    function hasForm() {
+      return (vm.page && vm.page.fields && vm.page.fields.length > 1);
     }
 
     function save() {
