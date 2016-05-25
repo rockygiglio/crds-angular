@@ -90,8 +90,6 @@
         controller: 'SingleSeriesController as series',
         templateUrl: 'templates/seriesSingle.html',
         resolve: {
-          Media: 'Media',
-          Series: 'Series',
           $stateParams: '$stateParams',
           $state: '$state',
           Selected: function(Media, Series, $stateParams, $state) {
