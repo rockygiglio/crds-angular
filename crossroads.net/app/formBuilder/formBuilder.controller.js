@@ -112,6 +112,10 @@
       return (page && page.fields && page.fields.length > 1);
     }
 
+    function hasForm() {
+      return (vm.page && vm.page.fields && vm.page.fields.length > 1);
+    }
+
     function save() {
       vm.saving = true;
       try {
