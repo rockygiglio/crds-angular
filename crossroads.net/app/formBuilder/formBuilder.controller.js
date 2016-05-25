@@ -105,11 +105,11 @@
       });
 
       return results;
-
     }
 
     function hasForm() {
-      return (vm.page && vm.page.fields && vm.page.fields.length > 1);
+      var page = ContentPageService.page;
+      return (page && page.fields && page.fields.length > 1);
     }
 
     function save() {
