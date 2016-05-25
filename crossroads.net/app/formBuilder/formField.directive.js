@@ -17,6 +17,8 @@
         if (templateUrl == null) {
           return;
         }
+        
+        scope.constants = require('crds-constants');
 
         $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);

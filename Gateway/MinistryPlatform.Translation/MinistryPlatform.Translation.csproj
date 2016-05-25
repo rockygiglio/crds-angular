@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Models\Childcare\ChildcareRequest.cs" />
     <Compile Include="Models\Congregation.cs" />
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
@@ -146,11 +147,13 @@
     <Compile Include="Services\AuthenticationServiceImpl.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />
+    <Compile Include="Services\ChildcareRequestService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\GoCincinnati\GroupConnectorService.cs" />
     <Compile Include="Services\GoCincinnati\RegistrationService.cs" />
     <Compile Include="Services\Interfaces\GoCincinnati\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\GoCincinnati\IRegistrationService.cs" />
+    <Compile Include="Services\Interfaces\IChildcareRequestService.cs" />
     <Compile Include="Services\Interfaces\IFormBuilderService.cs" />
     <Compile Include="Services\Interfaces\IMinistryPlatformRestService.cs" />
     <Compile Include="Services\MinistryPlatformRestService.cs" />

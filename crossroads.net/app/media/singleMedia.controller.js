@@ -81,7 +81,7 @@
 
     if (vm.video) {
       vm.video.videoUrl = _.get(vm.video, 'serviceId');
-      vm.videoDownloadLink = _.get(vm.video, 'source.filename');
+      vm.videoDownloadLink = _.get(vm.video, 'source.filename', vm.video.sourcePath);
       $sce.trustAsResourceUrl(vm.videoUrl);
     }
 

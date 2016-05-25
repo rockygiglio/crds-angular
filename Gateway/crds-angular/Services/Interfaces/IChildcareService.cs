@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
-using MinistryPlatform.Models;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -11,5 +10,6 @@ namespace crds_angular.Services.Interfaces
         void SendRequestForRsvp();
         List<FamilyMember> MyChildren(string token);
         void SaveRsvp(ChildcareRsvpDto saveRsvp, string token);
+        void CreateChildcareRequest(ChildcareRequestDto request);
     }
 }

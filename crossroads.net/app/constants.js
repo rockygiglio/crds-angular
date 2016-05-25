@@ -76,7 +76,10 @@
         },
       }
     },
-    GROUP: {    
+    GROUP: {
+      GROUP_ID: {
+        UNDIVIDED_FACILITATOR: 166572,
+      },
       ROLES: {
         MEMBER: 16,
         LEADER: 22

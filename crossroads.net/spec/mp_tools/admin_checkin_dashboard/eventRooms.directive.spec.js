@@ -102,7 +102,7 @@ describe('EventRooms Directive', function() {
     it('should update rooms', function() {
       var isolateScope = element.isolateScope();
 
-      putData = {
+      var putData = {
         name: 'KC101',
         label: 'Age 0-1 year olds',
         checkinAllowed: true,
@@ -113,7 +113,7 @@ describe('EventRooms Directive', function() {
 
       isolateScope.rooms = [putData];
       isolateScope.eventId = 1;
-      isolateScope.roomsForm = {}
+      isolateScope.roomsForm = {};
       isolateScope.roomsForm.$dirty = true;
       isolateScope.update(0);
       $httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms', putData)

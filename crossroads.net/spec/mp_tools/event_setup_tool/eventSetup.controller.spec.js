@@ -53,7 +53,7 @@ describe('EventSetupController', function() {
   beforeEach(inject(function($injector, _$controller_) {
     $rootScope = $injector.get('$rootScope');
     scope = $rootScope.$new();
-    $httpBackend = $injector.get('$httpBackend');
+    httpBackend = $injector.get('$httpBackend');
     AuthService = $injector.get('AuthService');
     CRDS_TOOLS_CONSTANTS = $injector.get('CRDS_TOOLS_CONSTANTS');
     EventService = $injector.get('EventService');
@@ -67,8 +67,8 @@ describe('EventSetupController', function() {
   );
 
   afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('loadEvents()', function() {
@@ -77,13 +77,13 @@ describe('EventSetupController', function() {
       vm.startDate = new Date('2016-05-10T17:30:06.445Z');
       vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventtemplatesbysite/1')
+      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventtemplatesbysite/1')
                              .respond(mockEventTemplateResponse);
 
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
+      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
                              .respond(mockEventResponse);
 
-      $httpBackend.flush();
+      httpBackend.flush();
     });
 
     it('should recieve the events Templates for the site', function() {
@@ -107,10 +107,10 @@ describe('EventSetupController', function() {
       vm.event = {id: 1};
       var postData = {eventtemplateid: vm.template.id, eventid: vm.event.id};
       vm.setup();
-      $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/copyeventsetup', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/copyeventsetup', postData)
                              .respond({});
 
-      $httpBackend.flush();
+      httpBackend.flush();
     });
 
     it('should save', function() {
