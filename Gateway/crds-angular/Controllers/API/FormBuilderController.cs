@@ -30,8 +30,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [System.Web.Http.Route("api/formbuilder/groups/{templateType}")]
-        [System.Web.Http.HttpGet]
+        [Route("api/formbuilder/groups/{templateType}")]
+        [HttpGet]
         public IHttpActionResult GetGroupsUndivided(string templateType)
         {
             return Authorized(token =>

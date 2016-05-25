@@ -11,8 +11,8 @@
 
     var service = {
       hasFieldsSection: hasFieldSection,
-      hasProfile: hasProfile,
       hasGroupParticipant: hasGroupParticipant,
+      hasProfile: hasProfile,
     };
 
     function hasFieldSection(section) {

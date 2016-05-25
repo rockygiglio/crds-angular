@@ -165,13 +165,13 @@
 
       vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitatorAttribute;
 
-      
+
       // TODO: Need better way to determine Leader vs. Member
       if (coFacilitator) {
         vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
       }
 
-      
+
       var participants = [vm.data.groupParticipant];
 
       Group.Participant.save({
