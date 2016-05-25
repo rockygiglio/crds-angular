@@ -71,9 +71,9 @@
                 ng-model="request.choosenFrequency"
                 required>
           <option value=""> -- Please choose a Frequency -- </option>
-          <option value="once"> Once </option>
-          <option value="weekly"> Weekly </option>
-          <option value="monthly"> Monthly </option>
+          <option value="Once"> Once </option>
+          <option value="Weekly"> Weekly </option>
+          <option value="Monthly"> Monthly </option>
         </select>
         <ng-messages for="request.childcareRequestForm.frequency.$error" ng-if="request.validateField('frequency')">
           <span ng-message="required">
