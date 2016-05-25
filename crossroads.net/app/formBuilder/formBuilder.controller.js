@@ -105,7 +105,11 @@
       });
 
       return results;
+    }
 
+    function hasForm() {
+      var page = ContentPageService.page;
+      return (page && page.fields && page.fields.length > 1);
     }
 
     function hasForm() {
