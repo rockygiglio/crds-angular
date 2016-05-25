@@ -7,39 +7,41 @@
 
   function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
     var vm = this;
-    var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     var constants = require('crds-constants');
     var fieldsService = FormBuilderFieldsService;
 
-    //TODO Decide if you member or leader - now always leader
-    var participant = {
-      capacity: 1,
-      childCareNeeded: false,
-      contactId: parseInt(Session.exists('userId')),
-      groupRoleId: constants.GROUP.ROLES.MEMBER,
-      sendConfirmationEmail: false,
-      singleAttributes: {},
-      attributeTypes: {}
-    };
+    activate();
 
-    vm.data = {};
-    vm.save = save;
-    vm.saving = false;
+    function activate() {
 
-    // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
+      //TODO Decide if you member or leader - now always leader
+      var participant = {
+        capacity: 1,
+        contactId: parseInt(Session.exists('userId')),
+        groupRoleId: constants.GROUP.ROLES.MEMBER,
+        childCareNeeded: false,
+        sendConfirmationEmail: false,
+        singleAttributes: {},
+        attributeTypes: {}
+      };
+      participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
-    vm.group = { groupId: null };
+      vm.data = {};
+      vm.saving = false;
+      vm.save = save;
 
-    vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
-    vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-    vm.data.ethnicities = ContentPageService.resolvedData.profile.attributeTypes[attributeTypeIds.ETHNICITY].attributes;
-    vm.data.genders = ContentPageService.resolvedData.genders;
-    vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+      // TODO: Consider setting vm.data = resolvedData, may have to add convenience methods like ethnicities
 
-    participant.attributeTypes = getMultiSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-    participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      vm.group = {};
+      vm.group.groupId = null;
 
-    vm.data.groupParticipant = participant;
+      vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+      vm.data.genders = ContentPageService.resolvedData.genders;
+      vm.data.availableGroups = ContentPageService.resolvedData.availableGroups
+      vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
+      vm.data.groupParticipant = participant;
+    }
 
     function convertAttributeTypes(list) {
       var results = {}
@@ -105,6 +107,7 @@
     function save() {
       vm.saving = true;
       try {
+
         // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
         // TODO: Need to only show 1 save once all promises
         // TODO: Need to only call saves if the section is used
@@ -119,7 +122,6 @@
     }
 
     function savePersonal() {
-
       if (!fieldsService.hasProfile()) {
         return;
       }
@@ -147,23 +149,29 @@
       //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
       var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
+      var coFacilitatorAttribute = {
+        attribute: null,
+        notes: null,
+      };
+
       if (coFacilitator && coFacilitator !== '') {
-
-        var item = {
-            attribute: {
-              attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
-            },
-            notes: coFacilitator,
-          };
-        vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = item;       
+        coFacilitatorAttribute = {
+          attribute: {
+            attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
+          },
+          notes: coFacilitator,
+        };
       }
-      
+
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitatorAttribute;
+
+
       // TODO: Need better way to determine Leader vs. Member
-      if (coFacilitator){
-         vm.data.groupParticipant.groupRoleId =  constants.GROUP.ROLES.LEADER
+      if (coFacilitator) {
+        vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
       }
 
-      
+
       var participants = [vm.data.groupParticipant];
 
       Group.Participant.save({
