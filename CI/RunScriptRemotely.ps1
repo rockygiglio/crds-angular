@@ -4,9 +4,9 @@
 #   -ScriptPath Path On Local System   The directory on the local server where the powershell script resides
 
 Param (
-  [string]$DBServer = "216.68.184.202", # default to public IP of MPTEST02
+  [string]$DBServer = "mp-demo-db.centralus.cloudapp.azure.com", # default to public IP of MPTEST02
   [string]$ScriptPath = $(throw "-ScriptPath (Path to powershell script to run) is required."),
-  [string]$Username = "Administrator",
+  [string]$Username = "CRDSAdmin",
   [string]$Password = $Env:MPTEST02_PASS,
   [string]$Port = "5986"
 )

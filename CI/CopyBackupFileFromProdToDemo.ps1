@@ -6,10 +6,10 @@
 #   -DestinationPath path_name   The directory to send the file to on the remote server (required)
 
 Param (
-  [string]$DBServer = "MPTEST02", # default to MPTEST02 (assuming this is running remote on MPTEST02)
+  [string]$DBServer = "mp-demo-db.centralus.cloudapp.azure.com", # default to MPTEST02 (assuming this is running remote on MPTEST02)
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [string]$BackupPath = "/cygdrive/D/SqlServer/Backup",
-  [string]$DestinationPath = "/cygdrive/E/Backup/FromProduction"
+  [string]$DestinationPath = "/cygdrive/F/Backups/FromProduction"
 )
 
 $exitCode = 0;
@@ -20,7 +20,7 @@ $backupFileName="${BackupPath}/${DBName}-Backup-${backupDateStamp}.trn"
 
 echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning copy of file $backupFileName to server $DBServer"
 try {
-  $output = & "C:\Program Files\OpenSSH\bin\scp.exe" -i /home/CrdsAdmin/.ssh/id_rsa "$backupFileName" "CRAdmin@${DBServer}:${DestinationPath}" 2> $null
+  $output = & "C:\Program Files\OpenSSH\bin\scp.exe" -i /home/CrdsAdmin/.ssh/id_rsa "$backupFileName" "CRDSAdmin@${DBServer}:${DestinationPath}" 2> $null
 } catch [System.Exception] {
   $exitCode = 1;
   $exitMessage = "ERROR - Copy failed: " + $_.Exception.Message;
