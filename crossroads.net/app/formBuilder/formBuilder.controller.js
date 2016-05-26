@@ -39,12 +39,21 @@
       vm.group.groupId = null;
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
-      vm.data = {};
+      vm.data = {};  
+      vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+
       vm.data.genders = ContentPageService.resolvedData.genders;
-      vm.data.availableGroups = ContentPageService.resolvedData.availableGroups
+      vm.data.locations = ContentPageService.resolvedData.locations;
+      vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       vm.data.groupParticipant = participant;
+    }
+
+    function openBirthdatePicker($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      this.birthdateOpen = !this.birthdateOpen;
     }
 
     function convertAttributeTypes(list) {
