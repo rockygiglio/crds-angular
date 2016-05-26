@@ -5,9 +5,22 @@
 
   module.exports = FormBuilderCtrl;
 
-  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
+  FormBuilderCtrl.$inject = ['$rootScope',
+    'Group',
+    'Session',
+    'ContentPageService',
+    'FormBuilderFieldsService',
+    '$log',
+    '$q',
+  ];
 
-  function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
+  function FormBuilderCtrl($rootScope,
+                           Group,
+                           Session,
+                           ContentPageService,
+                           FormBuilderFieldsService,
+                           $log,
+                           $q) {
     var vm = this;
 
     vm.hasForm = hasForm;
@@ -131,7 +144,6 @@
     function save() {
       vm.saving = true;
       try {
-
         var promise = savePersonal();
         promise = promise.then(saveGroup);
 
