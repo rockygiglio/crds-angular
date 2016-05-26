@@ -18,12 +18,14 @@
   require('./templates/default/defaultField.html');
   require('./templates/groupParticipant/childcare.html');
   require('./templates/groupParticipant/coFacilitator.html');
-  require('./templates/groupParticipant/facilitatorTraining.html');
-  require('./templates/groupParticipant/kickOffEvent.html');
-  require('./templates/groupParticipant/preferredSession.html');
+  require('./templates/groupParticipant/facilitatorTraining.html');  
+  require('./templates/groupParticipant/kickOffEvent.html'); 
+  require('./templates/groupParticipant/preferredSession.html'); 
+  require('./templates/profile/birthdate.html');
   require('./templates/profile/email.html');
-  require('./templates/profile/ethnicity.html');
-  require('./templates/profile/gender.html');
+  require('./templates/profile/ethnicity.html');  
+  require('./templates/profile/gender.html'); 
+  require('./templates/profile/location.html'); 
   require('./templates/profile/name.html');
 
 })();
