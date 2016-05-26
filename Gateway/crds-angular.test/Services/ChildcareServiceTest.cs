@@ -7,6 +7,7 @@ using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -168,6 +169,80 @@ namespace crds_angular.test.Services
             new object[] {3, 2025, new DateTime(2015, 11, 10)},
             new object[] {0, 2035, new DateTime(2015, 5, 29)}
         };
+
+        [Test]
+        public void ShouldSendChildcareRequestNotification()
+        {
+            var startDate = new DateTime(2016, 5, 26);
+            var endDate = new DateTime(2016, 7, 2);
+
+            var notificationTemplateId = 0985627;
+            var defaultAuthorId = 9087345;
+
+            var template = new MessageTemplate()
+            {
+                Body = "Some long string of text",
+                Subject = "A subject"
+            };
+
+            var request = new ChildcareRequestEmail()
+            {
+                RequestId = 1,
+                RequesterEmail = "lakshmi@lak.shmi",
+                ChildcareContactEmail = "florencechildcare@crossroads.net",
+                ChildcareContactId = 12,
+                ChildcareSession = "Monday, 9am - 12pm",
+                CongregationName = "Florence",
+                EndDate = endDate,
+                StartDate = startDate,
+                EstimatedChildren = 2,
+                Frequency = "once",
+                RequesterLastName = "Nair",
+                RequesterNickname = "Lak",
+                Requester = "Nair, Lak",
+                RequesterId = 432,
+                GroupName = "FI 101"
+            };
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Requester", request.Requester},
+                {"Nickname", request.RequesterNickname},
+                {"LastName", request.RequesterLastName},
+                {"Group", request.GroupName},
+                {"Site", request.CongregationName},
+                {"StartDate", (request.StartDate).ToShortDateString()},
+                {"EndDate", (request.EndDate).ToShortDateString()},
+                {"ChildcareSession", request.ChildcareSession},
+                {"RequestId", request.RequestId},
+                {"Base_Url", "https://localhost:3000"}
+            };
+
+            var communication = new Communication
+            {
+                TemplateId = 0,
+                DomainId = 0,
+                AuthorUserId = defaultAuthorId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ToContacts = new List<Contact> { new Contact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                MergeData = mergeData
+            };
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestNotificationTemplate")).Returns(notificationTemplateId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultUserAuthorId")).Returns(defaultAuthorId);
+            _communicationService.Setup(m => m.GetTemplate(notificationTemplateId)).Returns(template);
+            _configurationWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("https://localhost:3000");
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
+
+            _fixture.SendChildcareRequestNotification(request);
+
+            
+            _communicationService.VerifyAll();
+
+        }
 
         [Test]
         public void SendTwoRsvpEmails()

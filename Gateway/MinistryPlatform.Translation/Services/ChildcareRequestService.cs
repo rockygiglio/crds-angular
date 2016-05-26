@@ -51,7 +51,7 @@ namespace MinistryPlatform.Translation.Services
 
         public ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token)
         {
-            var searchString = string.Format("{0}", childcareRequestId);
+            var searchString = string.Format("{0},", childcareRequestId);
             var r = _ministryPlatformService.GetPageViewRecords(_childcareEmailPageViewId, token,searchString);
             if (r.Count == 1)
             {
@@ -59,17 +59,20 @@ namespace MinistryPlatform.Translation.Services
 
                 var c = new ChildcareRequestEmail
                 {
+                    RequestId = record.ToInt("Childcare_Request_ID"),
                     RequesterId = record.ToInt("Contact_ID"),
                     RequesterEmail = record.ToString("Email_Address"),
+                    RequesterNickname = record.ToString("Nickname"),
+                    RequesterLastName = record.ToString("Last_Name"),
                     GroupName = record.ToString("Group_Name"),
                     MinistryName = record.ToString("Ministry_Name"),
                     StartDate = record.ToDate("Start_Date"),
                     EndDate = record.ToDate("End_Date"),
                     ChildcareSession = record.ToString("Childcare_Session"),
-                    CongregationId = record.ToInt("Congregation_ID"),
                     Requester = record.ToString("Display_Name"),
                     ChildcareContactEmail = record.ToString("Childcare_Contact_Email_Address"),
-                    ChildcareContactId = record.ToInt("Childcare_Contact_ID")
+                    ChildcareContactId = record.ToInt("Childcare_Contact_ID"),
+                    CongregationName = record.ToString("Congregation_Name")
                 };
 
                 return c;

@@ -122,30 +122,26 @@ namespace crds_angular.Services
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");          
-            var template = _communicationService.GetTemplate(templateId);
-            const int domainId = 1;            
-            //var toContact = new MyContact
-            //{
-            //    Contact_ID = congregation.ChildcareContact,
-            //    Email_Address = _contactService.GetContactEmail(congregation.ChildcareContact)
-            //};
+            var template = _communicationService.GetTemplate(templateId);           
 
             var mergeData = new Dictionary<string, object>
             {
                 {"Requester", request.Requester},
-                {"GroupName", request.GroupName },
-                {"MinistryName", request.MinistryName },
-                {"StartDate", (request.StartDate).ToString("yy-mmm-dd") },
-                {"ChildcareSession", request.ChildcareSession }
-
+                {"Nickname", request.RequesterNickname },
+                {"LastName", request.RequesterLastName },
+                {"Group", request.GroupName },
+                {"Site", request.CongregationName },
+                {"StartDate", (request.StartDate).ToShortDateString() },
+                {"EndDate", (request.EndDate).ToShortDateString() },
+                {"ChildcareSession", request.ChildcareSession },
+                {"RequestId", request.RequestId },
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
-            
             var communication = new Communication
            
              {
                 AuthorUserId = authorUserId,
-                DomainId = domainId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
                 FromContact = new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},

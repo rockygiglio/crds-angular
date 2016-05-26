@@ -21,8 +21,8 @@ INSERT INTO [dbo].[dp_Communications]
            (
 		    5500,
 			5,
-			'A new Childcare Request Submitted',
-			'<span style="font-family: ''Helvetica Neue'', Helvetica, Arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);">You have a new request for Childcare from [Requester] for [Group] at [Congregation] from [StartDate] to Enddate] . Please click on the link below and review to either approve or reject this request.</span><div><a href="https://adminint.crossroads.net/ministryplatform#/36/[RequestId]" target="_self">New-Childcare-Request</a><font face="Helvetica Neue, Helvetica, Arial, sans-serif"><br /></font><div><br /></div></div>',
+			'New Childcare Request Submitted',
+			'<span style="font-family: ''Helvetica Neue'', Helvetica, Arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);">You have a new request for Childcare from [Nickname] [LastName] for [Group] at [Site] from [StartDate] to [EndDate] . Please click on the link below and review to either approve or reject this request.</span><div><a href="https://[Base_Url]/ministryplatform#/36/[RequestId]" target="_self">New-Childcare-Request</a><font face="Helvetica Neue, Helvetica, Arial, sans-serif"><br /></font><div><br /></div></div>',
 			1,
 			Getdate(),
 			1,
