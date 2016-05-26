@@ -1,9 +1,13 @@
-﻿using MinistryPlatform.Translation.Models.Childcare;
+﻿using System;
+using System.Collections.Generic;
+using MinistryPlatform.Translation.Models.Childcare;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IChildcareRequestService
     {
-        void CreateChildcareRequest(ChildcareRequest request);
+        int CreateChildcareRequest(ChildcareRequest request);
+
+        ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
     }
 }
