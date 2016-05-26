@@ -167,7 +167,6 @@
       if (!FormBuilderFieldsService.hasGroupParticipant()) {
         return;
       }
-debugger;
       //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
       var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 
