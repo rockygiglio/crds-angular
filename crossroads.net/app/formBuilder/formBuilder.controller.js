@@ -5,9 +5,22 @@
 
   module.exports = FormBuilderCtrl;
 
-  FormBuilderCtrl.$inject = ['$rootScope', 'Group', 'Session', 'ContentPageService', 'FormBuilderFieldsService'];
+  FormBuilderCtrl.$inject = ['$rootScope',
+    'Group',
+    'Session',
+    'ContentPageService',
+    'FormBuilderFieldsService',
+    '$log',
+    '$q',
+  ];
 
-  function FormBuilderCtrl($rootScope, Group, Session, ContentPageService, FormBuilderFieldsService) {
+  function FormBuilderCtrl($rootScope,
+                           Group,
+                           Session,
+                           ContentPageService,
+                           FormBuilderFieldsService,
+                           $log,
+                           $q) {
     var vm = this;
 
     vm.hasForm = hasForm;
@@ -39,7 +52,7 @@
       vm.group.groupId = null;
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
-      vm.data = {};  
+      vm.data = {};
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
 
@@ -61,6 +74,7 @@
       _.each(list, function(item) {
         results[item.attributeTypeId] = item;
       });
+
       return results;
     }
 
@@ -121,16 +135,28 @@
       return (page && page.fields && page.fields.length > 1);
     }
 
+    function resolvedPromise() {
+      var deferred = $q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
+
     function save() {
       vm.saving = true;
       try {
+        var promise = savePersonal();
+        promise = promise.then(saveGroup);
 
-        // TODO: Need to return promises from save methods and then wait on all to turn of vm.saving
-        // TODO: Need to only show 1 save once all promises
-        // TODO: Need to only call saves if the section is used
+        promise.then(function() {
+            $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+            vm.saving = false;
+          },
 
-        savePersonal();
-        saveGroup();
+          function() {
+            $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+            $log.debug('person save unsuccessful');
+            vm.saving = false;
+          });
       }
       catch (error) {
         vm.saving = false;
@@ -140,68 +166,63 @@
 
     function savePersonal() {
       if (!FormBuilderFieldsService.hasProfile()) {
-        return;
+        return resolvedPromise();
       }
 
       // set oldName to existing email address to work around password change dialog issue
       vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
 
-      vm.data.profileData.person.$save(function() {
-           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-           vm.saving = false;
-         },
-
-         function() {
-           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-           $log.debug('person save unsuccessful');
-           vm.saving = false;
-         });
+      return vm.data.profileData.person.$save();
     }
 
-    function saveGroup() {
-      if (!FormBuilderFieldsService.hasGroupParticipant()) {
-        return;
-      }
+    function getAttributeNote(fieldName, attributeId) {
+      var field = vm.data[fieldName];
 
-      //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
-      var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
-
-      var coFacilitatorAttribute = {
+      var attribute = {
         attribute: null,
         notes: null,
       };
 
-      if (coFacilitator && coFacilitator !== '') {
-        coFacilitatorAttribute = {
+      if (field && field !== '') {
+        attribute = {
           attribute: {
-            attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
+            attributeId: attributeId,
           },
-          notes: coFacilitator,
+          notes: field,
         };
       }
 
-      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitatorAttribute;
+      return attribute;
+    }
 
+    function saveGroup() {
+      if (!FormBuilderFieldsService.hasGroupParticipant()) {
+        return resolvedPromise();
+      }
 
-      // TODO: Need better way to determine Leader vs. Member
-      if (coFacilitator) {
+      var coFacilitator = getAttributeNote(
+        constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR,
+        constants.ATTRIBUTE_IDS.COFACILITATOR
+      );
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitator;
+
+      // TODO: See if we can move this logic into the templates
+      var coParticipant = getAttributeNote(
+        constants.CMS.FORM_BUILDER.FIELD_NAME.COPARTICIPANT,
+        constants.ATTRIBUTE_IDS.COPARTICIPANT
+      );
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COPARTICIPANT] = coParticipant;
+
+      if (vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR]) {
         vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
       }
 
-
       var participants = [vm.data.groupParticipant];
 
-      Group.Participant.save({
+      return Group.Participant.save({
           groupId: vm.data.group.groupId,
-        }, participants).$promise.then(function(response) {
-          $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-          vm.saving = false;
-        }, function(error) {
-
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-          vm.saving = false;
-        });
+        },
+        participants).$promise;
     }
   }
-
 })();
