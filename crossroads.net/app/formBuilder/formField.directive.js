@@ -66,6 +66,8 @@
           return 'profile/birthdate.html';
         case 'Childcare':
           return 'groupParticipant/childcare.html';
+        case 'CoParticipant':
+          return 'groupParticipant/coParticipant.html';
         case 'CoFacilitator':
           return 'groupParticipant/coFacilitator.html';
         case 'Email':

@@ -173,6 +173,10 @@ describe('FormBuilder', function() {
     it('loading state should be false after exception', function() {
       var controller = getController(false);
 
+      FormBuilderFieldsService.hasProfile = function() {
+        return true;
+      };
+
       // Force exception by not unsetting responses object
       delete controller.data;
 
