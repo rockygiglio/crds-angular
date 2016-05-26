@@ -33,7 +33,17 @@ class RequestChildcareController {
       this.groups.$promise
         .then(data => this.loadingGroups = false, err => this.loadingGroups = false);
       this.preferredTimes = this.requestChildcareService.getPreferredTimes(this.choosenCongregation.dp_RecordID);
+      this.filteredTimes = this.preferredTimes;
     }
+  }
+
+  onStartDateChange(startDate) {
+    this.filteredTimes = this.preferredTimes.filter((time) => {
+      if (time.Deactivate_Date === null) { return true; }
+      var preferredStart = moment(startDate);
+      var deactivateDate = moment(time.Deactivate_Date);
+      return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate); 
+    });
   }
 
   showGroups() {
