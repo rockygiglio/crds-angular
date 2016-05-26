@@ -15,8 +15,8 @@ namespace MinistryPlatform.Translation.Test
     [Category("IntegrationTests")]
     public class LookupTest
     {
-        private const string USERNAME = "testme";
-        private const string PASSWORD = "changeme";
+        private const string USERNAME = "changeme";
+        private const string PASSWORD = "testme";
         private const string EMAIL = "donotreply+testme@crossroads.net";
 
         private AuthenticationServiceImpl _fixture;
@@ -187,8 +187,8 @@ namespace MinistryPlatform.Translation.Test
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
 
-            var groups = _lookupService.ChildcareTimesByCongregation(token, "1");
-            Assert.IsNotEmpty(groups);
+            var times = _lookupService.ChildcareTimesByCongregation(token, "1");
+            Assert.IsNotEmpty(times);
         }
     }
 }
