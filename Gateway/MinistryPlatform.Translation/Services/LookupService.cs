@@ -116,8 +116,8 @@ namespace MinistryPlatform.Translation.Services
         {
             var searchString = string.Format("\"{0}\",", congregationid);
 
-            var groups = _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("ChildcareTimesByCongregation"), token, searchString);
-            return groups;
+            var times = _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("ChildcareTimesByCongregation"), token, searchString);
+            return times;
         }
     }
 }
