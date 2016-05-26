@@ -15,8 +15,8 @@ namespace MinistryPlatform.Translation.Test
     [Category("IntegrationTests")]
     public class LookupTest
     {
-        private const string USERNAME = "phil.lachmann@ingagepartners.com";
-        private const string PASSWORD = "pheve2011";
+        private const string USERNAME = "changeme";
+        private const string PASSWORD = "testme";
         private const string EMAIL = "donotreply+testme@crossroads.net";
 
         private AuthenticationServiceImpl _fixture;
