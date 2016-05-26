@@ -99,9 +99,10 @@ describe('Request Childcare Controller', () => {
     commonExpectations();
     const time = {
       'Childcare_Start_Time': '09:00:00',
-      'Childcare_End_Time': '19:00:00'
+      'Childcare_End_Time': '19:00:00',
+      'Meeting_Day': 'Monday'
     };
-    expect(controller.formatPreferredTime(time)).toBe('9:00AM - 7:00PM');
+    expect(controller.formatPreferredTime(time)).toBe('Monday, 9:00AM - 7:00PM');
   });
 
   it('should submit the form', () => {
