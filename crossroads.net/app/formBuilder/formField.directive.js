@@ -26,14 +26,15 @@
           $compile(template)(scope);
         });
       },
+
       controller: FormFieldController,
       controllerAs: 'formField',
       bindToController: true
     };
 
     function FormFieldController() {
-      var vm = this;         
-   
+      var vm = this;
+
       // TODO: See if moving the radiobutton specific code to another directive is better than this
       if (vm.field && vm.field.attributeType) {
         vm.attributeType = vm.field.attributeType;
@@ -47,7 +48,7 @@
     }
 
     function getTemplateUrl(field) {
-      switch (field.className) {  
+      switch (field.className) {
         case 'ProfileField':
         case 'GroupParticipantField':
           return getCMSTemplateUrl(field);
@@ -60,7 +61,7 @@
 
     function getCMSTemplateUrl(field) {
       //TODO: See if we can simplify / possibly strategy pattern
-      switch(field.templateType) {
+      switch (field.templateType) {
         case 'Birthday':
           return 'profile/birthdate.html';
         case 'Childcare':
@@ -72,13 +73,13 @@
         case 'Ethnicity':
           return 'profile/ethnicity.html';
         case 'FacilitatorTraining':
-          return 'groupParticipant/facilitatorTraining.html';  
+          return 'groupParticipant/facilitatorTraining.html';
         case 'Gender':
           return 'profile/gender.html';
         case 'KickOffEvent':
-          return 'groupParticipant/kickOffEvent.html';  
+          return 'groupParticipant/kickOffEvent.html';
         case 'Location':
-          return 'profile/location.html';      
+          return 'profile/location.html';
         case 'Name':
           return 'profile/name.html';
         case 'GroupsUndivided':
@@ -86,7 +87,7 @@
         default:
           return 'default/defaultField.html';
       }
-    } 
+    }
   }
 
 })();

@@ -7,7 +7,6 @@
   FormBuilderFieldsService.$inject = ['ContentPageService'];
 
   function FormBuilderFieldsService(ContentPageService) {
-    var constants = require('crds-constants');
     var groupParticipantField = constants.CMS.FORM_BUILDER.CLASS_NAME.GROUP_PARTICIPANT_FIELD;
     var profileField = constants.CMS.FORM_BUILDER.CLASS_NAME.PROFILE_FILED;
 
