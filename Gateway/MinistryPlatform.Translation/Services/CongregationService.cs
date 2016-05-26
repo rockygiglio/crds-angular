@@ -7,7 +7,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class CongregationService : BaseService
+    public class CongregationService : BaseService, ICongregationService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         

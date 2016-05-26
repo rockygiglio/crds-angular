@@ -67,7 +67,9 @@ namespace MinistryPlatform.Translation.Services
                     EndDate = record.ToDate("End_Date"),
                     ChildcareSession = record.ToString("Childcare_Session"),
                     CongregationId = record.ToInt("Congregation_ID"),
-                    Requester = record.ToString("Display_Name")
+                    Requester = record.ToString("Display_Name"),
+                    ChildcareContactEmail = record.ToString("Childcare_Contact_Email_Address"),
+                    ChildcareContactId = record.ToInt("Childcare_Contact_ID")
                 };
 
                 return c;

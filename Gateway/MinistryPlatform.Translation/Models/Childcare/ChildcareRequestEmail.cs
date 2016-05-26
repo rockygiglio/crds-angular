@@ -8,7 +8,6 @@ namespace MinistryPlatform.Translation.Models.Childcare
 {
     public class ChildcareRequestEmail
     {
-
         public int RequesterId { get; set; }
         public String RequesterEmail { get; set; }
         public String MinistryName { get; set; }
@@ -20,8 +19,8 @@ namespace MinistryPlatform.Translation.Models.Childcare
         public int EstimatedChildren { get; set; }
         public int CongregationId { get; set; }
         public string Requester { get; set; }
-       
-
+        public int ChildcareContactId { get; set; }
+        public string ChildcareContactEmail { get; set; }
     }
 }
     
