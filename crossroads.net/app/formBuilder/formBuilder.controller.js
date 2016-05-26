@@ -39,7 +39,7 @@
       vm.group.groupId = null;
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
-      vm.data = {};  
+      vm.data = {};
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
 
@@ -61,6 +61,7 @@
       _.each(list, function(item) {
         results[item.attributeTypeId] = item;
       });
+
       return results;
     }
 
@@ -147,15 +148,35 @@
       vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
 
       vm.data.profileData.person.$save(function() {
-           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-           vm.saving = false;
-         },
+          $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+          vm.saving = false;
+        },
 
-         function() {
-           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-           $log.debug('person save unsuccessful');
-           vm.saving = false;
-         });
+        function() {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          $log.debug('person save unsuccessful');
+          vm.saving = false;
+        });
+    }
+
+    function getAttributeNote(fieldName, attributeId) {
+      var field = vm.data[fieldName];
+
+      var attribute = {
+        attribute: null,
+        notes: null,
+      };
+
+      if (field && field !== '') {
+        attribute = {
+          attribute: {
+            attributeId: attributeId,
+          },
+          notes: field,
+        };
+      }
+
+      return attribute;
     }
 
     function saveGroup() {
@@ -163,45 +184,36 @@
         return;
       }
 
-      //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
-      var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
+      var coFacilitator = getAttributeNote(
+        constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR,
+        constants.ATTRIBUTE_IDS.COFACILITATOR
+      );
 
-      var coFacilitatorAttribute = {
-        attribute: null,
-        notes: null,
-      };
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitator;
 
-      if (coFacilitator && coFacilitator !== '') {
-        coFacilitatorAttribute = {
-          attribute: {
-            attributeId: constants.ATTRIBUTE_IDS.COFACILITATOR
-          },
-          notes: coFacilitator,
-        };
-      }
-
-      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COFACILITATOR] = coFacilitatorAttribute;
-
+      // TODO: See if we can move this logic into the templates
+      var coParticipant = getAttributeNote(
+        constants.CMS.FORM_BUILDER.FIELD_NAME.COPARTICIPANT,
+        constants.ATTRIBUTE_IDS.COPARTICIPANT
+      );
+      vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COPARTICIPANT] = coParticipant;
 
       // TODO: Need better way to determine Leader vs. Member
-      if (coFacilitator) {
+      if (vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR]) {
         vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
       }
-
 
       var participants = [vm.data.groupParticipant];
 
       Group.Participant.save({
-          groupId: vm.data.group.groupId,
-        }, participants).$promise.then(function(response) {
-          $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
-          vm.saving = false;
-        }, function(error) {
-
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-          vm.saving = false;
-        });
+        groupId: vm.data.group.groupId,
+      }, participants).$promise.then(function(response) {
+        $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+        vm.saving = false;
+      }, function(error) {
+        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+        vm.saving = false;
+      });
     }
   }
-
 })();
