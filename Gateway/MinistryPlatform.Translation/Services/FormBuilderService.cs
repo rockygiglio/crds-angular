@@ -26,8 +26,11 @@ namespace MinistryPlatform.Translation.Services
 
             return records.Select(record => new Group
             {
+
                 GroupId = record.ToInt("dp_RecordID"),
+                GroupDescription = record.ToString("Description"),                
                 Name = record.ToString("Group_Name"),
+                CongregationId = record.ToInt("Congregation_ID"),
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToDate("End_Date")
             }).ToList();
