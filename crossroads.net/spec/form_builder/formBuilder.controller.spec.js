@@ -1,10 +1,11 @@
 require('crds-core');
 require('../../app/ang');
-require('../../app/formBuilder/formBuilder.module.js');
+require('../../app/common/common.module');
 require('../../app/app');
+require('../../app/formBuilder/formBuilder.module.js');
 
 describe('FormBuilder', function() {
-  describe('undividedFacilitator.controller', function() {
+  describe('formBuilder.controller', function() {
     var CONSTANTS = require('crds-constants');
     var MODULE = CONSTANTS.MODULES.FORM_BUILDER;
 
@@ -14,6 +15,8 @@ describe('FormBuilder', function() {
     var Session;
     var $controller;
     var group;
+    var FormBuilderFieldsService;
+    var ContentPageService;
 
     beforeEach(angular.mock.module(function($provide) {
       $provide.value('$state', {
@@ -23,14 +26,82 @@ describe('FormBuilder', function() {
 
       Session = {exists: function() {return 45;}};
 
-      $provide.value('Session', Session);
+      ContentPageService = {
+        page: {
+          fields: [1, 2]
+        },
+        resolvedData: {
+          attributeTypes: [
+            {
+              name: 'Shirt Size',
+              attributes: [
+                {
+                  attributeId: 6852,
+                  name: 'Child S',
+                  description: null,
+                  category: null,
+                  categoryId: null,
+                  categoryDescription: null,
+                  sortOrder: 0,
+                }
+              ],
+              attributeTypeId: 21,
+              allowMultipleSelections: false,
+            },
+            {
+              name: 'Undivided Co-facilitator',
+              attributes: [
+                {
+                  attributeId: 7086,
+                  name: 'co-facilitator',
+                  description: null,
+                  category: null,
+                  categoryId: null,
+                  categoryDescription: null,
+                  sortOrder: 1
+                }
+              ],
+              attributeTypeId: 87,
+              allowMultipleSelections: false,
+            },
+            {
+              name: 'Undivided Co-participant',
+              attributes: [
+                {
+                  attributeId: 7087,
+                  name: 'co-participant',
+                  description: null,
+                  category: null,
+                  categoryId: null,
+                  categoryDescription: null,
+                  sortOrder: 1
+                }
+              ],
+              attributeTypeId: 88,
+              allowMultipleSelections: false,
+            },
+          ]
+        }
+      }
+
+      FormBuilderFieldsService = {
+        hasProfile: function() {
+          return false;
+        },
+
+        hasGroupParticipant: function() {
+          return true;
+        },
+      };
+
+      $provide.value('Session', Session, 'ContentPageService', ContentPageService, 'FormBuilderFieldsService', FormBuilderFieldsService);
     }));
 
     beforeEach(angular.mock.module(CONSTANTS.MODULES.COMMON));
     beforeEach(angular.mock.module(MODULE));
 
     beforeEach(
-      inject(function($injector, _$compile_, _$rootScope_, _$controller_, Session, _$q_) {
+      inject(function($injector, _$compile_, _$rootScope_, _$controller_, Session, FormBuilderService, ContentPageService, _$q_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $q = _$q_;
@@ -57,10 +128,12 @@ describe('FormBuilder', function() {
         }
       };
 
-      var controller = $controller('UndividedFacilitatorCtrl', {
+      var controller = $controller('FormBuilderCtrl', {
         $rootScope: $rootScope,
         Group: group,
-        Session: Session
+        Session: Session,
+        ContentPageService: ContentPageService,
+        FormBuilderFieldsService: FormBuilderFieldsService,
       });
 
       return controller;
@@ -68,11 +141,11 @@ describe('FormBuilder', function() {
 
     it('loading state should be true while save is running and reset after successful save', function() {
       var controller = getController(false);
-      controller.responses = {
-        Childcare: true,
-        singleAttributes: {},
+      controller.data.group = {
+        groupId: 123
       };
-      controller.responses[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'coFacilitator';
+
+      controller.data[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'coFacilitator';
 
       controller.save();
       expect(controller.saving).toBe(true);
@@ -83,11 +156,12 @@ describe('FormBuilder', function() {
 
     it('loading state should be true while save is running and reset after failed save', function() {
       var controller = getController(true);
-      controller.responses = {
-        Childcare: true,
-        singleAttributes: {},
+
+      controller.data.group = {
+        groupId: 123
       };
-      controller.responses[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'coFacilitator';
+
+      controller.data[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'coFacilitator';
 
       controller.save();
       expect(controller.saving).toBe(true);
@@ -100,26 +174,26 @@ describe('FormBuilder', function() {
       var controller = getController(false);
 
       // Force exception by not unsetting responses object
-      delete controller.responses;
+      delete controller.data;
 
       expect(controller.save).toThrow();
       $rootScope.$apply();
       expect(controller.saving).toBe(false);
     });
 
-    it('co-facilitator should be added to the single attributes and original object remain unchanged', function() {
+    it('co-facilitator should be added to the single attributes', function() {
       var controller = getController(false);
-      controller.responses = {
-        Childcare: true,
-        singleAttributes: {},
+
+      controller.data.group = {
+        groupId: 123
       };
-      controller.responses[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'My Co-Facilitator';
+
+      controller.data[CONSTANTS.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR] = 'My Co-Facilitator';
 
       spyOn(group.Participant, 'save').and.callThrough();
       controller.save();
       $rootScope.$apply();
 
-      expect(controller.responses.singleAttributes[CONSTANTS.ATTRIBUTE_TYPE_IDS.COFACILITATOR]).not.toBeDefined();
       expect(group.Participant.save).toHaveBeenCalled();
 
       var expectedCoFacilitator = {
@@ -139,9 +213,9 @@ describe('FormBuilder', function() {
 
     it('co-facilitator should not be added to the single attributes', function() {
       var controller = getController(false);
-      controller.responses = {
-        Childcare: true,
-        singleAttributes: {},
+
+      controller.data.group = {
+        groupId: 123
       };
 
       spyOn(group.Participant, 'save').and.callThrough();
@@ -154,14 +228,20 @@ describe('FormBuilder', function() {
       var participantsArgument = mostRecentArgs[1];
       var participant = participantsArgument[0];
 
-      expect(participant.singleAttributes[CONSTANTS.ATTRIBUTE_TYPE_IDS.COFACILITATOR]).not.toBeDefined();
+      var emptyAttribute = {
+        attribute: null,
+        notes: null,
+      };
+
+      expect(participant.singleAttributes[CONSTANTS.ATTRIBUTE_TYPE_IDS.COFACILITATOR]).toEqual(emptyAttribute);
     });
 
     it('childCareNeeded should not be set', function() {
       var controller = getController(false);
-      controller.responses = {
-        Childcare: false,
-        singleAttributes: {},
+
+      controller.data.childCareNeeded = false;
+      controller.data.group = {
+        groupId: 123
       };
 
       spyOn(group.Participant, 'save').and.callThrough();
@@ -179,9 +259,10 @@ describe('FormBuilder', function() {
 
     it('childCareNeeded should be set', function() {
       var controller = getController(false);
-      controller.responses = {
-        Childcare: true,
-        singleAttributes: {},
+
+      controller.data.groupParticipant.childCareNeeded = true;
+      controller.data.group = {
+        groupId: 123
       };
 
       spyOn(group.Participant, 'save').and.callThrough();

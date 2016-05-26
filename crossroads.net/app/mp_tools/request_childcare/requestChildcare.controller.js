@@ -47,7 +47,8 @@ class RequestChildcareController {
       {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
     const endTime = moment().set(
       {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
-    return `${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
+    const day = time['Meeting_Day'];
+    return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
   }
 
   submit() {
@@ -64,7 +65,7 @@ class RequestChildcareController {
         startDate: moment(this.startDate).utc(),
         endDate: moment(this.endDate).utc(),
         frequency: this.choosenFrequency,
-        timeframe: this.choosenPreferredTime.dp_RecordID,
+        timeframe: this.formatPreferredTime(this.choosenPreferredTime),
         estimatedChildren: this.numberOfChildren,
         notes: this.notes
       };

@@ -29,7 +29,7 @@ namespace crds_angular.Models.Crossroads.Childcare
         public string Frequency { get; set; }
 
         [JsonProperty(PropertyName = "timeframe")]
-        public int PreferredTime { get; set; }
+        public string PreferredTime { get; set; }
 
         [JsonProperty(PropertyName = "estimatedChildren")]
         public int EstimatedChildren { get; set; }

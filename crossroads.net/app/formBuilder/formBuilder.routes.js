@@ -2,9 +2,9 @@
   'use strict';
   module.exports = FormBuilderRoutes;
 
-  FormBuilderRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider', '$locationProvider'];
+  FormBuilderRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider'];
 
-  function FormBuilderRoutes($stateProvider, $urlMatcherFactory, $locationProvider) {
+  function FormBuilderRoutes($stateProvider, $urlMatcherFactory) {
     $urlMatcherFactory.caseInsensitive(true);
 
     $stateProvider

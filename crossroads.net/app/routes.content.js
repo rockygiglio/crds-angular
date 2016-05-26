@@ -30,8 +30,10 @@
                                           $stateParams,
                                           Page,
                                           ContentPageService,
-                                          Session,                                          
-                                          $state) {
+                                          Session,
+                                          $state,
+                                          $q,
+                                          FormBuilderResolverService) {
                 var promise;
 
                 var link = addTrailingSlashIfNecessary($stateParams.link);
@@ -45,7 +47,7 @@
 
                   var notFoundPromise = Page.get({url: '/page-not-found/'}).$promise;
 
-                  notFoundPromise.then(function (promise) {
+                  notFoundPromise.then(function(promise) {
                     if (promise.pages.length > 0) {
                       ContentPageService.page = promise.pages[0];
                     } else {
@@ -60,7 +62,36 @@
                   return notFoundPromise;
                 });
 
-                return childPromise.then(function () {
+                childPromise = childPromise.then(function() {
+                  if (ContentPageService.page.canViewType === 'LoggedInUsers') {
+                    $state.next.data.isProtected = true;
+                    var promise = Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);
+                    return promise;
+                  }
+
+                  var deferred = $q.defer();
+                  deferred.resolve();
+                  return deferred.promise;
+                });
+
+                childPromise = childPromise.then(function() {
+                  var fields = ContentPageService.page.fields;
+
+                  if (fields && fields.length > 1) {
+                    return FormBuilderResolverService.getInstance({
+                      contactId: Session.exists('userId'),
+                      fields: fields,
+                    });
+                  }
+
+                  var deferred = $q.defer();
+                  deferred.resolve();
+                  return deferred.promise;
+                });
+
+                return childPromise.then(function(formBuilderServiceData) {
+                  ContentPageService.resolvedData = formBuilderServiceData;
+
                   var metaDescription = ContentPageService.page.metaDescription;
                   if (!metaDescription) {
                     //If a meta description is not provided we'll use the Content
@@ -76,12 +107,7 @@
                     image: ContentPageService.page.image,
                     statusCode: ContentPageService.page.errorCode
                   };
-                                
-                  if (ContentPageService.page.canViewType === 'LoggedInUsers') {
-                    $state.next.data.isProtected = true;
-                    Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);
-                  }
-                                    
+
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
                       return $templateFactory.fromUrl('templates/noHeaderOrFooter.html');
@@ -111,9 +137,8 @@
             'sidebar@content': {
               templateUrl: 'content/sidebarContent.html'
             }
-
           }, data: {
-            resolve: true          
+            resolve: true
           }
         });
   }
