@@ -42,7 +42,6 @@ namespace MinistryPlatform.Translation.Services
             c.CongregationId = recordDict.ToInt("Congregation_ID");
             c.Name = recordDict.ToString("Congregation_Name");
             c.LocationId = recordDict.ToInt("Location_ID");
-          //  c.ChildcareContact = recordDict.ToInt("ChildcareContact");
             return c;
         }
 
