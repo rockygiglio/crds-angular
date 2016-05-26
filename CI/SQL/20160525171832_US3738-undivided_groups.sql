@@ -67,10 +67,10 @@ begin
 	DECLARE @subgroup_cnt int
 	DECLARE @subgroup_idx int = 0
 	set @subgroup_cnt = CASE @siteName
-		WHEN 'Florence' THEN 5
-		WHEN 'Oakley' THEN 76
-		WHEN 'Mason' THEN 11
-		WHEN 'West Side' THEN 5
+		WHEN 'Florence' THEN 4
+		WHEN 'Oakley' THEN 75
+		WHEN 'Mason' THEN 10
+		WHEN 'West Side' THEN 4
 		ELSE 0
 	END
 
@@ -79,7 +79,8 @@ begin
 		select @subgroup_idx = @subgroup_idx + 1;
 		DECLARE @subgroup_name nvarchar(255)
 		DECLARE @subgroup_id int = 0
-		SET @subgroup_name = REPLACE(@PARENT_TEMPLATE, '{site}', @siteName) + ' | #' + CONVERT(varchar(2), @subgroup_idx)
+
+		SET @subgroup_name = REPLACE(@PARENT_TEMPLATE, '{site}', @siteName) + ' | #' + RIGHT('0' + CAST(@subgroup_idx as varchar), 2)
 		PRINT 'Looking for group ' + @subgroup_name
 		
 		select @subgroup_id = Group_ID from [dbo].[Groups] where Group_Name = @subgroup_name
