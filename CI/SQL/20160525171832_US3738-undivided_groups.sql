@@ -13,9 +13,9 @@ declare @UNDIVIDED_SUB_GROUP_END_DATE as Date = '2016-09-11';
 
 -- These are currently the only sites we are worried about. 
 -- If more sites are needed, add them to the this temp table AND add them to case statement below
-declare @sites table(idx int identity(1,1), siteId int, siteName varchar(255));
-insert into @sites (siteId, siteName) 
-		values (7, 'Florence'), (6, 'Mason'), (1, 'Oakley'), (8, 'West Side');
+declare @sites table(idx int identity(1,1), siteId int, siteName varchar(255), groupDescription varchar(255));
+insert into @sites (siteId, siteName, groupDescription) 
+		values (7, 'Florence', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (6, 'Mason', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (1, 'Oakley', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (8, 'West Side', '6:30 - 8:30pm, Every Thursday from August 11 to August 31');
 
 declare @i int;
 declare @cnt int;
@@ -28,9 +28,10 @@ begin
 	
 	declare @siteId as int
 	declare @siteName as varchar(255)
+	declare @groupDescription as varchar(255)
 	declare @groupName as varchar(255)
 	declare @groupId as int = 0
-	select @siteId = siteId, @siteName = siteName from @sites where idx = @i;
+	select @siteId = siteId, @siteName = siteName, @groupDescription = groupDescription from @sites where idx = @i;
 	
 	set @groupName = REPLACE(@PARENT_TEMPLATE, '{site}', @siteName);
 	select @groupId = Group_ID from [dbo].[Groups] where Group_Name = @groupName
@@ -46,6 +47,7 @@ begin
 			,[Ministry_ID]
 			,[Congregation_ID]
 			,[Primary_Contact]
+			,[Description]
 			,[Start_Date]
 			,[End_Date]
 			,[Domain_ID])
@@ -56,6 +58,7 @@ begin
 			,@UNDIVIDED_GROUP_MINISTRY
 			,@siteId
 			,@PRIMARY_CONTACT
+			,@groupDescription
 			,@UNDIVIDED_PARENT_GROUP_START_DATE
 			,@UNDIVIDED_PARENT_GROUP_END_DATE
 			,1
@@ -63,7 +66,7 @@ begin
 		SELECT @groupId = id from @temp_groupId;
 	END
 
-	-- CREATE THE SUBGROUPS
+--	 CREATE THE SUBGROUPS
 	DECLARE @subgroup_cnt int
 	DECLARE @subgroup_idx int = 0
 	set @subgroup_cnt = CASE @siteName

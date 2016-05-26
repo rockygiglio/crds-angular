@@ -39,7 +39,8 @@
       vm.group.groupId = null;
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
-      vm.data = {};  
+      vm.data = {};
+      vm.data.displayLocation = displayLocation;
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
 
@@ -48,6 +49,10 @@
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       vm.data.groupParticipant = participant;
+    }
+
+    function displayLocation(locationId) {
+      return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
     }
 
     function openBirthdatePicker($event) {
@@ -162,7 +167,7 @@
       if (!FormBuilderFieldsService.hasGroupParticipant()) {
         return;
       }
-
+debugger;
       //var singleAttributes = _.cloneDeep(vm.responses.singleAttributes);
       var coFacilitator = vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR];
 

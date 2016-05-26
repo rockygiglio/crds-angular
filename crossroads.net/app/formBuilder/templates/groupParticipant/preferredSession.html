@@ -6,7 +6,7 @@
     <input type="radio"
             name="group"
             ng-value="group.groupId"
-            ng-model="formField.data.group.groupId" /> {{group.groupName}}
+            ng-model="formField.data.group.groupId" /> {{formField.data.displayLocation(group.congregationId)}} ({{group.groupDescription}})
     </label>
 </div>
 </div>
