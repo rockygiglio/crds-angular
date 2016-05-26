@@ -44,8 +44,7 @@
         loggedin: crds_utilities.checkLoggedin,
         MPTools: 'MPTools',
         Page: 'Page',
-        $stateParams: '$stateParams',
-        CmsInfo: function(Page, $stateParams) {
+        CmsInfo: function(Page) {
           return Page.get({
             url: '/volunteer-application/kids-club/'
           }).$promise;
@@ -198,6 +197,7 @@
         resolve: {
           $state: '$state',
           CRDS_TOOLS_CONSTANTS: 'CRDS_TOOLS_CONSTANTS',
+          GiveTransferService: 'GiveTransferService',
           role: function(CRDS_TOOLS_CONSTANTS) {
             return CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.KidsClubTools;
           },
