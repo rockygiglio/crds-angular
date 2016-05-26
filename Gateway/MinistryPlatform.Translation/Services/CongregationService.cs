@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class CongregationService : BaseService, ICongregationService
+    public class CongregationService : BaseService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        
 
         public CongregationService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
+            
         }
 
         public Congregation GetCongregationById(int id)
@@ -39,7 +42,10 @@ namespace MinistryPlatform.Translation.Services
             c.CongregationId = recordDict.ToInt("Congregation_ID");
             c.Name = recordDict.ToString("Congregation_Name");
             c.LocationId = recordDict.ToInt("Location_ID");
+          //  c.ChildcareContact = recordDict.ToInt("ChildcareContact");
             return c;
         }
+
+       
     }
 }

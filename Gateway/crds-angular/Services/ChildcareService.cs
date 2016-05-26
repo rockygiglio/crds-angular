@@ -28,8 +28,21 @@ namespace crds_angular.Services
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
         private readonly IApiUserService _apiUserService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.ICongregationService _congregationService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
+        private IEventParticipantService object1;
+        private ICommunicationService object2;
+        private IConfigurationWrapper object3;
+        private IContactService object4;
+        private MinistryPlatform.Translation.Services.Interfaces.IEventService object5;
+        private IParticipantService object6;
+        private IServeService object7;
+        private IDateTime object8;
+        private IApiUserService object9;
+        private Interfaces.IEventService object10;
+        private IChildcareRequestService object11;
+        private MinistryPlatform.Translation.Services.Interfaces.ICongregationService object12;
 
         public ChildcareService(IEventParticipantService eventParticipantService,
                                 ICommunicationService communicationService,
@@ -39,9 +52,11 @@ namespace crds_angular.Services
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService)
+                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService,
+                                MinistryPlatform.Translation.Services.Interfaces.ICongregationService congregationService)
         {
             _childcareRequestService = childcareRequestService;
+            _congregationService = congregationService;
             _eventParticipantService = eventParticipantService;
             _communicationService = communicationService;
             _configurationWrapper = configurationWrapper;
@@ -52,6 +67,22 @@ namespace crds_angular.Services
             _serveService = serveService;
             _dateTimeWrapper = dateTimeWrapper;
             _apiUserService = apiUserService;
+        }
+
+        public ChildcareService(IEventParticipantService object1, ICommunicationService object2, IConfigurationWrapper object3, IContactService object4, MinistryPlatform.Translation.Services.Interfaces.IEventService object5, IParticipantService object6, IServeService object7, IDateTime object8, IApiUserService object9, Interfaces.IEventService object10, IChildcareRequestService object11)
+        {
+            this.object1 = object1;
+            this.object2 = object2;
+            this.object3 = object3;
+            this.object4 = object4;
+            this.object5 = object5;
+            this.object6 = object6;
+            this.object7 = object7;
+            this.object8 = object8;
+            this.object9 = object9;
+            this.object10 = object10;
+            this.object11 = object11;
+            
         }
 
         public List<FamilyMember> MyChildren(string token)
@@ -102,24 +133,70 @@ namespace crds_angular.Services
             }
         }
 
-
-        public void SendChildcareRequestNotification(int childcareRequestId, ChildcareRequest request)
+        public void CreateChildcareRequest(ChildcareRequestDto request, String token)
         {
-            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareConfirmationTemplate");
-            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
-            var template = _communicationService.GetTemplate(templateId);
-            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            const int domainId = 1;
+            var mpRequest = request.ToMPChildcareRequest();
+            var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
 
-            var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId);
-
+            try
+            {
+                var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
+                SendChildcareRequestNotification(childcareRequest);
+            }
+           catch (Exception ex)
+            {
+                _logger.Error(string.Format("Save Request failed"), ex);
+            }
 
         }
 
-        public void CreateChildcareRequest(ChildcareRequestDto request)
+        public void SendChildcareRequestNotification( ChildcareRequestEmail request)
         {
-            var mpRequest = request.ToMPChildcareRequest();
-            _childcareRequestService.CreateChildcareRequest(mpRequest);
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
+            var template = _communicationService.GetTemplate(templateId);
+            const int domainId = 1;
+            var congregation = _congregationService.GetCongregationById(request.CongregationId);
+            //var toContact = new MyContact
+            //{
+            //    Contact_ID = congregation.ChildcareContact,
+            //    Email_Address = _contactService.GetContactEmail(congregation.ChildcareContact)
+            //};
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Requester", request.Requester},
+                {"GroupName", request.GroupName },
+                {"MinistryName", request.MinistryName },
+                {"StartDate", (request.StartDate).ToString("yy-mmm-dd") },
+                {"ChildcareSession", request.ChildcareSession }
+
+            };
+
+            
+            var communication = new Communication
+           
+             {
+                AuthorUserId = authorUserId,
+                DomainId = domainId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ToContacts = new List<Contact> {new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail } },
+                MergeData = mergeData
+             };
+
+            try
+            {
+                _communicationService.SendMessage(communication);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Send Childcare request notification email failed"), ex);
+            }
+
+
         }
 
         private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
@@ -294,5 +371,6 @@ namespace crds_angular.Services
             };
             return mergeData;
         }
-    }
+
+        } 
 }

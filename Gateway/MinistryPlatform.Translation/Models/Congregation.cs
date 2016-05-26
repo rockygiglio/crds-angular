@@ -5,5 +5,7 @@ namespace MinistryPlatform.Translation.Models
         public int CongregationId { get; set; }
         public string Name { get; set; }
         public int LocationId { get; set; }
+       // public int ChildcareContact { get; set; }
     }
+
 }
