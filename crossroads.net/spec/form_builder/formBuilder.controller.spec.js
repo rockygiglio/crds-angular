@@ -27,6 +27,9 @@ describe('FormBuilder', function() {
       Session = {exists: function() {return 45;}};
 
       ContentPageService = {
+        page: {
+          fields: [1, 2]
+        },
         resolvedData: {
           attributeTypes: [
             {

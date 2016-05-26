@@ -26,6 +26,7 @@
           $compile(template)(scope);
         });
       },
+
       controller: FormFieldController,
       controllerAs: 'formField',
       bindToController: true
@@ -47,7 +48,7 @@
     }
 
     function getTemplateUrl(field) {
-      switch (field.className) {        
+      switch (field.className) {
         case 'ProfileField':
         case 'GroupParticipantField':
           return getCMSTemplateUrl(field);
@@ -60,7 +61,9 @@
 
     function getCMSTemplateUrl(field) {
       //TODO: See if we can simplify / possibly strategy pattern
-      switch(field.templateType) {
+      switch (field.templateType) {
+        case 'Birthday':
+          return 'profile/birthdate.html';
         case 'Childcare':
           return 'groupParticipant/childcare.html';
         case 'CoFacilitator':
@@ -75,6 +78,8 @@
           return 'profile/gender.html';
         case 'KickOffEvent':
           return 'groupParticipant/kickOffEvent.html';
+        case 'Location':
+          return 'profile/location.html';
         case 'Name':
           return 'profile/name.html';
         case 'GroupsUndivided':

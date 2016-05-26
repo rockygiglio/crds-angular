@@ -11,6 +11,5 @@
   app.directive('eventFilter', require('./eventFilter.directive'));
   app.directive('siteFilter', require('./siteFilter.directive'));
   app.controller('AdminToolController', require('./adminTool.controller'));
-  app.config(require('./adminTool.routes'));
 
 })();
