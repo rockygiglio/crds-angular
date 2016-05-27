@@ -26,6 +26,6 @@ SET [Field_List] = 	'Group_Participants.[Start_Date] AS [Registration_Date]
 	,Group_Participants.[Child_Care_Requested] AS [Requested_Child_Care]'
 ,[View_Clause] ='Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND Group_Role_ID_Table.Group_Role_ID = 16 AND
      (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL) 
-		 AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL)'
+		 AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL) AND Group_ID_Table_Parent_Group_Table.Group_ID IS NULL'
 		
 WHERE Page_View_ID = '92145'			
