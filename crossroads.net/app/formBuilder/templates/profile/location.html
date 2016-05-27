@@ -1,10 +1,8 @@
 <div class="form-group col-md-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'name')}" >
-<label ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
-<label ng-show="formField.field.description" dynamic-content="formField.field.description | html"></label>
-<div class="bordered">
-  <select class="form-control col-sm-12"  name="crLocation"  ng-model="formField.data.profileData.person.congregationId"
-        ng-options="location.dp_RecordID as location.dp_RecordName for location in formField.data.locations | orderBy: ['OnlineSortOrder', 'name']">
-  <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
-  </select> 
-</div>  
+  <label ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
+  <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
+    <select class="form-control"  name="crLocation"  ng-model="formField.data.profileData.person.congregationId"
+      ng-options="location.dp_RecordID as location.dp_RecordName for location in formField.data.locations | orderBy: ['OnlineSortOrder', 'name']">
+      <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+    </select>
 </div>
