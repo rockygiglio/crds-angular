@@ -1,0 +1,12 @@
+<div class="form-group col-md-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'ethnicity')}" >
+  <label class="block required" ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
+  <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
+  <div class="profile-ethnicity">
+    <div class="checkbox" ng-repeat="ethnicity in formField.data.profileData.person.attributeTypes[attributeTypeIds.ETHNICITY].attributes">
+      <label>
+        <input type="checkbox" name="ethnicity" ng-value="ethnicity.attributeId" ng-model="ethnicity.selected" />
+        {{ethnicity.name}}
+      </label>
+    </div>
+  </div>
+</div>

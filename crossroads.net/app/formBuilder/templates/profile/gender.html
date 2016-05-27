@@ -1,0 +1,16 @@
+<div class="form-group col-md-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'gender')}" >
+  <label class="block required" ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
+  <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
+  <label class="radio-inline" ng-repeat='genders in formField.data.genders'>
+    <input type="radio"
+            name="gender"
+            ng-value="genders.dp_RecordID"
+            ng-model="formField.data.profileData.person.genderId"
+            required />
+    {{genders.dp_RecordName}}
+  </label>
+  <ng-messages for="profile.pform.kickOffEvent.$error" ng-if="profile.validation.showErrors(profile.pform, 'kickOffEvent')">
+  <ng-messages-include src="on-submit-messages"></ng-messages-include>
+  <ng-messages-include src="on-pause-messages"></ng-messages-include>
+  </ng-messages>
+</div>

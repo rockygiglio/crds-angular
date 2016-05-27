@@ -25,6 +25,7 @@
       ABUSE_HISTORY: 69,
       ALLERGIES: 67,
       COFACILITATOR: 87,
+      COPARTICIPANT: 88,
       DIETARY_RESTRICTIONS: 65,
       ETHNICITY: 20,
       EXPERIENCE_ABROAD: 68,
@@ -39,10 +40,13 @@
       TRIP_SKILLS: 61,
       TSHIRT_SIZES: 21,
       TRIP_EXPERIENCE: 62,
+      UNDIVIDED_FACILITATOR_TRAINING: 85,
+      UNDIVIDED_RSVP_KICKOFF: 86,
     },
     ATTRIBUTE_IDS: {
       ALL_ALLERGIES: 3971,
       COFACILITATOR: 7086,
+      COPARTICIPANT: 7087,
       DELTA_FREQUENT_FLYER: 3958,
       EXPERIENCE_ABROAD: 3972,
       US_FREQUENT_FLYER: 3980,
@@ -65,9 +69,14 @@
         ONETIMEEVENTS: 'OnetimeEventSignupPage'
       },
       FORM_BUILDER: {
+        CLASS_NAME: {
+          GROUP_PARTICIPANT_FIELD: 'GroupParticipantField',
+          PROFILE_FILED: 'ProfileField',
+        },
         FIELD_NAME: {
           COFACILITATOR: 'CoFacilitator',
-        }
+          COPARTICIPANT: 'CoParticipant',
+        },
       }
     },
     GROUP: {

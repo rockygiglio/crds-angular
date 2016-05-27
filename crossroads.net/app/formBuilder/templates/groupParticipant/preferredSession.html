@@ -1,0 +1,12 @@
+<div class="form-group col-md-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'undividedSession')}" >
+  <label ng-show="formField.field.label"dynamic-content="formField.field.label | html"></label>
+  <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
+  <div class="radio" ng-repeat='group in formField.data.availableGroups'>
+    <label>
+    <input type="radio"
+            name="group"
+            ng-value="group.groupId"
+            ng-model="formField.data.group.groupId" /> {{formField.data.displayLocation(group.congregationId)}} ({{group.groupDescription}})
+    </label>
+  </div>
+</div>
