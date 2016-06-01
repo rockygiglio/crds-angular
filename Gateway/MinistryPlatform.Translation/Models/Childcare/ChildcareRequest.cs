@@ -14,7 +14,6 @@ namespace MinistryPlatform.Translation.Models.Childcare
         public DateTime EndDate { get; set; }
         public string Frequency { get; set; }
         public string PreferredTime { get; set; }
-        public int EstimatedChildren { get; set; }
         public string Notes { get; set; }
         public List<DateTime> DatesList { get; set; }
     }
