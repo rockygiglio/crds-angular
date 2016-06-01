@@ -89,13 +89,13 @@
       </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('preferredTime')}" ng-show="request.choosenGroup">
-      	<label class="control-label required" for="preferredTime">Preferred Time</label>
+      	<label class="control-label required" for="preferredTime">Available Childcare Sessions</label>
       	<select name="preferredTime"
                 class="form-control"
                 ng-model="request.choosenPreferredTime"
                 required
                 ng-options="request.formatPreferredTime(time) for time in request.filteredTimes track by time.dp_RecordID" >
-      		<option value="">-- Please choose a preferred time --</option>
+      		<option value="">-- Please choose a childcare session --</option>
       	</select>
         <ng-messages for="request.childcareRequestForm.preferredTime.$error" ng-if="request.validateField('preferredTime')">
           <span ng-message="required">
