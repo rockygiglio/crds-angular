@@ -18,10 +18,11 @@
       },
       resolve:{
         $stateParams: '$stateParams',
-        type: function($stateParams){
+        type: function($stateParams) {
           return $stateParams.type;
         },
-        searchString: function($stateParams){
+
+        searchString: function($stateParams) {
           return $stateParams.q;
         }
       }

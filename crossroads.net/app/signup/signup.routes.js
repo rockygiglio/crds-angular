@@ -28,6 +28,7 @@
         $q: '$q',
         Group: 'Group',
         ServeOpportunities: 'ServeOpportunities',
+        Lookup: 'Lookup',
         Family: function(SignupService, ServeOpportunities) {
           return ServeOpportunities.Family.query({}, function(data) {
             SignupService.family = data;
