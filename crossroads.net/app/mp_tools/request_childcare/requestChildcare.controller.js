@@ -31,7 +31,7 @@ class RequestChildcareController {
       this.groups = this.requestChildcareService
         .getGroups(this.choosenCongregation.dp_RecordID, this.choosenMinistry.dp_RecordID); 
       this.groups.$promise
-        .then(data => this.loadingGroups = false, err => this.loadingGroups = false);
+        .then(() => this.loadingGroups = false, () => this.loadingGroups = false);
       this.preferredTimes = this.requestChildcareService.getPreferredTimes(this.choosenCongregation.dp_RecordID);
       this.filteredTimes = this.preferredTimes;
     }
@@ -44,6 +44,10 @@ class RequestChildcareController {
       var deactivateDate = moment(time.Deactivate_Date);
       return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate); 
     });
+  }
+
+  showGaps() {
+    return this.choosenFrequency && this.choosenFrequency !== 'Once';
   }
 
   showGroups() {
@@ -79,11 +83,11 @@ class RequestChildcareController {
         notes: this.notes
       };
       const save = this.requestChildcareService.saveRequest(dto);
-      save.$promise.then((data) => {
+      save.$promise.then(() => {
         this.log.debug('saved!');
         this.saving = false;
         this.window.close();
-      }, (err) => {
+      }, () => {
         this.saving = false;
         this.log.error('error!'); 
         this.saving = false;
