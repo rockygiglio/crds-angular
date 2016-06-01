@@ -40,3 +40,32 @@ PRINT 'Adding foreign key for Domain'
 ALTER TABLE [dbo].[cr_Childcare_Request_Dates]  WITH CHECK ADD  CONSTRAINT [FK_Childcare_Requests_Dates_Domain] FOREIGN KEY([Domain_ID])
 	REFERENCES [dbo].[dp_Domains] ([Domain_ID])
 GO
+
+PRINT 'Creating subpage Request_Dates to Childcare Requests page'
+INSERT INTO [dbo].[dp_Sub_Pages]
+           ([Display_Name]
+           ,[Singular_Name]
+           ,[Page_ID]
+           ,[View_Order]
+           ,[Primary_Table]
+           ,[Primary_Key]
+           ,[Default_Field_List]
+           ,[Selected_Record_Expression]
+		   ,[Filter_Key]
+           ,[Relation_Type_ID]
+           ,[Display_Copy])
+     VALUES
+           ('Request Dates'
+           ,'Request Date'
+           ,36
+           ,1
+           ,'cr_Childcare_Request_Dates'
+           ,'Childcare_Request_Date_ID'
+           ,'Childcare_Request_Date, Approved'
+           ,'Childcare_Request_Date'
+		   ,'Childcare_Request_ID'
+           ,1
+           ,1)
+GO
+
+
