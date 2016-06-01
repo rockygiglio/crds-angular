@@ -31,9 +31,6 @@ namespace crds_angular.Models.Crossroads.Childcare
         [JsonProperty(PropertyName = "timeframe")]
         public string PreferredTime { get; set; }
 
-        [JsonProperty(PropertyName = "estimatedChildren")]
-        public int EstimatedChildren { get; set; }
-
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
 
@@ -49,7 +46,6 @@ namespace crds_angular.Models.Crossroads.Childcare
                 EndDate = this.EndDate,
                 Frequency = this.Frequency,
                 PreferredTime = this.PreferredTime,
-                EstimatedChildren = this.EstimatedChildren,
                 Notes = this.Notes
             };
 
