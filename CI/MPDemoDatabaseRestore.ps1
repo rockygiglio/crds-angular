@@ -7,9 +7,9 @@
 #   -DBPassword password         The SQLServer password to login to the DBServer (optional, defaults to environment variable MP_TARGET_DB_PASSWORD)
 
 Param (
-  [string]$DBServer = "216.68.184.202", # default to public IP of MPTEST02
+  [string]$DBServer = "mp-demo-db.centralus.cloudapp.azure.com", # default to public IP of MPTEST02
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
-  [string]$BackupPath = "E:\Backup\FromProduction",
+  [string]$BackupPath = "F:\Backups\FromProduction",
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable
   [string]$DBPassword = $(Get-ChildItem Env:MP_TARGET_DB_PASSWORD).Value # Default to environment variable
 )
@@ -91,18 +91,18 @@ $updateSql = @"
 -- The API password
 DECLARE @apiPassword varchar(30) = 'xrds8253%%(';
 -- The internal server name, if accessible at a different URL internally versus externally
-DECLARE @internalServerName varchar(75) = 'MP-INT-WEB';
+DECLARE @internalServerName varchar(75) = 'MP-DEMO-WEB';
 -- The external server name
-DECLARE @externalServerName varchar(75) = 'adminint.crossroads.net';
+DECLARE @externalServerName varchar(75) = 'admindemo.crossroads.net';
 -- The name of the site
 DECLARE @applicationTitle varchar(30) = 'Crossroads Integration';
 -- The user which will be logging in to the MP database from the ministryplatform and ministryplatformapi apps
-DECLARE @dbLoginUser varchar(50) = 'MP-INT-DB\MPUser';
+DECLARE @dbLoginUser varchar(50) = 'MP-DEMO-DB\MPUser';
 -- The user which will be running the Windows scheduled tasks from the WEB server
-DECLARE @scheduledTasksUser varchar(50) = 'MP-INT-WEB\MPAdmin';
+DECLARE @scheduledTasksUser varchar(50) = 'MP-DEMO-WEB\MPAdmin';
 -- The domain GUID - set this to NEWID() when setting up a new domain, but use a previous value for an existing domain
 --DECLARE @domainGuid = NEWID();
-DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('0FDE7F32-37E3-4E0B-B020-622E0EBD6BF0' AS UNIQUEIDENTIFIER);
+DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('8B6242C9-EA32-40F7-97A2-E2BB3524CED2' AS UNIQUEIDENTIFIER);
 
 USE $DBName;
 
@@ -203,15 +203,15 @@ BEGIN
 END;
 
 Use MinistryPlatform
-CREATE USER [MP-INT-DB\MPUser] FOR LOGIN [MP-INT-DB\MPUser];
-ALTER ROLE [db_accessadmin] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_backupoperator] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_datareader] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_datawriter] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_ddladmin] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_executor] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_owner] ADD MEMBER [MP-INT-DB\MPUser];
-ALTER ROLE [db_securityadmin] ADD MEMBER [MP-INT-DB\MPUser];
+CREATE USER [MP-INT-DB\MPUser] FOR LOGIN [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_accessadmin] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_backupoperator] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_datareader] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_datawriter] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_ddladmin] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_executor] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_owner] ADD MEMBER [MP-DEMO-DB\MPUser];
+ALTER ROLE [db_securityadmin] ADD MEMBER [MP-DEMO-DB\MPUser];
 
 ALTER AUTHORIZATION ON DATABASE::$DBName to sa;
 "@;

@@ -1,11 +1,8 @@
 USE [MinistryPlatform]	
 GO
 
-SET IDENTITY_INSERT [dbo].[dp_Page_Views] ON
-
-INSERT INTO [dp_page_views]([Page_View_ID],[View_Title],[Page_ID],[Description],[Field_List],[View_Clause],[Order_By],[User_ID],[User_Group_ID])
-VALUES(92146,'Undivided - Registered Facilitators',316,'Staff members can view the users that have registered to be an Undivided Facilitator.'
-	,'Group_Participants.[Start_Date] AS [Registration_Date] 
+UPDATE [dp_page_views]
+SET [Field_List] = 'Group_Participants.[Start_Date] AS [Registration_Date] 
 	,Participant_ID_Table_Contact_ID_Table.[First_Name]
 	,Participant_ID_Table_Contact_ID_Table.[Last_Name]
 	,Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.[Gender]
@@ -32,9 +29,9 @@ VALUES(92146,'Undivided - Registered Facilitators',316,'Staff members can view t
 	  GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
 	  Attribute_Type_ID = 87) AS [Preferred_Co-Facilitator]	
 	, Group_Participants.[Child_Care_Requested] AS [Requested_Child_Care]'
-    ,'Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND Group_Role_ID_Table.Group_Role_ID = 16 AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL) AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL)'
-    ,'Group_Participants.[Start_Date]' 
-    ,NULL
-    ,NULL
-    )
-SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF
+,[View_Clause] = 'Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND 
+  Group_Role_ID_Table.Group_Role_ID = 22 AND (Group_Participants.End_Date > GetDate() OR 
+	Group_Participants.End_Date IS NULL) AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL)
+	AND Group_ID_Table_Parent_Group_Table.Group_ID IS NULL'
+  
+WHERE Page_View_ID = '92146'	
