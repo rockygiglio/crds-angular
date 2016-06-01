@@ -9,15 +9,15 @@
     <form name="request.childcareRequestForm" novalidate ng-submit="request.submit()">
 
       <div class="form-group" ng-class="{'has-error': request.validateField('congregation')}">
-      	<label class="control-label required" for="congregation">Site</label>
-      	<select name="congregation" 
+        <label class="control-label required" for="congregation">Site</label>
+        <select name="congregation" 
                 class="form-control"
                 ng-options="congregation.dp_RecordName for congregation in request.congregations track by congregation.dp_RecordID" 
                 ng-model="request.choosenCongregation"
                 required 
                 ng-change="request.getGroups()">
           <option value=""> -- Choose your Site -- </option>
-      	</select>
+        </select>
         <ng-messages for="request.childcareRequestForm.congregation.$error" ng-if="request.validateField('congregation')">
           <span ng-message="required">
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
