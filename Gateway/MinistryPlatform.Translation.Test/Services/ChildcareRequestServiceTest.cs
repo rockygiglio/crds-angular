@@ -45,7 +45,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 EndDate = DateTime.Today.AddDays(7),
                 Frequency = "Weekly",
                 PreferredTime = "8:00AM to 9:00AM",
-                EstimatedChildren = 30,
                 Notes = "This is a test request"
             };
 
@@ -59,7 +58,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"End_Date", request.EndDate},
                 {"Frequency", request.Frequency},
                 {"Childcare_Session", request.PreferredTime},
-                {"Est_No_of_Children", request.EstimatedChildren},
                 {"Notes", request.Notes},
                 {"Request_Status_ID", _childcareRequestPending}
             };

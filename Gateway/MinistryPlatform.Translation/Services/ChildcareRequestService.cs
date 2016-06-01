@@ -40,7 +40,6 @@ namespace MinistryPlatform.Translation.Services
                 {"End_Date", request.EndDate },
                 {"Frequency", request.Frequency },
                 {"Childcare_Session", request.PreferredTime },
-                {"Est_No_of_Children", request.EstimatedChildren },
                 {"Notes", request.Notes },
                 {"Request_Status_ID", _childcareRequestStatusPending }
             };
