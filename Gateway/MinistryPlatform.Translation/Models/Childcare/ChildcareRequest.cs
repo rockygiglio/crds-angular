@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MinistryPlatform.Models;
 
 namespace MinistryPlatform.Translation.Models.Childcare
@@ -15,5 +16,6 @@ namespace MinistryPlatform.Translation.Models.Childcare
         public string PreferredTime { get; set; }
         public int EstimatedChildren { get; set; }
         public string Notes { get; set; }
+        public List<DateTime> DatesList { get; set; }
     }
 }
