@@ -6,7 +6,7 @@ DECLARE @VIEW_TITLE nvarchar(255) = N'Undivided - Assigned Facilitators'
 DECLARE @PAGE_ID int = 316
 DECLARE @DESCRIPTION nvarchar(255) = N'Staff members can view the users that have been assigned to a group as a facilitator.'
 
-DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Registration Date] 
+DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Registration_Date] 
 	,Group_ID_Table.[Group_Name]
 	,Participant_ID_Table_Contact_ID_Table.[First_Name]
 	,Participant_ID_Table_Contact_ID_Table.[Last_Name]
@@ -26,13 +26,13 @@ DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Regis
 	  WHERE GPA.Attribute_ID = A.Attribute_ID
 	  AND GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID
 	  AND GETDATE() BETWEEN GPA.Start_Date AND ISNULL(GPA.End_Date,GETDATE()) 
-	  AND Attribute_Type_ID = 85) AS [Facilitator Training]
+	  AND Attribute_Type_ID = 85) AS [Facilitator_Training]
 	,(SELECT Notes 
 	  FROM Group_Participant_Attributes GPA, Attributes A 
 	  WHERE GPA.Attribute_ID = A.Attribute_ID and 
 	  GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID and
-	  Attribute_Type_ID = 87) AS [Preferred Co-Facilitator]		
-	,Group_Participants.[Child_Care_Requested] AS [Requested Child Care]'
+	  Attribute_Type_ID = 87) AS [Preferred_Co-Facilitator]		
+	,Group_Participants.[Child_Care_Requested] AS [Requested_Child_Care]'
 
 DECLARE @VIEW_CLAUSE nvarchar(1000) = N'Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND Group_Role_ID_Table.Group_Role_ID = 22 AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL) AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL) AND Group_ID_Table_Parent_Group_Table.Group_ID IS NOT NULL'
 DECLARE @ORDER_BY nvarchar(1000) = N'Group_ID_Table.[Group_Name], Group_Participants.[Start_Date]'

@@ -6,9 +6,9 @@ DECLARE @VIEW_TITLE nvarchar(255) = N'Undivided - Assigned All'
 DECLARE @PAGE_ID int = 316
 DECLARE @DESCRIPTION nvarchar(255) = N'Staff members can view the users that have been assigned to a group as a leader or a member.'
 
-DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Registration Date] 
+DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Registration_Date] 
 	,Group_ID_Table.[Group_Name]
-	,Group_Role_ID_Table.[Role_Title]
+	,Group_Role_ID_Table.[Role_Title] AS [Role]
 	,Participant_ID_Table_Contact_ID_Table.[First_Name]
 	,Participant_ID_Table_Contact_ID_Table.[Last_Name]
 	,Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.[Gender]
@@ -22,7 +22,7 @@ DECLARE @FIELD_LIST nvarchar(2000) = N'Group_Participants.[Start_Date] AS [Regis
       AND ISNULL(CA.End_Date,GETDATE()) 
 	  FOR XML PATH('''')), 1, 1, '''') AS [Ethnicity]
 	,DATEDIFF(hour,Participant_ID_Table_Contact_ID_Table.[Date_of_Birth],GETDATE())/8766 AS [AGE]
-	,Group_Participants.[Child_Care_Requested] AS [Requested Child Care]'
+	,Group_Participants.[Child_Care_Requested] AS [Requested_Child_Care]'
 
 DECLARE @VIEW_CLAUSE nvarchar(1000) = N'Group_ID_Table_Group_Type_ID_Table.Group_Type_ID = 26 AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date IS NULL) AND (Group_ID_Table.End_Date > GetDate() OR Group_ID_Table.End_Date IS NULL) AND Group_ID_Table_Parent_Group_Table.Group_ID IS NOT NULL'
 DECLARE @ORDER_BY nvarchar(1000) = N'Group_Participants.[Start_Date]'
