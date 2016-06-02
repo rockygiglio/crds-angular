@@ -69,6 +69,10 @@
       return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
     }
 
+    function userExistsInGroup() {
+      return false;
+    }
+
     function openBirthdatePicker($event) {
       $event.preventDefault();
       $event.stopPropagation();
@@ -204,6 +208,10 @@
 
     function saveGroup() {
       if (!FormBuilderFieldsService.hasGroupParticipant()) {
+        return resolvedPromise();
+      }
+
+      if (userExistsInGroup()) {
         return resolvedPromise();
       }
 
