@@ -119,6 +119,10 @@
         <label class="control-label required" for="endTime">End Time</label>
         <timepicker name="endTime" ng-model="reqiest.emdTime" ng-class="timepicker" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
       </div>
+        
+      <div class="form-group" ng-if="request.customSessionSelected">
+        <div dynamic-content="$root.MESSAGES.childcareThreeHourMessage.content | html"></div>
+      </div>
 
       <div class="form-group" ng-show="request.choosenGroup">
       	<label class="control-label" for="notes">Notes</label>
