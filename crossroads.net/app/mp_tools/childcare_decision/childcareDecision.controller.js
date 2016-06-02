@@ -4,20 +4,14 @@ class ChildcareDecisionController {
                 MPTools,
                 CRDS_TOOLS_CONSTANTS,
                 $log,
-                RequestChildcareService,
+                ChildcareDecisionService,
                 Validation,
                 $cookies,
                 $window) {
-        this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
-        this.congregations = RequestChildcareService.getCongregations();
-        this.currentRequest = Number(MPTools.getParams().recordId);
-        this.loadingGroups = false;
-        this.log = $log;
-        this.ministries = RequestChildcareService.getMinistries();
-        this.minDate = new Date();
-        this.minDate.setDate(this.minDate.getDate() + 7);
-        this.name = 'request-childcare';
-        this.requestChildcareService = RequestChildcareService;
+        this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareDecisionTool);
+        this.childcarerequest = ChildcareDecisionService.getChildcareRequest();
+        this.name = 'childcare-decision';
+        this.childcareDecisionService = ChildcareDecisionService;
         this.rootScope = $rootScope;
         this.uid = $cookies.get('userId');
         this.validation = Validation;
@@ -25,30 +19,10 @@ class ChildcareDecisionController {
         this.window = $window;
     }
 
-    getGroups() {
-        if (this.choosenCongregation && this.choosenMinistry) {
-            this.loadingGroups = true;
-            this.groups = this.requestChildcareService
-                .getGroups(this.choosenCongregation.dp_RecordID, this.choosenMinistry.dp_RecordID);
-            this.groups.$promise
-                .then(data => this.loadingGroups = false, err => this.loadingGroups = false);
-            this.preferredTimes = this.requestChildcareService.getPreferredTimes(this.choosenCongregation.dp_RecordID);
-            this.filteredTimes = this.preferredTimes;
-        }
-    }
 
-    onStartDateChange(startDate) {
-        this.filteredTimes = this.preferredTimes.filter((time) => {
-                if (time.Deactivate_Date === null) { return true; }
-        var preferredStart = moment(startDate);
-        var deactivateDate = moment(time.Deactivate_Date);
-        return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate);
-    });
-}
-
-showGroups() {
+    showGroups() {
     return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0 ;
-}
+    }
 
 formatPreferredTime(time) {
     const startTimeArr = time['Childcare_Start_Time'].split(':');
@@ -63,7 +37,7 @@ formatPreferredTime(time) {
 
 submit() {
     this.saving = true;
-    if (this.childcareRequestForm.$invalid) {
+    if (this.childcareDecisionForm.$invalid) {
         this.saving = false;
         return false;
     } else {
@@ -78,7 +52,7 @@ submit() {
             timeframe: this.formatPreferredTime(this.choosenPreferredTime),
             notes: this.notes
         };
-        const save = this.requestChildcareService.saveRequest(dto);
+        const save = this.childcareDecisionService.saveRequest(dto);
         save.$promise.then((data) => {
             this.log.debug('saved!');
         this.saving = false;
@@ -88,11 +62,11 @@ submit() {
         this.log.error('error!');
         this.saving = false;
     });
-}
-}
+};
+
 
 validateField(fieldName) {
-    return this.validation.showErrors(this.childcareRequestForm, fieldName);
+    return this.validation.showErrors(this.childcareDecisionForm, fieldName);
 }
 }
-export default RequestChildcareController;
+export default ChildcareDecisionController;
