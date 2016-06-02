@@ -1,61 +1,25 @@
 class ChildcareDecisionService {
     /*@ngInject*/
-    constructor($log, LookupService, $rootScope, $resource) {
-        this.lookupService = LookupService;
+    constructor($log, ChildcareService, $rootScope, $resource) {
+        this.childcareRequestService = ChildcareRequestService;
         this.log = $log;
         this.rootScope = $rootScope;
         this.resource = $resource;
     }
 
-    getCongregations() {
-        return this.lookupService.ChildcareLocations.query((data) => {
+    getChildcareRequest() {
+        return this.childcareRequestService.GetChildcareRequest.query((data) => {
                 return data;
     },
 
 (err) => {
-        this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);
+        this.log.error(`Unable to get ChildcareRequest: ${err.status} - ${err.statusText}`);
         return [];
 });
 }
 
-getMinistries() {
-    return this.lookupService.Ministries.query((data) => {
-            return data;
-},
-
-(err) => {
-    this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);
-    return [];
-});
-}
-
-getGroups(congregationId, ministryId) {
-    return this.lookupService.GroupsByCongregationAndMinistry
-            .query({congregationId, ministryId}, (data) => {
-            return data;
-},
-
-(err) => {
-    this.log.error('Unable to get groups');
-    this.rootScope.$emit('notify', this.rootScope.MESSAGES.noGroupsAvailable);
-    return [];
-});
-}
-
-getPreferredTimes(congregationId) {
-    return this.lookupService.ChildcareTimes
-            .query({congregationId}, (data) => {
-            return data;
-},
-
-(err) => {
-    this.log.error('Unable to get childcare times');
-    return [];
-});
-}
-
 saveRequest(dto) {
-    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request');
+    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/decision');
     return this.saveRequest.save(dto);
 }
 }
