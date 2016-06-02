@@ -15,8 +15,8 @@ namespace MinistryPlatform.Translation.Test
     [Category("IntegrationTests")]
     public class LookupTest
     {
-        private const string USERNAME = "testme";
-        private const string PASSWORD = "changeme";
+        private const string USERNAME = "changeme";
+        private const string PASSWORD = "testme";
         private const string EMAIL = "donotreply+testme@crossroads.net";
 
         private AuthenticationServiceImpl _fixture;
@@ -140,6 +140,55 @@ namespace MinistryPlatform.Translation.Test
 
             Assert.Contains(clifton, crossroadsLocations);
             crossroadsLocations.ForEach(Assert.IsInstanceOf<Dictionary<string, object>>);
+        }
+
+        [Test]
+        public void ShouldFindListOfMinistries()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            List<Dictionary<string, object>> ministriesList = _lookupService.Ministries(token);
+            Assert.IsNotEmpty(ministriesList);
+            ministriesList.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
+        }
+
+        [Test]
+        public void ShouldFindListOfChildCareLocations()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            var contactId = _fixture.GetContactId(token);
+            Assert.IsNotNull(contactId);
+            var childcarelocations = _lookupService.ChildcareLocations(token);
+            Assert.IsNotEmpty(childcarelocations);
+        }
+
+        [Test]
+        public void ShouldFindGroups()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            var contactId = _fixture.GetContactId(token);
+            Assert.IsNotNull(contactId);
+
+            var groups = _lookupService.GroupsByCongregationAndMinistry(token,"1","11");
+            Assert.IsNotEmpty(groups);
+        }
+
+        [Test]
+        public void ShouldFindChildcareTimes()
+        {
+            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            Assert.IsNotNull(authData);
+            var token = authData["token"].ToString();
+            var contactId = _fixture.GetContactId(token);
+            Assert.IsNotNull(contactId);
+
+            var times = _lookupService.ChildcareTimesByCongregation(token, "1");
+            Assert.IsNotEmpty(times);
         }
     }
 }

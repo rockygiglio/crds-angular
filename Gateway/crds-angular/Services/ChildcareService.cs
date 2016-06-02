@@ -8,14 +8,15 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
+        private readonly IChildcareRequestService _childcareRequestService;
         private readonly ICommunicationService _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactService _contactService;
@@ -25,7 +26,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserService _apiUserService;        
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -37,8 +38,9 @@ namespace crds_angular.Services
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService)
+                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService)
         {
+            _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
             _communicationService = communicationService;
             _configurationWrapper = configurationWrapper;
@@ -97,6 +99,67 @@ namespace crds_angular.Services
             {
                 _logger.Error(string.Format("Save RSVP failed for event ({0}), participant ({1})", saveRsvp.EventId, participantId), ex);
             }
+        }
+
+        public void CreateChildcareRequest(ChildcareRequestDto request, String token)
+        {
+            var mpRequest = request.ToMPChildcareRequest();
+            var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
+
+            try
+            {
+                var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
+                SendChildcareRequestNotification(childcareRequest);
+            }
+           catch (Exception ex)
+            {
+                _logger.Error(string.Format("Save Request failed"), ex);
+            }
+
+        }
+
+        public void SendChildcareRequestNotification( ChildcareRequestEmail request)
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");          
+            var template = _communicationService.GetTemplate(templateId);           
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Requester", request.Requester},
+                {"Nickname", request.RequesterNickname },
+                {"LastName", request.RequesterLastName },
+                {"Group", request.GroupName },
+                {"Site", request.CongregationName },
+                {"StartDate", (request.StartDate).ToShortDateString() },
+                {"EndDate", (request.EndDate).ToShortDateString() },
+                {"ChildcareSession", request.ChildcareSession },
+                {"RequestId", request.RequestId },
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+            };
+
+            var communication = new Communication
+           
+             {
+                AuthorUserId = authorUserId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ToContacts = new List<Contact> {new Contact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                MergeData = mergeData
+             };
+
+            try
+            {
+                _communicationService.SendMessage(communication);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Send Childcare request notification email failed"), ex);
+            }
+
+
         }
 
         private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
@@ -271,5 +334,6 @@ namespace crds_angular.Services
             };
             return mergeData;
         }
-    }
+
+        } 
 }

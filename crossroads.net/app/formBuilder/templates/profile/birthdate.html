@@ -1,0 +1,27 @@
+<div class="form-group col-sm-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'birthdate')}">
+  <label ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
+  <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
+  <span class="input-group datepicker">
+    <input
+        type="text"
+        class="form-control"
+        name="birthdate"
+        id="birthdate"
+        placeholder="mm/dd/yyyy"
+        datepicker-popup="MM/dd/yyyy"
+        ng-model='formField.data.profileData.person.dateOfBirth'
+        is-open='formField.data.birthdateOpen'
+        max-date={{profile.maxBirthdate}}
+        min-date={{profile.oneHundredFiftyYearsAgo}}
+        init-date=profile.initDate
+        ng-required="true"
+        datepicker-validator
+        ng-change="profile.underThirteen()"
+    >
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default" ng-click="formField.data.openBirthdatePicker($event)">
+          <i class="glyphicon glyphicon-calendar"></i>
+      </button>
+    </span>
+  </span>
+</div>

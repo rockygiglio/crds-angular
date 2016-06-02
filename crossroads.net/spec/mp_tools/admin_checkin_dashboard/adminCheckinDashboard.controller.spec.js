@@ -66,7 +66,7 @@ describe('AdminCheckinDashboard', function() {
   beforeEach(inject(function($injector, _$controller_) {
     var $rootScope = $injector.get('$rootScope');
     scope = $rootScope.$new();
-    $httpBackend = $injector.get('$httpBackend');
+    httpBackend = $injector.get('$httpBackend');
     AuthService = $injector.get('AuthService');
     CRDS_TOOLS_CONSTANTS = $injector.get('CRDS_TOOLS_CONSTANTS');
     AdminCheckinDashboardService = $injector.get('AdminCheckinDashboardService');
@@ -82,17 +82,17 @@ describe('AdminCheckinDashboard', function() {
   );
 
   afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('loadRooms()', function() {
     beforeEach(function() {
       vm.event = {id: 1};
       vm.loadRooms();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms')
+      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms')
                              .respond({rooms: mockRoomResponse});
-      $httpBackend.flush();
+      httpBackend.flush();
     });
 
     it('should recieve the rooms for the event', function() {
@@ -113,9 +113,10 @@ describe('AdminCheckinDashboard', function() {
       vm.startDate = new Date('2016-05-10T17:30:06.445Z');
       vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
-                             .respond(mockEventResponse);
-      $httpBackend.flush();
+      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 
+                            `api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z`)
+        .respond(mockEventResponse);
+      httpBackend.flush();
 
       expect(vm.events.length).toBe(4);
       expect(vm.events[1].EventId).toEqual(2);
