@@ -11,6 +11,8 @@ class RequestChildcareController {
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
     this.congregations = RequestChildcareService.getCongregations();
     this.currentRequest = Number(MPTools.getParams().recordId);
+    this.customSessionSelected = false;
+    this.customSessionTime = 'Customize My Childcare Session...';
     this.loadingGroups = false;
     this.log = $log;
     this.ministries = RequestChildcareService.getMinistries();
@@ -48,6 +50,25 @@ class RequestChildcareController {
 
   showGroups() {
     return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0 ;
+  }
+
+  getAvailableTimes() {
+    var availableTimes = [];
+    for (var time of this.filteredTimes)
+    {
+      availableTimes.push(this.formatPreferredTime(time));
+    }
+
+    availableTimes.push(this.customSessionTime);
+    return availableTimes;
+  }
+
+  preferredTimeChanged() {
+    if (this.choosenPreferredTime == this.customSessionTime) {
+      this.customSessionSelected = true;
+    } else {
+      this.customSessionSelected = false;
+    }
   }
 
   formatPreferredTime(time) {
