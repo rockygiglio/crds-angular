@@ -24,6 +24,7 @@
     var vm = this;
 
     vm.hasForm = hasForm;
+    vm.registrationOpen = registrationOpen;
 
     activate();
 
@@ -139,6 +140,10 @@
     function hasForm() {
       var page = ContentPageService.page;
       return (page && page.fields && page.fields.length > 1);
+    }
+
+    function registrationOpen() {
+      return (vm.data.availableGroups.length > 0);
     }
 
     function resolvedPromise() {

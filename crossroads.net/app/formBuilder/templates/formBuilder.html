@@ -1,16 +1,22 @@
-<form ng-submit="formBuilder.save()" ng-if="formBuilder.hasForm()">
-  <div ng-repeat="field in formBuilder.page.fields">
-    <div class="row">
-      <form-field field="field" data="formBuilder.data"></form-field>
+<div ng-if='formBuilder.registrationOpen()'>
+  <form ng-submit="formBuilder.save()" ng-if="formBuilder.hasForm()">
+    <div ng-repeat="field in formBuilder.page.fields">
+      <div class="row">
+        <form-field field="field" data="formBuilder.data"></form-field>
+      </div>
     </div>
-  </div>
-  <loading-button
+    <loading-button
           loading-text='Submitting...'
           normal-text='Submit'
           input-type='button'
           input-classes='btn btn-primary pull-right'
           loading-class='disabled'
           loading='formBuilder.saving' >
-  </loading-button>
+    </loading-button>
 
-</form>
+  </form>
+</div>
+
+<div ng-show='!formBuilder.registrationOpen()'>
+  <span dynamic-content='$root.MESSAGES.registrationClosed.content | html'></span>
+</div>
