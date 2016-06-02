@@ -10,7 +10,8 @@
       TripTools: 113,
       VolunteerContactTool: 115,
       EventsRoomsEquipment: 116,
-      ChildcareRequestTool: 95 
+      ChildcareRequestTool: 95,
+      ChildcareDecisionTool: 135
     }
   };
 })();
