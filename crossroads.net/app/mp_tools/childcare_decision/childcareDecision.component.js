@@ -1,10 +1,8 @@
 import controller  from './childcareDecision.controller';
 
-ChildcareDecisionComponent.$inject = [ ];
-
 function ChildcareDecisionComponent() {
 
-    let ChildcareDecisionComponent = {
+    let ChildcareComponent = {
         restrict: 'E',
         templateUrl: 'childcare_decision/childcareDecision.html',
         controller: controller,
@@ -12,7 +10,7 @@ function ChildcareDecisionComponent() {
         bindToController: true
     };
 
-    return ChildcareDecisionComponent;
+    return ChildcareComponent;
 
 }
 export default ChildcareDecisionComponent;
