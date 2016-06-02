@@ -88,15 +88,27 @@
         </ng-messages>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" ng-show="request.showGaps()">
         <div class="panel-heading"> Please unselect any days you do not need childcare in the range</div>
-        <div class="panel-body">
+        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
+            </label>
+          </div>
         </div>
       </div>
 
-      <div class="form-group well" ng-class="{}" ng-show="request.showGaps()">
-         
-      </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('preferredTime')}" ng-show="request.choosenGroup">
       	<label class="control-label required" for="preferredTime">Preferred Time</label>

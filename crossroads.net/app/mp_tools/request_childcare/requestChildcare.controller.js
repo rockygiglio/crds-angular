@@ -25,6 +25,42 @@ class RequestChildcareController {
     this.window = $window;
   }
 
+  generateDateList(startDate, endDate, dayOfTheWeek, frequency) {
+    const start = moment(startDate);
+    const end = moment(endDate);
+    const day = moment().day(dayOfTheWeek).day();
+    const actualStart = this.getStartDate(start, day);
+    let dateList = [actualStart];
+    if (frequency === 'Weekly') {
+      let dateIter = moment(actualStart);
+      dateIter.add(1, 'w');
+      while (dateIter.isBefore(end)) {
+        const nextDate = moment(dateIter);
+        dateList = [...dateList, nextDate];
+      }
+    } else if (frequency === 'Monthly') {
+      let dateIter = moment(actualStart);
+      dateIter.add(1, 'm');
+      while (dateIter.isBefore(end)) {
+        const nextDate = moment(dateIter);
+        dateList = [...dateList, nextDate];
+      }
+    }
+    return dateList;
+  }
+
+  getStartDate(startDate, dayOfWeek) {
+    if(startDate.day() === dayOfWeek) {
+      return startDate;
+    } else if(startDate.day() < dayOfWeek){
+      return startDate.add(dayOfWeek - startDate.day(), 'd');
+    } else {
+      startDate.add(8 - startDate.day(), 'd');
+      startDate.add(dayOfWeek - startDate.day(), 'd');
+      return startDate;
+    }
+  }
+
   getGroups() {
     if (this.choosenCongregation && this.choosenMinistry) {
       this.loadingGroups = true;
@@ -47,7 +83,16 @@ class RequestChildcareController {
   }
 
   showGaps() {
-    return this.choosenFrequency && this.choosenFrequency !== 'Once';
+    if (this.choosenPreferredTime && this.choosenFrequency &&
+        this.choosenFrequency !== 'Once' &&
+        this.startDate &&
+        this.endDate) {
+      const start = this.startDate.getDate() + this.startDate.getMonth() + this.startDate.getFullYear();
+      const end = this.endDate.getDate() + this.endDate.getMonth() + this.endDate.getFullYear();
+      console.log(this.choosenPreferredTime);
+      return start !== end;
+    }
+    return false;
   }
 
   showGroups() {
