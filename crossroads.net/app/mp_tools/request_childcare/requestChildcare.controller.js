@@ -97,7 +97,6 @@ class RequestChildcareController {
         endDate: moment(this.endDate).utc(),
         frequency: this.choosenFrequency,
         timeframe: this.formatPreferredTime(this.choosenPreferredTime),
-        estimatedChildren: this.numberOfChildren,
         notes: this.notes
       };
       const save = this.requestChildcareService.saveRequest(dto);
