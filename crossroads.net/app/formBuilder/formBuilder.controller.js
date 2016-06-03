@@ -67,7 +67,7 @@
     }
 
     function availableForm() {
-      if (!FormBuilderFieldsService.hasGroupParticipant() || vm.data.availableGroups.length < 1) {
+      if (FormBuilderFieldsService.hasGroupParticipant() && vm.data.availableGroups.length < 1) {
           return false;
       }
       return true;
