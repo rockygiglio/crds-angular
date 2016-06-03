@@ -12,6 +12,7 @@
     'FormBuilderFieldsService',
     '$log',
     '$q',
+    '$anchorScroll'
   ];
 
   function FormBuilderCtrl($rootScope,
@@ -20,7 +21,8 @@
                            ContentPageService,
                            FormBuilderFieldsService,
                            $log,
-                           $q) {
+                           $q, 
+                           $anchorScroll) {
     var vm = this;
 
     vm.hasForm = hasForm;
@@ -47,6 +49,7 @@
       participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
       vm.saving = false;
+      vm.successfulSave = false;
       vm.save = save;
 
       vm.group = {};
@@ -54,10 +57,12 @@
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
       vm.data = {};
-
+      vm.data.onComplete = ContentPageService.page.onCompleteMessage;
       vm.data.displayLocation = displayLocation;
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+      vm.data.header = ContentPageService.page.fields[0].header;
+      vm.data.footer = ContentPageService.page.fields[0].footer;
 
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.locations = ContentPageService.resolvedData.locations;
@@ -157,6 +162,7 @@
 
     function save() {
       vm.saving = true;
+      vm.successfulSave = false;
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
@@ -164,16 +170,20 @@
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
+            vm.successfulSave = true;
+            $anchorScroll();            
           },
 
           function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             $log.debug('person save unsuccessful');
             vm.saving = false;
+            vm.successfulSave = false;
           });
       }
       catch (error) {
         vm.saving = false;
+        vm.successfulSave = false;
         throw (error);
       }
     }
