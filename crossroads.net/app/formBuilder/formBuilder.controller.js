@@ -158,7 +158,7 @@
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
-        
+ 
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
@@ -170,7 +170,7 @@
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             $log.debug('person save unsuccessful');
             vm.saving = false;
-            vm.successfulSave= false;
+            vm.successfulSave = false;
           });
       }
       catch (error) {
@@ -240,7 +240,6 @@
           groupId: vm.data.group.groupId,
         },
         participants).$promise;
-    }    
-    
+    }        
   }
 })();
