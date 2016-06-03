@@ -12,6 +12,7 @@
     'FormBuilderFieldsService',
     '$log',
     '$q',
+    '$anchorScroll'
   ];
 
   function FormBuilderCtrl($rootScope,
@@ -20,7 +21,8 @@
                            ContentPageService,
                            FormBuilderFieldsService,
                            $log,
-                           $q) {
+                           $q, 
+                           $anchorScroll) {
     var vm = this;
 
     vm.hasForm = hasForm;
@@ -59,6 +61,8 @@
       vm.data.displayLocation = displayLocation;
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
+      vm.data.header = ContentPageService.page.fields[0].header;
+      vm.data.footer = ContentPageService.page.fields[0].footer;
 
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.locations = ContentPageService.resolvedData.locations;
@@ -160,6 +164,7 @@
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
             vm.success = true;
+            $anchorScroll();
             successfulSave();            
           },
 

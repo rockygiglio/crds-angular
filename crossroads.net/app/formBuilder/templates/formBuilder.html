@@ -1,16 +1,22 @@
 <form ng-submit="formBuilder.save()" ng-if="formBuilder.hasForm() && !formBuilder.successfulSave()">
+ <div dynamic-content="formBuilder.data.header | html"> </div>
   <div ng-repeat="field in formBuilder.page.fields"> 
     <div class="row">
       <form-field field="field" data="formBuilder.data"></form-field>
     </div>
   </div>
-  <loading-button
-          loading-text='Submitting...'
-          normal-text='Submit'
-          input-type='button'
-          input-classes='btn btn-primary pull-right'
-          loading-class='disabled'
-          loading='formBuilder.saving' >
-  </loading-button>
+  <div class="row">
+    <loading-button
+            loading-text='Submitting...'
+            normal-text='Submit'
+            input-type='button'
+            input-classes='btn btn-primary pull-right'
+            loading-class='disabled'
+            loading='formBuilder.saving' >
+    </loading-button> 
+  </div>
 </form>
-<div ng-if="formBuilder.successfulSave()"> {{formBuilder.data.onComplete}} </div>
+<div ng-if="formBuilder.successfulSave()" dynamic-content="formBuilder.data.onComplete | html"> </div>
+<div class="row col-md-12">
+  <div dynamic-content="formBuilder.data.footer | html"> </div>
+</div>
