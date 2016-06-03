@@ -89,13 +89,14 @@
       </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('preferredTime')}" ng-show="request.choosenGroup">
-      	<label class="control-label required" for="preferredTime">Preferred Time</label>
+      	<label class="control-label required" for="preferredTime">Available Childcare Sessions</label>
       	<select name="preferredTime"
                 class="form-control"
                 ng-model="request.choosenPreferredTime"
-                required
-                ng-options="request.formatPreferredTime(time) for time in request.filteredTimes track by time.dp_RecordID" >
-      		<option value="">-- Please choose a preferred time --</option>
+                ng-change="request.preferredTimeChanged()"
+                required>
+          <option value="">-- Please choose a childcare session --</option>
+          <option ng-repeat="time in request.getAvailableTimes()" value="{{time}}">{{time}}</option>
       	</select>
         <ng-messages for="request.childcareRequestForm.preferredTime.$error" ng-if="request.validateField('preferredTime')">
           <span ng-message="required">
@@ -104,6 +105,51 @@
         </ng-messages>
       </div>
 
+      <div class="form-group" ng-class="{'has-error': request.validateField('dayOfWeek')}" ng-if="request.customSessionSelected">
+        <label class="control-label required" for="dayOfWeek">Day of the Week</label>
+        <select class="form-control" name="dayOfWeek" ng-model="request.dayOfWeek" required>
+          <option value="" selected>-- Please select a day of the week --</option>
+          <option>Sunday</option>
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
+          <option>Thursday</option>
+          <option>Friday</option>
+          <option>Saturday</option>
+        </select>
+        <ng-messages for="request.childcareRequestForm.dayOfWeek.$error" ng-if="request.validateField('dayOfWeek')">
+          <span ng-message="required">
+            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          </span>
+        </ng-messages>
+      </div>
+
+      <div class="form-group timepicker" ng-class="{'has-error': request.validateField('startTime')}" ng-if="request.customSessionSelected">
+        <label class="control-label required" for="startTime">Start Time</label>
+        <timepicker name="startTime" ng-model="request.startTime" ng-class="timepicker" hour-step="1" minute-step="15" show-meridian="true" required></timepicker>
+        <ng-messages for="request.childcareRequestForm.startTime.$error" ng-if="request.validateField('startTime')">
+          <span ng-message="required">
+            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          </span>
+        </ng-messages>
+      </div>
+
+      <div class="form-group timepicker" ng-class="{'has-error': request.validTimeRange(request.childcareRequestForm)}" ng-if="request.customSessionSelected">
+        <label class="control-label required" for="endTime">End Time</label>
+        <timepicker name="endTime" ng-model="request.endTime" ng-class="timepicker" hour-step="1" minute-step="15" show-meridian="true" required></timepicker>
+        <ng-messages for="request.childcareRequestForm.endTime.$error" ng-if="request.validTimeRange(request.childcareRequestForm)">
+          <span ng-message="required">
+            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          </span>
+          <span ng-message="invalidEnd">
+            <span dynamic-content="$root.MESSAGES.endTimeAfterStartTime.content | html"></span>
+          </span>
+        </ng-messages>
+      </div>
+        
+      <div class="form-group" ng-if="request.customSessionSelected">
+        <div dynamic-content="$root.MESSAGES.childcareThreeHourMessage.content | html"></div>
+      </div>
 
       <div class="form-group" ng-show="request.choosenGroup">
       	<label class="control-label" for="notes">Notes</label>
