@@ -16,8 +16,9 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareRequestStatusPending;
         private readonly int _childcareEmailPageViewId;
         private readonly int _childcareRequestDatesId;
+        private readonly int _myChildcareRequestDatesId;
 
-        
+
         public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
@@ -26,6 +27,7 @@ namespace MinistryPlatform.Translation.Services
             _childcareEmailPageViewId = configurationWrapper.GetConfigIntValue("ChildcareEmailPageView");
             _childcareRequestStatusPending = configurationWrapper.GetConfigIntValue("ChildcareRequestPending");
             _childcareRequestDatesId = configurationWrapper.GetConfigIntValue("ChildcareRequestDates");
+            _myChildcareRequestDatesId = configurationWrapper.GetConfigIntValue("MyChildcareRequestDates");
 
         }
 
@@ -99,6 +101,7 @@ namespace MinistryPlatform.Translation.Services
                     {"Approved", false }
                 };
                 _ministryPlatformService.CreateSubRecord(_childcareRequestDatesId, _childcareRequestPageId, requestDatesDict, token, false);
+                _ministryPlatformService.CreateSubRecord(_myChildcareRequestDatesId, childcareRequestId, requestDatesDict, token, false);
             }
         }
     }
