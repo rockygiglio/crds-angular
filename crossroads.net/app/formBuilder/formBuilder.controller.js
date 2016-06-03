@@ -145,6 +145,15 @@
       return (page && page.fields && page.fields.length > 1);
     }
 
+    function rejectedPromise() {
+      var deferred = $q.defer();
+      //deferred.reject(new Error('form builder: user already exists in group'));
+      deferred.reject({
+              contentBlockIdMessage: $rootScope.MESSAGES.userExistsInGroupError,
+          });
+      return deferred.promise;
+    }
+
     function resolvedPromise() {
       var deferred = $q.defer();
       deferred.resolve();
@@ -154,8 +163,12 @@
     function save() {
       vm.saving = true;
       try {
-        var promise = savePersonal();
+        var promise = validateGroup();
+        // var promise = savePersonal();
+        promise = promise.then(savePersonal);
         promise = promise.then(saveGroup);
+
+
 
         promise.then(function() {
 debugger;
@@ -163,10 +176,15 @@ debugger;
             vm.saving = false;
           },
 
-          function() {
+          function(data) {
 debugger;
-            $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-            $log.debug('person save unsuccessful');
+            if(data && data.contentBlockIdMessage) {
+              $rootScope.$emit('notify', data.contentBlockIdMessage);
+            }
+            else {
+              $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+            }
+            $log.debug('form builder save unsuccessful');
             vm.saving = false;
           });
       }
@@ -209,33 +227,36 @@ debugger;
       return attribute;
     }
 
+    function validateGroup() {
+      if (!FormBuilderFieldsService.hasGroupParticipant()) {
+        return resolvedPromise();
+      }
+
+      //TODO Only applies to Undivided form - move validation above savePersonal() and add check for groupParticipant to before userExistsInGroupType method
+      var promise = userExistsInGroupType();
+      promise = promise.then(function(data)  {
+        if (data.length > 0) {
+          return rejectedPromise();
+        }
+
+        return resolvedPromise();
+      });
+
+      return promise;
+    }
+
     function saveGroup() {
       if (!FormBuilderFieldsService.hasGroupParticipant()) {
         return resolvedPromise();
       }
 
-      //TODO Only applies to Undivided form
-      var promise = userExistsInGroupType();
-      promise = promise.then(function(data)  {
-debugger;
-        if (data.length > 0) {
-
-          //throw(new Error('form builder: user already exists in group'));
-
-          //return Promise.reject(new Error('form builder: user already exists in group'));
-
-          return Promise.reject(new Error('form builder: user already exists in group')).then(function(error) {
-            // not called
-            }, function(error) {
-            $log.debug('form builder: user already exists in group');
-          });
-
-          //$rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-          //$log.debug('form builder group save unsuccessful');
-          //vm.saving = false;
-          //return promise.reject;
-        }
-      });
+      //TODO Only applies to Undivided form - move validation above savePersonal() and add check for groupParticipant to before userExistsInGroupType method
+      // var promise = userExistsInGroupType();
+      // promise = promise.then(function(data)  {
+      //   if (data.length > 0) {
+      //     return rejectedPromise();
+      //   }
+      // });
 
       var coFacilitator = getAttributeNote(
         constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR,
