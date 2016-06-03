@@ -62,10 +62,11 @@
 
       <div class="form-group"  ng-show="request.choosenGroup">
         <date-range required="true"
-                    start-date="request.startDate"
-                    end-date="request.endDate"
+                    chosen-start-date="request.startDate"
+                    chosen-end-date="request.endDate"
                     min-date="request.minDate"
-                    start-date-change="request.onStartDateChange(startDate)">
+                    start-date-change="request.onStartDateChange(startDate)"
+                    end-date-change="request.onEndDateChange()">
           Date Range
         </date-range>
       </div>
@@ -75,6 +76,7 @@
       	<select class="form-control" 
                 name="frequency" 
                 ng-model="request.choosenFrequency"
+                ng-change="request.onFrequencyChange()"
                 required>
           <option value=""> -- Please choose a Frequency -- </option>
           <option value="Once"> Once </option>
@@ -88,27 +90,6 @@
         </ng-messages>
       </div>
 
-      <div class="panel panel-default" ng-show="request.showGaps()">
-        <div class="panel-heading"> Please unselect any days you do not need childcare in the range</div>
-        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Option one is this and that&mdash;be sure to include why it's great
-            </label>
-          </div>
-        </div>
-      </div>
-
 
       <div class="form-group" ng-class="{'has-error': request.validateField('preferredTime')}" ng-show="request.choosenGroup">
       	<label class="control-label required" for="preferredTime">Preferred Time</label>
@@ -116,6 +97,7 @@
                 class="form-control"
                 ng-model="request.choosenPreferredTime"
                 required
+                ng-change="request.onPrewferredTimeChange"
                 ng-options="request.formatPreferredTime(time) for time in request.filteredTimes track by time.dp_RecordID" >
       		<option value="">-- Please choose a preferred time --</option>
       	</select>
@@ -124,6 +106,19 @@
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
           </span>
         </ng-messages>
+      </div>
+
+      <div class="panel panel-default" ng-if="request.showGaps()">
+        <div class="panel-heading"> Please unselect any days you do not need childcare in the range</div>
+        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
+          <div class="checkbox" ng-repeat="date in request.datesList track by date.unix">
+            <label>
+              <input type="checkbox"
+                     checked="checked"
+                     ng-model="date.selected" > {{date.date.format("L")}}
+            </label>
+          </div>
+        </div>
       </div>
 
 

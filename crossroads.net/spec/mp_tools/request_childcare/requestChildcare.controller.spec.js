@@ -79,8 +79,8 @@ describe('Request Childcare Controller', () => {
       dp_Selected: 0
     };
     controller.choosenFrequency = 'Weekly';
-    controller.startDate = new Date(2016, 6, 1);
-    controller.endDate = new Date(2016, 6, 2);
+    controller.startDate = new Date(2016, 5, 1);
+    controller.endDate = new Date(2016, 10, 2);
     expect(controller.showGaps()).toBe(true);
   });
 
@@ -89,34 +89,25 @@ describe('Request Childcare Controller', () => {
     expect(controller.showGaps()).toBe(false);
   });
 
-  it('should get the correct startDate when start day is before picked day', () => {
-    commonExpectations();
-    const startDate = moment(new Date(2016,5,1)); //June 1st
-    expect(controller.getStartDate(
-      startDate, 2).format('MM-DD-YYYY')
-    ).toEqual(moment(new Date(2016, 5, 7)).format('MM-DD-YYYY'));
-  });
-
-
-  it('should get the correct startDate when start day is after picked day', () => {
-    commonExpectations();
-    const startDate = moment(new Date(2016,4,29)); //June 1st
-    expect(controller.getStartDate(
-      startDate, 2).format('MM-DD-YYYY')
-    ).toEqual(moment(new Date(2016, 4, 31)).format('MM-DD-YYYY'));
-  });
-
-  it('should get the correct startDate when start day is the same as the picked day', () => {
-    commonExpectations();
-    const startDate = moment(new Date(2016,4,31)); //June 1st
-    expect(controller.getStartDate(
-      startDate, 2).format('MM-DD-YYYY')
-    ).toEqual(moment(new Date(2016, 4, 31)).format('MM-DD-YYYY'));
-  });
-
   it('should get a list of dates for a weekly occurence', () => {
     commonExpectations();
-    var dateList = controller.generateDateList(new Date(2016,5,1), new Date(2016,7,1), 'Tuesday', 'Weekly');
+    controller.choosenPreferredTime = {
+      Childcare_Day_ID: 3,
+      Childcare_End_Time: '19:00:00',
+      Childcare_Preferred_Time_ID: 1,
+      Childcare_Start_Time: '18:00:00',
+      Congregation_ID: 1,
+      Deactivate_Date: null,
+      Meeting_Day: 'Tuesday',
+      dp_FileID: null,
+      dp_RecordID: 1,
+      dp_RecordName: 1,
+      dp_RecordStatus: 0,
+      dp_Selected: 0
+    };
+    controller.choosenFrequency = 'Weekly';
+    controller.startDate = new Date(2016, 5, 1);
+    controller.endDate = new Date(2016, 7, 2);
     var expectedDateList = [
       moment(new Date(2016, 5, 7)),
       moment(new Date(2016, 5, 14)),
@@ -125,23 +116,60 @@ describe('Request Childcare Controller', () => {
       moment(new Date(2016, 6, 5)),
       moment(new Date(2016, 6, 12)),
       moment(new Date(2016, 6, 19)),
-      moment(new Date(2016,6, 26))
+      moment(new Date(2016,6, 26)),
+      moment(new Date(2016,7,2))
     ];
-    expect(dateList).toEqual(expectedDateList);
+    var size = expectedDateList.length;
+
+    controller.generateDateList();
+    expect(controller.datesList.length).toBe(size);
+    for(var i = 0; i<size; i++) {
+      expect(controller.datesList[i].date.date()).toEqual(expectedDateList[i].date());
+    }
   });
 
   it('should get a list of dates for a montly occurence', () => {
     commonExpectations();
-    var dateList = controller.generateDateList(new Date(2016,5,1), new Date(2016,11,1), 'Tuesday', 'Monthly');
+    controller.choosenPreferredTime = {
+      Childcare_Day_ID: 3,
+      Childcare_End_Time: '19:00:00',
+      Childcare_Preferred_Time_ID: 1,
+      Childcare_Start_Time: '18:00:00',
+      Congregation_ID: 1,
+      Deactivate_Date: null,
+      Meeting_Day: 'Tuesday',
+      dp_FileID: null,
+      dp_RecordID: 1,
+      dp_RecordName: 1,
+      dp_RecordStatus: 0,
+      dp_Selected: 0
+    };
+    controller.choosenFrequency = 'Monthly';
+
+    controller.startDate = new Date(2016, 5, 1);
+    controller.endDate = new Date(2016, 11, 1);
+
+    controller.generateDateList();
     var expectedDateList = [
       moment(new Date(2016, 5, 7)),
-      moment(new Date(2016, 6, 7)),
+      moment(new Date(2016, 6, 5)),
       moment(new Date(2016, 7, 2)),
-      moment(new Date(2016, 8, 5)),
-      moment(new Date(2016, 9, 3)),
-      moment(new Date(2016, 10, 7))
+      moment(new Date(2016, 8, 6)),
+      moment(new Date(2016, 9, 4)),
+      moment(new Date(2016, 10, 1))
     ];
-    expect(dateList).toEqual(expectedDateList);
+    var size = expectedDateList.length;
+    expect(controller.datesList.length).toBe(size);
+    for(var i = 0; i<size; i++) {
+      expect(controller.datesList[i].date.date()).toEqual(expectedDateList[i].date());
+    }
+  });
+
+  it('should get the correct week of the month', function() {
+    commonExpectations();
+    var firstTuesday =  moment(new Date(2016, 5, 7));
+    var weekOfMonth = controller.getWeekOfMonth(firstTuesday);
+    expect(weekOfMonth).toBe(1);
   });
 
   it('should get groups and preferred times', () => {

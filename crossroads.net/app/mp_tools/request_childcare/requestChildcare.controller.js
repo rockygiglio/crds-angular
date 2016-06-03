@@ -1,3 +1,6 @@
+import moment from 'moment';
+require('moment-recur');
+
 class RequestChildcareController {
   /*@ngInject*/
   constructor($rootScope,
@@ -7,10 +10,13 @@ class RequestChildcareController {
               RequestChildcareService,
               Validation,
               $cookies,
-              $window) {
+              $window,
+              $timeout) {
+    this._timeout = $timeout;
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
     this.congregations = RequestChildcareService.getCongregations();
     this.currentRequest = Number(MPTools.getParams().recordId);
+    this.datesList = [];
     this.loadingGroups = false;
     this.log = $log;
     this.ministries = RequestChildcareService.getMinistries();
@@ -19,45 +25,42 @@ class RequestChildcareController {
     this.name = 'request-childcare';
     this.requestChildcareService = RequestChildcareService;
     this.rootScope = $rootScope;
+    this.runDateGenerator = true;
     this.uid = $cookies.get('userId');
     this.validation = Validation;
     this.viewReady = true;
     this.window = $window;
   }
 
-  generateDateList(startDate, endDate, dayOfTheWeek, frequency) {
-    const start = moment(startDate);
-    const end = moment(endDate);
-    const day = moment().day(dayOfTheWeek).day();
-    const actualStart = this.getStartDate(start, day);
-    let dateList = [actualStart];
-    if (frequency === 'Weekly') {
-      let dateIter = moment(actualStart);
-      dateIter.add(1, 'w');
-      while (dateIter.isBefore(end)) {
-        const nextDate = moment(dateIter);
-        dateList = [...dateList, nextDate];
+  generateDateList() {
+    if (this.runDateGenerator) {
+      const start = moment(this.startDate);
+      const end = moment(this.endDate);
+      if (this.choosenFrequency === 'Weekly') {
+        let weekly = moment().recur(start, end).every(this.choosenPreferredTime.Meeting_Day).daysOfWeek();
+        this.datesList = weekly.all().map( (d) => {
+          return { 
+            unix: d.unix(),
+            date: d,
+            selected: true
+          };
+        });
+      } else if (this.choosenFrequency === 'Monthly') {
+        let weekOfMonth = this.getWeekOfMonth(start);
+        let monthly = moment().recur(start, end)
+          .every(this.choosenPreferredTime.Meeting_Day).daysOfWeek()
+          .every(weekOfMonth -1).weeksOfMonthByDay();
+        this.datesList = monthly.all().map( (d) => {
+          return {
+            unix: d.unix(),
+            date: d,
+            selected: true
+          };
+        });
+      } else {
+        this.datesList = [];
       }
-    } else if (frequency === 'Monthly') {
-      let dateIter = moment(actualStart);
-      dateIter.add(1, 'm');
-      while (dateIter.isBefore(end)) {
-        const nextDate = moment(dateIter);
-        dateList = [...dateList, nextDate];
-      }
-    }
-    return dateList;
-  }
-
-  getStartDate(startDate, dayOfWeek) {
-    if(startDate.day() === dayOfWeek) {
-      return startDate;
-    } else if(startDate.day() < dayOfWeek){
-      return startDate.add(dayOfWeek - startDate.day(), 'd');
-    } else {
-      startDate.add(8 - startDate.day(), 'd');
-      startDate.add(dayOfWeek - startDate.day(), 'd');
-      return startDate;
+      this.runDateGenerator = false;
     }
   }
 
@@ -73,7 +76,24 @@ class RequestChildcareController {
     }
   }
 
+  getWeekOfMonth(startDate) {
+    return Math.ceil(startDate.date() / 7);
+  }
+
+  onEndDateChange() {
+    this.runDateGenerator = true;
+  }
+
+  onFrequencyChange() {
+    this.runDateGenerator = true;
+  }
+
+  onPreferredTimeChange() {
+    this.runDateGenerator = true;
+  }
+
   onStartDateChange(startDate) {
+    this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
       if (time.Deactivate_Date === null) { return true; }
       var preferredStart = moment(startDate);
@@ -87,10 +107,13 @@ class RequestChildcareController {
         this.choosenFrequency !== 'Once' &&
         this.startDate &&
         this.endDate) {
-      const start = this.startDate.getDate() + this.startDate.getMonth() + this.startDate.getFullYear();
-      const end = this.endDate.getDate() + this.endDate.getMonth() + this.endDate.getFullYear();
-      console.log(this.choosenPreferredTime);
-      return start !== end;
+      const start = this.startDate.getTime();
+      const end = this.endDate.getTime();
+      if (start !== end && start < end) {
+        this.generateDateList();
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -125,7 +148,8 @@ class RequestChildcareController {
         endDate: moment(this.endDate).utc(),
         frequency: this.choosenFrequency,
         timeframe: this.formatPreferredTime(this.choosenPreferredTime),
-        notes: this.notes
+        notes: this.notes,
+        dates: this.datesList.filter( (d) => { return d.selected === true;}).map( (d) => { return d.date; })
       };
       const save = this.requestChildcareService.saveRequest(dto);
       save.$promise.then(() => {
