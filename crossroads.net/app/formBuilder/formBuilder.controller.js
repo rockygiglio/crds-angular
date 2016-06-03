@@ -26,7 +26,6 @@
     var vm = this;
 
     vm.hasForm = hasForm;
-    vm.successfulSave = successfulSave;
 
     activate();
 
@@ -49,7 +48,7 @@
       participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
       vm.saving = false;
-      vm.success = false;
+      vm.successfulSave = false;
       vm.save = save;
 
       vm.group = {};
@@ -155,7 +154,7 @@
 
     function save() {
       vm.saving = true;
-      vm.success = false;
+      vm.successfulSave = false;
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
@@ -163,21 +162,20 @@
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
-            vm.success = true;
-            $anchorScroll();
-            successfulSave();            
+            vm.successfulSave = true;
+            $anchorScroll();            
           },
 
           function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             $log.debug('person save unsuccessful');
             vm.saving = false;
-            vm.success = false;
+            vm.successfulSave= false;
           });
       }
       catch (error) {
         vm.saving = false;
-        vm.success = false;
+        vm.successfulSave = false;
         throw (error);
       }
     }
@@ -242,10 +240,7 @@
           groupId: vm.data.group.groupId,
         },
         participants).$promise;
-    }
+    }    
     
-    function successfulSave() {      
-      return (vm.success);
-    }
   }
 })();
