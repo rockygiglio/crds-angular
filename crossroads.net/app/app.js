@@ -2,7 +2,7 @@
 
 require('./childcare');
 require('./mp_tools');
-require('../lib/select.css');
+require('ui-select/dist/select.css');
 
 (function() {
   'use strict()';
