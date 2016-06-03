@@ -51,7 +51,7 @@
       vm.saving = false;
       vm.success = false;
       vm.save = save;
-      
+
       vm.group = {};
       vm.group.groupId = null;
 
@@ -159,7 +159,7 @@
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
-//TODO save successful, go to thank you
+        
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
