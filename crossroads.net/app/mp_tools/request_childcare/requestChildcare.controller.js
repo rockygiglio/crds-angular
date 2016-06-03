@@ -10,13 +10,13 @@ class RequestChildcareController {
               RequestChildcareService,
               Validation,
               $cookies,
-              $window,
-              $timeout) {
-    this._timeout = $timeout;
+              $window) {
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
     this.congregations = RequestChildcareService.getCongregations();
     this.currentRequest = Number(MPTools.getParams().recordId);
     this.datesList = [];
+    this.customSessionSelected = false;
+    this.customSessionTime = 'Customize My Childcare Session...';
     this.loadingGroups = false;
     this.log = $log;
     this.ministries = RequestChildcareService.getMinistries();
@@ -26,6 +26,10 @@ class RequestChildcareController {
     this.requestChildcareService = RequestChildcareService;
     this.rootScope = $rootScope;
     this.runDateGenerator = true;
+    this.startTime = new Date();
+    this.startTime.setHours(9);
+    this.startTime.setMinutes(30);
+    this.endTime = this.startTime;
     this.uid = $cookies.get('userId');
     this.validation = Validation;
     this.viewReady = true;
@@ -68,7 +72,7 @@ class RequestChildcareController {
     if (this.choosenCongregation && this.choosenMinistry) {
       this.loadingGroups = true;
       this.groups = this.requestChildcareService
-        .getGroups(this.choosenCongregation.dp_RecordID, this.choosenMinistry.dp_RecordID); 
+        .getGroups(this.choosenCongregation.dp_RecordID, this.choosenMinistry.dp_RecordID);
       this.groups.$promise
         .then(() => this.loadingGroups = false, () => this.loadingGroups = false);
       this.preferredTimes = this.requestChildcareService.getPreferredTimes(this.choosenCongregation.dp_RecordID);
@@ -96,9 +100,10 @@ class RequestChildcareController {
     this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
       if (time.Deactivate_Date === null) { return true; }
+
       var preferredStart = moment(startDate);
       var deactivateDate = moment(time.Deactivate_Date);
-      return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate); 
+      return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate);
     });
   }
 
@@ -119,17 +124,47 @@ class RequestChildcareController {
   }
 
   showGroups() {
-    return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0 ;
+    return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0;
+  }
+
+  getAvailableTimes() {
+    var availableTimes = [];
+    for (var time of this.filteredTimes)
+    {
+      availableTimes.push(this.formatPreferredTime(time));
+    }
+
+    availableTimes.push(this.customSessionTime);
+    return availableTimes;
+  }
+
+  preferredTimeChanged() {
+    if (this.choosenPreferredTime == this.customSessionTime) {
+      this.customSessionSelected = true;
+    } else {
+      this.customSessionSelected = false;
+    }
   }
 
   formatPreferredTime(time) {
-    const startTimeArr = time['Childcare_Start_Time'].split(':');
-    const endTimeArr = time['Childcare_End_Time'].split(':');
-    const startTime = moment().set(
-      {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
-    const endTime = moment().set(
-      {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
-    const day = time['Meeting_Day'];
+    var startTime = {};
+    var endTime = {};
+    var day = '';
+
+    if (this.customSessionSelected) {
+      startTime = moment(this.startTime);
+      endTime = moment(this.endTime);
+      day = this.dayOfWeek;
+    } else {
+      const startTimeArr = time['Childcare_Start_Time'].split(':');
+      const endTimeArr = time['Childcare_End_Time'].split(':');
+      startTime = moment().set(
+        {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
+      endTime = moment().set(
+        {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
+      day = time['Meeting_Day'];
+    }
+
     return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
   }
 
@@ -158,7 +193,7 @@ class RequestChildcareController {
         this.window.close();
       }, () => {
         this.saving = false;
-        this.log.error('error!'); 
+        this.log.error('error!');
         this.saving = false;
       });
     }
@@ -166,6 +201,44 @@ class RequestChildcareController {
 
   validateField(fieldName) {
     return this.validation.showErrors(this.childcareRequestForm, fieldName);
+  }
+
+  validTimeRange(form) {
+    if (form === undefined) {
+      return false;
+    }
+
+    //verify that times are valid;
+    var start;
+    var end;
+    try {
+      start =  moment(this.startTime);
+      end = moment(this.endTime);
+    } catch (err) {
+      form.endTime.$error.invalidEnd = true;
+      form.endTime.$valid = false;
+      form.endTime.$invalid = true;
+      form.endTime.$dirty = true;
+      form.$valid = false;
+      form.$invalid = true;
+      return true;
+    }
+
+    if (start <= end) {
+      form.endTime.$error.invalidEnd = false;
+      form.endTime.$valid = true;
+      form.endTime.$invalid = false;
+      return false;
+    }
+
+    // set the endTime Invalid...
+    form.endTime.$error.invalidEnd = true;
+    form.endTime.$valid = false;
+    form.endTime.$invalid = true;
+    form.endTime.$dirty = true;
+    form.$valid = false;
+    form.$invalid = true;
+    return true;
   }
 }
 export default RequestChildcareController;

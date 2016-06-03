@@ -97,11 +97,11 @@
     "moment": "2.12.0",
     "moment-recur": "^1.0.5",
     "ng-cache-loader": "0.0.8",
-    "plangular-3": "^3.1.2"
+    "plangular-3": "^3.1.2",
+    "ui-select": "^0.17.1"
   },
   "browser": {
     "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
-    "angular-ui-select": "./lib/select.js",
     "plangular": "./node_modules/plangular-3/src/plangular.js",
     "crds-constants": "./app/constants.js",
     "angular-addthis": "./lib/angular-addthis.js",
