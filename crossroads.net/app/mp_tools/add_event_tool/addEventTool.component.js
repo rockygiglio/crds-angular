@@ -99,6 +99,14 @@
       }
 
       function submit() {
+
+        // prompt user to either save room or add a room
+        if (vm.allData.roomForm === undefined) {
+          if(!confirm("Do you want to save without adding a room?")) {
+            return;
+          }
+        }
+
         vm.processing = true;
         AddEvent.eventData.rooms = vm.rooms;
         if (vm.allData.roomForm) {

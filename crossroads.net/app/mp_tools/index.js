@@ -1,6 +1,6 @@
 (function(){
   'use strict()';
-  require('angular-ui-select');
+  require('ui-select');
 
   var MODULE = 'crossroads.mptools';
 

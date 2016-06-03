@@ -543,8 +543,8 @@ namespace crds_angular.test.Services
                 It.Is<RestRequest>(o =>
                     o.Method == Method.GET
                     && o.Resource.Equals("charges/456/refunds")
-                    && o.Parameters.Matches("expand[]", "balance_transaction")
-                    && o.Parameters.Matches("expand[]", "charge")
+                    && o.Parameters.Matches("expand[]", "data.balance_transaction")
+                    && o.Parameters.Matches("expand[]", "data.charge")
             )));
        
             _restClient.VerifyAll();
