@@ -69,8 +69,8 @@
       return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
     }
 
-    function userExistsInGroup() {
-      return false;
+    function userExistsInGroupType() {
+      return Group.Type.query({groupTypeId: constants.GROUP.GROUP_TYPE_ID.UNDIVIDED}).$promise;
     }
 
     function openBirthdatePicker($event) {
@@ -158,17 +158,20 @@
         promise = promise.then(saveGroup);
 
         promise.then(function() {
+debugger;
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
           },
 
           function() {
+debugger;
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             $log.debug('person save unsuccessful');
             vm.saving = false;
           });
       }
       catch (error) {
+debugger;
         vm.saving = false;
         throw (error);
       }
@@ -211,9 +214,28 @@
         return resolvedPromise();
       }
 
-      if (userExistsInGroup()) {
-        return resolvedPromise();
-      }
+      //TODO Only applies to Undivided form
+      var promise = userExistsInGroupType();
+      promise = promise.then(function(data)  {
+debugger;
+        if (data.length > 0) {
+
+          //throw(new Error('form builder: user already exists in group'));
+
+          //return Promise.reject(new Error('form builder: user already exists in group'));
+
+          return Promise.reject(new Error('form builder: user already exists in group')).then(function(error) {
+            // not called
+            }, function(error) {
+            $log.debug('form builder: user already exists in group');
+          });
+
+          //$rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          //$log.debug('form builder group save unsuccessful');
+          //vm.saving = false;
+          //return promise.reject;
+        }
+      });
 
       var coFacilitator = getAttributeNote(
         constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR,
