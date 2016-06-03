@@ -158,7 +158,7 @@
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
- 
+
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
@@ -240,6 +240,6 @@
           groupId: vm.data.group.groupId,
         },
         participants).$promise;
-    }        
+    }
   }
 })();
