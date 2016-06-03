@@ -1,4 +1,4 @@
-<div ng-if='formBuilder.registrationOpen()'>
+<div ng-if='formBuilder.availableForm()'>
   <form ng-submit="formBuilder.save()" ng-if="formBuilder.hasForm()">
     <div ng-repeat="field in formBuilder.page.fields">
       <div class="row">
@@ -17,6 +17,6 @@
   </form>
 </div>
 
-<div ng-show='!formBuilder.registrationOpen()'>
+<div ng-show='!formBuilder.availableForm()'>
   <span dynamic-content='$root.MESSAGES.registrationClosed.content | html'></span>
 </div>

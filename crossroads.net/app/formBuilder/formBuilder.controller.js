@@ -24,7 +24,7 @@
     var vm = this;
 
     vm.hasForm = hasForm;
-    vm.registrationOpen = registrationOpen;
+    vm.availableForm = availableForm;
 
     activate();
 
@@ -64,6 +64,13 @@
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       vm.data.groupParticipant = participant;
+    }
+
+    function availableForm() {
+      if (!FormBuilderFieldsService.hasGroupParticipant() || vm.data.availableGroups.length < 1) {
+          return false;
+      }
+      return true;
     }
 
     function displayLocation(locationId) {
@@ -140,10 +147,6 @@
     function hasForm() {
       var page = ContentPageService.page;
       return (page && page.fields && page.fields.length > 1);
-    }
-
-    function registrationOpen() {
-      return (vm.data.availableGroups.length > 0);
     }
 
     function resolvedPromise() {
