@@ -82,6 +82,10 @@
       return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
     }
 
+    function userExistsInGroupType() {
+      return Group.Type.query({groupTypeId: constants.GROUP.GROUP_TYPE_ID.UNDIVIDED}).$promise;
+    }
+
     function openBirthdatePicker($event) {
       $event.preventDefault();
       $event.stopPropagation();
@@ -154,6 +158,12 @@
       return (page && page.fields && page.fields.length > 1);
     }
 
+    function rejectedPromise(data) {
+      var deferred = $q.defer();
+      deferred.reject(data);
+      return deferred.promise;
+    }
+
     function resolvedPromise() {
       var deferred = $q.defer();
       deferred.resolve();
@@ -164,7 +174,8 @@
       vm.saving = true;
       vm.successfulSave = false;
       try {
-        var promise = savePersonal();
+        var promise = validateGroup();
+        promise = promise.then(savePersonal);
         promise = promise.then(saveGroup);
 
         promise.then(function() {
@@ -173,13 +184,18 @@
             vm.successfulSave = true;
             $anchorScroll();            
           },
+          function(data) {
+            if (data && data.contentBlockMessage) {
+              $rootScope.$emit('notify', data.contentBlockMessage);
+            } else {
+              $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+            }
 
-          function() {
-            $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-            $log.debug('person save unsuccessful');
+            $log.debug('form builder save unsuccessful');
             vm.saving = false;
             vm.successfulSave = false;
-          });
+          }
+        );
       }
       catch (error) {
         vm.saving = false;
@@ -199,7 +215,6 @@
       return vm.data.profileData.person.$save();
     }
 
-
     function getAttributeNote(fieldName, attributeId) {
       var field = vm.data[fieldName];
 
@@ -218,6 +233,24 @@
       }
 
       return attribute;
+    }
+
+    function validateGroup() {
+      if (!FormBuilderFieldsService.hasGroupParticipant()) {
+        return resolvedPromise();
+      }
+
+      var promise = userExistsInGroupType();
+      promise = promise.then(function(data)  {
+        if (data.length > 0) {
+          var result = {contentBlockMessage: $rootScope.MESSAGES.userExistsInGroupError};
+          return rejectedPromise(result);
+        }
+
+        return resolvedPromise();
+      });
+
+      return promise;
     }
 
     function saveGroup() {
