@@ -24,6 +24,7 @@
     var vm = this;
 
     vm.hasForm = hasForm;
+    vm.successfulSave = successfulSave;
 
     activate();
 
@@ -46,14 +47,15 @@
       participant.singleAttributes = getSingleSelectAttributeTypes(ContentPageService.resolvedData.attributeTypes);
 
       vm.saving = false;
+      vm.success = false;
       vm.save = save;
-
+      
       vm.group = {};
       vm.group.groupId = null;
 
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
       vm.data = {};
-
+      vm.data.onComplete = ContentPageService.page.onCompleteMessage;
       vm.data.displayLocation = displayLocation;
       vm.data.openBirthdatePicker = openBirthdatePicker;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
@@ -149,23 +151,28 @@
 
     function save() {
       vm.saving = true;
+      vm.success = false;
       try {
         var promise = savePersonal();
         promise = promise.then(saveGroup);
-
+//TODO save successful, go to thank you
         promise.then(function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
+            vm.success = true;
+            successfulSave();            
           },
 
           function() {
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             $log.debug('person save unsuccessful');
             vm.saving = false;
+            vm.success = false;
           });
       }
       catch (error) {
         vm.saving = false;
+        vm.success = false;
         throw (error);
       }
     }
@@ -230,6 +237,10 @@
           groupId: vm.data.group.groupId,
         },
         participants).$promise;
+    }
+    
+    function successfulSave() {      
+      return (vm.success);
     }
   }
 })();
