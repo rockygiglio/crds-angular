@@ -24,6 +24,7 @@
     var vm = this;
 
     vm.hasForm = hasForm;
+    vm.availableForm = availableForm;
 
     activate();
 
@@ -63,6 +64,13 @@
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
       vm.data.groupParticipant = participant;
+    }
+
+    function availableForm() {
+      if (FormBuilderFieldsService.hasGroupParticipant() && vm.data.availableGroups.length < 1) {
+          return false;
+      }
+      return true;
     }
 
     function displayLocation(locationId) {
