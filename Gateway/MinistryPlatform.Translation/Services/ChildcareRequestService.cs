@@ -15,6 +15,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareRequestPageId;
         private readonly int _childcareRequestStatusPending;
         private readonly int _childcareEmailPageViewId;
+        private readonly int _childcareRequestDatesId;
 
         
         public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
@@ -24,6 +25,8 @@ namespace MinistryPlatform.Translation.Services
             _childcareRequestPageId = configurationWrapper.GetConfigIntValue("ChildcareRequestPageId");
             _childcareEmailPageViewId = configurationWrapper.GetConfigIntValue("ChildcareEmailPageView");
             _childcareRequestStatusPending = configurationWrapper.GetConfigIntValue("ChildcareRequestPending");
+            _childcareRequestDatesId = configurationWrapper.GetConfigIntValue("ChildcareRequestDates");
+
         }
 
         public int CreateChildcareRequest(ChildcareRequest request)
@@ -84,6 +87,18 @@ namespace MinistryPlatform.Translation.Services
             throw new ApplicationException(string.Format("Duplicate Childcare Request ID detected: {0}", childcareRequestId));
         }
 
-
+        public void CreateChildcareRequestDates(ChildcareRequest request, string token)
+        {           
+            var datesList = request.DatesList;
+            foreach (var date in datesList)
+            {
+                var requestDatesDict = new Dictionary<String, Object>
+                {
+                    {"Childcare_Request_Date", date},
+                    {"Approved", false }
+                };
+                _ministryPlatformService.CreateSubRecord(_childcareRequestDatesId, _childcareRequestPageId, requestDatesDict, token, false);
+            }
+        }
     }
-}
+ }
