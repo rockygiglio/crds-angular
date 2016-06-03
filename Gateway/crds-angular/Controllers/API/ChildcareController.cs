@@ -114,5 +114,46 @@ namespace crds_angular.Controllers.API
                 
             });
         }
+
+        [Route("api/childcare/request/approve/{requestid}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult ApproveChildcareRequest(int requestid)
+        {
+           
+            return Authorized(token =>
+            {
+                try
+                {
+                    _childcareService.ApproveChildcareRequest(requestid,token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        [Route("api/childcare/getrequest/{requestid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetChildcareRequest(int requestid)
+        {
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    return Ok(_childcareService.GetChildcareRequestForReview(requestid, token));
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
     }
 }

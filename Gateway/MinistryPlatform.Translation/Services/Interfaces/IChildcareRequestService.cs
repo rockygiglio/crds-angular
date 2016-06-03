@@ -9,5 +9,9 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int CreateChildcareRequest(ChildcareRequest request);
 
         ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
+
+        ChildcareRequest GetChildcareRequestForReview(int childcareRequestId);
+
+        void ApproveChildcareRequest(int childcareRequestId);
     }
 }

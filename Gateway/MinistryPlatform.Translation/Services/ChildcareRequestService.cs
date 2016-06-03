@@ -8,12 +8,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ChildcareRequestService : IChildcareRequestService
+    public class ChildcareRequestService :  IChildcareRequestService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
         private readonly int _childcareRequestPageId;
         private readonly int _childcareRequestStatusPending;
+        private readonly int _childcareRequestStatusApproved;
         private readonly int _childcareEmailPageViewId;
 
         
@@ -24,6 +25,7 @@ namespace MinistryPlatform.Translation.Services
             _childcareRequestPageId = configurationWrapper.GetConfigIntValue("ChildcareRequestPageId");
             _childcareEmailPageViewId = configurationWrapper.GetConfigIntValue("ChildcareEmailPageView");
             _childcareRequestStatusPending = configurationWrapper.GetConfigIntValue("ChildcareRequestPending");
+            _childcareRequestStatusApproved = configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
         }
 
         public int CreateChildcareRequest(ChildcareRequest request)
@@ -84,6 +86,65 @@ namespace MinistryPlatform.Translation.Services
             throw new ApplicationException(string.Format("Duplicate Childcare Request ID detected: {0}", childcareRequestId));
         }
 
+        public void ApproveChildcareRequest(int childcareRequestId)
+        {
+            var apiToken = _apiUserService.GetToken();
 
+            var searchString = string.Format("{0},", childcareRequestId);
+            var record = _ministryPlatformService.GetRecordDict(_childcareRequestPageId, childcareRequestId, apiToken);
+
+            if (record == null)
+            {
+                throw new ApplicationException(string.Format("Childcare Request ID not found: {0}", childcareRequestId));
+            }
+
+            var requestDict = new Dictionary<string, object>
+            {
+                {"Childcare_Request_ID", childcareRequestId },
+                {"Requester_ID",record.ToInt("Requester_ID")},
+                {"Congregation_ID", record.ToInt("Congregation_ID")},
+                {"Ministry_ID", record.ToInt("Ministry_ID") },
+                {"Group_ID", record.ToInt("Group_ID") },
+                {"Start_Date", record.ToDate("Start_Date") },
+                {"End_Date", record.ToDate("End_Date") },
+                {"Frequency", record.ToString("Frequency") },
+                {"Childcare_Session", record.ToString("Childcare_Session") },
+                {"Notes", record.ToString("Notes") },
+                {"Request_Status_ID", _childcareRequestStatusApproved }
+            };
+
+            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
+        }
+
+
+        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId)
+        {
+            var apiToken = _apiUserService.GetToken();
+
+            var searchString = string.Format("{0},", childcareRequestId);
+            var record = _ministryPlatformService.GetRecordDict(_childcareRequestPageId, childcareRequestId, apiToken);
+
+            
+            if (record == null)
+            {
+                return null;
+            }
+            var c = new ChildcareRequest
+            {
+                RequesterId = record.ToInt("Requester_ID"),
+                LocationId = record.ToInt("Congregation_ID"),
+                MinistryId = record.ToInt("Ministry_ID"),
+                GroupId = record.ToInt("Group_ID"),
+                StartDate = record.ToDate("Start_Date"),
+                EndDate = record.ToDate("End_Date"),
+                Frequency = record.ToString("Frequency"),
+                PreferredTime = record.ToString("Childcare_Session"),
+                Notes = record.ToString("Notes")
+            };
+
+            return c;
+        }
     }
+
+
 }

@@ -118,6 +118,31 @@ namespace crds_angular.Services
 
         }
 
+        public void ApproveChildcareRequest(int childcareRequestId, String token)
+        {
+            try
+            {
+                _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+            }
+        }
+
+        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
+        {
+            try
+            {
+                return _childcareRequestService.GetChildcareRequestForReview(childcareRequestId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
+            }
+            return null;
+        }
+
         public void SendChildcareRequestNotification( ChildcareRequestEmail request)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
