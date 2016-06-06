@@ -17,19 +17,27 @@ class ChildcareDecisionController {
         this.viewReady = true;
         this.getChildcareRequest = ChildcareDecisionService.getChildcareRequest();
         this.requestId = Number(MPTools.getParams().recordId);
-        this.requestData = {};
+        this.requestData = this.getCurrentChildcare().requestData;
         this.group = '';
         this.startDate = '';
         this.endDate = '';
         this.childcareSession = '';
+        this.log = $log;
+        }
 
+        getCurrentChildcare()
+        {
+            
+            this.getChildcareRequest.requestData.get({requestid:'66'},((data) => {
+                this.request  = data;
+              this.Group = request.GroupId;
+            },
 
-
-        this.requestData = this.getChildcareRequest.requestData;
-
-
-
-    }
+            (err) => {
+              this.log.error(`Unable to get request data: `);  
+              return [];
+            }));
+        }
 }
 export default ChildcareDecisionController;
 
