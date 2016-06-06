@@ -124,7 +124,6 @@ namespace MinistryPlatform.Translation.Services
             var searchString = string.Format("{0},", childcareRequestId);
             var record = _ministryPlatformService.GetRecordDict(_childcareRequestPageId, childcareRequestId, apiToken);
 
-            
             if (record == null)
             {
                 return null;
@@ -135,6 +134,7 @@ namespace MinistryPlatform.Translation.Services
                 LocationId = record.ToInt("Congregation_ID"),
                 MinistryId = record.ToInt("Ministry_ID"),
                 GroupId = record.ToInt("Group_ID"),
+                GroupName = record.ToString("Group_ID_Text"),
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToDate("End_Date"),
                 Frequency = record.ToString("Frequency"),

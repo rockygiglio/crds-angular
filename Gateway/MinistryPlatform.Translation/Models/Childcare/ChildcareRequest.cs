@@ -9,6 +9,7 @@ namespace MinistryPlatform.Translation.Models.Childcare
         public int LocationId { get; set; }
         public int MinistryId { get; set; }
         public int GroupId { get; set; }
+        public string GroupName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Frequency { get; set; }
