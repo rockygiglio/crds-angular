@@ -12,7 +12,6 @@ class ChildcareDecisionService {
         return {requestData: this.resource(str)};
     }
 
-
     saveRequest(dto)
     {
         this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request/approve/:requestid');
