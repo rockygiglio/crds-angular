@@ -12,20 +12,26 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
+        private readonly IEventService _eventService;
         private readonly int _childcareRequestPageId;
+        private readonly int _childcareRequestDatesPageId;
         private readonly int _childcareRequestStatusPending;
         private readonly int _childcareRequestStatusApproved;
         private readonly int _childcareEmailPageViewId;
+        private readonly int _childcareEventType;
 
         
-        public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
+        public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
+            _eventService = eventService;
             _childcareRequestPageId = configurationWrapper.GetConfigIntValue("ChildcareRequestPageId");
+            _childcareRequestDatesPageId = configurationWrapper.GetConfigIntValue("ChildcareRequestDatesPageId");
             _childcareEmailPageViewId = configurationWrapper.GetConfigIntValue("ChildcareEmailPageView");
             _childcareRequestStatusPending = configurationWrapper.GetConfigIntValue("ChildcareRequestPending");
             _childcareRequestStatusApproved = configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
+            _childcareEventType = configurationWrapper.GetConfigIntValue("ChildcareEventType");
         }
 
         public int CreateChildcareRequest(ChildcareRequest request)
@@ -86,6 +92,21 @@ namespace MinistryPlatform.Translation.Services
             throw new ApplicationException(string.Format("Duplicate Childcare Request ID detected: {0}", childcareRequestId));
         }
 
+        public List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
+        {
+            var apiToken = _apiUserService.GetToken();
+            var searchString = $"{childcareRequestId},";
+            var records = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
+
+            return records.Select(rec => new ChildcareRequestDate
+            {
+                Approved = rec.ToBool("Approved"),
+                ChildcareRequestDateId = rec.ToInt("Childcare_Request_Date_ID"),
+                ChildcareRequestId = rec.ToInt("Childcare_Request_ID"),
+                RequestDate = rec.ToDate("Childcare_Request_Date")
+            }).ToList();
+        }
+
         public void ApproveChildcareRequest(int childcareRequestId)
         {
             var apiToken = _apiUserService.GetToken();
@@ -114,6 +135,30 @@ namespace MinistryPlatform.Translation.Services
             };
 
             _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
+        }
+
+        public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates)
+        {
+            var apiToken = _apiUserService.GetToken();
+
+            var request = GetChildcareRequestForReview(childcareRequestId);
+            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',')).Split('-');
+            var requestStartTime = TimeSpan.Parse(prefTime[0].Trim());
+            var requestEndTime = TimeSpan.Parse(prefTime[1].Trim());
+
+            var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken);
+
+            var reqEvents = new Dictionary<int, int>();
+            foreach (var date in requestedDates)
+            {
+                var foundEvent = events.Single(
+                    e => (e.EventStartDate == date.RequestDate.Add(requestStartTime)) && 
+                    (e.EventEndDate == date.RequestDate.Add(requestEndTime)) && 
+                    (e.CongregationId == request.LocationId)).EventId;
+                reqEvents.Add(date.ChildcareRequestDateId, foundEvent);
+            }
+            return reqEvents;
+
         }
 
 

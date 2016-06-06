@@ -122,11 +122,21 @@ namespace crds_angular.Services
         {
             try
             {
+                var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
+                var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
+                if (missingDates.Count > 0)
+                {
+                    var dateList = missingDates.Aggregate("", (current, date) => current + ", " + date.RequestDate.ToShortDateString());
+                    throw new Exception("The following dates are missing events: " + dateList);
+                }
+
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
             }
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Approve Childcare failed", ex);
             }
         }
 
