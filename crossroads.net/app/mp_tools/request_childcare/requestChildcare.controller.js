@@ -38,7 +38,6 @@ class RequestChildcareController {
   }
 
   generateDateList() {
-    console.log(this.choosenPreferredTime);
     if (this.runDateGenerator) {
       let dayOfWeek = this.choosenPreferredTime.Meeting_Day;
       if (this.choosenPreferredTime.dp_RecordID === -1) {
