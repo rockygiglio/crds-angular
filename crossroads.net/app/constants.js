@@ -80,8 +80,8 @@
       }
     },
     GROUP: {
-      GROUP_ID: {
-        UNDIVIDED_FACILITATOR: 166572,
+      GROUP_TYPE_ID: {
+        UNDIVIDED: 26,
       },
       ROLES: {
         MEMBER: 16,

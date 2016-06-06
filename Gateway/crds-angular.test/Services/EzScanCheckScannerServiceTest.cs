@@ -138,7 +138,7 @@ namespace crds_angular.test.Services
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns(contactDonorExisting);
 
-            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId)).Returns(new StripeCharge
+            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId, checks[0].CheckNumber)).Returns(new StripeCharge
             {
                 Id = "1020304",
                 Source = new StripeSource()
@@ -307,7 +307,8 @@ namespace crds_angular.test.Services
                     mocked.ChargeCustomer(stripeCustomer.id,
                                           stripeCustomer.default_source,
                                           checks[0].Amount,
-                                          contactDonorNonExistingStripeCustomer.DonorId)).Returns(mockChargeNonExistingStripeCustomer);
+                                          contactDonorNonExistingStripeCustomer.DonorId,
+                                          checks[0].CheckNumber)).Returns(mockChargeNonExistingStripeCustomer);
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
             
