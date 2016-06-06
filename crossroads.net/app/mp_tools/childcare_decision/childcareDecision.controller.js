@@ -25,7 +25,7 @@ class ChildcareDecisionController {
 
 
 
-        this.requestData = getChildcareRequest.requestData;
+        this.requestData = this.getChildcareRequest.requestData;
 
 
 

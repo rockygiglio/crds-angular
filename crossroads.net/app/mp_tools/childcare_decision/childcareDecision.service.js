@@ -8,13 +8,14 @@ class ChildcareDecisionService {
     }
 
     getChildcareRequest() {
-        return {requestData: resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestid')};
+        var str = __API_ENDPOINT__ + 'api/childcare/getrequest/:requestid';
+        return {requestData: this.resource(str)};
     }
 
 
     saveRequest(dto)
     {
-        this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/decision');
+        this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request/approve/:requestid');
         return this.saveRequest.save(dto);
     }
 }
