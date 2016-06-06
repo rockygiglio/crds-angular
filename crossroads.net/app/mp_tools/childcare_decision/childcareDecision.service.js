@@ -4,19 +4,20 @@ class ChildcareDecisionService {
         this.log = $log;
         this.rootScope = $rootScope;
         this.resource = $resource;
+        this.requestData = getChildcareRequest().requestData;
 
     }
 
-    getChildcareRequest() {
-        return {requestData: resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestid')};
-    }
-
-
-    saveRequest(dto)
+    getChildcareRequest()
     {
-        this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/decision');
-        return this.saveRequest.save(dto);
+        return {requestData: this.resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestid')};
     }
+
+// approveRequest(dto)
+  //  {
+   //     this.approveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request/approve/{requestid}');
+   //     return this.approveRequest.approve(dto);
+   // }
 }
 
 export default ChildcareDecisionService;
