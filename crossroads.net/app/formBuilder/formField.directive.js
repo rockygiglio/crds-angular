@@ -80,8 +80,12 @@
           return 'profile/gender.html';
         case 'KickOffEvent':
           return 'groupParticipant/kickOffEvent.html';
+        case 'Leader':
+          return null;
         case 'Location':
           return 'profile/location.html';
+        case 'Member':
+          return null;
         case 'Name':
           return 'profile/name.html';
         case 'GroupsUndivided':

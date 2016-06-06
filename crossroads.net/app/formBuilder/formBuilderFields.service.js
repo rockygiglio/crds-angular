@@ -14,6 +14,7 @@
       hasFieldsSection: hasFieldSection,
       hasGroupParticipant: hasGroupParticipant,
       hasProfile: hasProfile,
+      getGroupRoleId: getGroupRoleId,
     };
 
     function hasFieldSection(section) {
@@ -28,6 +29,22 @@
 
     function hasGroupParticipant() {
       return hasFieldSection(groupParticipantField);
+    }
+
+    function getGroupRoleId() {
+      if (!hasFieldSection(groupParticipantField)) {
+        return null;
+      }
+
+      var result = _.find(ContentPageService.page.fields, function(field) {
+        return (field.className === groupParticipantField && field.templateType === 'Leader');
+      });
+
+      if (result) {
+        return constants.GROUP.ROLES.LEADER;
+      }
+
+      return constants.GROUP.ROLES.MEMBER;
     }
 
     return service;
