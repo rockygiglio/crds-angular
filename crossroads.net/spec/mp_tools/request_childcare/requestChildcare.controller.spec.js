@@ -23,7 +23,7 @@ describe('Request Childcare Controller', () => {
     MPTools = $injector.get('MPTools');
     CRDS_TOOLS_CONSTANTS = $injector.get('CRDS_TOOLS_CONSTANTS');
     log = $injector.get('$log');
-    validation = $injector.get('Validation'); 
+    validation = $injector.get('Validation');
     cookies = $injector.get('$cookies');
     _window = $injector.get('$window');
 
@@ -34,12 +34,20 @@ describe('Request Childcare Controller', () => {
     spyOn(requestChildcareService, 'getCongregations');
     spyOn(requestChildcareService, 'getMinistries');
     spyOn(requestChildcareService, 'saveRequest').and.returnValue(
-      { $promise: 
+      { $promise:
         { then: function() {
           return [];
         }
       }
     });
+    spyOn(requestChildcareService, 'getPreferredTimes').and.returnValue(
+      {
+        $promise: {
+          then: function() {
+            return [];
+          }
+        }
+      });
     spyOn(requestChildcareService, 'getGroups').and.returnValue(
       // return a fake implementation of a promise
       {$promise: 
@@ -48,7 +56,6 @@ describe('Request Childcare Controller', () => {
           }
         }
       });
-    spyOn(requestChildcareService, 'getPreferredTimes');
     spyOn(cookies, 'get').and.returnValue(uid);
     spyOn(MPTools, 'getParams').and.returnValue({
       recordId: null 

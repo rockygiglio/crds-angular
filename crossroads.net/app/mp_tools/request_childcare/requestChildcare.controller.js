@@ -1,5 +1,6 @@
 import moment from 'moment';
-require('moment-recur');
+/* jshint unused: false */
+import * as recur from 'moment-recur';
 
 class RequestChildcareController {
   /*@ngInject*/
@@ -37,11 +38,16 @@ class RequestChildcareController {
   }
 
   generateDateList() {
+    console.log(this.choosenPreferredTime);
     if (this.runDateGenerator) {
+      let dayOfWeek = this.choosenPreferredTime.Meeting_Day;
+      if (this.choosenPreferredTime.dp_RecordID === -1) {
+        dayOfWeek = this.dayOfWeek;
+      }
       const start = moment(this.startDate);
       const end = moment(this.endDate);
       if (this.choosenFrequency === 'Weekly') {
-        let weekly = moment().recur(start, end).every(this.choosenPreferredTime.Meeting_Day).daysOfWeek();
+        let weekly = moment().recur(start, end).every(dayOfWeek).daysOfWeek();
         this.datesList = weekly.all().map( (d) => {
           return { 
             unix: d.unix(),
@@ -52,7 +58,7 @@ class RequestChildcareController {
       } else if (this.choosenFrequency === 'Monthly') {
         let weekOfMonth = this.getWeekOfMonth(start);
         let monthly = moment().recur(start, end)
-          .every(this.choosenPreferredTime.Meeting_Day).daysOfWeek()
+          .every(dayOfWeek).daysOfWeek()
           .every(weekOfMonth -1).weeksOfMonthByDay();
         this.datesList = monthly.all().map( (d) => {
           return {
@@ -75,8 +81,16 @@ class RequestChildcareController {
         .getGroups(this.choosenCongregation.dp_RecordID, this.choosenMinistry.dp_RecordID);
       this.groups.$promise
         .then(() => this.loadingGroups = false, () => this.loadingGroups = false);
-      this.preferredTimes = this.requestChildcareService.getPreferredTimes(this.choosenCongregation.dp_RecordID);
-      this.filteredTimes = this.preferredTimes;
+      this.preferredTimes = this.requestChildcareService.getPreferredTimes( this.choosenCongregation.dp_RecordID);
+      this.preferredTimes.$promise.then(() => {
+        this.preferredTimes = [...this.preferredTimes, {
+          Childcare_Start_Time: null,
+          Childcare_End_Time: null,
+          Meeting_Day: null, dp_RecordID: -1,
+          Deactivate_Date: null
+        }];
+        this.filteredTimes = this.preferredTimes;
+      });
     }
   }
 
@@ -92,10 +106,6 @@ class RequestChildcareController {
     this.runDateGenerator = true;
   }
 
-  onPreferredTimeChange() {
-    this.runDateGenerator = true;
-  }
-
   onStartDateChange(startDate) {
     this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
@@ -108,7 +118,9 @@ class RequestChildcareController {
   }
 
   showGaps() {
-    if (this.choosenPreferredTime && this.choosenFrequency &&
+    if (this.choosenPreferredTime && 
+        ( this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek ) &&
+        this.choosenFrequency &&
         this.choosenFrequency !== 'Once' &&
         this.startDate &&
         this.endDate) {
@@ -127,45 +139,39 @@ class RequestChildcareController {
     return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0;
   }
 
-  getAvailableTimes() {
-    var availableTimes = [];
-    for (var time of this.filteredTimes)
-    {
-      availableTimes.push(this.formatPreferredTime(time));
-    }
-
-    availableTimes.push(this.customSessionTime);
-    return availableTimes;
-  }
-
   preferredTimeChanged() {
-    if (this.choosenPreferredTime == this.customSessionTime) {
+    if (this.choosenPreferredTime.dp_RecordID === -1) {
       this.customSessionSelected = true;
     } else {
       this.customSessionSelected = false;
     }
+    this.runDateGenerator = true;
+  }
+
+  filterTimes(time) {
+    let t = time;
+    if (time.Childcare_Start_Time === undefined && Number(this.choosenPreferredTime) !== -1) {
+      t = _.find(this.filteredTimes, (tm) => {
+        return tm.dp_RecordID === Number(time);
+      });
+    }
+    return t;
   }
 
   formatPreferredTime(time) {
-    var startTime = {};
-    var endTime = {};
-    var day = '';
-
-    if (this.customSessionSelected) {
-      startTime = moment(this.startTime);
-      endTime = moment(this.endTime);
-      day = this.dayOfWeek;
+    if (time.dp_RecordID === -1) {
+            return this.customSessionTime;
     } else {
+      time = this.filterTimes(time);
       const startTimeArr = time['Childcare_Start_Time'].split(':');
       const endTimeArr = time['Childcare_End_Time'].split(':');
-      startTime = moment().set(
+      const startTime = moment().set(
         {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
-      endTime = moment().set(
+      const endTime = moment().set(
         {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
-      day = time['Meeting_Day'];
+      const day = time['Meeting_Day'];
+      return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
     }
-
-    return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
   }
 
   submit() {
@@ -174,6 +180,12 @@ class RequestChildcareController {
       this.saving = false;
       return false;
     } else {
+      let time = this.formatPreferredTime(this.choosenPreferredTime);
+      if (this.choosenPreferredTime.dp_RecordID === -1) {
+        let start = moment(this.startTime);
+        let end = moment(this.endTime);
+        time = `${this.dayOfWeek}, ${start.format('h:mmA')} - ${end.format('h:mmA')}`;
+      }
       const dto = {
         requester: this.uid,
         site: this.choosenCongregation.dp_RecordID,
@@ -182,7 +194,7 @@ class RequestChildcareController {
         startDate: moment(this.startDate).utc(),
         endDate: moment(this.endDate).utc(),
         frequency: this.choosenFrequency,
-        timeframe: this.formatPreferredTime(this.choosenPreferredTime),
+        timeframe: time,
         notes: this.notes,
         dates: this.datesList.filter( (d) => { return d.selected === true;}).map( (d) => { return d.date; })
       };

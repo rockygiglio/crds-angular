@@ -52,7 +52,7 @@
                 required
                 ng-options="group.dp_RecordName for group in request.groups track by group.dp_RecordID" >
           <option value=""> -- Choose your Group -- </option>
-      	</select>
+        </select>
         <ng-messages for="request.childcareRequestForm.group.$error" ng-if="request.validateField('group')">
           <span ng-message="required">
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -72,8 +72,8 @@
       </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('frequency')}" ng-show="request.choosenGroup">
-      	<label class="control-label required" for="frequency">Frequency</label>
-      	<select class="form-control" 
+        <label class="control-label required" for="frequency">Frequency</label>
+        <select class="form-control" 
                 name="frequency" 
                 ng-model="request.choosenFrequency"
                 ng-change="request.onFrequencyChange()"
@@ -97,9 +97,9 @@
                 class="form-control"
                 ng-model="request.choosenPreferredTime"
                 ng-change="request.preferredTimeChanged()"
+                ng-options="request.formatPreferredTime(time) for time in request.filteredTimes track by time.dp_RecordID" 
                 required>
           <option value="">-- Please choose a childcare session --</option>
-          <option ng-repeat="time in request.getAvailableTimes()" value="{{time}}">{{time}}</option>
         </select>
         <ng-messages for="request.childcareRequestForm.preferredTime.$error" ng-if="request.validateField('preferredTime')">
           <span ng-message="required">
@@ -178,7 +178,6 @@
                value="Submit" 
                ng-disabled="request.childcareRequestForm.$invalid || request.saving">
       </div>
-
     </form>
   </div>
 </div>
