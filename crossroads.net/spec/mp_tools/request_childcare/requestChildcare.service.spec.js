@@ -24,27 +24,27 @@ describe('Request Childcare Service', () => {
 
   it('should get congregations for childcare', () => {
     httpBackend.expectGET(`${endpoint}/lookup/childcarelocations`).respond(200,[] );
-    var request = requestChildcareService.getCongregations();
+    requestChildcareService.getCongregations();
     httpBackend.flush();
   });
 
   it('should get ministries for childcare', () => {
     httpBackend.expectGET(`${endpoint}/lookup/ministries`).respond(200,[] );
-    var request = requestChildcareService.getMinistries();
+    requestChildcareService.getMinistries();
     httpBackend.flush();
   });
 
   it('should get preferred childcare times for congregation', () => {
     const congregation = 4321;
     httpBackend.expectGET(`${endpoint}/lookup/childcaretimes/${congregation}`).respond(200, []);
-    var request = requestChildcareService.getPreferredTimes(congregation);
+    requestChildcareService.getPreferredTimes(congregation);
     httpBackend.flush();
   });
 
   it('should post to childcare/request', () => {
     const dto = { data: 1234, whatever: 'hi' };
     httpBackend.expectPOST(`${endpoint}/childcare/request`, dto).respond(200, {});
-    var request = requestChildcareService.saveRequest(dto);
+    requestChildcareService.saveRequest(dto);
     httpBackend.flush();
   });
 
@@ -52,14 +52,14 @@ describe('Request Childcare Service', () => {
     const ministry = 1234;
     const congregation = 4321;
     httpBackend.expectGET(`${endpoint}/lookup/group/${congregation}/${ministry}`).respond(200, [] );
-    var request = requestChildcareService.getGroups(congregation, ministry);
+    requestChildcareService.getGroups(congregation, ministry);
     httpBackend.flush();
   });
 
   it('should handle getCongregations error', () => {   
     httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
                           'api/lookup/childcarelocations').respond(500,[] );
-    var request = requestChildcareService.getCongregations();
+    requestChildcareService.getCongregations();
     httpBackend.flush();
   });
 

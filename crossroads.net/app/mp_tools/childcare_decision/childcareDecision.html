@@ -1,26 +1,54 @@
 <div ng-if="!decision.allowAccess && decision.viewReady" class="alert alert-danger" role="alert">
-    <div dynamic-content="$root.MESSAGES.mptool_invalid_access.content | html"></div>
+  <div dynamic-content="$root.MESSAGES.mptool_invalid_access.content | html"></div>
 </div>
 
 <div ng-if="decision.allowAccess">
-    <preloader full-screen="true" ng-show="!decision.viewReady"> </preloader>
-    <div ng-if="decision.viewReady"  class="col-md-6 col-md-offset-3">
-        <h1> Childcare Decision </h1>
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6">
-                <label>Group:&nbsp;</label><span>{{decision.request}}</span><br/>
-                <label>Start Date::&nbsp;</label>01/20/2016</span><br/>
-                <label>End Date:&nbsp;</label><span>12/20/1016</span><br/>
-                <label>Childcare Session:&nbsp;</label><span>Monday, 9AM - 11AM</span><br/>
-            </div>
-        </div>
-        <form name="decision.childcareRequestForm" novalidate ng-submit="decision.submit()">
-            <div class="form-group" >
-                <input class="btn btn-primary btn-standard pull-right"
-                       type="submit"
-                       value="Approve"
-                       ng-disabled="decision.childcareRequestForm.$invalid || decision.saving">
-            </div>
-        </form>
-    </div>
+  <div ng-if='decision.showError()' class='alert alert-danger' role='alert'>
+    <span dynamic-content='decision.errorMessage.content | html'></span>
+  </div>
+
+  <preloader full-screen="true" ng-show="!decision.viewReady"> </preloader>
+
+  <div ng-if="decision.viewReady && !decision.showError()"  class="col-md-6 col-md-offset-3">
+    <h1> Childcare Decision </h1>
+    <form name="decision.form" novalidate ng-submit="decision.submit()">
+      <div class="form-group">
+        <label class="control-label">Group:</label>
+        <input type="text"
+               class="form-control" 
+               readonly 
+               value="{{::decision.request.GroupName}}"/>
+      </div>
+      <div class="form-group">
+        <label class="control-label">Start Date:</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               value="{{::decision.request.StartDate}}" />
+      </div>
+      <div class="form-group">
+        <label class="control-label">End Date:</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               value="{{::decision.request.EndDate}}" />
+      </div>
+      <div class="form-group">
+        <label class="control-label">Childcare Session:</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               value="{{::decision.request.PreferredTime}}" />
+      </div>
+      <div class="form-group">
+        <loading-button
+               input-classes="btn btn-primary pull-left"
+               normal-text="Approve"
+               loading-text="Approving..."
+               loading="decision.saving"
+               input-type="submit">
+        </loading-button>
+      </div>
+    </form>
+  </div>
 </div>

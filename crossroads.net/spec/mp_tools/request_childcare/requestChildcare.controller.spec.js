@@ -1,16 +1,13 @@
 import constants from 'crds-constants';
 import RequestChildcareService from '../../../app/mp_tools/request_childcare/requestChildcare.service';
 import RequestChildcareController from '../../../app/mp_tools/request_childcare/requestChildcare.controller';
-import moment from 'moment';
 
 describe('Request Childcare Controller', () => {
-  
   let rootScope,
       MPTools,
       CRDS_TOOLS_CONSTANTS,
       log,
       controller,
-      lookupService,
       requestChildcareService,
       validation,
       cookies,
@@ -37,7 +34,7 @@ describe('Request Childcare Controller', () => {
     spyOn(requestChildcareService, 'getMinistries');
     spyOn(requestChildcareService, 'saveRequest').and.returnValue(
       { $promise: 
-        { then: function(fn) {
+        { then: function() {
           return [];
         }
       }
@@ -45,7 +42,7 @@ describe('Request Childcare Controller', () => {
     spyOn(requestChildcareService, 'getGroups').and.returnValue(
       // return a fake implementation of a promise
       {$promise: 
-        { then: function(fn) { 
+        { then: function() { 
             return [];
           }
         }
@@ -123,19 +120,6 @@ describe('Request Childcare Controller', () => {
     controller.numberOfChildren = 12;
     controller.notes = 'some long note';
 
-    const expectedDto = {
-      requester: uid,
-      site: 1,
-      ministry: 2,
-      group: 3,
-      startDate: moment(now).utc(),
-      endDate: moment(now).utc(),
-      frequency: 'once',
-      timeframe: 4,
-      estimatedChildren: 12,
-      notes: 'some long note'
-    };
- 
     controller.submit();
     expect(requestChildcareService.saveRequest).toHaveBeenCalled();
   });
