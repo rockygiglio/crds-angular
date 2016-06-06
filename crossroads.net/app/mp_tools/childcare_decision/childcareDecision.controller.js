@@ -2,8 +2,13 @@ class ChildcareDecisionController {
     /*@ngInject*/
     constructor(
         ChildcareDecisionService,
+        $rootScope,
         MPTools,
-        CRDS_TOOLS_CONSTANTS
+        CRDS_TOOLS_CONSTANTS,
+        $log,
+        Validation,
+        $cookies,
+        $window
     ) {
         this.mptools = MPTools;
         this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareDecisionTool);
@@ -17,19 +22,13 @@ class ChildcareDecisionController {
         this.startDate = '';
         this.endDate = '';
         this.childcareSession = '';
-        getChildcareRequest();
 
 
-        getChildcareRequest()
-        {
-            getChildcareRequest.get({requestId}, function (q) {
-                requestData = q;
-                group = requestData.GroupName;
-                startDate = requestData.StartDate;
-                endDate = requestData.EndDate;
-                childcareSession = requestData.ChildcareSession;
-            });
-        }
+
+        this.requestData = getChildcareRequest.requestData;
+
+
+
     }
 }
 export default ChildcareDecisionController;

@@ -8,8 +8,7 @@ class ChildcareDecisionService {
     }
 
     getChildcareRequest() {
-        let decisionResource = this.resource(__API_ENDPOINT__ + 'api/getChildcareRequest/:requestId');
-        return decisionResource;
+        return {requestData: resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestid')};
     }
 
 
