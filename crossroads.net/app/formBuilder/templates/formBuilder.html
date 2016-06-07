@@ -1,5 +1,5 @@
 <div ng-if='formBuilder.hasForm()'>
-  <form ng-submit="formBuilder.save()" ng-if="!formBuilder.successfulSave && formBuilder.availableForm()">
+  <ng-form name="formBuilder.dataForm" ng-submit="formBuilder.save()" ng-if="!formBuilder.successfulSave && formBuilder.availableForm()">
     <div dynamic-content="formBuilder.data.header | html"> </div>
     <div ng-repeat="field in formBuilder.page.fields"> 
       <div class="row">
@@ -24,4 +24,5 @@
   <div class="row col-md-12">
     <div dynamic-content="formBuilder.data.footer | html"> </div>
   </div>
+  </ng-form>
 </div>
