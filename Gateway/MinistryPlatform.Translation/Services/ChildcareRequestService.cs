@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
@@ -101,7 +102,7 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(rec => new ChildcareRequestDate
             {
                 Approved = rec.ToBool("Approved"),
-                ChildcareRequestDateId = rec.ToInt("Childcare_Request_Date_ID"),
+                ChildcareRequestDateId = rec.ToInt("dp_RecordID"),
                 ChildcareRequestId = rec.ToInt("Childcare_Request_ID"),
                 RequestDate = rec.ToDate("Childcare_Request_Date")
             }).ToList();
@@ -134,7 +135,44 @@ namespace MinistryPlatform.Translation.Services
                 {"Request_Status_ID", _childcareRequestStatusApproved }
             };
 
+            //set the approved column for dates to true
+            var childcareDates = GetChildcareRequestDates(childcareRequestId);
+            var groupid = record.ToInt("Group_ID");
+            foreach (var d in childcareDates)
+            {
+                ApproveChildcareRequestDate(d.ChildcareRequestDateId);
+
+                //add the group to the event
+                AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, d);
+            }
+            
             _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
+        }
+
+        public void AddGroupToChildcareEvents(int childcareRequestId, int groupId, ChildcareRequestDate childcareDate)
+        {
+            var cdList = new List<ChildcareRequestDate> {childcareDate};
+
+            var reqEvents = FindChildcareEvents(childcareRequestId, cdList);
+            foreach (var entry in reqEvents)
+            {
+                // do something with entry.Value or entry.Key
+                var eventId = entry.Value;
+
+            }
+        }
+
+        public void ApproveChildcareRequestDate(int childcareRequestDateId)
+        {
+            var apiToken = _apiUserService.GetToken();
+
+            var requestDateDict = new Dictionary<string, object>
+            {
+                {"Childcare_Request_Date_ID", childcareRequestDateId},
+                {"Approved", true}
+            };
+
+            _ministryPlatformService.UpdateRecord(_childcareRequestDatesPageId, requestDateDict, apiToken);
         }
 
         public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates)
