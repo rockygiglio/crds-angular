@@ -39,13 +39,19 @@ describe('Chilcare Decision Controller', () => {
     validation = $injector.get('Validation'); 
     cookies = $injector.get('$cookies');
     _window = $injector.get('$window');
-
-    childcareDecisionService = new ChildcareDecisionService();
+    let resource = $injector.get('$resource');
+    childcareDecisionService = new ChildcareDecisionService(log, rootScope, resource );
 
     // SPYS
     spyOn(childcareDecisionService, 'getChildcareRequest').and.returnValue(dto);
 
-    spyOn(childcareDecisionService, 'saveRequest');
+    spyOn(childcareDecisionService, 'saveRequest').and.returnValue({
+      $promise: {
+        then: function(fn) {
+          fn();
+        }
+      }
+    });
   }));
 
   it('should submit a request', () => {
@@ -53,14 +59,32 @@ describe('Chilcare Decision Controller', () => {
     allowAccess(requestId);
     commonExpectations();
     controller.submit();
-    expect(childcareDecisionService.saveRequest).toHaveBeenCalledWith(dto);
+    expect(childcareDecisionService.saveRequest).toHaveBeenCalled();
+  });
+
+  it('should format the missing event content correctly', () => {
+    let requestId = 200;
+    allowAccess(requestId);
+    commonExpectations();
+    var dateList = [
+      new Date(2016,0,1),
+      new Date(2016,1,1),
+      new Date(2016,2,1)
+    ];
+    expect(controller.missingEventContent(dateList))
+    .toBe(
+      '<p><strong>Missing Childcare Events</strong>' +
+      '<ul> <li> 01/01/2016 </li> '+
+      '<li> 02/01/2016 </li> ' +
+      '<li> 03/01/2016 </li> </ul></p>'
+    );
   });
 
   it('should make a request to get childcare request', () => {
     let requestId = 200;
     allowAccess(requestId);
     commonExpectations();
-    expect(childcareDecisionService.getChildcareRequest).toHaveBeenCalledWith(requestId);
+    expect(childcareDecisionService.getChildcareRequest).toHaveBeenCalled();
     expect(controller.viewReady).toBe(true);
   });
 

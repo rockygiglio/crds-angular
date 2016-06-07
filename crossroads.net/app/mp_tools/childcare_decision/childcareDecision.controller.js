@@ -14,6 +14,7 @@ class ChildcareDecisionController {
     this.log = $log;
     this.mptools = MPTools;
     this.name = 'childcare-decision';
+    this.rootScope = $rootScope;
     this._window = $window;
 
     if ( this.allowAccess) {
@@ -23,12 +24,43 @@ class ChildcareDecisionController {
         this.error = true;
         this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
       } else {
-        this.request = this.childcareDecisionService.getChildcareRequest(this.recordId);
+        this.request = this.childcareDecisionService.getChildcareRequest(this.recordId, (d) => {
+          this.startDate = moment(d.StartDate).format('L');
+          this.endDate = moment(d.EndDate).format('L');
+        });
         this.request.$promise.then(() => {
           this.viewReady = true;
         });
       }
     }
+  }
+
+  allowApproval() {
+    return this.request.Status !== 'Approved';
+  }
+
+  isLoading() {
+    return this.saving || !this.allowApproval();
+  }
+
+  loadingText() {
+    if (this.allowApproval()) {
+      return 'Approving...';
+    } else {
+      return 'Approve';
+    }
+  }
+
+  missingEventContent(dateList) {
+    let dateListLI = dateList.map( (d) => {
+      return `<li> ${moment(d).format('L')} </li>`;
+    }).reduce((first, next) => {
+     return `${first} ${next}`;
+    }, '');
+    let dateListUL = `<ul>${dateListLI} </ul>`;
+    let content ='<p><strong>Missing Childcare Events</strong>' +
+      dateListUL + '</p>';
+    return content;
   }
 
   showError() {
@@ -37,12 +69,22 @@ class ChildcareDecisionController {
 
   submit() {
     this.saving = true;
-    this.saved = this.childcareDecisionService.saveRequest(this.request, (data) => {
+    this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
+      this.saving = false;
       this.log('success!', data);
+      this._window.close();
     }, (err) => {
+      this.saving = false;
+      if (err.status === 416) {
+        this.rootScope.$emit('notify', {
+          content: this.missingEventContent(err.data.Errors),
+          type: 'error'
+        });
+      } else {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }
       this.log.error('error!', err);
     });
-    this.saved.$promise.then(this.saving = false );
   }
 
 }

@@ -1,20 +1,19 @@
 class ChildcareDecisionService {
   /*@ngInject*/
   constructor($log, $rootScope, $resource) {
-      this.log = $log;
-      this.rootScope = $rootScope;
-      this.resource = $resource;
-
+    this.log = $log;
+    this.rootScope = $rootScope;
+    this.resource = $resource;
+    this.approve = $resource(__API_ENDPOINT__ + 'api/childcare/request/approve/:requestId');
+    this.requestData = $resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
   }
 
-  getChildcareRequest(requestId) {
-    var requestData = this.resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
-    return requestData.get({requestId});
+  getChildcareRequest(requestId, success, error) {
+    return this.requestData.get({requestId},success,error);
   }
 
-  saveRequest(dto) {
-    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request/approve');
-    return this.saveRequest.save(dto);
+  saveRequest(requestId, dto, success, error) {
+    return this.approve.save({requestId}, dto, success, error);
   }
 }
 
