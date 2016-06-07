@@ -1,8 +1,8 @@
-<ng-form name="birthdayForm">
+<ng-form name="formField.birthdayForm">
   <div class="form-group col-sm-12" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'birthdate')}">
   <label ng-show="formField.field.label" dynamic-content="formField.field.label | html"></label>
     <p class="help-block" ng-show="formField.field.description" dynamic-content="formField.field.description | html"></p>
-    <span class="input-group datepicker" ng-class="{'has-error': formField.data.isDobError()}">
+    <span class="input-group datepicker" >
       <input
           type="text"
           class="form-control"
@@ -12,7 +12,7 @@
           datepicker-popup="MM/dd/yyyy"
           ng-model='formField.data.profileData.person.dateOfBirth'
           ng-value ='birthdate.value'
-          is-open='formField.data.birthdateOpen'
+          is-open='formField.birthdateOpen'
           max-date={{formField.data.maxBirthdate}}
           min-date={{formField.data.oneHundredFiftyYearsAgo}}
           init-date=formField.data.initDate
@@ -20,12 +20,12 @@
           datepicker-validator        
       >
       <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="formField.data.openBirthdatePicker($event)">
+        <button type="button" class="btn btn-default" ng-click="formField.openBirthdatePicker($event)">
             <i class="glyphicon glyphicon-calendar"></i>
         </button>  
       </span> 
     </span> 
-    <ng-messages for="birthdayForm.birthdate.$error" ng-class="{'has-error': formField.data.isDobError()}">          
+    <ng-messages for="birthdayForm.birthdate.$error" ng-if="formfield.validate(formField.birthdayForm, 'birthdate')">          
       <span ng-message="date">
         <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
       </span>
@@ -38,3 +38,5 @@
     </ng-messages> 
   </div>
 </ng-form>
+
+<!--ng-class="{'has-error': formField.isDobError()}"-->

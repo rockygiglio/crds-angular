@@ -30,7 +30,6 @@
     vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
-    vm.isDobError = isDobError;
 
     activate();
 
@@ -63,14 +62,13 @@
       vm.data = {};
       vm.data.onComplete = ContentPageService.page.onCompleteMessage;
       vm.data.displayLocation = displayLocation;
-      vm.data.openBirthdatePicker = openBirthdatePicker;
+    
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
       vm.data.header = ContentPageService.page.fields[0].header;
       vm.data.footer = ContentPageService.page.fields[0].footer;
       vm.data.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       vm.data.maxBirthdate = new Date(now.getFullYear() - vm.enforceAgeRestriction, now.getMonth(), now.getDate());
-      vm.data.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
-      vm.data.isDobError = isDobError;
+      vm.data.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());  
 
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.locations = ContentPageService.resolvedData.locations;
@@ -88,22 +86,12 @@
       return true;
     }
 
-    function isDobError() {
-      return (vm.dataForm.birthdayForm.birthdate.$touched && vm.dataForm.birthdayForm.birthdate.$invalid);
-    }
-    
     function displayLocation(locationId) {
       return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
     }
 
     function userExistsInGroupType() {
       return Group.Type.query({groupTypeId: constants.GROUP.GROUP_TYPE_ID.UNDIVIDED}).$promise;
-    }
-
-    function openBirthdatePicker($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-      this.birthdateOpen = !this.birthdateOpen;
     }
 
     function convertAttributeTypes(list) {

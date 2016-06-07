@@ -3,9 +3,9 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Validation'];
 
-  function FormField($templateRequest, $compile) {
+  function FormField($templateRequest, $compile, Validation) {
     return {
       restrict: 'E',
       scope: {
@@ -31,22 +31,7 @@
       controllerAs: 'formField',
       bindToController: true
     };
-
-    function FormFieldController() {
-      var vm = this;
-
-      // TODO: See if moving the radiobutton specific code to another directive is better than this
-      if (vm.field && vm.field.attributeType) {
-        vm.attributeType = vm.field.attributeType;
-
-        vm.singleAttributes = _.map(vm.attributeType.attributes, function(attribute) {
-          var singleAttribute = {};
-          singleAttribute[vm.attributeType.attributeTypeId] = {attribute: attribute};
-          return singleAttribute;
-        });
-      }
-    }
-
+    
     function getTemplateUrl(field) {
       switch (field.className) {
         case 'ProfileField':
@@ -89,6 +74,23 @@
         default:
           return 'default/defaultField.html';
       }
+    }
+    
+    function FormFieldController() {
+      var vm = this;
+      vm.validate = validate;
+      // vm.openBirthdatePicker = openBirthdatePicker;    
+  
+      //  function openBirthdatePicker($event) {
+      //    $event.preventDefault();
+      //    $event.stopPropagation();
+      //    vm.birthdateOpen = !vm.birthdateOpen;
+      //  }
+      
+      // function validate(form, field) {
+      //   return Validation.showErrors(form, field);
+      // }
+      
     }
   }
 
