@@ -40,7 +40,7 @@ describe('Childcare Decision Service', () => {
   it('should save a request', () => {
     let requestDTO = {};
     let requestId = 2345;
-    httpBackend.expectPOST(`${endpoint}/childcare/request/approve/${}`, requestDTO).respond(200, {});
+    httpBackend.expectPOST(`${endpoint}/childcare/request/approve/${requestId}`, requestDTO).respond(200, {});
     childcareDecisionService.saveRequest(requestId, requestDTO);
     httpBackend.flush();
   });
