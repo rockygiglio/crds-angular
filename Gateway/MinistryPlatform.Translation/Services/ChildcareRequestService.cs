@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using System.Diagnostics.Eventing.Reader;
+=======
+using System.Globalization;
+>>>>>>> origin/feature/US3952-childcaresiteownerapprovestherequest
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
@@ -180,20 +184,23 @@ namespace MinistryPlatform.Translation.Services
             var apiToken = _apiUserService.GetToken();
 
             var request = GetChildcareRequestForReview(childcareRequestId);
-            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',')).Split('-');
-            var requestStartTime = TimeSpan.Parse(prefTime[0].Trim());
-            var requestEndTime = TimeSpan.Parse(prefTime[1].Trim());
+            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
+            var requestStartTime = DateTime.ParseExact(prefTime[0].Trim(), "h:mmtt", CultureInfo.InvariantCulture );
+            var requestEndTime = DateTime.ParseExact(prefTime[1].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
 
             var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken);
 
             var reqEvents = new Dictionary<int, int>();
             foreach (var date in requestedDates)
             {
-                var foundEvent = events.Single(
-                    e => (e.EventStartDate == date.RequestDate.Add(requestStartTime)) && 
-                    (e.EventEndDate == date.RequestDate.Add(requestEndTime)) && 
-                    (e.CongregationId == request.LocationId)).EventId;
-                reqEvents.Add(date.ChildcareRequestDateId, foundEvent);
+                var foundEvent = events.SingleOrDefault(
+                    e => (e.EventStartDate == date.RequestDate.Add(requestStartTime.TimeOfDay)) && 
+                    (e.EventEndDate == date.RequestDate.Add(requestEndTime.TimeOfDay)) && 
+                    (e.CongregationId == request.LocationId));
+                if (foundEvent != null)
+                {
+                    reqEvents.Add(date.ChildcareRequestDateId, foundEvent.EventId);
+                }
             }
             return reqEvents;
 
