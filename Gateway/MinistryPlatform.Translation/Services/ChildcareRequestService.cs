@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using System.Diagnostics.Eventing.Reader;
-=======
 using System.Globalization;
->>>>>>> origin/feature/US3952-childcaresiteownerapprovestherequest
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
