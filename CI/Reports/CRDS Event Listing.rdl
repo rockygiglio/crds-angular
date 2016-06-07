@@ -13,46 +13,42 @@
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@DomainID">
+          <QueryParameter Name="DomainID">
             <Value>=Parameters!DomainID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@UserID">
+          <QueryParameter Name="UserID">
             <Value>=Parameters!UserID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@PageID">
+          <QueryParameter Name="PageID">
             <Value>=Parameters!PageID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@FromDate">
+          <QueryParameter Name="FromDate">
             <Value>=Parameters!FromDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ToDate">
+          <QueryParameter Name="ToDate">
             <Value>=Parameters!ToDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@LocationID">
-            <Value>=Parameters!LocationID.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@CongregationID">
+          <QueryParameter Name="CongregationID">
             <Value>=Parameters!CongregationID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@EventTypes">
+          <QueryParameter Name="EventTypes">
             <Value>=JOIN(Parameters!EventTypes.Value,",")</Value>
           </QueryParameter>
-          <QueryParameter Name="@ShowCancelled">
+          <QueryParameter Name="ShowCancelled">
             <Value>=Parameters!ShowCancelled.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ShowNoRoomsSet">
+          <QueryParameter Name="ShowNoRoomsSet">
             <Value>=Parameters!ShowNoRoomsSet.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ListTime">
+          <QueryParameter Name="ListTime">
             <Value>=Parameters!ListTime.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ShowBldgRm">
+          <QueryParameter Name="ShowBldgRm">
             <Value>=Parameters!ShowBldgRm.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>dbo.report_event_listing</CommandText>
+        <CommandText>report_CRDS_Event_Listing</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -108,16 +104,8 @@
           <DataField>Congregation_Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Location_Name">
-          <DataField>Location_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="Congregation_ID">
           <DataField>Congregation_ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Location_ID">
-          <DataField>Location_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Room_1">
@@ -268,8 +256,8 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Label>Location</Label>
-                                      <Value>=Fields!Location_Name.Value</Value>
+                                      <Label>Congregation</Label>
+                                      <Value>=Fields!Congregation_Name.Value</Value>
                                       <MarkupType>HTML</MarkupType>
                                       <Style>
                                         <FontSize>14pt</FontSize>
@@ -855,6 +843,7 @@
                           <KeepTogether>true</KeepTogether>
                           <Style />
                         </Rectangle>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -871,12 +860,12 @@
                 <TablixMember>
                   <Group Name="list1_Details_Group">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!Location_ID.Value</GroupExpression>
+                      <GroupExpression>=Fields!Congregation_ID.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=Fields!Location_Name.Value</Value>
+                      <Value>=Fields!Congregation_Name.Value</Value>
                     </SortExpression>
                   </SortExpressions>
                   <DataElementOutput>Output</DataElementOutput>
@@ -895,7 +884,7 @@
         <Height>1.35625in</Height>
         <Style />
       </Body>
-      <Width>8.00001in</Width>
+      <Width>9.94793in</Width>
       <Page>
         <PageHeader>
           <Height>0.375in</Height>
@@ -958,7 +947,7 @@
           <Style />
         </PageHeader>
         <PageFooter>
-          <Height>0.375in</Height>
+          <Height>3.48958in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -1044,17 +1033,6 @@
         </Values>
       </DefaultValue>
       <Prompt>To</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="LocationID">
-      <DataType>Integer</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Location (campus)</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="CongregationID">
       <DataType>Integer</DataType>
