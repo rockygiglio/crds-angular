@@ -10,6 +10,7 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Translation.Models.Childcare;
 
 namespace crds_angular.Controllers.API
 {
@@ -115,16 +116,22 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request/approve/{requestid}")]
+        [Route("api/childcare/request/approve/{requestId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult ApproveChildcareRequest(int requestid)
+        public IHttpActionResult ApproveChildcareRequest(int requestId, ChildcareRequest childcareRequest)
         {
-           
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Save Request Data Invalid", new InvalidOperationException("Invalid Save request Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
             return Authorized(token =>
             {
                 try
                 {
-                    _childcareService.ApproveChildcareRequest(requestid,token);
+                    _childcareService.ApproveChildcareRequest(requestId,token);
                     return Ok();
                 }
                 catch (Exception e)
