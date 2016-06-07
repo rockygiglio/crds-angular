@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -129,7 +130,9 @@ namespace crds_angular.Services
                 if (missingDates.Count > 0)
                 {
                     var dateList = missingDates.Aggregate("", (current, date) => current + ", " + date.RequestDate.ToShortDateString());
-                    throw new Exception("The following dates are missing events: " + dateList);
+                    _logger.Debug("Missing events for dates: ${dateList}");
+                    var dateMap = missingDates.Select(c => c.RequestDate).ToList();
+                    throw new EventMissingException(dateMap);
                 }
 
                 //set the approved column for dates to true
@@ -145,6 +148,10 @@ namespace crds_angular.Services
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+            }
+            catch (EventMissingException ex)
+            {
+                throw;
             }
             catch (Exception ex)
             {

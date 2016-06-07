@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
@@ -11,6 +14,7 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.Childcare;
+using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
 {
@@ -131,8 +135,16 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _childcareService.ApproveChildcareRequest(requestId,token);
+                    _childcareService.ApproveChildcareRequest(requestId, token);
                     return Ok();
+                }
+                catch (EventMissingException e)
+                {
+                    var errors = new DateError() {Errors = e.MissingDateTimes, Message = e.Message};
+                    var json = JsonConvert.SerializeObject(errors, Formatting.Indented);                    
+                    var message = new HttpResponseMessage(HttpStatusCode.RequestedRangeNotSatisfiable);
+                    message.Content = new StringContent(json);
+                    throw new HttpResponseException(message);
                 }
                 catch (Exception e)
                 {
@@ -161,6 +173,12 @@ namespace crds_angular.Controllers.API
                 }
 
             });
+        }
+
+        private class DateError
+        {
+            public List<DateTime> Errors { get; set;}
+            public string Message { get; set;}
         }
     }
 }
