@@ -242,7 +242,8 @@ namespace MinistryPlatform.Translation.Services
                 EventType = record.ToString("Event Type"),
                 EventStartDate = record.ToDate("Event Start Date", true),
                 EventEndDate = record.ToDate("Event End Date", true),
-                EventId = record.ToInt("dp_RecordID")
+                EventId = record.ToInt("dp_RecordID"),
+                CongregationId = record.ToInt("Congregation_ID")
             }).ToList();
 
             //now we have a list, filter by date range.

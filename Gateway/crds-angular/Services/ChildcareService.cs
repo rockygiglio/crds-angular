@@ -26,7 +26,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;        
+        private readonly IApiUserService _apiUserService;    
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -122,6 +122,7 @@ namespace crds_angular.Services
         {
             try
             {
+                var request = GetChildcareRequestForReview(childcareRequestId, token);
                 var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
                 var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
                 var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
@@ -129,6 +130,18 @@ namespace crds_angular.Services
                 {
                     var dateList = missingDates.Aggregate("", (current, date) => current + ", " + date.RequestDate.ToShortDateString());
                     throw new Exception("The following dates are missing events: " + dateList);
+                }
+
+                //set the approved column for dates to true
+                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var groupid = request.GroupId;
+                foreach (var d in childcareDates)
+                {
+                    
+                    _childcareRequestService.ApproveChildcareRequestDate(d.ChildcareRequestDateId);
+
+                    //add the group to the event
+                    _childcareRequestService.AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, d);
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
@@ -139,6 +152,10 @@ namespace crds_angular.Services
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
+
+
+        
+
 
         public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -135,30 +136,30 @@ namespace MinistryPlatform.Translation.Services
                 {"Request_Status_ID", _childcareRequestStatusApproved }
             };
 
-            //set the approved column for dates to true
-            var childcareDates = GetChildcareRequestDates(childcareRequestId);
-            var groupid = record.ToInt("Group_ID");
-            foreach (var d in childcareDates)
-            {
-                ApproveChildcareRequestDate(d.ChildcareRequestDateId);
-
-                //add the group to the event
-                AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, d);
-            }
-            
-            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
+           _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
         }
 
         public void AddGroupToChildcareEvents(int childcareRequestId, int groupId, ChildcareRequestDate childcareDate)
         {
-            var cdList = new List<ChildcareRequestDate> {childcareDate};
+            var apiToken = _apiUserService.GetToken();
+            var cdList = new List<ChildcareRequestDate> { childcareDate };
+
 
             var reqEvents = FindChildcareEvents(childcareRequestId, cdList);
             foreach (var entry in reqEvents)
             {
-                // do something with entry.Value or entry.Key
+               
                 var eventId = entry.Value;
 
+               
+                var eventGroup = new EventGroup
+                {
+                    DomainId = 1,
+                    EventId = eventId,
+                    GroupId = groupId
+                };
+
+                _eventService.CreateEventGroup(eventGroup, apiToken);
             }
         }
 
@@ -190,8 +191,8 @@ namespace MinistryPlatform.Translation.Services
             foreach (var date in requestedDates)
             {
                 var foundEvent = events.SingleOrDefault(
-                    e => (e.EventStartDate == date.RequestDate.Add(requestStartTime.TimeOfDay)) && 
-                    (e.EventEndDate == date.RequestDate.Add(requestEndTime.TimeOfDay)) && 
+                    e => (e.EventStartDate == date.RequestDate.Date.Add(requestStartTime.TimeOfDay)) && 
+                    (e.EventEndDate == date.RequestDate.Date.Add(requestEndTime.TimeOfDay)) && 
                     (e.CongregationId == request.LocationId));
                 if (foundEvent != null)
                 {
