@@ -226,6 +226,7 @@ namespace MinistryPlatform.Translation.Services
                 EndDate = record.ToDate("End_Date"),
                 Frequency = record.ToString("Frequency"),
                 PreferredTime = record.ToString("Childcare_Session"),
+                Status = record.ToString("Request_Status_ID_Text"),
                 Notes = record.ToString("Notes")
             };
 
