@@ -173,8 +173,7 @@
     }
 
     function validateForm() {
-      // Ensure form validation
-      if (!vm.dataForm.$error) {
+      if (vm.dataForm.$valid) {
         return true;
       }
 

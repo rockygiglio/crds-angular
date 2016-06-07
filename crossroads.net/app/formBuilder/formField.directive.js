@@ -1,6 +1,7 @@
 (function() {
   'use strict';
 
+  var constants = require('crds-constants');
   module.exports = FormField;
 
   FormField.$inject = ['$templateRequest', '$compile', 'Validation'];
@@ -19,7 +20,7 @@
           return;
         }
 
-        scope.attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+        scope.attributeTypeIds = constants.ATTRIBUTE_TYPE_IDS;
 
         $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);
@@ -85,6 +86,15 @@
       var vm = this;
       vm.required = (vm.field.required === '1');
       vm.validate = validate;
+      vm.attributeSelected = attributeSelected;
+
+      function attributeSelected(attributes) {
+        var selected = _.some(attributes, function(attribute) {
+          return attribute.selected;
+        });
+
+        return selected;
+      }
 
       function validate(fieldName) {
         return Validation.showErrors(vm.parentForm, fieldName);
