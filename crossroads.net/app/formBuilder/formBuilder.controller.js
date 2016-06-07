@@ -172,10 +172,26 @@
       return deferred.promise;
     }
 
+    function validateForm() {
+      // Ensure form validation
+      if (!vm.dataForm.$error) {
+        return true;
+      }
+
+      vm.dataForm.$submitted = true;
+      return false;
+    }
+
     function save() {
       vm.saving = true;
       vm.successfulSave = false;
       try {
+        if (!validateForm()) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          vm.saving = false;
+          return;
+        }
+
         var promise = validateGroup();
         promise = promise.then(savePersonal);
         promise = promise.then(saveGroup);

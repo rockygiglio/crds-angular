@@ -3,14 +3,15 @@
 
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Validation'];
 
-  function FormField($templateRequest, $compile) {
+  function FormField($templateRequest, $compile, Validation) {
     return {
       restrict: 'E',
       scope: {
         field: '=?',
-        data: '=?'
+        data: '=?',
+        parentForm: '='
       },
       link: function(scope, element) {
         var templateUrl = getTemplateUrl(scope.formField.field);
@@ -31,11 +32,6 @@
       controllerAs: 'formField',
       bindToController: true
     };
-
-    function FormFieldController() {
-      var vm = this;
-      vm.required = (vm.field.required === '1');
-    }
 
     function getTemplateUrl(field) {
       switch (field.className) {
@@ -84,6 +80,15 @@
           return 'default/defaultField.html';
       }
     }
-  }
 
+    function FormFieldController() {
+      var vm = this;
+      vm.required = (vm.field.required === '1');
+      vm.validate = validate;
+
+      function validate(fieldName) {
+        return Validation.showErrors(vm.parentForm, fieldName);
+      }
+    }
+  }
 })();
