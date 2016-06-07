@@ -10,7 +10,8 @@
       restrict: 'E',
       scope: {
         field: '=?',
-        data: '=?'
+        data: '=?',
+        parentForm: '='
       },
       link: function(scope, element) {
         var templateUrl = getTemplateUrl(scope.formField.field);
@@ -31,7 +32,7 @@
       controllerAs: 'formField',
       bindToController: true
     };
-    
+
     function getTemplateUrl(field) {
       switch (field.className) {
         case 'ProfileField':
@@ -65,8 +66,12 @@
           return 'profile/gender.html';
         case 'KickOffEvent':
           return 'groupParticipant/kickOffEvent.html';
+        case 'Leader':
+          return null;
         case 'Location':
           return 'profile/location.html';
+        case 'Member':
+          return null;
         case 'Name':
           return 'profile/name.html';
         case 'GroupsUndivided':
@@ -75,23 +80,22 @@
           return 'default/defaultField.html';
       }
     }
-    
+  
     function FormFieldController() {
       var vm = this;
+      vm.required = (vm.field.required === '1');
       vm.validate = validate;
-      // vm.openBirthdatePicker = openBirthdatePicker;    
+      vm.openBirthdatePicker = openBirthdatePicker;    
   
-      //  function openBirthdatePicker($event) {
-      //    $event.preventDefault();
-      //    $event.stopPropagation();
-      //    vm.birthdateOpen = !vm.birthdateOpen;
-      //  }
-      
-      // function validate(form, field) {
-      //   return Validation.showErrors(form, field);
-      // }
-      
+      function openBirthdatePicker($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        vm.birthdateOpen = !vm.birthdateOpen;
+       }
+
+      function validate(fieldName) {
+        return Validation.showErrors(vm.parentForm, fieldName);
+      }
     }
   }
-
 })();

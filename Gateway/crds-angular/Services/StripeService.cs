@@ -9,6 +9,7 @@ using System.Net;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Json;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Models;
@@ -298,7 +299,7 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId)
+        public StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId, string checkNumber)
         {
             var request = new RestRequest("charges", Method.POST);
             request.AddParameter("amount",(int)(amount * Constants.StripeDecimalConversionValue));
@@ -307,6 +308,7 @@ namespace crds_angular.Services
             request.AddParameter("source", customerSourceId);
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
+            request.AddParameter("statement_descriptor", string.Format("CRDS CONVERTED CK{0}", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);

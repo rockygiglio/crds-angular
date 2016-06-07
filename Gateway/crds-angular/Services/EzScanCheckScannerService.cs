@@ -97,7 +97,7 @@ namespace crds_angular.Services
                     }
 
                     //Always use the customer ID and source ID from the Donor Account, if it exists
-                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId);
+                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId, check.CheckNumber);
 
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 

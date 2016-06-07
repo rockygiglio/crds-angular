@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     public interface IChildcareRequestService
     {
         int CreateChildcareRequest(ChildcareRequest request);
-
         ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
+        void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest mpRequest, string token);
     }
 }

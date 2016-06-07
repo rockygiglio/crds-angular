@@ -21,7 +21,7 @@
                            ContentPageService,
                            FormBuilderFieldsService,
                            $log,
-                           $q, 
+                           $q,
                            $anchorScroll) {
     var vm = this;
     var now = new Date();
@@ -38,11 +38,12 @@
         return;
       }
 
-      //TODO Decide if you member or leader - now always leader
+      var groupRoleId = FormBuilderFieldsService.getGroupRoleId();
+
       var participant = {
         capacity: 1,
         contactId: parseInt(Session.exists('userId')),
-        groupRoleId: constants.GROUP.ROLES.MEMBER,
+        groupRoleId: groupRoleId,
         childCareNeeded: false,
         sendConfirmationEmail: false,
         singleAttributes: {},
@@ -81,8 +82,9 @@
 
     function availableForm() {
       if (FormBuilderFieldsService.hasGroupParticipant() && vm.data.availableGroups.length < 1) {
-          return false;
+        return false;
       }
+
       return true;
     }
 
@@ -172,10 +174,26 @@
       return deferred.promise;
     }
 
+    function validateForm() {
+      // Ensure form validation
+      if (!vm.dataForm.$error) {
+        return true;
+      }
+
+      vm.dataForm.$submitted = true;
+      return false;
+    }
+
     function save() {
       vm.saving = true;
       vm.successfulSave = false;
       try {
+        if (!validateForm()) {
+          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          vm.saving = false;
+          return;
+        }
+
         var promise = validateGroup();
         promise = promise.then(savePersonal);
         promise = promise.then(saveGroup);
@@ -184,7 +202,7 @@
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
             vm.successfulSave = true;
-            $anchorScroll();            
+            $anchorScroll();
           },
           function(data) {
             if (data && data.contentBlockMessage) {
@@ -272,10 +290,6 @@
         constants.ATTRIBUTE_IDS.COPARTICIPANT
       );
       vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COPARTICIPANT] = coParticipant;
-
-      if (vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR]) {
-        vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
-      }
 
       var participants = [vm.data.groupParticipant];
 

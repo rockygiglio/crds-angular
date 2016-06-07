@@ -451,7 +451,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                var response = _fixture.ChargeCustomer("cust_token", "nonexistant source", 9090, 98765);
+                var response = _fixture.ChargeCustomer("cust_token", "nonexistant source", 9090, 98765, "1111");
                 Assert.Fail("Should have thrown exception");
             }
             catch (PaymentProcessorException e)

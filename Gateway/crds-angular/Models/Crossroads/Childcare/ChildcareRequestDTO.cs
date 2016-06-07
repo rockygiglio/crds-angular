@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MinistryPlatform.Translation.Models.Childcare;
 using Newtonsoft.Json;
@@ -34,6 +35,11 @@ namespace crds_angular.Models.Crossroads.Childcare
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
 
+        [JsonProperty(PropertyName = "dates")]
+        public List<DateTime> DatesList { get; set; }
+
+
+
         public ChildcareRequest ToMPChildcareRequest()
         {
             var mpReq = new ChildcareRequest
@@ -46,7 +52,8 @@ namespace crds_angular.Models.Crossroads.Childcare
                 EndDate = this.EndDate,
                 Frequency = this.Frequency,
                 PreferredTime = this.PreferredTime,
-                Notes = this.Notes
+                Notes = this.Notes,
+                DatesList = this.DatesList
             };
 
             return mpReq;
