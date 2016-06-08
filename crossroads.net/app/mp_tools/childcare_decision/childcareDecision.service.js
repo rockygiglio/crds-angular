@@ -10,13 +10,13 @@ class ChildcareDecisionService {
   }
 
   getChildcareRequest(requestId, success, error) {
-    return this.requestData.get({requestId},success,error);
+    return this.requestData.get({requestId}, success, error);
   }
 
   rejectRequest(requestId, dto, success, error) {
     return this.reject.save({requestId}, dto, success, error);
   }
-  
+
   saveRequest(requestId, dto, success, error) {
     return this.approve.save({requestId}, dto, success, error);
   }

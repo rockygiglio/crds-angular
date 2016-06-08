@@ -67,7 +67,7 @@ class ChildcareDecisionController {
     this.saving = true;
     this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, (data) => {
       this.saving = false;
-      this.window.close();
+      this._window.close();
     }, (err) => {
       this.saving = false;
       if (err.status === 416) {
