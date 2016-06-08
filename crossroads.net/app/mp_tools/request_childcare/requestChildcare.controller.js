@@ -118,6 +118,10 @@ class RequestChildcareController {
     this.datesSelected = datesSelected.length > 0;
   }
 
+  onDayChange() {
+    this.runDateGenerator = true;
+  }
+
   onStartDateChange(startDate) {
     this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
