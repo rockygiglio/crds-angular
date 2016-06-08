@@ -23,13 +23,9 @@
                            $log,
                            $q,
                            $anchorScroll) {
-    var vm = this;
-    var now = new Date();
+    var vm = this;   
     vm.hasForm = hasForm;
     vm.availableForm = availableForm;
-    vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
 
     activate();
 
@@ -55,8 +51,7 @@
 
       vm.saving = false;
       vm.successfulSave = false;
-      vm.save = save;
-      vm.enforceAgeRestriction = 13 
+      vm.save = save;   
       vm.group = {};
       vm.group.groupId = null;
 
@@ -67,18 +62,14 @@
     
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
       vm.data.header = ContentPageService.page.fields[0].header;
-      vm.data.footer = ContentPageService.page.fields[0].footer;
-      vm.data.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      vm.data.maxBirthdate = new Date(now.getFullYear() - vm.enforceAgeRestriction, now.getMonth(), now.getDate());
-      vm.data.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());  
+      vm.data.footer = ContentPageService.page.fields[0].footer;  
 
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.locations = ContentPageService.resolvedData.locations;
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-      vm.data.groupParticipant = participant;        
-      vm.initDate.setFullYear(vm.initDate.getFullYear() - vm.enforceAgeRestriction);
-     
+      vm.data.groupParticipant = participant;           
+ 
     }
 
     function availableForm() {

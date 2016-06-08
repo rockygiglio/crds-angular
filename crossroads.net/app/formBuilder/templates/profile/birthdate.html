@@ -13,9 +13,9 @@
           ng-model='formField.data.profileData.person.dateOfBirth'
           ng-value ='birthdate.value'
           is-open='formField.birthdateOpen'
-          max-date={{formField.data.maxBirthdate}}
-          min-date={{formField.data.oneHundredFiftyYearsAgo}}
-          init-date=formField.data.initDate
+          max-date={{formField.maxBirthdate}}
+          min-date={{formField.oneHundredFiftyYearsAgo}}
+          init-date=formField.initDate
           ng-required="true"
           datepicker-validator        
       >

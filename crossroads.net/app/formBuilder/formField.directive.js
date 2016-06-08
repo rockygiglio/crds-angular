@@ -84,7 +84,14 @@
   
     function FormFieldController() {
       var vm = this;
+      var now = new Date();
       vm.attributeSelected = attributeSelected;
+      vm.enforceAgeRestriction = 13 
+      vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      vm.initDate.setFullYear(vm.initDate.getFullYear() - vm.enforceAgeRestriction);
+      vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+     
+      vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker; 
       vm.required = (vm.field.required === '1');
       vm.validate = validate;
