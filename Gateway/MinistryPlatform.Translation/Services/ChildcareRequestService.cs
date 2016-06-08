@@ -97,7 +97,7 @@ namespace MinistryPlatform.Translation.Services
         public List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
         {
             var apiToken = _apiUserService.GetToken();
-            var searchString = $"{childcareRequestId},";
+            var searchString = String.Format("{0},", childcareRequestId);
             var records = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
 
             return records.Select(rec => new ChildcareRequestDate
