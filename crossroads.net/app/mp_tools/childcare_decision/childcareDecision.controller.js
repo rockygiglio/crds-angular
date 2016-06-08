@@ -63,6 +63,25 @@ class ChildcareDecisionController {
     return content;
   }
 
+  reject() {
+    this.saving = true;
+    this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, (data) => {
+      this.saving = false;
+      this.window.close();
+    }, (err) => {
+      this.saving = false;
+      if (err.status === 416) {
+        this.rootScope.$emit('notify', {
+          content: this.missingEventContent(err.data.Errors),
+          type: 'error'
+        });
+      } else {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }
+      this.log.error('error!', err);
+    });
+  }
+
   showError() {
     return this.error === true ? true : false;
   }
