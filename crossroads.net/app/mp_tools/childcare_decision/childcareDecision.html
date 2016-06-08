@@ -42,7 +42,7 @@
       </div>
       <div class="form-group">
         <loading-button
-          input-classes="btn btn-primary"
+          input-classes="btn btn-primary pull-left"
           normal-text="Approve"
           loading-text="{{decision.loadingText()}}"
           loading="decision.isLoading()"
@@ -55,7 +55,7 @@
           normal-text="Reject"
           loading-text="Rejecting..."
           loading="decision.isLoading()"
-          ng-click="decision.reject()">
+          ng-click="decision.reject(); $event.preventDefault()">
         </loading-button>
       </div>
     </form>
