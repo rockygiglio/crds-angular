@@ -92,6 +92,10 @@ describe('FormBuilder', function() {
         hasGroupParticipant: function() {
           return true;
         },
+
+        getGroupRoleId: function() {
+          return 9;
+        },
       };
 
       $provide.value('Session', Session, 'ContentPageService', ContentPageService, 'FormBuilderFieldsService', FormBuilderFieldsService);

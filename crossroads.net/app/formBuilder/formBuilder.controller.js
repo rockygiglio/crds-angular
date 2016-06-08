@@ -21,7 +21,7 @@
                            ContentPageService,
                            FormBuilderFieldsService,
                            $log,
-                           $q, 
+                           $q,
                            $anchorScroll) {
     var vm = this;
 
@@ -35,11 +35,13 @@
         return;
       }
 
-      //TODO Decide if you member or leader - now always leader
+
+      var groupRoleId = FormBuilderFieldsService.getGroupRoleId();
+
       var participant = {
         capacity: 1,
         contactId: parseInt(Session.exists('userId')),
-        groupRoleId: constants.GROUP.ROLES.MEMBER,
+        groupRoleId: groupRoleId,
         childCareNeeded: false,
         sendConfirmationEmail: false,
         singleAttributes: {},
@@ -73,7 +75,7 @@
 
     function availableForm() {
       if (FormBuilderFieldsService.hasGroupParticipant() && vm.data.availableGroups.length < 1) {
-          return false;
+        return false;
       }
       return true;
     }
@@ -93,7 +95,7 @@
     }
 
     function convertAttributeTypes(list) {
-      var results = {}
+      var results = {};
       _.each(list, function(item) {
         results[item.attributeTypeId] = item;
       });
@@ -182,7 +184,7 @@
             $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
             vm.saving = false;
             vm.successfulSave = true;
-            $anchorScroll();            
+            $anchorScroll();
           },
           function(data) {
             if (data && data.contentBlockMessage) {
@@ -270,10 +272,6 @@
         constants.ATTRIBUTE_IDS.COPARTICIPANT
       );
       vm.data.groupParticipant.singleAttributes[constants.ATTRIBUTE_TYPE_IDS.COPARTICIPANT] = coParticipant;
-
-      if (vm.data[constants.CMS.FORM_BUILDER.FIELD_NAME.COFACILITATOR]) {
-        vm.data.groupParticipant.groupRoleId = constants.GROUP.ROLES.LEADER;
-      }
 
       var participants = [vm.data.groupParticipant];
 

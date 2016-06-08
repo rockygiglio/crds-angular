@@ -28,8 +28,7 @@ module.exports = function(config) {
       './assets/search*.js',
       './assets/profile*.js',
       './assets/media*.js',
-      './assets/govolunteer*.js',
-      './assets/formbuilder*.js'
+      './assets/govolunteer*.js'
     ],
 
     // preprocess matching files before serving them to the browser
