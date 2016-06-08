@@ -18,7 +18,7 @@ INSERT INTO [dbo].[dp_Pages]
            ,[Contact_ID_Field]
            ,[Display_Copy])
      VALUES
-           (557
+           (556
 		   , N'Undivided Participants'
            , N'Undivided Participant'
            , N'Undivided Current Participants - provides fields required for email template merge fields.' 
