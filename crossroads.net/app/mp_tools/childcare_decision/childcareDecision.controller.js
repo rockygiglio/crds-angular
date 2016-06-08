@@ -31,9 +31,9 @@ class ChildcareDecisionController {
         this.request.$promise.then(() => {
           this.viewReady = true;
         });
-        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);
+        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);  
         this.datesList.$promise.then((d)=>{
-            this.datesList = d;
+            this.datesList= d;
         });
 
       }
