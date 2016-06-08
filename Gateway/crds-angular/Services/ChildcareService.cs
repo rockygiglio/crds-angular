@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -26,7 +27,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;        
+        private readonly IApiUserService _apiUserService;    
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -105,7 +106,6 @@ namespace crds_angular.Services
         {
             var mpRequest = request.ToMPChildcareRequest();
             var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
-            _childcareRequestService.CreateChildcareRequestDates(childcareRequestId, mpRequest, token);
 
             try
             {
@@ -117,6 +117,60 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("Save Request failed"), ex);
             }
 
+        }
+
+        public void ApproveChildcareRequest(int childcareRequestId, String token)
+        {
+            try
+            {
+                var request = GetChildcareRequestForReview(childcareRequestId, token);
+                var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
+                var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
+                if (missingDates.Count > 0)
+                {
+                    var dateList = missingDates.Aggregate("", (current, date) => current + ", " + date.RequestDate.ToShortDateString());
+                    _logger.Debug("Missing events for dates: ${dateList}");
+                    var dateMap = missingDates.Select(c => c.RequestDate).ToList();
+                    throw new EventMissingException(dateMap);
+                }
+
+                //set the approved column for dates to true
+                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var groupid = request.GroupId;
+                foreach (var ccareDates in childcareDates)
+                {
+                    
+                    _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
+
+                    //add the group to the event
+                    _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
+                }
+
+                _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+            }
+            catch (EventMissingException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Approve Childcare failed", ex);
+            }
+        }
+        
+        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
+        {
+            try
+            {
+                return _childcareRequestService.GetChildcareRequestForReview(childcareRequestId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
+            }
+            return null;
         }
 
         public void SendChildcareRequestNotification( ChildcareRequestEmail request)
