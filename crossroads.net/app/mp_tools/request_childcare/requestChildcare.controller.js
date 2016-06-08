@@ -68,7 +68,12 @@ class RequestChildcareController {
           };
         });
       } else {
-        this.datesList = [];
+        // use the startDate and make sure it aligns with the day
+        if (start.day() === dayOfWeek) {
+          this.datesList = [{ unix: start.unix(), date: start, selected: true}];
+        } else {
+          this.datesList = [];
+        }
       }
       this.runDateGenerator = false;
     }
@@ -106,12 +111,12 @@ class RequestChildcareController {
   onFrequencyChange() {
     this.runDateGenerator = true;
   }
-    
+
   onDateSelectionChange() {
       var rc = false;
       var arrayLength = this.datesList.length;
       for (var i = 0; i < arrayLength; i++) {
-            if(this.datesList[i].selected == true) {
+            if(this.datesList[i].selected === true) {
                 rc = true;
             }
       }
@@ -190,6 +195,9 @@ class RequestChildcareController {
     this.saving = true;
     if (this.childcareRequestForm.$invalid) {
       this.saving = false;
+      return false;
+    } else if (this.datesList.length < 1) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.noDatesChosen);
       return false;
     } else {
       let time = this.formatPreferredTime(this.choosenPreferredTime);
