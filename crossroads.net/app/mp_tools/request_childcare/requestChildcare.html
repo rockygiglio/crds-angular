@@ -161,6 +161,7 @@
             <label>
               <input type="checkbox"
                      checked="checked"
+                     ng-change="request.onDateSelectionChange()"
                      ng-model="date.selected" > {{date.date.format("L")}}
             </label>
           </div>
@@ -176,7 +177,7 @@
       	<input class="btn btn-primary btn-standard pull-right"
                type="submit" 
                value="Submit" 
-               ng-disabled="request.childcareRequestForm.$invalid || request.saving">
+               ng-disabled="request.childcareRequestForm.$invalid || request.saving || !request.datesSelected">
       </div>
     </form>
   </div>
