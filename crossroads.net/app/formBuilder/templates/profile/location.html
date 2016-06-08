@@ -5,7 +5,7 @@
     <select class="form-control" name="location" ng-model="formField.data.profileData.person.congregationId"
             ng-options="location.dp_RecordID as location.dp_RecordName for location in formField.data.locations | orderBy: ['OnlineSortOrder', 'name']"
             valid-dropdown-value="formField.validLocations">
-      <option value="">-- chose country --</option>
+      <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
     </select>
     <ng-messages for="formField.parentForm.location.$error" ng-if="formField.validate('location')">
       <span ng-message="required">
