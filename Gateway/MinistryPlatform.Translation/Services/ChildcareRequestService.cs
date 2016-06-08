@@ -225,5 +225,18 @@ namespace MinistryPlatform.Translation.Services
 
             return childcareRequest;
         }
+
+        public List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId)
+        {
+            var apiToken = _apiUserService.GetToken();
+            var searchString = String.Format("{0},", childcareRequestId);
+            var records = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
+
+            return records.Select(rec => new ChildcareRequestDate
+            {
+                ChildcareRequestDateId = rec.ToInt("dp_RecordID"),
+                RequestDate = rec.ToDate("Childcare_Request_Date")
+            }).ToList();
+        }
     }
 }

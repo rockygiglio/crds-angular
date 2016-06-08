@@ -175,6 +175,26 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [Route("api/childcare/getrequestDates/{requestid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetChildcareRequestDates(int requestid)
+        {
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    return Ok(_childcareService.GetChildcareRequestDatesForReview(requestid, token));
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Create Childcare Request Dates Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
         private class DateError
         {
             public List<DateTime> Errors { get; set;}
