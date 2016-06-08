@@ -58,7 +58,7 @@
       vm.enforceAgeRestriction = 13 
       vm.group = {};
       vm.group.groupId = null;
-  
+
       // TODO: Consider setting vm.data = resolvedData, may need to address templates for changes
       vm.data = {};
       vm.data.onComplete = ContentPageService.page.onCompleteMessage;
