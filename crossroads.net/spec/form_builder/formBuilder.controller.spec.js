@@ -94,8 +94,8 @@ describe('FormBuilder', function() {
         },
 
         getGroupRoleId: function() {
-          return 9;
-        },
+          return 22;
+        }
       };
 
       $provide.value('Session', Session, 'ContentPageService', ContentPageService, 'FormBuilderFieldsService', FormBuilderFieldsService);
@@ -148,6 +148,8 @@ describe('FormBuilder', function() {
         ContentPageService: ContentPageService,
         FormBuilderFieldsService: FormBuilderFieldsService,
       });
+
+      controller.dataForm = {$valid: true};
 
       return controller;
     }

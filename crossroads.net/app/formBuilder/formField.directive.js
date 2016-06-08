@@ -1,16 +1,18 @@
 (function() {
   'use strict';
 
+  var constants = require('crds-constants');
   module.exports = FormField;
 
-  FormField.$inject = ['$templateRequest', '$compile'];
+  FormField.$inject = ['$templateRequest', '$compile', 'Validation'];
 
-  function FormField($templateRequest, $compile) {
+  function FormField($templateRequest, $compile, Validation) {
     return {
       restrict: 'E',
       scope: {
         field: '=?',
-        data: '=?'
+        data: '=?',
+        parentForm: '='
       },
       link: function(scope, element) {
         var templateUrl = getTemplateUrl(scope.formField.field);
@@ -18,7 +20,7 @@
           return;
         }
 
-        scope.attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
+        scope.attributeTypeIds = constants.ATTRIBUTE_TYPE_IDS;
 
         $templateRequest(templateUrl).then(function(html) {
           var template = angular.element(html);
@@ -31,21 +33,6 @@
       controllerAs: 'formField',
       bindToController: true
     };
-
-    function FormFieldController() {
-      var vm = this;
-
-      // TODO: See if moving the radiobutton specific code to another directive is better than this
-      if (vm.field && vm.field.attributeType) {
-        vm.attributeType = vm.field.attributeType;
-
-        vm.singleAttributes = _.map(vm.attributeType.attributes, function(attribute) {
-          var singleAttribute = {};
-          singleAttribute[vm.attributeType.attributeTypeId] = {attribute: attribute};
-          return singleAttribute;
-        });
-      }
-    }
 
     function getTemplateUrl(field) {
       switch (field.className) {
@@ -94,6 +81,36 @@
           return 'default/defaultField.html';
       }
     }
-  }
 
+    function FormFieldController() {
+      var vm = this;
+      vm.required = (vm.field.required === '1');
+      vm.validate = validate;
+
+      // TODO: Consider moving this logic and template to location directive
+      if (vm.field.templateType === 'Location') {
+        vm.validLocations = getValidLocationIds(vm.data.locations);
+      }
+
+      vm.attributeSelected = attributeSelected;
+
+      function attributeSelected(attributes) {
+        var selected = _.some(attributes, function(attribute) {
+          return attribute.selected;
+        });
+
+        return selected;
+      }
+
+      function validate(fieldName) {
+        return Validation.showErrors(vm.parentForm, fieldName);
+      }
+
+      function getValidLocationIds(locations) {
+        return _.map(locations, function(location) {
+          return location.dp_RecordID;
+        });
+      }
+    }
+  }
 })();
