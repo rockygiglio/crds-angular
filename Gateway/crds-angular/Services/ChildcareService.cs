@@ -141,10 +141,10 @@ namespace crds_angular.Services
                 foreach (var ccareDates in childcareDates)
                 {
                     
-                    _childcareRequestService.ApproveChildcareRequestDate(d.ChildcareRequestDateId);
+                    _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
 
                     //add the group to the event
-                    _childcareRequestService.AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, ccareDates);
+                    _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
