@@ -5,7 +5,7 @@ namespace crds_angular.Exceptions
 {
     public class EventMissingException : Exception
     {
-        public List<DateTime> MissingDateTimes { get; }
+        public List<DateTime> MissingDateTimes { get; set; }
 
         public EventMissingException(List<DateTime> events) : base("There are childcare events missing.")
         {
