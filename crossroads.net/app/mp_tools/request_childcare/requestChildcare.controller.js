@@ -97,7 +97,8 @@ class RequestChildcareController {
     return Math.ceil(startDate.date() / 7);
   }
 
-  onEndDateChange() {
+  onEndDateChange(endDate) {
+    this.endDate = endDate;
     this.runDateGenerator = true;
   }
 
