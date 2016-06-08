@@ -37,7 +37,7 @@ INSERT INTO [dbo].[dp_Pages]
 	            AND GPA.Group_Participant_ID = Group_Participants.Group_Participant_ID
 	            AND GETDATE() BETWEEN GPA.Start_Date AND ISNULL(GPA.End_Date,GETDATE()) 
 	            AND Attribute_Type_ID = 85) AS [Facilitator_Training] 
-				, (STUFF((SELECT ' ' + c.First_Name + ' ' + c.Last_Name + ' (' +  c.email_address + ') <br />'
+				, (STUFF((SELECT ' ' + c.First_Name + ' ' + c.Last_Name + ' (' +  c.email_address + ') '
                     FROM Group_Participants gp
                     INNER JOIN Contacts c ON c.Participant_record = gp.Participant_Id
                     WHERE group_id =  Group_ID_Table.[Group_ID] 
