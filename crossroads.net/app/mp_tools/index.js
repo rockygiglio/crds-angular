@@ -57,4 +57,7 @@
   // Request Childcare Tool
   require('./request_childcare');
 
+  // Childcare Decision Tool
+  require('./childcare_decision');
+
 })();
