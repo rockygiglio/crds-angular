@@ -172,6 +172,46 @@ describe('Request Childcare Controller', () => {
     }
   });
 
+  it('should get monthly recurrance and include the last date', () => {
+    commonExpectations();
+    controller.choosenPreferredTime = {
+      Childcare_Day_ID: 3,
+      Childcare_End_Time: '19:00:00',
+      Childcare_Preferred_Time_ID: 1,
+      Childcare_Start_Time: '18:00:00',
+      Congregation_ID: 1,
+      Deactivate_Date: null,
+      Meeting_Day: 'Friday',
+      dp_FileID: null,
+      dp_RecordID: 1,
+      dp_RecordName: 1,
+      dp_RecordStatus: 0,
+      dp_Selected: 0
+    };
+    controller.choosenFrequency = 'Monthly';
+
+    controller.startDate = new Date(2016, 5, 10);
+    controller.endDate = new Date(2017, 1, 10);
+
+    controller.generateDateList();
+    var expectedDateList = [
+      moment(new Date(2016, 5, 10)),
+      moment(new Date(2016, 6, 8)),
+      moment(new Date(2016, 7, 12)),
+      moment(new Date(2016, 8, 9)),
+      moment(new Date(2016, 9, 14)),
+      moment(new Date(2016, 10, 11)),
+      moment(new Date(2016, 11, 9)),
+      moment(new Date(2017, 0, 13)),
+      moment(new Date(2017, 1, 10)),
+    ];
+    var size = expectedDateList.length;
+    expect(controller.datesList.length).toBe(size);
+    for(var i = 0; i<size; i++) {
+      expect(controller.datesList[i].date.format('L')).toEqual(expectedDateList[i].format('L'));
+    }
+  });
+
   it('should get the correct week of the month', function() {
     commonExpectations();
     var firstTuesday =  moment(new Date(2016, 5, 7));

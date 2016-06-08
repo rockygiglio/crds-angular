@@ -89,7 +89,7 @@
       vm.enforceAgeRestriction = 13 
       vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       vm.initDate.setFullYear(vm.initDate.getFullYear() - vm.enforceAgeRestriction);
-      vm.maxBirthdate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      vm.maxBirthdate = new Date(now.getFullYear() - vm.enforceAgeRestriction, now.getMonth(), now.getDate());
      
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker; 
