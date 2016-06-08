@@ -28,8 +28,7 @@ module.exports = function(config) {
       './assets/search*.js',
       './assets/profile*.js',
       './assets/media*.js',
-      './assets/govolunteer*.js',
-      './assets/formbuilder*.js'
+      './assets/govolunteer*.js'
     ],
 
     // preprocess matching files before serving them to the browser
@@ -101,7 +100,7 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
-    browserNoActivityTimeout: 100000,
+
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,

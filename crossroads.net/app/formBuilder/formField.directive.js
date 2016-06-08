@@ -89,6 +89,13 @@
       vm.required = (vm.field.required === '1');
       vm.validate = validate;
 
+      // TODO: Consider moving this logic and template to location directive
+      if (vm.field.templateType === 'Location') {
+        vm.validLocations = getValidLocationIds(vm.data.locations);
+      }
+
+      vm.attributeSelected = attributeSelected;
+
       function attributeSelected(attributes) {
         var selected = _.some(attributes, function(attribute) {
           return attribute.selected;
@@ -105,6 +112,12 @@
 
       function validate(fieldName) {
         return Validation.showErrors(vm.parentForm, fieldName);
+      }
+
+      function getValidLocationIds(locations) {
+        return _.map(locations, function(location) {
+          return location.dp_RecordID;
+        });
       }
     }
   }
