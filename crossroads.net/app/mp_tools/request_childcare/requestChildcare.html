@@ -9,15 +9,15 @@
     <form name="request.childcareRequestForm" novalidate ng-submit="request.submit()">
 
       <div class="form-group" ng-class="{'has-error': request.validateField('congregation')}">
-      	<label class="control-label required" for="congregation">Site</label>
-      	<select name="congregation" 
+        <label class="control-label required" for="congregation">Site</label>
+        <select name="congregation" 
                 class="form-control"
                 ng-options="congregation.dp_RecordName for congregation in request.congregations track by congregation.dp_RecordID" 
                 ng-model="request.choosenCongregation"
                 required 
                 ng-change="request.getGroups()">
           <option value=""> -- Choose your Site -- </option>
-      	</select>
+        </select>
         <ng-messages for="request.childcareRequestForm.congregation.$error" ng-if="request.validateField('congregation')">
           <span ng-message="required">
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -52,7 +52,7 @@
                 required
                 ng-options="group.dp_RecordName for group in request.groups track by group.dp_RecordID" >
           <option value=""> -- Choose your Group -- </option>
-      	</select>
+        </select>
         <ng-messages for="request.childcareRequestForm.group.$error" ng-if="request.validateField('group')">
           <span ng-message="required">
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -65,16 +65,18 @@
                     start-date="request.startDate"
                     end-date="request.endDate"
                     min-date="request.minDate"
-                    start-date-change="request.onStartDateChange(startDate)">
+                    start-date-change="request.onStartDateChange(startDate)"
+                    end-date-change="request.onEndDateChange(endDate)">
           Date Range
         </date-range>
       </div>
 
       <div class="form-group" ng-class="{'has-error': request.validateField('frequency')}" ng-show="request.choosenGroup">
-      	<label class="control-label required" for="frequency">Frequency</label>
-      	<select class="form-control" 
+        <label class="control-label required" for="frequency">Frequency</label>
+        <select class="form-control" 
                 name="frequency" 
                 ng-model="request.choosenFrequency"
+                ng-change="request.onFrequencyChange()"
                 required>
           <option value=""> -- Please choose a Frequency -- </option>
           <option value="Once"> Once </option>
@@ -88,16 +90,17 @@
         </ng-messages>
       </div>
 
+
       <div class="form-group" ng-class="{'has-error': request.validateField('preferredTime')}" ng-show="request.choosenGroup">
-      	<label class="control-label required" for="preferredTime">Available Childcare Sessions</label>
-      	<select name="preferredTime"
+        <label class="control-label required" for="preferredTime">Available Childcare Sessions</label>
+        <select name="preferredTime"
                 class="form-control"
                 ng-model="request.choosenPreferredTime"
                 ng-change="request.preferredTimeChanged()"
+                ng-options="request.formatPreferredTime(time) for time in request.filteredTimes track by time.dp_RecordID" 
                 required>
           <option value="">-- Please choose a childcare session --</option>
-          <option ng-repeat="time in request.getAvailableTimes()" value="{{time}}">{{time}}</option>
-      	</select>
+        </select>
         <ng-messages for="request.childcareRequestForm.preferredTime.$error" ng-if="request.validateField('preferredTime')">
           <span ng-message="required">
             <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -124,29 +127,49 @@
         </ng-messages>
       </div>
 
-      <div class="form-group timepicker" ng-class="{'has-error': request.validateField('startTime')}" ng-if="request.customSessionSelected">
-        <label class="control-label required" for="startTime">Start Time</label>
-        <timepicker name="startTime" ng-model="request.startTime" ng-class="timepicker" hour-step="1" minute-step="15" show-meridian="true" required></timepicker>
-        <ng-messages for="request.childcareRequestForm.startTime.$error" ng-if="request.validateField('startTime')">
-          <span ng-message="required">
-            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-          </span>
-        </ng-messages>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group well" ng-class="{'has-error': request.validateField('startTime')}" ng-if="request.customSessionSelected">
+            <label class="required" for="startTime">Start Time</label>
+            <timepicker name="startTime" 
+                        ng-model="request.startTime" 
+                        ng-class="timepicker"
+                        hour-step="1"
+                        minute-step="15"
+                        show-meridian="true"
+                        required>
+            </timepicker>
+             <ng-messages for="request.childcareRequestForm.startTime.$error" ng-if="request.validateField('startTime')">
+              <span ng-message="required">
+                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+            </ng-messages>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group well" ng-class="{'has-error': request.validateField('endTime')}" ng-if="request.customSessionSelected">
+            <label class="required" for="endTime">End Time</label>
+            <timepicker name="endTime"
+                        ng-model="request.endTime"
+                        ng-class="timepicker"
+                        hour-step="1"
+                        minute-step="15"
+                        show-meridian="true"
+                        required>
+            </timepicker>
+            <ng-messages for="request.childcareRequestForm.endTime.$error" ng-if="request.validTimeRange(request.childcareRequestForm)">
+              <span ng-message="required">
+                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+              <span ng-message="invalidEnd">
+                <span dynamic-content="$root.MESSAGES.endTimeAfterStartTime.content | html"></span>
+              </span>
+            </ng-messages>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group timepicker" ng-class="{'has-error': request.validTimeRange(request.childcareRequestForm)}" ng-if="request.customSessionSelected">
-        <label class="control-label required" for="endTime">End Time</label>
-        <timepicker name="endTime" ng-model="request.endTime" ng-class="timepicker" hour-step="1" minute-step="15" show-meridian="true" required></timepicker>
-        <ng-messages for="request.childcareRequestForm.endTime.$error" ng-if="request.validTimeRange(request.childcareRequestForm)">
-          <span ng-message="required">
-            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-          </span>
-          <span ng-message="invalidEnd">
-            <span dynamic-content="$root.MESSAGES.endTimeAfterStartTime.content | html"></span>
-          </span>
-        </ng-messages>
-      </div>
-        
       <div class="form-group" ng-if="request.customSessionSelected">
         <div dynamic-content="$root.MESSAGES.childcareThreeHourMessage.content | html"></div>
       </div>
@@ -158,6 +181,7 @@
             <label>
               <input type="checkbox"
                      checked="checked"
+                     ng-change="request.onDateSelectionChange()"
                      ng-model="date.selected" > {{date.date.format("L")}}
             </label>
           </div>
@@ -173,9 +197,8 @@
       	<input class="btn btn-primary btn-standard pull-right"
                type="submit" 
                value="Submit" 
-               ng-disabled="request.childcareRequestForm.$invalid || request.saving">
+               ng-disabled="request.childcareRequestForm.$invalid || request.saving || !request.datesSelected">
       </div>
-
     </form>
   </div>
 </div>
