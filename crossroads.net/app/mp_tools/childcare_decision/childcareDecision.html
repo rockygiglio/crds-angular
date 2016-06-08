@@ -40,6 +40,18 @@
                readonly
                value="{{::decision.request.PreferredTime}}" />
       </div>
+      <div class="panel panel-default" >
+        <div class="panel-heading"> Please unselect any days you do not provide childcare in the range</div>
+        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
+          <div class="checkbox" ng-repeat="date in decision.datesList">
+            <label>
+              <input type="checkbox"
+                     checked="checked"
+                     ng-model="date.selected" > {{date}}
+            </label>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <loading-button
            input-classes="btn btn-primary pull-left"
