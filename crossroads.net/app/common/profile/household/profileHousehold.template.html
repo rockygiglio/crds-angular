@@ -148,7 +148,6 @@
                       <label for="provider" class="required">Crossroads Site</label>
                       <select class="form-control col-sm-12"
                               name="crLocation"
-                              required
                               valid-dropdown-value="household.validLocations"
                               ng-model="household.householdInfo.congregationId"
                               ng-options="location.dp_RecordID as location.dp_RecordName for location in household.locations | orderBy: ['OnlineSortOrder', 'name']">
