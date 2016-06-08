@@ -35,6 +35,7 @@
         return;
       }
 
+
       var groupRoleId = FormBuilderFieldsService.getGroupRoleId();
 
       var participant = {
@@ -76,7 +77,6 @@
       if (FormBuilderFieldsService.hasGroupParticipant() && vm.data.availableGroups.length < 1) {
         return false;
       }
-
       return true;
     }
 
@@ -95,7 +95,7 @@
     }
 
     function convertAttributeTypes(list) {
-      var results = {}
+      var results = {};
       _.each(list, function(item) {
         results[item.attributeTypeId] = item;
       });

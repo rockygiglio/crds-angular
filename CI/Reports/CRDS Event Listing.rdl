@@ -1,0 +1,1193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="MPReportsDS">
+      <DataSourceReference>/Data Sources/MPReportsDS</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>0aee39e8-b59b-4bf9-8046-e9904da71465</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="FromDate">
+            <Value>=Parameters!FromDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="ToDate">
+            <Value>=Parameters!ToDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="CongregationID">
+            <Value>=Parameters!CongregationID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="EventTypes">
+            <Value>=JOIN(Parameters!EventTypes.Value,",")</Value>
+          </QueryParameter>
+          <QueryParameter Name="ShowCancelled">
+            <Value>=Parameters!ShowCancelled.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="ShowNoRoomsSet">
+            <Value>=Parameters!ShowNoRoomsSet.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="ListTime">
+            <Value>=Parameters!ListTime.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="ShowBldgRm">
+            <Value>=Parameters!ShowBldgRm.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_CRDS_Event_Listing</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Event_ID">
+          <DataField>Event_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Event_Title">
+          <DataField>Event_Title</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Minutes_for_Setup">
+          <DataField>Minutes_for_Setup</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Event_Date">
+          <DataField>Event_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Event_Start_Date">
+          <DataField>Event_Start_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Event_End_Date">
+          <DataField>Event_End_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Minutes_for_Cleanup">
+          <DataField>Minutes_for_Cleanup</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Participants_Expected">
+          <DataField>Participants_Expected</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Contact_Person">
+          <DataField>Contact_Person</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Contact_Email">
+          <DataField>Contact_Email</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Contact_Phone">
+          <DataField>Contact_Phone</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Room_1">
+          <DataField>Room_1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Room_2">
+          <DataField>Room_2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Room_3">
+          <DataField>Room_3</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Room_4">
+          <DataField>Room_4</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Room_5">
+          <DataField>Room_5</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Room_6">
+          <DataField>Room_6</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Rooms">
+          <DataField>Rooms</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Number_of_Rooms">
+          <DataField>Number_of_Rooms</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Ministry_Name">
+          <DataField>Ministry_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RoomNumbers">
+          <DataField>RoomNumbers</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Full_Room_List">
+          <DataField>Full_Room_List</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Program_Name">
+          <DataField>Program_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Cancelled">
+          <DataField>Cancelled</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="ReservationStart">
+          <DataField>ReservationStart</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="ReservationEnd">
+          <DataField>ReservationEnd</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet3">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.report_filter_congregations</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet4">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@PageID">
+            <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@IsMulti">
+            <Value>=Parameters!IsMulti.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_filter_event_types</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Event_Type">
+          <DataField>Event_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Event_Type_ID">
+          <DataField>Event_Type_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Tablix Name="list1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>8.00001in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>1.35625in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Rectangle Name="list1_Contents">
+                          <ReportItems>
+                            <Textbox Name="Location_Name">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Label>Congregation</Label>
+                                      <Value>=Fields!Congregation_Name.Value</Value>
+                                      <MarkupType>HTML</MarkupType>
+                                      <Style>
+                                        <FontSize>14pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Location_Name</rd:DefaultName>
+                              <Top>0.125in</Top>
+                              <Height>0.25in</Height>
+                              <Width>8.00001in</Width>
+                              <Style>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                            <Tablix Name="table1">
+                              <TablixBody>
+                                <TablixColumns>
+                                  <TablixColumn>
+                                    <Width>1.92708in</Width>
+                                  </TablixColumn>
+                                  <TablixColumn>
+                                    <Width>2.07292in</Width>
+                                  </TablixColumn>
+                                  <TablixColumn>
+                                    <Width>1.72917in</Width>
+                                  </TablixColumn>
+                                  <TablixColumn>
+                                    <Width>2.27084in</Width>
+                                  </TablixColumn>
+                                </TablixColumns>
+                                <TablixRows>
+                                  <TablixRow>
+                                    <Height>0.25in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox1">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=IIF(Parameters!ListTime.Value = 1,"Event Time", "Reservation Time")</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Color>White</Color>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox1</rd:DefaultName>
+                                            <ZIndex>12</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Textbox4">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>Event Title</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Color>White</Color>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Textbox4</rd:DefaultName>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox2">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>Contact Person</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Color>White</Color>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox2</rd:DefaultName>
+                                            <ZIndex>11</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox3">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=IIF(Parameters!ShowBldgRm.Value = 1,"Building/Room", "Room")</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Color>White</Color>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox3</rd:DefaultName>
+                                            <ZIndex>10</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                    </TablixCells>
+                                  </TablixRow>
+                                  <TablixRow>
+                                    <Height>0.3in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="DateOfEvent">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=Fields!Event_Date.Value</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontSize>11pt</FontSize>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Format>D</Format>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style>
+                                                  <TextAlign>Left</TextAlign>
+                                                </Style>
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <ZIndex>9</ZIndex>
+                                            <Style>
+                                              <Border>
+                                                <Width>3pt</Width>
+                                              </Border>
+                                              <TopBorder>
+                                                <Style>Solid</Style>
+                                              </TopBorder>
+                                              <BackgroundColor>Gainsboro</BackgroundColor>
+                                              <VerticalAlign>Bottom</VerticalAlign>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                          <ColSpan>4</ColSpan>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell />
+                                      <TablixCell />
+                                      <TablixCell />
+                                    </TablixCells>
+                                  </TablixRow>
+                                  <TablixRow>
+                                    <Height>0.2in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Event_Title">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=IIF(Parameters!ListTime.Value = 1
+,IIF(TimeValue(Fields!Event_Start_Date.Value) = "00:00:00" AND TimeValue(Fields!Event_End_Date.Value) = "00:00:00","ALL DAY",FORMAT(Fields!Event_Start_Date.Value,"hh:mm tt") &amp; "-" &amp; FORMAT(Fields!Event_End_Date.Value,"hh:mm tt"))
+,IIF(TimeValue(Fields!ReservationStart.Value) = "00:00:00" AND TimeValue(Fields!ReservationEnd.Value) = "00:00:00","ALL DAY",FORMAT(Fields!ReservationStart.Value,"hh:mm tt") &amp; "-" &amp; FORMAT(Fields!ReservationEnd.Value,"hh:mm tt"))
+)</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Event_Title</rd:DefaultName>
+                                            <ZIndex>6</ZIndex>
+                                            <Style>
+                                              <TopBorder>
+                                                <Style>Solid</Style>
+                                              </TopBorder>
+                                              <PaddingLeft>1pt</PaddingLeft>
+                                              <PaddingRight>1pt</PaddingRight>
+                                              <PaddingTop>1pt</PaddingTop>
+                                              <PaddingBottom>1pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Event_Title1">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=Fields!Event_Title.Value</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Event_Title1</rd:DefaultName>
+                                            <Style>
+                                              <TopBorder>
+                                                <Style>Solid</Style>
+                                              </TopBorder>
+                                              <PaddingLeft>1pt</PaddingLeft>
+                                              <PaddingRight>1pt</PaddingRight>
+                                              <PaddingTop>1pt</PaddingTop>
+                                              <PaddingBottom>1pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Contact_Person">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=Fields!Contact_Person.Value &amp; vbCrLf  &amp;Fields!Contact_Email.Value  &amp; vbCrLf  &amp; Fields!Contact_Phone.Value </Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Contact_Person</rd:DefaultName>
+                                            <ZIndex>5</ZIndex>
+                                            <Style>
+                                              <TopBorder>
+                                                <Style>Solid</Style>
+                                              </TopBorder>
+                                              <PaddingLeft>1pt</PaddingLeft>
+                                              <PaddingRight>1pt</PaddingRight>
+                                              <PaddingTop>1pt</PaddingTop>
+                                              <PaddingBottom>1pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox10">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>=IIF(Parameters!ShowBldgRm.Value = 1, IIF(ISNOTHING(Fields!Full_Room_List.Value),"No Building or Rooms Set",Fields!Full_Room_List.Value),IIF(Parameters!ShowBldgRm.Value = 2,Fields!Rooms.Value,IIF(ISNOTHING(Fields!RoomNumbers.Value),"No Rooms Set",Fields!RoomNumbers.Value)))</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <ZIndex>4</ZIndex>
+                                            <Style>
+                                              <Border>
+                                                <Style>None</Style>
+                                              </Border>
+                                              <TopBorder>
+                                                <Style>Solid</Style>
+                                              </TopBorder>
+                                              <PaddingLeft>1pt</PaddingLeft>
+                                              <PaddingRight>1pt</PaddingRight>
+                                              <PaddingTop>1pt</PaddingTop>
+                                              <PaddingBottom>1pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                    </TablixCells>
+                                  </TablixRow>
+                                  <TablixRow>
+                                    <Height>0.2in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Description">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>="Ministry: " &amp; Fields!Ministry_Name.Value &amp; " | " &amp; Fields!Program_Name.Value &amp; vbCrLf  &amp;"Description: " &amp; Fields!Description.Value</Value>
+                                                    <Style>
+                                                      <FontFamily>Tahoma</FontFamily>
+                                                    </Style>
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Description</rd:DefaultName>
+                                            <Style>
+                                              <PaddingLeft>1pt</PaddingLeft>
+                                              <PaddingRight>1pt</PaddingRight>
+                                              <PaddingTop>1pt</PaddingTop>
+                                              <PaddingBottom>1pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                          <ColSpan>4</ColSpan>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell />
+                                      <TablixCell />
+                                      <TablixCell />
+                                    </TablixCells>
+                                  </TablixRow>
+                                  <TablixRow>
+                                    <Height>0.03125in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox7">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value />
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox7</rd:DefaultName>
+                                            <ZIndex>3</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Textbox13">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value />
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Textbox13</rd:DefaultName>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox8">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value />
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox8</rd:DefaultName>
+                                            <ZIndex>2</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="textbox9">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value />
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>textbox9</rd:DefaultName>
+                                            <ZIndex>1</ZIndex>
+                                            <Style>
+                                              <BackgroundColor>DimGray</BackgroundColor>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                    </TablixCells>
+                                  </TablixRow>
+                                </TablixRows>
+                              </TablixBody>
+                              <TablixColumnHierarchy>
+                                <TablixMembers>
+                                  <TablixMember />
+                                  <TablixMember />
+                                  <TablixMember>
+                                    <Visibility>
+                                      <Hidden>=IIF(Parameters!ShowContact.Value = False,True,False)</Hidden>
+                                    </Visibility>
+                                  </TablixMember>
+                                  <TablixMember />
+                                </TablixMembers>
+                              </TablixColumnHierarchy>
+                              <TablixRowHierarchy>
+                                <TablixMembers>
+                                  <TablixMember>
+                                    <KeepWithGroup>After</KeepWithGroup>
+                                    <RepeatOnNewPage>true</RepeatOnNewPage>
+                                    <KeepTogether>true</KeepTogether>
+                                  </TablixMember>
+                                  <TablixMember>
+                                    <Group Name="table1_Group1">
+                                      <GroupExpressions>
+                                        <GroupExpression>=Fields!Event_Date.Value</GroupExpression>
+                                      </GroupExpressions>
+                                    </Group>
+                                    <SortExpressions>
+                                      <SortExpression>
+                                        <Value>=Fields!Event_Date.Value</Value>
+                                      </SortExpression>
+                                    </SortExpressions>
+                                    <TablixMembers>
+                                      <TablixMember>
+                                        <KeepWithGroup>After</KeepWithGroup>
+                                        <RepeatOnNewPage>true</RepeatOnNewPage>
+                                        <KeepTogether>true</KeepTogether>
+                                      </TablixMember>
+                                      <TablixMember>
+                                        <Group Name="table1_Details_Group">
+                                          <DataElementName>Detail</DataElementName>
+                                        </Group>
+                                        <TablixMembers>
+                                          <TablixMember />
+                                          <TablixMember>
+                                            <Visibility>
+                                              <Hidden>=IIF(Parameters!ShowDetail.Value=True,False,True)</Hidden>
+                                              <ToggleItem>Event_Title</ToggleItem>
+                                            </Visibility>
+                                          </TablixMember>
+                                        </TablixMembers>
+                                        <DataElementName>Detail_Collection</DataElementName>
+                                        <DataElementOutput>Output</DataElementOutput>
+                                        <KeepTogether>true</KeepTogether>
+                                      </TablixMember>
+                                    </TablixMembers>
+                                  </TablixMember>
+                                  <TablixMember>
+                                    <KeepWithGroup>Before</KeepWithGroup>
+                                    <KeepTogether>true</KeepTogether>
+                                  </TablixMember>
+                                </TablixMembers>
+                              </TablixRowHierarchy>
+                              <DataSetName>DataSet1</DataSetName>
+                              <Top>0.375in</Top>
+                              <Height>0.98125in</Height>
+                              <Width>8.00001in</Width>
+                              <ZIndex>1</ZIndex>
+                              <Style />
+                            </Tablix>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
+                          <Style />
+                        </Rectangle>
+                        <rd:Selected>true</rd:Selected>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="list1_Details_Group">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Congregation_ID.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Congregation_Name.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <DataElementOutput>Output</DataElementOutput>
+                  <KeepTogether>true</KeepTogether>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <KeepTogether>true</KeepTogether>
+            <NoRowsMessage>Sorry, there are no matching events.</NoRowsMessage>
+            <DataSetName>DataSet1</DataSetName>
+            <Height>1.35625in</Height>
+            <Width>8.00001in</Width>
+            <Style />
+          </Tablix>
+        </ReportItems>
+        <Height>1.35625in</Height>
+        <Style />
+      </Body>
+      <Width>9.94793in</Width>
+      <Page>
+        <PageHeader>
+          <Height>0.375in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="mp_report_title">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=IIF(ISNOTHING(Parameters!ReportTitle.Value),Globals!ReportName,Parameters!ReportTitle.Value)</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>18pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Color>DimGray</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <Height>0.25in</Height>
+              <Width>5.375in</Width>
+              <Style />
+            </Textbox>
+            <Textbox Name="mp_run_time">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Now</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Color>DimGray</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <Left>5.5in</Left>
+              <Height>0.25in</Height>
+              <Width>2.50001in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <VerticalAlign>Bottom</VerticalAlign>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style />
+        </PageHeader>
+        <PageFooter>
+          <Height>3.48958in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="mp_page_number">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Color>DimGray</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <Top>0.125in</Top>
+              <Left>7in</Left>
+              <Height>0.25in</Height>
+              <Width>1.00001in</Width>
+              <Style>
+                <VerticalAlign>Bottom</VerticalAlign>
+              </Style>
+            </Textbox>
+            <Image Name="mp_logo">
+              <Source>Embedded</Source>
+              <Value>mp_sm_logo</Value>
+              <Top>0.125in</Top>
+              <Height>0.25in</Height>
+              <Width>1.92708in</Width>
+              <ZIndex>1</ZIndex>
+              <Style />
+            </Image>
+          </ReportItems>
+          <Style />
+        </PageFooter>
+        <LeftMargin>0.25in</LeftMargin>
+        <RightMargin>0.25in</RightMargin>
+        <TopMargin>0.5in</TopMargin>
+        <BottomMargin>0.5in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="DomainID">
+      <DataType>String</DataType>
+      <Prompt>DomainID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="UserID">
+      <DataType>String</DataType>
+      <Prompt>UserID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="PageID">
+      <DataType>Integer</DataType>
+      <Prompt>PageID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="FromDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Today()</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>From</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ToDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd(DateInterval.day,7,Today())</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>To</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="CongregationID">
+      <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+        </Values>
+      </DefaultValue>
+      <Prompt>Congregation</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet3</DataSetName>
+          <ValueField>Congregation_ID</ValueField>
+          <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ReportTitle">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+        </Values>
+      </DefaultValue>
+      <Prompt>Report Title</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ShowDetail">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=False</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Show Detail</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IsMulti">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>IsMulti</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="EventTypes">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Event Types</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet4</DataSetName>
+          <ValueField>Event_Type_ID</ValueField>
+          <LabelField>Event_Type</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ShowContact">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Contact Info</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ShowBldgRm">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>List Building/Rooms</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Building, Room Name, Room Numbers</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Room Name, Room Numbers</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Room Numbers</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ShowCancelled">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Cancelled</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ListTime">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>List Time</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Event Time</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Reservation Time</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ShowNoRoomsSet">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show No Rooms Set</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <EmbeddedImages>
+    <EmbeddedImage Name="mp_sm_logo">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportServerUrl>http://mp-int-web/ReportServer</rd:ReportServerUrl>
+  <rd:ReportID>6835654f-3954-4c4b-bf4b-64ce086231e9</rd:ReportID>
+</Report>

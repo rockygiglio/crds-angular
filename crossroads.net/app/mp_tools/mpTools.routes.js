@@ -120,6 +120,10 @@
       url: '/requestchildcare',
       template: '<request-childcare> </request-childcare>'
     })
+	.state('tools.childcareDecision', {
+      url: '/childcaredecision',
+      template: '<childcare-decision> </childcare-decision>',
+    })
     .state('tools.adminGivingHistoryTool', {
         // This is a "launch" page for the tool, it will check access, etc, then forward
         // on to the actual page with the history.
