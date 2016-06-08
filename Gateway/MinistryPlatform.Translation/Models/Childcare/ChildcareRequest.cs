@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MinistryPlatform.Models;
 
 namespace MinistryPlatform.Translation.Models.Childcare
