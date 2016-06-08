@@ -141,13 +141,13 @@ namespace crds_angular.Services
                 foreach (var ccareDates in childcareDates)
                 {
                     
-                    _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
 
                     //add the group to the event
                     _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
                 }
 
-                _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved"));
             }
             catch (EventMissingException ex)
             {
@@ -159,7 +159,28 @@ namespace crds_angular.Services
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
-        
+
+        public void RejectChildcareRequest(int childcareRequestId, string token)
+        {
+            try
+            {
+                //set the approved column for dates to false
+                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                foreach (var ccareDates in childcareDates)
+                {
+
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, false);
+
+                }
+
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+            }
+        }
+
         public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {
             try

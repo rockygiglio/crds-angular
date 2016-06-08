@@ -148,7 +148,34 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
+                    var apiError = new ApiErrorDto("Approve Childcare Request Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        [Route("api/childcare/request/reject/{requestId}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequest childcareRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Save Request Data Invalid", new InvalidOperationException("Invalid Save request Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _childcareService.RejectChildcareRequest(requestId, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Reject Childcare Request Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 

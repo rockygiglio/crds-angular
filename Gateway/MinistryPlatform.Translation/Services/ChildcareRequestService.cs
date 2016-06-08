@@ -109,7 +109,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public void ApproveChildcareRequest(int childcareRequestId)
+        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId)
         {
             var apiToken = _apiUserService.GetToken();
 
@@ -133,7 +133,7 @@ namespace MinistryPlatform.Translation.Services
                 {"Frequency", record.ToString("Frequency") },
                 {"Childcare_Session", record.ToString("Childcare_Session") },
                 {"Notes", record.ToString("Notes") },
-                {"Request_Status_ID", _childcareRequestStatusApproved }
+                {"Request_Status_ID", requestStatusId }
             };
 
            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
@@ -158,14 +158,14 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void ApproveChildcareRequestDate(int childcareRequestDateId)
+        public void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision)
         {
             var apiToken = _apiUserService.GetToken();
 
             var requestDateDict = new Dictionary<string, object>
             {
                 {"Childcare_Request_Date_ID", childcareRequestDateId},
-                {"Approved", true}
+                {"Approved", decision}
             };
 
             _ministryPlatformService.UpdateRecord(_childcareRequestDatesPageId, requestDateDict, apiToken);
