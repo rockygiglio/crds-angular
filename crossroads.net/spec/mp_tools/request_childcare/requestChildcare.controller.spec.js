@@ -3,7 +3,6 @@ import RequestChildcareService from '../../../app/mp_tools/request_childcare/req
 import RequestChildcareController from '../../../app/mp_tools/request_childcare/requestChildcare.controller';
 
 describe('Request Childcare Controller', () => {
-
   let rootScope,
       MPTools,
       CRDS_TOOLS_CONSTANTS,
@@ -23,7 +22,7 @@ describe('Request Childcare Controller', () => {
     MPTools = $injector.get('MPTools');
     CRDS_TOOLS_CONSTANTS = $injector.get('CRDS_TOOLS_CONSTANTS');
     log = $injector.get('$log');
-    validation = $injector.get('Validation');
+    validation = $injector.get('Validation'); 
     cookies = $injector.get('$cookies');
     _window = $injector.get('$window');
 
@@ -34,20 +33,12 @@ describe('Request Childcare Controller', () => {
     spyOn(requestChildcareService, 'getCongregations');
     spyOn(requestChildcareService, 'getMinistries');
     spyOn(requestChildcareService, 'saveRequest').and.returnValue(
-      { $promise:
+      { $promise: 
         { then: function() {
           return [];
         }
       }
     });
-    spyOn(requestChildcareService, 'getPreferredTimes').and.returnValue(
-      {
-        $promise: {
-          then: function() {
-            return [];
-          }
-        }
-      });
     spyOn(requestChildcareService, 'getGroups').and.returnValue(
       // return a fake implementation of a promise
       {$promise: 
@@ -56,6 +47,7 @@ describe('Request Childcare Controller', () => {
           }
         }
       });
+    spyOn(requestChildcareService, 'getPreferredTimes');
     spyOn(cookies, 'get').and.returnValue(uid);
     spyOn(MPTools, 'getParams').and.returnValue({
       recordId: null 
@@ -68,117 +60,7 @@ describe('Request Childcare Controller', () => {
     commonExpectations();
     expect(controller.allowAccess).toBe(false);
   });
-
-  it('should show the gaps in frequency widget', () => {
-    commonExpectations();
-    controller.choosenPreferredTime = { 
-      Childcare_Day_ID: 3,
-      Childcare_End_Time: '19:00:00',
-      Childcare_Preferred_Time_ID: 1,
-      Childcare_Start_Time: '18:00:00',
-      Congregation_ID: 1,
-      Deactivate_Date: null,
-      Meeting_Day: 'Tuesday',
-      dp_FileID: null,
-      dp_RecordID: 1,
-      dp_RecordName: 1,
-      dp_RecordStatus: 0,
-      dp_Selected: 0
-    };
-    controller.choosenFrequency = 'Weekly';
-    controller.startDate = new Date(2016, 5, 1);
-    controller.endDate = new Date(2016, 10, 2);
-    expect(controller.showGaps()).toBe(true);
-  });
-
-  it('should not show the gaps in frequency widget', () => {
-    commonExpectations();
-    expect(controller.showGaps()).toBe(false);
-  });
-
-  it('should get a list of dates for a weekly occurence', () => {
-    commonExpectations();
-    controller.choosenPreferredTime = {
-      Childcare_Day_ID: 3,
-      Childcare_End_Time: '19:00:00',
-      Childcare_Preferred_Time_ID: 1,
-      Childcare_Start_Time: '18:00:00',
-      Congregation_ID: 1,
-      Deactivate_Date: null,
-      Meeting_Day: 'Tuesday',
-      dp_FileID: null,
-      dp_RecordID: 1,
-      dp_RecordName: 1,
-      dp_RecordStatus: 0,
-      dp_Selected: 0
-    };
-    controller.choosenFrequency = 'Weekly';
-    controller.startDate = new Date(2016, 5, 1);
-    controller.endDate = new Date(2016, 7, 2);
-    var expectedDateList = [
-      moment(new Date(2016, 5, 7)),
-      moment(new Date(2016, 5, 14)),
-      moment(new Date(2016, 5, 21)),
-      moment(new Date(2016, 5, 28)),
-      moment(new Date(2016, 6, 5)),
-      moment(new Date(2016, 6, 12)),
-      moment(new Date(2016, 6, 19)),
-      moment(new Date(2016,6, 26)),
-      moment(new Date(2016,7,2))
-    ];
-    var size = expectedDateList.length;
-
-    controller.generateDateList();
-    expect(controller.datesList.length).toBe(size);
-    for(var i = 0; i<size; i++) {
-      expect(controller.datesList[i].date.date()).toEqual(expectedDateList[i].date());
-    }
-  });
-
-  it('should get a list of dates for a montly occurence', () => {
-    commonExpectations();
-    controller.choosenPreferredTime = {
-      Childcare_Day_ID: 3,
-      Childcare_End_Time: '19:00:00',
-      Childcare_Preferred_Time_ID: 1,
-      Childcare_Start_Time: '18:00:00',
-      Congregation_ID: 1,
-      Deactivate_Date: null,
-      Meeting_Day: 'Tuesday',
-      dp_FileID: null,
-      dp_RecordID: 1,
-      dp_RecordName: 1,
-      dp_RecordStatus: 0,
-      dp_Selected: 0
-    };
-    controller.choosenFrequency = 'Monthly';
-
-    controller.startDate = new Date(2016, 5, 1);
-    controller.endDate = new Date(2016, 11, 1);
-
-    controller.generateDateList();
-    var expectedDateList = [
-      moment(new Date(2016, 5, 7)),
-      moment(new Date(2016, 6, 5)),
-      moment(new Date(2016, 7, 2)),
-      moment(new Date(2016, 8, 6)),
-      moment(new Date(2016, 9, 4)),
-      moment(new Date(2016, 10, 1))
-    ];
-    var size = expectedDateList.length;
-    expect(controller.datesList.length).toBe(size);
-    for(var i = 0; i<size; i++) {
-      expect(controller.datesList[i].date.date()).toEqual(expectedDateList[i].date());
-    }
-  });
-
-  it('should get the correct week of the month', function() {
-    commonExpectations();
-    var firstTuesday =  moment(new Date(2016, 5, 7));
-    var weekOfMonth = controller.getWeekOfMonth(firstTuesday);
-    expect(weekOfMonth).toBe(1);
-  });
-
+ 
   it('should get groups and preferred times', () => {
     commonExpectations();
     controller.choosenCongregation = { dp_RecordID: 2 };
