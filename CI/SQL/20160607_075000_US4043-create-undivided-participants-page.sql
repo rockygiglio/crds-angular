@@ -26,11 +26,11 @@ INSERT INTO [dbo].[dp_Pages]
            , 'Group_Participants'
            , 'Group_Participants_ID'
 		   , NULL
-           , 'Participant_ID_Table_Contact_ID_Table.[First_Name] AS [First_Name]
-				, Participant_ID_Table_Contact_ID_Table.[Last_Name] AS [Last_Name]
-                , Group_ID_Table.[Group_Name] AS [Group_Name]
-                , Group_ID_Table.[Description] AS [Description]
-                , Group_ID_Table_Congregation_ID_Table.[Congregation_Name] AS [Congregation_Name]
+           , 'Participant_ID_Table_Contact_ID_Table.[First_Name] 
+				, Participant_ID_Table_Contact_ID_Table.[Last_Name] 
+                , Group_ID_Table.[Group_Name]
+                , Group_ID_Table.[Description] 
+                , Group_ID_Table_Congregation_ID_Table.[Congregation_Name] 
 				, (SELECT Attribute_Name 
 	            FROM Group_Participant_Attributes GPA, Attributes A 
 	            WHERE GPA.Attribute_ID = A.Attribute_ID
