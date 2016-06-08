@@ -35,6 +35,7 @@ class RequestChildcareController {
     this.validation = Validation;
     this.viewReady = true;
     this.window = $window;
+    this.datesSelected = true;
   }
 
   generateDateList() {
@@ -97,12 +98,24 @@ class RequestChildcareController {
     return Math.ceil(startDate.date() / 7);
   }
 
-  onEndDateChange() {
+  onEndDateChange(endDate) {
+    this.endDate = endDate;
     this.runDateGenerator = true;
   }
 
   onFrequencyChange() {
     this.runDateGenerator = true;
+  }
+    
+  onDateSelectionChange() {
+      var rc = false;
+      var arrayLength = this.datesList.length;
+      for (var i = 0; i < arrayLength; i++) {
+            if(this.datesList[i].selected == true) {
+                rc = true;
+            }
+      }
+      this.datesSelected = rc; 
   }
 
   onStartDateChange(startDate) {
