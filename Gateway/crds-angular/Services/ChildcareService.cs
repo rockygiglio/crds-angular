@@ -178,6 +178,7 @@ namespace crds_angular.Services
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Reject Childcare failed", ex);
             }
         }
 
