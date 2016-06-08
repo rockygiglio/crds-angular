@@ -2,7 +2,7 @@ USE MinistryPlatform;
 
 DECLARE @NewRecID int = 27;
 
-IF NOT EXISTS(SELECT * FROM dbo.group_types WHERE Group_Type_ID = @NewRecID)
+IF NOT EXISTS(SELECT * FROM dbo.group_types WHERE Group_Type_ID = @NewRecID AND Group_Type = 'Childcare')
 BEGIN
 	SET IDENTITY_INSERT dbo.group_types  ON
 

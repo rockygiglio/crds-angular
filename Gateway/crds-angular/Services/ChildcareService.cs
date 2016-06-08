@@ -138,13 +138,13 @@ namespace crds_angular.Services
                 //set the approved column for dates to true
                 var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
                 var groupid = request.GroupId;
-                foreach (var d in childcareDates)
+                foreach (var ccareDates in childcareDates)
                 {
                     
                     _childcareRequestService.ApproveChildcareRequestDate(d.ChildcareRequestDateId);
 
                     //add the group to the event
-                    _childcareRequestService.AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, d);
+                    _childcareRequestService.AddGroupToChildcareEvents(d.ChildcareRequestId, groupid, ccareDates);
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
@@ -159,11 +159,7 @@ namespace crds_angular.Services
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
-
-
         
-
-
         public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {
             try

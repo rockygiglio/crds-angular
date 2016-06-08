@@ -143,22 +143,17 @@ namespace MinistryPlatform.Translation.Services
         {
             var apiToken = _apiUserService.GetToken();
             var cdList = new List<ChildcareRequestDate> { childcareDate };
-
-
+            
             var reqEvents = FindChildcareEvents(childcareRequestId, cdList);
             foreach (var entry in reqEvents)
             {
-               
                 var eventId = entry.Value;
-
-               
                 var eventGroup = new EventGroup
                 {
                     DomainId = 1,
                     EventId = eventId,
                     GroupId = groupId
                 };
-
                 _eventService.CreateEventGroup(eventGroup, apiToken);
             }
         }
@@ -200,9 +195,7 @@ namespace MinistryPlatform.Translation.Services
                 }
             }
             return reqEvents;
-
         }
-
 
         public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId)
         {
@@ -215,7 +208,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            var c = new ChildcareRequest
+            var childcareRequest = new ChildcareRequest
             {
                 RequesterId = record.ToInt("Requester_ID"),
                 LocationId = record.ToInt("Congregation_ID"),
@@ -230,9 +223,7 @@ namespace MinistryPlatform.Translation.Services
                 Notes = record.ToString("Notes")
             };
 
-            return c;
+            return childcareRequest;
         }
     }
-
-
 }
