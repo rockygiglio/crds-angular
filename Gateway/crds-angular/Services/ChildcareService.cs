@@ -148,7 +148,7 @@ namespace crds_angular.Services
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
-                SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
+                SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
             }
             catch (EventMissingException ex)
             {
