@@ -104,10 +104,11 @@ namespace MinistryPlatform.Translation.Services
           var datesList = request.DatesList;
           foreach (var date in datesList)
           {
+            var requestDate = new DateTime(date.Year,date.Month,date.Day,0,0,0);
             var requestDatesDict = new Dictionary<String, Object>
             {
               {"Childcare_Request_ID", childcareRequestId },
-                {"Childcare_Request_Date", date},
+                {"Childcare_Request_Date", requestDate},
                 {"Approved", false }
             };
             _ministryPlatformService.CreateSubRecord(_childcareRequestDatesId, childcareRequestId, requestDatesDict, token, false);
