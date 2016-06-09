@@ -27,13 +27,12 @@ class ChildcareDecisionController {
         this.request = this.childcareDecisionService.getChildcareRequest(this.recordId, (d) => {
           this.startDate = moment(d.StartDate).format('L');
           this.endDate = moment(d.EndDate).format('L');
+          this.datesList = d.DatesList.map( (date) => {
+            return { selected: false, date: moment(date) };
+          });
         });
         this.request.$promise.then(() => {
           this.viewReady = true;
-        });
-        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);
-        this.datesList.$promise.then((d)=>{
-            this.datesList= d;
         });
       }
     }
