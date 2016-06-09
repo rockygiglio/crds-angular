@@ -108,7 +108,7 @@ namespace crds_angular.Services
         {
             var mpRequest = request.ToMPChildcareRequest();
             var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
-
+            _childcareRequestService.CreateChildcareRequestDates(childcareRequestId, mpRequest, token);
             try
             {
                 var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
@@ -127,6 +127,11 @@ namespace crds_angular.Services
             {
                 var request = GetChildcareRequestForReview(childcareRequestId, token);
                 var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                if (requestedDates.Count == 0)
+                {
+                    throw new ChildcareDatesMissingException(childcareRequestId);
+                }
+
                 var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
                 var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
                 if (missingDates.Count > 0)
@@ -141,7 +146,7 @@ namespace crds_angular.Services
                 var groupid = request.GroupId;
                 foreach (var ccareDates in requestedDates)
                 {
-                    
+
                     _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
                     
                     _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
@@ -151,6 +156,10 @@ namespace crds_angular.Services
                 SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
             }
             catch (EventMissingException ex)
+            {
+                throw;
+            }
+            catch (ChildcareDatesMissingException ex)
             {
                 throw;
             }

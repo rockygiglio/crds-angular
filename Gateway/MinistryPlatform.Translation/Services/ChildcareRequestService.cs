@@ -15,6 +15,8 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
         private readonly IEventService _eventService;
+        private readonly int _childcareRequestDatesId;
+        private readonly int _myChildcareRequestDatesId;
         private readonly int _childcareRequestPageId;
         private readonly int _childcareRequestDatesPageId;
         private readonly int _childcareRequestStatusPending;
@@ -23,7 +25,6 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareEventType;
         private readonly IGroupService _groupService;
 
-        
         public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService, IGroupService groupService)
         {
             _ministryPlatformService = ministryPlatformService;
@@ -36,12 +37,14 @@ namespace MinistryPlatform.Translation.Services
             _childcareRequestStatusApproved = configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
             _childcareEventType = configurationWrapper.GetConfigIntValue("ChildcareEventType");
             _groupService = groupService;
+            _childcareRequestDatesId = configurationWrapper.GetConfigIntValue("ChildcareRequestDates");
+            _myChildcareRequestDatesId = configurationWrapper.GetConfigIntValue("MyChildcareRequestDates");
         }
 
         public int CreateChildcareRequest(ChildcareRequest request)
         {
             var apiToken = _apiUserService.GetToken();
-            
+
             var requestDict = new Dictionary<string, object>
             {
                 {"Requester_ID", request.RequesterId},
@@ -94,6 +97,21 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
             throw new ApplicationException(string.Format("Duplicate Childcare Request ID detected: {0}", childcareRequestId));
+        }
+
+        public void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest request, string token)
+        {
+          var datesList = request.DatesList;
+          foreach (var date in datesList)
+          {
+            var requestDatesDict = new Dictionary<String, Object>
+            {
+              {"Childcare_Request_ID", childcareRequestId },
+                {"Childcare_Request_Date", date},
+                {"Approved", false }
+            };
+            _ministryPlatformService.CreateSubRecord(_childcareRequestDatesId, childcareRequestId, requestDatesDict, token, false);
+          }
         }
 
         public List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
