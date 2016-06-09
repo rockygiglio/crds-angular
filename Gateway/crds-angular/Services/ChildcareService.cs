@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
@@ -177,18 +179,26 @@ namespace crds_angular.Services
         private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates,String token)
         {
             var childcareRequest = _childcareRequestService.GetChildcareRequest(requestId, token);
-            
+            var request = GetChildcareRequestForReview(requestId, token);
+
+
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
             var template = _communicationService.GetTemplate(templateId);
-            var datesList = childcareRequestDates.Select(daterec => daterec.RequestDate).ToList();
+            var datesList = childcareRequestDates.Select(dateRec => dateRec.RequestDate).Select(requestDate => BuildParagraph("", requestDate.ToShortDateString())).ToList();
+            var styles = Styles();
+            var htmlCell = new HtmlElement("td", styles).Append(datesList);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
+
 
             var mergeData = new Dictionary<string, object>
             {
                 {"Group", childcareRequest.GroupName },
                 {"ChildcareSession", childcareRequest.ChildcareSession},
-                {"Frequency", childcareRequest.Frequency },
-                {"Dates", datesList },
+                {"Frequency", request.Frequency},
+                {"Dates", htmlTable.Build() },
                 {"RequestId", childcareRequest.RequestId },
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
@@ -433,6 +443,23 @@ namespace crds_angular.Services
             };
             return mergeData;
         }
+        private static HtmlElement BuildParagraph(string label, string value)
+        {
+            var els = new List<HtmlElement>()
+            {
+                new HtmlElement("strong", label),
+                new HtmlElement("span", value)
+            }
+                ;
+            return new HtmlElement("p", els);
+        }
+        private Dictionary<string, string> Styles()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"style", "border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0; border:none; border-color:#ffffff;font-size: small; font-weight: normal;" }
+            };
+        }
 
-        } 
+    } 
 }
