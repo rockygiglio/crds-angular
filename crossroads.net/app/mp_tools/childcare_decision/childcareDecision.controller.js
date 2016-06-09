@@ -6,12 +6,14 @@ class ChildcareDecisionController {
       CRDS_TOOLS_CONSTANTS,
       $log,
       $window,
-      ChildcareDecisionService
+      ChildcareDecisionService,
+      $modal
   ) {
 
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareDecisionTool);
     this.childcareDecisionService = ChildcareDecisionService;
     this.log = $log;
+    this.modal = $modal;
     this.mptools = MPTools;
     this.name = 'childcare-decision';
     this.rootScope = $rootScope;
@@ -65,6 +67,10 @@ class ChildcareDecisionController {
 
   reject() {
     this.saving = true;
+    var modalInstance = this.modal.open({
+      templateUrl: 'styleModalContent.html',
+      backdrop: true
+    });
     this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, (data) => {
       this.saving = false;
       this._window.close();
