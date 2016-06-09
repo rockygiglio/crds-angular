@@ -145,15 +145,16 @@ namespace crds_angular.Services
                 //set the approved column for dates to true
                 var groupid = request.GroupId;
                 foreach (var ccareDates in requestedDates)
-                {
-
-                    _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
+                {                  
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
                     
                     _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
                 }
 
-                _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved"));
+
                 SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
+
             }
             catch (EventMissingException ex)
             {
@@ -169,7 +170,29 @@ namespace crds_angular.Services
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
-        
+
+        public void RejectChildcareRequest(int childcareRequestId, string token)
+        {
+            try
+            {
+                //set the approved column for dates to false
+                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                foreach (var ccareDates in childcareDates)
+                {
+
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, false);
+
+                }
+
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Reject Childcare failed", ex);
+            }
+        }
+
         public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {
             try

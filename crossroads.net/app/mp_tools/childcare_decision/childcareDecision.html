@@ -42,13 +42,21 @@
       </div>
       <div class="form-group">
         <loading-button
-           input-classes="btn btn-primary pull-left"
-           normal-text="Approve"
-           loading-text="{{decision.loadingText()}}"
-           loading="decision.isLoading()"
-           input-type="submit" >
+          input-classes="btn btn-primary"
+          normal-text="Approve"
+          loading-text="{{decision.loadingText()}}"
+          loading="decision.isLoading()"
+          ng-click="submit()">
+          <span class="glyphicon glyphicon-ok"></span>
         </loading-button>
-      </div>
+        <loading-button
+          input-classes="btn btn-danger"
+          normal-text="Reject"
+          loading-text="{{decision.rejectingText()}}"
+          loading="decision.isLoading()"
+          ng-click="$event.preventDefault(); decision.reject()">
+          <span class="glyphicon glyphicon-remove"></span>
+        </loading-button>
     </form>
   </div>
 </div>
