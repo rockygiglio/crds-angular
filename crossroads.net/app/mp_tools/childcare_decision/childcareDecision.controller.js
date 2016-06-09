@@ -67,6 +67,11 @@ class ChildcareDecisionController {
       dateListUL + '</p>';
     return content;
   }
+    
+  missingChildcareDates() {
+      let content ='<p><strong>Childcare request has no associated dates.</strong></p>';
+    return content;
+  }
 
   showError() {
     return this.error === true ? true : false;
@@ -85,7 +90,14 @@ class ChildcareDecisionController {
           content: this.missingEventContent(err.data.Errors),
           type: 'error'
         });
-      } else {
+      }
+      else if (err.status === 406) {
+        this.rootScope.$emit('notify', {
+          content: this.missingChildcareDates(),
+          type: 'error'
+        });
+      }
+      else {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }
       this.log.error('error!', err);
