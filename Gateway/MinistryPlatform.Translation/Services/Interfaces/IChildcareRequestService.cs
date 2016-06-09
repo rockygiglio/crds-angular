@@ -11,12 +11,16 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
 
         ChildcareRequest GetChildcareRequestForReview(int childcareRequestId);
+
+        void DecisionChildcareRequest(int childcareRequestId, int requestStatusId);
         void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest mpRequest, string token);
         void ApproveChildcareRequest(int childcareRequestId, ChildcareRequest childcareRequest);
         Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates);
         List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId);
         List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);
         void ApproveChildcareRequestDate(int childcareRequestDateId);
+        Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates);
         void AddGroupToChildcareEvents(int childcareRequestId, int groupId, ChildcareRequestDate childcareDate);
+        void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision);
     }
 }

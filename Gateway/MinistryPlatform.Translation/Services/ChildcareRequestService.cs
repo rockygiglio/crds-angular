@@ -23,9 +23,9 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareRequestStatusApproved;
         private readonly int _childcareEmailPageViewId;
         private readonly int _childcareEventType;
+        private readonly IGroupService _groupService;
 
-        
-        public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService)
+        public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService, IGroupService groupService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
@@ -36,6 +36,7 @@ namespace MinistryPlatform.Translation.Services
             _childcareRequestStatusPending = configurationWrapper.GetConfigIntValue("ChildcareRequestPending");
             _childcareRequestStatusApproved = configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
             _childcareEventType = configurationWrapper.GetConfigIntValue("ChildcareEventType");
+            _groupService = groupService;
             _childcareRequestDatesId = configurationWrapper.GetConfigIntValue("ChildcareRequestDates");
             _myChildcareRequestDatesId = configurationWrapper.GetConfigIntValue("MyChildcareRequestDates");
         }
@@ -43,7 +44,7 @@ namespace MinistryPlatform.Translation.Services
         public int CreateChildcareRequest(ChildcareRequest request)
         {
             var apiToken = _apiUserService.GetToken();
-            
+
             var requestDict = new Dictionary<string, object>
             {
                 {"Requester_ID", request.RequesterId},
@@ -128,7 +129,8 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequest childcareRequest)
+        //public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequest childcareRequest)
+        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId)
         {
             var apiToken = _apiUserService.GetToken();
 
@@ -136,7 +138,17 @@ namespace MinistryPlatform.Translation.Services
             {
                 {"Childcare_Request_ID", childcareRequestId },
                 {"Request_Status_ID", _childcareRequestStatusApproved },
-                {"Decision_Notes", childcareRequest.DecisionNotes }
+                {"Decision_Notes", childcareRequest.DecisionNotes },
+                {"Requester_ID",record.ToInt("Requester_ID")},
+                {"Congregation_ID", record.ToInt("Congregation_ID")},
+                {"Ministry_ID", record.ToInt("Ministry_ID") },
+                {"Group_ID", record.ToInt("Group_ID") },
+                {"Start_Date", record.ToDate("Start_Date") },
+                {"End_Date", record.ToDate("End_Date") },
+                {"Frequency", record.ToString("Frequency") },
+                {"Childcare_Session", record.ToString("Childcare_Session") },
+                {"Notes", record.ToString("Notes") },
+                {"Request_Status_ID", requestStatusId }
             };
 
            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
@@ -146,29 +158,40 @@ namespace MinistryPlatform.Translation.Services
         {
             var apiToken = _apiUserService.GetToken();
             var cdList = new List<ChildcareRequestDate> { childcareDate };
-            
+
+            var groupEvents = _groupService.getAllEventsForGroup(groupId);
+
             var reqEvents = FindChildcareEvents(childcareRequestId, cdList);
             foreach (var entry in reqEvents)
             {
-                var eventId = entry.Value;
+                var eventExists = false;
+                foreach( Event ev in groupEvents)
+                {
+                    if (ev.EventId == entry.Value)
+                    {
+                        eventExists = true;
+                        break;
+                    }
+                }
+                if (eventExists) continue;
                 var eventGroup = new EventGroup
                 {
                     DomainId = 1,
-                    EventId = eventId,
+                    EventId = entry.Value,
                     GroupId = groupId
                 };
                 _eventService.CreateEventGroup(eventGroup, apiToken);
             }
         }
 
-        public void ApproveChildcareRequestDate(int childcareRequestDateId)
+        public void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision)
         {
             var apiToken = _apiUserService.GetToken();
 
             var requestDateDict = new Dictionary<string, object>
             {
                 {"Childcare_Request_Date_ID", childcareRequestDateId},
-                {"Approved", true}
+                {"Approved", decision}
             };
 
             _ministryPlatformService.UpdateRecord(_childcareRequestDatesPageId, requestDateDict, apiToken);

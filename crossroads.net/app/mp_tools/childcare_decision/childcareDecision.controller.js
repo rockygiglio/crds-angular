@@ -6,12 +6,14 @@ class ChildcareDecisionController {
       CRDS_TOOLS_CONSTANTS,
       $log,
       $window,
-      ChildcareDecisionService
+      ChildcareDecisionService,
+      $modal
   ) {
 
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareDecisionTool);
     this.childcareDecisionService = ChildcareDecisionService;
     this.log = $log;
+    this.modal = $modal;
     this.mptools = MPTools;
     this.name = 'childcare-decision';
     this.rootScope = $rootScope;
@@ -47,7 +49,7 @@ class ChildcareDecisionController {
   }
 
   loadingText() {
-    if (this.allowApproval()) {
+    if (!this.rejecting && this.allowApproval()) {
       return 'Approving...';
     } else {
       return 'Approve';
@@ -55,19 +57,61 @@ class ChildcareDecisionController {
   }
 
   missingEventContent(dateList) {
-    let dateListLI = dateList.map( (d) => {
+    let dateListLI = dateList.map((d) => {
       return `<li> ${moment(d).format('L')} </li>`;
     }).reduce((first, next) => {
-     return `${first} ${next}`;
+      return `${first} ${next}`;
     }, '');
     let dateListUL = `<ul>${dateListLI} </ul>`;
-    let content ='<p><strong>Missing Childcare Events</strong>' +
+    let content = '<p><strong>Missing Childcare Events</strong>' +
       dateListUL + '</p>';
     return content;
   }
 
+  rejectingText() {
+    if (this.rejecting) {
+      return 'Rejecting...';
+    } else {
+      return 'Reject';
+    }
+  }
+
+  reject() {
+    this.rejecting = true;
+    this.saving = true;
+    this.modalInstance = this.modal.open({
+      controller: 'DecisionModalController as modal',
+      templateUrl: 'childcare_decision/decisionModal.html',
+      backdrop: true
+    });
+    this.modalInstance.result.then(() => {
+      this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, () => {
+        this.saving = false;
+        this._window.close();
+      }, (err) => {
+        this.rejecting = false;
+        this.saving = false;
+        if (err.status === 416) {
+          this.rootScope.$emit('notify', {
+            content: this.missingEventContent(err.data.Errors),
+            type: 'error'
+          });
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }
+
+        this.log.error('error!', err);
+      });
+
+    }, () => {
+      this.saving = false;
+      this.rejecting = false;
+      console.log('dismissed');
+    });
+  }
+
   missingChildcareDates() {
-      let content ='<p><strong>Childcare request has no associated dates.</strong></p>';
+    let content = '<p><strong>Childcare request has no associated dates.</strong></p>';
     return content;
   }
 
@@ -101,7 +145,7 @@ class ChildcareDecisionController {
     };
     this.saved = this.childcareDecisionService.saveRequest(this.recordId, dto, (data) => {
       this.saving = false;
-      this.log('success!', data);
+      this.log.debug('success!', data);
       this._window.close();
     }, (err) => {
       this.saving = false;
@@ -110,16 +154,15 @@ class ChildcareDecisionController {
           content: this.missingEventContent(err.data.Errors),
           type: 'error'
         });
-      }
-      else if (err.status === 406) {
+      } else if (err.status === 406) {
         this.rootScope.$emit('notify', {
           content: this.missingChildcareDates(),
           type: 'error'
         });
-      }
-      else {
+      } else {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }
+
       this.log.error('error!', err);
     });
   }
