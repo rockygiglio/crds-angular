@@ -6,12 +6,11 @@ DECLARE @VIEW_TITLE nvarchar(255) = N'Undivided - Past Facilitators'
 DECLARE @PAGE_ID int = 355
 DECLARE @DESCRIPTION nvarchar(255) = N'Staff members can view the facilitators from past Undivided sessions.'
 
-DECLARE @FIELD_LIST nvarchar(2000) = '(SELECT COUNT(gp.Participant_ID) 
+DECLARE @FIELD_LIST nvarchar(2000) = 'Contact_ID_Table_Household_ID_Table_Congregation_ID_Table.[Congregation_Name],(SELECT COUNT(gp.Participant_ID) 
 FROM Group_Participants gp   
 	INNER JOIN Groups g ON g.Group_ID = gp.group_id                      
 WHERE gp.Group_Role_Id = 22 AND g.Group_Type_ID = 26  AND g.End_Date < getdate() AND gp.Participant_Id = Participants.[Participant_ID]             
 GROUP BY gp.Participant_ID) AS Num_Sessions_Participated
-,Contact_ID_Table_Household_ID_Table_Congregation_ID_Table.[Congregation_Name]
 ,Contact_ID_Table.[First_Name] 
 ,Contact_ID_Table.[Last_Name] 
 ,Contact_ID_Table.[Email_Address] 	 
