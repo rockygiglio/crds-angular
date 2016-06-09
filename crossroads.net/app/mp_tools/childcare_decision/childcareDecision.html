@@ -46,9 +46,8 @@
         <div class="panel-body" style="overflow-y:auto; max-height:200px;">
           <div class="checkbox" ng-repeat="date in decision.datesList">
             <label>
-              <input type="checkbox"
-                     checked="checked"
-                     ng-model="date.selected" > {{date.RequestDate}}
+              <input type="checkbox" ng-model="date.selected" >
+              {{date.RequestDate}}
             </label>
           </div>
         </div>

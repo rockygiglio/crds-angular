@@ -17,7 +17,7 @@ class ChildcareDecisionController {
     this.rootScope = $rootScope;
     this._window = $window;
 
-    if ( this.allowAccess) {
+    if (this.allowAccess) {
       this.recordId = Number(MPTools.getParams().recordId);
       if (!this.recordId || this.recordId === -1 ) {
         this.viewReady = true;
@@ -35,7 +35,6 @@ class ChildcareDecisionController {
         this.datesList.$promise.then((d)=>{
             this.datesList= d;
         });
-
       }
     }
   }
@@ -83,6 +82,11 @@ class ChildcareDecisionController {
 
   submit() {
     this.saving = true;
+    if (!this.validDates()) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.noDatesChosen);
+      this.saving = false;
+      return false;
+    }
     this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
       this.saving = false;
       this.log('success!', data);
@@ -106,6 +110,17 @@ class ChildcareDecisionController {
       }
       this.log.error('error!', err);
     });
+  }
+
+  validDates() {
+    if (this.datesList.length < 1) {
+      return false;
+    }
+
+    let found = this.datesList.filter((d) => {
+      return d.selected;
+    });
+    return found.length > 0;
   }
 
 }
