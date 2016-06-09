@@ -46,7 +46,7 @@ class ChildcareDecisionController {
   }
 
   loadingText() {
-    if (this.allowApproval()) {
+    if (!this.rejecting && this.allowApproval()) {
       return 'Approving...';
     } else {
       return 'Approve';
@@ -64,27 +64,45 @@ class ChildcareDecisionController {
       dateListUL + '</p>';
     return content;
   }
+  
+  rejectingText() {
+    if (this.rejecting) {
+      return 'Rejecting...';
+    } else {
+      return 'Reject';
+    }
+  }
 
   reject() {
+    this.rejecting = true;
     this.saving = true;
-    var modalInstance = this.modal.open({
-      templateUrl: 'styleModalContent.html',
+    this.modalInstance = this.modal.open({
+      controller: 'DecisionModalController as modal',
+      templateUrl: 'childcare_decision/decisionModal.html',
       backdrop: true
     });
-    this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, (data) => {
+    this.modalInstance.result.then( () => {
+      this.rejected = this.childcareDecisionService.rejectRequest(this.recordId, this.request, () => {
+        this.saving = false;
+        this._window.close();
+      }, (err) => {
+        this.rejecting = false;
+        this.saving = false;
+        if (err.status === 416) {
+          this.rootScope.$emit('notify', {
+            content: this.missingEventContent(err.data.Errors),
+            type: 'error'
+          });
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }
+        this.log.error('error!', err);
+      });
+
+    }, () => {
       this.saving = false;
-      this._window.close();
-    }, (err) => {
-      this.saving = false;
-      if (err.status === 416) {
-        this.rootScope.$emit('notify', {
-          content: this.missingEventContent(err.data.Errors),
-          type: 'error'
-        });
-      } else {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      }
-      this.log.error('error!', err);
+      this.rejecting = false;
+      console.log('dismissed');
     });
   }
 

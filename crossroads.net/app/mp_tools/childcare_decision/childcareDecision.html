@@ -47,28 +47,16 @@
           loading-text="{{decision.loadingText()}}"
           loading="decision.isLoading()"
           ng-click="submit()">
+          <span class="glyphicon glyphicon-ok"></span>
         </loading-button>
-      </div>
-      <script type="text/ng-template" id="styleModalContent.html">
-        <div class="modal-header">
-          <h3 class="modal-title">I&apos;m a modal and this is my header</h3>
-        </div>
-        <div class="modal-body">
-          I'm the modal body.
-        </div>
-        <div class="modal-footer">
-          I'm the modal footer.
-        </div>
-      </script>
-      <div class="form-group">
         <loading-button
-          input-classes="btn btn-primary"
+          input-classes="btn btn-danger"
           normal-text="Reject"
-          loading-text="Rejecting..."
+          loading-text="{{decision.rejectingText()}}"
           loading="decision.isLoading()"
           ng-click="$event.preventDefault(); decision.reject()">
+          <span class="glyphicon glyphicon-remove"></span>
         </loading-button>
-      </div>
     </form>
   </div>
 </div>
