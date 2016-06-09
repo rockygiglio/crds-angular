@@ -141,8 +141,15 @@ namespace crds_angular.Controllers.API
                 catch (EventMissingException e)
                 {
                     var errors = new DateError() {Errors = e.MissingDateTimes, Message = e.Message};
-                    var json = JsonConvert.SerializeObject(errors, Formatting.Indented);                    
+                    var json = JsonConvert.SerializeObject(errors, Formatting.Indented);
                     var message = new HttpResponseMessage(HttpStatusCode.RequestedRangeNotSatisfiable);
+                    message.Content = new StringContent(json);
+                    throw new HttpResponseException(message);
+                }
+                catch (ChildcareDatesMissingException e)
+                {
+                    var json = JsonConvert.SerializeObject(e.Message, Formatting.None);
+                    var message = new HttpResponseMessage(HttpStatusCode.NotAcceptable);
                     message.Content = new StringContent(json);
                     throw new HttpResponseException(message);
                 }

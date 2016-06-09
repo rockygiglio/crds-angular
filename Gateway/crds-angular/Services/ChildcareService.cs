@@ -127,6 +127,11 @@ namespace crds_angular.Services
             {
                 var request = GetChildcareRequestForReview(childcareRequestId, token);
                 var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                if (requestedDates.Count == 0)
+                {
+                    throw new ChildcareDatesMissingException(childcareRequestId);
+                }
+
                 var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
                 var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
                 if (missingDates.Count > 0)
@@ -142,7 +147,7 @@ namespace crds_angular.Services
                 var groupid = request.GroupId;
                 foreach (var ccareDates in childcareDates)
                 {
-                    
+
                     _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
 
                     //add the group to the event
@@ -153,6 +158,10 @@ namespace crds_angular.Services
                 SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
             }
             catch (EventMissingException ex)
+            {
+                throw;
+            }
+            catch (ChildcareDatesMissingException ex)
             {
                 throw;
             }
