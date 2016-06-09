@@ -29,7 +29,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;    
+        private readonly IApiUserService _apiUserService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -108,7 +108,7 @@ namespace crds_angular.Services
         {
             var mpRequest = request.ToMPChildcareRequest();
             var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
-
+            _childcareRequestService.CreateChildcareRequestDates(childcareRequestId, mpRequest, token);
             try
             {
                 var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
@@ -143,19 +143,17 @@ namespace crds_angular.Services
                 }
 
                 //set the approved column for dates to true
-                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
                 var groupid = request.GroupId;
-                foreach (var ccareDates in childcareDates)
+                foreach (var ccareDates in requestedDates)
                 {
 
                     _childcareRequestService.ApproveChildcareRequestDate(ccareDates.ChildcareRequestDateId);
-
-                    //add the group to the event
+                    
                     _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
-                SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
+                SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
             }
             catch (EventMissingException ex)
             {

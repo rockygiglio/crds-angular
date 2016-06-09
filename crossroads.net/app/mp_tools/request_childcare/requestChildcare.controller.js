@@ -68,7 +68,13 @@ class RequestChildcareController {
           };
         });
       } else {
-        this.datesList = [];
+        // use the startDate and make sure it aligns with the day
+        if (start.day() === moment().day(dayOfWeek).day()) {
+          this.datesList = [{ unix: start.unix(), date: start, selected: true}];
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.daysDoNotMatch);
+          this.datesList = [];
+        }
       }
       this.runDateGenerator = false;
     }
@@ -106,16 +112,14 @@ class RequestChildcareController {
   onFrequencyChange() {
     this.runDateGenerator = true;
   }
-    
+
   onDateSelectionChange() {
-      var rc = false;
-      var arrayLength = this.datesList.length;
-      for (var i = 0; i < arrayLength; i++) {
-            if(this.datesList[i].selected == true) {
-                rc = true;
-            }
-      }
-      this.datesSelected = rc; 
+    let datesSelected = this.datesList.filter( (d) => { return d.selected; });
+    this.datesSelected = datesSelected.length > 0;
+  }
+
+  onDayChange() {
+    this.runDateGenerator = true;
   }
 
   onStartDateChange(startDate) {
@@ -133,14 +137,13 @@ class RequestChildcareController {
     if (this.choosenPreferredTime && 
         ( this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek ) &&
         this.choosenFrequency &&
-        this.choosenFrequency !== 'Once' &&
         this.startDate &&
         this.endDate) {
       const start = this.startDate.getTime();
       const end = this.endDate.getTime();
-      if (start !== end && start < end) {
+      if (start < end || start === end) {
         this.generateDateList();
-        return true;
+        return this.datesList.length > 0;
       }
       return false;
     }
@@ -190,6 +193,9 @@ class RequestChildcareController {
     this.saving = true;
     if (this.childcareRequestForm.$invalid) {
       this.saving = false;
+      return false;
+    } else if (this.datesList.length < 1) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.noDatesChosen);
       return false;
     } else {
       let time = this.formatPreferredTime(this.choosenPreferredTime);
