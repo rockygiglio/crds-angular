@@ -33,7 +33,7 @@ DECLARE @VIEW_CLAUSE nvarchar(1000) = N'Participants.[Participant_ID] IN (
 			Groups g,
 			Group_Participants gp
 			WHERE gp.Participant_id = Participants.[Participant_ID] AND gp.group_id = g.group_id AND gp.Group_Role_Id = 16 AND 
-g.Group_Type_ID = 26  AND g.End_Date < getdate() AND g.Parent_Group IS NULL)'
+g.Group_Type_ID = 26  AND g.End_Date < getdate() AND g.Parent_Group IS NOT NULL)'
 DECLARE @ORDER_BY nvarchar(1000) = N'Contact_ID_Table_Household_ID_Table_Congregation_ID_Table.[Congregation_Name],Contact_ID_Table.[Last_Name] '
 SELECT @VIEW_ID = [Page_View_ID] FROM [dbo].[dp_Page_Views] WHERE [Page_View_ID] = 2304;
 
