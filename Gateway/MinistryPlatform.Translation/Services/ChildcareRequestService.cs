@@ -206,6 +206,8 @@ namespace MinistryPlatform.Translation.Services
 
             var searchString = string.Format("{0},", childcareRequestId);
             var record = _ministryPlatformService.GetRecordDict(_childcareRequestPageId, childcareRequestId, apiToken);
+            List<ChildcareRequestDate> daterecords = GetChildcareRequestDates(childcareRequestId);
+            var datesList = daterecords.Select(dateRec => dateRec.RequestDate).ToList();
 
             if (record == null)
             {
@@ -223,7 +225,8 @@ namespace MinistryPlatform.Translation.Services
                 Frequency = record.ToString("Frequency"),
                 PreferredTime = record.ToString("Childcare_Session"),
                 Status = record.ToString("Request_Status_ID_Text"),
-                Notes = record.ToString("Notes")
+                Notes = record.ToString("Notes"),
+                DatesList = datesList
             };
 
             return childcareRequest;

@@ -17,9 +17,9 @@ class ChildcareDecisionController {
     this.rootScope = $rootScope;
     this._window = $window;
 
-    if ( this.allowAccess) {
+    if (this.allowAccess) {
       this.recordId = Number(MPTools.getParams().recordId);
-      if (this.recordId === -1) {
+      if (!this.recordId || this.recordId === -1 ) {
         this.viewReady = true;
         this.error = true;
         this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
@@ -27,15 +27,13 @@ class ChildcareDecisionController {
         this.request = this.childcareDecisionService.getChildcareRequest(this.recordId, (d) => {
           this.startDate = moment(d.StartDate).format('L');
           this.endDate = moment(d.EndDate).format('L');
+          this.datesList = d.DatesList.map( (date) => {
+            return { selected: false, date: moment(date) };
+          });
         });
         this.request.$promise.then(() => {
           this.viewReady = true;
         });
-        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);  
-        this.datesList.$promise.then((d)=>{
-            this.datesList= d;
-        });
-
       }
     }
   }
@@ -67,10 +65,14 @@ class ChildcareDecisionController {
       dateListUL + '</p>';
     return content;
   }
-    
+
   missingChildcareDates() {
       let content ='<p><strong>Childcare request has no associated dates.</strong></p>';
     return content;
+  }
+
+  showDates() {
+    return this.datesList.length > 0;
   }
 
   showError() {
@@ -79,6 +81,11 @@ class ChildcareDecisionController {
 
   submit() {
     this.saving = true;
+    if (!this.validDates()) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.noDatesChosen);
+      this.saving = false;
+      return false;
+    }
     this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
       this.saving = false;
       this.log('success!', data);
@@ -102,6 +109,17 @@ class ChildcareDecisionController {
       }
       this.log.error('error!', err);
     });
+  }
+
+  validDates() {
+    if (this.datesList.length < 1) {
+      return false;
+    }
+
+    let found = this.datesList.filter((d) => {
+      return d.selected;
+    });
+    return found.length > 0;
   }
 
 }
