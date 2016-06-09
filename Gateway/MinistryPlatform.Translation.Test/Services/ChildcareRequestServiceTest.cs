@@ -12,10 +12,11 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ChildcareRequestServiceTest
     {
+        private Mock<IEventService> _eventService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IApiUserService> _apiUserService;
         private Mock<IConfigurationWrapper> _configuration;
-        private Mock<IEventService> _eventService;
+        private Mock<IGroupService> _groupService;
         private ChildcareRequestService _fixture;
 
         private int _childcareRequestPage = 36;
@@ -24,14 +25,16 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void Setup()
         {
+            _eventService = new Mock<IEventService>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _apiUserService = new Mock<IApiUserService>();
             _apiUserService.Setup(m => m.GetToken()).Returns("useme");
             _eventService = new Mock<IEventService>();
+            _groupService = new Mock<IGroupService>();
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPageId")).Returns(_childcareRequestPage);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPending")).Returns(_childcareRequestPending);
-            _fixture = new ChildcareRequestService(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object);
+            _fixture = new ChildcareRequestService(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object, _groupService.Object);
         }
 
         [Test]
