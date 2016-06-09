@@ -121,7 +121,8 @@ namespace crds_angular.Services
 
         }
 
-        public void ApproveChildcareRequest(int childcareRequestId, String token)
+        // TODO: Should we merge childcareRequestId into the childcareRequestDto?
+        public void ApproveChildcareRequest(int childcareRequestId, string token, ChildcareRequestDto childcareRequest)
         {
             try
             {
@@ -154,7 +155,9 @@ namespace crds_angular.Services
                     _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
                 }
 
-                _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+                
+                var mpChildcare = childcareRequest.ToMPChildcareRequest();
+                _childcareRequestService.ApproveChildcareRequest(childcareRequestId, mpChildcare);
                 SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
             }
             catch (EventMissingException ex)

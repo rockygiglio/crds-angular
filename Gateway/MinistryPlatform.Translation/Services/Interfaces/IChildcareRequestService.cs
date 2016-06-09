@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 
         ChildcareRequest GetChildcareRequestForReview(int childcareRequestId);
         void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest mpRequest, string token);
-        void ApproveChildcareRequest(int childcareRequestId);
+        void ApproveChildcareRequest(int childcareRequestId, ChildcareRequest childcareRequest);
         Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates);
         List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId);
         List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);
