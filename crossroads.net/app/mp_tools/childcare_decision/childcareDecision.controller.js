@@ -19,7 +19,7 @@ class ChildcareDecisionController {
 
     if ( this.allowAccess) {
       this.recordId = Number(MPTools.getParams().recordId);
-      if (this.recordId === -1) {
+      if (!this.recordId || this.recordId === -1 ) {
         this.viewReady = true;
         this.error = true;
         this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
@@ -31,7 +31,7 @@ class ChildcareDecisionController {
         this.request.$promise.then(() => {
           this.viewReady = true;
         });
-        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);  
+        this.datesList = this.childcareDecisionService.getChildcareRequestDates(this.recordId);
         this.datesList.$promise.then((d)=>{
             this.datesList= d;
         });
@@ -67,10 +67,14 @@ class ChildcareDecisionController {
       dateListUL + '</p>';
     return content;
   }
-    
+
   missingChildcareDates() {
       let content ='<p><strong>Childcare request has no associated dates.</strong></p>';
     return content;
+  }
+
+  showDates() {
+    return this.datesList.length > 0;
   }
 
   showError() {
