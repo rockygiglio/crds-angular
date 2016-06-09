@@ -277,6 +277,8 @@ describe('Request Childcare Controller', () => {
     controller.choosenPreferredTime = { Childcare_Start_Time: '9:00:00' , Childcare_End_Time: '10:00:00' }; 
     controller.numberOfChildren = 12;
     controller.notes = 'some long note';
+    
+    controller.datesList = [ moment(new Date(2016, 0, 1)) ];
 
     controller.submit();
     expect(requestChildcareService.saveRequest).toHaveBeenCalled();
