@@ -10,7 +10,7 @@ DECLARE @FIELD_LIST nvarchar(2000) = 'Contact_ID_Table_Household_ID_Table_Congre
 FROM Group_Participants gp   
 	INNER JOIN Groups g ON g.Group_ID = gp.group_id                      
 WHERE gp.Group_Role_Id = 22 AND g.Group_Type_ID = 26  AND g.End_Date < getdate() AND gp.Participant_Id = Participants.[Participant_ID]             
-GROUP BY gp.Participant_ID) AS Num_Sessions_Participated
+GROUP BY gp.Participant_ID) AS Num_Sessions_Facilitated
 ,Contact_ID_Table.[First_Name] 
 ,Contact_ID_Table.[Last_Name] 
 ,Contact_ID_Table.[Email_Address] 	 
