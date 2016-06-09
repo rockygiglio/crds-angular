@@ -110,7 +110,11 @@
 
       <div class="form-group" ng-class="{'has-error': request.validateField('dayOfWeek')}" ng-if="request.customSessionSelected">
         <label class="control-label required" for="dayOfWeek">Day of the Week</label>
-        <select class="form-control" name="dayOfWeek" ng-model="request.dayOfWeek" required>
+        <select class="form-control" 
+                name="dayOfWeek" 
+                ng-model="request.dayOfWeek" 
+                ng-change="request.onDayChange()"
+                required>
           <option value="" selected>-- Please select a day of the week --</option>
           <option>Sunday</option>
           <option>Monday</option>
