@@ -94,14 +94,14 @@ describe('Chilcare Decision Controller', () => {
     expect(controller.submit()).toBe(false);
   });
 
- it('should submit a request if at least on date had been checked', () => {
+ it('should submit a request if at least one date had been checked', () => {
     let requestId = 200;
     allowAccess(requestId);
     commonExpectations();
 
     controller.datesList = [
-      { selected: false, date: new Date(2016, 0, 1) },
-      { selected: true, date: new Date(2017, 0, 1) }
+      { selected: false, date: moment(new Date(2016, 0, 1)) },
+      { selected: true, date: moment(new Date(2017, 0, 1)) }
     ];
     controller.submit();
     expect(childcareDecisionService.saveRequest).toHaveBeenCalled();

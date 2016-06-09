@@ -86,7 +86,20 @@ class ChildcareDecisionController {
       this.saving = false;
       return false;
     }
-    this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
+    let dto = {
+      requester: this.request.RequesterId,
+      site: this.request.LocationId,
+      ministry: this.request.MinistryId,
+      group: this.request.GroupId,
+      startDate: this.request.StartDate,
+      endDate: this.request.EndDate,
+      frequency: this.request.Frequency,
+      dates: this.datesList.map((date) => {
+        return date.date.utc();
+      }),
+      decisionNotes: this.request.decisionNotes
+    };
+    this.saved = this.childcareDecisionService.saveRequest(this.recordId, dto, (data) => {
       this.saving = false;
       this.log('success!', data);
       this._window.close();
@@ -112,7 +125,7 @@ class ChildcareDecisionController {
   }
 
   validDates() {
-    if (this.datesList.length < 1) {
+    if (!this.datesList || this.datesList.length < 1) {
       return false;
     }
 
