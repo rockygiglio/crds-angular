@@ -108,7 +108,7 @@ namespace crds_angular.Services
         {
             var mpRequest = request.ToMPChildcareRequest();
             var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
-
+            _childcareRequestService.CreateChildcareRequestDates(childcareRequestId, mpRequest, token);
             try
             {
                 var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
