@@ -76,7 +76,7 @@ class ChildcareDecisionController {
     this.saving = true;
     this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
       this.saving = false;
-      this.log('success!', data);
+      this.log.debug('success!', data);
       this._window.close();
     }, (err) => {
       this.saving = false;
