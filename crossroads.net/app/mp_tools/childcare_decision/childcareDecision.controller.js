@@ -138,8 +138,10 @@ class ChildcareDecisionController {
       startDate: this.request.StartDate,
       endDate: this.request.EndDate,
       frequency: this.request.Frequency,
-      dates: this.datesList.map((date) => {
-        return date.date.utc();
+      dates: this.datesList.filter((date) => {
+        return date.selected;
+      }).map((date) => {
+        return date.date;
       }),
       decisionNotes: this.request.decisionNotes
     };
