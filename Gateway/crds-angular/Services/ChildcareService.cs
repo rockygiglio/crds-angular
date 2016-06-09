@@ -24,7 +24,7 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactService _contactService;
         private readonly IEventParticipantService _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;    
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
@@ -127,7 +127,8 @@ namespace crds_angular.Services
             try
             {
                 var request = GetChildcareRequestForReview(childcareRequestId, token);
-                var requestedDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var datesFromRequest = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var requestedDates = childcareRequest.DatesList.Select(date => _childcareRequestService.GetChildcareRequestDates(childcareRequestId, date, token)).ToList();
                 if (requestedDates.Count == 0)
                 {
                     throw new ChildcareDatesMissingException(childcareRequestId);
@@ -143,22 +144,22 @@ namespace crds_angular.Services
                     throw new EventMissingException(dateMap);
                 }
 
-                //set the approved column for dates to true
-                var groupid = request.GroupId;
+                //set the approved column for dates to true                
                 foreach (var ccareDates in requestedDates)
                 {                  
                     _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
-                    
-                    _childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
-                }
+                    var eventId = childcareEvents.Where((ev) => ev.Key == ccareDates.ChildcareRequestDateId).Select( (ev) => ev.Value).SingleOrDefault();
+                    var eventGroup = new EventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
+                    var currentGroups = _eventService.GetGroupsForEvent(eventId).Select((g) => g.GroupId).ToList();
+                    if (!currentGroups.Contains(request.GroupId))
+                    {
+                        _eventService.CreateEventGroup(eventGroup, token);
+                    }
 
-                var mpChildcare = childcareRequest.ToMPChildcareRequest();
-                _childcareRequestService.ApproveChildcareRequest(childcareRequestId, mpChildcare);
-                SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
-                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved"));
-
+                    //_childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
+                }                              
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, GetApprovalStatus(datesFromRequest, requestedDates), childcareRequest.ToMPChildcareRequest());
                 SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
-
             }
             catch (EventMissingException ex)
             {
@@ -175,6 +176,15 @@ namespace crds_angular.Services
             }
         }
 
+        private int GetApprovalStatus(List<ChildcareRequestDate> datesFromMP, List<ChildcareRequestDate> datesApproving)
+        {
+            if (datesFromMP.Count > datesApproving.Count)
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionallyApproved");
+            }
+            return _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
+        }
+
         public void RejectChildcareRequest(int childcareRequestId, string token)
         {
             try
@@ -188,7 +198,7 @@ namespace crds_angular.Services
 
                 }
 
-                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"));
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"), new ChildcareRequest());
             }
             catch (Exception ex)
             {
@@ -208,20 +218,7 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
             }
             return null;
-        }
-
-        public List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId, string token)
-        {
-            try
-            {
-                return _childcareRequestService.GetChildcareRequestDatesForReview(childcareRequestId);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(string.Format("GetChildcareRequestDatesForReview failed"), ex);
-            }
-            return null;
-        }
+        }       
         
         private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates,String token)
         {

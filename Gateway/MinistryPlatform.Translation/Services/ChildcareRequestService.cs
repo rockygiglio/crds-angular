@@ -129,59 +129,22 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        //public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequest childcareRequest)
-        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId)
+        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, ChildcareRequest childcareRequest)
         {
             var apiToken = _apiUserService.GetToken();
+            
 
             var requestDict = new Dictionary<string, object>
             {
-                {"Childcare_Request_ID", childcareRequestId },
-                {"Request_Status_ID", _childcareRequestStatusApproved },
-                {"Decision_Notes", childcareRequest.DecisionNotes },
-                {"Requester_ID",record.ToInt("Requester_ID")},
-                {"Congregation_ID", record.ToInt("Congregation_ID")},
-                {"Ministry_ID", record.ToInt("Ministry_ID") },
-                {"Group_ID", record.ToInt("Group_ID") },
-                {"Start_Date", record.ToDate("Start_Date") },
-                {"End_Date", record.ToDate("End_Date") },
-                {"Frequency", record.ToString("Frequency") },
-                {"Childcare_Session", record.ToString("Childcare_Session") },
-                {"Notes", record.ToString("Notes") },
+                {"Childcare_Request_ID", childcareRequestId },                        
                 {"Request_Status_ID", requestStatusId }
             };
+            if (childcareRequest.DecisionNotes != null)
+            {
+                requestDict.Add("Decision_Notes", childcareRequest.DecisionNotes );
+            }
 
            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
-        }
-
-        public void AddGroupToChildcareEvents(int childcareRequestId, int groupId, ChildcareRequestDate childcareDate)
-        {
-            var apiToken = _apiUserService.GetToken();
-            var cdList = new List<ChildcareRequestDate> { childcareDate };
-
-            var groupEvents = _groupService.getAllEventsForGroup(groupId);
-
-            var reqEvents = FindChildcareEvents(childcareRequestId, cdList);
-            foreach (var entry in reqEvents)
-            {
-                var eventExists = false;
-                foreach( Event ev in groupEvents)
-                {
-                    if (ev.EventId == entry.Value)
-                    {
-                        eventExists = true;
-                        break;
-                    }
-                }
-                if (eventExists) continue;
-                var eventGroup = new EventGroup
-                {
-                    DomainId = 1,
-                    EventId = entry.Value,
-                    GroupId = groupId
-                };
-                _eventService.CreateEventGroup(eventGroup, apiToken);
-            }
         }
 
         public void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision)
@@ -195,6 +158,23 @@ namespace MinistryPlatform.Translation.Services
             };
 
             _ministryPlatformService.UpdateRecord(_childcareRequestDatesPageId, requestDateDict, apiToken);
+        }
+
+        public ChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token)
+        {
+            var apiToken = _apiUserService.GetToken();
+            var searchString = String.Format("{0},", childcareRequestId);
+            var mpRecords = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
+            var requestedDate = new ChildcareRequestDate();
+
+            foreach (var mpRecord in from mpRecord in mpRecords let mpDate = mpRecord.ToDate("Childcare_Request_Date") where date.Date == mpDate.Date select mpRecord)
+            {
+                requestedDate.RequestDate = mpRecord.ToDate("Childcare_Request_Date");
+                requestedDate.ChildcareRequestDateId = mpRecord.ToInt("dp_RecordID");
+                requestedDate.ChildcareRequestId = childcareRequestId;
+                requestedDate.Approved = mpRecord.ToBool("Approved");
+            }
+            return requestedDate;
         }
 
         public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates)
