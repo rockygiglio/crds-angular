@@ -6,6 +6,7 @@ BEGIN
 	SET IDENTITY_INSERT [dbo].[Contacts] ON;
 	INSERT INTO [dbo].[Contacts]
            ([Contact_ID]
+		   ,[Company]
            ,[Display_Name]
 		   ,[First_Name]
 		   ,[Last_Name]
@@ -20,6 +21,7 @@ BEGIN
 		   )
      VALUES
            (7672342
+		   ,0
 		   ,N'Undivided'
 		   ,N'Undivided'
 		   ,N'Communications'
