@@ -232,6 +232,10 @@ class RequestChildcareController {
   validateField(fieldName) {
     return this.validation.showErrors(this.childcareRequestForm, fieldName);
   }
+    
+  validateDateSelection() {
+      return !this.datesSelected;
+  }
 
   validTimeRange(form) {
     if (form === undefined) {

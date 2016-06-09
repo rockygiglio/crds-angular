@@ -178,18 +178,28 @@
         <div dynamic-content="$root.MESSAGES.childcareThreeHourMessage.content | html"></div>
       </div>
 
-      <div class="panel panel-default" ng-if="request.showGaps()">
-        <div class="panel-heading"> Please uncheck any days you do not need childcare available for your group.</div>
-        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
-          <div class="checkbox" ng-repeat="date in request.datesList track by date.unix">
-            <label>
-              <input type="checkbox"
-                     checked="checked"
-                     ng-change="request.onDateSelectionChange()"
-                     ng-model="date.selected" > {{date.date.format("L")}}
-            </label>
+      <div class="form-group" ng-class="{'has-error': request.validateDateSelection()}"ng-if="request.showGaps()">
+          <label class="control-label"  for="checkboxes">Specific Dates</label>
+          <div class="panel panel-default" >
+            <div class="panel-heading"> Please uncheck any days you do not need childcare available for your group.</div>
+            <div class="panel-body" style="overflow-y:auto; max-height:200px;" >
+              <div class="checkbox" name="checkboxes" ng-repeat="date in request.datesList track by date.unix">
+                <label>
+                  <input type="checkbox"
+                         name="datecheckbox"
+                         checked="checked"
+                         ng-required="request.validateDateSelection()"
+                         ng-change="request.onDateSelectionChange()"
+                         ng-model="date.selected" > {{date.date.format("L")}}
+                </label>
+              </div>
+              <ng-messages for="request.childcareRequestForm.datecheckbox.$error" ng-show="request.validateDateSelection()" >
+                <span ng-message="required">
+                  <span dynamic-content="$root.MESSAGES.dateNotSelected.content | html"></span>
+                </span>
+              </ng-messages> 
+            </div>
           </div>
-        </div>
       </div>
 
       <div class="form-group" ng-show="request.choosenGroup">
