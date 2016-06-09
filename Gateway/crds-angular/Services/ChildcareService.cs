@@ -148,6 +148,7 @@ namespace crds_angular.Services
                 }
 
                 _childcareRequestService.ApproveChildcareRequest(childcareRequestId);
+                SendChildcareRequestApprovalNotification(childcareRequestId, childcareDates, token);
             }
             catch (EventMissingException ex)
             {
@@ -171,6 +172,49 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
             }
             return null;
+        }
+
+        private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates,String token)
+        {
+            var childcareRequest = _childcareRequestService.GetChildcareRequest(requestId, token);
+            
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
+            var template = _communicationService.GetTemplate(templateId);
+            var datesList = childcareRequestDates.Select(daterec => daterec.RequestDate).ToList();
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Group", childcareRequest.GroupName },
+                {"ChildcareSession", childcareRequest.ChildcareSession},
+                {"Frequency", childcareRequest.Frequency },
+                {"Dates", datesList },
+                {"RequestId", childcareRequest.RequestId },
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+            };
+            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequest.RequesterId, EmailAddress = childcareRequest.RequesterEmail}};
+               
+
+            var communication = new Communication
+            {
+                AuthorUserId = authorUserId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact { ContactId = childcareRequest.ChildcareContactId, EmailAddress = childcareRequest.ChildcareContactEmail},
+                ReplyToContact = new Contact { ContactId = childcareRequest.ChildcareContactId, EmailAddress = childcareRequest.ChildcareContactEmail },
+                ToContacts = toContactsList,
+                MergeData = mergeData
+            };
+
+            try
+            {
+                _communicationService.SendMessage(communication);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Send Childcare request approval notification email failed"), ex);
+            }
+
         }
 
         public void SendChildcareRequestNotification( ChildcareRequestEmail request)
