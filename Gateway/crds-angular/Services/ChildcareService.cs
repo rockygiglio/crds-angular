@@ -158,7 +158,7 @@ namespace crds_angular.Services
 
                 }
                 _childcareRequestService.DecisionChildcareRequest(childcareRequestId, GetApprovalStatus(datesFromRequest, requestedDates), childcareRequest.ToMPChildcareRequest());
-                SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
+                SendChildcareRequestApprovalNotification(childcareRequestId, datesFromRequest, requestedDates, token);
             }
             catch (EventMissingException ex)
             {
@@ -225,15 +225,27 @@ namespace crds_angular.Services
             return null;
         }
 
-        private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates,String token)
+        private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> datesFromRequest, List<ChildcareRequestDate> childcareRequestDates, string token)
         {
             var childcareRequest = _childcareRequestService.GetChildcareRequest(requestId, token);
             var request = GetChildcareRequestForReview(requestId, token);
+            var requestStatus = GetApprovalStatus(datesFromRequest, childcareRequestDates);
+            MessageTemplate template;
+            if (requestStatus == 1)
+            {
+                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
+                template = _communicationService.GetTemplate(templateId);
+            }
+            else
+            {
+                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionalApprovalNotificationTemplate");
+                template = _communicationService.GetTemplate(templateId);
+            }
 
+            var decisionNotes = request.DecisionNotes ?? "N/A";
 
-            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
+           
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
-            var template = _communicationService.GetTemplate(templateId);
             var datesList = childcareRequestDates.Select(dateRec => dateRec.RequestDate).Select(requestDate => BuildParagraph("", requestDate.ToShortDateString())).ToList();
             var styles = Styles();
             var htmlCell = new HtmlElement("td", styles).Append(datesList);
@@ -246,6 +258,7 @@ namespace crds_angular.Services
             {
                 {"Group", childcareRequest.GroupName },
                 {"ChildcareSession", childcareRequest.ChildcareSession},
+                {"DecisionNotes", decisionNotes },
                 {"Frequency", request.Frequency},
                 {"Dates", htmlTable.Build() },
                 {"RequestId", childcareRequest.RequestId },
