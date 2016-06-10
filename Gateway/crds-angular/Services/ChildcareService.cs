@@ -128,7 +128,7 @@ namespace crds_angular.Services
             {
                 var request = GetChildcareRequestForReview(childcareRequestId, token);
                 var datesFromRequest = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
-                var requestedDates = childcareRequest.DatesList.Select(date => _childcareRequestService.GetChildcareRequestDates(childcareRequestId, date, token)).ToList();
+                var requestedDates = childcareRequest.DatesList.Select(date => GetChildcareDateFromList(datesFromRequest, date)).ToList();
                 if (requestedDates.Count == 0)
                 {
                     throw new ChildcareDatesMissingException(childcareRequestId);
@@ -173,6 +173,12 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Approve Childcare failed", ex);
             }
+        }
+
+        private ChildcareRequestDate GetChildcareDateFromList(List<ChildcareRequestDate> allDates, DateTime date)
+        {
+            var requestedDate = new ChildcareRequestDate();
+            return allDates.SingleOrDefault(d => date.Date == d.RequestDate.Date); 
         }
 
         private int GetApprovalStatus(List<ChildcareRequestDate> datesFromMP, List<ChildcareRequestDate> datesApproving)
