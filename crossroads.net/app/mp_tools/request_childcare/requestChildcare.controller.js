@@ -134,8 +134,8 @@ class RequestChildcareController {
   }
 
   showGaps() {
-    if (this.choosenPreferredTime && 
-        ( this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek ) &&
+    if (this.choosenPreferredTime &&
+        (this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek) &&
         this.choosenFrequency &&
         this.startDate &&
         this.endDate) {
@@ -143,10 +143,16 @@ class RequestChildcareController {
       const end = this.endDate.getTime();
       if (start < end || start === end) {
         this.generateDateList();
+        if (this.choosenFrequency === 'Once') {
+          return false;
+        }
+
         return this.datesList.length > 0;
       }
+
       return false;
     }
+
     return false;
   }
 
