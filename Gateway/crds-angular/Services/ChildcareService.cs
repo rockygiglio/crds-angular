@@ -144,9 +144,9 @@ namespace crds_angular.Services
                     throw new EventMissingException(dateMap);
                 }
 
-                //set the approved column for dates to true                
+                //set the approved column for dates to true
                 foreach (var ccareDates in requestedDates)
-                {                  
+                {
                     _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
                     var eventId = childcareEvents.Where((ev) => ev.Key == ccareDates.ChildcareRequestDateId).Select( (ev) => ev.Value).SingleOrDefault();
                     var eventGroup = new EventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
@@ -156,8 +156,7 @@ namespace crds_angular.Services
                         _eventService.CreateEventGroup(eventGroup, token);
                     }
 
-                    //_childcareRequestService.AddGroupToChildcareEvents(ccareDates.ChildcareRequestId, groupid, ccareDates);
-                }                              
+                }
                 _childcareRequestService.DecisionChildcareRequest(childcareRequestId, GetApprovalStatus(datesFromRequest, requestedDates), childcareRequest.ToMPChildcareRequest());
                 SendChildcareRequestApprovalNotification(childcareRequestId, requestedDates, token);
             }
@@ -218,8 +217,8 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
             }
             return null;
-        }       
-        
+        }
+
         private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates,String token)
         {
             var childcareRequest = _childcareRequestService.GetChildcareRequest(requestId, token);
@@ -247,7 +246,7 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
             var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequest.RequesterId, EmailAddress = childcareRequest.RequesterEmail}};
-               
+
 
             var communication = new Communication
             {
@@ -292,7 +291,6 @@ namespace crds_angular.Services
             };
 
             var communication = new Communication
-           
              {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -429,10 +427,6 @@ namespace crds_angular.Services
                 }
             }
         }
-
-        
-
-        
 
         private static MyContact ReplyToContact(Event childEvent)
         {
