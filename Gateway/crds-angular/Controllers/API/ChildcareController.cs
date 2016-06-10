@@ -135,7 +135,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _childcareService.ApproveChildcareRequest(requestId, token, childcareRequest);
+                    _childcareService.ApproveChildcareRequest(requestId, childcareRequest, token);
                     return Ok();
                 }
                 catch (EventMissingException e)
@@ -164,7 +164,7 @@ namespace crds_angular.Controllers.API
 
         [Route("api/childcare/request/reject/{requestId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequest childcareRequest)
+        public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -177,7 +177,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _childcareService.RejectChildcareRequest(requestId, token);
+                    _childcareService.RejectChildcareRequest(requestId, childcareRequest, token);
                     return Ok();
                 }
                 catch (Exception e)

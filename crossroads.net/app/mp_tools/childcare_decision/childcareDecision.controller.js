@@ -70,9 +70,9 @@ class ChildcareDecisionController {
 
   rejectingText() {
     if (this.rejecting) {
-      return 'Rejecting...';
+      return 'Rejecting All...';
     } else {
-      return 'Reject';
+      return 'Reject All';
     }
   }
 

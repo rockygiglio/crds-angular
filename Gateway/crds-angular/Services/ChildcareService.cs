@@ -24,7 +24,7 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactService _contactService;
         private readonly IEventParticipantService _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;    
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
@@ -41,7 +41,9 @@ namespace crds_angular.Services
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService)
+                                IApiUserService apiUserService, 
+                                Interfaces.IEventService crdsEventService, 
+                                IChildcareRequestService childcareRequestService)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -122,7 +124,7 @@ namespace crds_angular.Services
         }
 
         // TODO: Should we merge childcareRequestId into the childcareRequestDto?
-        public void ApproveChildcareRequest(int childcareRequestId, string token, ChildcareRequestDto childcareRequest)
+        public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token)
         {
             try
             {
@@ -155,10 +157,12 @@ namespace crds_angular.Services
                     {
                         _eventService.CreateEventGroup(eventGroup, token);
                     }
-
                 }
-                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, GetApprovalStatus(datesFromRequest, requestedDates), childcareRequest.ToMPChildcareRequest());
-                SendChildcareRequestApprovalNotification(childcareRequestId, datesFromRequest, requestedDates, token);
+
+                var requestStatusId = GetApprovalStatus(datesFromRequest, requestedDates);
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, requestStatusId, childcareRequest.ToMPChildcareRequest());
+                var templateId = GetApprovalEmailTemplate(requestStatusId);
+                SendChildcareRequestDecisionNotification(childcareRequestId, requestedDates, childcareRequest, templateId, token);
             }
             catch (EventMissingException ex)
             {
@@ -172,6 +176,18 @@ namespace crds_angular.Services
             {
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Approve Childcare failed", ex);
+            }
+        }
+
+        private int GetApprovalEmailTemplate(int requestStatusId)
+        {
+            if (requestStatusId == 1)
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
+            }
+            else
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionalApprovalNotificationTemplate");
             }
         }
 
@@ -190,7 +206,7 @@ namespace crds_angular.Services
             return _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
         }
 
-        public void RejectChildcareRequest(int childcareRequestId, string token)
+        public void RejectChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token)
         {
             try
             {
@@ -198,12 +214,12 @@ namespace crds_angular.Services
                 var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
                 foreach (var ccareDates in childcareDates)
                 {
-
                     _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, false);
-
                 }
 
-                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"), new ChildcareRequest());
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"), childcareRequest.ToMPChildcareRequest());
+                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestRejectionNotificationTemplate");
+                SendChildcareRequestDecisionNotification(childcareRequestId, childcareDates, childcareRequest, templateId, token);
             }
             catch (Exception ex)
             {
@@ -225,24 +241,12 @@ namespace crds_angular.Services
             return null;
         }
 
-        private void SendChildcareRequestApprovalNotification(int requestId, List<ChildcareRequestDate> datesFromRequest, List<ChildcareRequestDate> childcareRequestDates, string token)
+        private void SendChildcareRequestDecisionNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
         {
-            var childcareRequest = _childcareRequestService.GetChildcareRequest(requestId, token);
-            var request = GetChildcareRequestForReview(requestId, token);
-            var requestStatus = GetApprovalStatus(datesFromRequest, childcareRequestDates);
-            MessageTemplate template;
-            if (requestStatus == 1)
-            {
-                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
-                template = _communicationService.GetTemplate(templateId);
-            }
-            else
-            {
-                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionalApprovalNotificationTemplate");
-                template = _communicationService.GetTemplate(templateId);
-            }
+            var childcareRequestEmail = _childcareRequestService.GetChildcareRequest(requestId, token);;
+            var template = _communicationService.GetTemplate(templateId);
 
-            var decisionNotes = request.DecisionNotes ?? "N/A";
+            var decisionNotes = childcareRequest.DecisionNotes ?? "N/A";
 
            
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
@@ -253,19 +257,18 @@ namespace crds_angular.Services
             var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
             var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
 
-
             var mergeData = new Dictionary<string, object>
             {
-                {"Group", childcareRequest.GroupName },
-                {"ChildcareSession", childcareRequest.ChildcareSession},
+                {"Group", childcareRequestEmail.GroupName},
+                {"ChildcareSession", childcareRequestEmail.ChildcareSession},
                 {"DecisionNotes", decisionNotes },
-                {"Frequency", request.Frequency},
+                {"Frequency", childcareRequest.Frequency},
                 {"Dates", htmlTable.Build() },
-                {"RequestId", childcareRequest.RequestId },
+                {"RequestId", childcareRequestEmail.RequestId },
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
-                {"Congregation", childcareRequest.CongregationName }
+                {"Congregation", childcareRequestEmail.CongregationName }
             };
-            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequest.RequesterId, EmailAddress = childcareRequest.RequesterEmail}};
+            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
 
 
             var communication = new Communication
@@ -273,8 +276,8 @@ namespace crds_angular.Services
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = childcareRequest.ChildcareContactId, EmailAddress = childcareRequest.ChildcareContactEmail},
-                ReplyToContact = new Contact { ContactId = childcareRequest.ChildcareContactId, EmailAddress = childcareRequest.ChildcareContactEmail },
+                FromContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
+                ReplyToContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
                 ToContacts = toContactsList,
                 MergeData = mergeData
             };

@@ -13,8 +13,8 @@ namespace crds_angular.Services.Interfaces
         List<FamilyMember> MyChildren(string token);
         void SaveRsvp(ChildcareRsvpDto saveRsvp, string token);
         void CreateChildcareRequest(ChildcareRequestDto request, String token);
-        void ApproveChildcareRequest(int childcareRequestId, string token, ChildcareRequestDto childcareRequest);
+        void ApproveChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token);
         ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token);
-        void RejectChildcareRequest(int requestId, string token);
+        void RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest, string token);
     }
 }
