@@ -22,7 +22,7 @@ INSERT INTO [dbo].[dp_Communications]
 		    5600,
 			5,
 			'Your Childcare Request has been approved',
-			'<span style="font-family: ''Helvetica Neue'', Helvetica, Arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);">Your request for Childcare for [Group] at [Congreration] on [ChildcareSession], [Frequency] has been approved for the following dates [Dates]. Please click on the link below to review.</span><div><a href="https://[Base_Url]/ministryplatform#/36/[RequestId]" target="_self">Approved-Childcare-Request</a><font face="Helvetica Neue, Helvetica, Arial, sans-serif"><br /></font><div><br /></div></div>',
+			'<span style="font-family: ''Helvetica Neue'', Helvetica, Arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);">Your request for Childcare for [Group] at [Congregation] on [ChildcareSession], [Frequency] has been approved for the following dates [Dates]. Please click on the link below to review.</span><div><a href="https://[Base_Url]/ministryplatform#/36/[RequestId]" target="_self">Approved-Childcare-Request</a><font face="Helvetica Neue, Helvetica, Arial, sans-serif"><br /></font><div><br /></div></div>',
 			1,
 			Getdate(),
 			1,
