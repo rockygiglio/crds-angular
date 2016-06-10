@@ -40,6 +40,29 @@
                readonly
                value="{{::decision.request.PreferredTime}}" />
       </div>
+
+      <div class="panel panel-default" ng-show="decision.showDates()">
+        <div class="panel-heading"> Please select the days you want to approve.</div>
+        <div class="panel-body" style="overflow-y:auto; max-height:200px;">
+          <div class="checkbox" ng-repeat="date in decision.datesList">
+            <label>
+              <input type="checkbox" 
+                     name="datebox"
+                     ng-model="date.selected" >
+              {{date.date.format('L')}}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Decision Notes: </label>
+        <textarea
+               class="form-control"
+               ng-model="decision.request.decisionNotes" 
+               placeholder="Any special notes to relay to the requestor" >
+        </textarea>
+      </div>
       <div class="form-group">
         <loading-button
           input-classes="btn btn-primary"

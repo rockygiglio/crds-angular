@@ -7,6 +7,7 @@ class ChildcareDecisionService {
     this.approve = $resource(__API_ENDPOINT__ + 'api/childcare/request/approve/:requestId');
     this.reject = $resource(__API_ENDPOINT__ + 'api/childcare/request/reject/:requestId');
     this.requestData = $resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
+    this.requestDates = $resource(__API_ENDPOINT__ + 'api/childcare/getrequestDates/:requestId');
   }
 
   getChildcareRequest(requestId, success, error) {

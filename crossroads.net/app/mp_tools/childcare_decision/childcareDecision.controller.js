@@ -21,7 +21,7 @@ class ChildcareDecisionController {
 
     if (this.allowAccess) {
       this.recordId = Number(MPTools.getParams().recordId);
-      if (this.recordId === -1) {
+      if (!this.recordId || this.recordId === -1 ) {
         this.viewReady = true;
         this.error = true;
         this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
@@ -29,6 +29,9 @@ class ChildcareDecisionController {
         this.request = this.childcareDecisionService.getChildcareRequest(this.recordId, (d) => {
           this.startDate = moment(d.StartDate).format('L');
           this.endDate = moment(d.EndDate).format('L');
+          this.datesList = d.DatesList.map( (date) => {
+            return { selected: false, date: moment(date) };
+          });
         });
         this.request.$promise.then(() => {
           this.viewReady = true;
@@ -112,13 +115,37 @@ class ChildcareDecisionController {
     return content;
   }
 
+  showDates() {
+    return this.datesList.length > 0;
+  }
+
   showError() {
     return this.error === true ? true : false;
   }
 
   submit() {
     this.saving = true;
-    this.saved = this.childcareDecisionService.saveRequest(this.recordId, this.request, (data) => {
+    if (!this.validDates()) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.noDatesChosen);
+      this.saving = false;
+      return false;
+    }
+    let dto = {
+      requester: this.request.RequesterId,
+      site: this.request.LocationId,
+      ministry: this.request.MinistryId,
+      group: this.request.GroupId,
+      startDate: this.request.StartDate,
+      endDate: this.request.EndDate,
+      frequency: this.request.Frequency,
+      dates: this.datesList.filter((date) => {
+        return date.selected;
+      }).map((date) => {
+        return date.date;
+      }),
+      decisionNotes: this.request.decisionNotes
+    };
+    this.saved = this.childcareDecisionService.saveRequest(this.recordId, dto, (data) => {
       this.saving = false;
       this.log.debug('success!', data);
       this._window.close();
@@ -140,6 +167,17 @@ class ChildcareDecisionController {
 
       this.log.error('error!', err);
     });
+  }
+
+  validDates() {
+    if (!this.datesList || this.datesList.length < 1) {
+      return false;
+    }
+
+    let found = this.datesList.filter((d) => {
+      return d.selected;
+    });
+    return found.length > 0;
   }
 
 }

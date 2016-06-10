@@ -54,13 +54,58 @@ describe('Chilcare Decision Controller', () => {
     });
   }));
 
-  it('should submit a request', () => {
+  it('should indicate if at least one date is selected', () => {
     let requestId = 200;
     allowAccess(requestId);
     commonExpectations();
+
+    controller.datesList = [ 
+      { selected: false, date: new Date(2016, 0, 1) },
+      { selected: true, date: new Date(2017, 0, 1) }
+    ];
+
+    expect(controller.validDates()).toBe(true);
+  });
+
+  it('should return false if not dates are selected', () => {
+    let requestId = 200;
+    allowAccess(requestId);
+    commonExpectations();
+
+    controller.datesList = [ 
+      { selected: false, date: new Date(2016, 0, 1) },
+      { selected: false, date: new Date(2017, 0, 1) }
+    ];
+    expect(controller.validDates()).toBe(false);
+  });
+
+  it('should return false if there are no dates', () => {
+    let requestId = 200;
+    allowAccess(requestId);
+    commonExpectations();
+
+    expect(controller.validDates()).toBe(false);
+  });
+
+  it('should not submit a request unless at least one date is checked', () => {
+    let requestId = 200;
+    allowAccess(requestId);
+    commonExpectations();
+    expect(controller.submit()).toBe(false);
+  });
+
+ it('should submit a request if at least one date had been checked', () => {
+    let requestId = 200;
+    allowAccess(requestId);
+    commonExpectations();
+
+    controller.datesList = [
+      { selected: false, date: moment(new Date(2016, 0, 1)) },
+      { selected: true, date: moment(new Date(2017, 0, 1)) }
+    ];
     controller.submit();
     expect(childcareDecisionService.saveRequest).toHaveBeenCalled();
-  });
+ });
 
   it('should format the missing event content correctly', () => {
     let requestId = 200;
