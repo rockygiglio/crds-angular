@@ -19,7 +19,7 @@ BEGIN
 		 VALUES
 			   (37
 			   ,'Undivided:  Request to Facilitate Received'
-			   ,4439146
+			   ,1344416
 			   ,1
 			   ,'This process will send an email to a user who registers to facilitate an Undivided session'
 			   ,316
@@ -93,7 +93,7 @@ BEGIN
 		 VALUES
 			   (38
 			   ,'Undivided:  Request to Participate Received'
-			   ,4439146
+			   ,1344416
 			   ,1
 			   ,'This process will send an email to a user who registers as a participant for an Undivided session'
 			   ,316
