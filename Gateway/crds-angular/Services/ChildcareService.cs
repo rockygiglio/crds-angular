@@ -262,7 +262,8 @@ namespace crds_angular.Services
                 {"Frequency", request.Frequency},
                 {"Dates", htmlTable.Build() },
                 {"RequestId", childcareRequest.RequestId },
-                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
+                {"Congregation", childcareRequest.CongregationName }
             };
             var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequest.RequesterId, EmailAddress = childcareRequest.RequesterEmail}};
 
