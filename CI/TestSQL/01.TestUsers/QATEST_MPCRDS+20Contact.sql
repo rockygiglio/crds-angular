@@ -2,7 +2,7 @@
 USE [MinistryPlatform]
 GO
 
-if((select url from dp_bookmarks where name = 'crossroads.net') = "https://demo.crossroads.net")
+if((select url from dp_bookmarks where name = 'crossroads.net') like "%demo%")
 {
  DECLARE @processorID as varchar(255)
  SET @processorID = 'cus_6YjXxCzFsV300g';
@@ -42,7 +42,7 @@ UPDATE [dbo].Contacts set Donor_Record = @donor_id where contact_id = @contactID
 GO
 
 --Registered Account - Mpcrds+20@gmail.com contact record
-if((select url from dp_bookmarks where name = 'crossroads.net') = "https://demo.crossroads.net")
+if((select url from dp_bookmarks where name = 'crossroads.net') like "%demo%")
 {
  DECLARE @processorID as varchar(255)
  SET @processorID = 'cus_6Woe7iX2PlkGeb';
