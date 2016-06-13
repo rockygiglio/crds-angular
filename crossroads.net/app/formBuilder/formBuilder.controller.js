@@ -189,7 +189,7 @@
         promise = promise.then(saveGroup);
 
         promise.then(function() {
-            $rootScope.$emit('notify', $rootScope.MESSAGES.successfullRegistration);
+            $rootScope.$emit('notify', $rootScope.MESSAGES.successfulSubmission);
             vm.saving = false;
             vm.successfulSave = true;
             $anchorScroll();
