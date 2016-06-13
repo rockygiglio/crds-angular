@@ -40,6 +40,7 @@ class RequestChildcareController {
 
   generateDateList() {
     if (this.runDateGenerator) {
+      this.datesSelected = true;
       let dayOfWeek = this.choosenPreferredTime.Meeting_Day;
       if (this.choosenPreferredTime.dp_RecordID === -1) {
         dayOfWeek = this.dayOfWeek;
