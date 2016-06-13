@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -26,7 +29,7 @@ namespace crds_angular.Services
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;        
+        private readonly IApiUserService _apiUserService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -38,7 +41,9 @@ namespace crds_angular.Services
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, Interfaces.IEventService crdsEventService, IChildcareRequestService childcareRequestService)
+                                IApiUserService apiUserService, 
+                                Interfaces.IEventService crdsEventService, 
+                                IChildcareRequestService childcareRequestService)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -105,7 +110,7 @@ namespace crds_angular.Services
         {
             var mpRequest = request.ToMPChildcareRequest();
             var childcareRequestId = _childcareRequestService.CreateChildcareRequest(mpRequest);
-
+            _childcareRequestService.CreateChildcareRequestDates(childcareRequestId, mpRequest, token);
             try
             {
                 var childcareRequest = _childcareRequestService.GetChildcareRequest(childcareRequestId, token);
@@ -114,6 +119,176 @@ namespace crds_angular.Services
            catch (Exception ex)
             {
                 _logger.Error(string.Format("Save Request failed"), ex);
+            }
+
+        }
+
+        // TODO: Should we merge childcareRequestId into the childcareRequestDto?
+        public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token)
+        {
+            try
+            {
+                var request = GetChildcareRequestForReview(childcareRequestId, token);
+                var datesFromRequest = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                var requestedDates = childcareRequest.DatesList.Select(date => GetChildcareDateFromList(datesFromRequest, date)).ToList();
+                if (requestedDates.Count == 0)
+                {
+                    throw new ChildcareDatesMissingException(childcareRequestId);
+                }
+
+                var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
+                var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
+                if (missingDates.Count > 0)
+                {
+                    var dateList = missingDates.Aggregate("", (current, date) => current + ", " + date.RequestDate.ToShortDateString());
+                    _logger.Debug("Missing events for dates: ${dateList}");
+                    var dateMap = missingDates.Select(c => c.RequestDate).ToList();
+                    throw new EventMissingException(dateMap);
+                }
+
+                //set the approved column for dates to true
+                foreach (var ccareDates in requestedDates)
+                {
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
+                    var eventId = childcareEvents.Where((ev) => ev.Key == ccareDates.ChildcareRequestDateId).Select( (ev) => ev.Value).SingleOrDefault();
+                    var eventGroup = new EventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
+                    var currentGroups = _eventService.GetGroupsForEvent(eventId).Select((g) => g.GroupId).ToList();
+                    if (!currentGroups.Contains(request.GroupId))
+                    {
+                        _eventService.CreateEventGroup(eventGroup, token);
+                    }
+                }
+
+                var requestStatusId = GetApprovalStatus(datesFromRequest, requestedDates);
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, requestStatusId, childcareRequest.ToMPChildcareRequest());
+                var templateId = GetApprovalEmailTemplate(requestStatusId);
+                SendChildcareRequestDecisionNotification(childcareRequestId, requestedDates, childcareRequest, templateId, token);
+            }
+            catch (EventMissingException ex)
+            {
+                throw;
+            }
+            catch (ChildcareDatesMissingException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Approve Childcare failed", ex);
+            }
+        }
+
+        private int GetApprovalEmailTemplate(int requestStatusId)
+        {
+            if (requestStatusId == 1)
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestApprovalNotificationTemplate");
+            }
+            else
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionalApprovalNotificationTemplate");
+            }
+        }
+
+        private ChildcareRequestDate GetChildcareDateFromList(List<ChildcareRequestDate> allDates, DateTime date)
+        {
+            var requestedDate = new ChildcareRequestDate();
+            return allDates.SingleOrDefault(d => date.Date == d.RequestDate.Date); 
+        }
+
+        private int GetApprovalStatus(List<ChildcareRequestDate> datesFromMP, List<ChildcareRequestDate> datesApproving)
+        {
+            if (datesFromMP.Count > datesApproving.Count)
+            {
+                return _configurationWrapper.GetConfigIntValue("ChildcareRequestConditionallyApproved");
+            }
+            return _configurationWrapper.GetConfigIntValue("ChildcareRequestApproved");
+        }
+
+        public void RejectChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token)
+        {
+            try
+            {
+                //set the approved column for dates to false
+                var childcareDates = _childcareRequestService.GetChildcareRequestDates(childcareRequestId);
+                foreach (var ccareDates in childcareDates)
+                {
+                    _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, false);
+                }
+
+                _childcareRequestService.DecisionChildcareRequest(childcareRequestId, _configurationWrapper.GetConfigIntValue("ChildcareRequestRejected"), childcareRequest.ToMPChildcareRequest());
+                var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestRejectionNotificationTemplate");
+                SendChildcareRequestDecisionNotification(childcareRequestId, childcareDates, childcareRequest, templateId, token);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Update Request failed"), ex);
+                throw new Exception("Reject Childcare failed", ex);
+            }
+        }
+
+        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
+        {
+            try
+            {
+                return _childcareRequestService.GetChildcareRequestForReview(childcareRequestId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("GetChildcareRequestForReview failed"), ex);
+            }
+            return null;
+        }
+
+        private void SendChildcareRequestDecisionNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
+        {
+            var childcareRequestEmail = _childcareRequestService.GetChildcareRequest(requestId, token);;
+            var template = _communicationService.GetTemplate(templateId);
+
+            var decisionNotes = childcareRequest.DecisionNotes ?? "N/A";
+
+           
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
+            var datesList = childcareRequestDates.Select(dateRec => dateRec.RequestDate).Select(requestDate => BuildParagraph("", requestDate.ToShortDateString())).ToList();
+            var styles = Styles();
+            var htmlCell = new HtmlElement("td", styles).Append(datesList);
+            var htmlRow = new HtmlElement("tr", styles).Append(htmlCell);
+            var htmlTBody = new HtmlElement("tbody", styles).Append(htmlRow);
+            var htmlTable = new HtmlElement("table", styles).Append(htmlTBody);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Group", childcareRequestEmail.GroupName},
+                {"ChildcareSession", childcareRequestEmail.ChildcareSession},
+                {"DecisionNotes", decisionNotes },
+                {"Frequency", childcareRequest.Frequency},
+                {"Dates", htmlTable.Build() },
+                {"RequestId", childcareRequestEmail.RequestId },
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
+                {"Congregation", childcareRequestEmail.CongregationName }
+            };
+            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
+
+
+            var communication = new Communication
+            {
+                AuthorUserId = authorUserId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
+                ReplyToContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
+                ToContacts = toContactsList,
+                MergeData = mergeData
+            };
+
+            try
+            {
+                _communicationService.SendMessage(communication);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Send Childcare request approval notification email failed"), ex);
             }
 
         }
@@ -139,7 +314,6 @@ namespace crds_angular.Services
             };
 
             var communication = new Communication
-           
              {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -277,10 +451,6 @@ namespace crds_angular.Services
             }
         }
 
-        
-
-        
-
         private static MyContact ReplyToContact(Event childEvent)
         {
             var contact = childEvent.PrimaryContact;
@@ -334,6 +504,23 @@ namespace crds_angular.Services
             };
             return mergeData;
         }
+        private static HtmlElement BuildParagraph(string label, string value)
+        {
+            var els = new List<HtmlElement>()
+            {
+                new HtmlElement("strong", label),
+                new HtmlElement("span", value)
+            }
+                ;
+            return new HtmlElement("p", els);
+        }
+        private Dictionary<string, string> Styles()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"style", "border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; padding: 0; border:none; border-color:#ffffff;font-size: small; font-weight: normal;" }
+            };
+        }
 
-        } 
+    } 
 }

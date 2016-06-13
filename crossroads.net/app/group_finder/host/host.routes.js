@@ -16,16 +16,18 @@
           AuthenticatedPerson: ['Person', function(Person) {
             return Person.getProfile();
           }],
+
           QuestionDefinitions: function(GroupQuestionService) {
             return GroupQuestionService.getQuestions();
           },
+
           LookupDefinitions: function(GroupQuestionService) {
             return GroupQuestionService;
           }
         },
         data: {
           isProtected: true,
-          meta: { title: SERIES.title,description: '' }
+          meta: { title: SERIES.title, description: '' }
         }
       })
       .state('group_finder.host.questions', {
@@ -33,21 +35,21 @@
         url: '/questions',
         templateUrl: 'host/host_questions.html',
         resolve: {},
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       .state('group_finder.host.review', {
         controller: 'HostReviewCtrl as host',
         url: '/review',
         templateUrl: 'host/host_review.html',
         resolve: {},
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       .state('group_finder.host.confirm', {
         controller: 'HostConfirmCtrl as host',
         url: '/success',
         templateUrl: 'host/host_confirm.html',
         resolve: {},
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       ;
 

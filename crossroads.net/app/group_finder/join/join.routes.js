@@ -16,9 +16,11 @@
           AuthenticatedPerson: ['Person', function(Person) {
             return Person.getProfile();
           }],
+
           QuestionDefinitions: function(ParticipantQuestionService) {
             return ParticipantQuestionService.getQuestions();
           },
+
           LookupDefinitions: function(ParticipantQuestionService) {
             return ParticipantQuestionService;
           }
@@ -32,20 +34,20 @@
         controller: 'JoinQuestionsCtrl as join',
         url: '/questions',
         templateUrl: 'join/join_questions.html',
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       .state('group_finder.join.review', {
         controller: 'JoinReviewCtrl as join',
         url: '/review',
         templateUrl: 'join/join_review.html',
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       .state('group_finder.join.results', {
         controller: 'JoinResultsCtrl as result',
         url: '/results',
         templateUrl: 'join/join_results.html',
         resolve: {},
-        data: {isProtected: true, meta: {title: SERIES.title,description: ''}}
+        data: {isProtected: true, meta: {title: SERIES.title, description: ''}}
       })
       .state('group_finder.join.upsell', {
         controller: 'JoinUpsellCtrl as upsell',

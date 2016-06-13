@@ -1,6 +1,6 @@
 (function(){
   'use strict()';
-  require('angular-ui-select');
+  require('ui-select');
 
   var MODULE = 'crossroads.mptools';
 
@@ -56,5 +56,8 @@
 
   // Request Childcare Tool
   require('./request_childcare');
+
+  // Childcare Decision Tool
+  require('./childcare_decision');
 
 })();

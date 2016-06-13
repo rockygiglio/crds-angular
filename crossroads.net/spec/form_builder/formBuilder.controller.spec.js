@@ -92,6 +92,10 @@ describe('FormBuilder', function() {
         hasGroupParticipant: function() {
           return true;
         },
+
+        getGroupRoleId: function() {
+          return 22;
+        }
       };
 
       $provide.value('Session', Session, 'ContentPageService', ContentPageService, 'FormBuilderFieldsService', FormBuilderFieldsService);
@@ -112,6 +116,15 @@ describe('FormBuilder', function() {
 
     function getController(failedApiCall) {
       group = {
+        Type: {
+          query: function() {
+            var deferred = $q.defer();
+            deferred.resolve({});
+
+            var promise = deferred.promise;
+            return {$promise: promise};
+          }
+        },
         Participant: {
           save: function() {
             var deferred = $q.defer();
@@ -135,6 +148,8 @@ describe('FormBuilder', function() {
         ContentPageService: ContentPageService,
         FormBuilderFieldsService: FormBuilderFieldsService,
       });
+
+      controller.dataForm = {$valid: true};
 
       return controller;
     }
@@ -177,8 +192,8 @@ describe('FormBuilder', function() {
         return true;
       };
 
-      // Force exception by not unsetting responses object
-      delete controller.data;
+      // Force exception by unsetting query method
+      delete group.Type.query;
 
       expect(controller.save).toThrow();
       $rootScope.$apply();
