@@ -5,8 +5,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IProgramService
     {
-        List<Program> GetOnlineGivingPrograms(int? programType);
-        Program GetProgramById(int programId);
-        List<Program> GetAllPrograms();
+        List<MpProgram> GetOnlineGivingPrograms(int? programType);
+        MpProgram GetProgramById(int programId);
+        List<MpProgram> GetAllPrograms();
     }
 }

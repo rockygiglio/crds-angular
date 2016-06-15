@@ -511,7 +511,7 @@ namespace MinistryPlatform.Translation.Services
                Details = new ContactDetails
                {
                    DisplayName = donorAccount[0]["Display_Name"].ToString(),
-                   Address = new PostalAddress
+                   Address = new MpPostalAddress
                    {
                        Line1 = myContact.Address_Line_1,
                        Line2 = myContact.Address_Line_2,
@@ -935,7 +935,7 @@ namespace MinistryPlatform.Translation.Services
            return createDonation;
         }
 
-        public List<RecurringGift> GetRecurringGiftsForAuthenticatedUser(string userToken)
+        public List<MpRecurringGift> GetRecurringGiftsForAuthenticatedUser(string userToken)
         {
             var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationRecurringGifts, userToken);
             return records.Select(MapRecordToRecurringGift).ToList();
@@ -971,9 +971,9 @@ namespace MinistryPlatform.Translation.Services
         }
         
         // ReSharper disable once FunctionComplexityOverflow
-        private RecurringGift MapRecordToRecurringGift(Dictionary<string, object> record)
+        private MpRecurringGift MapRecordToRecurringGift(Dictionary<string, object> record)
         {
-            return new RecurringGift
+            return new MpRecurringGift
             {
                 RecurringGiftId = record["Recurring_Gift_ID"] as int? ?? 0,
                 DonorID = record["Donor_ID"] as int? ?? 0,

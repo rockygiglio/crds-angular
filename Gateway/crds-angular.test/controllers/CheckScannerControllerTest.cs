@@ -198,7 +198,7 @@ namespace crds_angular.test.controllers
             var donorDetail = new EZScanDonorDetails
             {
                 DisplayName = "Peyton Manning",
-                Address = new PostalAddress()
+                Address = new MpPostalAddress()
                 {
                     Line1 = "1 Superbowl Way",
                     Line2 = "Suite 1000",

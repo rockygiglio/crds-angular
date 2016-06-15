@@ -575,9 +575,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetRecurringGiftsForAuthenticatedUser()
         {
-            var records = new List<RecurringGift>
+            var records = new List<MpRecurringGift>
             {
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 123,
                     DonorID = 123123,
@@ -597,7 +597,7 @@ namespace crds_angular.test.Services
                     ProcessorId = "cus_123",
                     ProcessorAccountId = "card_123"
                 },
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 124,
                     DonorID = 123123,
@@ -617,7 +617,7 @@ namespace crds_angular.test.Services
                     ProcessorId = "cus_456",
                     ProcessorAccountId = "ba_456"
                 },
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 125,
                     DonorID = 123123,

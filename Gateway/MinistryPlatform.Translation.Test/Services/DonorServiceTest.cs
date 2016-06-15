@@ -217,7 +217,7 @@ namespace MinistryPlatform.Translation.Test.Services
                
             };
 
-            var programServiceResponse = new Program
+            var programServiceResponse = new MpProgram
             {
                 CommunicationTemplateId = 1234,
                 ProgramId = 3,
@@ -342,7 +342,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Item_Number", itemNumber}
             };
 
-            var programServiceResponse = new Program
+            var programServiceResponse = new MpProgram
             {
                 CommunicationTemplateId = 1234,
                 ProgramId = 3,
@@ -492,7 +492,7 @@ namespace MinistryPlatform.Translation.Test.Services
                
             };
 
-            var programServiceResponse = new Program
+            var programServiceResponse = new MpProgram
             {
                 CommunicationTemplateId = 1234,
                 ProgramId = 3,
@@ -886,7 +886,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string accountType = "bank";
 
 
-            var program = new Program
+            var program = new MpProgram
             {
                 CommunicationTemplateId = 9000,
                 Name = "program name"
@@ -918,7 +918,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int templateId = 987;
             _configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGiveConfirmationEmailTemplate")).Returns(templateId);
 
-            var program = new Program
+            var program = new MpProgram
             {
                 CommunicationTemplateId = null,
                 Name = "program name"
@@ -950,7 +950,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int templateId = 987;
             _configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGiveConfirmationEmailTemplate")).Returns(templateId);
 
-            var program = new Program
+            var program = new MpProgram
             {
                 CommunicationTemplateId = 0,
                 Name = "program name"
@@ -1083,7 +1083,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Details = new ContactDetails
                 {
                     DisplayName = displayName,
-                    Address = new PostalAddress()
+                    Address = new MpPostalAddress()
                     {
                         Line1 = addr1,
                         Line2 = addr2,

@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public IEnumerable<Relationship> GetMyCurrentRelationships(int contactId)
+        public IEnumerable<MpRelationship> GetMyCurrentRelationships(int contactId)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace MinistryPlatform.Translation.Services
                                                                                  contactId,
                                                                                  ApiLogin());
 
-                return viewRecords.Select(record => new Relationship
+                return viewRecords.Select(record => new MpRelationship
                 {
                     RelationshipID = record.ToInt("Relationship_ID"),
                     RelatedContactID = record.ToInt("Related_Contact_ID"),
@@ -78,7 +78,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public int AddRelationship(Relationship relationship, int toContact)
+        public int AddRelationship(MpRelationship relationship, int toContact)
         {
             try
             {

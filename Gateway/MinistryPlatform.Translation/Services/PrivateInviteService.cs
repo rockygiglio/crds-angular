@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Services
             _tripInvitationsPageId = _configurationWrapper.GetConfigIntValue("TripInvitations");
         }
 
-        public PrivateInvite Create(int pledgeCampaignId, string emailAddress, string recipientName, string token)
+        public MpPrivateInvite Create(int pledgeCampaignId, string emailAddress, string recipientName, string token)
         {
             var values = new Dictionary<string, object>
             {
@@ -37,7 +37,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 var privateInviteId = _ministryPlatformService.CreateRecord(_tripInvitationsPageId, values, token, true);
                 var record = _ministryPlatformService.GetRecordDict(_tripInvitationsPageId, privateInviteId, token, false);
-                var invite = new PrivateInvite();
+                var invite = new MpPrivateInvite();
                 invite.EmailAddress = record.ToString("Email_Address");
                 invite.InvitationGuid = record.ToString("Invitation_GUID");
                 invite.InvitationUsed = record.ToBool("Invitation_Used");

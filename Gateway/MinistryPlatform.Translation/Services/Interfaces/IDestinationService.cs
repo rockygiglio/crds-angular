@@ -5,6 +5,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IDestinationService
     {
-        List<TripDocuments> DocumentsForDestination(int destinationId);
+        List<MpTripDocuments> DocumentsForDestination(int destinationId);
     }
 }

@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public bool AddDocumentsToTripParticipant(List<TripDocuments> documents, int eventParticipantId)
+        public bool AddDocumentsToTripParticipant(List<MpTripDocuments> documents, int eventParticipantId)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public List<TripParticipant> TripParticipants(string search)
+        public List<MpTripParticipant> TripParticipants(string search)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace MinistryPlatform.Translation.Services
                             (_ministryPlatformService.GetPageViewRecords("GoTripParticipants",
                                                                          apiToken,
                                                                          search)));
-                return records.Select(viewRecord => new TripParticipant
+                return records.Select(viewRecord => new MpTripParticipant
                 {
                     EventParticipantId = viewRecord.ToInt("Event_Participant_ID"),
                     EventId = viewRecord.ToInt("Event_ID"),

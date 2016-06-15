@@ -55,18 +55,18 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public List<TripFormResponse> GetTripFormResponsesByRecordId(int recordId)
+        public List<MpTripFormResponse> GetTripFormResponsesByRecordId(int recordId)
         {
             var command = CreateTripFormResponsesSqlCommandWithRecordId(recordId);
             return GetTripFormResponses(command);
         }
 
-        public List<TripFormResponse> GetTripFormResponsesBySelectionId(int selectionId)
+        public List<MpTripFormResponse> GetTripFormResponsesBySelectionId(int selectionId)
         {
             var command = CreateTripFormResponsesSqlCommandWithSelectionId(selectionId);
             return GetTripFormResponses(command);
         }
-        private List<TripFormResponse> GetTripFormResponses(IDbCommand command)
+        private List<MpTripFormResponse> GetTripFormResponses(IDbCommand command)
         {
             var connection = _dbConnection;
             try
@@ -75,10 +75,10 @@ namespace MinistryPlatform.Translation.Services
 
                 command.Connection = connection;
                 var reader = command.ExecuteReader();
-                var responses = new List<TripFormResponse>();
+                var responses = new List<MpTripFormResponse>();
                 while (reader.Read())
                 {
-                    var response = new TripFormResponse();
+                    var response = new MpTripFormResponse();
                     response.ContactId = reader.GetInt32(reader.GetOrdinal("Contact_ID"));
                     var donorId = SafeInt32(reader, "Donor_ID");
                     response.DonorId = donorId;

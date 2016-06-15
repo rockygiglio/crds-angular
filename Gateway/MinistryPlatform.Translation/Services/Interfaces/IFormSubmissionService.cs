@@ -8,8 +8,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         List<FormField> GetFieldsForForm(int formId);
         int GetFormFieldId(int crossroadsId);
-        List<TripFormResponse> GetTripFormResponsesByRecordId(int recordId);
-        List<TripFormResponse> GetTripFormResponsesBySelectionId(int selectionId);
+        List<MpTripFormResponse> GetTripFormResponsesByRecordId(int recordId);
+        List<MpTripFormResponse> GetTripFormResponsesBySelectionId(int selectionId);
         int SubmitFormResponse(FormResponse form);
 
         DateTime? GetTripFormResponseByContactId(int p, int pledgeId);

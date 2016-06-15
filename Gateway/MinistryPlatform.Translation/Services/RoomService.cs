@@ -118,13 +118,13 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, token);
         }
 
-        public List<Room> GetRoomsByLocationId(int locationId)
+        public List<MpRoom> GetRoomsByLocationId(int locationId)
         {
             var t = ApiLogin();
             var search = string.Format(",,,,{0}", locationId);
             var records = _ministryPlatformService.GetPageViewRecords("RoomsByLocationId", t, search);
 
-            return records.Select(record => new Room
+            return records.Select(record => new MpRoom
             {
                 BuildingId = record.ToInt("Building_ID"),
                 LocationId = record.ToInt("Location_ID"),

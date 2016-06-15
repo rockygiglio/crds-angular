@@ -177,11 +177,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripDistribution> MockFundingPastTripDonationsResponse()
+        private List<MpTripDistribution> MockFundingPastTripDonationsResponse()
         {
-            return new List<TripDistribution>
+            return new List<MpTripDistribution>
             {
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -202,11 +202,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripParticipant> mockTripParticipants()
+        private List<MpTripParticipant> mockTripParticipants()
         {
-            return new List<TripParticipant>
+            return new List<MpTripParticipant>
             {
-                new TripParticipant()
+                new MpTripParticipant()
                 {
                     EmailAddress = "myEmail@Address.com",
                     EventStartDate = new DateTime(2015, 10, 08),
@@ -226,11 +226,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripDistribution> MockTripDonationsResponse()
+        private List<MpTripDistribution> MockTripDonationsResponse()
         {
-            return new List<TripDistribution>
+            return new List<MpTripDistribution>
             {
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -248,7 +248,7 @@ namespace crds_angular.test.Services
                     DonationDate = DateTime.Today,
                     DonationAmount = 350
                 },
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -269,11 +269,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<TripParticipant> MockMpSearchResponse()
+        private static List<MpTripParticipant> MockMpSearchResponse()
         {
-            return new List<TripParticipant>
+            return new List<MpTripParticipant>
             {
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "test@aol.com",
                     EventEndDate = new DateTime(2015, 7, 1),
@@ -288,7 +288,7 @@ namespace crds_angular.test.Services
                     CampaignId = 1,
                     DonorId = 1
                 },
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "test@aol.com",
                     EventEndDate = new DateTime(2015, 8, 1),
@@ -303,7 +303,7 @@ namespace crds_angular.test.Services
                     CampaignId = 2,
                     DonorId = 2
                 },
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "spec@aol.com",
                     EventEndDate = new DateTime(2015, 7, 1),

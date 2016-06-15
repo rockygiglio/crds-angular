@@ -411,7 +411,7 @@ namespace crds_angular.Services
 
         private void CreateRelationship(Registration registration, int contactId)
         {
-            var relationship = new Relationship
+            var relationship = new MpRelationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
                 RelatedContactID = contactId,

@@ -21,40 +21,40 @@ namespace MinistryPlatform.Translation.Services
             _programsPageId = configurationWrapper.GetConfigIntValue("Programs");
         }
 
-        public List<Program> GetAllPrograms()
+        public List<MpProgram> GetAllPrograms()
         {
             var token = ApiLogin();
             var records = _ministryPlatformService.GetPageViewRecords("AllProgramsList", token);
-            var programs = new List<Program>();
+            var programs = new List<MpProgram>();
             if (records == null || records.Count == 0)
             {
                 return programs;
             }
-            programs.AddRange(records.Select(Mapper.Map<Program>));
+            programs.AddRange(records.Select(Mapper.Map<MpProgram>));
 
             return programs;
         }
 
-        public List<Program> GetOnlineGivingPrograms(int? programType)
+        public List<MpProgram> GetOnlineGivingPrograms(int? programType)
         {
             var searchString = programType == null ? null : string.Format(",,,{0}", programType);
             var programs =
                 WithApiLogin(
                     apiToken => (_ministryPlatformService.GetPageViewRecords(_onlineGivingProgramsPageViewId, apiToken, searchString)));
 
-            var programList = new List<Program>();
+            var programList = new List<MpProgram>();
             if (programs == null || programs.Count == 0)
             {
                 return programList;
             }
-            programList.AddRange(programs.Select(Mapper.Map<Program>));
+            programList.AddRange(programs.Select(Mapper.Map<MpProgram>));
 
             return programList;
         }
 
-        public Program GetProgramById(int programId)
+        public MpProgram GetProgramById(int programId)
         {
-            return (WithApiLogin(token => (Mapper.Map<Program>(_ministryPlatformService.GetRecordDict(_programsPageId, programId, token)))));
+            return (WithApiLogin(token => (Mapper.Map<MpProgram>(_ministryPlatformService.GetRecordDict(_programsPageId, programId, token)))));
         }
     }
 }

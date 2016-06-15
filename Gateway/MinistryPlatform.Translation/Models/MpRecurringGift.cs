@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class RecurringGift
+    public class MpRecurringGift
     {
         public int RecurringGiftId { get; set; }
         public int DonorID { get; set; }

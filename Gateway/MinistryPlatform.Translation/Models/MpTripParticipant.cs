@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class TripParticipant
+    public class MpTripParticipant
     {
         public string EmailAddress { get; set; }
         public DateTime EventEndDate { get; set; }

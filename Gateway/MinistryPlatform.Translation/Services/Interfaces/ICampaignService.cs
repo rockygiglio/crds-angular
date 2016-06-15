@@ -9,6 +9,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface ICampaignService
     {
-        PledgeCampaign GetPledgeCampaign(int campaignId);
+        MpPledgeCampaign GetPledgeCampaign(int campaignId);
     }
 }

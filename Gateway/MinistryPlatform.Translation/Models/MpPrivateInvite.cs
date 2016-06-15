@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class PrivateInvite
+    public class MpPrivateInvite
     {
         public string EmailAddress { get; set; }
         public string InvitationGuid { get; set; }

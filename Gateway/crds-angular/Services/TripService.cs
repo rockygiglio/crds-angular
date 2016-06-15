@@ -146,7 +146,7 @@ namespace crds_angular.Services
                 : FormatTripResponse(responses);
         }
 
-        private static TripApplicantResponse FormatTripResponse(List<TripFormResponse> responses)
+        private static TripApplicantResponse FormatTripResponse(List<MpTripFormResponse> responses)
         {
             var tripInfo = responses
                 .Select(r =>
@@ -203,7 +203,7 @@ namespace crds_angular.Services
             return fam;
         }
 
-        private static List<string> ValidateResponse(int selectionCount, int formResponseId, List<TripFormResponse> responses)
+        private static List<string> ValidateResponse(int selectionCount, int formResponseId, List<MpTripFormResponse> responses)
         {
             var messages = new List<string>();
             if (responses.Count == 0)
@@ -450,7 +450,7 @@ namespace crds_angular.Services
             return invite.PrivateInvitationId;
         }
 
-        private Communication PrivateInviteCommunication(PrivateInvite invite)
+        private Communication PrivateInviteCommunication(MpPrivateInvite invite)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
@@ -622,7 +622,7 @@ namespace crds_angular.Services
                 return;
             }
             // Update the relationship
-            var relationship = new Relationship
+            var relationship = new MpRelationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("SponsoredChild"),
                 RelatedContactID = childId,

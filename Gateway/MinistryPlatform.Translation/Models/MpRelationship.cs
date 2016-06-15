@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Relationship
+    public class MpRelationship
     {
         public int RelationshipID { get; set; }
         public DateTime? EndDate { get; set; }

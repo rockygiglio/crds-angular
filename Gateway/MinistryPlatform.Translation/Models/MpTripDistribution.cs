@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class TripDistribution
+    public class MpTripDistribution
     {
         public int ContactId { get; set; }
         public int EventTypeId { get; set; }

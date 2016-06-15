@@ -16,16 +16,16 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<TripDocuments> DocumentsForDestination(int destinationId)
+        public List<MpTripDocuments> DocumentsForDestination(int destinationId)
         {
             var token = ApiLogin();
             var searchString = string.Format(",{0}", destinationId);
             var records = _ministryPlatformService.GetPageViewRecords("TripDestinationDocuments", token, searchString);
 
-            var documents = new List<TripDocuments>();
+            var documents = new List<MpTripDocuments>();
             foreach (var record in records)
             {
-                var d = new TripDocuments();
+                var d = new MpTripDocuments();
                 d.Description = record.ToString("Description");
                 d.Document = record.ToString("Document");
                 d.DocumentId = record.ToInt("Document_ID");

@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void CreatePaymentProcessorEventError(DateTime? eventDateTime, string eventId, string eventType,
             string eventMessage, string responseMessage);
 
-        List<TripDistribution> GetMyTripDistributions(int contactId);
+        List<MpTripDistribution> GetMyTripDistributions(int contactId);
         List<GPExportDatum> GetGpExport(int depositId, string token);
         void UpdateDepositToExported(int selectionId, int depositId, string token);
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);

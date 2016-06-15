@@ -17,7 +17,7 @@ using Address = MinistryPlatform.Translation.Models.Address;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Event = MinistryPlatform.Translation.Models.Event;
 using Group = MinistryPlatform.Translation.Models.Group;
-using Response = MinistryPlatform.Translation.Models.Response;
+using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace crds_angular.App_Start
 {
@@ -50,7 +50,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.NickName))
                 .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId));
 
-            Mapper.CreateMap<Response, OpportunityResponseDto>()
+            Mapper.CreateMap<MpResponse, OpportunityResponseDto>()
                 .ForMember(dest => dest.Closed, opts => opts.MapFrom(src => src.Closed))
                 .ForMember(dest => dest.Comments, opts => opts.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.Event_ID))
@@ -72,14 +72,14 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.DepositId, opts => opts.MapFrom(src => src.ToNullableInt("Deposit_ID", false)))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ContainsKey("dp_RecordID") ? src.ToInt("dp_RecordID", false) : src.ToInt("Batch_ID", false)));
 
-            Mapper.CreateMap<Dictionary<string, object>, Program>()
+            Mapper.CreateMap<Dictionary<string, object>, MpProgram>()
                 .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ToInt("Program_ID", false)))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ToString("Program_Name")))
                 .ForMember(dest => dest.ProgramType, opts => opts.MapFrom(src => src.ToInt("Program_Type_ID", false)))
                 .ForMember(dest => dest.CommunicationTemplateId, opts => opts.MapFrom(src => src.ContainsKey("Communication_ID") ? src.ToNullableInt("Communication_ID", false) : (int?)null))
                 .ForMember(dest => dest.AllowRecurringGiving, opts => opts.MapFrom(src => src.ToBool("Allow_Recurring_Giving", false)));
 
-            Mapper.CreateMap<Program, ProgramDTO>()
+            Mapper.CreateMap<MpProgram, ProgramDTO>()
                 .ForMember(dest => dest.ProgramType, opts => opts.MapFrom(src => src.ProgramType))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.CommunicationTemplateId, opts => opts.MapFrom(src => src.CommunicationTemplateId))
@@ -180,7 +180,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.PassportMiddlename, opts => opts.MapFrom(src => src.Passport_Middlename))
                 .ForMember(dest => dest.PassportCountry, opts => opts.MapFrom(src => src.Passport_Country));
 
-            Mapper.CreateMap<RecurringGift, RecurringGiftDto>()
+            Mapper.CreateMap<MpRecurringGift, RecurringGiftDto>()
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.RecurringGiftId))
                 .ForMember(dest => dest.DonorID, opts => opts.MapFrom(src => src.DonorID))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))

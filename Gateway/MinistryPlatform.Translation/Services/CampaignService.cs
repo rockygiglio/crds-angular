@@ -19,17 +19,17 @@ namespace MinistryPlatform.Translation.Services
             _configurationWrapper = configurationWrapper;
         }
 
-        public PledgeCampaign GetPledgeCampaign(int campaignId)
+        public MpPledgeCampaign GetPledgeCampaign(int campaignId)
         {
-            return WithApiLogin<PledgeCampaign>(token =>
+            return WithApiLogin<MpPledgeCampaign>(token =>
             {
                 var results = _ministryPlatformService.GetPageViewRecords(_configurationWrapper.GetConfigIntValue("GoTripsWithForms"), token, campaignId.ToString());
-                var campaigns = new List<PledgeCampaign>();
+                var campaigns = new List<MpPledgeCampaign>();
                 foreach (var result in results)
                 {
                     var ageExceptions = _ministryPlatformService.GetSubPageRecords(_configurationWrapper.GetConfigIntValue("GoTripAgeExceptions"), campaignId, token);
                     var exceptions = ageExceptions.Select(ae => ae.ToInt("Contact_ID")).ToList();
-                    var campaign = new PledgeCampaign()
+                    var campaign = new MpPledgeCampaign()
                     {
                         Id = result.ToInt("Pledge_Campaign_ID"),
                         Name = result.ToString("Campaign_Name"),
