@@ -6,8 +6,8 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
     "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev",
-    "core-test": "./node_modules/karma/bin/karma start karma.conf.js", /* TODO: renamed when moving over */
-    "core-ci-test": "./node_modules/karma/bin/karma start karma.ci.conf.js" /* TODO: renamed when moving over */
+    "core-test": "./node_modules/karma/bin/karma start karma.conf.js",
+    "core-ci-test": "./node_modules/karma/bin/karma start karma.ci.conf.js"
   },
   "repository": {
     "type": "git",
@@ -26,9 +26,9 @@
   "devDependencies": {
     "angular-mocks": "~1.4.3",
     "assets-webpack-plugin": "^2.2.0",
-    "autoprefixer-loader": "^1.2.0", /* TODO: This is different 2.0.0 in core*/
-    "babel-core": "^4.1.1", /* TODO: This is different 5.8.19 in core */
-    "babel-loader": "^4.0.0", /* TODO: This is different 5.3.2 in core */
+    "autoprefixer-loader": "^1.2.0",
+    "babel-core": "^4.1.1",
+    "babel-loader": "^4.0.0",
     "browser-sync": "^2.8.1",
     "connect-history-api-fallback": "^1.1.0",
     "css-loader": "^0.15.6",
@@ -74,7 +74,7 @@
     "phantomjs-polyfill": "0.0.1",
     "protractor": "^2.0.0",
     "protractor-html-screenshot-reporter": "0.0.19",
-    "sass-loader": "^3.1.2", /* TODO: core was 1.0.3 */
+    "sass-loader": "^3.1.2",
     "style-loader": "^0.12.3",
     "svgo": "^0.5.3",
     "url-loader": "^0.5.6",
@@ -112,7 +112,7 @@
     "moment-recur": "^1.0.5",
     "ng-cache-loader": "0.0.8",
     "plangular-3": "^3.1.2",
-    "ui-select": "^0.17.1",
+    "ui-select": "^0.17.1"
   },
   "browser": {
     "angular-aside": "./lib/angular-aside.js",
@@ -127,6 +127,6 @@
     "crds-constants": "./app/constants.js",
     "plangular": "./node_modules/plangular-3/src/plangular.js",
     "ui-event": "./node_modules/angular-ui-event/dist/event.js",
-    "ui-mask": "./node_modules/angular-ui-mask/dist/mask.js",
+    "ui-mask": "./node_modules/angular-ui-mask/dist/mask.js"
   }
 }
