@@ -23,7 +23,7 @@ namespace crds_angular.Services
         public List<OtherOrganization> GetOtherOrgs(string token)
         {
             var current_token = token ?? _mpApiUserService.GetToken();
-            var orgList = _lookupService.GetList<MPOtherOrganization>(current_token);
+            var orgList = _lookupService.GetList<MpOtherOrganization>(current_token);
             return orgList.Select(org => new OtherOrganization(org.OtherOrganizationID, org.OtherOrganization)).ToList();
         }
     }

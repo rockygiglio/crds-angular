@@ -180,9 +180,9 @@ namespace crds_angular.test.Services
             };
             _eventService.Setup(mocked => mocked.GetEvent(123)).Returns(e);
 
-            var r = new List<RoomReservationDto>
+            var r = new List<MpRoomReservationDto>
             {
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = false,
                     Hidden = false,
@@ -195,7 +195,7 @@ namespace crds_angular.test.Services
                     Name = "name 1",
                     Label = "label 1"
                 },
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = true,
                     Hidden = true,
@@ -269,9 +269,9 @@ namespace crds_angular.test.Services
             };
             _eventService.Setup(mocked => mocked.GetEvent(123)).Returns(e);
 
-            var r = new List<RoomReservationDto>
+            var r = new List<MpRoomReservationDto>
             {
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = false,
                     Hidden = false,
@@ -284,7 +284,7 @@ namespace crds_angular.test.Services
                     Name = "name 1",
                     Label = "label 1"
                 },
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = true,
                     Hidden = true,
@@ -300,17 +300,17 @@ namespace crds_angular.test.Services
             };
             _roomService.Setup(mocked => mocked.GetRoomReservations(123)).Returns(r);
 
-            var q = new List<List<EquipmentReservationDto>>()
+            var q = new List<List<MpEquipmentReservationDto>>()
             {
-                 new List<EquipmentReservationDto>{
-                    new EquipmentReservationDto
+                 new List<MpEquipmentReservationDto>{
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = false,
                         EquipmentId = 1,
                         EventRoomId = 11,
                         QuantityRequested = 111
                     },
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = true,
                         EquipmentId = 2,
@@ -319,16 +319,16 @@ namespace crds_angular.test.Services
                     }
 
                 },
-                new List<EquipmentReservationDto>
+                new List<MpEquipmentReservationDto>
                 {
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = false,
                         EquipmentId = 3,
                         EventRoomId = 33,
                         QuantityRequested = 333
                     },
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = true,
                         EquipmentId = 4,

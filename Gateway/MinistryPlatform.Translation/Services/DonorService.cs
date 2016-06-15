@@ -848,17 +848,17 @@ namespace MinistryPlatform.Translation.Services
             return recurringGiftId;
         }
 
-        public CreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId)
+        public MpCreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId)
         {
             var searchStr = string.Format("\"{0}\",", recurringGiftId);
-            CreateDonationDistDto createDonation = null;
+            MpCreateDonationDistDto createDonation = null;
             try
             {
                 var records = _ministryPlatformService.GetPageViewRecords(_myHouseholdRecurringGiftsApiPageView, authorizedUserToken, searchStr);
                 if (records != null && records.Any())
                 {
                     var record = records.First();
-                    createDonation = new CreateDonationDistDto
+                    createDonation = new MpCreateDonationDistDto
                     {
                         RecurringGiftId = record.ToNullableInt("Recurring_Gift_ID"),
                         DonorId = record.ToInt("Donor_ID"),
@@ -888,7 +888,7 @@ namespace MinistryPlatform.Translation.Services
             return createDonation;
         }
 
-        public CreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "")
+        public MpCreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "")
         {
             string searchStr;
             if (!string.IsNullOrEmpty(optionalSourceId))
@@ -899,7 +899,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 searchStr = string.Format(",\"{0}\",", subscription);
             }
-            CreateDonationDistDto createDonation = null;
+            MpCreateDonationDistDto createDonation = null;
             try
             {
                 var records =
@@ -908,7 +908,7 @@ namespace MinistryPlatform.Translation.Services
                 if (records != null && records.Count > 0)
                 {
                     var record = records.First();
-                    createDonation = new CreateDonationDistDto
+                    createDonation = new MpCreateDonationDistDto
                     {
                         DonorId = record.ToInt("Donor_ID"),
                         Amount = record["Amount"] as decimal? ?? 0,

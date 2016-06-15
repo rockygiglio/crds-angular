@@ -350,7 +350,7 @@ namespace crds_angular.test.Services
             };
             const int recurringGiftId = 888;
 
-            var recurringGift = new CreateDonationDistDto
+            var recurringGift = new MpCreateDonationDistDto
             {
                 ProgramName = "Crossroads",
                 Amount = 123.45M,
@@ -728,7 +728,7 @@ namespace crds_angular.test.Services
         {
             const string authUserToken = "auth";
             const int recurringGiftId = 123;
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 DonorId = 456,
                 SubscriptionId = "sub_123",
@@ -787,7 +787,7 @@ namespace crds_angular.test.Services
                 DonorId = 456
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -830,7 +830,7 @@ namespace crds_angular.test.Services
                 ProcessorId = "cus_123"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -890,7 +890,7 @@ namespace crds_angular.test.Services
                 Email = "me@here.com"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -937,7 +937,7 @@ namespace crds_angular.test.Services
 
             const int newRecurringGiftId = 765;
 
-            var newRecurringGift = new CreateDonationDistDto
+            var newRecurringGift = new MpCreateDonationDistDto
             {
                 Amount = 80000,
                 ProgramId = "3",
@@ -1022,7 +1022,7 @@ namespace crds_angular.test.Services
                 Email = "me@here.com"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -1067,7 +1067,7 @@ namespace crds_angular.test.Services
 
             const int newRecurringGiftId = 765;
 
-            var newRecurringGift = new CreateDonationDistDto
+            var newRecurringGift = new MpCreateDonationDistDto
             {
                 Amount = 80000,
                 ProgramId = "3",

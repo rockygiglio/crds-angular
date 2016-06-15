@@ -80,7 +80,7 @@ namespace MinistryPlatform.Translation.Services
             return (user);
         }
 
-        public List<RoleDto> GetUserRoles(int userId)
+        public List<MpRoleDto> GetUserRoles(int userId)
         {
             var records = _ministryPlatformService.GetSubpageViewRecords("User_Roles_With_ID", userId, ApiLogin());
             if (records == null || !records.Any())
@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Services
                 return (null);
             }
 
-            return records.Select(record => new RoleDto
+            return records.Select(record => new MpRoleDto
             {
                 Id = record.ToInt("Role_ID"), Name = record.ToString("Role_Name")
             }).ToList();

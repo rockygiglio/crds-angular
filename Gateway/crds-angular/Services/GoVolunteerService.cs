@@ -443,7 +443,7 @@ namespace crds_angular.Services
 
         private int CreateRegistration(Registration registration, int participantId)
         {
-            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
+            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration();
             registrationDto.ParticipantId = participantId;
             var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
@@ -456,7 +456,7 @@ namespace crds_angular.Services
             return Registration(registrationDto);
         }
 
-        private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration registrationDto)
         {
             int registrationId;
             try

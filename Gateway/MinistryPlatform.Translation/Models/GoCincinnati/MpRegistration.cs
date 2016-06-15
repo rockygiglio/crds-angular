@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models.GoCincinnati
 {
-    public class Registration
+    public class MpRegistration
     {
         public string AdditionalInformation { get; set; }
         public int InitiativeId { get; set; }

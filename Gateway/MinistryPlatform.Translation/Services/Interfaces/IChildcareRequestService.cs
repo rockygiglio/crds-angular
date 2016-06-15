@@ -6,18 +6,18 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IChildcareRequestService
     {
-        int CreateChildcareRequest(ChildcareRequest request);
+        int CreateChildcareRequest(MpChildcareRequest request);
 
-        ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
+        MpChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token);
 
-        ChildcareRequest GetChildcareRequestForReview(int childcareRequestId);
+        MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId);
 
-        void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, ChildcareRequest childcareRequest);
-        void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest mpRequest, string token);       
-        List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId);
-        List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);        
-        Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates);        
+        void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, MpChildcareRequest childcareRequest);
+        void CreateChildcareRequestDates(int childcareRequestId, MpChildcareRequest mpRequest, string token);       
+        List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId);
+        List<MpChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);        
+        Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates);        
         void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision);
-        ChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token);
+        MpChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token);
     }
 }

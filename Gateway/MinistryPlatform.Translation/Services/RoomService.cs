@@ -22,13 +22,13 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<RoomReservationDto> GetRoomReservations(int eventId)
+        public List<MpRoomReservationDto> GetRoomReservations(int eventId)
         {
             var token = ApiLogin();
             var search = string.Format(",\"{0}\"", eventId);
             var records = _ministryPlatformService.GetPageViewRecords("GetRoomReservations", token, search);
 
-            return records.Select(record => new RoomReservationDto
+            return records.Select(record => new MpRoomReservationDto
             {
                 Cancelled = record.ToBool("Cancelled"),
                 EventRoomId = record.ToInt("Event_Room_ID"),
@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public int CreateRoomReservation(RoomReservationDto roomReservation, string token)
+        public int CreateRoomReservation(MpRoomReservationDto roomReservation, string token)
         {
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
 
@@ -77,7 +77,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void UpdateRoomReservation(RoomReservationDto roomReservation, string token)
+        public void UpdateRoomReservation(MpRoomReservationDto roomReservation, string token)
         {
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             var reservationDictionary = new Dictionary<string, object>
@@ -111,7 +111,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void DeleteRoomReservation(RoomReservationDto roomReservation, string token)
+        public void DeleteRoomReservation(MpRoomReservationDto roomReservation, string token)
         {
             // TODO: Move this to a classwide variable to support testing, dry it up, etc
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");

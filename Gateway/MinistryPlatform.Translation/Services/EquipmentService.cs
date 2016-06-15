@@ -21,13 +21,13 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<EquipmentReservationDto> GetEquipmentReservations(int eventId, int roomId)
+        public List<MpEquipmentReservationDto> GetEquipmentReservations(int eventId, int roomId)
         {
             var token = ApiLogin();
             var search = string.Format(",{0},{1}", eventId, roomId);
             var records = _ministryPlatformService.GetPageViewRecords("GetEquipmentReservations", token, search);
 
-            return records.Select(record => new EquipmentReservationDto
+            return records.Select(record => new MpEquipmentReservationDto
             {
                 Cancelled = record.ToBool("Cancelled"),
                 EquipmentId = record.ToInt("Equipment_ID"),
@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public int CreateEquipmentReservation(EquipmentReservationDto equipmentReservation, string token)
+        public int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token)
         {
             var equipmentReservationPageId = _configurationWrapper.GetConfigIntValue("EquipmentReservationPageId");
             var equipmentDictionary = new Dictionary<string, object>
@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void UpdateEquipmentReservation(EquipmentReservationDto equipmentReservation, string token)
+        public void UpdateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token)
         {
             var equipmentReservationPageId = _configurationWrapper.GetConfigIntValue("EquipmentReservationPageId");
             var equipmentDictionary = new Dictionary<string, object>

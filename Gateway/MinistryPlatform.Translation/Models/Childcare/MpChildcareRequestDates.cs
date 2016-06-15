@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models.Childcare
 {
-    public class ChildcareRequestDate
+    public class MpChildcareRequestDate
     {
         public int ChildcareRequestDateId { get; set; }
         public int ChildcareRequestId { get; set; }

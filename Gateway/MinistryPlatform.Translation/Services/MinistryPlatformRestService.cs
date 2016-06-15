@@ -73,7 +73,7 @@ namespace MinistryPlatform.Translation.Services
 
         private static string GetTableName<T>()
         {
-            var table = typeof(T).GetAttribute<RestApiTable>();
+            var table = typeof(T).GetAttribute<MpRestApiTable>();
             if (table == null)
             {
                 throw new NoTableDefinitionException(typeof(T));

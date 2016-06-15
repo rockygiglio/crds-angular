@@ -500,7 +500,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 Frequency = 1,
                 RecurringGiftId = recurringGiftId,
@@ -546,7 +546,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 Frequency = frequency,
                 RecurringGiftId = recurringGiftId,

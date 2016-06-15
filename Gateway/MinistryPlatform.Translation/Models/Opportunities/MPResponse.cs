@@ -1,9 +1,8 @@
-﻿
-using System;
+﻿using System;
 
 namespace MinistryPlatform.Translation.Models.Opportunities
 {
-    public class MPResponse
+    public class MpResponse
     {
         public int Group_ID { get; set; }
         public int Event_ID { get; set; }

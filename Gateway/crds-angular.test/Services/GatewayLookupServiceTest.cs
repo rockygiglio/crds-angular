@@ -38,20 +38,20 @@ namespace crds_angular.test.Services
                     _apiUserService.Setup(m => m.GetToken()).Returns(tk);
                     token = tk;
                 }
-                _lookupService.Setup(m => m.GetList<MPOtherOrganization>(token)).Returns(otherOrgs);
+                _lookupService.Setup(m => m.GetList<MpOtherOrganization>(token)).Returns(otherOrgs);
                 var result = _fixture.GetOtherOrgs(token);
                 Assert.IsInstanceOf<List<OtherOrganization>>(result);
                 Assert.AreEqual(otherOrgs.Count(), result.Count);
             }).QuickCheckThrowOnFailure();
         }
 
-        private IEnumerable<MPOtherOrganization> MPOtherOrgs()
+        private IEnumerable<MpOtherOrganization> MPOtherOrgs()
         {
-            return new List<MPOtherOrganization>()
+            return new List<MpOtherOrganization>()
             {
-                new MPOtherOrganization(12, "sadfsadf"),
-                new MPOtherOrganization(345, "asdfadfdfasdf"),
-                new MPOtherOrganization(90909, "asfdgahlskjdfsadf")   
+                new MpOtherOrganization(12, "sadfsadf"),
+                new MpOtherOrganization(345, "asdfadfdfasdf"),
+                new MpOtherOrganization(90909, "asfdgahlskjdfsadf")   
             };
         } 
     }

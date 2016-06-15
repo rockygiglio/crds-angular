@@ -158,14 +158,14 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public List<MPResponse> SearchResponseByGroupAndEvent(String searchString)
+        public List<MpResponse> SearchResponseByGroupAndEvent(String searchString)
         {
             var token = _apiUserService.GetToken();
             var records = _ministryPlatformService.GetPageViewRecords("ResponsesByEventAndGroup", token, searchString);
             return ConvertToMPResponse(records);
         } 
 
-        public List<MPResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
+        public List<MpResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
         {
             var search = string.Format("{0}, {1}", groupId, eventId);
             var token = _apiUserService.GetToken();
@@ -174,9 +174,9 @@ namespace MinistryPlatform.Translation.Services
 
         }
 
-        private List<MPResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
+        private List<MpResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
         {
-            return response.Select(r => new MPResponse()
+            return response.Select(r => new MpResponse()
             {
                 Contact_ID = r.ToInt("Contact_ID"),
                 Event_ID = r.ToInt("Event_ID"),
@@ -253,7 +253,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void RespondToOpportunity(RespondToOpportunityDto opportunityResponse)
+        public void RespondToOpportunity(MpRespondToOpportunityDto opportunityResponse)
         {
             foreach (var participant in opportunityResponse.Participants)
             {

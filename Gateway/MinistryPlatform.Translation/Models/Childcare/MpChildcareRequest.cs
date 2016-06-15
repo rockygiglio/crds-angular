@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models.Childcare
 {
-    public class ChildcareRequest
+    public class MpChildcareRequest
     {
         public int RequesterId { get; set; }
         public int LocationId { get; set; }

@@ -6,12 +6,12 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IRoomService
     {
-        int CreateRoomReservation(RoomReservationDto roomReservation, string token);
+        int CreateRoomReservation(MpRoomReservationDto roomReservation, string token);
         List<MpRoom> GetRoomsByLocationId(int locationId);
         List<RoomLayout> GetRoomLayouts();
-        List<RoomReservationDto> GetRoomReservations(int eventId);
-        void UpdateRoomReservation(RoomReservationDto roomReservation, string token);
-        void DeleteRoomReservation(RoomReservationDto roomReservation, string token);
+        List<MpRoomReservationDto> GetRoomReservations(int eventId);
+        void UpdateRoomReservation(MpRoomReservationDto roomReservation, string token);
+        void DeleteRoomReservation(MpRoomReservationDto roomReservation, string token);
         void DeleteEventRoomsForEvent(int eventId, string token);
     }
 }

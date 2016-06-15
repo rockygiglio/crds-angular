@@ -305,7 +305,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var token = It.IsAny<string>();
             _ministryPlatformService.Setup(m => m.CreateRecord(pageKey, p1, token, true)).Returns(27);
 
-            var dto = new RespondToOpportunityDto {OpportunityId = 1, Participants = new List<int> {100, 200, 300}};
+            var dto = new MpRespondToOpportunityDto {OpportunityId = 1, Participants = new List<int> {100, 200, 300}};
             Assert.DoesNotThrow(() => _fixture.RespondToOpportunity(dto));
 
             _ministryPlatformService.Verify(

@@ -73,7 +73,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
     }
 
-    [RestApiTable(Name = "Payment_Types")]
+    [MpRestApiTable(Name = "Payment_Types")]
     public class MyPaymentType
     {
         [JsonProperty(PropertyName = "Payment_Type_ID")]

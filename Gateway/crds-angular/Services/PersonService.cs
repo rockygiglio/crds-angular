@@ -97,7 +97,7 @@ namespace crds_angular.Services
             return person;
         }
 
-        public List<RoleDto> GetLoggedInUserRoles(string token)
+        public List<MpRoleDto> GetLoggedInUserRoles(string token)
         {
             return GetMyRecords.GetMyRoles(token);
         }

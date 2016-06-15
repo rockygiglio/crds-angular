@@ -13,6 +13,6 @@ namespace crds_angular.Services.Interfaces
         void SetProfile(String token, Person person);        
         Person GetLoggedInUserProfile(String token);
         Person GetPerson(int contactId);
-        List<RoleDto> GetLoggedInUserRoles(string token);
+        List<MpRoleDto> GetLoggedInUserRoles(string token);
     }
 }

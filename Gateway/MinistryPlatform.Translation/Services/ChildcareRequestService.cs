@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Services
             _myChildcareRequestDatesId = configurationWrapper.GetConfigIntValue("MyChildcareRequestDates");
         }
 
-        public int CreateChildcareRequest(ChildcareRequest request)
+        public int CreateChildcareRequest(MpChildcareRequest request)
         {
             var apiToken = _apiUserService.GetToken();
 
@@ -62,7 +62,7 @@ namespace MinistryPlatform.Translation.Services
             return childcareRequestId;
         }
 
-        public ChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token)
+        public MpChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token)
         {
             var searchString = string.Format("{0},", childcareRequestId);
             var r = _ministryPlatformService.GetPageViewRecords(_childcareEmailPageViewId, token,searchString);
@@ -70,7 +70,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 var record = r[0];
 
-                var c = new ChildcareRequestEmail
+                var c = new MpChildcareRequestEmail
                 {
                     RequestId = record.ToInt("Childcare_Request_ID"),
                     RequesterId = record.ToInt("Contact_ID"),
@@ -98,7 +98,7 @@ namespace MinistryPlatform.Translation.Services
             throw new ApplicationException(string.Format("Duplicate Childcare Request ID detected: {0}", childcareRequestId));
         }
 
-        public void CreateChildcareRequestDates(int childcareRequestId, ChildcareRequest request, string token)
+        public void CreateChildcareRequestDates(int childcareRequestId, MpChildcareRequest request, string token)
         {
           var datesList = request.DatesList;
           foreach (var date in datesList)
@@ -114,13 +114,13 @@ namespace MinistryPlatform.Translation.Services
           }
         }
 
-        public List<ChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
+        public List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
         {
             var apiToken = _apiUserService.GetToken();
             var searchString = String.Format("{0},", childcareRequestId);
             var records = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
 
-            return records.Select(rec => new ChildcareRequestDate
+            return records.Select(rec => new MpChildcareRequestDate
             {
                 Approved = rec.ToBool("Approved"),
                 ChildcareRequestDateId = rec.ToInt("dp_RecordID"),
@@ -129,7 +129,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, ChildcareRequest childcareRequest)
+        public void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, MpChildcareRequest childcareRequest)
         {
             var apiToken = _apiUserService.GetToken();
             
@@ -160,12 +160,12 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.UpdateRecord(_childcareRequestDatesPageId, requestDateDict, apiToken);
         }
 
-        public ChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token)
+        public MpChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token)
         {
             var apiToken = _apiUserService.GetToken();
             var searchString = String.Format("{0},", childcareRequestId);
             var mpRecords = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
-            var requestedDate = new ChildcareRequestDate();
+            var requestedDate = new MpChildcareRequestDate();
 
             foreach (var mpRecord in from mpRecord in mpRecords let mpDate = mpRecord.ToDate("Childcare_Request_Date") where date.Date == mpDate.Date select mpRecord)
             {
@@ -177,7 +177,7 @@ namespace MinistryPlatform.Translation.Services
             return requestedDate;
         }
 
-        public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<ChildcareRequestDate> requestedDates)
+        public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates)
         {
             var apiToken = _apiUserService.GetToken();
 
@@ -203,18 +203,18 @@ namespace MinistryPlatform.Translation.Services
             return reqEvents;
         }
 
-        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId)
+        public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId)
         {
             var apiToken = _apiUserService.GetToken();
             var record = _ministryPlatformService.GetRecordDict(_childcareRequestPageId, childcareRequestId, apiToken);
-            List<ChildcareRequestDate> daterecords = GetChildcareRequestDates(childcareRequestId);
+            List<MpChildcareRequestDate> daterecords = GetChildcareRequestDates(childcareRequestId);
             var datesList = daterecords.Select(dateRec => dateRec.RequestDate).ToList();
 
             if (record == null)
             {
                 return null;
             }
-            var childcareRequest = new ChildcareRequest
+            var childcareRequest = new MpChildcareRequest
             {
                 RequesterId = record.ToInt("Requester_ID"),
                 LocationId = record.ToInt("Congregation_ID"),
@@ -234,13 +234,13 @@ namespace MinistryPlatform.Translation.Services
             return childcareRequest;
         }
 
-        public List<ChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId)
+        public List<MpChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId)
         {
             var apiToken = _apiUserService.GetToken();
             var searchString = String.Format("{0},", childcareRequestId);
             var records = _ministryPlatformService.GetRecordsDict(_childcareRequestDatesPageId, apiToken, searchString);
 
-            return records.Select(rec => new ChildcareRequestDate
+            return records.Select(rec => new MpChildcareRequestDate
             {
                 ChildcareRequestDateId = rec.ToInt("dp_RecordID"),
                 RequestDate = rec.ToDate("Childcare_Request_Date")
