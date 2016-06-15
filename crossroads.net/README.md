@@ -160,3 +160,6 @@ A .jscsrc file exists to use AirBnB styleguide
 * For Sublime Text 3, [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter-jscs/)
 * For IntelliJ, [jscs-plugin](https://github.com/idok/jscs-plugin)
 
+### ESLint
+A .eslintrc file has already been added to the project
+* For IntelliJ - Navigate to **File | Settings | Languages and Frameworks | JavaScript | Code Quality Tools | ESLint** and check the Enable box
