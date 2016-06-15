@@ -5,6 +5,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IProjectTypeService
     {
-        List<ProjectType> GetProjectTypes();
+        List<MpProjectType> GetProjectTypes();
     }
 }

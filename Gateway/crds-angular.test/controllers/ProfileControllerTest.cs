@@ -74,7 +74,7 @@ namespace crds_angular.test.controllers
                 UserRecordId = 987
             };
             _userService.Setup(mocked => mocked.GetByAuthenticationToken(_authType + " " + _authToken)).Returns(user);
-            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns((List<RoleDto>) null);
+            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns((List<MpRoleDto>) null);
 
             var result = _fixture.AdminGetProfile(13579);
             Assert.IsNotNull(result);
@@ -91,13 +91,13 @@ namespace crds_angular.test.controllers
                 UserRecordId = 987
             };
             _userService.Setup(mocked => mocked.GetByAuthenticationToken(_authType + " " + _authToken)).Returns(user);
-            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns(new List<RoleDto>
+            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns(new List<MpRoleDto>
             {
-                new RoleDto
+                new MpRoleDto
                 {
                     Id = 765
                 },
-                new RoleDto
+                new MpRoleDto
                 {
                     Id = 456
                 }

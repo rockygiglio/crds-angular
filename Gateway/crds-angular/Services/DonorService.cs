@@ -363,7 +363,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void SendRecurringGiftConfirmationEmail(string authorizedUserToken, int templateId, CreateDonationDistDto recurringGift, int? recurringGiftId = null)
+        private void SendRecurringGiftConfirmationEmail(string authorizedUserToken, int templateId, MpCreateDonationDistDto recurringGift, int? recurringGiftId = null)
         {
             try
             {
@@ -525,7 +525,7 @@ namespace crds_angular.Services
             return (newRecurringGift);
         }
 
-        public CreateDonationDistDto GetRecurringGiftForSubscription(string subscriptionId)
+        public MpCreateDonationDistDto GetRecurringGiftForSubscription(string subscriptionId)
         {
             return (_mpDonorService.GetRecurringGiftForSubscription(subscriptionId));  
         }

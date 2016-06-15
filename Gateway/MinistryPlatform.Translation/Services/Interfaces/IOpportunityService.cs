@@ -18,10 +18,10 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         Response GetMyOpportunityResponses(int contactId, int opportunityId);
         Response GetOpportunityResponse(int contactId, int opportunityId);
         Response GetOpportunityResponse(int opportunityId, int eventId, Participant participant);
-        List<MPResponse> SearchResponseByGroupAndEvent(String searchString);
-        List<MPResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId);
+        List<MpResponse> SearchResponseByGroupAndEvent(String searchString);
+        List<MpResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId);
         List<Response> GetOpportunityResponses(int opportunityId, string token);
-        void RespondToOpportunity(RespondToOpportunityDto opportunityResponse);
+        void RespondToOpportunity(MpRespondToOpportunityDto opportunityResponse);
         int RespondToOpportunity(int participantId, int opportunityId, string comments, int eventId, bool response);
     }
 }

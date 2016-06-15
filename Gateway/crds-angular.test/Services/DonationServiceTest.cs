@@ -1657,7 +1657,7 @@ namespace crds_angular.test.Services
             const int donationStatus = 4;
             const decimal amt = 789;
 
-            var recurringGift = new CreateDonationDistDto
+            var recurringGift = new MpCreateDonationDistDto
             {
                 Amount = amt,
                 DonorAccountId = donorAccountId,

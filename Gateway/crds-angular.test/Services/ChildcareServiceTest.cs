@@ -185,7 +185,7 @@ namespace crds_angular.test.Services
                 Subject = "A subject"
             };
 
-            var request = new ChildcareRequestEmail()
+            var request = new MpChildcareRequestEmail()
             {
                 RequestId = 1,
                 RequesterEmail = "lakshmi@lak.shmi",

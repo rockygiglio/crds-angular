@@ -16,16 +16,16 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<ProjectType> GetProjectTypes()
+        public List<MpProjectType> GetProjectTypes()
         {
             var token = ApiLogin();
             var result = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("ProjectTypes"), token);
             return MapProjectTypes(result);
         }
 
-        private static List<ProjectType> MapProjectTypes(IEnumerable<Dictionary<string, object>> records)
+        private static List<MpProjectType> MapProjectTypes(IEnumerable<Dictionary<string, object>> records)
         {
-            return records.Select(record => new ProjectType
+            return records.Select(record => new MpProjectType
             {
                 ProjectTypeId = record.ToInt("dp_RecordID"),
                 Description = record.ToString("Description"),

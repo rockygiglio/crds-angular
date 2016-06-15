@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces;
-using RoleDTO = MinistryPlatform.Translation.Models.DTO.RoleDto;
+using RoleDTO = MinistryPlatform.Translation.Models.DTO.MpRoleDto;
 
 namespace MinistryPlatform.Translation.Services
 {

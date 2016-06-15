@@ -176,7 +176,7 @@ namespace crds_angular.Controllers.API
     public class LoginReturn
     {
         public LoginReturn(){}
-        public LoginReturn(string userToken, int userId, string username, string userEmail, List<RoleDto> roles){
+        public LoginReturn(string userToken, int userId, string username, string userEmail, List<MpRoleDto> roles){
             this.userId = userId;
             this.userToken = userToken;
             this.username = username;
@@ -189,7 +189,7 @@ namespace crds_angular.Controllers.API
         public int userId { get; set; }
         public string username { get; set; }
         public string userEmail { get; set;  }
-        public List<RoleDto> roles { get; set; }
+        public List<MpRoleDto> roles { get; set; }
         public int age { get; set; }
     }
 

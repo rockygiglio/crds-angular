@@ -2,7 +2,7 @@ using System;
 
 namespace MinistryPlatform.Translation.Models.EventReservations
 {
-    public class EventReservationDto
+    public class MpEventReservationDto
     {
         public int CongregationId { get; set; }
         public int ContactId { get; set; }

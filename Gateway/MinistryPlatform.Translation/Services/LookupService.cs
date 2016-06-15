@@ -70,16 +70,16 @@ namespace MinistryPlatform.Translation.Services
 
         public IEnumerable<T> GetList<T>(string token)
         {
-            if (typeof (T) == typeof (MPWorkTeams))
+            if (typeof (T) == typeof (MpWorkTeams))
             {
                 return (IEnumerable<T>) 
-                    WorkTeams(token).Select(wt => new MPWorkTeams(wt.ToInt("dp_RecordID"), wt.ToString("dp_RecordName")));
+                    WorkTeams(token).Select(wt => new MpWorkTeams(wt.ToInt("dp_RecordID"), wt.ToString("dp_RecordName")));
             }
-            if (typeof (T) == typeof (MPOtherOrganization))
+            if (typeof (T) == typeof (MpOtherOrganization))
             {                
                 return (IEnumerable<T>)
                     _ministryPlatformServiceImpl.GetLookupRecords(_configurationWrapper.GetConfigIntValue("OtherOrgs"), token)
-                    .Select(other => new MPOtherOrganization(other.ToInt("dp_RecordID"), other.ToString("dp_RecordName")));
+                    .Select(other => new MpOtherOrganization(other.ToInt("dp_RecordID"), other.ToString("dp_RecordName")));
             }
 
             return null;

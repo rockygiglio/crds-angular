@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void CreateRequest()
         {
-            var request = new ChildcareRequest
+            var request = new MpChildcareRequest
             {
                 RequesterId = 1,
                 LocationId = 2,

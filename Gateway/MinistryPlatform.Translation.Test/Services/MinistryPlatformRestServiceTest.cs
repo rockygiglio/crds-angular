@@ -163,7 +163,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
     }
 
-    [RestApiTable(Name = "MP_Table_Name")]
+    [MpRestApiTable(Name = "MP_Table_Name")]
     internal class TestModelWithRestApiTable
     {
         [JsonProperty(PropertyName = "ID")]

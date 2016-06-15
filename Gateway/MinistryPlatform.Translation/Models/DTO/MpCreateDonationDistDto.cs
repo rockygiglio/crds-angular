@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models.DTO
 {
-    public class CreateDonationDistDto
+    public class MpCreateDonationDistDto
     {
         public Decimal Amount { get; set; }
         public int DonorId { get; set; }

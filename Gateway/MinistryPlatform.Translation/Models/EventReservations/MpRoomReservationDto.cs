@@ -1,6 +1,6 @@
 namespace MinistryPlatform.Translation.Models.EventReservations
 {
-    public class RoomReservationDto
+    public class MpRoomReservationDto
     {
         public int EventId { get; set; }
         public int EventRoomId { get; set; }

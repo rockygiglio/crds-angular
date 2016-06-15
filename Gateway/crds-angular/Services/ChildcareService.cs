@@ -191,13 +191,13 @@ namespace crds_angular.Services
             }
         }
 
-        private ChildcareRequestDate GetChildcareDateFromList(List<ChildcareRequestDate> allDates, DateTime date)
+        private MpChildcareRequestDate GetChildcareDateFromList(List<MpChildcareRequestDate> allDates, DateTime date)
         {
-            var requestedDate = new ChildcareRequestDate();
+            var requestedDate = new MpChildcareRequestDate();
             return allDates.SingleOrDefault(d => date.Date == d.RequestDate.Date); 
         }
 
-        private int GetApprovalStatus(List<ChildcareRequestDate> datesFromMP, List<ChildcareRequestDate> datesApproving)
+        private int GetApprovalStatus(List<MpChildcareRequestDate> datesFromMP, List<MpChildcareRequestDate> datesApproving)
         {
             if (datesFromMP.Count > datesApproving.Count)
             {
@@ -228,7 +228,7 @@ namespace crds_angular.Services
             }
         }
 
-        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
+        public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {
             try
             {
@@ -241,7 +241,7 @@ namespace crds_angular.Services
             return null;
         }
 
-        private void SendChildcareRequestDecisionNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
+        private void SendChildcareRequestDecisionNotification(int requestId, List<MpChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
         {
             var childcareRequestEmail = _childcareRequestService.GetChildcareRequest(requestId, token);;
             var template = _communicationService.GetTemplate(templateId);
@@ -293,7 +293,7 @@ namespace crds_angular.Services
 
         }
 
-        public void SendChildcareRequestNotification( ChildcareRequestEmail request)
+        public void SendChildcareRequestNotification( MpChildcareRequestEmail request)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");          

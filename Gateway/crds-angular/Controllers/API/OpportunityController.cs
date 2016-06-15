@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (int))]
         [Route("api/opportunity/save-qualified-server")]
-        public IHttpActionResult Post([FromBody] RespondToOpportunityDto opportunityResponse)
+        public IHttpActionResult Post([FromBody] MpRespondToOpportunityDto opportunityResponse)
         {
             if (!ModelState.IsValid)
             {

@@ -238,7 +238,7 @@ namespace crds_angular.Services
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
         {
-            var equipmentReservation = new EquipmentReservationDto();
+            var equipmentReservation = new MpEquipmentReservationDto();
             equipmentReservation.Cancelled = false;
             equipmentReservation.EquipmentId = equipment.EquipmentId;
             equipmentReservation.EventId = eventId;
@@ -249,7 +249,7 @@ namespace crds_angular.Services
 
         private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
         {
-            var equipmentReservation = new EquipmentReservationDto();
+            var equipmentReservation = new MpEquipmentReservationDto();
             equipmentReservation.Cancelled = equipment.Cancelled;
             equipmentReservation.EquipmentId = equipment.EquipmentId;
             equipmentReservation.EventEquipmentId = equipment.EquipmentReservationId;
@@ -261,7 +261,7 @@ namespace crds_angular.Services
 
         private void AddRoom(int eventId, EventRoomDto room, string token)
         {
-            var roomReservation = new RoomReservationDto();
+            var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = false;
             roomReservation.EventId = eventId;
             roomReservation.Hidden = room.Hidden;
@@ -277,7 +277,7 @@ namespace crds_angular.Services
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
         {
-            var roomReservation = new RoomReservationDto();
+            var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = room.Cancelled;
             roomReservation.EventId = eventId;
             roomReservation.EventRoomId = room.RoomReservationId;
@@ -294,7 +294,7 @@ namespace crds_angular.Services
 
         private int AddEvent(EventToolDto eventTool)
         {
-            var eventDto = new EventReservationDto();
+            var eventDto = new MpEventReservationDto();
             eventDto.CongregationId = eventTool.CongregationId;
             eventDto.ContactId = eventTool.ContactId;
             eventDto.Description = eventTool.Description;

@@ -702,9 +702,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111                
             };
 
-            var otherResponses = new List<MPResponse>
+            var otherResponses = new List<MpResponse>
             {
-                new MPResponse()
+                new MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -716,12 +716,12 @@ namespace crds_angular.test.Services
             };
 
             // no responses for Saturday...
-            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MPResponse>());
+            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MpResponse>());
             
             // there is no response for the first participant for Saturday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
                 String.Format(",,{0},,,,{1}", groupParticipants.First().ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+            )).Returns(new List<MpResponse>());
 
             // there is a response for the first participant for Sunday...
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
@@ -731,12 +731,12 @@ namespace crds_angular.test.Services
             // there is not a response for the second participant for Saturday
              _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
                 String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+            )).Returns(new List<MpResponse>());
 
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
                 String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+            )).Returns(new List<MpResponse>());
             
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 1);
@@ -764,9 +764,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111
             };
 
-            var responses = new List<MPResponse>
+            var responses = new List<MpResponse>
             {
-                new MPResponse()
+                new MpResponse()
                 {
                     Contact_ID = groupParticipants[0].ContactId,
                     Event_ID = eventId,
@@ -775,7 +775,7 @@ namespace crds_angular.test.Services
                     Response_Date = DateTime.Now,
                     Response_Result_ID = 2
                 },
-                new MPResponse()
+                new MpResponse()
                 {
                     Contact_ID = groupParticipants[1].ContactId,
                     Event_ID = eventId,
@@ -786,9 +786,9 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var otherResponses = new List<MPResponse>
+            var otherResponses = new List<MpResponse>
             {
-                new MPResponse()
+                new MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -810,7 +810,7 @@ namespace crds_angular.test.Services
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
                 String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+            )).Returns(new List<MpResponse>());
 
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 0);

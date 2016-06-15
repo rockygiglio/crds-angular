@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinistryPlatform.Translation.Models.Childcare
 {
-    public class ChildcareRequestEmail
+    public class MpChildcareRequestEmail
     {
         public int RequestId { get; set; }
         public string Requester { get; set; }

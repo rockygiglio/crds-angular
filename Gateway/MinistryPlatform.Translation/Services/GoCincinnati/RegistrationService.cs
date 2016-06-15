@@ -60,7 +60,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
             return AddAttribute(registrationId, dictionary, "RegistrationProjectPreferencesSubPage");
         }
 
-        public int CreateRegistration(Registration registration)
+        public int CreateRegistration(MpRegistration registration)
         {
             var token = ApiLogin();
             var registrationPageId = _configurationWrapper.GetConfigIntValue("RegistrationPageId");

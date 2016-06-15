@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models.GoCincinnati
 {
-    public class ProjectType
+    public class MpProjectType
     {
         public int ProjectTypeId { get; set; }
         public string Description { get; set; }

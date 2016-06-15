@@ -41,7 +41,7 @@ namespace MinistryPlatform.Translation.Services
             _groupService = groupService;
         }
 
-        public int CreateEvent(EventReservationDto eventReservationReservation)
+        public int CreateEvent(MpEventReservationDto eventReservationReservation)
         {
             var token = ApiLogin();
             var eventPageId = _configurationWrapper.GetConfigIntValue("Events");

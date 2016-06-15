@@ -30,8 +30,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         List<Donation> GetDonations(IEnumerable<int> donorIds, string donationYear = null);
         List<Donation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null);
         List<Donation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null);
-        CreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "");
-        CreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId);
+        MpCreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "");
+        MpCreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId);
         int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId);
         void UpdateRecurringGiftDonorAccount(string authorizedUserToken, int recurringGiftId, int donorAccountId);
         void CancelRecurringGift(string authorizedUserToken, int recurringGiftId);

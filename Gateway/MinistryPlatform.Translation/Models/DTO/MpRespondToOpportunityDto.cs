@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models.DTO
 {
-    public class RespondToOpportunityDto
+    public class MpRespondToOpportunityDto
     {
         [JsonProperty(PropertyName = "opportunityId")]
         public int OpportunityId { get; set; }
