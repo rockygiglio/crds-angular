@@ -28,10 +28,11 @@ module.exports = {
     main: './app/app.js',
     ang: './app/ang.js',
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
-    core: ['./node_modules/crds-core'],
+    core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js']
   },
+  // TODO: do we need to add core to watchPattern?
   watchPattern: 'app/**/**',
   externals: {
     stripe: 'Stripe',
@@ -42,6 +43,7 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
+    // TODO: Do we want map files in our environments, crds-core had them?
   },
   devtool: 'sourcemap',
   debug: true,
@@ -54,6 +56,8 @@ module.exports = {
             {
               test: /\.js$/,
               include: [
+	      	// TODO: core had path.resolve(__dirname, 'core'),
+               //  path.resolve(__dirname, 'core'),
                 path.resolve(__dirname, 'app'),
                 path.resolve(__dirname, 'node_modules/angular-stripe')
               ],
