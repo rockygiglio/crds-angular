@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class PledgeCampaign
+    public class MpPledgeCampaign
     {
         public int Id { get; set; }
         public string Name { get; set; }

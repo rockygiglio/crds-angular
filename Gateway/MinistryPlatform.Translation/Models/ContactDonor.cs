@@ -49,7 +49,7 @@ namespace MinistryPlatform.Translation.Models
     {
         public string EmailAddress { get; set; }
         public string DisplayName { get; set; }
-        public PostalAddress Address { get; set; }
+        public MpPostalAddress Address { get; set; }
         public int HouseholdId { get; set; }
 
         public bool HasAddress { get { return (Address != null); } }

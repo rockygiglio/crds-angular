@@ -374,7 +374,7 @@ namespace crds_angular.test.Services
                 Details = new ContactDetails
              {
                 DisplayName = displayName,
-                Address = new PostalAddress()
+                Address = new MpPostalAddress()
                 {
                     Line1 = addr1,
                     Line2 = addr2,

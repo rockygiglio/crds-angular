@@ -36,15 +36,15 @@ namespace MinistryPlatform.Translation.Test.Services
         public void AddDocumentsToTripParticipantTest()
         {
             const int eventParticipantId = 9;
-            var docs = new List<TripDocuments>
+            var docs = new List<MpTripDocuments>
             {
-                new TripDocuments
+                new MpTripDocuments
                 {
                     DocumentId = 1,
                     Description = "doc 1 desc",
                     Document = "doc 1"
                 },
-                new TripDocuments
+                new MpTripDocuments
                 {
                     DocumentId = 2,
                     Description = "doc 2 desc",

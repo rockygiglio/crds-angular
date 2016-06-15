@@ -194,7 +194,7 @@ namespace crds_angular.Services
             contactDonor.Details = new ContactDetails
             {
                 DisplayName = checkDetails.Name1,
-                Address = new PostalAddress
+                Address = new MpPostalAddress
                 {
                     Line1 = checkDetails.Address.Line1,
                     Line2 = checkDetails.Address.Line2,

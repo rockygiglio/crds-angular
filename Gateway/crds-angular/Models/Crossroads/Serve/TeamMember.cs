@@ -31,12 +31,12 @@ namespace crds_angular.Models.Crossroads.Serve
         public Participant Participant { get; set; }
 
         [JsonIgnore]
-        public List<MinistryPlatform.Translation.Models.Response> Responses { get; set; }
+        public List<MinistryPlatform.Translation.Models.MpResponse> Responses { get; set; }
 
         public TeamMember()
         {
             this.Roles = new List<ServeRole>();
-            this.Responses = new List<MinistryPlatform.Translation.Models.Response>();
+            this.Responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
         }
     }
 }

@@ -117,7 +117,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 var response = _opportunityService.GetOpportunityResponse(contactId, id);
-                var mapped = Mapper.Map<Response, OpportunityResponseDto>(response);
+                var mapped = Mapper.Map<MpResponse, OpportunityResponseDto>(response);
                 return Ok(mapped);
             }
             catch (Exception exception)

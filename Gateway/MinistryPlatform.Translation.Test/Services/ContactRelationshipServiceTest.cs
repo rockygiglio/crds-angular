@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int myId = 2186211;
 
 
-            Relationship r = new Relationship
+            MpRelationship r = new MpRelationship
             {
                 RelationshipID = 43,
                 EndDate = null,
@@ -78,9 +78,9 @@ namespace MinistryPlatform.Translation.Test.Services
             const int childId = 4384766;
             const int myId = 2186211;
 
-            var relationships = new List<Relationship>
+            var relationships = new List<MpRelationship>
             {
-                new Relationship
+                new MpRelationship
                 {
                     RelationshipID = 43,
                     RelatedContactID = childId,

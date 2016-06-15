@@ -533,7 +533,7 @@ namespace crds_angular.Services
         public List<RecurringGiftDto> GetRecurringGiftsForAuthenticatedUser(string userToken)
         {
             var records = _mpDonorService.GetRecurringGiftsForAuthenticatedUser(userToken);
-            var recurringGifts = records.Select(Mapper.Map<RecurringGift, RecurringGiftDto>).ToList();
+            var recurringGifts = records.Select(Mapper.Map<MpRecurringGift, RecurringGiftDto>).ToList();
 
             // We're not currently storing routing number, postal code, or expiration date in the DonorAccount table.
             // We need these for editing a gift, so populate them from Stripe

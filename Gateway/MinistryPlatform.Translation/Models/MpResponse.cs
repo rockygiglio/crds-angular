@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Response
+    public class MpResponse
     {
         public int Response_ID { get; set; }
         public DateTime Response_Date { get; set; }

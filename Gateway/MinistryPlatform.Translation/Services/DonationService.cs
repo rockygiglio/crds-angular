@@ -365,13 +365,13 @@ namespace MinistryPlatform.Translation.Services
             return (d);
         }
 
-        public List<TripDistribution> GetMyTripDistributions(int contactId)
+        public List<MpTripDistribution> GetMyTripDistributions(int contactId)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_tripDistributionsPageView, ApiLogin(), contactId.ToString());
-            var trips = new List<TripDistribution>();
+            var trips = new List<MpTripDistribution>();
             foreach (var result in results)
             {
-                var trip = new TripDistribution
+                var trip = new MpTripDistribution
                 {
                     EventId = result.ToInt("Event ID"),
                     EventTypeId = result.ToInt("Event Type ID"),

@@ -347,7 +347,7 @@ namespace MinistryPlatform.Translation.Services
         {
             if (!String.IsNullOrEmpty(town))
             {
-                var address = new PostalAddress
+                var address = new MpPostalAddress
                 {
                     City = town,
                     Line1 = "Not Known"
@@ -452,7 +452,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private int CreateHouseholdAndAddress(string householdName, PostalAddress address, string apiToken)
+        private int CreateHouseholdAndAddress(string householdName, MpPostalAddress address, string apiToken)
         {
             var addressDictionary = new Dictionary<string, object>
             {

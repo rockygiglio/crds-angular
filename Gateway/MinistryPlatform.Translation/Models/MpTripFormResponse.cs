@@ -1,6 +1,6 @@
 namespace MinistryPlatform.Translation.Models
 {
-    public class TripFormResponse
+    public class MpTripFormResponse
     {
         public int ContactId { get; set; }
         public int DestinationId { get; set; }
