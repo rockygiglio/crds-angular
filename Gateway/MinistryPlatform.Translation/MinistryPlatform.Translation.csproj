@@ -135,7 +135,7 @@
     <Compile Include="Models\People\MpParticipant.cs" />
     <Compile Include="Models\People\Participant.cs" />
     <Compile Include="Models\Room.cs" />
-    <Compile Include="Services\AddressService.cs" />
+    <Compile Include="Services\AddressRepository.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\BulkEmailRepository.cs" />
     <Compile Include="Enum\NumericDayOfWeek.cs" />
@@ -145,7 +145,7 @@
     <Compile Include="Exceptions\TemplateParseException.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Services\ApiUserService.cs" />
-    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\AuthenticationRepository.cs" />
     <Compile Include="Services\AuthenticationServiceImpl.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CampaignService.cs" />

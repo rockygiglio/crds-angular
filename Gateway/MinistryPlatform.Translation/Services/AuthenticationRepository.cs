@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class AuthenticationService
+    public class AuthenticationRepository
     {
        //get token using logged in user's credentials
         public static Dictionary<string, object> authenticate(string username, string password)

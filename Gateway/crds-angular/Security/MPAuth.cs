@@ -52,7 +52,7 @@ namespace crds_angular.Security
                 var authorized = "";
                 if (Request.Headers.TryGetValues("RefreshToken", out refreshTokens) && refreshTokens.Any())
                 {
-                    var authData = AuthenticationService.RefreshToken(refreshTokens.FirstOrDefault());
+                    var authData = AuthenticationRepository.RefreshToken(refreshTokens.FirstOrDefault());
                     if (authData != null)
                     {
                         authorized = authData["token"].ToString();

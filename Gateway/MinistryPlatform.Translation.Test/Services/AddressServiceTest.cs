@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IApiUserService> _apiUserService;
         private Mock<IConfigurationWrapper> _configuration;
-        private AddressService _fixture;
+        private AddressRepository _fixture;
         private readonly int _addressPageId;
 
 
@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _apiUserService.Setup(m => m.GetToken()).Returns("useme");
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Addresses")).Returns(271);
-            _fixture = new AddressService(_configuration.Object,_ministryPlatformService.Object, _apiUserService.Object);
+            _fixture = new AddressRepository(_configuration.Object,_ministryPlatformService.Object, _apiUserService.Object);
         }
 
         [Test]

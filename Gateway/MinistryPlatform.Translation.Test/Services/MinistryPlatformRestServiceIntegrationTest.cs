@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [TestFixtureSetUp]
         public void SetupAll()
         {
-            var auth = AuthenticationService.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
+            var auth = AuthenticationRepository.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
             _authToken = auth["token"].ToString();
         }
 

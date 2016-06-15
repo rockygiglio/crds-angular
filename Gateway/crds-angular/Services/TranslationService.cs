@@ -56,7 +56,7 @@ namespace crds_angular.Services
         
         public static Dictionary<string, object> Login(string username, string password)
         {
-            return (AuthenticationService.authenticate(username, password));
+            return (AuthenticationRepository.authenticate(username, password));
         }
 
         public static dynamic DecodeJson(string json)

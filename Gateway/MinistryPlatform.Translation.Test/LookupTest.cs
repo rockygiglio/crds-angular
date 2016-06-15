@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldReturnAValidObjectWithUserIdAndEmailAddress()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
@@ -51,7 +51,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldReturnValidObjectForUpperCaseEmailAddress()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
@@ -63,7 +63,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldBeEmpty()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
@@ -75,7 +75,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfGenders()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> genders = _lookupService.Genders(token);
@@ -86,7 +86,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfMaritalStatus()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> maritalStatus = _lookupService.MaritalStatus(token);
@@ -97,7 +97,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfServiceProviders()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> ServiceProviders = _lookupService.ServiceProviders(token);
@@ -108,7 +108,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfStates()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> States = _lookupService.States(token);
@@ -119,7 +119,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfCountries()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> Countries = _lookupService.Countries(token);
@@ -131,7 +131,7 @@ namespace MinistryPlatform.Translation.Test
         public void ShouldFindListOfCrossroadsLocations()
         {
             var clifton = new Dictionary<string, object> { { "dp_RecordID", 11 }, { "dp_RecordName", "Uptown" } };
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
 
             var token = authData["token"].ToString();
@@ -145,7 +145,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfMinistries()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             List<Dictionary<string, object>> ministriesList = _lookupService.Ministries(token);
@@ -156,7 +156,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfChildCareLocations()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
@@ -168,7 +168,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindGroups()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
@@ -181,7 +181,7 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindChildcareTimes()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);

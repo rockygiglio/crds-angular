@@ -8,13 +8,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class AddressService : IAddressService
+    public class AddressRepository : IAddressService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
         private readonly int AddressPageId;
 
-        public AddressService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
+        public AddressRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
