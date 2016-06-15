@@ -22,7 +22,7 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty("last4")]
         public string Last4 { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("account_holder_name")]
+        public string AccountHolderName { get; set; }
     }
 }
