@@ -418,7 +418,7 @@ namespace crds_angular.test.Services
         }
 
         [Test, TestCaseSource("OpportunityCapacityCases")]
-        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<MpResponse> mockResponses,
+        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<Response> mockResponses,
             Capacity expectedCapacity)
         {
             const int opportunityId = 9999;
@@ -449,7 +449,7 @@ namespace crds_angular.test.Services
         {
             new object[]
             {
-                10, 20, new List<MpResponse>(),
+                10, 20, new List<Response>(),
                 new Capacity
                 {
                     Available = 10,
@@ -463,7 +463,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                10, null, new List<MpResponse>(),
+                10, null, new List<Response>(),
                 new Capacity
                 {
                     Available = 10,
@@ -477,7 +477,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                null, 20, new List<MpResponse>(),
+                null, 20, new List<Response>(),
                 new Capacity
                 {
                     Available = 20,
@@ -525,7 +525,7 @@ namespace crds_angular.test.Services
             opportunity.MaximumNeeded = null;
             opportunity.MinimumNeeded = null;
             opportunity.OpportunityId = opportunityId;
-            opportunity.Responses = new List<MpResponse>();
+            opportunity.Responses = new List<Response>();
 
             _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
                 .Returns(opportunity.Responses);
@@ -1099,22 +1099,22 @@ namespace crds_angular.test.Services
             }
         }
         
-        private static List<MpResponse> MockTwentyResponses()
+        private static List<Response> MockTwentyResponses()
         {
-            var responses = new List<MpResponse>();
+            var responses = new List<Response>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new MpResponse {Event_ID = 1000});
+                responses.Add(new Response {Event_ID = 1000});
             }
             return responses;
         }
 
-        private static List<MpResponse> MockFifteenResponses()
+        private static List<Response> MockFifteenResponses()
         {
-            var responses = new List<MpResponse>();
+            var responses = new List<Response>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new MpResponse {Event_ID = 1000});
+                responses.Add(new Response {Event_ID = 1000});
             }
             return responses;
         }

@@ -166,7 +166,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.VerifyAll();
 
             Assert.IsNotNull(response);
-            Assert.IsInstanceOf<MpResponse>(response);
+            Assert.IsInstanceOf<Response>(response);
             Assert.AreEqual(mockResponse[0]["dp_RecordID"], response.Response_ID);
         }
 

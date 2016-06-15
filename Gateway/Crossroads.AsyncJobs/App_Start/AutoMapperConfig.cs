@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Group = MinistryPlatform.Translation.Models.Group;
-using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
+using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace Crossroads.AsyncJobs
 {
@@ -36,7 +36,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.NickName))
                 .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId));
 
-            Mapper.CreateMap<MpResponse, OpportunityResponseDto>()
+            Mapper.CreateMap<Response, OpportunityResponseDto>()
                 .ForMember(dest => dest.Closed, opts => opts.MapFrom(src => src.Closed))
                 .ForMember(dest => dest.Comments, opts => opts.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.Event_ID))

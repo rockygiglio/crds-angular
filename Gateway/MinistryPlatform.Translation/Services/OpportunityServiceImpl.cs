@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Services
             _apiUserService = apiUserService;
         }
 
-        public MpResponse GetMyOpportunityResponses(int contactId, int opportunityId)
+        public Response GetMyOpportunityResponses(int contactId, int opportunityId)
         {
             var searchString = ",,,," + contactId;
             var subpageViewRecords = MinistryPlatformService.GetSubpageViewRecords(_contactOpportunityResponses,
@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            var response = new MpResponse
+            var response = new Response
             {
                 Opportunity_ID = (int) s["Opportunity ID"],
                 Participant_ID = (int) s["Participant ID"],
@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Services
             return opportunity;
         }
 
-        public MpResponse GetOpportunityResponse(int contactId, int opportunityId)
+        public Response GetOpportunityResponse(int contactId, int opportunityId)
         {
             var searchString = ",,,," + contactId;
             var subpageViewRecords = _ministryPlatformService.GetSubpageViewRecords(_contactOpportunityResponses,
@@ -96,7 +96,7 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
 
-            var response = new MpResponse();
+            var response = new Response();
             response.Response_ID = record.ToInt("dp_RecordID");
             response.Opportunity_ID = record.ToInt("Opportunity ID");
             response.Participant_ID = record.ToInt("Participant ID");
@@ -105,7 +105,7 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public MpResponse GetOpportunityResponse(int opportunityId, int eventId, Participant participant)
+        public Response GetOpportunityResponse(int opportunityId, int eventId, Participant participant)
         {
             var searchString = string.Format(",{0},{1},{2}", opportunityId, eventId, participant.ParticipantId);
             List<Dictionary<string, object>> dictionaryList;
@@ -133,10 +133,10 @@ namespace MinistryPlatform.Translation.Services
 
             if (dictionaryList.Count == 0)
             {
-                return new MpResponse();
+                return new Response();
             }
 
-            var response = new MpResponse();
+            var response = new Response();
             try
             {
                 var dictionary = dictionaryList.First();
@@ -187,17 +187,17 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public List<MpResponse> GetOpportunityResponses(int opportunityId, string token)
+        public List<Response> GetOpportunityResponses(int opportunityId, string token)
         {
             var records = _ministryPlatformService.GetSubpageViewRecords(_signedupToServeSubPageViewId,
                                                                          opportunityId,
                                                                          token,
                                                                          "");
 
-            var responses = new List<MpResponse>();
+            var responses = new List<Response>();
             foreach (var r in records)
             {
-                var response = new MpResponse();
+                var response = new Response();
                 response.Event_ID = r.ToInt("Event_ID");
                 responses.Add(response);
             }

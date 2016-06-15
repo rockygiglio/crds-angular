@@ -17,7 +17,7 @@ using Address = MinistryPlatform.Translation.Models.Address;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Event = MinistryPlatform.Translation.Models.Event;
 using Group = MinistryPlatform.Translation.Models.Group;
-using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
+using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace crds_angular.App_Start
 {
@@ -50,7 +50,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.NickName))
                 .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId));
 
-            Mapper.CreateMap<MpResponse, OpportunityResponseDto>()
+            Mapper.CreateMap<Response, OpportunityResponseDto>()
                 .ForMember(dest => dest.Closed, opts => opts.MapFrom(src => src.Closed))
                 .ForMember(dest => dest.Comments, opts => opts.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.Event_ID))

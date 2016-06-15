@@ -113,7 +113,7 @@ namespace MinistryPlatform.Translation.Services
 
         }
 
-        public List<MpResponse> GetParticipantResponses(int participantId)
+        public List<Response> GetParticipantResponses(int participantId)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace MinistryPlatform.Translation.Services
                         apiToken =>
                             (_ministryPlatformService.GetSubpageViewRecords("ParticipantResponsesWithEventId",
                                 participantId, apiToken, "", "")));
-                return records.Select(viewRecord => new MpResponse
+                return records.Select(viewRecord => new Response
                 {
                     Opportunity_ID = viewRecord.ToInt("Opportunity ID"),
                     Participant_ID = viewRecord.ToInt("Participant ID"),

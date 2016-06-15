@@ -186,7 +186,7 @@
     <Compile Include="Models\MpProgram.cs" />
     <Compile Include="Models\MpRecurringGift.cs" />
     <Compile Include="Models\MpRelationship.cs" />
-    <Compile Include="Models\MpResponse.cs" />
+    <Compile Include="Models\Response.cs" />
     <Compile Include="Models\MpRoom.cs" />
     <Compile Include="Models\MpTripDistribution.cs" />
     <Compile Include="Models\MpTripDocuments.cs" />
