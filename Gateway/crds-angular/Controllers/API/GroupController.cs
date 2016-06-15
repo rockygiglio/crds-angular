@@ -14,7 +14,6 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Services.Interfaces;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API

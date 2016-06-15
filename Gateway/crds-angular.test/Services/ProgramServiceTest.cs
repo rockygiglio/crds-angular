@@ -4,7 +4,7 @@ using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using MPServices=MinistryPlatform.Translation.Services.Interfaces;
 using NUnit.Framework;

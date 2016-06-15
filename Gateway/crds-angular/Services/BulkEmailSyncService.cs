@@ -11,12 +11,12 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Serializers;
 using log4net;
-using MinistryPlatform.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 using AutoMapper;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {

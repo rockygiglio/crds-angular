@@ -5,8 +5,8 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using CrossroadsStripeOnboarding.Models;
-using MinistryPlatform.Models;
 using RecurringGift = CrossroadsStripeOnboarding.Models.RecurringGift;
+using MinistryPlatform.Translation.Models;
 
 namespace CrossroadsStripeOnboarding.Services
 {

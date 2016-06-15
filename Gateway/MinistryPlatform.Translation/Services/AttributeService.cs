@@ -4,7 +4,7 @@ using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Models.Attribute;
+using Attribute = MinistryPlatform.Translation.Models.Attribute;
 
 namespace MinistryPlatform.Translation.Services
 {

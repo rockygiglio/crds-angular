@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models.People;
-using Event = MinistryPlatform.Models.Event;
+using Event = MinistryPlatform.Translation.Models.Event;
 
 namespace crds_angular.Services.Interfaces
 {

@@ -15,7 +15,7 @@ using System.Web.Http.Results;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Json;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.test.controllers

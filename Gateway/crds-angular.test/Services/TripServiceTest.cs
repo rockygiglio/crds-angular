@@ -5,7 +5,7 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;

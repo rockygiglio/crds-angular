@@ -5,8 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services

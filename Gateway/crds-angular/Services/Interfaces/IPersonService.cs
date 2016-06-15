@@ -4,7 +4,7 @@ using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.MP;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace crds_angular.Services.Interfaces
 {

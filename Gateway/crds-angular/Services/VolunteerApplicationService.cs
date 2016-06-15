@@ -5,7 +5,7 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.VolunteerApplication;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services

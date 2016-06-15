@@ -1,8 +1,8 @@
-﻿using MinistryPlatform.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Stewardship;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace crds_angular.Services.Interfaces
 {

@@ -12,7 +12,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Controllers.API

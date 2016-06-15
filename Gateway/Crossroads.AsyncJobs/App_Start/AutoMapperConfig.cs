@@ -6,11 +6,11 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Stewardship;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using Group = MinistryPlatform.Models.Group;
-using Response = MinistryPlatform.Models.Response;
+using Group = MinistryPlatform.Translation.Models.Group;
+using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace Crossroads.AsyncJobs
 {

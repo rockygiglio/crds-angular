@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;

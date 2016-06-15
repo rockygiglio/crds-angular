@@ -8,10 +8,10 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Models.Attribute;
+using Attribute = MinistryPlatform.Translation.Models.Attribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -184,7 +184,7 @@ namespace crds_angular.Services
         public List<Event> GetGroupEvents(int groupId, string token)
         {
             var eventTypes = _mpGroupService.GetEventTypesForGroup(groupId, token);
-            var events = new List<MinistryPlatform.Models.Event>();
+            var events = new List<MinistryPlatform.Translation.Models.Event>();
             foreach (var eventType in eventTypes.Where(eventType => !string.IsNullOrEmpty(eventType)))
             {
                 events.AddRange(_eventService.GetEvents(eventType, token));
@@ -265,7 +265,7 @@ namespace crds_angular.Services
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
                 if (events != null)
                 {
-                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Models.Event, crds_angular.Models.Crossroads.Events.Event>).ToList();
+                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Translation.Models.Event, crds_angular.Models.Crossroads.Events.Event>).ToList();
                 }
                 //the first instance of family must always be the logged in user
                 var fam = new SignUpFamilyMembers

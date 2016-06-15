@@ -11,12 +11,13 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
-using Address = MinistryPlatform.Models.Address;
+using MinistryPlatform.Translation.Models;
+using Address = MinistryPlatform.Translation.Models.Address;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using Group = MinistryPlatform.Models.Group;
-using Response = MinistryPlatform.Models.Response;
+using Event = MinistryPlatform.Translation.Models.Event;
+using Group = MinistryPlatform.Translation.Models.Group;
+using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace crds_angular.App_Start
 {
@@ -216,7 +217,7 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<DonorStatement, DonorStatementDTO>();
             Mapper.CreateMap<DonorStatementDTO, DonorStatement>();
 
-            Mapper.CreateMap<MinistryPlatform.Models.Event, Models.Crossroads.Events.Event>()
+            Mapper.CreateMap<Event, Models.Crossroads.Events.Event>()
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.EventId))
                 .ForMember(dest => dest.name, opts => opts.MapFrom(src => src.EventTitle))
                 .ForMember(dest => dest.location, opts => opts.MapFrom(src => src.Congregation))

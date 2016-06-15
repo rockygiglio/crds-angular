@@ -11,7 +11,7 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 

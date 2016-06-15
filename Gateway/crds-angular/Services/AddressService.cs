@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {

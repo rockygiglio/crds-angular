@@ -11,13 +11,13 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Event = MinistryPlatform.Models.Event;
+using Event = MinistryPlatform.Translation.Models.Event;
 
 namespace crds_angular.test.controllers
 {

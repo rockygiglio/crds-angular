@@ -7,7 +7,7 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace crds_angular.Controllers.API
 {

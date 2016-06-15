@@ -9,7 +9,7 @@ using log4net;
 using MinistryPlatform.Translation.Models.EventReservations;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
-using Event = MinistryPlatform.Models.Event;
+using Event = MinistryPlatform.Translation.Models.Event;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;

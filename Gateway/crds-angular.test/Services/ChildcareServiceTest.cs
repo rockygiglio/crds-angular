@@ -6,7 +6,7 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;

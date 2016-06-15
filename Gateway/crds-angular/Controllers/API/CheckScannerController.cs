@@ -13,7 +13,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Controllers.API

@@ -4,13 +4,13 @@ using crds_angular.App_Start;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Test.Services
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;

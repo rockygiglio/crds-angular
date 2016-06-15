@@ -7,7 +7,7 @@ using log4net;
 using MinistryPlatform.Translation.Services.Interfaces;
 using System.Linq;
 using AutoMapper;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using IFormBuilderService = MinistryPlatform.Translation.Services.Interfaces.IFormBuilderService;
 
 namespace crds_angular.Services

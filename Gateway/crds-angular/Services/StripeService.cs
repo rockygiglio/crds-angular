@@ -12,7 +12,7 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using RestSharp.Extensions;
 
 namespace crds_angular.Services

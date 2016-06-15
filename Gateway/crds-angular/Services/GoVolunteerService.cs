@@ -8,7 +8,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
@@ -411,7 +411,7 @@ namespace crds_angular.Services
 
         private void CreateRelationship(Registration registration, int contactId)
         {
-            var relationship = new MinistryPlatform.Models.Relationship
+            var relationship = new Relationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
                 RelatedContactID = contactId,

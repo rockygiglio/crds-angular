@@ -6,7 +6,7 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using MvcContrib.TestHelper.Ui;

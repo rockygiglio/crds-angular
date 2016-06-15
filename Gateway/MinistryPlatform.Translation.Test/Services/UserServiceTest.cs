@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;

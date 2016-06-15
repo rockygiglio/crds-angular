@@ -6,8 +6,8 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using Attribute = MinistryPlatform.Models.Attribute;
+using MinistryPlatform.Translation.Models;
+using Attribute = MinistryPlatform.Translation.Models.Attribute;
 using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 

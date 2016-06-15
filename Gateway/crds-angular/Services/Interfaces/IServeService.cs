@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 
 namespace crds_angular.Services.Interfaces
 {
     public interface IServeService
     {
-        List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<MinistryPlatform.Models.Participant, MinistryPlatform.Models.Event, Boolean> saveFunc = null);
+        List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, Event, Boolean> saveFunc = null);
         List<FamilyMember> GetImmediateFamilyParticipants(string token);
         DateTime GetLastServingDate(int opportunityId, string token);
         List<QualifiedServerDto> GetQualifiedServers(int groupId, int opportunityId, string token);

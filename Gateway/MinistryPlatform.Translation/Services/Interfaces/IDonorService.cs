@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {

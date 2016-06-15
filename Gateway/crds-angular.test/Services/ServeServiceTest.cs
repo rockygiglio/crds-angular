@@ -10,7 +10,6 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Services.Interfaces;
@@ -18,7 +17,7 @@ using Moq;
 using NUnit.Framework;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using Participant = MinistryPlatform.Models.Participant;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
 {

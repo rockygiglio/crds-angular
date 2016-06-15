@@ -4,13 +4,13 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Communication = MinistryPlatform.Models.Communication;
+using Communication = MinistryPlatform.Translation.Models.Communication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {

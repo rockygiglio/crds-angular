@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
-using MinistryPlatform.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Services
 {

@@ -10,17 +10,17 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using Moq;
 using NUnit.Framework;
-using Attribute = MinistryPlatform.Models.Attribute;
-using Event = MinistryPlatform.Models.Event;
+using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using Event = MinistryPlatform.Translation.Models.Event;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
-using Participant = MinistryPlatform.Models.Participant;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
 {

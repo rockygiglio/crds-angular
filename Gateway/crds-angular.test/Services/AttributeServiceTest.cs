@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;

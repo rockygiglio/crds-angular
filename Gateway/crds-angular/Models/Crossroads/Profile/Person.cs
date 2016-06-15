@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using Address = crds_angular.Models.MP.Address;
 

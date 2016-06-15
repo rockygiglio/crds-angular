@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Services.Interfaces;
 

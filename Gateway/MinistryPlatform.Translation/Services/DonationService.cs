@@ -5,13 +5,13 @@ using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Communication = MinistryPlatform.Models.Communication;
+using Communication = MinistryPlatform.Translation.Models.Communication;
 
 namespace MinistryPlatform.Translation.Services
 {

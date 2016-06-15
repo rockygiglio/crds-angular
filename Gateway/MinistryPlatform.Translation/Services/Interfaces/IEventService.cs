@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
 

@@ -5,7 +5,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 using Moq;

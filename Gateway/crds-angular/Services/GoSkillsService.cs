@@ -6,7 +6,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 

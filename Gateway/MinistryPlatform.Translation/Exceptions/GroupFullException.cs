@@ -1,5 +1,5 @@
 ﻿using System;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Exceptions
 {

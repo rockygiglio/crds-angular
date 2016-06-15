@@ -12,7 +12,7 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.test.Services

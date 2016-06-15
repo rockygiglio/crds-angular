@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
 using System.Collections.Generic;
-using MinistryPlatform.Models.Attributes;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Test.Services
 {

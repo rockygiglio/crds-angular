@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services

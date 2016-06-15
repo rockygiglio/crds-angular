@@ -12,8 +12,8 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
@@ -277,7 +277,7 @@ namespace crds_angular.Services
             return capacity;
         }
 
-        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, MinistryPlatform.Models.Event, bool> saveFunc = null)
+        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, Event, bool> saveFunc = null)
         {
             var updatedEvents = new List<int>();
 

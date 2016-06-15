@@ -1,4 +1,4 @@
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {

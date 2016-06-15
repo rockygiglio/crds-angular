@@ -4,7 +4,6 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using FsCheck;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models;
 using Equipment = crds_angular.Models.Crossroads.GoVolunteer.Equipment;
 using Random = System.Random;
@@ -74,7 +73,7 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static MinistryPlatform.Models.Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        public static Communication Communication(MyContact sender, MyContact sendee, int templateId)
         {           
             return new Communication()
             {

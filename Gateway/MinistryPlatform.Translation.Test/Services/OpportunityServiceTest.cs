@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;

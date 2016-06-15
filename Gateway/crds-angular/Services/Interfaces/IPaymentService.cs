@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Stewardship;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services.Interfaces
 {

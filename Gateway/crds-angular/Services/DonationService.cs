@@ -10,8 +10,8 @@ using crds_angular.Util;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 

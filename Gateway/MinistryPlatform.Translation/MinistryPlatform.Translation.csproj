@@ -115,26 +115,83 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\Attribute.cs" />
+    <Compile Include="Models\Attributes\RestApiTable.cs" />
+    <Compile Include="Models\BulkEmailPublication.cs" />
+    <Compile Include="Models\BulkEmailSubscriber.cs" />
+    <Compile Include="Models\BulkEmailSubscriberOpt.cs" />
     <Compile Include="Models\Childcare\ChildcareRequest.cs" />
     <Compile Include="Models\Childcare\ChildcareRequestDates.cs" />
     <Compile Include="Models\Childcare\ChildcareRequestEmail.cs" />
+    <Compile Include="Models\Communication.cs" />
+    <Compile Include="Models\CommunicationPreferences.cs" />
     <Compile Include="Models\Congregation.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\ContactDonor.cs" />
+    <Compile Include="Models\ContactRelationship.cs" />
+    <Compile Include="Models\Deposit.cs" />
+    <Compile Include="Models\Donation.cs" />
+    <Compile Include="Models\DonationAndDistributionRecord.cs" />
+    <Compile Include="Models\DonationBatch.cs" />
+    <Compile Include="Models\DonationDistribution.cs" />
+    <Compile Include="Models\DonationStatus.cs" />
+    <Compile Include="Models\DonorStatement.cs" />
+    <Compile Include="Models\DTO\CreateDonationDistDto.cs" />
+    <Compile Include="Models\DTO\RespondToOpportunityDto.cs" />
+    <Compile Include="Models\DTO\RoleDto.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\EventGroup.cs" />
+    <Compile Include="Models\EventParticipant.cs" />
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />
     <Compile Include="Models\EventReservations\EventReservationDto.cs" />
     <Compile Include="Models\EventReservations\RoomReservationDto.cs" />
+    <Compile Include="Models\FormField.cs" />
+    <Compile Include="Models\FormResponse.cs" />
     <Compile Include="Models\GoCincinnati\Registration.cs" />
     <Compile Include="Models\GoCincinnati\MpGroupConnector.cs" />
     <Compile Include="Models\GoCincinnati\ProjectType.cs" />
+    <Compile Include="Models\GPExportDatum.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupParticipant.cs" />
+    <Compile Include="Models\GroupSearchAttributes.cs" />
+    <Compile Include="Models\GroupSearchResult.cs" />
+    <Compile Include="Models\GroupServingParticipant.cs" />
+    <Compile Include="Models\GroupServingResponses.cs" />
+    <Compile Include="Models\GroupSignupRelationships.cs" />
+    <Compile Include="Models\Household.cs" />
+    <Compile Include="Models\HouseholdMember.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Lookups\MPOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MPWorkTeams.cs" />
+    <Compile Include="Models\MessageTemplate.cs" />
+    <Compile Include="Models\MinistryPlatformUser.cs" />
     <Compile Include="Models\MPGoVolunteerSkill.cs" />
     <Compile Include="Models\MPOrganization.cs" />
     <Compile Include="Models\MPServeReminder.cs" />
+    <Compile Include="Models\MPTask.cs" />
+    <Compile Include="Models\MyContact.cs" />
+    <Compile Include="Models\ObjectAttribute.cs" />
+    <Compile Include="Models\ObjectAttributeConfiguration.cs" />
+    <Compile Include="Models\ObjectAttributeConfigurationFactory.cs" />
     <Compile Include="Models\Opportunities\MPResponse.cs" />
+    <Compile Include="Models\Opportunity.cs" />
+    <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\People\MpParticipant.cs" />
     <Compile Include="Models\People\Participant.cs" />
+    <Compile Include="Models\Pledge.cs" />
+    <Compile Include="Models\PledgeCampaign.cs" />
+    <Compile Include="Models\PostalAddress.cs" />
+    <Compile Include="Models\PrivateInvite.cs" />
+    <Compile Include="Models\Program.cs" />
+    <Compile Include="Models\RecurringGift.cs" />
+    <Compile Include="Models\Relationship.cs" />
+    <Compile Include="Models\Response.cs" />
     <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\TripDistribution.cs" />
+    <Compile Include="Models\TripDocuments.cs" />
+    <Compile Include="Models\TripFormResponse.cs" />
+    <Compile Include="Models\TripParticipant.cs" />
     <Compile Include="Services\AddressRepository.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\BulkEmailRepository.cs" />
@@ -349,10 +406,6 @@
     <ProjectReference Include="..\Crossroads.Utilities\Crossroads.Utilities.csproj">
       <Project>{61238A82-D410-4330-BD25-889239FC7873}</Project>
       <Name>Crossroads.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MinistryPlatform.Models\MinistryPlatform.Models.csproj">
-      <Project>{cd41507e-91ac-4c60-96e2-5cac25f49a76}</Project>
-      <Name>MinistryPlatform.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

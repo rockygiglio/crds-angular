@@ -6,9 +6,9 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using log4net;
-using MinistryPlatform.Models;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {

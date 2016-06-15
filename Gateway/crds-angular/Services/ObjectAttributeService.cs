@@ -4,9 +4,9 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
-using Attribute = MinistryPlatform.Models.Attribute;
+using Attribute = MinistryPlatform.Translation.Models.Attribute;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services

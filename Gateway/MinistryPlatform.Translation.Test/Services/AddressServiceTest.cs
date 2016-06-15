@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 

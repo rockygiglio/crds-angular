@@ -7,7 +7,6 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Newtonsoft.Json;
 

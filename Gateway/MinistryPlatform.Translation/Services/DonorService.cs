@@ -7,13 +7,13 @@ using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Communication = MinistryPlatform.Models.Communication;
+using Communication = MinistryPlatform.Translation.Models.Communication;
 
 namespace MinistryPlatform.Translation.Services
 {

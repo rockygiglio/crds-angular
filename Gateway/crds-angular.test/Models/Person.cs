@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.test.Models
 {
@@ -21,7 +21,7 @@ namespace crds_angular.test.Models
         public void ShouldReturnHouseholdType()
         {
             var household = _person.GetHousehold();
-            Assert.That(household, Is.TypeOf<MinistryPlatform.Models.Household>());
+            Assert.That(household, Is.TypeOf<Household>());
             Assert.AreEqual(_person.CongregationId, household.Congregation_ID);
 
         }
