@@ -1,5 +1,3 @@
-require('../../app/core');
-
 describe('ContentSiteConfigService', function() {
   var ContentSiteConfigService;
 

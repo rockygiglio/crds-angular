@@ -1,4 +1,4 @@
-require('../../app/core');
+
 
 describe('Date Field Directive', function() {
 

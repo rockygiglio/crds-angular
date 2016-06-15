@@ -1,4 +1,4 @@
-require('../../app/core');
+
 
 describe('Dropdown Validator', function() {
 

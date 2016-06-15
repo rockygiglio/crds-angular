@@ -1,4 +1,4 @@
-require('../../app/core');
+
 
 describe('Session Service', function() {
 

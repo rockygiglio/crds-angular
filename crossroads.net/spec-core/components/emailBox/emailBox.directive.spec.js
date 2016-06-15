@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  require('../../../app/core');
+  
 
   describe('EmailBox Directive', function() {
 

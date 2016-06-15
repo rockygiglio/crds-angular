@@ -1,4 +1,4 @@
-require('../../app/core');
+
 
 describe('Auth Service', function() {
   var fixture;

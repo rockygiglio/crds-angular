@@ -27,13 +27,13 @@ module.exports = function(config) {
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       './node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'spec/spec_index.js'
+      'spec-core/spec_index.js'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec/spec_index.js': ['webpack','env']
+      'spec-core/spec_index.js': ['webpack','env']
     },
 
     envPreprocessor: [

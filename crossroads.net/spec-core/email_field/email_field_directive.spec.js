@@ -1,4 +1,4 @@
-require('../../app/core');
+
 
 describe('Email Field Directive', function() {
   var mockSession, mockUser;
