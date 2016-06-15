@@ -17,8 +17,10 @@ This will create a symbolic link in your node_modules directory to your local co
 
 We use gulp scripts to build and run webpack so you will also need to install gulp globally.  This is not required, but makes command-line tasks easier later on.  To install gulp globally, use one of the following commands.  Both will install gulp into the NodeJS path, which is presumably already on your OS's execution PATH.
 
-For Windows users (replace the prefix value below with the path to your NodeJS install):
+For Windows users (replace the prefix value below with the path to your NodeJS install): 
+Ensure you are running the command prompt as administrator
 ``` npm set prefix "C:\Program Files\nodejs" ```
+
 ``` npm install -g gulp ```
 
 Mac and Linux (replace the prefix value below with the path to your NodeJS install):
