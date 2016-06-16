@@ -408,7 +408,7 @@ namespace crds_angular.Services
         /// </summary>
         /// <param name="authorizedUserToken">An OAuth token for the user who is logged in to cr.net/MP</param>
         /// <param name="editGift">The edited values for the Recurring Gift</param>
-        /// <param name="donor">The donor performing the edits</param>
+        /// <param name="donor>The donor performing the edits</param>
         /// <returns>A RecurringGiftDto, populated with any new/updated values after any edits</returns>
         public RecurringGiftDto EditRecurringGift(string authorizedUserToken, RecurringGiftDto editGift, MpContactDonor donor)
         {

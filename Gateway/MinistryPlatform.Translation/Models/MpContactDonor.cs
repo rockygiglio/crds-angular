@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Models
     /// This could be for a registered User who has given online, or a Guest giver 
     /// who has previously given online, or for someone who has given cash or checks 
     /// directly without ever logging in.  There are various properties on this object
-    /// that can be referenced to determine the state of the ContactDonor.
+    /// that can be referenced to determine the state of the MpContactDonor.
     /// </summary>
     public class MpContactDonor
     {
@@ -21,22 +21,22 @@ namespace MinistryPlatform.Translation.Models
         public string ProcessorId { get; set; }
         public string Email { get; set; }
         public bool RegisteredUser {get; set; }
-        public ContactDetails Details { get; set; }
-        public DonorAccount Account { get; set; }
+        public MpContactDetails Details { get; set; }
+        public MpDonorAccount Account { get; set; }
 
         /// <summary>
-        /// Returns true if this ContactDonor represents an existing MP Contact, false if not.
+        /// Returns true if this MpContactDonor represents an existing MP Contact, false if not.
         /// </summary>
         public bool ExistingContact { get { return (ContactId > 0); } }
 
         /// <summary>
-        /// Returns true if this ContactDonor represents an existing MP Donor, false if not.
+        /// Returns true if this MpContactDonor represents an existing MP Donor, false if not.
         /// An existing Donor implies that there is an existing Contact.
         /// </summary>
         public bool ExistingDonor { get { return (ExistingContact && DonorId > 0); } }
 
         /// <summary>
-        /// Returns true if this ContactDonor has a record setup at the payment processor, false if not.
+        /// Returns true if this MpContactDonor has a record setup at the payment processor, false if not.
         /// </summary>
         public bool HasPaymentProcessorRecord { get { return (!String.IsNullOrWhiteSpace(ProcessorId)); } }
 
@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Models
         public bool HasAccount { get { return (Account != null); } }
     }
 
-    public class ContactDetails
+    public class MpContactDetails
     {
         public string EmailAddress { get; set; }
         public string DisplayName { get; set; }
@@ -55,7 +55,7 @@ namespace MinistryPlatform.Translation.Models
         public bool HasAddress { get { return (Address != null); } }
     }
 
-    public class DonorAccount
+    public class MpDonorAccount
     {
         public int DonorAccountId { get; set; }
         public string AccountNumber { get; set; }

@@ -128,7 +128,7 @@
     <Compile Include="Models\MpCommunicationPreferences.cs" />
     <Compile Include="Models\MpCongregation.cs" />
     <Compile Include="Models\MpContact.cs" />
-    <Compile Include="Models\ContactDonor.cs" />
+    <Compile Include="Models\MpContactDonor.cs" />
     <Compile Include="Models\MpContactRelationship.cs" />
     <Compile Include="Models\MpDeposit.cs" />
     <Compile Include="Models\MpDonation.cs" />
