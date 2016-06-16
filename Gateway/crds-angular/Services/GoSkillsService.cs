@@ -67,11 +67,11 @@ namespace crds_angular.Services
             if (token == String.Empty)
             {
                 token = _apiUserService.GetToken();
-                configuration = ObjectAttributeConfigurationFactory.Contact();
+                configuration = MpObjectAttributeConfigurationFactory.Contact();
             }
             else
             {
-                configuration = ObjectAttributeConfigurationFactory.MyContact();
+                configuration = MpObjectAttributeConfigurationFactory.MyContact();
             }
 
             var contactObs = Observable.Start(() => _contactService.GetContactByParticipantId(participantId));
@@ -138,7 +138,7 @@ namespace crds_angular.Services
         private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken)
         {
             var contact = _contactService.GetMyProfile(token);
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contact.Contact_ID, configuration);
             ObjectAttributeTypeDTO contactSkills;
             var skillsAttributeTypeId = _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills");

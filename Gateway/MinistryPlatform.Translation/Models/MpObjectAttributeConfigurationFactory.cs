@@ -2,7 +2,7 @@ using System.Configuration;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public static class ObjectAttributeConfigurationFactory
+    public static class MpObjectAttributeConfigurationFactory
     {
         public static MpObjectAttributeConfiguration Contact()
         {

@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IContactService> _contactService;
         private Mock<ICryptoProvider> _crypto;
 
-        private DonorService _fixture;
+        private DonorRepository _fixture;
 
         [SetUp]
         public void SetUp()
@@ -57,7 +57,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new DonorService(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
+            _fixture = new DonorRepository(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
         }
 
         [Test]
@@ -566,7 +566,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 299,
                 It.Is<Dictionary<string, object>>(
                     d => ((int)d["Donor_ID"]) == 123
-                        && ((string)d[DonorService.DonorProcessorId]).Equals("456")),
+                        && ((string)d[DonorRepository.DonorProcessorId]).Equals("456")),
                 It.IsAny<string>()));
             Assert.AreEqual(123, response);
         }
@@ -893,7 +893,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorService>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };
@@ -925,7 +925,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorService>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };
@@ -957,7 +957,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorService>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };

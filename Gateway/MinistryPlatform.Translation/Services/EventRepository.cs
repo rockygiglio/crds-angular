@@ -12,7 +12,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class EventService : BaseService, IEventService
+    public class EventRepository : BaseService, IEventService
     {
         private readonly log4net.ILog _logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -31,7 +31,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IGroupService _groupService;
 
-        public EventService(IMinistryPlatformService ministryPlatformService,
+        public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationService authenticationService,
                             IConfigurationWrapper configurationWrapper,
                             IGroupService groupService)

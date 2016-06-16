@@ -82,7 +82,7 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<MpGroup>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
-                var configuration = ObjectAttributeConfigurationFactory.Group();
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)
@@ -126,7 +126,7 @@ namespace crds_angular.Services
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
 
-                    var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
+                    var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
                     _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
@@ -251,7 +251,7 @@ namespace crds_angular.Services
             }
 
             var apiToken = _apiUserService.GetToken();
-            var configuration = ObjectAttributeConfigurationFactory.Group();
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, groupId, configuration);
 
             var detail = new GroupDTO();
@@ -310,7 +310,7 @@ namespace crds_angular.Services
 
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.Group();
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
             var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
@@ -389,7 +389,7 @@ namespace crds_angular.Services
             }
             var participants = groupParticipants.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
+            var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
             var mpAttributes = _attributeService.GetAttributes(null);

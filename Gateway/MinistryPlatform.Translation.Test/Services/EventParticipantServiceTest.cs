@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Test.Services
 {
     public class EventParticipantServiceTest
     {
-        private EventParticipantService _fixture;
+        private EventParticipantRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("api-password");
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("TripDestinationDocuments")).Returns(1234);
 
-            _fixture = new EventParticipantService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new EventParticipantRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

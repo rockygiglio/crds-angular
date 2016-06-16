@@ -28,10 +28,10 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("EventsBySite")).Returns(2222);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new EventService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
+            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
         }
 
-        private EventService _fixture;
+        private EventRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;

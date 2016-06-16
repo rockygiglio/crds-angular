@@ -6,11 +6,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class DestinationService : BaseService, IDestinationService
+    public class DestinationRepository : BaseService, IDestinationService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public DestinationService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public DestinationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
