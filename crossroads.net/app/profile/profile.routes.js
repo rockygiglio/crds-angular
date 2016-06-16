@@ -27,12 +27,13 @@
             Profile: 'Profile',
             $stateParams: '$stateParams',
             $cookies: '$cookies',
+            Lookup: 'Lookup',
 
-            AttributeTypes: function (AttributeTypeService) {
+            AttributeTypes: function(AttributeTypeService) {
               return AttributeTypeService.AttributeTypes().query().$promise;
             },
 
-            Person: function (Profile, $stateParams, $cookies) {
+            Person: function(Profile, $stateParams, $cookies) {
               var cid = $cookies.get('userId');
               if ($stateParams.contactId) {
                 cid = $stateParams.contactId;
@@ -41,18 +42,19 @@
               return Profile.Person.get({contactId: cid}).$promise;
             },
 
-            Locations: function (Lookup) {
+            Locations: function(Lookup) {
               return Lookup.query({
                 table: 'crossroadslocations'
-              }, function (data) {
+              }, function(data) {
                 return data;
               });
             },
 
-            Subscriptions: function (Profile) {
+            Subscriptions: function(Profile) {
               return Profile.Subscriptions.query().$promise;
             },
-            Statement: function (Profile) {
+
+            Statement: function(Profile) {
               return Profile.Statement.get().$promise;
             },
 

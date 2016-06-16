@@ -4,8 +4,7 @@ import CONSTANTS from 'crds-constants';
 
 angular.module(CONSTANTS.MODULES.MPTOOLS)
     .directive('requestChildcare', requestChildcareComponent)
-    .service('RequestChildcareService', RequestChildcareService) 
+    .service('RequestChildcareService', RequestChildcareService)
     ;
-
 
 require('./requestChildcare.html');

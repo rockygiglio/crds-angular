@@ -116,6 +116,7 @@
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
     <Compile Include="Models\Childcare\ChildcareRequest.cs" />
+    <Compile Include="Models\Childcare\ChildcareRequestDates.cs" />
     <Compile Include="Models\Childcare\ChildcareRequestEmail.cs" />
     <Compile Include="Models\Congregation.cs" />
     <Compile Include="Models\EventReservations\EquipmentReservationDto.cs" />

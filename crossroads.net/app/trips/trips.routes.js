@@ -19,6 +19,7 @@
         templateUrl: 'tripsearch/tripsearch.html',
         resolve: {
           Page: 'Page',
+          $stateParams: '$stateParams',
           CmsInfo: function(Page, $stateParams) {
             return Page.get({
               url: '/trips/search/'
@@ -40,6 +41,7 @@
         resolve: {
           Trip: 'Trip',
           $stateParams: '$stateParams',
+          $state: '$state',
           TripParticipant: function(Trip, $stateParams) {
             return Trip.TripParticipant.get({
               tripParticipantId: $stateParams.eventParticipantId
@@ -221,10 +223,12 @@
             return;
           },
 
+          Trip: 'Trip',
           WorkTeams: function(Trip) {
             return Trip.WorkTeams.query().$promise;
           },
 
+          Lookup: 'Lookup',
           Locations: function(Lookup) {
             return Lookup.query({
               table: 'crossroadslocations'

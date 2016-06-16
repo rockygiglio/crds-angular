@@ -15,7 +15,7 @@ declare @UNDIVIDED_SUB_GROUP_END_DATE as Date = '2016-09-11';
 -- If more sites are needed, add them to the this temp table AND add them to case statement below
 declare @sites table(idx int identity(1,1), siteId int, siteName varchar(255), groupDescription varchar(255));
 insert into @sites (siteId, siteName, groupDescription) 
-		values (7, 'Florence', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (6, 'Mason', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (1, 'Oakley', '6:30 - 8:30pm, Every Monday from August 8 to August 29'), (8, 'West Side', '6:30 - 8:30pm, Every Thursday from August 11 to August 31');
+		values (7, 'Florence', '6:30 - 8:30pm, Every Monday from August 1 to August 29'), (6, 'Mason', '6:30 - 8:30pm, Every Monday from August 1 to August 29'), (1, 'Oakley', '6:30 - 8:30pm, Every Tuesday from August 2 to August 30'), (8, 'West Side', '6:30 - 8:30pm, Every Thursday from August 4 to August 31');
 
 declare @i int;
 declare @cnt int;
@@ -97,6 +97,7 @@ begin
 			,[Ministry_ID]
 			,[Congregation_ID]
 			,[Primary_Contact]
+			,[Description]
 			,[Start_Date]
 			,[End_Date]
 			,[Domain_ID])
@@ -108,6 +109,7 @@ begin
 			,@UNDIVIDED_GROUP_MINISTRY
 			,@siteId
 			,@PRIMARY_CONTACT
+			,@groupDescription
 			,@UNDIVIDED_SUB_GROUP_START_DATE
 			,@UNDIVIDED_SUB_GROUP_END_DATE
 			,1

@@ -14,20 +14,19 @@ namespace crds_angular.Exceptions.Models
         {
         }
 
-        public ApiErrorDto(string message, Exception exception = null, HttpStatusCode code = HttpStatusCode.BadRequest)
+        public ApiErrorDto(string message, Exception exception = null, HttpStatusCode code = HttpStatusCode.BadRequest, List<string> errors = null )
         {
             this.code = code;
             this.Message = message;
 
-            if (exception != null)
+            if (exception == null) return;
+            var privateErrors = errors ?? new List<string>();
+            privateErrors.Add(exception.Message);
+            if (exception.InnerException != null)
             {
-                var errors = new List<string> {exception.Message};
-                if (exception.InnerException != null)
-                {
-                    errors.Add(exception.InnerException.Message);
-                }
-                this.Errors = errors;
+                privateErrors.Add(exception.InnerException.Message);
             }
+            this.Errors = privateErrors;
         }
 
         [JsonProperty(PropertyName = "message")]

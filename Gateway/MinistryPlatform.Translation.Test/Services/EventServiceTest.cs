@@ -51,7 +51,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Event Title", "event-title-100"},
                     {"Event Type", "event-type-100"},
                     {"Event Start Date", new DateTime(2015, 3, 28, 8, 30, 0)},
-                    {"Event End Date", new DateTime(2015, 3, 28, 8, 30, 0)}
+                    {"Event End Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                    {"Congregation_ID", 1}
                 },
                 new Dictionary<string, object>
                 {
@@ -59,7 +60,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Event Title", "event-title-200"},
                     {"Event Type", "event-type-200"},
                     {"Event Start Date", new DateTime(2015, 4, 1, 8, 30, 0)},
-                    {"Event End Date", new DateTime(2015, 4, 1, 8, 30, 0)}
+                    {"Event End Date", new DateTime(2015, 4, 1, 8, 30, 0)},
+                    {"Congregation_ID", 1}
                 },
                 new Dictionary<string, object>
                 {
@@ -67,7 +69,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Event Title", "event-title-300"},
                     {"Event Type", "event-type-300"},
                     {"Event Start Date", new DateTime(2015, 4, 2, 8, 30, 0)},
-                    {"Event End Date", new DateTime(2015, 4, 2, 8, 30, 0)}
+                    {"Event End Date", new DateTime(2015, 4, 2, 8, 30, 0)},
+                    {"Congregation_ID", 1}
                 }
                 ,
                 new Dictionary<string, object>
@@ -76,7 +79,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Event Title", "event-title-400"},
                     {"Event Type", "event-type-400"},
                     {"Event Start Date", new DateTime(2015, 4, 30, 8, 30, 0)},
-                    {"Event End Date", new DateTime(2015, 4, 30, 8, 30, 0)}
+                    {"Event End Date", new DateTime(2015, 4, 30, 8, 30, 0)},
+                    {"Congregation_ID", 1}
                 }
                 ,
                 new Dictionary<string, object>
@@ -85,7 +89,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Event Title", "event-title-500"},
                     {"Event Type", "event-type-500"},
                     {"Event Start Date", new DateTime(2015, 5, 1, 8, 30, 0)},
-                    {"Event End Date", new DateTime(2015, 5, 1, 8, 30, 0)}
+                    {"Event End Date", new DateTime(2015, 5, 1, 8, 30, 0)},
+                    {"Congregation_ID", 1}
                 }
             };
         }

@@ -116,13 +116,7 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(t =>
             {
-                var ret = new List<Dictionary<string, object>>();
-                ret = _lookupService.ChildcareTimesByCongregation(t, congregationid);
-
-                if (ret.Count == 0)
-                {
-                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationid));
-                }
+                var ret = _lookupService.ChildcareTimesByCongregation(t, congregationid);
                 return Ok(ret);
             });
         }

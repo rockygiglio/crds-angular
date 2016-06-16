@@ -451,7 +451,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                var response = _fixture.ChargeCustomer("cust_token", "nonexistant source", 9090, 98765);
+                var response = _fixture.ChargeCustomer("cust_token", "nonexistant source", 9090, 98765, "1111");
                 Assert.Fail("Should have thrown exception");
             }
             catch (PaymentProcessorException e)
@@ -543,8 +543,8 @@ namespace crds_angular.test.Services
                 It.Is<RestRequest>(o =>
                     o.Method == Method.GET
                     && o.Resource.Equals("charges/456/refunds")
-                    && o.Parameters.Matches("expand[]", "balance_transaction")
-                    && o.Parameters.Matches("expand[]", "charge")
+                    && o.Parameters.Matches("expand[]", "data.balance_transaction")
+                    && o.Parameters.Matches("expand[]", "data.charge")
             )));
        
             _restClient.VerifyAll();

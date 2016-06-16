@@ -26,7 +26,7 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: function(SystemPage, $state) {
+            Meta: ['SystemPage', '$state', function(SystemPage, $state) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
@@ -39,14 +39,14 @@
                       $state.next.data.meta = systemPage.systemPages[0];
                     }
                   });
-            },
+            }],
 
-            SiteConfig: function(SiteConfig, ContentSiteConfigService) {
+            SiteConfig: ['SiteConfig', 'ContentSiteConfigService', function(SiteConfig, ContentSiteConfigService) {
               return SiteConfig.get({id: 1}).$promise.then(function(result) {
                     ContentSiteConfigService.siteconfig = result.siteConfig;
                   }
               );
-            }
+            }]
           }
         })
         .state('noSideBar', {
@@ -450,13 +450,12 @@
           },
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
-            Page: 'Page',
-            CmsInfo: function(Page, $stateParams) {
+            CmsInfo: ['Page', '$stateParams', function(Page, $stateParams) {
               var link = addTrailingSlashIfNecessary($stateParams.link);
               return Page.get({
                 url: link
               }).$promise;
-            }
+            }]
           }
         })
         .state('volunteer-application', {
@@ -474,7 +473,7 @@
           resolve: {
             loggedin: crds_utilities.checkLoggedin,
             Page: 'Page',
-            PageInfo: function($q, Profile, Page, $stateParams) {
+            PageInfo: ['$q', 'Profile', 'Page', '$stateParams', function($q, Profile, Page, $stateParams) {
               var deferred = $q.defer();
               var contactId = $stateParams.id;
 
@@ -499,7 +498,7 @@
                   });
 
               return deferred.promise;
-            },
+            }],
 
             Volunteer: 'VolunteerService',
             Family: function(Volunteer) {
@@ -516,32 +515,32 @@
           templateUrl: 'thedaily/thedaily.html'
         });
 
-        // Commented out for US2924, will be added back after Corkboard go-live
-        //
-        //.state('corkboard', {
-        //  url: '{link:corkboardRouteType}',
-        //  resolve: {
-        //    RedirectToSubSite: function($window, $location) {
-        //      // Force browser to do a full reload to load corkboard's index.html
-        //      $window.location.href = $location.path();
-        //    }
-        //  },
-        //  data: {
-        //    preventRouteAuthentication: true,
-        //    meta: {
-        //      title: 'Corkboard',
-        //      description: ''
-        //    }
-        //  }
-        //})
+    // Commented out for US2924, will be added back after Corkboard go-live
+    //
+    //.state('corkboard', {
+    //  url: '{link:corkboardRouteType}',
+    //  resolve: {
+    //    RedirectToSubSite: function($window, $location) {
+    //      // Force browser to do a full reload to load corkboard's index.html
+    //      $window.location.href = $location.path();
+    //    }
+    //  },
+    //  data: {
+    //    preventRouteAuthentication: true,
+    //    meta: {
+    //      title: 'Corkboard',
+    //      description: ''
+    //    }
+    //  }
+    //})
 
-        //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
-        //will handle the routing.
-        //.state('404', {
-        //    templateUrl: __CMS_ENDPOINT__ + '/page-not-found/'
-        //}); 
+    //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
+    //will handle the routing.
+    //.state('404', {
+    //    templateUrl: __CMS_ENDPOINT__ + '/page-not-found/'
+    //});
 
-        $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/');
   }
 
   function addTrailingSlashIfNecessary(link) {
