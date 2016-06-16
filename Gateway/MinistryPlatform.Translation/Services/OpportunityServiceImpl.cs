@@ -6,8 +6,8 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
-using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Services.Interfaces;
+using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            var response = new Models.MpResponse
+            var response = new MpResponse
             {
                 Opportunity_ID = (int) s["Opportunity ID"],
                 Participant_ID = (int) s["Participant ID"],
@@ -96,7 +96,7 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
 
-            var response = new Models.MpResponse();
+            var response = new MpResponse();
             response.Response_ID = record.ToInt("dp_RecordID");
             response.Opportunity_ID = record.ToInt("Opportunity ID");
             response.Participant_ID = record.ToInt("Participant ID");
@@ -133,10 +133,10 @@ namespace MinistryPlatform.Translation.Services
 
             if (dictionaryList.Count == 0)
             {
-                return new Models.MpResponse();
+                return new MpResponse();
             }
 
-            var response = new Models.MpResponse();
+            var response = new MpResponse();
             try
             {
                 var dictionary = dictionaryList.First();
@@ -176,7 +176,7 @@ namespace MinistryPlatform.Translation.Services
 
         private List<Models.Opportunities.MpResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
         {
-            return response.Select(r => new MpResponse()
+            return response.Select(r => new Models.Opportunities.MpResponse()
             {
                 Contact_ID = r.ToInt("Contact_ID"),
                 Event_ID = r.ToInt("Event_ID"),
@@ -187,17 +187,17 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public List<Models.MpResponse> GetOpportunityResponses(int opportunityId, string token)
+        public List<MpResponse> GetOpportunityResponses(int opportunityId, string token)
         {
             var records = _ministryPlatformService.GetSubpageViewRecords(_signedupToServeSubPageViewId,
                                                                          opportunityId,
                                                                          token,
                                                                          "");
 
-            var responses = new List<Models.MpResponse>();
+            var responses = new List<MpResponse>();
             foreach (var r in records)
             {
-                var response = new Models.MpResponse();
+                var response = new MpResponse();
                 response.Event_ID = r.ToInt("Event_ID");
                 responses.Add(response);
             }
