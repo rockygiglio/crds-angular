@@ -7,9 +7,9 @@ using crds_angular.Models.MP;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
-using ILookupRepository = MinistryPlatform.Translation.Services.Interfaces.ILookupRepository;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {

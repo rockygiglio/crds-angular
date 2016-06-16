@@ -11,7 +11,7 @@ using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Json;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using MinistryPlatform.Translation.Models;
@@ -26,13 +26,13 @@ namespace crds_angular.test.controllers
     class DonationControllerTest
     {
         private DonationController fixture;
-        private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorRepository> donorServiceMock;
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> donorServiceMock;
         private Mock<IPaymentService> stripeServiceMock;
         private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IDonorService> gatewayDonorServiceMock;
         private Mock<IDonationService> gatewayDonationServiceMock;
         private Mock<IUserImpersonationService> impersonationService;
-        private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationRepository> mpDonationService; 
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository> mpDonationService; 
         private Mock<IPledgeRepository> mpPledgeService;
         private string authToken;
         private string authType;
@@ -40,14 +40,14 @@ namespace crds_angular.test.controllers
         [SetUp]
         public void SetUp()
         {
-            donorServiceMock = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorRepository>();
+            donorServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>();
             gatewayDonorServiceMock = new Mock<IDonorService>();
             stripeServiceMock = new Mock<IPaymentService>();
             authenticationServiceMock = new Mock<IAuthenticationRepository>();
             gatewayDonationServiceMock = new Mock<IDonationService>();
             mpPledgeService = new Mock<IPledgeRepository>();
             impersonationService = new Mock<IUserImpersonationService>();
-            mpDonationService = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationRepository>();
+            mpDonationService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository>();
 
             fixture = new DonationController(donorServiceMock.Object, stripeServiceMock.Object,
                 authenticationServiceMock.Object, gatewayDonorServiceMock.Object, gatewayDonationServiceMock.Object, mpDonationService.Object, mpPledgeService.Object, impersonationService.Object);

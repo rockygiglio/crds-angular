@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {

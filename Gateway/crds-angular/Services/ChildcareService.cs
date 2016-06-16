@@ -13,7 +13,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -24,7 +24,7 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactRepository _contactService;
         private readonly IEventParticipantRepository _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _eventService;
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
         private readonly IParticipantRepository _participantService;
         private readonly IServeService _serveService;
@@ -37,7 +37,7 @@ namespace crds_angular.Services
                                 ICommunicationRepository communicationService,
                                 IConfigurationWrapper configurationWrapper,
                                 IContactRepository contactService,
-                                MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
+                                MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                                 IParticipantRepository participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,

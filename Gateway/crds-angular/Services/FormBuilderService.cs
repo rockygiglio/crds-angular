@@ -4,11 +4,11 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Linq;
 using AutoMapper;
 using MinistryPlatform.Translation.Models;
-using IFormBuilderRepository = MinistryPlatform.Translation.Services.Interfaces.IFormBuilderRepository;
+using IFormBuilderRepository = MinistryPlatform.Translation.Repositories.Interfaces.IFormBuilderRepository;
 
 namespace crds_angular.Services
 {

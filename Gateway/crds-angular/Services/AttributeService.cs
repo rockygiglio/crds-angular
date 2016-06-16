@@ -3,7 +3,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {

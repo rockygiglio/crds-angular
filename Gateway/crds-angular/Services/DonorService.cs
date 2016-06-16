@@ -1,5 +1,5 @@
 ﻿using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +12,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
-using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 
 namespace crds_angular.Services
 {

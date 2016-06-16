@@ -10,11 +10,11 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using RestSharp.Extensions;
-using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 
 namespace crds_angular.test.Services
 {

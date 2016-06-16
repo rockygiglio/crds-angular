@@ -7,7 +7,7 @@ using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;

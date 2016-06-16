@@ -8,7 +8,7 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices=MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {

@@ -4,7 +4,7 @@ using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services;
 using FsCheck;
 using MinistryPlatform.Translation.Models.Lookups;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 

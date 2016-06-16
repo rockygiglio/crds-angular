@@ -17,11 +17,11 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Json;
 using Crossroads.Utilities.Models;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using IDonationService = crds_angular.Services.Interfaces.IDonationService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.controllers
 {

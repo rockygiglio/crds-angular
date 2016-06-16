@@ -3,7 +3,7 @@ using System.Data.Entity.Core;
 using crds_angular.Exceptions;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {

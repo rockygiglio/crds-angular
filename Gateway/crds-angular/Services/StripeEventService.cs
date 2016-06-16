@@ -21,7 +21,7 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(StripeEventController));
         private readonly IPaymentService _paymentService;
         private readonly IDonationService _donationService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IDonorRepository _mpDonorService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository _mpDonorService;
         private readonly int _donationStatusDeclined;
         private readonly int _donationStatusDeposited;
         private readonly int _donationStatusSucceeded;
@@ -30,7 +30,7 @@ namespace crds_angular.Services
         // This value is used when creating the batch name for exporting to GP.  It must be 15 characters or less.
         private const string BatchNameDateFormat = @"\M\PyyyyMMddHHmm";
        
-        public StripeEventService(IPaymentService paymentService, IDonationService donationService, MinistryPlatform.Translation.Services.Interfaces.IDonorRepository mpDonorService, IConfigurationWrapper configuration)
+        public StripeEventService(IPaymentService paymentService, IDonationService donationService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorService, IConfigurationWrapper configuration)
         {
             _paymentService = paymentService;
             _donationService = donationService;

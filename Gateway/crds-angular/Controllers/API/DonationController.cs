@@ -13,7 +13,7 @@ using crds_angular.Util;
 using log4net;
 using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {

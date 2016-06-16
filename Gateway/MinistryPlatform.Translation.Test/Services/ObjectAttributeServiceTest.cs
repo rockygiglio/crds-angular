@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<Translation.Services.Interfaces.IApiUserRepository> _apiUserService;
+        private Mock<Translation.Repositories.Interfaces.IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()

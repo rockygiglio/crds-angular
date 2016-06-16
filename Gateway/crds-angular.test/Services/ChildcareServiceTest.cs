@@ -8,10 +8,10 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
 
 namespace crds_angular.test.Services

@@ -6,7 +6,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Services;
 using MinistryPlatform.Translation.Models;
 using Moq;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices=MinistryPlatform.Translation.Repositories.Interfaces;
 using NUnit.Framework;
 
 namespace crds_angular.test.Services

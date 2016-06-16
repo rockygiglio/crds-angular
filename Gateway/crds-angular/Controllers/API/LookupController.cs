@@ -6,7 +6,7 @@ using System.Web.Http.Description;
 using System.Web.Http.Results;
 using crds_angular.Security;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 
 namespace crds_angular.Controllers.API
 {

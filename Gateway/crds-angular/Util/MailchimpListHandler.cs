@@ -6,7 +6,7 @@ using RestSharp;
 using Crossroads.Utilities.Interfaces;
 using System.Net;
 using Crossroads.Utilities.Serializers;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 using log4net;

@@ -10,12 +10,12 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
-using IAttributeRepository = MinistryPlatform.Translation.Services.Interfaces.IAttributeRepository;
-using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services

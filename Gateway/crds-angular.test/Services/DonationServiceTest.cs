@@ -13,7 +13,7 @@ using MinistryPlatform.Translation.Models.DTO;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices=MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {

@@ -12,14 +12,14 @@ using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services

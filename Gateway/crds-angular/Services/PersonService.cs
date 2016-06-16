@@ -6,8 +6,8 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.People;
-using MinistryPlatform.Translation.Services;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 

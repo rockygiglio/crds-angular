@@ -1,4 +1,4 @@
-﻿using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+﻿using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using crds_angular.Services.Interfaces;

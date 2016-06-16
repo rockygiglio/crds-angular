@@ -8,11 +8,11 @@ namespace crds_angular.Services
 {
     public class CongregationService : ICongregationService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.ICongregationRepository _congregationService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.ICongregationRepository _congregationService;
         private readonly IRoomService _roomService;
         private readonly IEquipmentService _equipmentService;
 
-        public CongregationService(MinistryPlatform.Translation.Services.Interfaces.ICongregationRepository congregationService,
+        public CongregationService(MinistryPlatform.Translation.Repositories.Interfaces.ICongregationRepository congregationService,
                                    IRoomService roomService,
                                    IEquipmentService equipmentService)
         {

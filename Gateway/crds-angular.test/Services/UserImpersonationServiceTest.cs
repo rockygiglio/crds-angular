@@ -4,7 +4,7 @@ using crds_angular.Exceptions;
 using crds_angular.Services;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 

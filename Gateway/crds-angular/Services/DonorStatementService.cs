@@ -3,7 +3,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
-using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 
 namespace crds_angular.Services
 {

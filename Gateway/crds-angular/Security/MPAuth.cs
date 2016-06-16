@@ -16,7 +16,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Util;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Owin;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 
 namespace crds_angular.Security
 {

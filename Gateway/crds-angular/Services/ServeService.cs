@@ -14,9 +14,9 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using WebGrease.Css.Extensions;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.Services
 {
@@ -32,7 +32,7 @@ namespace crds_angular.Services
     {
         private readonly IContactRepository _contactService;
         private readonly IContactRelationshipRepository _contactRelationshipService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _eventService;
         private readonly IGroupParticipantRepository _groupParticipantService;
         private readonly IGroupRepository _groupService;
         private readonly IOpportunityRepository _opportunityService;
@@ -56,7 +56,7 @@ namespace crds_angular.Services
         public ServeService(IContactRepository contactService,
                             IContactRelationshipRepository contactRelationshipService,
                             IOpportunityRepository opportunityService,
-                            MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
+                            MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                             IParticipantRepository participantService,
                             IGroupParticipantRepository groupParticipantService,
                             IGroupRepository groupService,

@@ -10,7 +10,7 @@ using crds_angular.Security;
 using crds_angular.Util;
 using log4net;
 using MinistryPlatform.Translation.PlatformService;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {

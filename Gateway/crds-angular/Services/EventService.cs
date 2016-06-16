@@ -7,13 +7,13 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models.EventReservations;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using WebGrease.Css.Extensions;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
-using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using TranslationEventService = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 
 namespace crds_angular.Services
 {

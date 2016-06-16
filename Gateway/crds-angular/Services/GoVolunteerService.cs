@@ -9,9 +9,9 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
-using IGroupConnectorRepository = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {

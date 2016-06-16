@@ -3,7 +3,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {

@@ -12,11 +12,11 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Opportunities;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
-using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services

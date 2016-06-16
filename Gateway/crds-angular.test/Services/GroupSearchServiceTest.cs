@@ -11,8 +11,8 @@ using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {

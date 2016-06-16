@@ -10,9 +10,9 @@ namespace crds_angular.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IAddressRepository _mpAddressService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository _mpAddressService;
 
-        public AddressService(MinistryPlatform.Translation.Services.Interfaces.IAddressRepository mpAddressService)
+        public AddressService(MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository mpAddressService)
         {
             _mpAddressService = mpAddressService;
         }

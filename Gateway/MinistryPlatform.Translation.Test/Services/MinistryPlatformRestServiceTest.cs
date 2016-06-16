@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;

@@ -6,13 +6,13 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IDonationRepository = MinistryPlatform.Translation.Services.Interfaces.IDonationRepository;
-using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
-using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {

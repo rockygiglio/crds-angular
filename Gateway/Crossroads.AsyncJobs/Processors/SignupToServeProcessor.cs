@@ -5,8 +5,8 @@ using Crossroads.AsyncJobs.Interfaces;
 using Crossroads.AsyncJobs.Models;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace Crossroads.AsyncJobs.Processors
 {

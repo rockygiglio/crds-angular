@@ -2,10 +2,10 @@
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Test.Helpers;
 
 namespace MinistryPlatform.Translation.Test.Services

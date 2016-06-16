@@ -7,12 +7,12 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using FsCheck;
-using MinistryPlatform.Translation.Services.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using Moq;
 using NUnit.Framework;
 using IAttributeService = crds_angular.Services.Interfaces.IAttributeService;
-using IGroupConnectorRepository = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
 
 namespace crds_angular.test.Services
 {
@@ -23,11 +23,11 @@ namespace crds_angular.test.Services
 
         private readonly Mock<IAttributeService> _attributeService;
         private readonly Mock<IConfigurationWrapper> _configurationWrapper;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactRepository> _contactService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRepository> _contactService;
         private readonly Mock<IGroupConnectorRepository> _groupConnectorService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IParticipantRepository> _participantService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IProjectTypeRepository> _projectTypeService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository> _participantService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IProjectTypeRepository> _projectTypeService;
         private readonly Mock<IRegistrationRepository> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationRepository> _commnuicationService;

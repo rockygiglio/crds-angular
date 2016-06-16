@@ -1,6 +1,6 @@
 ﻿using System;
 using MinistryPlatform.Translation.Models.Attributes;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;

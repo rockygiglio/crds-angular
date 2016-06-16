@@ -9,11 +9,11 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
-using IDonationRepository = MinistryPlatform.Translation.Services.Interfaces.IDonationRepository;
-using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
-using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using PledgeCampaign = crds_angular.Models.Crossroads.Stewardship.PledgeCampaign;
 
 namespace crds_angular.Services
@@ -24,7 +24,7 @@ namespace crds_angular.Services
         private readonly IDonationRepository _donationService;
         private readonly IGroupRepository _groupService;
         private readonly IFormSubmissionRepository _formSubmissionService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _mpEventService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _mpEventService;
         private readonly IDonorRepository _mpDonorService;
         private readonly IPledgeRepository _mpPledgeService;
         private readonly ICampaignRepository _campaignService;
@@ -42,7 +42,7 @@ namespace crds_angular.Services
                            IDonationRepository donationService,
                            IGroupRepository groupService,
                            IFormSubmissionRepository formSubmissionService,
-                           MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
+                           MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                            IDonorRepository donorService,
                            IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,

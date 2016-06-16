@@ -5,7 +5,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Security;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 
 namespace crds_angular.Controllers.API

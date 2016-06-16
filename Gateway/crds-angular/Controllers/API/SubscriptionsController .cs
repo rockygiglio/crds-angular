@@ -3,7 +3,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.Subscription;
 
 namespace crds_angular.Controllers.API
