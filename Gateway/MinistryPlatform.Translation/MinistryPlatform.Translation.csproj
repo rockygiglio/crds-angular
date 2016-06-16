@@ -208,8 +208,8 @@
     <Compile Include="Services\CampaignRepository.cs" />
     <Compile Include="Services\ChildcareRequestRepository.cs" />
     <Compile Include="Services\CongregationRepository.cs" />
-    <Compile Include="Services\GoCincinnati\GroupConnectorService.cs" />
-    <Compile Include="Services\GoCincinnati\RegistrationService.cs" />
+    <Compile Include="Services\GoCincinnati\GroupConnectorRepository.cs" />
+    <Compile Include="Services\GoCincinnati\RegistrationRepository.cs" />
     <Compile Include="Services\Interfaces\GoCincinnati\IGroupConnectorService.cs" />
     <Compile Include="Services\Interfaces\GoCincinnati\IRegistrationService.cs" />
     <Compile Include="Services\Interfaces\IChildcareRequestService.cs" />

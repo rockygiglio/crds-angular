@@ -11,13 +11,13 @@ using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.
 
 namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
-    public class GroupConnectorService : BaseRepository, IGroupConnectorService
+    public class GroupConnectorRepository : BaseRepository, IGroupConnectorService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly string _apiToken;
 
-        public GroupConnectorService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public GroupConnectorRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
