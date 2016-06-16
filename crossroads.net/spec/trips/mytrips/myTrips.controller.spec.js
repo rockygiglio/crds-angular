@@ -1,6 +1,3 @@
-
-require('../../../app/ang');
-
 require('../../../app/trips/trips.module');
 
 (function() {

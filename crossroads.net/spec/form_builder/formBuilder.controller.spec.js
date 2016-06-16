@@ -1,5 +1,3 @@
-
-require('../../app/ang');
 require('../../app/common/common.module');
 require('../../app/app');
 require('../../app/formBuilder/formBuilder.module.js');

@@ -1,6 +1,3 @@
-
-require('../../app/ang');
-
 require('../../app/app');
 
 describe('GivingYears Directive', function() {

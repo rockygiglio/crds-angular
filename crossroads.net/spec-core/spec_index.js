@@ -1,8 +1,8 @@
 require('../core/core');
-require('../app/ang');
+require('../core/ang');
 
 // require all modules ending in ".spec" from the
 // current directory and all subdirectories
 
-var testsContext = require.context('.', true, /.spec$/);
+var testsContext = require.context('./', true, /.spec$/);
 testsContext.keys().forEach(testsContext);

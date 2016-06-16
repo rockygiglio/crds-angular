@@ -6,8 +6,8 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
     "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev",
-    "core-test": "./node_modules/karma/bin/karma start karma.conf.js",
-    "core-ci-test": "./node_modules/karma/bin/karma start karma.ci.conf.js"
+    "core-test": "./node_modules/karma/bin/karma start core.tests.conf.js",
+    "core-ci-test": "./node_modules/karma/bin/karma start core.tests.ci.conf.js"
   },
   "repository": {
     "type": "git",

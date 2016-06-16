@@ -1,6 +1,3 @@
-
-require('../../../app/ang');
-
 require('../../../app/common/common.module');
 require('../../../app/trips/trips.module');
 

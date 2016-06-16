@@ -1,6 +1,3 @@
-
-require('../../app/ang');
-
 require('../../app/app');
 
 describe('Serve Tabs Directive', function() {
