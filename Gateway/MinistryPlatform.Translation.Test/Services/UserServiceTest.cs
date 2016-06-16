@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Test.Services
 {
     public class UserServiceTest
     {
-        private UserService _fixture;
+        private UserRepository _fixture;
 
         private Mock<IAuthenticationService> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("UsersApiLookupPageView")).Returns(102030);
             _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new UserService(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new UserRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
         }
 
         [Test]

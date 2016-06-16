@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ProgramServiceTest
     {
-        private ProgramService _fixture;
+        private ProgramRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             AutoMapperConfig.RegisterMappings();
 
-            _fixture = new ProgramService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ProgramRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

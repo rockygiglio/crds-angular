@@ -10,7 +10,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
     public class RegistrationService : BaseService, IRegistrationService
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
 
         public RegistrationService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)

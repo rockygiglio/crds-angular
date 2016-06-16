@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Services
     public class EquipmentService : BaseService, IEquipmentService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
 
         public EquipmentService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)

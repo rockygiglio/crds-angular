@@ -7,11 +7,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class SkillsService : BaseService, ISkillsService
+    public class SkillsRepository : BaseService, ISkillsService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public SkillsService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
+        public SkillsRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

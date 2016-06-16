@@ -7,13 +7,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ProgramService : BaseService, IProgramService
+    public class ProgramRepository : BaseService, IProgramService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _onlineGivingProgramsPageViewId;
         private readonly int _programsPageId;
 
-        public ProgramService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public ProgramRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

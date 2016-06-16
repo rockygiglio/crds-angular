@@ -8,14 +8,14 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class PrivateInviteService : BaseService, IPrivateInviteService
+    public class PrivateInviteRepository : BaseService, IPrivateInviteService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int _tripPrivateInviteId;
         private readonly int _tripInvitationsPageId;
 
-        public PrivateInviteService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public PrivateInviteRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

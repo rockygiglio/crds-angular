@@ -11,12 +11,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class RoomService : BaseService, IRoomService
+    public class RoomRepository : BaseService, IRoomService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
 
-        public RoomService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public RoomRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

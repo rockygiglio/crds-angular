@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
     public class GroupConnectorService : BaseService, IGroupConnectorService
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly string _apiToken;
 

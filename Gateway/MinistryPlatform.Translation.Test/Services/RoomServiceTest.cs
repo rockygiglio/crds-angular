@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _config;
         private Mock<IAuthenticationService> _authenticationService;
 
-        private RoomService _fixture;
+        private RoomRepository _fixture;
 
         [SetUp]
         public void SetUp()
@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"token", "abc"}
             });
 
-            _fixture = new RoomService(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
+            _fixture = new RoomRepository(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
         }
 
         [Test]

@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ResponseService : BaseService, IResponseService
+    public class ResponseRepository : BaseService, IResponseService
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Services
 
         private readonly int _signupToServeRemindersId;
 
-        public ResponseService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
+        public ResponseRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
             : base(authenticationService, configurationWrapper)
         {
             _authenticationService = authenticationService;

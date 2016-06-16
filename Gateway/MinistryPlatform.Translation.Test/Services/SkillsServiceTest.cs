@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class SkillsServiceTest
     {
-        private SkillsService _fixture;
+        private SkillsRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IAuthenticationService> _authenticationService;
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _authenticationService = new Mock<IAuthenticationService>();
 
-            _fixture = new SkillsService(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new SkillsRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
             
         }
 

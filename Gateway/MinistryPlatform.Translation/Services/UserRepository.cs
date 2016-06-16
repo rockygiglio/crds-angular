@@ -10,13 +10,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class UserService : BaseService, IUserService
+    public class UserRepository : BaseService, IUserService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _usersApiLookupPageViewId;
         private readonly int _usersPageId;
 
-        public UserService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public UserRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _usersApiLookupPageViewId = _configurationWrapper.GetConfigIntValue("UsersApiLookupPageView");
