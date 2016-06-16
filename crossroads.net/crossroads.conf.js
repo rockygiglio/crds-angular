@@ -26,15 +26,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      { pattern: 'spec.bundle.js', watched: false },
       'https://js.stripe.com/v2/',
-      'node_modules/angular/angular.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'node_modules/moment/moment.js',
-
-      // TODO: Should this match the other files?
-      // './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      // { pattern: 'spec/spec_index.js', watched: false },
+      './node_modules/phantomjs-polyfill/bind-polyfill.js',
+      { pattern: 'spec/spec_index.js', watched: false },
     ],
 
     // preprocess matching files before serving them to the browser
@@ -43,6 +37,18 @@ module.exports = function(config) {
       'spec/spec_index.js': ['webpack','env', 'sourcemap']
     },
 
+    envPreprocessor: [
+      'CRDS_API_ENDPOINT',
+      'CRDS_CMS_ENDPOINT',
+    ],
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['html'],
+
+    // web server port
+    port: 9876,
     webpack: {
       devtool: 'inline-source-map',
       externals: {
@@ -55,14 +61,17 @@ module.exports = function(config) {
         loaders: [
           {
             test: /\.css$/,
-            loader: 'style-loader!css-loader' },
+            loader: 'style-loader!css-loader'
+          },
           {
             test: /\.js$/,
             include: [
               path.resolve(__dirname, 'app'),
-              path.resolve(__dirname, 'node_modules/angular-stripe')
+              path.resolve(__dirname, './node_modules/angular-stripe'),
+              path.resolve(__dirname, 'spec')
             ],
-            loader: 'babel-loader' },
+            loader: 'ng-annotate!babel-loader'
+          },
           {
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
@@ -89,27 +98,14 @@ module.exports = function(config) {
     },
 
     webpackServer: {
-       noInfo: true // prevent console spamming when running in Karma!
-     },
+      noInfo: true // prevent console spamming when running in Karma!
+    },
 
     webpackMiddleware: {
       stats: {
         colors: true
       }
     },
-
-    envPreprocessor: [
-      'CRDS_API_ENDPOINT',
-      'CRDS_CMS_ENDPOINT',
-    ],
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['html'],
-
-    // web server port
-    port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

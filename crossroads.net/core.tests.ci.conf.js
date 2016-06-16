@@ -24,7 +24,6 @@ module.exports = function(config) {
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       './node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'node_modules/moment/moment.js',
       'spec-core/spec_index.js'
     ],
 
@@ -68,8 +67,7 @@ module.exports = function(config) {
           },
           {
             test: /\.(jpe?g|png|gif|svg)$/i,
-            loaders: [
-            'image?bypassOnDebug&optimizationLevel=7&interlaced=false']
+            loaders: ['image?bypassOnDebug&optimizationLevel=7&interlaced=false']
           },
           {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,

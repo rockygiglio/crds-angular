@@ -59,12 +59,14 @@ module.exports = function(config) {
             loader: 'style-loader!css-loader'
           },
           {
-            test: /\.js$/, include: [
+            test: /\.js$/,
+            include: [
               path.resolve(__dirname, 'app'),
               path.resolve(__dirname, './node_modules/angular-stripe'),
               path.resolve(__dirname, 'spec')
             ],
-            loader: 'babel-loader' },
+            loader: 'ng-annotate!babel-loader'
+          },
           {
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')

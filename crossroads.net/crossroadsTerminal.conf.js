@@ -61,16 +61,15 @@ module.exports = function(config) {
           {
             test: /\.js$/,
             include: [
-              //path.resolve(__dirname, 'core'),
               path.resolve(__dirname, 'app'),
               path.resolve(__dirname, './node_modules/angular-stripe'),
               path.resolve(__dirname, 'spec')
-            ], loader: 'ng-annotate!babel-loader'
+            ],
+            loader: 'ng-annotate!babel-loader'
           },
           {
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract('style-loader',
-              'css-loader!autoprefixer-loader!sass-loader')
+            loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
           },
           {
             test: /\.(jpe?g|png|gif|svg)$/i,
@@ -93,9 +92,9 @@ module.exports = function(config) {
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
     },
 
-     webpackServer: {
-       noInfo: true // prevent console spamming when running in Karma!
-     },
+    webpackServer: {
+      noInfo: true // prevent console spamming when running in Karma!
+    },
 
     webpackMiddleware: {
       stats: {
@@ -130,6 +129,5 @@ module.exports = function(config) {
       require('karma-env-preprocessor'),
       require('karma-sourcemap-loader')
     ]
-
   });
 };
