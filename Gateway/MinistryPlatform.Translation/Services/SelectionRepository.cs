@@ -5,7 +5,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class SelectionRepository : BaseService, ISelectionService
+    public class SelectionRepository : BaseRepository, ISelectionService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 

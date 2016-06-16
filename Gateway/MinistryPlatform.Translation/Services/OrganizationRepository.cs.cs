@@ -7,7 +7,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class OrganizationService : BaseService,IOrganizationService
+    public class OrganizationService : BaseRepository,IOrganizationService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 

@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace Crossroads.AsyncJobs.Processors
 {
-    public class SignupToServeProcessor : BaseService, IJobExecutor<SaveRsvpDto>
+    public class SignupToServeProcessor : BaseRepository, IJobExecutor<SaveRsvpDto>
     {
         private readonly IServeService _serveService;
         private readonly IConfigurationWrapper _configurationWrapper;

@@ -9,7 +9,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ContactService : BaseService, IContactService
+    public class ContactRepository : BaseRepository, IContactService
     {
         private readonly int _addressesPageId;
         private readonly IConfigurationWrapper _configurationWrapper;
@@ -18,13 +18,13 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _householdDefaultSourceId;
         private readonly int _householdPositionDefaultId;
         private readonly int _householdsPageId;
-        private readonly ILog _logger = LogManager.GetLogger(typeof (ContactService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (ContactRepository));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _participantsPageId;
         private readonly int _securityRolesSubPageId;
 
-        public ContactService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public ContactRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class BulkEmailRepository : BaseService, IBulkEmailRepository
+    public class BulkEmailRepository : BaseRepository, IBulkEmailRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _bulkEmailPublicationPageViewId = Convert.ToInt32(AppSettings("BulkEmailPublicationsPageView"));

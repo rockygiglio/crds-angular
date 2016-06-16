@@ -15,7 +15,7 @@ using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class DonationRepository : BaseService, IDonationService
+    public class DonationRepository : BaseRepository, IDonationService
     {
         private readonly int _donationsPageId;
         private readonly int _donationDistributionPageId;

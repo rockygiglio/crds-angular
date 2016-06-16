@@ -9,7 +9,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class PledgeService : BaseService, IPledgeService
+    public class PledgeService : BaseRepository, IPledgeService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 

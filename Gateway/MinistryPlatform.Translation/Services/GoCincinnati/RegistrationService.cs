@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
-    public class RegistrationService : BaseService, IRegistrationService
+    public class RegistrationService : BaseRepository, IRegistrationService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;

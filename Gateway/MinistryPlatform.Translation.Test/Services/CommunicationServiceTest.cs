@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class CommunicationServiceTest
     {
-        private CommunicationService _fixture;
+        private CommunicationRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new CommunicationService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new CommunicationRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

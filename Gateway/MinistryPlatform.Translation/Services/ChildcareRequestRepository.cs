@@ -9,7 +9,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ChildcareRequestService :  IChildcareRequestService
+    public class ChildcareRequestRepository :  IChildcareRequestService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareEventType;
         private readonly IGroupService _groupService;
 
-        public ChildcareRequestService(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService, IGroupService groupService)
+        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService, IGroupService groupService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;

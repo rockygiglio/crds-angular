@@ -11,7 +11,7 @@ using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.
 
 namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
-    public class GroupConnectorService : BaseService, IGroupConnectorService
+    public class GroupConnectorService : BaseRepository, IGroupConnectorService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;

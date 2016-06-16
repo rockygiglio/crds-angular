@@ -17,7 +17,7 @@ using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class DonorRepository : BaseService, IDonorService
+    public class DonorRepository : BaseRepository, IDonorService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonorRepository));
 

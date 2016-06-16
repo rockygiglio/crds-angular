@@ -8,7 +8,7 @@ using RoleDTO = MinistryPlatform.Translation.Models.DTO.MpRoleDto;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GetMyRecordsRepository : BaseService
+    public class GetMyRecordsRepository : BaseRepository
     {
         public GetMyRecordsRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)

@@ -7,7 +7,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ProgramRepository : BaseService, IProgramService
+    public class ProgramRepository : BaseRepository, IProgramService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _onlineGivingProgramsPageViewId;

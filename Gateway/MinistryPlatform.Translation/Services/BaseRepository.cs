@@ -5,12 +5,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class BaseService
+    public class BaseRepository
     {
         protected readonly IAuthenticationService _authenticationService;
         protected readonly IConfigurationWrapper _configurationWrapper;
 
-        public BaseService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public BaseRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
         {
             this._authenticationService = authenticationService;
             this._configurationWrapper = configurationWrapper;

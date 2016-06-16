@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ContactRelationshipServiceTest
     {
-        private ContactRelationshipService _fixture;
+        private ContactRelationshipRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationService> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationService>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new ContactRelationshipService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ContactRelationshipRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 

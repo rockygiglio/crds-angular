@@ -6,7 +6,7 @@ using MinistryPlatform.Translation.Utils;
 namespace MinistryPlatform.Translation.Services
 {
 
-    public class CreatePageRecordService
+    public class CreatePageRecordRepository
     {
         public static int CreateRecord(int pageId, Dictionary<string, object> dictionary, String token, bool quickadd = true) {
             return PlatformUtils.Call<int>(token, platformClient => platformClient.CreatePageRecord(pageId, dictionary, quickadd));                  

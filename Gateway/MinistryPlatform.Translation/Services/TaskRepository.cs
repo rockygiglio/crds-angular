@@ -7,7 +7,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class TaskRepository : BaseService, ITaskRepository
+    public class TaskRepository : BaseRepository, ITaskRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _autoStartedTaskPageViewId;

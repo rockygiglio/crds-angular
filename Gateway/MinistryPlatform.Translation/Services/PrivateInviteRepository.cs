@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class PrivateInviteRepository : BaseService, IPrivateInviteService
+    public class PrivateInviteRepository : BaseRepository, IPrivateInviteService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IConfigurationWrapper _configurationWrapper;

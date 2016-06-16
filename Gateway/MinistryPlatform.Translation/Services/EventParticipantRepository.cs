@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class EventParticipantRepository : BaseService, IEventParticipantService
+    public class EventParticipantRepository : BaseRepository, IEventParticipantService
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
