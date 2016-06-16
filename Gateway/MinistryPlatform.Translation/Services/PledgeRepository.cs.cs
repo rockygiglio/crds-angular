@@ -8,14 +8,14 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class PledgeService : BaseRepository, IPledgeRepository
+    public class PledgeRepository : BaseRepository, IPledgeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
         private readonly int _pledgePageId;
         private readonly int _myHouseholdPledges;
 
-        public PledgeService(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public PledgeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

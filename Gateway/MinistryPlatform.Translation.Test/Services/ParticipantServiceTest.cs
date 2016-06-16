@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ParticipantServiceTest
     {
-        private ParticipantService _fixture;
+        private ParticipantRepository _fixture;
         private Mock<IMinistryPlatformService> _mpServiceMock;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("Participants")).Returns(355);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new ParticipantService(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ParticipantRepository(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

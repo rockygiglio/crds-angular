@@ -13,13 +13,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ObjectAttributeService : BaseRepository, IObjectAttributeRepository
+    public class ObjectAttributeRepository : BaseRepository, IObjectAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ObjectAttributeService(IAuthenticationRepository authenticationService,
+        public ObjectAttributeRepository(IAuthenticationRepository authenticationService,
             IConfigurationWrapper configurationWrapper,
             IMinistryPlatformService ministryPlatformService)
             : base(authenticationService, configurationWrapper)

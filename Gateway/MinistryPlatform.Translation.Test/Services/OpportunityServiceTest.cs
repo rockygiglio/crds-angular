@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IParticipantRepository> _participantService;
         private Mock<IApiUserRepository> _apiUserService;
 
-        private OpportunityServiceImpl _fixture;
+        private OpportunityRepository _fixture;
 
         [SetUp]
         public void SetUp()
@@ -42,7 +42,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
 
-            _fixture = new OpportunityServiceImpl(_ministryPlatformService.Object,
+            _fixture = new OpportunityRepository(_ministryPlatformService.Object,
                                                   _authenticationService.Object,
                                                   _configWrapper.Object,
                                                   _participantService.Object,

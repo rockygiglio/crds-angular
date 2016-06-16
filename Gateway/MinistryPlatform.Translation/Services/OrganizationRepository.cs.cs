@@ -7,11 +7,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class OrganizationService : BaseRepository,IOrganizationRepository
+    public class OrganizationRepository : BaseRepository,IOrganizationRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public OrganizationService(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public OrganizationRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
         }

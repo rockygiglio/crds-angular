@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ObjectAttributeServiceTest
     {
-        private ObjectAttributeService _fixture;
+        private ObjectAttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper = new Mock<IConfigurationWrapper>();            
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new ObjectAttributeService(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new ObjectAttributeRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
         }
 
         [Test]

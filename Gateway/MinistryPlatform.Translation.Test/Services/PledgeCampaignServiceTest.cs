@@ -31,7 +31,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("Pledges")).Returns(mockPledgesPageId);
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("MyHouseholdPledges")).Returns(525);
 
-            _fixture = new PledgeService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new PledgeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

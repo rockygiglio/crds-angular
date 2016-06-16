@@ -9,11 +9,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ParticipantService : BaseRepository, IParticipantRepository
+    public class ParticipantRepository : BaseRepository, IParticipantRepository
     {
         private IMinistryPlatformService _ministryPlatformService;
 
-        public ParticipantService(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService , IConfigurationWrapper configurationWrapper)
+        public ParticipantRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService , IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             this._ministryPlatformService = ministryPlatformService;

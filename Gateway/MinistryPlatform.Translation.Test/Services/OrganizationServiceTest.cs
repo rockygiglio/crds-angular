@@ -27,10 +27,10 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("LocationsForOrg")).Returns(LocPage);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new OrganizationService(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
+            _fixture = new OrganizationRepository(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
         }
 
-        private OrganizationService _fixture;
+        private OrganizationRepository _fixture;
         private Mock<IMinistryPlatformService> _mpServiceMock;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
