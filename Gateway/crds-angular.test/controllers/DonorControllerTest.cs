@@ -43,7 +43,7 @@ namespace crds_angular.test.controllers
         private const string Last4 = "1234";
         private const string Brand = "Visa";
         private const string AddressZip = "45454";
-        private readonly ContactDonor _donor = new ContactDonor()
+        private readonly MpContactDonor _donor = new MpContactDonor()
         {
             DonorId = DonorId,
             ProcessorId = ProcessorId,
@@ -81,7 +81,7 @@ namespace crds_angular.test.controllers
                 stripe_token_id = "tok_test"
             };
 
-            _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(It.IsAny<string>())).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(It.IsAny<string>())).Returns((MpContactDonor)null);
             _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(null, string.Empty, string.Empty, "tok_test", It.IsAny<DateTime>())).Returns(_donor);
             
             IHttpActionResult result = _fixture.Post(createDonorDto);
@@ -96,7 +96,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetSuccessGetDonorAuthenticated()
         {
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 ContactId = 1,
                 DonorId = 394256,
@@ -126,7 +126,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetGetDonorAuthenticatedNoPaymentProcessor()
         {
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 ContactId = 1,
                 DonorId = 2,
@@ -155,7 +155,7 @@ namespace crds_angular.test.controllers
         public void TestGetGetDonorUnauthenticatedNoPaymentProcessor()
         {
             _fixture.Request.Headers.Authorization = null;
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 ContactId = 1,
                 DonorId = 2,
@@ -178,14 +178,14 @@ namespace crds_angular.test.controllers
                 email_address = "me@here.com"
             };
 
-            var lookupDonor = new ContactDonor
+            var lookupDonor = new MpContactDonor
             {
                 ContactId = 8675309,
                 DonorId = 0,
                 ProcessorId = null
             };
 
-            var createDonor = new ContactDonor
+            var createDonor = new MpContactDonor
             {
                 ContactId = 8675309,
                 DonorId = 394256,
@@ -193,7 +193,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<ContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
 
             IHttpActionResult result = _fixture.Post(createDonorDto);
 
@@ -222,14 +222,14 @@ namespace crds_angular.test.controllers
                 email_address = "me@here.com"
             };
 
-            var lookupDonor = new ContactDonor
+            var lookupDonor = new MpContactDonor
             {
                 ContactId = 8675309,
                 DonorId = 90210,
                 ProcessorId = "jenny_ive_got_your_number"
             };
 
-            var createDonor = new ContactDonor
+            var createDonor = new MpContactDonor
             {
                 ContactId = 8675309,
                 DonorId = 90210,
@@ -237,7 +237,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<ContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
 
             IHttpActionResult result = _fixture.Post(createDonorDto);
 
@@ -295,7 +295,7 @@ namespace crds_angular.test.controllers
                 email_address = "me@here.com"
             };
 
-            var lookupDonor = new ContactDonor
+            var lookupDonor = new MpContactDonor
             {
                 ContactId = 8675309,
                 DonorId = 90210,
@@ -305,7 +305,7 @@ namespace crds_angular.test.controllers
             var createException = new Exception("Danger, Will Robinson!");
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<ContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Throws(createException);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Throws(createException);
 
             try
             {
@@ -331,7 +331,7 @@ namespace crds_angular.test.controllers
                 StripeTokenId = "456"
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 123,
                 ContactId = 789,
@@ -377,7 +377,7 @@ namespace crds_angular.test.controllers
                 StripeTokenId = "456"
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 123,
                 ContactId = 789,
@@ -457,7 +457,7 @@ namespace crds_angular.test.controllers
                 StripeTokenId = "456"
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 123,
                 ContactId = 789,
@@ -496,7 +496,7 @@ namespace crds_angular.test.controllers
                 stripe_token_id = "456"
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 123,
                 ContactId = 789,
@@ -527,7 +527,7 @@ namespace crds_angular.test.controllers
                 stripe_token_id = "456"
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 123,
                 ContactId = 789,
@@ -553,11 +553,11 @@ namespace crds_angular.test.controllers
         public void TestCreateRecurringGift()
         {
             const string stripeToken = "tok_123";
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 Email = "you@here.com"
             };
-            var contactDonorUpdated = new ContactDonor
+            var contactDonorUpdated = new MpContactDonor
             {
                 Email = "me@here.com"
             };
@@ -585,8 +585,8 @@ namespace crds_angular.test.controllers
         public void TestCreateRecurringGiftStripeError()
         {
             const string stripeToken = "tok_123";
-            var contactDonor = new ContactDonor();
-            var contactDonorUpdated = new ContactDonor();
+            var contactDonor = new MpContactDonor();
+            var contactDonorUpdated = new MpContactDonor();
             var recurringGiftDto = new RecurringGiftDto
             {
                 StripeTokenId = stripeToken
@@ -690,7 +690,7 @@ namespace crds_angular.test.controllers
         public void TestEditRecurringGift()
         {
             var authorizedUserToken = _authType + " " + _authToken;
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             var editGift = new RecurringGiftDto();
             var newGift = new RecurringGiftDto();
             const int recurringGiftId = 123;
@@ -713,7 +713,7 @@ namespace crds_angular.test.controllers
         public void TestEditRecurringGiftStripeError()
         {
             var authorizedUserToken = _authType + " " + _authToken;
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             var editGift = new RecurringGiftDto();
             const int recurringGiftId = 123;
 
@@ -742,7 +742,7 @@ namespace crds_angular.test.controllers
         public void TestEditRecurringGiftMinistryPlatformException()
         {
             var authorizedUserToken = _authType + " " + _authToken;
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             var editGift = new RecurringGiftDto();
             const int recurringGiftId = 123;
 

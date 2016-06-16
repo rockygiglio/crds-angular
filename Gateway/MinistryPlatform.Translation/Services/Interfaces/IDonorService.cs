@@ -11,18 +11,18 @@ namespace MinistryPlatform.Translation.Services.Interfaces
             int? statementFrequencyId = 1, // default to quarterly
             int? statementTypeId = 1, //default to individual
             int? statementMethodId = 2, // default to email/online
-            DonorAccount donorAccount = null
+            MpDonorAccount mpDonorAccount = null
             );
 
         int CreateDonationAndDistributionRecord(MpDonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true);
-        ContactDonor GetContactDonor(int contactId);
-        ContactDonor GetPossibleGuestContactDonor(string email);
-        ContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber);
+        MpContactDonor GetContactDonor(int contactId);
+        MpContactDonor GetPossibleGuestContactDonor(string email);
+        MpContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber);
         int UpdatePaymentProcessorCustomerId(int donorId, string paymentProcessorCustomerId);
         void SetupConfirmationEmail(int programId, int donorId, decimal donationAmount, DateTime setupDate, string pymtType);
-        ContactDonor GetEmailViaDonorId(int donorId);
+        MpContactDonor GetEmailViaDonorId(int donorId);
         void SendEmail(int emailTemplate, int donorId, decimal donationAmount, string donationType, DateTime donationDate, string programName, string emailReason, string frequency = null);
-        ContactDonor GetContactDonorForCheckAccount(string encryptedKey);
+        MpContactDonor GetContactDonorForCheckAccount(string encryptedKey);
         string CreateHashedAccountAndRoutingNumber(string accountNumber, string routingNumber);
         string DecryptCheckValue(string value);
         string UpdateDonorAccount(string encryptedKey, string customerId, string sourceId);

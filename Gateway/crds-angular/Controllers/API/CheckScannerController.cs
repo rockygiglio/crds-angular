@@ -141,7 +141,7 @@ namespace crds_angular.Controllers.API
         /// <param name="checkDetails" type="FromBody">The Check Details from the check that was scanned.</param>
         /// <returns>The created donor record.</returns>
         [RequiresAuthorization]
-        [ResponseType(typeof(ContactDonor))]
+        [ResponseType(typeof(MpContactDonor))]
         [Route("api/checkscanner/donor"), HttpPost]
         public IHttpActionResult CreateDonor([FromBody] CheckScannerCheck checkDetails)
         {

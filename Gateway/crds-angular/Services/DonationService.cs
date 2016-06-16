@@ -124,7 +124,7 @@ namespace crds_angular.Services
             return (GetDonationYearsForDonor(donor));
         }
 
-        private DonationsDTO GetDonationsForDonor(ContactDonor donor, string donationYear = null, bool softCredit = false)
+        private DonationsDTO GetDonationsForDonor(MpContactDonor donor, string donationYear = null, bool softCredit = false)
         {
             var donorIds = GetDonorIdsForDonor(donor);
 
@@ -289,7 +289,7 @@ namespace crds_angular.Services
             return donations;
         }
 
-        private DonationYearsDTO GetDonationYearsForDonor(ContactDonor donor)
+        private DonationYearsDTO GetDonationYearsForDonor(MpContactDonor donor)
         {
             var donorIds = GetDonorIdsForDonor(donor);
             var donations = _mpDonorService.GetDonations(donorIds, null);
@@ -311,7 +311,7 @@ namespace crds_angular.Services
             return (donationYears);
         }
 
-        private IEnumerable<int> GetDonorIdsForDonor(ContactDonor donor)
+        private IEnumerable<int> GetDonorIdsForDonor(MpContactDonor donor)
         {
             var donorIds = new HashSet<int>();
             if (donor.ExistingDonor)

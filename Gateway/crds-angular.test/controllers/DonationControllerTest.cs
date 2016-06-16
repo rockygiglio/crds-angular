@@ -113,7 +113,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsImpersonationNotAllowed()
         {
-            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new ContactDonor
+            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new MpContactDonor
             {
                 Email = "me@here.com"
             });
@@ -133,7 +133,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsImpersonationUserNotFound()
         {
-            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new ContactDonor
+            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new MpContactDonor
             {
                 Email = "me@here.com"
             });
@@ -211,7 +211,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "bank"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -296,7 +296,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "junk bonds"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -395,7 +395,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "card"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -495,7 +495,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "bank"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,

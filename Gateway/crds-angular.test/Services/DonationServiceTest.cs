@@ -621,12 +621,12 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 987,
                 DonorId = 123,
                 StatementTypeId = 456,
-                Details = new ContactDetails
+                Details = new MpContactDetails
                 {
                     HouseholdId = 901
                 }
@@ -818,7 +818,7 @@ namespace crds_angular.test.Services
                 "1996"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 987,
                 DonorId = 123,
@@ -939,12 +939,12 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 987,
                 DonorId = 123,
                 StatementTypeId = 456,
-                Details = new ContactDetails
+                Details = new MpContactDetails
                 {
                     HouseholdId = 901
                 }

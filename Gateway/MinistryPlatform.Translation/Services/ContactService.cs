@@ -42,9 +42,9 @@ namespace MinistryPlatform.Translation.Services
 
         public int CreateContactForGuestGiver(string emailAddress, string displayName)
         {
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
-                Details = new ContactDetails
+                Details = new MpContactDetails
                 {
                     DisplayName = displayName,
                     EmailAddress = emailAddress
@@ -53,9 +53,9 @@ namespace MinistryPlatform.Translation.Services
             return (CreateContact(contactDonor));
         }
 
-        public int CreateContactForNewDonor(ContactDonor contactDonor)
+        public int CreateContactForNewDonor(MpContactDonor mpContactDonor)
         {
-            return (CreateContact(contactDonor));
+            return (CreateContact(mpContactDonor));
         }
 
         public int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard)
@@ -223,7 +223,7 @@ namespace MinistryPlatform.Translation.Services
                 }
                 catch (Exception e)
                 {
-                    throw new ApplicationException("Error Saving contact: " + e.Message);
+                    throw new ApplicationException("Error Saving mpContact: " + e.Message);
                 }
             });
         }
@@ -405,18 +405,18 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private int CreateContact(ContactDonor contactDonor)
+        private int CreateContact(MpContactDonor mpContactDonor)
         {
             var token = ApiLogin();
 
-            var emailAddress = contactDonor.Details.EmailAddress;
-            var displayName = contactDonor.Details.DisplayName;
+            var emailAddress = mpContactDonor.Details.EmailAddress;
+            var displayName = mpContactDonor.Details.DisplayName;
             int? householdId = null;
-            if (contactDonor.Details.HasAddress)
+            if (mpContactDonor.Details.HasAddress)
             {
                 try
                 {
-                    householdId = CreateHouseholdAndAddress(displayName, contactDonor.Details.Address, token);
+                    householdId = CreateHouseholdAndAddress(displayName, mpContactDonor.Details.Address, token);
                 }
                 catch (Exception e)
                 {
@@ -444,7 +444,7 @@ namespace MinistryPlatform.Translation.Services
             }
             catch (Exception e)
             {
-                var msg = string.Format("Error creating contact, emailAddress: {0} displayName: {1}",
+                var msg = string.Format("Error creating mpContact, emailAddress: {0} displayName: {1}",
                                         emailAddress,
                                         displayName);
                 _logger.Error(msg, e);

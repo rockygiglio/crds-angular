@@ -596,7 +596,7 @@ namespace crds_angular.test.Services
             };
             var interval = EnumMemberSerializationUtils.ToEnumString(recurringGiftDto.PlanInterval);
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123"

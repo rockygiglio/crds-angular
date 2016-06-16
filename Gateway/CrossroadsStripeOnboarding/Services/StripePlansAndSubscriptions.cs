@@ -86,9 +86,9 @@ namespace CrossroadsStripeOnboarding.Services
             };
         }
 
-        private ContactDonor MapToContactDonor(RecurringGift gift)
+        private MpContactDonor MapToContactDonor(RecurringGift gift)
         {
-            return new ContactDonor
+            return new MpContactDonor
             {
                 DonorId = gift.Donor_ID,
             };

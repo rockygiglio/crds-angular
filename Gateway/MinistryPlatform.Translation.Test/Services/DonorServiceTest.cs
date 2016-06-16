@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var rtnBytes = Encoding.UTF8.GetBytes("rtn");
             var expectedEncAcct = Convert.ToBase64String(acctBytes.Concat(rtnBytes).ToArray());
 
-            var donorAccount = new DonorAccount
+            var donorAccount = new MpDonorAccount
             {
                 AccountNumber = "123",
                 RoutingNumber = "456",
@@ -605,7 +605,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Contact_ID", contactId},
                 {"Email_Address", email}
             });
-            var donor = new ContactDonor()
+            var donor = new MpContactDonor()
             {
                 DonorId = donorId,
                 ProcessorId = processorId,
@@ -650,7 +650,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Statement_Method", "None"},
                 {"Household_ID", 1}
             });
-            var donor = new ContactDonor()
+            var donor = new MpContactDonor()
             {
                 DonorId = donorId,
                 ProcessorId = processorId,
@@ -1013,14 +1013,14 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Household_ID", 1},
                 }
             };
-            var donor = new ContactDonor()
+            var donor = new MpContactDonor()
             {
                 DonorId = donorId,
                 ProcessorId = processorId,
                 ContactId = contactId,
                 Email = email,
                 
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorAccountId = processorAccountId,
                     ProcessorId = accountProcessorId
@@ -1077,10 +1077,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 Postal_Code = zip
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = donorId,
-                Details = new ContactDetails
+                Details = new MpContactDetails
                 {
                     DisplayName = displayName,
                     Address = new MpPostalAddress()

@@ -72,7 +72,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetDonorForEmail()
         {
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             _mpDonorService.Setup(mocked => mocked.GetPossibleGuestContactDonor("me@here.com")).Returns(donor);
             var response = _fixture.GetContactDonorForEmail("me@here.com");
 
@@ -84,7 +84,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetDonorForAuthenticatedUser()
         {
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             _authenticationService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
             _mpDonorService.Setup(mocked => mocked.GetContactDonor(123)).Returns(donor);
             var response = _fixture.GetContactDonorForAuthenticatedUser("authToken");
@@ -98,7 +98,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldReturnExistingDonorWithExistingStripeId()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 67890,
@@ -150,7 +150,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldCreateNewDonorForExistingContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 0,
@@ -182,7 +182,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldCreateNewDonorForExistingRegisteredContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 0,
@@ -217,7 +217,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldUpdateExistingDonorForExistingContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 456,
@@ -249,12 +249,12 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldAddNewDonorAccountToExistingDonor()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 456,
                 Email = "me@here.com",
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     AccountNumber = "123456789",
                     EncryptedAccount = "enc12345",
@@ -298,7 +298,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123",
@@ -405,7 +405,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123",
@@ -512,7 +512,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123"
@@ -782,7 +782,7 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456
             };
@@ -824,7 +824,7 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123"
@@ -883,7 +883,7 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123",
@@ -1015,7 +1015,7 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123",

@@ -116,7 +116,7 @@ namespace Crossroads.AsyncJobs
                     }
                 });
 
-            Mapper.CreateMap<ContactDonor, EZScanDonorDetails>()
+            Mapper.CreateMap<MpContactDonor, EZScanDonorDetails>()
                 .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Details.DisplayName))
                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Details.Address));
 

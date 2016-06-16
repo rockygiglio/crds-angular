@@ -93,7 +93,7 @@ namespace MinistryPlatform.Translation.Services
                                      //default to individual
                                      int? statementMethodId = 2,
                                      // default to email/online
-                                     DonorAccount donorAccount = null
+                                     MpDonorAccount mpDonorAccount = null
             )
         {
             //this assumes that you do not already have a donor record - new giver
@@ -120,14 +120,14 @@ namespace MinistryPlatform.Translation.Services
                 throw new ApplicationException(string.Format("CreateDonorRecord failed.  Contact Id: {0}", contactId), e);
             }
    
-            if (donorAccount!= null)
+            if (mpDonorAccount!= null)
             {
                 CreateDonorAccount(DefaultInstitutionName,
                                    DonorAccountNumberDefault,
                                    DonorRoutingNumberDefault,
-                                   donorAccount.EncryptedAccount,
+                                   mpDonorAccount.EncryptedAccount,
                                    donorId,
-                                   donorAccount.ProcessorAccountId,
+                                   mpDonorAccount.ProcessorAccountId,
                                    processorId);
             }
             
@@ -376,9 +376,9 @@ namespace MinistryPlatform.Translation.Services
             return donationId;
         }
 
-        public ContactDonor GetContactDonor(int contactId)
+        public MpContactDonor GetContactDonor(int contactId)
         {
-            ContactDonor donor;
+            MpContactDonor donor;
             try
             {
                 var searchStr = string.Format("\"{0}\",", contactId);
@@ -388,7 +388,7 @@ namespace MinistryPlatform.Translation.Services
                 if (records != null && records.Count > 0)
                 {
                     var record = records.First();
-                    donor = new ContactDonor()
+                    donor = new MpContactDonor()
                     {
                         DonorId = record.ToInt("Donor_ID"),
                         //we only want processorID from the donor if we are not processing a check
@@ -400,7 +400,7 @@ namespace MinistryPlatform.Translation.Services
                         StatementTypeId = record.ToInt("Statement_Type_ID"),
                         StatementFreq = record.ToString("Statement_Frequency"),
                         StatementMethod = record.ToString("Statement_Method"),
-                        Details = new ContactDetails
+                        Details = new MpContactDetails
                         {
                             EmailAddress = record.ToString("Email"),
                             HouseholdId = record.ToInt("Household_ID")
@@ -409,7 +409,7 @@ namespace MinistryPlatform.Translation.Services
                 }
                 else
                 {
-                    donor = new ContactDonor
+                    donor = new MpContactDonor
                     {
                         ContactId = contactId,
                         RegisteredUser = true
@@ -425,9 +425,9 @@ namespace MinistryPlatform.Translation.Services
             return donor;
 
         }
-        public ContactDonor GetPossibleGuestContactDonor(string email)
+        public MpContactDonor GetPossibleGuestContactDonor(string email)
         {
-            ContactDonor donor;
+            MpContactDonor donor;
             try
             {
                 if (string.IsNullOrWhiteSpace(email))
@@ -441,7 +441,7 @@ namespace MinistryPlatform.Translation.Services
                 if (records != null && records.Count > 0)
                 {
                     var record = records.First();
-                    donor = new ContactDonor()
+                    donor = new MpContactDonor()
                     {
                         
                         DonorId = record.ToInt(DonorRecordId),
@@ -466,7 +466,7 @@ namespace MinistryPlatform.Translation.Services
 
         }
 
-        public ContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber)
+        public MpContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber)
         {
             var search = string.Format(",\"{0}\"", CreateHashedAccountAndRoutingNumber(accountNumber, routingNumber));
 
@@ -485,7 +485,7 @@ namespace MinistryPlatform.Translation.Services
 
             var contactDonor = GetContactDonor(contactId);
 
-            contactDonor.Account = new DonorAccount
+            contactDonor.Account = new MpDonorAccount
             {
                 DonorAccountId = accounts[0].ToInt("Donor_Account_ID"),
                 ProcessorAccountId = accounts[0]["Processor_Account_ID"].ToString(),
@@ -495,7 +495,7 @@ namespace MinistryPlatform.Translation.Services
             return contactDonor;
         }
 
-        public ContactDonor GetContactDonorForCheckAccount(string encrptedKey)
+        public MpContactDonor GetContactDonorForCheckAccount(string encrptedKey)
         {
             var donorAccount = WithApiLogin(apiToken => _ministryPlatformService.GetPageViewRecords(_donorLookupByEncryptedAccount, apiToken, "," + encrptedKey));
             if (donorAccount == null || donorAccount.Count == 0)
@@ -505,10 +505,10 @@ namespace MinistryPlatform.Translation.Services
             var contactId = Convert.ToInt32(donorAccount[0]["Contact_ID"]);
             var myContact = _contactService.GetContactById(contactId);
 
-            var details = new ContactDonor
+            var details = new MpContactDonor
             {
                DonorId = (int) donorAccount[0]["Donor_ID"],
-               Details = new ContactDetails
+               Details = new MpContactDetails
                {
                    DisplayName = donorAccount[0]["Display_Name"].ToString(),
                    Address = new MpPostalAddress
@@ -601,9 +601,9 @@ namespace MinistryPlatform.Translation.Services
             SendEmail(communicationTemplateId, donorId, donationAmount, pymtType, setupDate, program.Name, EmailReason);
         }
 
-        public ContactDonor GetEmailViaDonorId(int donorId)
+        public MpContactDonor GetEmailViaDonorId(int donorId)
         {
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             try
             {
                 var searchStr = string.Format(",\"{0}\"", donorId);
@@ -623,7 +623,7 @@ namespace MinistryPlatform.Translation.Services
                     donor.StatementTypeId = record.ToInt("Statement_Type_ID");
                     donor.StatementFreq = record.ToString("Statement_Frequency");
                     donor.StatementMethod = record.ToString("Statement_Method");
-                    donor.Details = new ContactDetails
+                    donor.Details = new MpContactDetails
                     {
                         EmailAddress = record.ToString("Email"),
                         HouseholdId = record.ToInt("Household_ID")

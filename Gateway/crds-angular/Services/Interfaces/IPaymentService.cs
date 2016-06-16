@@ -22,7 +22,7 @@ namespace crds_angular.Services.Interfaces
         StripeRefund GetChargeRefund(string chargeId);
         StripeRefundData GetRefund(string refundId);
         StripeCharge GetCharge(string chargeId);
-        StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, ContactDonor contactDonor);
+        StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor);
         StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate);
         StripeSubscription UpdateSubscriptionPlan(string customerId, string subscriptionId, string planId, DateTime? trialEndDate = null);
         StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate);

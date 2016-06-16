@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         MpMyContact GetMyProfile(string token);
         int CreateContactForGuestGiver(string emailAddress, string displayName);
         int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard);
-        int CreateContactForNewDonor(ContactDonor contactDonor);
+        int CreateContactForNewDonor(MpContactDonor mpContactDonor);
         IList<int> GetContactIdByRoleId(int roleId, string token);
         void UpdateContact(int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> householdDictionary, Dictionary<string, object> addressDictionary);
         void UpdateContact(int contactId, Dictionary<string, object> profileDictionary);

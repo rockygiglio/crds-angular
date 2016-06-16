@@ -57,7 +57,7 @@ namespace crds_angular.Controllers.API
 
         private IHttpActionResult CreateDonorForUnauthenticatedUser(CreateDonorDTO dto)
         {
-            ContactDonor donor;
+            MpContactDonor donor;
             try
             {
                 donor = _donorService.GetContactDonorForEmail(dto.email_address);
@@ -230,18 +230,18 @@ namespace crds_angular.Controllers.API
 
         private IHttpActionResult UpdateDonor(string token, UpdateDonorDTO dto)
         {
-            ContactDonor contactDonor;
+            MpContactDonor mpContactDonor;
             SourceData sourceData;
 
             try
             {
-                contactDonor = 
+                mpContactDonor = 
                     token == null ? 
                     _donorService.GetContactDonorForEmail(dto.EmailAddress) 
                     : 
                     _donorService.GetContactDonorForAuthenticatedUser(token);
               
-                sourceData = _stripePaymentService.UpdateCustomerSource(contactDonor.ProcessorId, dto.StripeTokenId);
+                sourceData = _stripePaymentService.UpdateCustomerSource(mpContactDonor.ProcessorId, dto.StripeTokenId);
             }
             catch (PaymentProcessorException stripeException)
             {
@@ -256,8 +256,8 @@ namespace crds_angular.Controllers.API
             //return donor
             var donor = new DonorDTO
             {
-                Id = contactDonor.DonorId,
-                ProcessorId = contactDonor.ProcessorId,
+                Id = mpContactDonor.DonorId,
+                ProcessorId = mpContactDonor.ProcessorId,
                 DefaultSource = new DefaultSourceDTO
                 {
                     credit_card = new CreditCardDTO
@@ -275,8 +275,8 @@ namespace crds_angular.Controllers.API
                         accountHolderType = sourceData.account_holder_type
                     }
                 },
-                RegisteredUser = contactDonor.RegisteredUser,
-                Email = contactDonor.Email
+                RegisteredUser = mpContactDonor.RegisteredUser,
+                Email = mpContactDonor.Email
             };
 
             return Ok(donor);
