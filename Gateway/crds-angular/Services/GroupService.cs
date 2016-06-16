@@ -184,7 +184,7 @@ namespace crds_angular.Services
         public List<Event> GetGroupEvents(int groupId, string token)
         {
             var eventTypes = _mpGroupService.GetEventTypesForGroup(groupId, token);
-            var events = new List<MinistryPlatform.Translation.Models.Event>();
+            var events = new List<MinistryPlatform.Translation.Models.MpEvent>();
             foreach (var eventType in eventTypes.Where(eventType => !string.IsNullOrEmpty(eventType)))
             {
                 events.AddRange(_eventService.GetEvents(eventType, token));
@@ -242,7 +242,7 @@ namespace crds_angular.Services
 
             var events = _mpGroupService.getAllEventsForGroup(groupId);
 
-            ContactRelationship[] familyToReturn = null;
+            MpContactRelationship[] familyToReturn = null;
 
             if (currRelationships != null)
             {
@@ -265,7 +265,7 @@ namespace crds_angular.Services
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
                 if (events != null)
                 {
-                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Translation.Models.Event, crds_angular.Models.Crossroads.Events.Event>).ToList();
+                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Translation.Models.MpEvent, crds_angular.Models.Crossroads.Events.Event>).ToList();
                 }
                 //the first instance of family must always be the logged in user
                 var fam = new SignUpFamilyMembers
@@ -362,9 +362,9 @@ namespace crds_angular.Services
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
-                ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
+                FromContact = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new MpContact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
+                ToContacts = new List<MpContact> { new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
         }

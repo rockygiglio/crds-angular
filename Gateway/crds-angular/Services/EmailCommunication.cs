@@ -45,9 +45,9 @@ namespace crds_angular.Services
             }
 
             var replyToContactId = email.ReplyToContactId ?? DefaultContactEmailId;
-            var from = new Contact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
-            var replyTo = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
-            var recipient = new Contact {ContactId = email.ToContactId, EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId) };
+            var from = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
+            var replyTo = new MpContact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
+            var recipient = new MpContact {ContactId = email.ToContactId, EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId) };
 
             communication.FromContact = from;
             communication.ReplyToContact = replyTo;
@@ -72,8 +72,8 @@ namespace crds_angular.Services
         {
             var replyToContactId = emailData.ReplyToContactId ?? DefaultContactEmailId;
                 
-            var from = new Contact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
-            var replyTo = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
+            var from = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
+            var replyTo = new MpContact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
 
             var comm = new MpCommunication
             {
@@ -84,11 +84,11 @@ namespace crds_angular.Services
                 FromContact = from,
                 ReplyToContact = replyTo,
                 MergeData = new Dictionary<string, object>(),
-                ToContacts = new List<Contact>()
+                ToContacts = new List<MpContact>()
             };
             foreach (var to in emailData.ToContactIds)
             {
-                var contact  = new Contact { ContactId = to, EmailAddress = _communicationService.GetEmailFromContactId(to) };
+                var contact  = new MpContact { ContactId = to, EmailAddress = _communicationService.GetEmailFromContactId(to) };
                 comm.ToContacts.Add(contact);
             }
             _communicationService.SendMessage(comm);

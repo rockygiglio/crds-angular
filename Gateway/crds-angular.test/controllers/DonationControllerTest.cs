@@ -234,7 +234,7 @@ namespace crds_angular.test.controllers
 
             donorServiceMock.Setup(mocked => mocked.
                                        CreateDonationAndDistributionRecord(
-                                           It.Is<DonationAndDistributionRecord>(
+                                           It.Is<MpDonationAndDistributionRecord>(
                                                d => d.DonationAmt == createDonationDTO.Amount &&
                                                     d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                     d.DonorId == donor.DonorId &&
@@ -332,7 +332,7 @@ namespace crds_angular.test.controllers
                 .Returns(charge);
 
             donorServiceMock.Setup(mocked => mocked.
-                CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                                d => d.DonationAmt == createDonationDTO.Amount &&
                                                     d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                     d.DonorId == donor.DonorId &&
@@ -430,7 +430,7 @@ namespace crds_angular.test.controllers
 
 
             donorServiceMock.Setup(mocked => mocked.
-                CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                            d => d.DonationAmt == createDonationDTO.Amount &&
                                                 d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                 d.DonorId == donor.DonorId &&
@@ -514,7 +514,7 @@ namespace crds_angular.test.controllers
                 Returns(charge);
 
             donorServiceMock.Setup(mocked => mocked.
-                                       CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                                       CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                            d => d.DonationAmt == createDonationDTO.Amount &&
                                                 d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                 d.DonorId == donor.DonorId &&

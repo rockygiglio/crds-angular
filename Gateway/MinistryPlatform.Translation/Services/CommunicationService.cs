@@ -110,7 +110,7 @@ namespace MinistryPlatform.Translation.Services
 
         private void AddCommunicationMessages(MpCommunication communication, int communicationId, string token)
         {
-            foreach (Contact contact in communication.ToContacts)
+            foreach (MpContact contact in communication.ToContacts)
             {
                 var dictionary = new Dictionary<string, object>
                 {
@@ -154,9 +154,9 @@ namespace MinistryPlatform.Translation.Services
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = fromContactId, EmailAddress = fromEmailAddress},
-                ReplyToContact = new Contact {ContactId = replyContactId, EmailAddress = replyEmailAddress},
-                ToContacts = new List<Contact>{ new Contact{ContactId = toContactId, EmailAddress = toEmailAddress}},
+                FromContact = new MpContact {ContactId = fromContactId, EmailAddress = fromEmailAddress},
+                ReplyToContact = new MpContact {ContactId = replyContactId, EmailAddress = replyEmailAddress},
+                ToContacts = new List<MpContact>{ new MpContact{ContactId = toContactId, EmailAddress = toEmailAddress}},
                 TemplateId = templateId,
                 MergeData = mergeData
             };

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Donation
+    public class MpDonation
     {
         public int donationId { get; set; }
         public int donorId { get; set; }
@@ -22,11 +22,11 @@ namespace MinistryPlatform.Translation.Models
         public bool IncludeOnPrintedStatement { get; set; }
 
         #region Distributions property
-        private readonly List<DonationDistribution> _distributions = new List<DonationDistribution>();
-        public List<DonationDistribution> Distributions { get { return (_distributions); } }
+        private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();
+        public List<MpDonationDistribution> Distributions { get { return (_distributions); } }
          #endregion
 
-        public Donation()
+        public MpDonation()
         {
             IncludeOnGivingHistory = true;
             IncludeOnPrintedStatement = false;

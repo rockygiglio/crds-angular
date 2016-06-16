@@ -16,7 +16,7 @@ using MinistryPlatform.Translation.Services;
 using Moq;
 using NUnit.Framework;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
-using Event = MinistryPlatform.Translation.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
@@ -178,11 +178,11 @@ namespace crds_angular.test.Services
             groupService.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(888456);
             groupService.Setup(mocked => mocked.SendCommunityGroupConfirmationEmail(It.IsAny<int>(), 456, true, false));
 
-            var events = new List<Event>
+            var events = new List<MpEvent>
             {
-                new Event {EventId = 777},
-                new Event {EventId = 555},
-                new Event {EventId = 444}
+                new MpEvent {EventId = 777},
+                new MpEvent {EventId = 555},
+                new MpEvent {EventId = 444}
             };
             groupService.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
 
@@ -214,7 +214,7 @@ namespace crds_angular.test.Services
                 GroupId = 98765
             };
 
-            var eventList = new List<Event>()
+            var eventList = new List<MpEvent>()
             {
                 EventHelpers.TranslationEvent()
             };
@@ -229,9 +229,9 @@ namespace crds_angular.test.Services
             };
             groupService.Setup(mocked => mocked.GetGroupSignupRelations(90210)).Returns(relations);
 
-            var contactRelations = new List<ContactRelationship>
+            var contactRelations = new List<MpContactRelationship>
             {
-                new ContactRelationship
+                new MpContactRelationship
                 {
                     Contact_Id = 333,
                     Relationship_Id = 111,

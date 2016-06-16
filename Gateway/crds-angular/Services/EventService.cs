@@ -9,7 +9,7 @@ using log4net;
 using MinistryPlatform.Translation.Models.EventReservations;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
-using Event = MinistryPlatform.Translation.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
@@ -316,7 +316,7 @@ namespace crds_angular.Services
             return eventId;
         }
 
-        public Event GetEvent(int eventId)
+        public MpEvent GetEvent(int eventId)
         {
             return _eventService.GetEvent(eventId);
         }
@@ -442,7 +442,7 @@ namespace crds_angular.Services
             eventList.ForEach(evt => { SendPrimaryContactReminderEmail(evt, token); });
         }
 
-        private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, Event childcareEvent, IList<Participant> children, string token)
+        private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, MpEvent childcareEvent, IList<Participant> children, string token)
         {
             try
             {
@@ -574,7 +574,7 @@ namespace crds_angular.Services
             _communicationService.SendMessage(comm);
         }
 
-        private HtmlElement SetupTable(List<RegisterEventObj> regData, Event evnt)
+        private HtmlElement SetupTable(List<RegisterEventObj> regData, MpEvent evnt)
         {
             var tableAttrs = new Dictionary<string, string>()
             {
@@ -620,7 +620,7 @@ namespace crds_angular.Services
             public bool ChildcareRequested { get; set; }
         }
 
-        public Event GetMyChildcareEvent(int parentEventId, string token)
+        public MpEvent GetMyChildcareEvent(int parentEventId, string token)
         {
             var participantRecord = _participantService.GetParticipantRecord(token);
             if (!_eventService.EventHasParticipant(parentEventId, participantRecord.ParticipantId))
@@ -632,7 +632,7 @@ namespace crds_angular.Services
             return childcareEvent;
         }
 
-        public Event GetChildcareEvent(int parentEventId)
+        public MpEvent GetChildcareEvent(int parentEventId)
         {
             var childEvents = _eventService.GetEventsByParentEventId(parentEventId);
             var childcareEvents = childEvents.Where(childEvent => childEvent.EventType == "Childcare").ToList();
@@ -690,14 +690,14 @@ namespace crds_angular.Services
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
+        public List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
         {
             var eventTemplates = _eventService.GetEventsBySite(site, token, startDate, endDate);
 
             return eventTemplates;
         }
 
-        public List<Event> GetEventTemplatesBySite(string site, string token)
+        public List<MpEvent> GetEventTemplatesBySite(string site, string token)
         {
             var eventTemplates = _eventService.GetEventTemplatesBySite(site, token);
 

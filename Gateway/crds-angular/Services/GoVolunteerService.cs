@@ -87,7 +87,7 @@ namespace crds_angular.Services
 
                 if (registration.SpouseParticipation)
                 {
-                    var spouse = Observable.Start<Contact>(() => SpouseInformation(registration));
+                    var spouse = Observable.Start<MpContact>(() => SpouseInformation(registration));
                     spouse.Subscribe(contact =>
                     {
                         if (contact != null)
@@ -377,13 +377,13 @@ namespace crds_angular.Services
             }
         }
 
-        private Contact SpouseInformation(Registration registration)
+        private MpContact SpouseInformation(Registration registration)
         {
             
 
             if (!AddSpouse(registration))
             {
-                return new Contact()
+                return new MpContact()
                 {
                     ContactId = registration.Spouse.ContactId,
                     EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId)
@@ -396,7 +396,7 @@ namespace crds_angular.Services
                                                                                          registration.Spouse.EmailAddress,
                                                                                          registration.Spouse.DateOfBirth,
                                                                                          registration.Spouse.MobilePhone));
-                contact.Subscribe<Contact>(c =>
+                contact.Subscribe<MpContact>(c =>
                 {
                     Observable.CombineLatest(
                         Observable.Start(() => { _participantService.CreateParticipantRecord(c.ContactId); }),

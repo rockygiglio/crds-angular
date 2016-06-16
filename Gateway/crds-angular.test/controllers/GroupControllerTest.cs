@@ -17,7 +17,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Event = MinistryPlatform.Translation.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 namespace crds_angular.test.controllers
 {
@@ -72,10 +72,10 @@ namespace crds_angular.test.controllers
                 }
             };
 
-            List<Event> events = new List<Event>();
-            Event e1 = new Event();
+            List<MpEvent> events = new List<MpEvent>();
+            MpEvent e1 = new MpEvent();
             e1.EventId = 101;
-            Event e2 = new Event();
+            MpEvent e2 = new MpEvent();
             e2.EventId = 202;
             events.Add(e1);
             events.Add(e2);

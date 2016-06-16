@@ -224,8 +224,8 @@ namespace crds_angular.test.Services
                     {"Shift_End", fakeServeReminder.ShiftEnd}
                  };
 
-                var contact = new Contact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
-                var toContact = new Contact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
+                var contact = new MpContact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
+                var toContact = new MpContact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
                 var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
@@ -236,7 +236,7 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = defaultEmailTemplate,
-                    ToContacts = new List<Contact>() {toContact}
+                    ToContacts = new List<MpContact>() {toContact}
                 };
 
                 _contactService.Setup(m => m.GetContactById(fakeServeReminder.SignedupContactId)).Returns(fakeMyContact);
@@ -403,13 +403,13 @@ namespace crds_angular.test.Services
             return servingParticipants;
         }
 
-        private static List<ContactRelationship> MockContactRelationships()
+        private static List<MpContactRelationship> MockContactRelationships()
         {
-            var mockRelationships = new List<ContactRelationship>();
-            var mockRelationship1 = new ContactRelationship();
+            var mockRelationships = new List<MpContactRelationship>();
+            var mockRelationship1 = new MpContactRelationship();
             mockRelationship1.Contact_Id = 1111111;
             mockRelationship1.Participant_Id = 1;
-            var mockRelationship2 = new ContactRelationship();
+            var mockRelationship2 = new MpContactRelationship();
             mockRelationship2.Contact_Id = 123456;
             mockRelationship2.Participant_Id = 2;
             mockRelationships.Add(mockRelationship1);
@@ -600,9 +600,9 @@ namespace crds_angular.test.Services
                 DomainId = 1,
                 EmailBody = mockRsvpChangedTemplate.Body,
                 EmailSubject = mockRsvpChangedTemplate.Subject,
-                FromContact = new Contact {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address},
-                ReplyToContact = new Contact { ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address },
-                ToContacts = new List<Contact> {new Contact{ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address}}
+                FromContact = new MpContact {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address},
+                ReplyToContact = new MpContact { ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address}}
             };
 
             var mergeData = new Dictionary<string, object>
@@ -817,7 +817,7 @@ namespace crds_angular.test.Services
         }
 
         [Test, TestCaseSource("AllMockEvents")]
-        public void RespondToServeOpportunityYesForEveryOtherWeek(List<Event> mockEvents)
+        public void RespondToServeOpportunityYesForEveryOtherWeek(List<MpEvent> mockEvents)
         {
             const int contactId = 8;
             const int opportunityId = 12;
@@ -889,31 +889,31 @@ namespace crds_angular.test.Services
             new[] {SetupWeekNotInSequentialOrderMockEvents()}
         };
 
-        private static List<Event> SetupMockEvents()
+        private static List<MpEvent> SetupMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
@@ -946,36 +946,36 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMissingInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMissingInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 29)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 6,
                     EventStartDate = new DateTime(2015, 2, 5)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 2, 12)
@@ -983,26 +983,26 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMissingNotInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMissingNotInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
@@ -1010,31 +1010,31 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMutipleMissingInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMutipleMissingInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 6,
                     EventStartDate = new DateTime(2015, 2, 5)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 2, 12)
@@ -1042,31 +1042,31 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekNotInSequentialOrderMockEvents()
+        private static List<MpEvent> SetupWeekNotInSequentialOrderMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
@@ -1075,7 +1075,7 @@ namespace crds_angular.test.Services
         }
 
         private void SetUpRSVPMocks(int contactId, int eventTypeId, int opportunityId, bool signUp,
-            List<Event> mockEvents)
+            List<MpEvent> mockEvents)
         {
             var mockParticipant = new Participant
             {

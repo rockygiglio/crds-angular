@@ -228,7 +228,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactId = _fixture.CreateSimpleContact(firstname, lastname, email, dob, mobile);
 
-            Assert.IsInstanceOf<Contact>(contactId);
+            Assert.IsInstanceOf<MpContact>(contactId);
             Assert.AreEqual(123, contactId.ContactId);
 
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,

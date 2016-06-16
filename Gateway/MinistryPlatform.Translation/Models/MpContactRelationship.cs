@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class ContactRelationship
+    public class MpContactRelationship
     {
         public int Contact_Id { get; set; }
         public string Email_Address { get; set; }

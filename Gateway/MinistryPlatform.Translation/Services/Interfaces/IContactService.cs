@@ -20,6 +20,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int GetContactIdByEmail(string email);
         MyContact GetContactByParticipantId(int participantId);
         List<Dictionary<string, object>> StaffContacts();
-        Contact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile);
+        MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile);
     }
 }

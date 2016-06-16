@@ -331,7 +331,7 @@ namespace MinistryPlatform.Translation.Services
                 return groupParticipants;
         }
 
-        public IList<Event> getAllEventsForGroup(int groupId)
+        public IList<MpEvent> getAllEventsForGroup(int groupId)
         {
             var apiToken = ApiLogin();
             var groupEvents = ministryPlatformService.GetSubpageViewRecords("GroupEventsSubPageView", groupId, apiToken);
@@ -339,7 +339,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            return groupEvents.Select(tmpEvent => new Event
+            return groupEvents.Select(tmpEvent => new MpEvent
             {
                 EventId = tmpEvent.ToInt("Event_ID"),
                 Congregation = tmpEvent.ToString("Congregation_Name"),
@@ -443,15 +443,15 @@ namespace MinistryPlatform.Translation.Services
             };
 
             var domainId = Convert.ToInt32(AppSettings("DomainId"));
-            var from = new Contact()
+            var from = new MpContact()
             {
                 ContactId = DefaultEmailContactId,
                 EmailAddress = _communicationService.GetEmailFromContactId(DefaultEmailContactId)
             };
 
-            var to = new List<Contact>
+            var to = new List<MpContact>
             {
-                new Contact {
+                new MpContact {
                     ContactId = toContact,
                     EmailAddress = toContactInfo.Email_Address
                 }

@@ -277,7 +277,7 @@ namespace crds_angular.Services
             return capacity;
         }
 
-        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, Event, bool> saveFunc = null)
+        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, MpEvent, bool> saveFunc = null)
         {
             var updatedEvents = new List<int>();
 
@@ -494,7 +494,7 @@ namespace crds_angular.Services
             return otherResponses.Any();
         }
 
-        private static DateTime IncrementSequenceDate(Event @event, DateTime sequenceDate, int increment)
+        private static DateTime IncrementSequenceDate(MpEvent @event, DateTime sequenceDate, int increment)
         {
             if (@event.EventStartDate.Date > sequenceDate.Date)
             {
@@ -525,7 +525,7 @@ namespace crds_angular.Services
                                                       List<int> opportunityIds,
                                                       bool signUp,
                                                       Participant participant,
-                                                      Event @event,
+                                                      MpEvent @event,
                                                       MyContact groupLeader)
         {
             var response = signUp
@@ -548,7 +548,7 @@ namespace crds_angular.Services
             return templateId;
         }
 
-        private List<Event> GetEventsInRange(string token, int eventTypeId, DateTime startDate, DateTime endDate)
+        private List<MpEvent> GetEventsInRange(string token, int eventTypeId, DateTime startDate, DateTime endDate)
         {
             var events =
                 _eventService.GetEventsByTypeForRange(eventTypeId, startDate, endDate, token)
@@ -558,7 +558,7 @@ namespace crds_angular.Services
         }
 
         private Dictionary<string, object> HandleYesRsvp(Participant participant,
-                                                         Event e,
+                                                         MpEvent e,
                                                          int opportunityId,
                                                          IReadOnlyCollection<int> opportunityIds,
                                                          String token)
@@ -603,7 +603,7 @@ namespace crds_angular.Services
         }
 
         private Dictionary<string, object> HandleNoRsvp(Participant participant,
-                                                        Event e,
+                                                        MpEvent e,
                                                         List<int> opportunityIds,
                                                         string token,
                                                         MyContact groupLeader)
@@ -685,9 +685,9 @@ namespace crds_angular.Services
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address},
-                ReplyToContact = new Contact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
-                ToContacts = new List<Contact> {new Contact {ContactId = toContact.Contact_ID, EmailAddress = toContact.Email_Address}},
+                FromContact = new MpContact {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address},
+                ReplyToContact = new MpContact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = toContact.Contact_ID, EmailAddress = toContact.Email_Address}},
                 MergeData = mergeData
             };
         }

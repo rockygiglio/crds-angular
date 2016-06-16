@@ -108,7 +108,7 @@ namespace crds_angular.Services
                  
                     var programId = batchDetails.ProgramId == null ? null : batchDetails.ProgramId + "";
 
-                    var donationAndDistribution = new DonationAndDistributionRecord
+                    var donationAndDistribution = new MpDonationAndDistributionRecord
                     {
                         DonationAmt = check.Amount,
                         FeeAmt = fee,

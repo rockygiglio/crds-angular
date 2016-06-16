@@ -286,7 +286,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true)
+        public int CreateDonationAndDistributionRecord(MpDonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true)
         {
             var pymtId = PaymentType.GetPaymentType(donationAndDistribution.PymtType).id;
             var fee = donationAndDistribution.FeeAmt.HasValue ? donationAndDistribution.FeeAmt / Constants.StripeDecimalConversionValue : null;
@@ -653,9 +653,9 @@ namespace MinistryPlatform.Translation.Services
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact =  new Contact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ReplyToContact = new Contact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ToContacts = new List<Contact> {new Contact{ContactId = contact.ContactId, EmailAddress = contact.Email}},
+                FromContact =  new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
+                ReplyToContact = new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = contact.ContactId, EmailAddress = contact.Email}},
                 MergeData = new Dictionary<string, object>
                 {
                     {"Program_Name", program},
@@ -674,7 +674,7 @@ namespace MinistryPlatform.Translation.Services
             _communicationService.SendMessage(comm);
         }
 
-        public List<Donation> GetDonations(IEnumerable<int> donorIds, string donationYear = null)
+        public List<MpDonation> GetDonations(IEnumerable<int> donorIds, string donationYear = null)
         {
             var search = string.Format("{0},,,,,,,,,,{1}", YearSearch(donationYear), DonorIdSearch(donorIds));
             var records = WithApiLogin(token => _ministryPlatformService.GetRecordsDict(_donationDistributionPageId, token, search));
@@ -682,21 +682,21 @@ namespace MinistryPlatform.Translation.Services
             return MapDonationRecords(records);
         }
 
-        public List<Donation> GetDonations(int donorId, string donationYear = null)
+        public List<MpDonation> GetDonations(int donorId, string donationYear = null)
         {
             return (GetDonations(new [] {donorId}, donationYear));
         }
 
-        private List<DonationStatus> GetDonationStatuses()
+        private List<MpDonationStatus> GetDonationStatuses()
         {
             var statuses = WithApiLogin(token => _ministryPlatformService.GetRecordsDict(_donationStatusesPageId, token));
 
             if (statuses == null || statuses.Count == 0)
             {
-                return (new List<DonationStatus>());
+                return (new List<MpDonationStatus>());
             }
 
-            var result = statuses.Select(s => new DonationStatus
+            var result = statuses.Select(s => new MpDonationStatus
             {
                 DisplayOnGivingHistory = s["Display_On_Giving_History"] as bool? ?? true,
                 DisplayOnStatement = s["Display_On_Statements"] as bool? ?? false,
@@ -708,7 +708,7 @@ namespace MinistryPlatform.Translation.Services
             return (result);
         }
 
-        public List<Donation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null)
+        public List<MpDonation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null)
         {
             var search = string.Format("{0},,,,,,,,,,,,,,,,,{1}", YearSearch(donationYear), DonorIdSearch(donorIds));
             var records = WithApiLogin(token => _ministryPlatformService.GetRecordsDict(_donationDistributionPageId, token, search));
@@ -716,7 +716,7 @@ namespace MinistryPlatform.Translation.Services
             return MapDonationRecords(records);
         }
 
-        public List<Donation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null)
+        public List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null)
         {
             var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
             var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
@@ -724,7 +724,7 @@ namespace MinistryPlatform.Translation.Services
             return MapDonationRecords(records);
         }
 
-        private List<Donation> MapDonationRecords(List<Dictionary<string, Object>> records)
+        private List<MpDonation> MapDonationRecords(List<Dictionary<string, Object>> records)
         {
             if (records == null || records.Count == 0)
             {
@@ -733,7 +733,7 @@ namespace MinistryPlatform.Translation.Services
 
             var statuses = GetDonationStatuses();
 
-            var donationMap = new Dictionary<int, Donation>();
+            var donationMap = new Dictionary<int, MpDonation>();
             foreach (var record in records)
             {
                 var donationId = record["Donation_ID"] as int? ?? 0;
@@ -746,17 +746,17 @@ namespace MinistryPlatform.Translation.Services
             return donationMap.Values.ToList();
         }
 
-        private static Donation GetDonationFromMap(Dictionary<int, Donation> donationMap,
+        private static MpDonation GetDonationFromMap(Dictionary<int, MpDonation> donationMap,
                                             Dictionary<string, Object> record,
                                             int donationId,
-                                            List<DonationStatus> statuses)
+                                            List<MpDonationStatus> statuses)
         {
             if (donationMap.ContainsKey(donationId))
             {
                 return donationMap[donationId];
             }
             
-            var donation = new Donation
+            var donation = new MpDonation
             {
                 donationDate = record["Donation_Date"] as DateTime? ?? DateTime.Now,
                 batchId = null,
@@ -772,20 +772,20 @@ namespace MinistryPlatform.Translation.Services
                 itemNumber = record["Item_Number"] as string
             };
 
-            var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new DonationStatus();
+            var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();
             donation.IncludeOnGivingHistory = status.DisplayOnGivingHistory;
             donation.IncludeOnPrintedStatement = status.DisplayOnStatement;
 
             return donation;
         }
 
-        private static void AddDistributionToDonation(Dictionary<string, Object> record, Donation donation)
+        private static void AddDistributionToDonation(Dictionary<string, Object> record, MpDonation donation)
         {
 
             var amount = Convert.ToInt32((record["Amount"] as decimal? ?? 0) * Constants.StripeDecimalConversionValue);
             donation.donationAmt += amount;
 
-            donation.Distributions.Add(new DonationDistribution
+            donation.Distributions.Add(new MpDonationDistribution
             {
                 donationDistributionProgram = record["dp_RecordName"] as string,
                 donationDistributionAmt = amount
@@ -995,7 +995,7 @@ namespace MinistryPlatform.Translation.Services
             };
         }
 
-        public DonorStatement GetDonorStatement(string token)
+        public MpDonorStatement GetDonorStatement(string token)
         {
             var records = _ministryPlatformService.GetRecordsDict(_myDonorPageId, token);
 
@@ -1010,14 +1010,14 @@ namespace MinistryPlatform.Translation.Services
             }
 
             var postalStatementId = _configurationWrapper.GetConfigValue("PostalMailStatement");
-            var statementMethod = new DonorStatement();
+            var statementMethod = new MpDonorStatement();
             statementMethod.DonorId = records[0].ToInt("dp_RecordID");
             
             statementMethod.Paperless = records[0].ToString("Statement_Method_ID") != postalStatementId;
             return statementMethod;
         }
 
-        public void UpdateDonorStatement(string token, DonorStatement statement)
+        public void UpdateDonorStatement(string token, MpDonorStatement statement)
         {           
             var onlineStatementId = _configurationWrapper.GetConfigValue("EmailOnlineStatement");
             var postalStatementId = _configurationWrapper.GetConfigValue("PostalMailStatement");

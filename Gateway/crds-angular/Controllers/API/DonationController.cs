@@ -203,7 +203,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var donationAndDistribution = new DonationAndDistributionRecord
+                var donationAndDistribution = new MpDonationAndDistributionRecord
                 {
                     DonationAmt = dto.Amount,
                     FeeAmt = fee,
@@ -261,7 +261,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var donationAndDistribution = new DonationAndDistributionRecord
+                var donationAndDistribution = new MpDonationAndDistributionRecord
                 {
                     DonationAmt = dto.Amount,
                     FeeAmt = fee,

@@ -165,7 +165,7 @@ namespace MinistryPlatform.Translation.Services
             return (eventParticipantId);
         }
 
-        public Event GetEvent(int eventId)
+        public MpEvent GetEvent(int eventId)
         {
             var token = ApiLogin();
             var searchString = string.Format("{0},", eventId);
@@ -173,7 +173,7 @@ namespace MinistryPlatform.Translation.Services
             if (r.Count == 1)
             {
                 var record = r[0];
-                var e = new Event
+                var e = new MpEvent
                 {
                     CongregationId = record.ToInt("Congregation_ID"),
                     EventEndDate = record.ToDate("Event_End_Date"),
@@ -181,7 +181,7 @@ namespace MinistryPlatform.Translation.Services
                     EventStartDate = record.ToDate("Event_Start_Date"),
                     EventTitle = record.ToString("Event_Title"),
                     ParentEventId = record.ToNullableInt("Parent_Event_ID"),
-                    PrimaryContact = new Contact
+                    PrimaryContact = new MpContact
                     {
                         ContactId = record.ToInt("Contact_ID"),
                         EmailAddress = record.ToString("Email_Address")
@@ -213,14 +213,14 @@ namespace MinistryPlatform.Translation.Services
             return records.Count != 0;
         }
 
-        public List<Event> GetEvents(string eventType, string token)
+        public List<MpEvent> GetEvents(string eventType, string token)
         {
             //this is using the basic Events page, any concern there?
             var pageId = Convert.ToInt32(ConfigurationManager.AppSettings["Events"]);
             var search = ",," + eventType;
             var records = _ministryPlatformService.GetRecordsDict(pageId, token, search);
 
-            return records.Select(record => new Event
+            return records.Select(record => new MpEvent
             {
                 EventTitle = (string) record["Event_Title"],
                 EventType = (string) record["Event_Type"],
@@ -230,13 +230,13 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public List<Event> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token)
+        public List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token)
         {
             const string viewKey = "EventsWithEventTypeId";
             var search = ",," + eventTypeId;
             var eventRecords = _ministryPlatformService.GetPageViewRecords(viewKey, token, search);
 
-            var events = eventRecords.Select(record => new Event
+            var events = eventRecords.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event Title"),
                 EventType = record.ToString("Event Type"),
@@ -253,20 +253,20 @@ namespace MinistryPlatform.Translation.Services
             return filteredEvents;
         }
 
-        public List<Event> GetEventsByParentEventId(int parentEventId)
+        public List<MpEvent> GetEventsByParentEventId(int parentEventId)
         {
             var token = ApiLogin();
             var searchStr = string.Format(",,,{0}", parentEventId);
             var records = _ministryPlatformService.GetPageViewRecords("EventsByParentEventID", token, searchStr);
 
-            var events = records.Select(record => new Event
+            var events = records.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event_Title"),
                 EventType = record.ToString("Event_Type"),
                 EventStartDate = record.ToDate("Event_Start_Date", true),
                 EventEndDate = record.ToDate("Event_End_Date", true),
                 EventId = record.ToInt("Event_ID"),
-                PrimaryContact = new Contact
+                PrimaryContact = new MpContact
                 {
                     ContactId = record.ToInt("Contact_ID"),
                     EmailAddress = record.ToString("Email_Address")
@@ -276,16 +276,16 @@ namespace MinistryPlatform.Translation.Services
             return events;
         }
 
-        public IEnumerable<Event> EventsByPageId(string token, int pageViewId)
+        public IEnumerable<MpEvent> EventsByPageId(string token, int pageViewId)
         {
-            return _ministryPlatformService.GetRecordsDict(pageViewId, token).Select(record => new Event()
+            return _ministryPlatformService.GetRecordsDict(pageViewId, token).Select(record => new MpEvent()
             {
                 EventId = (int) record["Event_ID"],
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
                 EventType = record.ToString("Event_Type"),
-                PrimaryContact = new Contact()
+                PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
                     EmailAddress = record.ToString("Primary_Contact_Email_Address")
@@ -293,16 +293,16 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public IEnumerable<Event> EventsByPageViewId(string token, int pageViewId, string searchString)
+        public IEnumerable<MpEvent> EventsByPageViewId(string token, int pageViewId, string searchString)
         {
-            return _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString).Select(record => new Event()
+            return _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString).Select(record => new MpEvent()
             {
                 EventId = (int) record["Event_ID"],
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
                 EventType = record.ToString("Event_Type"),
-                PrimaryContact = new Contact()
+                PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
                     EmailAddress = record.ToString("Primary_Contact_Email_Address")
@@ -394,7 +394,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.DeleteSelection(eventGroupSelId, token);
         }
 
-        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
+        public List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
         {
             StringBuilder dateSearchString = new StringBuilder();
 
@@ -425,7 +425,7 @@ namespace MinistryPlatform.Translation.Services
             return GetEventsData(token, searchString);
         }
 
-        public List<Event> GetEventTemplatesBySite(string site, string token)
+        public List<MpEvent> GetEventTemplatesBySite(string site, string token)
         {
             var searchString = string.Format(",,\"{0}\",,True,", site);
 
@@ -480,7 +480,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private List<Event> GetEventsData(string token, string searchString)
+        private List<MpEvent> GetEventsData(string token, string searchString)
         {
             var pageViewId = _configurationWrapper.GetConfigIntValue("EventsBySite");
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, searchString);
@@ -490,7 +490,7 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
 
-            return records.Select(record => new Event
+            return records.Select(record => new MpEvent
             {
                 // this isn't a complete list of all event fields - we may need more for user info purposes
                 EventId = record.ToInt("Event_ID"),

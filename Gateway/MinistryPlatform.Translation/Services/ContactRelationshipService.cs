@@ -20,13 +20,13 @@ namespace MinistryPlatform.Translation.Services
             this._ministryPlatformService = ministryPlatformService;
         }
 
-        public IEnumerable<ContactRelationship> GetMyImmediateFamilyRelationships(int contactId, string token)
+        public IEnumerable<MpContactRelationship> GetMyImmediateFamilyRelationships(int contactId, string token)
         {
             var viewRecords = _ministryPlatformService.GetSubpageViewRecords("MyContactFamilyRelationshipViewId",
                                                                              contactId,
                                                                              token);
 
-            return viewRecords.Select(viewRecord => new ContactRelationship
+            return viewRecords.Select(viewRecord => new MpContactRelationship
             {
                 Contact_Id = viewRecord.ToInt("Contact_ID"),
                 Email_Address = viewRecord.ToString("Email_Address"),
@@ -61,13 +61,13 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public IEnumerable<ContactRelationship> GetMyCurrentRelationships(int contactId, string token)
+        public IEnumerable<MpContactRelationship> GetMyCurrentRelationships(int contactId, string token)
         {
             var viewRecords = _ministryPlatformService.GetSubpageViewRecords(_getMyCurrentRelationships,
                                                                              contactId,
                                                                              token);
 
-            return viewRecords.Select(viewRecord => new ContactRelationship
+            return viewRecords.Select(viewRecord => new MpContactRelationship
             {
                 Contact_Id = viewRecord.ToInt("Contact_ID"),
                 Email_Address = viewRecord.ToString("Email_Address"),

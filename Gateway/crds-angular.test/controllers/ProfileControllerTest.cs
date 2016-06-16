@@ -180,9 +180,9 @@ namespace crds_angular.test.controllers
             };
 
 
-            var familyList = new List<ContactRelationship>
+            var familyList = new List<MpContactRelationship>
             {
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = heather.Age,
                     Contact_Id = heather.ContactId,
@@ -193,7 +193,7 @@ namespace crds_angular.test.controllers
                     Email_Address = heather.Email,
                     HighSchoolGraduationYear = 0
                 },
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = 12,
                     Contact_Id = 13579,
@@ -216,9 +216,9 @@ namespace crds_angular.test.controllers
         [Test]
         public void ShouldNotReturnSpouse()
         {
-           var familyList = new List<ContactRelationship>
+           var familyList = new List<MpContactRelationship>
             {
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = 12,
                     Contact_Id = 13579,

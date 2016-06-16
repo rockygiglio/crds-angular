@@ -330,7 +330,7 @@ namespace MinistryPlatform.Translation.Services
             return null;
         }
 
-        public Contact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile)
+        public MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile)
         {
             var contactId = CreateContact(new MyContact
             {
@@ -340,7 +340,7 @@ namespace MinistryPlatform.Translation.Services
                 Email_Address = email,
                 Mobile_Phone = mobile
             });
-            return new Contact() { ContactId = contactId, EmailAddress = email};
+            return new MpContact() { ContactId = contactId, EmailAddress = email};
         }
 
         private int CreateAddressHouseholdForSponsoredChild(string town, string lastName)

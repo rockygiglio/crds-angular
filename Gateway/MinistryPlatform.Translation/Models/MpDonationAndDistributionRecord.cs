@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class DonationAndDistributionRecord
+    public class MpDonationAndDistributionRecord
     {
         public decimal DonationAmt { get; set; }
 
@@ -43,9 +43,9 @@ namespace MinistryPlatform.Translation.Models
         public string Notes { get; set; }
 
         #region Donation Distributions
-        private readonly List<DonationDistribution> _distributions = new List<DonationDistribution>();
+        private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();
 
-        public List<DonationDistribution> Distributions
+        public List<MpDonationDistribution> Distributions
         {
             get { return _distributions; }
         }

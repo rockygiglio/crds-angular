@@ -10,7 +10,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Event = MinistryPlatform.Translation.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IDonationService = MinistryPlatform.Translation.Services.Interfaces.IDonationService;
 using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
@@ -395,7 +395,7 @@ namespace crds_angular.Services
             return groupParticipants;
         }
 
-        private int AddGroupParticipant(int groupId, int groupRoleId, DateTime groupStartDate, IList<Event> events, TripApplicant applicant)
+        private int AddGroupParticipant(int groupId, int groupRoleId, DateTime groupStartDate, IList<MpEvent> events, TripApplicant applicant)
         {
             if (_groupService.ParticipantGroupMember(groupId, applicant.ParticipantId))
             {
@@ -405,7 +405,7 @@ namespace crds_angular.Services
             return groupParticipantId;
         }
 
-        private void SendTripParticipantSuccess(int contactId, IList<Event> events)
+        private void SendTripParticipantSuccess(int contactId, IList<MpEvent> events)
         {
             var htmlTable = FormatParticipantEventTable(events).Build();
 
@@ -413,7 +413,7 @@ namespace crds_angular.Services
             SendMessage("TripParticipantSuccessTemplate", contactId, mergeData);
         }
 
-        private HtmlElement FormatParticipantEventTable(IEnumerable<Event> events)
+        private HtmlElement FormatParticipantEventTable(IEnumerable<MpEvent> events)
         {
             var tableAttrs = new Dictionary<string, string>()
             {
@@ -463,9 +463,9 @@ namespace crds_angular.Services
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
-                ReplyToContact = new Contact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
-                ToContacts = new List<Contact> {new Contact{ContactId = fromContact.Contact_ID, EmailAddress = invite.EmailAddress}},
+                FromContact = new MpContact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
+                ReplyToContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = fromContact.Contact_ID, EmailAddress = invite.EmailAddress}},
                 MergeData = mergeData
             };
         }
@@ -504,7 +504,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void EventRegistration(IEnumerable<Event> events, TripApplicant applicant, int destinationId)
+        private void EventRegistration(IEnumerable<MpEvent> events, TripApplicant applicant, int destinationId)
         {
             var destinationDocuments = _destinationService.DocumentsForDestination(destinationId);
             foreach (var e in events)

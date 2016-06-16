@@ -81,9 +81,9 @@ namespace crds_angular.test
                 DomainId = RandomInt(),
                 EmailBody = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                 EmailSubject = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                FromContact = new Contact() {ContactId = sender.Contact_ID, EmailAddress = sender.Email_Address},
+                FromContact = new MpContact() {ContactId = sender.Contact_ID, EmailAddress = sender.Email_Address},
                 MergeData = new Dictionary<string, object>(),
-                ReplyToContact = new Contact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
+                ReplyToContact = new MpContact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
                 TemplateId = templateId
             };
         }

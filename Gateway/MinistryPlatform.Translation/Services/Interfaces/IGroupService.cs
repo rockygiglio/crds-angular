@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
                                   DateTime? endDate = null,
                                   Boolean? employeeRole = false);
 
-        IList<Event> getAllEventsForGroup(int groupId);
+        IList<MpEvent> getAllEventsForGroup(int groupId);
 
         Group getGroupDetails(int groupId);
 

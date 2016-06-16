@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Event
+    public class MpEvent
     {
         private IList<int> participants = new List<int>();
 
@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Models
         public DateTime EventStartDate { get; set; }
         public DateTime EventEndDate { get; set; }
         public int? ParentEventId { get; set; }
-        public Contact PrimaryContact { get; set; }
+        public MpContact PrimaryContact { get; set; }
 
         public IList<int> Participants
         {

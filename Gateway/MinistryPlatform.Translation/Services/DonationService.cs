@@ -90,7 +90,7 @@ namespace MinistryPlatform.Translation.Services
             }));
         }
 
-        public DonationBatch GetDonationBatchByProcessorTransferId(string processorTransferId)
+        public MpDonationBatch GetDonationBatchByProcessorTransferId(string processorTransferId)
         {
             return(WithApiLogin(token =>
             {
@@ -101,17 +101,17 @@ namespace MinistryPlatform.Translation.Services
                     return (null);
                 }
 
-                return (Mapper.Map<Dictionary<string, object>, DonationBatch>(batches[0]));
+                return (Mapper.Map<Dictionary<string, object>, MpDonationBatch>(batches[0]));
             }));
             
         }
 
-        public DonationBatch GetDonationBatch(int batchId)
+        public MpDonationBatch GetDonationBatch(int batchId)
         {
-            return (WithApiLogin(token => (Mapper.Map<Dictionary<string,object>, DonationBatch>(_ministryPlatformService.GetRecordDict(_batchesPageId, batchId, token)))));
+            return (WithApiLogin(token => (Mapper.Map<Dictionary<string,object>, MpDonationBatch>(_ministryPlatformService.GetRecordDict(_batchesPageId, batchId, token)))));
         }
 
-        public DonationBatch GetDonationBatchByDepositId(int depositId)
+        public MpDonationBatch GetDonationBatchByDepositId(int depositId)
         {
             return (WithApiLogin(token =>
             {
@@ -122,18 +122,18 @@ namespace MinistryPlatform.Translation.Services
                     return (null);
                 }
 
-                return (Mapper.Map<Dictionary<string, object>, DonationBatch>(batches[0]));
+                return (Mapper.Map<Dictionary<string, object>, MpDonationBatch>(batches[0]));
             }));
         }
 
-        public List<Deposit> GetSelectedDonationBatches(int selectionId, string token)
+        public List<MpDeposit> GetSelectedDonationBatches(int selectionId, string token)
         {
             var results = _ministryPlatformService.GetSelectionsForPageDict(_depositsPageId, selectionId, token);
-            var deposits = new List<Deposit>();
+            var deposits = new List<MpDeposit>();
 
             foreach (var result in results)
             {
-                deposits.Add(Mapper.Map<Dictionary<string, object>, Deposit>(result));
+                deposits.Add(Mapper.Map<Dictionary<string, object>, MpDeposit>(result));
             }
 
             return deposits;
@@ -311,12 +311,12 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public Donation GetDonationByProcessorPaymentId(string processorPaymentId, bool retrieveDistributions = false)
+        public MpDonation GetDonationByProcessorPaymentId(string processorPaymentId, bool retrieveDistributions = false)
         {
             return (WithApiLogin(token => GetDonationByProcessorPaymentId(processorPaymentId, token, retrieveDistributions)));
         }
         
-        private Donation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken, bool retrieveDistributions)
+        private MpDonation GetDonationByProcessorPaymentId(string processorPaymentId, string apiToken, bool retrieveDistributions)
         {
             var result = _ministryPlatformService.GetRecordsDict(_donationsPageId, apiToken,
                 string.Format(",,,,,,,\"{0}\"", processorPaymentId));
@@ -328,7 +328,7 @@ namespace MinistryPlatform.Translation.Services
 
             var dictionary = result.First();
 
-            var d = new Donation()
+            var d = new MpDonation()
             {
                 donationId = dictionary.ToInt("dp_RecordID"),
                 donorId = dictionary.ToInt("Donor_ID"),
@@ -353,7 +353,7 @@ namespace MinistryPlatform.Translation.Services
 
             foreach (var dist in distributions)
             {
-                d.Distributions.Add(new DonationDistribution
+                d.Distributions.Add(new MpDonationDistribution
                 {
                     donationId = d.donationId,
                     donationDistributionAmt = (int)((dist["Amount"] as decimal? ?? 0M) * Constants.StripeDecimalConversionValue),
@@ -599,9 +599,9 @@ namespace MinistryPlatform.Translation.Services
             };
             var toEmail = _donorService.GetEmailViaDonorId(donorId);
 
-            var to = new List<Contact>()
+            var to = new List<MpContact>()
             {
-                new Contact()
+                new MpContact()
                 {
                      ContactId = toEmail.ContactId,
                     EmailAddress = toEmail.Email
@@ -616,8 +616,8 @@ namespace MinistryPlatform.Translation.Services
                 AuthorUserId = authorId,
                 DomainId = 1,
                 ToContacts = to,
-                FromContact = new Contact(){ContactId = defaultContactId, EmailAddress = defaultContactEmail},
-                ReplyToContact = new Contact(){ContactId = fromContactId, EmailAddress = fromEmail},
+                FromContact = new MpContact(){ContactId = defaultContactId, EmailAddress = defaultContactEmail},
+                ReplyToContact = new MpContact(){ContactId = fromContactId, EmailAddress = fromEmail},
                 EmailSubject = _communicationService.ParseTemplateBody(template.Subject, messageData),
                 EmailBody = _communicationService.ParseTemplateBody(template.Body, messageData),
                 MergeData = messageData
@@ -641,9 +641,9 @@ namespace MinistryPlatform.Translation.Services
             var donorContact = _donorService.GetEmailViaDonorId(toDonor);
             var template = _communicationService.GetTemplate(_tripDonationMessageTemplateId);
 
-            var toContacts = new List<Contact> {new Contact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
+            var toContacts = new List<MpContact> {new MpContact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
 
-            var from = new Contact()
+            var from = new MpContact()
             {
                 ContactId = 5,
                 EmailAddress = "updates@crossroads.net"

@@ -46,7 +46,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationBatch()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatch(123)).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatch(123)).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 456,
@@ -63,7 +63,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationBatchReturnsNull()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatch(123)).Returns((DonationBatch) null);
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatch(123)).Returns((MpDonationBatch) null);
             var result = _fixture.GetDonationBatch(123);
             _mpDonationService.VerifyAll();
             Assert.IsNull(result);
@@ -72,7 +72,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationBatchByProcessorTransferId()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("123")).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("123")).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 456,
@@ -89,7 +89,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentIdDonationNotFound()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((Donation) null);
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((MpDonation) null);
             Assert.IsNull(_fixture.GetDonationByProcessorPaymentId("123"));
             _mpDonationService.VerifyAll();
         }
@@ -97,7 +97,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationByProcessorPaymentId()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns(new Donation
+            _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns(new MpDonation
             {
                 donationId = 123,
                 donationAmt = 456,
@@ -116,7 +116,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationBatchByDepositDonationIdNotFound()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(12424)).Returns((DonationBatch)null);
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(12424)).Returns((MpDonationBatch)null);
             Assert.IsNull(_fixture.GetDonationBatchByDepositId(12424));
             _mpDonationService.VerifyAll();
         }
@@ -124,7 +124,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationBatchByDepositId()
         {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(12424)).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(12424)).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 12424,
@@ -149,11 +149,11 @@ namespace crds_angular.test.Services
             Assert.AreEqual(456, result[0].Id);
         }
 
-        private List<Deposit> MockDepositList()
+        private List<MpDeposit> MockDepositList()
         {
-            return new List<Deposit>
+            return new List<MpDeposit>
             {
-                new Deposit
+                new MpDeposit
                 {
                     DepositDateTime = DateTime.Parse("12/01/2010"),
                     DepositName = "Test Deposit Name 1",
@@ -163,7 +163,7 @@ namespace crds_angular.test.Services
                     Exported = false,
                     ProcessorTransferId = "1233"
                 },
-                new Deposit
+                new MpDeposit
                 {
                     DepositDateTime = DateTime.Parse("2/12/2015"),
                     DepositName = "Test Deposit Name 2",
@@ -310,7 +310,7 @@ namespace crds_angular.test.Services
             var date = DateTime.Today;
             var fileName = string.Format("XRDReceivables-Test_Batch_Name_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 456,
@@ -330,14 +330,14 @@ namespace crds_angular.test.Services
             var fileName = string.Format("XRDReceivables-Test_BatchName_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
             _mpDonationService.Setup(mocked => mocked.GetSelectedDonationBatches(12424, "afdasfsafd")).Returns(MockDepositList);
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 456,
                 ProcessorTransferId = "789",
                 BatchName = "Test BatchName",
             });
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(4557657)).Returns(new DonationBatch
+            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(4557657)).Returns(new MpDonationBatch
             {
                 Id = 1212213,
                 DepositId = 4557657,
@@ -594,16 +594,16 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationsForDonor()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
                     donationDate = DateTime.Parse("1999-12-31 23:59:59"),
                     paymentTypeId = 2, // Cash
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -611,7 +611,7 @@ namespace crds_angular.test.Services
                     paymentTypeId = 5, //bank
                     transactionCode = "tx_67"
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -696,9 +696,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationsForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -706,7 +706,7 @@ namespace crds_angular.test.Services
                     paymentTypeId = 2, // Cash,
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -715,7 +715,7 @@ namespace crds_angular.test.Services
                     transactionCode = "tx_67",
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -764,45 +764,45 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationYearsForDonor()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-12-31 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("2000-01-01 00:00:01"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1998-10-30 23:59:59"),
                 }
             };
 
-            var softCreditDonations = new List<Donation>
+            var softCreditDonations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1997-12-31 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("2001-01-01 00:00:01"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1997-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1996-10-30 23:59:59"),
                 }
@@ -839,45 +839,45 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetDonationYearsForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-12-31 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("2000-01-01 00:00:01"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1998-10-30 23:59:59"),
                 }
             };
 
-            var softCreditDonations = new List<Donation>
+            var softCreditDonations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1997-12-31 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("2001-01-01 00:00:01"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1999-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1997-11-30 23:59:59"),
                 },
-                new Donation
+                new MpDonation
                 {
                     donationDate = DateTime.Parse("1996-10-30 23:59:59"),
                 }
@@ -906,9 +906,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSoftCreditGetDonationsForDonor()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -917,7 +917,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 123,
                     donorDisplayName = "Fidelity",
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -927,7 +927,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 123,
                     donorDisplayName = "US Bank",
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -1004,9 +1004,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSoftCreditGetDonationsForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -1015,7 +1015,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 123,
                     donorDisplayName = "Fidelity",
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -1025,7 +1025,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 123,
                     donorDisplayName = "US Bank",
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -1063,9 +1063,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetAllDonationsForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -1073,7 +1073,7 @@ namespace crds_angular.test.Services
                     paymentTypeId = 2, // Cash,
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -1082,7 +1082,7 @@ namespace crds_angular.test.Services
                     transactionCode = "tx_67",
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -1091,7 +1091,7 @@ namespace crds_angular.test.Services
                     transactionCode = "tx_78",
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 79,
@@ -1101,7 +1101,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 123,
                     donorDisplayName = "US Bank",
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 80,
@@ -1161,9 +1161,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetLimitedDonationsForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -1172,7 +1172,7 @@ namespace crds_angular.test.Services
                     transactionCode = "tx_67",
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -1180,7 +1180,7 @@ namespace crds_angular.test.Services
                     paymentTypeId = 2, // Cash,
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -1192,7 +1192,7 @@ namespace crds_angular.test.Services
             };
 
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 123,
                     donationId = 67,
@@ -1201,7 +1201,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 124,
                     donationId = 67,
@@ -1210,7 +1210,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 125,
                     donationId = 67,
@@ -1220,7 +1220,7 @@ namespace crds_angular.test.Services
             );
 
             donations[1].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 126,
                     donationId = 45,
@@ -1229,7 +1229,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[1].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 127,
                     donationId = 45,
@@ -1239,7 +1239,7 @@ namespace crds_angular.test.Services
             );
 
             donations[2].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 128,
                     donationId = 78,
@@ -1281,9 +1281,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetLimitedDonationsAgainForAuthenticatedUser()
         {
-            var donations = new List<Donation>
+            var donations = new List<MpDonation>
             {
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 567,
                     donationId = 67,
@@ -1292,7 +1292,7 @@ namespace crds_angular.test.Services
                     transactionCode = "tx_67",
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 123,
                     donationId = 45,
@@ -1300,7 +1300,7 @@ namespace crds_angular.test.Services
                     paymentTypeId = 2, // Cash,
                     softCreditDonorId = 0,
                 },
-                new Donation
+                new MpDonation
                 {
                     donationAmt = 678,
                     donationId = 78,
@@ -1312,7 +1312,7 @@ namespace crds_angular.test.Services
             };
 
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 123,
                     donationId = 67,
@@ -1321,7 +1321,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 124,
                     donationId = 67,
@@ -1330,7 +1330,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[0].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 125,
                     donationId = 67,
@@ -1340,7 +1340,7 @@ namespace crds_angular.test.Services
             );
 
             donations[1].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 126,
                     donationId = 45,
@@ -1349,7 +1349,7 @@ namespace crds_angular.test.Services
                 }
             );
             donations[1].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 127,
                     donationId = 45,
@@ -1359,7 +1359,7 @@ namespace crds_angular.test.Services
             );
 
             donations[2].Distributions.Add(
-                new DonationDistribution()
+                new MpDonationDistribution()
                 {
                     donationDistributionId = 128,
                     donationId = 78,
@@ -1493,17 +1493,17 @@ namespace crds_angular.test.Services
             };
 
 
-            var donation = new Donation
+            var donation = new MpDonation
             {
                 Distributions =
                 {
-                    new DonationDistribution
+                    new MpDonationDistribution
                     {
                         donationDistributionProgram = "9",
                         donationDistributionAmt = 9,
                         PledgeId = 9
                     },
-                    new DonationDistribution
+                    new MpDonationDistribution
                     {
                         donationDistributionProgram = "8",
                         donationDistributionAmt = 8,
@@ -1516,7 +1516,7 @@ namespace crds_angular.test.Services
             };
             _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("py_123", true)).Returns(donation);
 
-            _mpDonorService.Setup(mocked => mocked.CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(d => 
+            _mpDonorService.Setup(mocked => mocked.CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(d => 
                 !d.Anonymous 
                 && d.ChargeId.Equals(refund.Data[0].Id) 
                 && d.CheckNumber == null 
@@ -1599,7 +1599,7 @@ namespace crds_angular.test.Services
                 Customer = processorId,
             };
 
-            var donation = new Donation
+            var donation = new MpDonation
             {
                 donationId = 123
             };
@@ -1675,7 +1675,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(
+                        It.Is<MpDonationAndDistributionRecord>(
                             d => d.DonationAmt == (int)(chargeAmount / Constants.StripeDecimalConversionValue) &&
                                  d.FeeAmt == feeAmount &&
                                  d.DonorId == donorId &&

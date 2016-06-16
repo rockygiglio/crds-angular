@@ -6,7 +6,7 @@ using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Event = MinistryPlatform.Translation.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 using Moq;
@@ -87,19 +87,19 @@ namespace crds_angular.test.Services
                 Email_Address = "default@email.com"
             };
 
-            var testEvent = new Event ()
+            var testEvent = new MpEvent ()
             {
                 EventId = 32,
                 EventStartDate = new DateTime(),
                 EventEndDate = new DateTime().AddHours(2),
-                PrimaryContact = new Contact()
+                PrimaryContact = new MpContact()
                 {
                     EmailAddress = "test@test.com",
                     ContactId = 4321
                 }
             };
 
-            var testEventList = new List<Event>()
+            var testEventList = new List<MpEvent>()
             {
                testEvent
             };
@@ -128,7 +128,7 @@ namespace crds_angular.test.Services
                     {"Event_Start_Time", evt.StartDate.ToShortTimeString()}               
                 };
 
-                var contact = new Contact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
+                var contact = new MpContact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
                 var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
@@ -139,7 +139,7 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = 14909,
-                    ToContacts = new List<Contact>() { contact }
+                    ToContacts = new List<MpContact>() { contact }
                 };
 
                 var testContact = new MyContact()
@@ -170,7 +170,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetEventRoomDetails()
         {
-            var e = new Event
+            var e = new MpEvent
             {
                 EventTitle = "title",
                 CongregationId = 12,
@@ -259,7 +259,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetEventReservation()
         {
-            var e = new Event
+            var e = new MpEvent
             {
                 EventTitle = "title",
                 CongregationId = 12,

@@ -159,7 +159,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(d =>
+                        It.Is<MpDonationAndDistributionRecord>(d =>
                                                                  d.DonationAmt == checks[0].Amount &&
                                                                  d.FeeAmt == 123 &&
                                                                  d.DonorId == contactDonorExisting.DonorId &&
@@ -315,7 +315,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(d =>
+                        It.Is<MpDonationAndDistributionRecord>(d =>
                                                                  d.DonationAmt == checks[0].Amount &&
                                                                  d.FeeAmt == null &&
                                                                  d.DonorId == contactDonorNonExistingStripeCustomerWithoutAccount.DonorId &&

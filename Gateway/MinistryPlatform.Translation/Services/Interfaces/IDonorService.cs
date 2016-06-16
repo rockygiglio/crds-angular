@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
             DonorAccount donorAccount = null
             );
 
-        int CreateDonationAndDistributionRecord(DonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true);
+        int CreateDonationAndDistributionRecord(MpDonationAndDistributionRecord donationAndDistribution, bool sendConfirmationEmail = true);
         ContactDonor GetContactDonor(int contactId);
         ContactDonor GetPossibleGuestContactDonor(string email);
         ContactDonor GetContactDonorForDonorAccount(string accountNumber, string routingNumber);
@@ -26,10 +26,10 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         string CreateHashedAccountAndRoutingNumber(string accountNumber, string routingNumber);
         string DecryptCheckValue(string value);
         string UpdateDonorAccount(string encryptedKey, string customerId, string sourceId);
-        List<Donation> GetDonations(int donorId, string donationYear = null);
-        List<Donation> GetDonations(IEnumerable<int> donorIds, string donationYear = null);
-        List<Donation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null);
-        List<Donation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null);
+        List<MpDonation> GetDonations(int donorId, string donationYear = null);
+        List<MpDonation> GetDonations(IEnumerable<int> donorIds, string donationYear = null);
+        List<MpDonation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null);
+        List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null);
         MpCreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "");
         MpCreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId);
         int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId);
@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         void UpdateRecurringGift(int pageView, string token, int recurringGiftId, Dictionary<string, object> recurringGiftValues);
         int GetDonorAccountPymtType(int donorAccountId);
 
-        DonorStatement GetDonorStatement(string token);
-        void UpdateDonorStatement(string token, DonorStatement statement);
+        MpDonorStatement GetDonorStatement(string token);
+        void UpdateDonorStatement(string token, MpDonorStatement statement);
     }
 }

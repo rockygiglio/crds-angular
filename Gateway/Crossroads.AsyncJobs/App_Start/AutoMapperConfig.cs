@@ -46,13 +46,13 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.ResponseId, opts => opts.MapFrom(src => src.Response_ID))
                 .ForMember(dest => dest.ResponseResultId, opts => opts.MapFrom(src => src.Response_Result_ID));
 
-            Mapper.CreateMap<DonationBatch, DonationBatchDTO>()
+            Mapper.CreateMap<MpDonationBatch, DonationBatchDTO>()
                 .ForMember(dest => dest.BatchName, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ProcessorTransferId))
                 .ForMember(dest => dest.DepositId, opts => opts.MapFrom(src => src.DepositId))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id));
 
-            Mapper.CreateMap<Dictionary<string, object>, DonationBatch>()
+            Mapper.CreateMap<Dictionary<string, object>, MpDonationBatch>()
                 .ForMember(dest => dest.BatchName, opts => opts.MapFrom(src => src.ToString("Batch_Name")))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ToString("Processor_Transfer_ID")))
                 .ForMember(dest => dest.DepositId, opts => opts.MapFrom(src => src.ToNullableInt("Deposit_ID", false)))
@@ -71,9 +71,9 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.CommunicationTemplateId, opts => opts.MapFrom(src => src.CommunicationTemplateId))
                 .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ProgramId));
 
-            Mapper.CreateMap<Deposit, DepositDTO>();
+            Mapper.CreateMap<MpDeposit, DepositDTO>();
 
-            Mapper.CreateMap<Dictionary<string, object>, Deposit>()
+            Mapper.CreateMap<Dictionary<string, object>, MpDeposit>()
                 .ForMember(dest => dest.DepositDateTime, opts => opts.MapFrom(src => src.ToDate("Deposit_Date", false)))
                 .ForMember(dest => dest.DepositName, opts => opts.MapFrom(src => src.ToString("Deposit_Name")))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ToInt("Deposit_ID", false)))
@@ -94,7 +94,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
                 .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate)));
 
-            Mapper.CreateMap<Donation, DonationDTO>()
+            Mapper.CreateMap<MpDonation, DonationDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationAmt))
                 .ForMember(dest => dest.DonationDate, opts => opts.MapFrom(src => src.donationDate))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.donationStatus))
@@ -120,7 +120,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Details.DisplayName))
                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Details.Address));
 
-            Mapper.CreateMap<DonationDistribution, DonationDistributionDTO>()
+            Mapper.CreateMap<MpDonationDistribution, DonationDistributionDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationDistributionAmt))
                 .ForMember(dest => dest.ProgramName, opts => opts.MapFrom(src => src.donationDistributionProgram));
 

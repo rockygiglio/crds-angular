@@ -250,7 +250,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(getTemplateResponse);
 
-            var donationAndDistribution = new DonationAndDistributionRecord
+            var donationAndDistribution = new MpDonationAndDistributionRecord
             {
                 DonationAmt = donationAmt,
                 FeeAmt = feeAmt,
@@ -368,7 +368,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(viewKey, It.IsAny<string>(), searchString, sortString, 0)).Returns(dictList);
 
-            var donationAndDistribution = new DonationAndDistributionRecord
+            var donationAndDistribution = new MpDonationAndDistributionRecord
             {
                 DonationAmt = donationAmt,
                 FeeAmt = feeAmt,
@@ -384,12 +384,12 @@ namespace MinistryPlatform.Translation.Test.Services
                 DonationStatus = donationStatus,
                 CheckNumber = itemNumber
             };
-            donationAndDistribution.Distributions.Add(new DonationDistribution
+            donationAndDistribution.Distributions.Add(new MpDonationDistribution
             {
                 donationDistributionAmt = 100,
                 donationDistributionProgram = programId,
             });
-            donationAndDistribution.Distributions.Add(new DonationDistribution
+            donationAndDistribution.Distributions.Add(new MpDonationDistribution
             {
                 donationDistributionAmt = 200,
                 donationDistributionProgram = programId + "9",
@@ -525,7 +525,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(getTemplateResponse);
 
-            var donationAndDistribution = new DonationAndDistributionRecord
+            var donationAndDistribution = new MpDonationAndDistributionRecord
             {
                 DonationAmt = donationAmt,
                 FeeAmt = feeAmt,
@@ -739,9 +739,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 DomainId = 1,
                 EmailBody = getTemplateResponse.Body,
                 EmailSubject = getTemplateResponse.Subject,
-                FromContact = new Contact {ContactId = 5, EmailAddress = "giving@crossroads.net"},
-                ReplyToContact = new Contact { ContactId = 5, EmailAddress = "giving@crossroads.net" },
-                ToContacts = new List<Contact> {new Contact{ContactId = contactId, EmailAddress = emailAddress}},
+                FromContact = new MpContact {ContactId = 5, EmailAddress = "giving@crossroads.net"},
+                ReplyToContact = new MpContact { ContactId = 5, EmailAddress = "giving@crossroads.net" },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = contactId, EmailAddress = emailAddress}},
                 MergeData = new Dictionary<string, object>
                 {
                     {"Program_Name", program},
@@ -835,9 +835,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 DomainId = 1,
                 EmailBody = getTemplateResponse.Body,
                 EmailSubject = getTemplateResponse.Subject,
-                FromContact = new Contact {ContactId = 5, EmailAddress = "giving@crossroads.net"},
-                ReplyToContact = new Contact {ContactId = 5, EmailAddress = "giving@crossroads.net" },
-                ToContacts = new List<Contact> {new Contact{ContactId = contactId, EmailAddress = emailAddress}},
+                FromContact = new MpContact {ContactId = 5, EmailAddress = "giving@crossroads.net"},
+                ReplyToContact = new MpContact {ContactId = 5, EmailAddress = "giving@crossroads.net" },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = contactId, EmailAddress = emailAddress}},
                 MergeData = new Dictionary<string, object>
                 {
                     {"Program_Name", program},

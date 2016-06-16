@@ -225,9 +225,9 @@ namespace crds_angular.test.Services
                 AuthorUserId = defaultAuthorId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ToContacts = new List<Contact> { new Contact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                FromContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ReplyToContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ToContacts = new List<MpContact> { new MpContact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
                 MergeData = mergeData
             };
 
@@ -265,7 +265,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var mockPrimaryContact = new Contact
+            var mockPrimaryContact = new MpContact
             {
                 ContactId = 98765,
                 EmailAddress = "wonder-woman@ip.com"
@@ -277,9 +277,9 @@ namespace crds_angular.test.Services
                 Email_Address = "gmail@gmail.com"
             };
 
-            var mockEvent1 = new Event {EventType = "Childcare", PrimaryContact = mockPrimaryContact};
-            var mockEvent2 = new Event {EventType = "DoggieDaycare", PrimaryContact = mockPrimaryContact};
-            var mockEvents = new List<Event> {mockEvent1, mockEvent2};
+            var mockEvent1 = new MpEvent {EventType = "Childcare", PrimaryContact = mockPrimaryContact};
+            var mockEvent2 = new MpEvent {EventType = "DoggieDaycare", PrimaryContact = mockPrimaryContact};
+            var mockEvents = new List<MpEvent> {mockEvent1, mockEvent2};
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("NumberOfDaysBeforeEventToSend")).Returns(daysBefore);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
@@ -289,8 +289,8 @@ namespace crds_angular.test.Services
 
             var kids = new List<Participant> { new Participant { ContactId = 456321987 } };
             _crdsEventService.Setup(m => m.EventParticpants(987654321, It.IsAny<string>())).Returns(kids);
-            var mockChildcareEvent = new Event {EventId = 987654321};
-            var mockContact = new Contact
+            var mockChildcareEvent = new MpEvent {EventId = 987654321};
+            var mockContact = new MpContact
             {
                 ContactId = 8888888,
                 EmailAddress = "sometest@test.com"

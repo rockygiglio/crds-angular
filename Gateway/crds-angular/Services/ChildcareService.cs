@@ -268,7 +268,7 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
                 {"Congregation", childcareRequestEmail.CongregationName }
             };
-            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
+            var toContactsList = new List<MpContact> {new MpContact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
 
 
             var communication = new MpCommunication
@@ -276,8 +276,8 @@ namespace crds_angular.Services
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
-                ReplyToContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
+                FromContact = new MpContact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
+                ReplyToContact = new MpContact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
                 ToContacts = toContactsList,
                 MergeData = mergeData
             };
@@ -318,9 +318,9 @@ namespace crds_angular.Services
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
-                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
-                ToContacts = new List<Contact> {new Contact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                FromContact = new MpContact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ReplyToContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
                 MergeData = mergeData
              };
 
@@ -451,7 +451,7 @@ namespace crds_angular.Services
             }
         }
 
-        private static MyContact ReplyToContact(Event childEvent)
+        private static MyContact ReplyToContact(MpEvent childEvent)
         {
             var contact = childEvent.PrimaryContact;
             var replyToContact = new MyContact
@@ -477,9 +477,9 @@ namespace crds_angular.Services
                 DomainId = domainId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
-                ReplyToContact = new Contact {ContactId = replyToContact.Contact_ID, EmailAddress = replyToContact.Email_Address},
-                ToContacts = new List<Contact> {new Contact {ContactId = participantContactId, EmailAddress = participantEmail}},
+                FromContact = new MpContact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
+                ReplyToContact = new MpContact {ContactId = replyToContact.Contact_ID, EmailAddress = replyToContact.Email_Address},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = participantContactId, EmailAddress = participantEmail}},
                 MergeData = mergeData
             };
             return communication;

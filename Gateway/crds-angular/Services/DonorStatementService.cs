@@ -21,13 +21,13 @@ namespace crds_angular.Services
         public DonorStatementDTO GetDonorStatement(string token)
         {            
             var mpDonorStatement = _mpDonorService.GetDonorStatement(token);            
-            var donorStatement = Mapper.Map<DonorStatement, DonorStatementDTO>(mpDonorStatement);
+            var donorStatement = Mapper.Map<MpDonorStatement, DonorStatementDTO>(mpDonorStatement);
             return donorStatement;
         }
 
         public void SaveDonorStatement(string token, DonorStatementDTO donorStatement)
         {
-            var mpDonorStatement = Mapper.Map<DonorStatementDTO, DonorStatement>(donorStatement);
+            var mpDonorStatement = Mapper.Map<DonorStatementDTO, MpDonorStatement>(donorStatement);
             _mpDonorService.UpdateDonorStatement(token, mpDonorStatement);
         }
     }

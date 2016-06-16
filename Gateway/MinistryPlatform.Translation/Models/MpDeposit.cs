@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Deposit
+    public class MpDeposit
     {
         public int Id { get; set; }
         public string DepositName { get; set; }
