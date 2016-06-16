@@ -42,7 +42,6 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
-    // TODO: Do we want map files in our environments, crds-core had them?
   },
   devtool: 'sourcemap',
   debug: true,
@@ -55,8 +54,6 @@ module.exports = {
             {
               test: /\.js$/,
               include: [
-	      	// TODO: core had path.resolve(__dirname, 'core'),
-               //  path.resolve(__dirname, 'core'),
                 path.resolve(__dirname, 'app'),
                 path.resolve(__dirname, 'node_modules/angular-stripe')
               ],
