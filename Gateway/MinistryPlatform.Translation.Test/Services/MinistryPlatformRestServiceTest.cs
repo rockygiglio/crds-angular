@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
 {
     public class MinistryPlatformRestServiceTest
     {
-        private MinistryPlatformRestService _fixture;
+        private MinistryPlatformRestRepository _fixture;
 
         private Mock<IRestClient> _restClient;
 
@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _restClient = new Mock<IRestClient>();
-            _fixture = new MinistryPlatformRestService(_restClient.Object);
+            _fixture = new MinistryPlatformRestRepository(_restClient.Object);
         }
 
         [Test]

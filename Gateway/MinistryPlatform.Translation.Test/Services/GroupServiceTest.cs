@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class GroupServiceTest
     {
-        private GroupService fixture;
+        private GroupRepository fixture;
         private Mock<IMinistryPlatformService> ministryPlatformService;
         private Mock<IConfigurationWrapper> configWrapper;
         private Mock<IAuthenticationService> authService;
@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
             communicationService = new Mock<ICommunicationService>();
             contactService = new Mock<IContactService>();
             contentBlockService = new Mock<IContentBlockService>();
-            fixture = new GroupService(ministryPlatformService.Object, configWrapper.Object, authService.Object, communicationService.Object, contactService.Object, contentBlockService.Object);
+            fixture = new GroupRepository(ministryPlatformService.Object, configWrapper.Object, authService.Object, communicationService.Object, contactService.Object, contentBlockService.Object);
 
 
             configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     class LookupServiceTest
     {
-        private LookupService _fixture;
+        private LookupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IAuthenticationService> _authenticationService;
@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authenticationService = new Mock<IAuthenticationService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new LookupService(_authenticationService.Object, _configurationWrapper.Object,  _ministryPlatformService.Object);
+            _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object,  _ministryPlatformService.Object);
             
         }
 

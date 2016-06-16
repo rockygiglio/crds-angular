@@ -11,14 +11,14 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GroupParticipantService : IGroupParticipantService
+    public class GroupParticipantRepository : IGroupParticipantService
     {
         private readonly IDbConnection _dbConnection;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserService _apiUserService;
 
-        public GroupParticipantService(IDbConnection dbConnection,
+        public GroupParticipantRepository(IDbConnection dbConnection,
                                        IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
                                        IApiUserService apiUserService)

@@ -10,7 +10,7 @@ namespace MinistryPlatform.Translation.Test.Services
     [Category("IntegrationTests")]
     public class MinistryPlatformRestServiceIntegrationTest
     {
-        private MinistryPlatformRestService _fixture;
+        private MinistryPlatformRestRepository _fixture;
 
         private string _authToken;
 
@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
-            _fixture = new MinistryPlatformRestService(restClient);
+            _fixture = new MinistryPlatformRestRepository(restClient);
         }
 
         [Test]

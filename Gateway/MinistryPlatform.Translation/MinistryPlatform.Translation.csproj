@@ -214,8 +214,8 @@
     <Compile Include="Services\Interfaces\GoCincinnati\IRegistrationService.cs" />
     <Compile Include="Services\Interfaces\IChildcareRequestService.cs" />
     <Compile Include="Services\Interfaces\IFormBuilderService.cs" />
-    <Compile Include="Services\Interfaces\IMinistryPlatformRestService.cs" />
-    <Compile Include="Services\MinistryPlatformRestService.cs" />
+    <Compile Include="Services\Interfaces\IMinistryPlatformRestRepository.cs" />
+    <Compile Include="Services\MinistryPlatformRestRepository..cs" />
     <Compile Include="Services\ProjectTypeRepository.cs" />
     <Compile Include="Services\Interfaces\IProjectTypeService.cs" />
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
@@ -235,8 +235,8 @@
     <Compile Include="Services\FormSubmissionService.cs" />
     <Compile Include="Services\AttributeService.cs" />
     <Compile Include="Services\GetMyRecords.cs" />
-    <Compile Include="Services\GroupParticipantService.cs" />
-    <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\GroupParticipantRepository.cs" />
+    <Compile Include="Services\GroupRepository..cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\IBulkEmailRepository.cs" />
     <Compile Include="Services\Interfaces\IApiUserService.cs" />
@@ -268,8 +268,7 @@
     <Compile Include="Services\Interfaces\ISelectionService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Services\Interfaces\IResponseService.cs" />
-    <Compile Include="Services\LookupService.cs" />
-    <Compile Include="Services\MessageInfo.cs" />
+    <Compile Include="Services\LookupRepository..cs" />
     <Compile Include="Services\MinistryPlatformService.cs" />
     <Compile Include="Services\MinistryPlatformServiceImpl.cs" />
     <Compile Include="Services\OpportunityRepository..cs" />

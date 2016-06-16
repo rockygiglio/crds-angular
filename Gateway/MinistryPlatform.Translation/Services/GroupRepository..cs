@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GroupService : BaseService, IGroupService
+    public class GroupRepository : BaseService, IGroupService
     {
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly ICommunicationService _communicationService;
@@ -34,7 +34,7 @@ namespace MinistryPlatform.Translation.Services
 
         private IMinistryPlatformService ministryPlatformService;
 
-        public GroupService(IMinistryPlatformService ministryPlatformService, IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService, ICommunicationService communicationService, IContactService contactService, IContentBlockService contentBlockService)
+        public GroupRepository(IMinistryPlatformService ministryPlatformService, IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService, ICommunicationService communicationService, IContactService contactService, IContentBlockService contentBlockService)
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;

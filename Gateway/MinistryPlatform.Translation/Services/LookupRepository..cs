@@ -8,11 +8,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class LookupService : BaseService, ILookupService
+    public class LookupRepository : BaseService, ILookupService
     {
         private readonly IMinistryPlatformService _ministryPlatformServiceImpl;
 
-        public LookupService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformServiceImpl)
+        public LookupRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformServiceImpl)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformServiceImpl = ministryPlatformServiceImpl;

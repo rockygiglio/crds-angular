@@ -13,12 +13,12 @@ namespace crds_angular.Controllers.API
     public class LookupController : MPAuth
     {
         private IConfigurationWrapper _configurationWrapper;
-        private readonly LookupService _lookupService;
+        private readonly LookupRepository _lookupRepository;
 
-        public LookupController(IConfigurationWrapper configurationWrapper, LookupService lookupService)
+        public LookupController(IConfigurationWrapper configurationWrapper, LookupRepository lookupRepository)
         {
             _configurationWrapper = configurationWrapper;
-            _lookupService = lookupService;
+            _lookupRepository = lookupRepository;
         }
 
 
@@ -37,40 +37,40 @@ namespace crds_angular.Controllers.API
                 switch (table)
                 {
                     case "genders":
-                        ret = _lookupService.Genders(t);
+                        ret = _lookupRepository.Genders(t);
                         break;
                     case "maritalstatus":
-                        ret = _lookupService.MaritalStatus(t);
+                        ret = _lookupRepository.MaritalStatus(t);
                         break;
                     case "serviceproviders":
-                        ret = _lookupService.ServiceProviders(t);
+                        ret = _lookupRepository.ServiceProviders(t);
                         break;
                     case "countries":
-                        ret = _lookupService.Countries(t);
+                        ret = _lookupRepository.Countries(t);
                         break;
                     case "states":
-                        ret = _lookupService.States(t);
+                        ret = _lookupRepository.States(t);
                         break;
                     case "crossroadslocations":
-                        ret = _lookupService.CrossroadsLocations(t);
+                        ret = _lookupRepository.CrossroadsLocations(t);
                         break;
                     case "workteams":
-                        ret = _lookupService.WorkTeams(t);
+                        ret = _lookupRepository.WorkTeams(t);
                         break;
                     case "eventtypes":
-                        ret = _lookupService.EventTypes(t);
+                        ret = _lookupRepository.EventTypes(t);
                         break;
                     case "reminderdays":
-                        ret = _lookupService.ReminderDays(t);
+                        ret = _lookupRepository.ReminderDays(t);
                         break;
                     case "meetingdays":
-                        ret = _lookupService.MeetingDays(t);
+                        ret = _lookupRepository.MeetingDays(t);
                         break;
                     case "ministries":
-                        ret = _lookupService.Ministries(t);
+                        ret = _lookupRepository.Ministries(t);
                         break;
                     case "childcarelocations":
-                        ret = _lookupService.ChildcareLocations(t);
+                        ret = _lookupRepository.ChildcareLocations(t);
                         break;
                     default:
                         break;
@@ -95,7 +95,7 @@ namespace crds_angular.Controllers.API
             return Authorized(t =>
             {
                 var ret = new List<Dictionary<string, object>>();
-                ret = _lookupService.GroupsByCongregationAndMinistry(t, congregationid, ministryid);
+                ret = _lookupRepository.GroupsByCongregationAndMinistry(t, congregationid, ministryid);
 
                 if (ret.Count == 0)
                 {
@@ -116,7 +116,7 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(t =>
             {
-                var ret = _lookupService.ChildcareTimesByCongregation(t, congregationid);
+                var ret = _lookupRepository.ChildcareTimesByCongregation(t, congregationid);
                 return Ok(ret);
             });
         }
@@ -129,7 +129,7 @@ namespace crds_angular.Controllers.API
             //TODO let's clean this up
             var authorizedWithCookie = Authorized(t =>
             {
-                var exists = _lookupService.EmailSearch(email, t);
+                var exists = _lookupRepository.EmailSearch(email, t);
                 if (exists.Count == 0 || Convert.ToInt32(exists["dp_RecordID"]) == userId)
                 {
                     return Ok();
@@ -144,7 +144,7 @@ namespace crds_angular.Controllers.API
 
                 var authData = AuthenticationRepository.authenticate(apiUser, apiPassword);
                 var token = authData["token"].ToString();
-                var exists = _lookupService.EmailSearch(email, token.ToString());
+                var exists = _lookupRepository.EmailSearch(email, token.ToString());
                 if (exists.Count == 0)
                 {
                     return Ok();

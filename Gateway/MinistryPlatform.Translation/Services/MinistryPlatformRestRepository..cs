@@ -11,17 +11,17 @@ using RestSharp.Extensions;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class MinistryPlatformRestService : IMinistryPlatformRestService
+    public class MinistryPlatformRestRepository : IMinistryPlatformRestRepository
     {
         private readonly IRestClient _ministryPlatformRestClient;
         private readonly ThreadLocal<string> _authToken = new ThreadLocal<string>();
 
-        public MinistryPlatformRestService(IRestClient ministryPlatformRestClient)
+        public MinistryPlatformRestRepository(IRestClient ministryPlatformRestClient)
         {
             _ministryPlatformRestClient = ministryPlatformRestClient;
         }
 
-        public IMinistryPlatformRestService UsingAuthenticationToken(string authToken)
+        public IMinistryPlatformRestRepository UsingAuthenticationToken(string authToken)
         {
             _authToken.Value = authToken;
             return this;

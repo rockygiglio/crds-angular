@@ -2,14 +2,14 @@
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IMinistryPlatformRestService
+    public interface IMinistryPlatformRestRepository
     {
         /// <summary>
         /// This fluent method allows you to call various service methods using a particular MP OAuth token.  For instance, service.UsingAuthenticationToken(token).Get&lt;Event&gt;(2).
         /// </summary>
         /// <param name="authToken">The authentication token to use for subsequent calls to the service.</param>
         /// <returns>the instance of the service, to use with other method calls</returns>
-        IMinistryPlatformRestService UsingAuthenticationToken(string authToken);
+        IMinistryPlatformRestRepository UsingAuthenticationToken(string authToken);
 
         /// <summary>
         /// Get a particular record, by the primary key ID column, from MinistryPlatform.
