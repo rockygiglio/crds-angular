@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class GPExportDatum
+    public class MpGPExportDatum
     {
         public string DocumentNumber { get; set; }
         public int DepositId { get; set; }

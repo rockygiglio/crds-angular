@@ -58,7 +58,7 @@ namespace MinistryPlatform.Translation.Services
             return records.Count != 0;
         }
 
-        public Pledge GetPledgeByCampaignAndDonor(int pledgeCampaignId, int donorId)
+        public MpPledge GetPledgeByCampaignAndDonor(int pledgeCampaignId, int donorId)
         {
             var searchString = string.Format(",{0},{1}", pledgeCampaignId, donorId);
             var records = _ministryPlatformService.GetPageViewRecords("PledgesByDonorId", ApiLogin(), searchString);
@@ -66,7 +66,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 case 1:
                     var record = records.First();
-                    var pledge = new Pledge();
+                    var pledge = new MpPledge();
                     pledge.DonorId = record.ToInt("Donor_ID");
                     pledge.PledgeCampaignId = record.ToInt("Pledge_Campaign_ID");
                     pledge.PledgeId = record.ToInt("Pledge_ID");
@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Services
             return record.ToInt("Donor_ID");
         }
         
-        public List<Pledge> GetPledgesForAuthUser(string userToken, int[] pledgeTypeIds = null)
+        public List<MpPledge> GetPledgesForAuthUser(string userToken, int[] pledgeTypeIds = null)
         {
             string search;
             if (pledgeTypeIds != null && pledgeTypeIds.Any())
@@ -104,9 +104,9 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(MapRecordToPledge).ToList();
         }
 
-        private Pledge MapRecordToPledge(Dictionary<string, object> record)
+        private MpPledge MapRecordToPledge(Dictionary<string, object> record)
         {
-            return new Pledge()
+            return new MpPledge()
             {
                 PledgeId = record.ToInt("Pledge_ID"),
                 PledgeCampaignId = record.ToInt("Pledge_Campaign_ID"),

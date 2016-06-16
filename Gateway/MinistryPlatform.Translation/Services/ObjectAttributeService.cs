@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<ObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
+        public List<MpObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
         {
             var subPageViewId = configuration.SelectedSubPage;
             var searchString = attributeTypeIdFilter.HasValue ? string.Format(",,,,\"{0}\"", attributeTypeIdFilter.Value) : "";
@@ -37,7 +37,7 @@ namespace MinistryPlatform.Translation.Services
 
             var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
 
-            var objectAttributes = records.Select(record => new ObjectAttribute
+            var objectAttributes = records.Select(record => new MpObjectAttribute
             {
                 ObjectAttributeId = record.ToInt(keyColumn),
 
@@ -52,7 +52,7 @@ namespace MinistryPlatform.Translation.Services
             return objectAttributes;
         }
 
-        public int CreateAttribute(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        public int CreateAttribute(string token, int objectId, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration)
         {
             var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
             var subPageId = configuration.SubPage;
@@ -71,7 +71,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public IObservable<int> CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        public IObservable<int> CreateAttributeAsync(string token, int objectId, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration)
         {
 
             return Observable.Create<int>(o =>
@@ -94,7 +94,7 @@ namespace MinistryPlatform.Translation.Services
             });
         }
 
-        public void UpdateAttribute(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        public void UpdateAttribute(string token, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration)
         {
             var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
             var subPageId = configuration.SubPage;
@@ -112,7 +112,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void UpdateAttributeAsync(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        public void UpdateAttributeAsync(string token, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration)
         {
             var attributeDictionary = TranslateAttributeToDictionary(attribute, configuration);
             var subPageId = configuration.SubPage;
@@ -131,7 +131,7 @@ namespace MinistryPlatform.Translation.Services
 
         }
 
-        private Dictionary<string, object> TranslateAttributeToDictionary(ObjectAttribute attribute, ObjectAttributeConfiguration configuration)
+        private Dictionary<string, object> TranslateAttributeToDictionary(MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration)
         {
             var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
 

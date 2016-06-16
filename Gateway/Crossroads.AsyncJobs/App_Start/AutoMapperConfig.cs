@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
-using Response = MinistryPlatform.Translation.Models.Response;
+using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace Crossroads.AsyncJobs
 {
@@ -36,7 +36,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.NickName))
                 .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId));
 
-            Mapper.CreateMap<Response, OpportunityResponseDto>()
+            Mapper.CreateMap<MpResponse, OpportunityResponseDto>()
                 .ForMember(dest => dest.Closed, opts => opts.MapFrom(src => src.Closed))
                 .ForMember(dest => dest.Comments, opts => opts.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.Event_ID))
@@ -82,7 +82,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.Exported, opts => opts.MapFrom(src => src.ToString("Exported")))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ToString("Processor_Transfer_ID")));
 
-            Mapper.CreateMap<GPExportDatum, GPExportDatumDTO>()
+            Mapper.CreateMap<MpGPExportDatum, GPExportDatumDTO>()
                 .ForMember(dest => dest.DocumentNumber, opts => opts.MapFrom(src => src.DonationId))
                 .ForMember(dest => dest.DocumentDescription, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
@@ -124,7 +124,7 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationDistributionAmt))
                 .ForMember(dest => dest.ProgramName, opts => opts.MapFrom(src => src.donationDistributionProgram));
 
-            Mapper.CreateMap<MyContact, Person>()
+            Mapper.CreateMap<MpMyContact, Person>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.Contact_ID))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.Email_Address))
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.Nickname))

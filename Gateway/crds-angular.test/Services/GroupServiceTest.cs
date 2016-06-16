@@ -248,7 +248,7 @@ namespace crds_angular.test.Services
             groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<MpGroupParticipant>>())).Returns(false);
 
             var attributes = new ObjectAllAttributesDTO();            
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributes);
 
             var response = fixture.getGroupDetails(456, 777, participant, "auth token");
 
@@ -301,7 +301,7 @@ namespace crds_angular.test.Services
             var attributes = new ObjectAllAttributesDTO();
 
             groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
 
             var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
            
@@ -460,7 +460,7 @@ namespace crds_angular.test.Services
                 Subject = "You Can Join My Group",
                 Body = "This is a journey group."
             };
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Contact_ID = 7689
             };
@@ -471,7 +471,7 @@ namespace crds_angular.test.Services
             groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, JOURNEY_GROUP_ID)).Returns(groups);
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
             _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();

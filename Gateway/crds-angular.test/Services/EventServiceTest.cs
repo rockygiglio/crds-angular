@@ -81,7 +81,7 @@ namespace crds_angular.test.Services
         {
             const string search = "";
             const string apiToken = "qwerty1234";
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 321,
                 Email_Address = "default@email.com"
@@ -142,7 +142,7 @@ namespace crds_angular.test.Services
                     ToContacts = new List<MpContact>() { contact }
                 };
 
-                var testContact = new MyContact()
+                var testContact = new MpMyContact()
                 {
                     Contact_ID = 9876,
                     Email_Address = "ghj@cr.net"

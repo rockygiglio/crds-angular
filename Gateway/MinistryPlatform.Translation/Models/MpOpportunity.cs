@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Opportunity
+    public class MpOpportunity
     {
         public int OpportunityId { get; set; }
         public string OpportunityName { get; set; }
@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Models
         //public int Capacity { get; set; }
         public int? MaximumNeeded { get; set; }
         public int? MinimumNeeded { get; set; }
-        public List<Response> Responses { get; set; }
+        public List<MpResponse> Responses { get; set; }
         public string Room { get; set; }
         public string GroupContactName { get; set; }
         public int GroupContactId { get; set; }

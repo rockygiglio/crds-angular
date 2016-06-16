@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
             string eventMessage, string responseMessage);
 
         List<MpTripDistribution> GetMyTripDistributions(int contactId);
-        List<GPExportDatum> GetGpExport(int depositId, string token);
+        List<MpGPExportDatum> GetGpExport(int depositId, string token);
         void UpdateDepositToExported(int selectionId, int depositId, string token);
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
         void SendMessageFromDonor(int pledgeId, int donationId, string message);

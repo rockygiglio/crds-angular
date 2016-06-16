@@ -32,7 +32,7 @@ namespace crds_angular.Services
             var opportunityResponseId = application.ResponseOpportunityId;
             _formFields = _formSubmissionService.GetFieldsForForm(formId);
 
-            var formResponse = new FormResponse();
+            var formResponse = new MpFormResponse();
             formResponse.ContactId = application.ContactId; //contact id of the person the application is for
             formResponse.FormId = formId;
             formResponse.OpportunityId = application.OpportunityId; // we know this from CMS
@@ -150,7 +150,7 @@ namespace crds_angular.Services
             var opportunityResponseId = application.ResponseOpportunityId;
             _formFields = _formSubmissionService.GetFieldsForForm(formId);
 
-            var formResponse = new FormResponse();
+            var formResponse = new MpFormResponse();
             formResponse.ContactId = application.ContactId; //contact id of the person the application is for
             formResponse.FormId = formId;
             formResponse.OpportunityId = application.OpportunityId; // we know this from CMS
@@ -254,7 +254,7 @@ namespace crds_angular.Services
         }
 
 
-        private FormAnswer SetCustomField(CustomField customField, int opportunityResponseId)
+        private MpFormAnswer SetCustomField(CustomField customField, int opportunityResponseId)
         {
             int fieldId;
             try
@@ -266,7 +266,7 @@ namespace crds_angular.Services
                 throw new ApplicationException(string.Format("Failed to locate id for crossroads field {0}",
                     customField.CrossroadsId));
             }
-            var answer = new FormAnswer();
+            var answer = new MpFormAnswer();
             answer.FieldId = fieldId;
             answer.OpportunityResponseId = opportunityResponseId;
             answer.Response = customField.Value;

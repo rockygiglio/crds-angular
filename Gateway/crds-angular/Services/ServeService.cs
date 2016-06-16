@@ -315,7 +315,7 @@ namespace crds_angular.Services
             var groupContact = _contactService.GetContactById(opportunity.GroupContactId);
 
             var toContact = _contactService.GetContactById(dto.ContactId);
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
             try
             {
                 var fromDate = GetTimeStamp(opportunity.ShiftStart);
@@ -511,11 +511,11 @@ namespace crds_angular.Services
             return templateId;
         }
 
-        private static Opportunity PreviousOpportunity(Dictionary<string, object> response, Opportunity previousOpportunity)
+        private static MpOpportunity PreviousOpportunity(Dictionary<string, object> response, MpOpportunity previousOpportunity)
         {
-            if (response.ToNullableObject<Opportunity>("previousOpportunity") != null)
+            if (response.ToNullableObject<MpOpportunity>("previousOpportunity") != null)
             {
-                previousOpportunity = response.ToNullableObject<Opportunity>("previousOpportunity");
+                previousOpportunity = response.ToNullableObject<MpOpportunity>("previousOpportunity");
             }
             return previousOpportunity;
         }
@@ -526,7 +526,7 @@ namespace crds_angular.Services
                                                       bool signUp,
                                                       Participant participant,
                                                       MpEvent @event,
-                                                      MyContact groupLeader)
+                                                      MpMyContact groupLeader)
         {
             var response = signUp
                 ? HandleYesRsvp(participant, @event, opportunityId, opportunityIds, token)
@@ -534,7 +534,7 @@ namespace crds_angular.Services
             return response;
         }
 
-        private Opportunity GetOpportunity(string token, int opportunityId, List<int> opportunityIds)
+        private MpOpportunity GetOpportunity(string token, int opportunityId, List<int> opportunityIds)
         {
             var opportunity = (opportunityId > 0)
                 ? _opportunityService.GetOpportunityById(opportunityId, token)
@@ -565,7 +565,7 @@ namespace crds_angular.Services
         {
             var templateId = AppSetting("RsvpYesTemplate");
             var deletedRSVPS = new List<int>();
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
 
             var opportunity = _opportunityService.GetOpportunityById(opportunityId,token);
             //Try to register this user for the event
@@ -606,10 +606,10 @@ namespace crds_angular.Services
                                                         MpEvent e,
                                                         List<int> opportunityIds,
                                                         string token,
-                                                        MyContact groupLeader)
+                                                        MpMyContact groupLeader)
         {
             int templateId;
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
 
             try
             {
@@ -657,7 +657,7 @@ namespace crds_angular.Services
             };
         }
 
-        private void SendCancellationMessage(MyContact groupLeader, string volunteerName, string volunteerEmail, string teamName, string opportunityName, string eventDateTime)
+        private void SendCancellationMessage(MpMyContact groupLeader, string volunteerName, string volunteerEmail, string teamName, string opportunityName, string eventDateTime)
         {
             var templateId = AppSetting("RsvpYesToNo");
 
@@ -675,7 +675,7 @@ namespace crds_angular.Services
             _communicationService.SendMessage(communication);
         }
 
-        private MpCommunication SetupCommunication(int templateId, MyContact groupContact, MyContact toContact, Dictionary<string, object> mergeData)
+        private MpCommunication SetupCommunication(int templateId, MpMyContact groupContact, MpMyContact toContact, Dictionary<string, object> mergeData)
         {
             var template = _communicationService.GetTemplate(templateId);
             var defaultContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
@@ -729,14 +729,14 @@ namespace crds_angular.Services
 
         private Dictionary<string, object> SetupMergeData(int contactId,
                                                           int opportunityId,
-                                                          Opportunity previousOpportunity,
-                                                          Opportunity currentOpportunity,
+                                                          MpOpportunity previousOpportunity,
+                                                          MpOpportunity currentOpportunity,
                                                           DateTime startDate,
                                                           DateTime endDate,
-                                                          MyContact groupContact,
+                                                          MpMyContact groupContact,
                                                           String htmlTable)
         {
-            MyContact volunteer = _contactService.GetContactById(contactId);
+            MpMyContact volunteer = _contactService.GetContactById(contactId);
             return new Dictionary<string, object>
             {
                 {"Opportunity_Name", opportunityId == 0 ? "Not Available" : currentOpportunity.OpportunityName},

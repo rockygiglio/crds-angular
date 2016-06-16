@@ -494,11 +494,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<GPExportDatum> MockGPExport()
+        private List<MpGPExportDatum> MockGPExport()
         {
-            return new List<GPExportDatum>
+            return new List<MpGPExportDatum>
             {
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentType = "SALE",
                     DocumentNumber = "10002001",
@@ -521,7 +521,7 @@ namespace crds_angular.test.Services
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentType = "SALE",
                     DocumentNumber = "10002001",
@@ -543,7 +543,7 @@ namespace crds_angular.test.Services
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentType = "SALE",
                     DocumentNumber = "10002002",
@@ -566,7 +566,7 @@ namespace crds_angular.test.Services
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentType = "SALE",
                     DocumentNumber = "10002002",

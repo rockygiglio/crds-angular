@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void GetContactByParticipantId()
         {
             const int participantId = 99999;
-            var expectedContact = new MyContact
+            var expectedContact = new MpMyContact
             {
                 Contact_ID = 11111,
                 Email_Address = "andy@dalton.nfl",

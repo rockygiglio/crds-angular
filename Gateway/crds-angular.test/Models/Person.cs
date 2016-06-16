@@ -12,7 +12,7 @@ namespace crds_angular.test.Models
         public void ShouldReturnContactType()
         {
             var contact = _person.GetContact();
-            Assert.That(contact, Is.TypeOf<MyContact>());
+            Assert.That(contact, Is.TypeOf<MpMyContact>());
             Assert.AreEqual(_person.EmailAddress, contact.Email_Address);
 
         }

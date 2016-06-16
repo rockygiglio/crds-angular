@@ -309,7 +309,7 @@ namespace crds_angular.test.controllers
             };
 
             var pledgeId = 3456;
-            var pledge = new Pledge
+            var pledge = new MpPledge
             {
                 DonorId = 1,
                 PledgeCampaignId = 2,
@@ -408,7 +408,7 @@ namespace crds_angular.test.controllers
             };
 
             var pledgeId = 3456;
-            var pledge = new Pledge
+            var pledge = new MpPledge
             {
                 DonorId = 1,
                 PledgeCampaignId = 2,

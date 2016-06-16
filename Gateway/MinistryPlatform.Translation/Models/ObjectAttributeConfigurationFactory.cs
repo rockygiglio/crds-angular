@@ -4,18 +4,18 @@ namespace MinistryPlatform.Translation.Models
 {
     public static class ObjectAttributeConfigurationFactory
     {
-        public static ObjectAttributeConfiguration Contact()
+        public static MpObjectAttributeConfiguration Contact()
         {
-            return new ObjectAttributeConfiguration()
+            return new MpObjectAttributeConfiguration()
             {
                 SubPage = int.Parse(ConfigurationManager.AppSettings["ContactAttributesSubPage"]),
                 SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedContactAttributes"]),
                 TableName = "Contact"
             };
         }
-        public static ObjectAttributeConfiguration MyContact()
+        public static MpObjectAttributeConfiguration MyContact()
         {
-            return new ObjectAttributeConfiguration()
+            return new MpObjectAttributeConfiguration()
             {
                 SubPage = int.Parse(ConfigurationManager.AppSettings["MyContactAttributesSubPage"]),
                 SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["MyContactCurrentAttributesSubPageView"]),
@@ -23,9 +23,9 @@ namespace MinistryPlatform.Translation.Models
             };
         }
 
-        public static ObjectAttributeConfiguration Group()
+        public static MpObjectAttributeConfiguration Group()
         {
-            return new ObjectAttributeConfiguration()
+            return new MpObjectAttributeConfiguration()
             {
                 SubPage = int.Parse(ConfigurationManager.AppSettings["GroupAttributesSubPage"]),
                 SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedGroupAttributesAttributes"]),
@@ -33,9 +33,9 @@ namespace MinistryPlatform.Translation.Models
             };
         }
 
-        public static ObjectAttributeConfiguration GroupParticipant()
+        public static MpObjectAttributeConfiguration GroupParticipant()
         {
-            return new ObjectAttributeConfiguration()
+            return new MpObjectAttributeConfiguration()
             {
                 SubPage = int.Parse(ConfigurationManager.AppSettings["GroupParticipantAttributesSubPage"]),
                 SelectedSubPage = int.Parse(ConfigurationManager.AppSettings["SelectedGroupPartAttributes"]),

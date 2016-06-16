@@ -81,21 +81,21 @@ namespace crds_angular.test.Services
             var mockMpSearchResponse = MockMpSearchResponse();
             _eventParticipantService.Setup(m => m.TripParticipants(It.IsAny<string>())).Returns(mockMpSearchResponse);
 
-            var mockPledge1 = new Pledge
+            var mockPledge1 = new MpPledge
             {
                 PledgeId = 1,
                 DonorId = mockMpSearchResponse[0].DonorId,
                 PledgeCampaignId = mockMpSearchResponse[0].CampaignId,
                 PledgeStatusId = 1
             };
-            var mockPledge2 = new Pledge
+            var mockPledge2 = new MpPledge
             {
                 PledgeId = 2,
                 DonorId = mockMpSearchResponse[1].DonorId,
                 PledgeCampaignId = mockMpSearchResponse[1].CampaignId,
                 PledgeStatusId = 1
             };
-            var mockPledge3 = new Pledge
+            var mockPledge3 = new MpPledge
             {
                 PledgeId = 3,
                 DonorId = mockMpSearchResponse[2].DonorId,
@@ -158,9 +158,9 @@ namespace crds_angular.test.Services
             Assert.AreEqual(0, myTrips.MyTrips[0].FundraisingDaysLeft);
         }
 
-        private Pledge mockPledgeCampaign()
+        private MpPledge mockPledgeCampaign()
         {
-            return new Pledge
+            return new MpPledge
             {
                 CampaignName = "",
                 CampaignStartDate = DateTime.Now,

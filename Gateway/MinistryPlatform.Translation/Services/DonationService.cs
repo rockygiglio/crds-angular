@@ -400,9 +400,9 @@ namespace MinistryPlatform.Translation.Services
             return trips;
         }
 
-        public List<GPExportDatum> GetGpExport(int depositId, string token)
+        public List<MpGPExportDatum> GetGpExport(int depositId, string token)
         {
-            var gpExport = new List<GPExportDatum>();
+            var gpExport = new List<MpGPExportDatum>();
             var glLevelGPExport = GetGLLevelGpExport(depositId, token);
 
             foreach (var glLevelGPData in glLevelGPExport)
@@ -413,12 +413,12 @@ namespace MinistryPlatform.Translation.Services
             return gpExport;
         }
 
-        private List<GPExportDatum> GetGLLevelGpExport(int depositId, string token)
+        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, string token)
         {
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
             var gpExportDonationLevel = GetGpExportData(depositId, token);
             
-            var gpExportGLLevel= new List<GPExportDatum>();
+            var gpExportGLLevel= new List<MpGPExportDatum>();
 
             var gpExportDonationSum = gpExportDonationLevel.GroupBy(r => new
             {
@@ -439,7 +439,7 @@ namespace MinistryPlatform.Translation.Services
                 r.ScholarshipPaymentTypeId, 
                 r.PaymentTypeId
             })
-                .Select(x => new GPExportDatum()
+                .Select(x => new MpGPExportDatum()
                 {
                     DepositId = x.Key.DepositId,
                     ProccessFeeProgramId = x.Key.ProccessFeeProgramId,
@@ -473,7 +473,7 @@ namespace MinistryPlatform.Translation.Services
             return gpExportGLLevel.ToList();
         }
 
-        private void GenerateGLLevelGpExport(List<GPExportDatum> gpExportGLLevel, GPExportDatum gpExportDistLevel, Dictionary<string, object> processingFeeGLMapping,int indx)
+        private void GenerateGLLevelGpExport(List<MpGPExportDatum> gpExportGLLevel, MpGPExportDatum gpExportDistLevel, Dictionary<string, object> processingFeeGLMapping,int indx)
         {
             gpExportGLLevel.Add(AdjustGPExportDatumAmount(gpExportDistLevel, indx));
 
@@ -483,7 +483,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
         
-        private static GPExportDatum AdjustGPExportDatumAmount(GPExportDatum datum, int indx)
+        private static MpGPExportDatum AdjustGPExportDatumAmount(MpGPExportDatum datum, int indx)
         {
             if (datum.ProcessorFeeAmount < 0)
             {
@@ -508,11 +508,11 @@ namespace MinistryPlatform.Translation.Services
             return datum;
         }
 
-        private GPExportDatum CreateProcessorFee(GPExportDatum datum, Dictionary<string, object> processingFeeGLMapping)
+        private MpGPExportDatum CreateProcessorFee(MpGPExportDatum datum, Dictionary<string, object> processingFeeGLMapping)
         {
             var processorFeeAmount  = datum.ProcessorFeeAmount < 0 ? -1 * datum.ProcessorFeeAmount : datum.ProcessorFeeAmount;
             
-            return new GPExportDatum 
+            return new MpGPExportDatum 
             {
                 DocumentNumber = datum.DocumentNumber,
                 ProccessFeeProgramId = _processingProgramId,
@@ -538,14 +538,14 @@ namespace MinistryPlatform.Translation.Services
             };
         }
         
-        public List<GPExportDatum> GetGpExportData(int depositId, string token)
+        public List<MpGPExportDatum> GetGpExportData(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
 
 
             return (from result in results
                 let amount = Convert.ToDecimal(result.ToString("Amount"))
-                select new GPExportDatum
+                select new MpGPExportDatum
                 {
                     ProccessFeeProgramId = _processingProgramId,
                     DepositId = result.ToInt("Deposit_ID"),

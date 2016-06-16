@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Services
             _apiUserService = apiUserService;
         }
 
-        public Response GetMyOpportunityResponses(int contactId, int opportunityId)
+        public MpResponse GetMyOpportunityResponses(int contactId, int opportunityId)
         {
             var searchString = ",,,," + contactId;
             var subpageViewRecords = MinistryPlatformService.GetSubpageViewRecords(_contactOpportunityResponses,
@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            var response = new Response
+            var response = new Models.MpResponse
             {
                 Opportunity_ID = (int) s["Opportunity ID"],
                 Participant_ID = (int) s["Participant ID"],
@@ -58,12 +58,12 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public Opportunity GetOpportunityById(int opportunityId, string token)
+        public MpOpportunity GetOpportunityById(int opportunityId, string token)
         {
             var opp = _ministryPlatformService.GetRecordDict(_opportunityPage, opportunityId, token);
             var shiftStart = opp.ToNullableTimeSpan("Shift_Start");
             var shiftEnd = opp.ToNullableTimeSpan("Shift_End"); 
-            var opportunity = new Opportunity
+            var opportunity = new MpOpportunity
             {
                 OpportunityId = opportunityId,
                 OpportunityName = opp.ToString("Opportunity_Title"),
@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Services
             return opportunity;
         }
 
-        public Response GetOpportunityResponse(int contactId, int opportunityId)
+        public MpResponse GetOpportunityResponse(int contactId, int opportunityId)
         {
             var searchString = ",,,," + contactId;
             var subpageViewRecords = _ministryPlatformService.GetSubpageViewRecords(_contactOpportunityResponses,
@@ -96,7 +96,7 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
 
-            var response = new Response();
+            var response = new Models.MpResponse();
             response.Response_ID = record.ToInt("dp_RecordID");
             response.Opportunity_ID = record.ToInt("Opportunity ID");
             response.Participant_ID = record.ToInt("Participant ID");
@@ -105,7 +105,7 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public Response GetOpportunityResponse(int opportunityId, int eventId, Participant participant)
+        public MpResponse GetOpportunityResponse(int opportunityId, int eventId, Participant participant)
         {
             var searchString = string.Format(",{0},{1},{2}", opportunityId, eventId, participant.ParticipantId);
             List<Dictionary<string, object>> dictionaryList;
@@ -133,10 +133,10 @@ namespace MinistryPlatform.Translation.Services
 
             if (dictionaryList.Count == 0)
             {
-                return new Response();
+                return new Models.MpResponse();
             }
 
-            var response = new Response();
+            var response = new Models.MpResponse();
             try
             {
                 var dictionary = dictionaryList.First();
@@ -158,14 +158,14 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public List<MpResponse> SearchResponseByGroupAndEvent(String searchString)
+        public List<Models.Opportunities.MpResponse> SearchResponseByGroupAndEvent(String searchString)
         {
             var token = _apiUserService.GetToken();
             var records = _ministryPlatformService.GetPageViewRecords("ResponsesByEventAndGroup", token, searchString);
             return ConvertToMPResponse(records);
         } 
 
-        public List<MpResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
+        public List<Models.Opportunities.MpResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId)
         {
             var search = string.Format("{0}, {1}", groupId, eventId);
             var token = _apiUserService.GetToken();
@@ -174,7 +174,7 @@ namespace MinistryPlatform.Translation.Services
 
         }
 
-        private List<MpResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
+        private List<Models.Opportunities.MpResponse> ConvertToMPResponse(List<Dictionary<string, object>> response)
         {
             return response.Select(r => new MpResponse()
             {
@@ -187,17 +187,17 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public List<Response> GetOpportunityResponses(int opportunityId, string token)
+        public List<Models.MpResponse> GetOpportunityResponses(int opportunityId, string token)
         {
             var records = _ministryPlatformService.GetSubpageViewRecords(_signedupToServeSubPageViewId,
                                                                          opportunityId,
                                                                          token,
                                                                          "");
 
-            var responses = new List<Response>();
+            var responses = new List<Models.MpResponse>();
             foreach (var r in records)
             {
-                var response = new Response();
+                var response = new Models.MpResponse();
                 response.Event_ID = r.ToInt("Event_ID");
                 responses.Add(response);
             }

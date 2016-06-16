@@ -10,7 +10,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int GetFormFieldId(int crossroadsId);
         List<MpTripFormResponse> GetTripFormResponsesByRecordId(int recordId);
         List<MpTripFormResponse> GetTripFormResponsesBySelectionId(int selectionId);
-        int SubmitFormResponse(FormResponse form);
+        int SubmitFormResponse(MpFormResponse form);
 
         DateTime? GetTripFormResponseByContactId(int p, int pledgeId);
     }

@@ -72,9 +72,9 @@ namespace crds_angular.test.Services
         private readonly int rsvpNoId = 11299;
         private readonly int rsvpChangeId = 11366;
 
-        private Opportunity fakeOpportunity = new Opportunity();
-        private MyContact fakeGroupContact = new MyContact();
-        private MyContact fakeMyContact = new MyContact();
+        private MpOpportunity fakeOpportunity = new MpOpportunity();
+        private MpMyContact fakeGroupContact = new MpMyContact();
+        private MpMyContact fakeMyContact = new MpMyContact();
 
         [SetUp]
         public void SetUp()
@@ -119,7 +119,7 @@ namespace crds_angular.test.Services
 
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
-            var myContact = new MyContact
+            var myContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "contact@email.com",
@@ -418,13 +418,13 @@ namespace crds_angular.test.Services
         }
 
         [Test, TestCaseSource("OpportunityCapacityCases")]
-        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<Response> mockResponses,
+        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<MinistryPlatform.Translation.Models.MpResponse> mockResponses,
             Capacity expectedCapacity)
         {
             const int opportunityId = 9999;
             const int eventId = 1000;
 
-            var opportunity = new Opportunity();
+            var opportunity = new MpOpportunity();
             opportunity.MaximumNeeded = max;
             opportunity.MinimumNeeded = min;
             opportunity.OpportunityId = opportunityId;
@@ -449,7 +449,7 @@ namespace crds_angular.test.Services
         {
             new object[]
             {
-                10, 20, new List<Response>(),
+                10, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 10,
@@ -463,7 +463,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                10, null, new List<Response>(),
+                10, null, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 10,
@@ -477,7 +477,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                null, 20, new List<Response>(),
+                null, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 20,
@@ -521,11 +521,11 @@ namespace crds_angular.test.Services
             const int opportunityId = 9999;
             const int eventId = 1000;
 
-            var opportunity = new Opportunity();
+            var opportunity = new MpOpportunity();
             opportunity.MaximumNeeded = null;
             opportunity.MinimumNeeded = null;
             opportunity.OpportunityId = opportunityId;
-            opportunity.Responses = new List<Response>();
+            opportunity.Responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
 
             _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
                 .Returns(opportunity.Responses);
@@ -555,14 +555,14 @@ namespace crds_angular.test.Services
             _opportunityService.Setup(m => m.DeleteResponseToOpportunities(47, 1, 1)).Returns(1);
 
             // The previous Opportunity
-            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new Opportunity()
+            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new MpOpportunity()
             {
                 OpportunityId = 1,
                 OpportunityName = "Previous Opportunity"
             });
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -636,7 +636,7 @@ namespace crds_angular.test.Services
             SetUpRSVPMocks(contactId, eventTypeId, opportunityId, signUp, SetupMockEvents());
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -670,7 +670,7 @@ namespace crds_angular.test.Services
                 (m => m.RespondToOpportunity(47, opportunityId, It.IsAny<string>(), It.IsAny<int>(), signUp)),
                 Times.Exactly(5));
 
-            Opportunity o = new Opportunity();
+            MpOpportunity o = new MpOpportunity();
             o.OpportunityName = "Whatever";
             o.OpportunityId = opportunityId;
             o.ShiftStart = new TimeSpan();
@@ -702,9 +702,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111                
             };
 
-            var otherResponses = new List<MpResponse>
+            var otherResponses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MpResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -716,12 +716,12 @@ namespace crds_angular.test.Services
             };
 
             // no responses for Saturday...
-            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MpResponse>());
-            
+            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
+
             // there is no response for the first participant for Saturday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants.First().ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MpResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants.First().ParticipantId, saturday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             // there is a response for the first participant for Sunday...
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
@@ -729,14 +729,14 @@ namespace crds_angular.test.Services
             )).Returns(otherResponses);
 
             // there is not a response for the second participant for Saturday
-             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MpResponse>());
+            _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, saturday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MpResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
             
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 1);
@@ -764,9 +764,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111
             };
 
-            var responses = new List<MpResponse>
+            var responses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MpResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants[0].ContactId,
                     Event_ID = eventId,
@@ -775,7 +775,7 @@ namespace crds_angular.test.Services
                     Response_Date = DateTime.Now,
                     Response_Result_ID = 2
                 },
-                new MpResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants[1].ContactId,
                     Event_ID = eventId,
@@ -786,9 +786,9 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var otherResponses = new List<MpResponse>
+            var otherResponses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MpResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -809,8 +809,8 @@ namespace crds_angular.test.Services
 
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MpResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 0);
@@ -833,7 +833,7 @@ namespace crds_angular.test.Services
             _opportunityService.Setup(m => m.GetOpportunityById(opportunityId, It.IsAny<string>()))
                 .Returns(fakeOpportunity);
 
-            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new Opportunity()
+            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new MpOpportunity()
             {
                 OpportunityId = 1,
                 OpportunityName = "Previous Opportunity",
@@ -841,7 +841,7 @@ namespace crds_angular.test.Services
             });
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -1099,22 +1099,22 @@ namespace crds_angular.test.Services
             }
         }
         
-        private static List<Response> MockTwentyResponses()
+        private static List<MinistryPlatform.Translation.Models.MpResponse> MockTwentyResponses()
         {
-            var responses = new List<Response>();
+            var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new Response {Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
             }
             return responses;
         }
 
-        private static List<Response> MockFifteenResponses()
+        private static List<MinistryPlatform.Translation.Models.MpResponse> MockFifteenResponses()
         {
-            var responses = new List<Response>();
+            var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new Response {Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
             }
             return responses;
         }

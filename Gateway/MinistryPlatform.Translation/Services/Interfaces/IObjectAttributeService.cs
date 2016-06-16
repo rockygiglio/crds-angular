@@ -6,11 +6,11 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IObjectAttributeService
     {
-        List<ObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null);
-        int CreateAttribute(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
+        List<MpObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null);
+        int CreateAttribute(string token, int objectId, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration);
         //void CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
-        IObservable<int> CreateAttributeAsync(string token, int objectId, ObjectAttribute attribute, ObjectAttributeConfiguration configuration); 
-        void UpdateAttribute(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
-        void UpdateAttributeAsync(string token, ObjectAttribute attribute, ObjectAttributeConfiguration configuration);
+        IObservable<int> CreateAttributeAsync(string token, int objectId, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration); 
+        void UpdateAttribute(string token, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration);
+        void UpdateAttributeAsync(string token, MpObjectAttribute attribute, MpObjectAttributeConfiguration configuration);
     }
 }

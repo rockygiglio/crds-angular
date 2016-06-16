@@ -172,7 +172,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string itemNumber = "98766";
             const string notes = "notes notes notes";
 
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
                 Email_Address = "giving@crossroads.net"
@@ -307,7 +307,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int donationStatus = 4;
             const string itemNumber = "98766";
 
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
                 Email_Address = "giving@crossroads.net"
@@ -448,7 +448,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var donationPageId = Convert.ToInt32(ConfigurationManager.AppSettings["Donations"]);
             var donationDistPageId = Convert.ToInt32(ConfigurationManager.AppSettings["Distributions"]);
             
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
                 Email_Address = "giving@crossroads.net"
@@ -757,7 +757,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
                 Email_Address = "giving@crossroads.net"
@@ -798,7 +798,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int donationAmt = 4343;
             const string paymentType = "Bank";
 
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
                 Email_Address = "giving@crossroads.net"
@@ -1068,7 +1068,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("," + donorLookupByEncryptedAccount, It.IsAny<string>(), encryptedKey, "", 0)).Returns(donorContact);
 
-            var myContact = new MyContact
+            var myContact = new MpMyContact
             {
                 Address_Line_1 = addr1,
                 Address_Line_2 = addr2,

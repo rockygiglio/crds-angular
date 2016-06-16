@@ -551,7 +551,7 @@ namespace crds_angular.Services
             return pledges
                 .Where(o=>o.PledgeStatus == "Active" || o.PledgeStatus == "Completed")
                 .OrderByDescending(o=>o.CampaignStartDate)
-                .Select(Mapper.Map<Pledge, PledgeDto>).ToList();
+                .Select(Mapper.Map<MpPledge, PledgeDto>).ToList();
         } 
 
         private void PopulateStripeInfoOnRecurringGiftSource(DonationSourceDTO donationSource)

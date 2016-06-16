@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Pledge
+    public class MpPledge
     {
         public int PledgeId { get; set; }
         public int PledgeCampaignId { get; set; }

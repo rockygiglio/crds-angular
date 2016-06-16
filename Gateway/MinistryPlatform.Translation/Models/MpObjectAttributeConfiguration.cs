@@ -1,6 +1,6 @@
 namespace MinistryPlatform.Translation.Models
 {
-    public class ObjectAttributeConfiguration
+    public class MpObjectAttributeConfiguration
     {
         public int SubPage { get; set; }
         public int SelectedSubPage { get; set; }

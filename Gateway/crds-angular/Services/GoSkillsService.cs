@@ -63,7 +63,7 @@ namespace crds_angular.Services
 
         public void UpdateSkills(int participantId, List<GoSkills> skills, string token)
         {
-            ObjectAttributeConfiguration configuration;
+            MpObjectAttributeConfiguration configuration;
             if (token == String.Empty)
             {
                 token = _apiUserService.GetToken();

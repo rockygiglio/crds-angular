@@ -62,7 +62,7 @@ namespace MinistryPlatform.Translation.Services
         {
             var householdId = CreateAddressHouseholdForSponsoredChild(town, lastName);
 
-            var contact = new MyContact
+            var contact = new MpMyContact
             {
                 First_Name = firstName,
                 Last_Name = lastName,
@@ -73,7 +73,7 @@ namespace MinistryPlatform.Translation.Services
             return CreateContact(contact);
         }
 
-        public MyContact GetContactById(int contactId)
+        public MpMyContact GetContactById(int contactId)
         {
             var searchString = string.Format(",\"{0}\"", contactId);
 
@@ -87,7 +87,7 @@ namespace MinistryPlatform.Translation.Services
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
-        public MyContact GetContactByIdCard(string idCard)
+        public MpMyContact GetContactByIdCard(string idCard)
         {
             var searchString = string.Format(new String(',', 33) + "\"{0}\"", idCard);
             var pageViewRecords = _ministryPlatformService.GetPageViewRecords("AllIndividualsWithContactId", ApiLogin(), searchString);
@@ -104,7 +104,7 @@ namespace MinistryPlatform.Translation.Services
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
-        public MyContact GetContactByParticipantId(int participantId)
+        public MpMyContact GetContactByParticipantId(int participantId)
         {
             var token = ApiLogin();
             var searchString = string.Format("{0},", participantId);
@@ -114,7 +114,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            var contact = new MyContact
+            var contact = new MpMyContact
             {
                 Contact_ID = c.ToInt("Contact_ID"),
                 Email_Address = c.ToString("Email_Address"),
@@ -190,7 +190,7 @@ namespace MinistryPlatform.Translation.Services
         }
 
 
-        public MyContact GetMyProfile(string token)
+        public MpMyContact GetMyProfile(string token)
         {
             var recordsDict = _ministryPlatformService.GetRecordsDict("MyProfile", token);
 
@@ -259,9 +259,9 @@ namespace MinistryPlatform.Translation.Services
             });
         }
 
-        private static MyContact ParseProfileRecord(Dictionary<string, object> recordsDict)
+        private static MpMyContact ParseProfileRecord(Dictionary<string, object> recordsDict)
         {
-            var contact = new MyContact
+            var contact = new MpMyContact
             {
                 Address_ID = recordsDict.ToNullableInt("Address_ID"),
                 Address_Line_1 = recordsDict.ToString("Address_Line_1"),
@@ -332,7 +332,7 @@ namespace MinistryPlatform.Translation.Services
 
         public MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile)
         {
-            var contactId = CreateContact(new MyContact
+            var contactId = CreateContact(new MpMyContact
             {
                 Date_Of_Birth = dob,
                 First_Name = firstName,
@@ -360,7 +360,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private int CreateContact(MyContact contact)
+        private int CreateContact(MpMyContact contact)
         {
             var contactDictionary = new Dictionary<string, object>
             {

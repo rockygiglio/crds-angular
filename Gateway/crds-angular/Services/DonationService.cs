@@ -383,7 +383,7 @@ namespace crds_angular.Services
         {
             var gpExportData = _mpDonationService.GetGpExport(depositId, token);
 
-            return gpExportData.Select(Mapper.Map<GPExportDatum, GPExportDatumDTO>).ToList();
+            return gpExportData.Select(Mapper.Map<MpGPExportDatum, GPExportDatumDTO>).ToList();
         }
 
         public MemoryStream CreateGPExport(int selectionId, int depositId, string token)

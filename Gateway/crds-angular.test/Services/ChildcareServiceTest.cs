@@ -271,7 +271,7 @@ namespace crds_angular.test.Services
                 EmailAddress = "wonder-woman@ip.com"
             };
 
-            var defaultContact = new MyContact
+            var defaultContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "gmail@gmail.com"

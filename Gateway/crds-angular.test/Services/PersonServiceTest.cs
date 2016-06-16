@@ -23,7 +23,7 @@ namespace crds_angular.test.Services
         private Mock<MPInterfaces.IUserService> _userService;
 
         private PersonService _fixture;
-        private MyContact _myContact;
+        private MpMyContact _myContact;
         private List<MpHouseholdMember> _householdMembers;
 
         private readonly DateTime startDate = new DateTime(2015, 2, 21);
@@ -33,7 +33,7 @@ namespace crds_angular.test.Services
         {
             _objectAttributeService = new Mock<IObjectAttributeService>();
             var allAttributesDto = new ObjectAllAttributesDTO();
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(allAttributesDto);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
             _contactService = new Mock<MPInterfaces.IContactService>();
             _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
             _participantService = new Mock<MPInterfaces.IParticipantService>();
@@ -43,7 +43,7 @@ namespace crds_angular.test.Services
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
-            _myContact = new MyContact
+            _myContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "contact@email.com",

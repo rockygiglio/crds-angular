@@ -587,11 +587,11 @@ namespace MinistryPlatform.Translation.Test.Services
             };
         }
 
-        private List<GPExportDatum> MockGPExportDataTest1()
+        private List<MpGPExportDatum> MockGPExportDataTest1()
         {
-            var dict = new List<GPExportDatum>
+            var dict = new List<MpGPExportDatum>
             {
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -614,7 +614,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -637,7 +637,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -660,7 +660,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
@@ -688,11 +688,11 @@ namespace MinistryPlatform.Translation.Test.Services
             return dict;
         }
         
-        private List<GPExportDatum> MockGPExportDataTest2()
+        private List<MpGPExportDatum> MockGPExportDataTest2()
         {
-            return new List<GPExportDatum>
+            return new List<MpGPExportDatum>
             {
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340001",
                     DepositId = 12341234,
@@ -716,7 +716,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340001",
                     DepositId = 12341234,
@@ -740,7 +740,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340002",
                     DepositId = 12341234,
@@ -764,7 +764,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340002",
                     DepositId = 12341234,
@@ -788,7 +788,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340003",
                     DepositId = 12341234,
@@ -812,7 +812,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340003",
                     DepositId = 12341234,

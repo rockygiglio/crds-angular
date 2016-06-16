@@ -451,10 +451,10 @@ namespace crds_angular.Services
             }
         }
 
-        private static MyContact ReplyToContact(MpEvent childEvent)
+        private static MpMyContact ReplyToContact(MpEvent childEvent)
         {
             var contact = childEvent.PrimaryContact;
-            var replyToContact = new MyContact
+            var replyToContact = new MpMyContact
             {
                 Contact_ID = contact.ContactId,
                 Email_Address = contact.EmailAddress
@@ -465,8 +465,8 @@ namespace crds_angular.Services
         private static MpCommunication FormatCommunication(int authorUserId,
                                                          int domainId,
                                                          MpMessageTemplate template,
-                                                         MyContact fromContact,
-                                                         MyContact replyToContact,
+                                                         MpMyContact fromContact,
+                                                         MpMyContact replyToContact,
                                                          int participantContactId,
                                                          string participantEmail,
                                                          Dictionary<string, object> mergeData)

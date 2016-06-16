@@ -23,7 +23,7 @@ namespace crds_angular.test.Services
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
         private Mock<MPInterfaces.IAttributeService> _mpAttributeService;
         private List<ObjectSingleAttributeDTO> _updatedAttributes = new List<ObjectSingleAttributeDTO>();
-        private List<ObjectAttribute> _currentAttributes = new List<ObjectAttribute>();
+        private List<MpObjectAttribute> _currentAttributes = new List<MpObjectAttribute>();
 
         private int _fakeContactId = 2186211;
         private string _fakeToken = "afaketoken";
@@ -51,7 +51,7 @@ namespace crds_angular.test.Services
                 Notes = "New and Updated Notes"
  
             });  
-            _currentAttributes.Add(new ObjectAttribute
+            _currentAttributes.Add(new MpObjectAttribute
             {
                 AttributeTypeId = 2,
                 AttributeId = 23,
@@ -87,7 +87,7 @@ namespace crds_angular.test.Services
 
             _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, configuration, null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);
-            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), configuration)).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
+            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<MpObjectAttribute>(), configuration)).Callback<string, MpObjectAttribute, MpObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
             {
                 Assert.AreEqual(actual.Notes, _updatedNote);  
                 Assert.AreEqual(actual.ObjectAttributeId, 123456);
@@ -97,7 +97,7 @@ namespace crds_angular.test.Services
             _apiUserService.VerifyAll();
             _attributeService.VerifyAll();
             _mpAttributeService.VerifyAll();
-            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>()), Times.Once);
+            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<MpObjectAttribute>(), It.IsAny<MpObjectAttributeConfiguration>()), Times.Once);
             
 
         }

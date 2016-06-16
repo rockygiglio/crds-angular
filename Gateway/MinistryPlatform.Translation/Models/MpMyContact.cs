@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class MyContact
+    public class MpMyContact
     {
         public int? Address_ID { get; set; }
         public string Address_Line_1 { get; set; }

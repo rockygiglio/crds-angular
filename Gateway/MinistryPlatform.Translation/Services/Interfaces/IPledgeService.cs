@@ -7,8 +7,8 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         int CreatePledge(int donorId, int pledgeCampaignId, decimal totalPledge);
         bool DonorHasPledge(int pledgeCampaignId, int donorId);
-        Pledge GetPledgeByCampaignAndDonor(int pledgeCampaignId, int donorId);
+        MpPledge GetPledgeByCampaignAndDonor(int pledgeCampaignId, int donorId);
         int GetDonorForPledge(int pledgeId);
-        List<Pledge> GetPledgesForAuthUser(string userToken, int[] campaignTypeIds = null);
+        List<MpPledge> GetPledgesForAuthUser(string userToken, int[] campaignTypeIds = null);
     }
 }

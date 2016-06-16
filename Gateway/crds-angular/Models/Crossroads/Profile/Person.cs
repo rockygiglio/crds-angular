@@ -135,9 +135,9 @@ namespace crds_angular.Models.Crossroads.Profile
         [JsonProperty(PropertyName = "attendanceStartDate")]
         public DateTime? AttendanceStartDate { get; set; }
 
-        public MyContact GetContact()
+        public MpMyContact GetContact()
         {
-            return new MyContact
+            return new MpMyContact
             {
                 Contact_ID = ContactId,
                 Email_Address = EmailAddress,

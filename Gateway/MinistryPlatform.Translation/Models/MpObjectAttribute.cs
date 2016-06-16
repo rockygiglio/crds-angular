@@ -2,7 +2,7 @@ using System;
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class ObjectAttribute
+    public class MpObjectAttribute
     {
         public int ObjectAttributeId { get; set; }
         public int AttributeId { get; set; }

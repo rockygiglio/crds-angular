@@ -344,7 +344,7 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = 1
             };
@@ -451,7 +451,7 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = 1
             };
@@ -537,7 +537,7 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = null
             };
@@ -952,7 +952,7 @@ namespace crds_angular.test.Services
                 Recurrence = "12th of the month",
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = congregationId
             };
@@ -1080,7 +1080,7 @@ namespace crds_angular.test.Services
                 DonorId = 789
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = congregationId
             };
@@ -1127,11 +1127,11 @@ namespace crds_angular.test.Services
 
             var userAuthToken = "auth";
 
-            var pledgeList = new List<Pledge>
+            var pledgeList = new List<MpPledge>
             {
-                new Pledge(){CampaignName = "Oldest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2000")},
-                new Pledge(){CampaignName = "Youngest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016")},
-                new Pledge(){CampaignName = "Middle Campaign", PledgeStatus = "Active",CampaignStartDate = DateTime.Parse("1/1/2010")}
+                new MpPledge(){CampaignName = "Oldest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2000")},
+                new MpPledge(){CampaignName = "Youngest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016")},
+                new MpPledge(){CampaignName = "Middle Campaign", PledgeStatus = "Active",CampaignStartDate = DateTime.Parse("1/1/2010")}
             }; 
 
             _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32 [1] )).Returns(pledgeList);
@@ -1153,11 +1153,11 @@ namespace crds_angular.test.Services
 
             var userAuthToken = "auth";
 
-            var pledgeList = new List<Pledge>
+            var pledgeList = new List<MpPledge>
             {
-                new Pledge(){CampaignName = "Active Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016") },
-                new Pledge(){CampaignName = "Completed Campaign", PledgeStatus = "Completed", CampaignStartDate = DateTime.Parse("1/1/2010")},
-                new Pledge(){CampaignName = "Inactive Campaign", PledgeStatus = "Discontinued", CampaignStartDate = DateTime.Parse("1/1/2000")}
+                new MpPledge(){CampaignName = "Active Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016") },
+                new MpPledge(){CampaignName = "Completed Campaign", PledgeStatus = "Completed", CampaignStartDate = DateTime.Parse("1/1/2010")},
+                new MpPledge(){CampaignName = "Inactive Campaign", PledgeStatus = "Discontinued", CampaignStartDate = DateTime.Parse("1/1/2000")}
             };
 
             _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32[1])).Returns(pledgeList);

@@ -73,7 +73,7 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static MpCommunication Communication(MyContact sender, MyContact sendee, int templateId)
+        public static MpCommunication Communication(MpMyContact sender, MpMyContact sendee, int templateId)
         {           
             return new MpCommunication()
             {
@@ -88,9 +88,9 @@ namespace crds_angular.test
             };
         }
 
-        public static MyContact ContactFromRegistrant(Registrant r)
+        public static MpMyContact ContactFromRegistrant(Registrant r)
         {
-            return new MyContact()
+            return new MpMyContact()
             {
                 Age = RandomInt(),
                 Contact_ID = r.ContactId,
@@ -246,9 +246,9 @@ namespace crds_angular.test
             }, size).ToList();
         }
 
-        public static MyContact MyContact(int contactId = 0)
+        public static MpMyContact MyContact(int contactId = 0)
         {
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Address_ID = RandomInt(),
                 Address_Line_1 = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,

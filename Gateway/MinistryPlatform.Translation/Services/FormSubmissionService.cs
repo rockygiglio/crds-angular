@@ -151,7 +151,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public int SubmitFormResponse(FormResponse form)
+        public int SubmitFormResponse(MpFormResponse form)
         {
             var token = ApiLogin();
             var responseId = CreateFormResponse(form, token);
@@ -177,7 +177,7 @@ namespace MinistryPlatform.Translation.Services
             return DateTime.Parse(signedUp.First()["Response_Date"].ToString());
         }
 
-        private int CreateFormResponse(FormResponse formResponse, string token)
+        private int CreateFormResponse(MpFormResponse formResponse, string token)
         {
             var record = new Dictionary<string, object>
             {
@@ -193,7 +193,7 @@ namespace MinistryPlatform.Translation.Services
             return responseId;
         }
 
-        private void CreateFormAnswer(FormAnswer answer, string token)
+        private void CreateFormAnswer(MpFormAnswer answer, string token)
         {
             var formAnswer = new Dictionary<string, object>
             {
