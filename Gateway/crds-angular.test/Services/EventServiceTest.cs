@@ -129,7 +129,7 @@ namespace crds_angular.test.Services
                 };
 
                 var contact = new Contact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
-                var fakeCommunication = new Communication()
+                var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
                     DomainId = 1,

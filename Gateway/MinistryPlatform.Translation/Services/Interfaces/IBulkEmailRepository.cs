@@ -5,11 +5,11 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IBulkEmailRepository
     {
-        List<BulkEmailPublication> GetPublications(string token);
-        void UpdateLastSyncDate(string token, BulkEmailPublication publication);
+        List<MpBulkEmailPublication> GetPublications(string token);
+        void UpdateLastSyncDate(string token, MpBulkEmailPublication publication);
         List<int> GetPageViewIds(string token, int publicationId);
-        List<BulkEmailSubscriber> GetSubscribers(string token, int publicationId, List<int> pageViewIds);
-        void UpdateSubscriber(string token, BulkEmailSubscriber subscriber);
-        bool SetSubscriberStatus(string token, BulkEmailSubscriberOpt subscriberOpt);
+        List<MpBulkEmailSubscriber> GetSubscribers(string token, int publicationId, List<int> pageViewIds);
+        void UpdateSubscriber(string token, MpBulkEmailSubscriber subscriber);
+        bool SetSubscriberStatus(string token, MpBulkEmailSubscriberOpt subscriberOpt);
     }
 }

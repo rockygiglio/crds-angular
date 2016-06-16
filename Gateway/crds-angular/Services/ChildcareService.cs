@@ -271,7 +271,7 @@ namespace crds_angular.Services
             var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
 
 
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -313,7 +313,7 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
-            var communication = new Communication
+            var communication = new MpCommunication
              {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -462,7 +462,7 @@ namespace crds_angular.Services
             return replyToContact;
         }
 
-        private static Communication FormatCommunication(int authorUserId,
+        private static MpCommunication FormatCommunication(int authorUserId,
                                                          int domainId,
                                                          MessageTemplate template,
                                                          MyContact fromContact,
@@ -471,7 +471,7 @@ namespace crds_angular.Services
                                                          string participantEmail,
                                                          Dictionary<string, object> mergeData)
         {
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 AuthorUserId = authorUserId,
                 DomainId = domainId,

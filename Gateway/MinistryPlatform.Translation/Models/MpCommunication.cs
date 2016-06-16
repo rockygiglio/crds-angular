@@ -2,9 +2,9 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class Communication
+    public class MpCommunication
     {
-        public Communication()
+        public MpCommunication()
         {
             ToContacts = new List<Contact>();
         }

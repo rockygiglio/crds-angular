@@ -675,11 +675,11 @@ namespace crds_angular.Services
             _communicationService.SendMessage(communication);
         }
 
-        private Communication SetupCommunication(int templateId, MyContact groupContact, MyContact toContact, Dictionary<string, object> mergeData)
+        private MpCommunication SetupCommunication(int templateId, MyContact groupContact, MyContact toContact, Dictionary<string, object> mergeData)
         {
             var template = _communicationService.GetTemplate(templateId);
             var defaultContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,

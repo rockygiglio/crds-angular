@@ -450,14 +450,14 @@ namespace crds_angular.Services
             return invite.PrivateInvitationId;
         }
 
-        private Communication PrivateInviteCommunication(MpPrivateInvite invite)
+        private MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var mergeData = SetMergeData(invite.PledgeCampaignIdText, invite.PledgeCampaignId, invite.InvitationGuid, invite.RecipientName);
 
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,

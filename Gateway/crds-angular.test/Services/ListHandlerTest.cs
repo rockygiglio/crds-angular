@@ -141,10 +141,10 @@ namespace crds_angular.test.Services
             Assert.AreEqual(newResponse.ErrorInSignupProcess, response.ErrorInSignupProcess);
         }
 
-        private List<BulkEmailPublication> GetPublications()
+        private List<MpBulkEmailPublication> GetPublications()
         {
-            List<BulkEmailPublication> publications = new List<BulkEmailPublication>();
-            publications.Add(new BulkEmailPublication
+            List<MpBulkEmailPublication> publications = new List<MpBulkEmailPublication>();
+            publications.Add(new MpBulkEmailPublication
             {
                 PublicationId = 1,
                 Title = "test",

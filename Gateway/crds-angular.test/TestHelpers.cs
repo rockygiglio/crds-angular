@@ -73,9 +73,9 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        public static MpCommunication Communication(MyContact sender, MyContact sendee, int templateId)
         {           
-            return new Communication()
+            return new MpCommunication()
             {
                 AuthorUserId = RandomInt(),
                 DomainId = RandomInt(),

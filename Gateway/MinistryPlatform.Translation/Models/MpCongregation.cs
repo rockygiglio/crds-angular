@@ -1,6 +1,6 @@
 namespace MinistryPlatform.Translation.Models
 {
-    public class Congregation
+    public class MpCongregation
     {
         public int CongregationId { get; set; }
         public string Name { get; set; }

@@ -7,6 +7,6 @@ namespace crds_angular.Services.Interfaces
     public interface IAttributeService
     {
         List<AttributeTypeDTO> GetAttributeTypes(int? attributeTypeId);
-        AttributeDTO ConvertAttributeToAttributeDto(Attribute attribute);
+        AttributeDTO ConvertAttributeToAttributeDto(MpAttribute attribute);
     }
 }

@@ -226,7 +226,7 @@ namespace crds_angular.test.Services
 
                 var contact = new Contact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
                 var toContact = new Contact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
-                var fakeCommunication = new Communication()
+                var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
                     DomainId = 1,
@@ -594,7 +594,7 @@ namespace crds_angular.test.Services
 
             _communicationService.Verify(m => m.GetTemplate(rsvpChangeId));
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -619,8 +619,8 @@ namespace crds_angular.test.Services
                 {"Previous_Opportunity_Name", It.IsAny<string>()}
             };
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false));
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(),false));
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(),false));
         }
 
         [Test]

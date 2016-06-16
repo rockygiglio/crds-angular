@@ -4,7 +4,7 @@ using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -20,14 +20,14 @@ namespace MinistryPlatform.Translation.Services
 
 
 
-        public List<Attribute> GetAttributes(int? attributeTypeId)
+        public List<MpAttribute> GetAttributes(int? attributeTypeId)
         {
             var token = base.ApiLogin();
 
             var filter = attributeTypeId.HasValue ? string.Format(",,,\"{0}\"", attributeTypeId) : string.Empty;
             var records = _ministryPlatformService.GetPageViewRecords("AttributesPageView", token, filter);
 
-            return records.Select(record => new Attribute
+            return records.Select(record => new MpAttribute
             {
                 AttributeId = record.ToInt("Attribute_ID"), 
                 Name = record.ToString("Attribute_Name"),

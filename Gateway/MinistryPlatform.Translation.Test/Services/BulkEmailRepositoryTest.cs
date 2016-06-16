@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,
@@ -66,7 +66,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,
@@ -92,7 +92,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,

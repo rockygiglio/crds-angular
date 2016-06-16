@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class BulkEmailPublication
+    public class MpBulkEmailPublication
     {
         public int PublicationId { get; set; }
         public string Title { get; set; }

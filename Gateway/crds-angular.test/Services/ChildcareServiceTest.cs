@@ -218,7 +218,7 @@ namespace crds_angular.test.Services
                 {"Base_Url", "https://localhost:3000"}
             };
 
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 TemplateId = 0,
                 DomainId = 0,
@@ -235,7 +235,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultUserAuthorId")).Returns(defaultAuthorId);
             _communicationService.Setup(m => m.GetTemplate(notificationTemplateId)).Returns(template);
             _configurationWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("https://localhost:3000");
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 
             _fixture.SendChildcareRequestNotification(request);
 
@@ -285,7 +285,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
             _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MessageTemplate());            
             _eventParticipantService.Setup(m => m.GetChildCareParticipants(daysBefore)).Returns(participants);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 
             var kids = new List<Participant> { new Participant { ContactId = 456321987 } };
             _crdsEventService.Setup(m => m.EventParticpants(987654321, It.IsAny<string>())).Returns(kids);
@@ -310,7 +310,7 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _eventParticipantService.VerifyAll();
             _communicationService.VerifyAll();
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Exactly(2));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
         }
     }

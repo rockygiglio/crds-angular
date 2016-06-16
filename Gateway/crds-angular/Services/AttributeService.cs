@@ -34,7 +34,7 @@ namespace crds_angular.Services
             return attributeTypes.Values.ToList();
         }
 
-        public AttributeDTO ConvertAttributeToAttributeDto(Attribute attribute)
+        public AttributeDTO ConvertAttributeToAttributeDto(MpAttribute attribute)
         {
             var attributeDto = new AttributeDTO
             {
@@ -49,7 +49,7 @@ namespace crds_angular.Services
             return attributeDto;
         }
 
-        private static int GetOrCreateAttributeTypeDto(Attribute attribute, Dictionary<int, AttributeTypeDTO> attributeTypes)
+        private static int GetOrCreateAttributeTypeDto(MpAttribute attribute, Dictionary<int, AttributeTypeDTO> attributeTypes)
         {
             var attributeTypeDto = new AttributeTypeDTO()
             {

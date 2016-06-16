@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class BulkEmailSubscriber
+    public class MpBulkEmailSubscriber
     {
         public int ContactPublicationId { get; set; }
         public int ContactId { get; set; }
@@ -11,14 +11,14 @@ namespace MinistryPlatform.Translation.Models
         public bool Subscribed { get; set; }
         public Dictionary<string, string> MergeFields { get; private set; }
 
-        public BulkEmailSubscriber()
+        public MpBulkEmailSubscriber()
         {
             MergeFields = new Dictionary<string, string>();
         }
 
-        public BulkEmailSubscriber Clone()
+        public MpBulkEmailSubscriber Clone()
         {
-            return (BulkEmailSubscriber) MemberwiseClone();
+            return (MpBulkEmailSubscriber) MemberwiseClone();
         }
     }
 }

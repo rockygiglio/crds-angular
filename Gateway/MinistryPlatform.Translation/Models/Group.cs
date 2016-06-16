@@ -32,7 +32,7 @@ namespace MinistryPlatform.Translation.Models
         public int RemainingCapacity { get; set; }
         public int ContactId { get; set; }
         public int GroupRoleId { get; set; }
-        public Address Address { get; set; }
+        public MpAddress Address { get; set; }
 
 
         public Group()

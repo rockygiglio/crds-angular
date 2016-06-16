@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Services
             AddressPageId = configurationWrapper.GetConfigIntValue("Addresses");
         }
 
-        public int Create(Address address)
+        public int Create(MpAddress address)
         {
             var apiToken = _apiUserService.GetToken();
 
@@ -41,7 +41,7 @@ namespace MinistryPlatform.Translation.Services
             return addressId;
         }
 
-        public List<Address> FindMatches(Address address)
+        public List<MpAddress> FindMatches(MpAddress address)
         {
             var apiToken = _apiUserService.GetToken();
             var search = string.Format("{0}, {1}, {2}, {3}, {4}, {5}",
@@ -54,7 +54,7 @@ namespace MinistryPlatform.Translation.Services
 
             var records = _ministryPlatformService.GetRecordsDict(AddressPageId, apiToken, search);
 
-            var addresses = records.Select(record => new Address()
+            var addresses = records.Select(record => new MpAddress()
             {
                 Address_ID = record.ToInt("dp_RecordID"),
                 Address_Line_1 = record.ToString("Address_Line_1"),

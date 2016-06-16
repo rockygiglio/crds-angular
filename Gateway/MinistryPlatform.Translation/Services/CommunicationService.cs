@@ -51,13 +51,13 @@ namespace MinistryPlatform.Translation.Services
             return contact["Email_Address"].ToString();
         }
 
-        public CommunicationPreferences GetPreferences(String token, int userId)
+        public MpCommunicationPreferences GetPreferences(String token, int userId)
         {
             int pNum = Convert.ToInt32( ConfigurationManager.AppSettings["MyContact"]);
             int hNum = Convert.ToInt32(ConfigurationManager.AppSettings["MyHousehold"]);
             var profile = _ministryPlatformService.GetRecordDict(pNum, userId, token);
             var household = _ministryPlatformService.GetRecordDict(hNum, (int)profile["Household_ID"], token);
-            return new CommunicationPreferences
+            return new MpCommunicationPreferences
             {
                 Bulk_Email_Opt_Out = (bool)profile["Bulk_Email_Opt_Out"],
                 Bulk_Mail_Opt_Out = (bool)household["Bulk_Mail_Opt_Out"],
@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Services
         /// </summary>
         /// <param name="communication">The message properties </param>     
         /// <param name="isDraft"> Is this message a draft? Defaults to false </param>   
-        public int SendMessage(Communication communication, bool isDraft = false)
+        public int SendMessage(MpCommunication communication, bool isDraft = false)
         {
             var token = ApiLogin();
             var communicationStatus = isDraft ? _communicationDraftStatus : _communicationStatusId;
@@ -92,7 +92,7 @@ namespace MinistryPlatform.Translation.Services
             return communicationId;
         }
 
-        private int AddCommunication(Communication communication, string token, int communicationStatus)
+        private int AddCommunication(MpCommunication communication, string token, int communicationStatus)
         {
             var dictionary = new Dictionary<string, object>
             {
@@ -108,7 +108,7 @@ namespace MinistryPlatform.Translation.Services
             return communicationId;
         }
 
-        private void AddCommunicationMessages(Communication communication, int communicationId, string token)
+        private void AddCommunicationMessages(MpCommunication communication, int communicationId, string token)
         {
             foreach (Contact contact in communication.ToContacts)
             {
@@ -145,10 +145,10 @@ namespace MinistryPlatform.Translation.Services
             return template;
         }
 
-        public Communication GetTemplateAsCommunication(int templateId, int fromContactId, string fromEmailAddress, int replyContactId, string replyEmailAddress, int toContactId, string toEmailAddress, Dictionary<string, object> mergeData = null)
+        public MpCommunication GetTemplateAsCommunication(int templateId, int fromContactId, string fromEmailAddress, int replyContactId, string replyEmailAddress, int toContactId, string toEmailAddress, Dictionary<string, object> mergeData = null)
         {
             var template = GetTemplate(templateId);
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = _configurationWrapper.GetConfigIntValue("DefaultAuthorUser"),
                 DomainId = 1,

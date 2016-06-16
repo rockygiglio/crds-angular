@@ -7,7 +7,7 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
@@ -195,7 +195,7 @@ namespace crds_angular.Services
             return participantGoal.Value.AttributeId == _goalMatches[groupGoalId.Value];
         }
 
-        private List<GroupDTO> ConvertToGroupDto(IEnumerable<GroupSearchResult> mpGroups, List<Attribute> mpAttributes)
+        private List<GroupDTO> ConvertToGroupDto(IEnumerable<GroupSearchResult> mpGroups, List<MpAttribute> mpAttributes)
         {
             var groups = new List<GroupDTO>();
 
@@ -234,7 +234,7 @@ namespace crds_angular.Services
             return groups;
         }
 
-        private ObjectAttributeTypeDTO GetPetAttributes(List<Attribute> mpAttributes, GroupSearchAttributes searchAttributes)
+        private ObjectAttributeTypeDTO GetPetAttributes(List<MpAttribute> mpAttributes, GroupSearchAttributes searchAttributes)
         {
             var petsAttributeType = mpAttributes.First(x => x.AttributeTypeId == GroupPetsAttributeTypeId);
 
@@ -255,7 +255,7 @@ namespace crds_angular.Services
             return groupPets;
         }
 
-        private KeyValuePair<int, ObjectSingleAttributeDTO> ConvertToSingleAttribute(List<Attribute> mpAttributes, int attributeId)
+        private KeyValuePair<int, ObjectSingleAttributeDTO> ConvertToSingleAttribute(List<MpAttribute> mpAttributes, int attributeId)
         {
             var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeId);
             var groupSingleAttribute = new ObjectSingleAttributeDTO()
@@ -276,7 +276,7 @@ namespace crds_angular.Services
             return new KeyValuePair<int, ObjectSingleAttributeDTO>(mpAttribute.AttributeTypeId, groupSingleAttribute);            
         }
 
-        private ObjectAttributeDTO ConvertToMultiAttribute(List<Attribute> mpAttributes, int attributeId, bool selected)
+        private ObjectAttributeDTO ConvertToMultiAttribute(List<MpAttribute> mpAttributes, int attributeId, bool selected)
         {
             var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeId);
 

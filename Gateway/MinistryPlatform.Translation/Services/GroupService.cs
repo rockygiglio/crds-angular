@@ -261,7 +261,7 @@ namespace MinistryPlatform.Translation.Services
                 MeetingTime = record.ToString("Meeting_Time"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
 
-                Address = new Address()
+                Address = new MpAddress()
                 {
                     Address_ID = record.ToInt("Address_ID"),
                     Address_Line_1 = record.ToString("Address_Line_1"),
@@ -457,7 +457,7 @@ namespace MinistryPlatform.Translation.Services
                 }
             };
 
-            var confirmation = new Communication 
+            var confirmation = new MpCommunication 
             { 
                 EmailBody = emailTemplate.Body, 
                 EmailSubject = emailTemplate.Subject,
@@ -505,7 +505,7 @@ namespace MinistryPlatform.Translation.Services
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
                 MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
-                Address = new Address()
+                Address = new MpAddress()
                 {
                     Address_ID = details.ToInt("Address_ID"),
                     Address_Line_1 = details.ToString("Address_Line_1"),

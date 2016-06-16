@@ -10,7 +10,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
 using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
 
@@ -81,7 +81,7 @@ namespace crds_angular.test.Services
             var participant = new GroupParticipantDTO();
             
             _groupService.Setup(mocked => mocked.GetSearchResults(groupTypeId)).Returns(It.IsAny<List<GroupSearchResult>>());
-            _attributeService.Setup(mocked => mocked.GetAttributes(null)).Returns(It.IsAny<List<Attribute>>());
+            _attributeService.Setup(mocked => mocked.GetAttributes(null)).Returns(It.IsAny<List<MpAttribute>>());
             
             //var result =  _fixture.FindMatches(groupTypeId, participant);
             

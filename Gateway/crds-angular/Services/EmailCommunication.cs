@@ -35,7 +35,7 @@ namespace crds_angular.Services
 
         public void SendEmail(EmailCommunicationDTO email, string token)
         {
-            var communication = new Communication();
+            var communication = new MpCommunication();
             communication.DomainId = DomainID;
             communication.AuthorUserId = email.FromUserId ?? DefaultAuthorUserId;
 
@@ -75,7 +75,7 @@ namespace crds_angular.Services
             var from = new Contact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
             var replyTo = new Contact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 AuthorUserId = DefaultAuthorUserId,
                 DomainId = DomainID,

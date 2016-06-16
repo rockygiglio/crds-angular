@@ -5,7 +5,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 
 namespace MinistryPlatform.Translation.Services
 {

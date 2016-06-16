@@ -186,7 +186,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
 
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
             var expectedDonationValues = new Dictionary<string, object>
             {
@@ -272,7 +272,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -462,7 +462,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
 
             var expectedDonationValues = new Dictionary<string, object>
             {
@@ -543,7 +543,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var response = _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<Communication>(), false));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -733,7 +733,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string frequency = "12th of the month";
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("DonorByContactId", It.IsAny<string>(), It.IsAny<string>(), string.Empty, 0)).Returns(contactList);
-            var expectedCommunication = new Communication
+            var expectedCommunication = new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -767,7 +767,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<Communication>(
+                        It.Is<MpCommunication>(
                             c =>
                                 c.EmailBody.Equals(expectedCommunication.EmailBody) && c.EmailSubject.Equals(expectedCommunication.EmailSubject) &&
                                 c.ToContacts[0].ContactId == expectedCommunication.ToContacts[0].ContactId && c.ToContacts[0].EmailAddress.Equals(expectedCommunication.ToContacts[0].EmailAddress) &&
@@ -829,7 +829,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("DonorByContactId", It.IsAny<string>(), It.IsAny<string>(), string.Empty, 0)).Returns(contactList);
-            var expectedCommunication = new Communication
+            var expectedCommunication = new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -856,7 +856,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<Communication>(
+                        It.Is<MpCommunication>(
                             c =>
                                 c.EmailBody.Equals(expectedCommunication.EmailBody) && c.EmailSubject.Equals(expectedCommunication.EmailSubject) &&
                                 c.ToContacts[0].ContactId == expectedCommunication.ToContacts[0].ContactId && c.ToContacts[0].EmailAddress.Equals(expectedCommunication.ToContacts[0].EmailAddress) &&

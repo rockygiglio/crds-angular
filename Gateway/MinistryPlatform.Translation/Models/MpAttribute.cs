@@ -1,6 +1,6 @@
 namespace MinistryPlatform.Translation.Models
 {
-    public class Attribute
+    public class MpAttribute
     {
         public int AttributeId { get; set; }
         public string Name { get; set; }

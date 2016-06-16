@@ -11,7 +11,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Communication = MinistryPlatform.Translation.Models.Communication;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -611,7 +611,7 @@ namespace MinistryPlatform.Translation.Services
             var authorId = _communicationService.GetUserIdFromContactId(fromContactId);
             var fromEmail = _communicationService.GetEmailFromContactId(fromContactId);
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 AuthorUserId = authorId,
                 DomainId = 1,
@@ -649,7 +649,7 @@ namespace MinistryPlatform.Translation.Services
                 EmailAddress = "updates@crossroads.net"
             };
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,

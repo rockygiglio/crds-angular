@@ -22,12 +22,12 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<BulkEmailPublication> GetPublications(string token)
+        public List<MpBulkEmailPublication> GetPublications(string token)
         {
 
             var records = _ministryPlatformService.GetPageViewRecords(_bulkEmailPublicationPageViewId, token);
 
-            var publications = records.Select(record => new BulkEmailPublication
+            var publications = records.Select(record => new MpBulkEmailPublication
             {
                 PublicationId = record.ToInt("Publication_ID"),
                 Title = record.ToString("Title"),
@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Services
             return publications;
         }
 
-        public void UpdateLastSyncDate(string token, BulkEmailPublication publication)
+        public void UpdateLastSyncDate(string token, MpBulkEmailPublication publication)
         {
             var publicationDictionary = new Dictionary<string, object>
             {
@@ -58,7 +58,7 @@ namespace MinistryPlatform.Translation.Services
             return publications;
         }
 
-        public List<BulkEmailSubscriber> GetSubscribers(string token, int publicationId, List<int> pageViewIds)
+        public List<MpBulkEmailSubscriber> GetSubscribers(string token, int publicationId, List<int> pageViewIds)
         {
             var publcationFilter = string.Format(",\"{0}\"", publicationId);
             var subscribers = GetBaseSubscribers(token, publcationFilter);
@@ -71,7 +71,7 @@ namespace MinistryPlatform.Translation.Services
             return subscribers.Values.ToList();
         }
 
-        public void UpdateSubscriber(string token, BulkEmailSubscriber subscriber)
+        public void UpdateSubscriber(string token, MpBulkEmailSubscriber subscriber)
         {
             var subscriberDictionary = new Dictionary<string, object>
             {
@@ -83,14 +83,14 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.UpdateRecord(Convert.ToInt32(AppSettings("Subscribers")), subscriberDictionary, token);
         }
 
-        private Dictionary<int, BulkEmailSubscriber> GetBaseSubscribers(string token, string publicationFilter)
+        private Dictionary<int, MpBulkEmailSubscriber> GetBaseSubscribers(string token, string publicationFilter)
         {
             var records = _ministryPlatformService.GetPageViewRecords(_segmentationBasePageViewId, token, publicationFilter);
-            var subscribers = new Dictionary<int, BulkEmailSubscriber>();
+            var subscribers = new Dictionary<int, MpBulkEmailSubscriber>();
 
             foreach (var record in records)
             {
-                var subscriber = new BulkEmailSubscriber();
+                var subscriber = new MpBulkEmailSubscriber();
                 subscriber.ContactPublicationId = record.ToInt("Contact_Publication_ID");
                 subscriber.ContactId = record.ToInt("Contact_ID");
                 subscriber.EmailAddress = record.ToString("Email_Address");
@@ -104,7 +104,7 @@ namespace MinistryPlatform.Translation.Services
             return subscribers;
         }
 
-        private void AddAdditionalFields(string token, Dictionary<int, BulkEmailSubscriber> subscribers, string publicationFilter, int pageViewId)
+        private void AddAdditionalFields(string token, Dictionary<int, MpBulkEmailSubscriber> subscribers, string publicationFilter, int pageViewId)
         {            
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token, publicationFilter);
 
@@ -123,7 +123,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        private void AddMergeFields(BulkEmailSubscriber subscriber, Dictionary<string, object> record)
+        private void AddMergeFields(MpBulkEmailSubscriber subscriber, Dictionary<string, object> record)
         {
             var columnsToSkip = new List<string>()
             {
@@ -165,7 +165,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public bool SetSubscriberStatus(string token, BulkEmailSubscriberOpt subscriberOpt)
+        public bool SetSubscriberStatus(string token, MpBulkEmailSubscriberOpt subscriberOpt)
         {
             var searchString = string.Format(",\"{0}\",,,,,,,\"{1}\"", subscriberOpt.PublicationID, subscriberOpt.EmailAddress);
             var contactPublications = _ministryPlatformService.GetPageViewRecords(_segmentationBasePageViewId, token, searchString);

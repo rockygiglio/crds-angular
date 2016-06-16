@@ -11,7 +11,7 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
 using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
@@ -349,14 +349,14 @@ namespace crds_angular.Services
         }
 
 
-        private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
+        private MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,

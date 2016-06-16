@@ -6,7 +6,7 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
@@ -36,7 +36,7 @@ namespace crds_angular.Services
             return GetObjectAttributes(token, objectId, configuration, mpAttributes);
         }
 
-        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, List<Attribute> mpAttributes)
+        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, List<MpAttribute> mpAttributes)
         {
             var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
 
@@ -49,7 +49,7 @@ namespace crds_angular.Services
         }
 
 
-        private Dictionary<int, ObjectAttributeTypeDTO> TranslateToAttributeTypeDtos(List<ObjectAttribute> mpObjectAttributes, List<Attribute> mpAttributes)
+        private Dictionary<int, ObjectAttributeTypeDTO> TranslateToAttributeTypeDtos(List<ObjectAttribute> mpObjectAttributes, List<MpAttribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == false).ToList();
 
@@ -100,7 +100,7 @@ namespace crds_angular.Services
 
         private Dictionary<int, ObjectSingleAttributeDTO> TranslateToSingleAttributeTypeDtos(
             List<ObjectAttribute> mpObjectAttributes,
-            List<Attribute> mpAttributes)
+            List<MpAttribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == true).ToList();
 

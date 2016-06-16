@@ -41,11 +41,11 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result[1].Attributes.Count, 1, "Number of attributes for attributeType not correct");
         }
 
-        private List<Attribute> GetAttributesResults()
+        private List<MpAttribute> GetAttributesResults()
         {
-            return new List<Attribute>
+            return new List<MpAttribute>
             {
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 1,
                     Name=  "Attribute #1",
@@ -55,7 +55,7 @@ namespace crds_angular.test.Services
                     AttributeTypeName = "AttributeType #1",
                     PreventMultipleSelection = false
                 },
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 4,
                     Name=  "Attribute #2",
@@ -65,7 +65,7 @@ namespace crds_angular.test.Services
                     AttributeTypeName = "AttributeType #1",
                     PreventMultipleSelection = false
                 },
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 7,
                     Name=  "Attribute #3",

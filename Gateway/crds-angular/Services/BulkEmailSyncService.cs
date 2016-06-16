@@ -69,7 +69,7 @@ namespace crds_angular.Services
                 _refreshTokenTimer.Start();
 
                 var publications = _bulkEmailRepository.GetPublications(_token);
-                var publicationOperationIds = new Dictionary<BulkEmailPublication, List<string>>();
+                var publicationOperationIds = new Dictionary<MpBulkEmailPublication, List<string>>();
 
                 foreach (var publication in publications)
                 {
@@ -90,7 +90,7 @@ namespace crds_angular.Services
             }
         }
 
-        private List<string> CreateAndSendBatches(BulkEmailPublication publication, List<BulkEmailSubscriber> subscribers)
+        private List<string> CreateAndSendBatches(MpBulkEmailPublication publication, List<MpBulkEmailSubscriber> subscribers)
         {            
             var batchSize = 10000;
             var batches = Math.Ceiling(subscribers.Count/(decimal) batchSize);
@@ -110,7 +110,7 @@ namespace crds_angular.Services
             return operationIds;
         }
 
-        public string SendBatch(BulkEmailPublication publication, List<BulkEmailSubscriber> subscribers, int batchIndex)
+        public string SendBatch(MpBulkEmailPublication publication, List<MpBulkEmailSubscriber> subscribers, int batchIndex)
         {
             var client = GetBulkEmailClient();
 
@@ -163,7 +163,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void ProcessSynchronizationResultsWithRetries(Dictionary<BulkEmailPublication, List<string>> publicationOperations)
+        private void ProcessSynchronizationResultsWithRetries(Dictionary<MpBulkEmailPublication, List<string>> publicationOperations)
         {
             var configurationWaitHours = _configWrapper.GetConfigIntValue("BulkEmailMaximumWaitHours");
             var waitTime = (int) TimeSpan.FromSeconds(10).TotalSeconds;
@@ -193,7 +193,7 @@ namespace crds_angular.Services
             } while (publicationOperations.Any());
         }
 
-        private Dictionary<BulkEmailPublication, List<string>> ProcessSynchronizationResults(Dictionary<BulkEmailPublication, List<string>> publicationOperations)
+        private Dictionary<MpBulkEmailPublication, List<string>> ProcessSynchronizationResults(Dictionary<MpBulkEmailPublication, List<string>> publicationOperations)
         {
             var client = GetBulkEmailClient();
 
@@ -216,7 +216,7 @@ namespace crds_angular.Services
             return publicationOperations;
         }
 
-        private void ProcessSynchronizationResultsForPublication(List<string> operations, RestClient client, BulkEmailPublication publication)
+        private void ProcessSynchronizationResultsForPublication(List<string> operations, RestClient client, MpBulkEmailPublication publication)
         {
             for (var operationIndex = operations.Count - 1; operationIndex >= 0; operationIndex--)
             {
@@ -287,7 +287,7 @@ namespace crds_angular.Services
             return client;
         }
 
-        private SubscriberBatchDTO AddSubscribersToBatch(BulkEmailPublication publication, List<BulkEmailSubscriber> subscribers)
+        private SubscriberBatchDTO AddSubscribersToBatch(MpBulkEmailPublication publication, List<MpBulkEmailSubscriber> subscribers)
         {
             var batch = new SubscriberBatchDTO();
             batch.Operations = new List<SubscriberOperationDTO>();
@@ -315,7 +315,7 @@ namespace crds_angular.Services
             return batch;
         }
 
-        private SubscriberOperationDTO UnsubscribeOldEmailAddress(BulkEmailPublication publication, BulkEmailSubscriber subscriber)
+        private SubscriberOperationDTO UnsubscribeOldEmailAddress(MpBulkEmailPublication publication, MpBulkEmailSubscriber subscriber)
         {
             var updatedSubcriber = subscriber.Clone();
             updatedSubcriber.Subscribed = false;
@@ -323,7 +323,7 @@ namespace crds_angular.Services
             return updateOperation;
         }
 
-        private SubscriberOperationDTO GetOperation(BulkEmailPublication publication, BulkEmailSubscriber subscriber)
+        private SubscriberOperationDTO GetOperation(MpBulkEmailPublication publication, MpBulkEmailSubscriber subscriber)
         {
             var mailChimpSubscriber = new SubscriberDTO();
             
@@ -381,7 +381,7 @@ namespace crds_angular.Services
             return sb.ToString();
         }
 
-        private void PullSubscriptionStatusChangesFromThirdParty(BulkEmailPublication publication)
+        private void PullSubscriptionStatusChangesFromThirdParty(MpBulkEmailPublication publication)
         {
             var client = GetBulkEmailClient();
 
@@ -416,14 +416,14 @@ namespace crds_angular.Services
             }
         }
 
-        public void SetStatuses(BulkEmailPublication publication, List<BulkEmailSubscriberOptDTO> subscribersDTOs)
+        public void SetStatuses(MpBulkEmailPublication publication, List<BulkEmailSubscriberOptDTO> subscribersDTOs)
         {
-            List<BulkEmailSubscriberOpt> subscriberOpts = new List<BulkEmailSubscriberOpt>();
+            List<MpBulkEmailSubscriberOpt> subscriberOpts = new List<MpBulkEmailSubscriberOpt>();
 
             foreach (var subscriberDTO in subscribersDTOs)
             {
                 subscriberDTO.PublicationID = publication.PublicationId;
-                subscriberOpts.Add(Mapper.Map<BulkEmailSubscriberOpt>(subscriberDTO));   
+                subscriberOpts.Add(Mapper.Map<MpBulkEmailSubscriberOpt>(subscriberDTO));   
             }
 
             foreach (var subscriberOpt in subscriberOpts)

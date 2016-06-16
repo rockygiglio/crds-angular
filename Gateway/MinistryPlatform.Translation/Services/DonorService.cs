@@ -13,7 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
-using Communication = MinistryPlatform.Translation.Models.Communication;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
@@ -646,7 +646,7 @@ namespace MinistryPlatform.Translation.Services
             var defaultContact = _contactService.GetContactById(AppSetting("DefaultGivingContactEmailId"));
             var contact = GetEmailViaDonorId(donorId);
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 
                 AuthorUserId = 5,

@@ -19,7 +19,7 @@ namespace MinistryPlatform.Translation.Models
         public DateTime? EndDate { get; set; }
         public int RemainingCapacity { get; set; }
         public int ContactId { get; set; }
-        public Address Address { get; set; }
+        public MpAddress Address { get; set; }
         public GroupSearchAttributes SearchAttributes { get; set; }
     }
 }

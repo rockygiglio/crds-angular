@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Communication = MinistryPlatform.Translation.Models.Communication;
+using Communication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -460,7 +460,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 MeetingTime = "18000",
                 GroupRoleId = 16,
                 MinimumAge = 0,
-                Address = new Address()
+                Address = new MpAddress()
                 {
                     Address_ID = 43567
                 }

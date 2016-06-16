@@ -115,18 +115,18 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
-    <Compile Include="Models\Address.cs" />
-    <Compile Include="Models\Attribute.cs" />
+    <Compile Include="Models\MpAddress.cs" />
+    <Compile Include="Models\MpAttribute.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
-    <Compile Include="Models\BulkEmailPublication.cs" />
-    <Compile Include="Models\BulkEmailSubscriber.cs" />
-    <Compile Include="Models\BulkEmailSubscriberOpt.cs" />
+    <Compile Include="Models\MpBulkEmailPublication.cs" />
+    <Compile Include="Models\MpBulkEmailSubscriber.cs" />
+    <Compile Include="Models\MpBulkEmailSubscriberOpt.cs" />
     <Compile Include="Models\Childcare\MpChildcareRequest.cs" />
     <Compile Include="Models\Childcare\MpChildcareRequestDates.cs" />
     <Compile Include="Models\Childcare\MpChildcareRequestEmail.cs" />
-    <Compile Include="Models\Communication.cs" />
-    <Compile Include="Models\CommunicationPreferences.cs" />
-    <Compile Include="Models\Congregation.cs" />
+    <Compile Include="Models\MpCommunication.cs" />
+    <Compile Include="Models\MpCommunicationPreferences.cs" />
+    <Compile Include="Models\MpCongregation.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\ContactDonor.cs" />
     <Compile Include="Models\ContactRelationship.cs" />

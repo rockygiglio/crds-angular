@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string apiToken = "useme";
             const int addressId = 785645;
 
-            var addr = new Address()
+            var addr = new MpAddress()
             {
                 Address_Line_1 = "321 Road Ln",
                 Address_Line_2 = "Suite 100",
@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            var addr = new Address()
+            var addr = new MpAddress()
             {
                 Address_ID = 12345,
                 Address_Line_1 = "321 Road Ln",

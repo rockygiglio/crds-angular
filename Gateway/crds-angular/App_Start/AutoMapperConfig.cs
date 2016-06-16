@@ -13,7 +13,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using Address = MinistryPlatform.Translation.Models.Address;
+using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using Event = MinistryPlatform.Translation.Models.Event;
 using Group = MinistryPlatform.Translation.Models.Group;
@@ -226,8 +226,8 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.EventStartDate))
                 .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EventEndDate));
 
-            Mapper.CreateMap<BulkEmailSubscriberOptDTO, BulkEmailSubscriberOpt>();
-            Mapper.CreateMap<BulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
+            Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
+            Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 
             Mapper.CreateMap<Group, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
@@ -241,14 +241,14 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<GroupSearchResult, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
 
-            Mapper.CreateMap<Address, AddressDTO>()
+            Mapper.CreateMap<MpAddress, AddressDTO>()
                 .ForMember(dest => dest.AddressLine1, opts => opts.MapFrom(src => src.Address_Line_1))
                 .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
                 .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
                 .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
                 .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
 
-            Mapper.CreateMap<AddressDTO, Address>()
+            Mapper.CreateMap<AddressDTO, MpAddress>()
                 .ForMember(dest => dest.Address_Line_1, opts => opts.MapFrom(src => src.AddressLine1))
                 .ForMember(dest => dest.Address_Line_2, opts => opts.MapFrom(src => src.AddressLine2))
                 .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))

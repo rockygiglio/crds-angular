@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class BulkEmailSubscriberOpt
+    public class MpBulkEmailSubscriberOpt
     {
         public string ThirdPartySystemID { get; set; }
         public string EmailAddress { get; set; }

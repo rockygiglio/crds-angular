@@ -6,13 +6,13 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface ICommunicationService
     {
-        CommunicationPreferences GetPreferences(String token, int userId);
+        MpCommunicationPreferences GetPreferences(String token, int userId);
         bool SetEmailSMSPreferences(String token, Dictionary<string, object> prefs);
         bool SetMailPreferences(string token, Dictionary<string, object> prefs);
-        int SendMessage(Communication communication, bool isDraft = false);
+        int SendMessage(MpCommunication communication, bool isDraft = false);
         MessageTemplate GetTemplate(int templateId);
 
-        Communication GetTemplateAsCommunication(int templateId,
+        MpCommunication GetTemplateAsCommunication(int templateId,
                                                  int fromContactId,
                                                  string fromEmailAddress,
                                                  int replyContactId,

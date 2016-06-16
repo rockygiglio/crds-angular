@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Services
             
         }
 
-        public Congregation GetCongregationById(int id)
+        public MpCongregation GetCongregationById(int id)
         {
             var token = ApiLogin();
             var pageId = _configurationWrapper.GetConfigIntValue("CrossroadsLocations");
@@ -37,7 +37,7 @@ namespace MinistryPlatform.Translation.Services
                 throw;
             }
 
-            var c = new Congregation();
+            var c = new MpCongregation();
             c.CongregationId = recordDict.ToInt("Congregation_ID");
             c.Name = recordDict.ToString("Congregation_Name");
             c.LocationId = recordDict.ToInt("Location_ID");

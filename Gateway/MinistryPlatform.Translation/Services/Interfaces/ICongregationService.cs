@@ -4,7 +4,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface ICongregationService
     {
-        Congregation GetCongregationById(int id);
+        MpCongregation GetCongregationById(int id);
 
     }
 }

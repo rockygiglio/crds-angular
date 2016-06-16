@@ -15,7 +15,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services;
 using Moq;
 using NUnit.Framework;
-using Attribute = MinistryPlatform.Translation.Models.Attribute;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = MinistryPlatform.Translation.Models.Event;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
@@ -287,7 +287,7 @@ namespace crds_angular.test.Services
                     MeetingDayId = 3,
                     MeetingTime = "10 AM",
                     AvailableOnline = false,
-                    Address = new Address()
+                    Address = new MpAddress()
                     {
                         Address_Line_1 = "123 Sesame St",
                         Address_Line_2 = "",
@@ -301,7 +301,7 @@ namespace crds_angular.test.Services
             var attributes = new ObjectAllAttributesDTO();
 
             groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<Attribute>>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
 
             var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
            
@@ -407,7 +407,7 @@ namespace crds_angular.test.Services
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
 
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -431,7 +431,7 @@ namespace crds_angular.test.Services
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -471,13 +471,13 @@ namespace crds_angular.test.Services
             groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, JOURNEY_GROUP_ID)).Returns(groups);
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<Attribute>>())).Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();            
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Once);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
         }
     }
 }
