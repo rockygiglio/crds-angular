@@ -34,8 +34,7 @@ module.exports = {
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js']
   },
-  // TODO: do we need to add core to watchPattern?
-  watchPattern: 'app/**/**',
+  watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
