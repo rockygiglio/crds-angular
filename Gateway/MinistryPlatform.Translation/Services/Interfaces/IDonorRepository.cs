@@ -5,7 +5,7 @@ using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IDonorService
+    public interface IDonorRepository
     {
         int CreateDonorRecord(int contactId, string processorId, DateTime setupTime,
             int? statementFrequencyId = 1, // default to quarterly

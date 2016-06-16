@@ -20,13 +20,13 @@ namespace MinistryPlatform.Translation.Test.Services
         private LookupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
       
         [SetUp]
         public void Setup()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object,  _ministryPlatformService.Object);
             

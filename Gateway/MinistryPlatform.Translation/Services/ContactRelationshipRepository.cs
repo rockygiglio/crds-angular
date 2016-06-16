@@ -8,13 +8,13 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ContactRelationshipRepository : BaseRepository, IContactRelationshipService
+    public class ContactRelationshipRepository : BaseRepository, IContactRelationshipRepository
     {
         private readonly int _getMyCurrentRelationships = Convert.ToInt32((AppSettings("MyContactCurrentRelationships")));
 
         private IMinistryPlatformService _ministryPlatformService;
 
-        public ContactRelationshipRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public ContactRelationshipRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             this._ministryPlatformService = ministryPlatformService;

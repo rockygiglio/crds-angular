@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private AttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private readonly string _tokenValue = "ABC";
@@ -22,7 +22,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             var authenticateResults =

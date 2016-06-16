@@ -6,12 +6,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class CongregationRepository : BaseRepository, ICongregationService
+    public class CongregationRepository : BaseRepository, ICongregationRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         
 
-        public CongregationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public CongregationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

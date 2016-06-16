@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IContactRelationshipService
+    public interface IContactRelationshipRepository
     {
         IEnumerable<MpContactRelationship> GetMyImmediateFamilyRelationships(int contactId, string token);
         IEnumerable<MpRelationship> GetMyCurrentRelationships(int contactId);

@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Contacts")).Returns(292);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Households")).Returns(327);
@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private ContactRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
 

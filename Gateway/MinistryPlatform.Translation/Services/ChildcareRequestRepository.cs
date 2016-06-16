@@ -9,11 +9,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ChildcareRequestRepository :  IChildcareRequestService
+    public class ChildcareRequestRepository :  IChildcareRequestRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IEventService _eventService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IEventRepository _eventService;
         private readonly int _childcareRequestDatesId;
         private readonly int _myChildcareRequestDatesId;
         private readonly int _childcareRequestPageId;
@@ -22,9 +22,9 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _childcareRequestStatusApproved;
         private readonly int _childcareEmailPageViewId;
         private readonly int _childcareEventType;
-        private readonly IGroupService _groupService;
+        private readonly IGroupRepository _groupService;
 
-        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService, IGroupService groupService)
+        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventRepository eventService, IGroupRepository groupService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;

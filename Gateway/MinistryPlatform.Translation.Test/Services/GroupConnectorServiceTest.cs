@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     class GroupConnectorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private GroupConnectorRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
 
@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
 
             _configuration.Setup(mocked => mocked.GetConfigIntValue("GroupConnectorPageId")).Returns(467);

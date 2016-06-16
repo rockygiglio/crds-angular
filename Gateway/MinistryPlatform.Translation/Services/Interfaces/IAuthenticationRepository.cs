@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IAuthenticationService
+    public interface IAuthenticationRepository
     {
         Dictionary<string, object> Authenticate(string username, string password);
 

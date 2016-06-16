@@ -14,14 +14,14 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private ParticipantService _fixture;
         private Mock<IMinistryPlatformService> _mpServiceMock;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         [SetUp]
         public void SetUp()
         {
             _mpServiceMock = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

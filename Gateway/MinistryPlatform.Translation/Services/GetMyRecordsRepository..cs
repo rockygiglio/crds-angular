@@ -10,7 +10,7 @@ namespace MinistryPlatform.Translation.Services
 {
     public class GetMyRecordsRepository : BaseRepository
     {
-        public GetMyRecordsRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public GetMyRecordsRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             

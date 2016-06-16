@@ -3,8 +3,8 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IFormBuilderService
+    public interface IAttributeRepository
     {
-        List<MpGroup> GetGroupsUndividedSession(int pageViewId);
+        List<MpAttribute> GetAttributes(int? attributeTypeId);
     }
 }

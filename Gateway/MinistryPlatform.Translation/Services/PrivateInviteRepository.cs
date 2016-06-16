@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _tripPrivateInviteId;
         private readonly int _tripInvitationsPageId;
 
-        public PrivateInviteRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public PrivateInviteRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

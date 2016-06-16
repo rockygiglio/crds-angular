@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models.Childcare;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IChildcareRequestService
+    public interface IChildcareRequestRepository
     {
         int CreateChildcareRequest(MpChildcareRequest request);
 

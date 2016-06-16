@@ -14,16 +14,16 @@ namespace crds_angular.Services
 {
     public class GoSkillsService : IGoSkillsService
     {
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly ISkillsService _skillsService;
 
-        public GoSkillsService(IApiUserService apiUserService,
+        public GoSkillsService(IApiUserRepository apiUserService,
                                ISkillsService skillsService,
                                IObjectAttributeService objectAttributeService,
-                               IContactService contactService,
+                               IContactRepository contactService,
                                IConfigurationWrapper configurationWrapper)
         {
             _apiUserService = apiUserService;

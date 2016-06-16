@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IGroupService
+    public interface IGroupRepository
     {
         int CreateGroup(MpGroup group);
 

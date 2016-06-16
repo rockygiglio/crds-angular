@@ -7,10 +7,10 @@ namespace MinistryPlatform.Translation.Services
 {
     public class BaseRepository
     {
-        protected readonly IAuthenticationService _authenticationService;
+        protected readonly IAuthenticationRepository _authenticationService;
         protected readonly IConfigurationWrapper _configurationWrapper;
 
-        public BaseRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public BaseRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
         {
             this._authenticationService = authenticationService;
             this._configurationWrapper = configurationWrapper;

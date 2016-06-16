@@ -10,12 +10,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class EquipmentRepository : BaseRepository, IEquipmentService
+    public class EquipmentRepository : BaseRepository, IEquipmentRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
 
-        public EquipmentRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public EquipmentRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

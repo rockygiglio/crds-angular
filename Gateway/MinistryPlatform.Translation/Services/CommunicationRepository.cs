@@ -11,7 +11,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class CommunicationRepository : BaseRepository, ICommunicationService
+    public class CommunicationRepository : BaseRepository, ICommunicationRepository
 
     {
         private readonly int _messagePageId = Convert.ToInt32(AppSettings("MessagesPageId"));
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public CommunicationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService,IConfigurationWrapper configurationWrapper)
+        public CommunicationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService,IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

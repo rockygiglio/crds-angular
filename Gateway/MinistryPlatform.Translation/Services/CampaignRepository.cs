@@ -7,12 +7,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    class CampaignRepository : BaseRepository, ICampaignService
+    class CampaignRepository : BaseRepository, ICampaignRepository
     {
         private IConfigurationWrapper _configurationWrapper;
         private IMinistryPlatformService _ministryPlatformService;
 
-        public CampaignRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public CampaignRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

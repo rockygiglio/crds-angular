@@ -10,11 +10,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GroupRepository : BaseRepository, IGroupService
+    public class GroupRepository : BaseRepository, IGroupRepository
     {
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly int GroupsParticipantsPageId = Convert.ToInt32(AppSettings("GroupsParticipants"));
@@ -34,7 +34,7 @@ namespace MinistryPlatform.Translation.Services
 
         private IMinistryPlatformService ministryPlatformService;
 
-        public GroupRepository(IMinistryPlatformService ministryPlatformService, IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService, ICommunicationService communicationService, IContactService contactService, IContentBlockService contentBlockService)
+        public GroupRepository(IMinistryPlatformService ministryPlatformService, IConfigurationWrapper configurationWrapper, IAuthenticationRepository authenticationService, ICommunicationRepository communicationService, IContactRepository contactService, IContentBlockService contentBlockService)
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;

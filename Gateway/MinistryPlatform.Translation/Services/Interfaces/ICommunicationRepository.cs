@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface ICommunicationService
+    public interface ICommunicationRepository
     {
         MpCommunicationPreferences GetPreferences(String token, int userId);
         bool SetEmailSMSPreferences(String token, Dictionary<string, object> prefs);

@@ -9,9 +9,9 @@ namespace crds_angular.Services
 {
     public class StaffContactService : IStaffContactService
     {
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
 
-        public StaffContactService(IContactService contactService)
+        public StaffContactService(IContactRepository contactService)
         {
             _contactService = contactService;
         }

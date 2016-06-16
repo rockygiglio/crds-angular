@@ -11,17 +11,17 @@ namespace crds_angular.Services
 {
     public class EmailCommunication : IEmailCommunication
     {
-        private readonly ICommunicationService _communicationService;
+        private readonly ICommunicationRepository _communicationService;
         private readonly IPersonService _personService;
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int DefaultContactEmailId;
         private readonly int DomainID;
         private readonly int DefaultAuthorUserId;
 
-        public EmailCommunication(ICommunicationService communicationService, 
+        public EmailCommunication(ICommunicationRepository communicationService, 
             IPersonService personService, 
-            IContactService contactService,
+            IContactRepository contactService,
             IConfigurationWrapper configurationWrapper)
         {
             _communicationService = communicationService;

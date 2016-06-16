@@ -21,14 +21,14 @@ namespace crds_angular.Services
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (DonationService));
 
-        private readonly MPServices.IDonationService _mpDonationService;
-        private readonly MPServices.IDonorService _mpDonorService;
+        private readonly MPServices.IDonationRepository _mpDonationService;
+        private readonly MPServices.IDonorRepository _mpDonorService;
         private readonly IPaymentService _paymentService;
-        private readonly MPServices.IContactService _contactService;
+        private readonly MPServices.IContactRepository _contactService;
         private readonly int _statementTypeFamily;
         private readonly int _bankErrorRefundDonorId;
 
-        public DonationService(MPServices.IDonationService mpDonationService, MPServices.IDonorService mpDonorService, IPaymentService paymentService, MPServices.IContactService contactService, IConfigurationWrapper config)
+        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
         {
             _mpDonationService = mpDonationService;
             _mpDonorService = mpDonorService;

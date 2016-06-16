@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Test.Services
     public class PledgeCampaignServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private IPledgeService _fixture;
 
@@ -22,7 +22,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int mockPledgesPageId = 9876;
 
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

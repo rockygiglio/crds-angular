@@ -11,9 +11,9 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
-using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
 
 namespace crds_angular.Services
 {
@@ -23,17 +23,17 @@ namespace crds_angular.Services
 
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly TranslationEventService _eventService;
-        private readonly IGroupService _groupService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly IGroupRepository _groupService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly IGroupParticipantService _groupParticipantService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
+        private readonly IGroupParticipantRepository _groupParticipantService;
         private readonly IParticipantService _participantService;
         private readonly IRoomService _roomService;
-        private readonly IEquipmentService _equipmentService;
-        private readonly IEventParticipantService _eventParticipantService;
+        private readonly IEquipmentRepository _equipmentService;
+        private readonly IEventParticipantRepository _eventParticipantService;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -46,18 +46,18 @@ namespace crds_angular.Services
 
 
         public EventService(TranslationEventService eventService,
-                            IGroupService groupService,
-                            ICommunicationService communicationService,
-                            IContactService contactService,
+                            IGroupRepository groupService,
+                            ICommunicationRepository communicationService,
+                            IContactRepository contactService,
                             IContentBlockService contentBlockService,
                             IConfigurationWrapper configurationWrapper,
-                            IApiUserService apiUserService,
-                            IContactRelationshipService contactRelationshipService,
-                            IGroupParticipantService groupParticipantService,
+                            IApiUserRepository apiUserService,
+                            IContactRelationshipRepository contactRelationshipService,
+                            IGroupParticipantRepository groupParticipantService,
                             IParticipantService participantService,
                             IRoomService roomService,
-                            IEquipmentService equipmentService,
-                            IEventParticipantService eventParticipantService)
+                            IEquipmentRepository equipmentService,
+                            IEventParticipantRepository eventParticipantService)
         {
             _eventService = eventService;
             _groupService = groupService;

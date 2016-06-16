@@ -19,12 +19,12 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationService));
 
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
         private readonly IEmailCommunication _emailCommunication;
         private readonly IUserService _userService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
-        public LoginService(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IContactService contactService, IEmailCommunication emailCommunication, IUserService userService)
+        public LoginService(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IContactRepository contactService, IEmailCommunication emailCommunication, IUserService userService)
         {
             _configurationWrapper = configurationWrapper;
             _contactService = contactService;

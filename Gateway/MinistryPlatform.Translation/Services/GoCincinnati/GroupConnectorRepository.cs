@@ -7,17 +7,17 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
-using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository;
 
 namespace MinistryPlatform.Translation.Services.GoCincinnati
 {
-    public class GroupConnectorRepository : BaseRepository, IGroupConnectorService
+    public class GroupConnectorRepository : BaseRepository, IGroupConnectorRepository
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly string _apiToken;
 
-        public GroupConnectorRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public GroupConnectorRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

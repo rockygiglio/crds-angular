@@ -19,7 +19,7 @@ namespace crds_angular.test.Services
     {
         private OrganizationService _fixture;
         private Mock<MPInterfaces.IOrganizationService> _organizationService;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
 
         private const string apiUserToken = "somerandomstring";
         private const int CONTACTID = 123456789;
@@ -31,7 +31,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _organizationService = new Mock<MPInterfaces.IOrganizationService>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
             _fixture = new OrganizationService(_organizationService.Object, _apiUserService.Object);
 
             _apiUserService.Setup(m => m.GetToken()).Returns(apiUserToken);

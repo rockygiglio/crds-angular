@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _usersApiLookupPageViewId;
         private readonly int _usersPageId;
 
-        public UserRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public UserRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _usersApiLookupPageViewId = _configurationWrapper.GetConfigIntValue("UsersApiLookupPageView");

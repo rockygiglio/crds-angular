@@ -22,15 +22,15 @@ namespace crds_angular.Controllers.API
         private readonly IDonorService _donorService;
         private readonly IPaymentService _stripePaymentService;
         private readonly IDonationService _donationService;
-        private readonly MPInterfaces.IDonorService _mpDonorService;
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
+        private readonly MPInterfaces.IDonorRepository _mpDonorService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly IUserImpersonationService _impersonationService;
 
         public DonorController(IDonorService donorService, 
                                 IPaymentService stripePaymentService, 
                                 IDonationService donationService, 
-                                MPInterfaces.IDonorService mpDonorService, 
-                                MPInterfaces.IAuthenticationService authenticationService,
+                                MPInterfaces.IDonorRepository mpDonorService, 
+                                MPInterfaces.IAuthenticationRepository authenticationService,
                                 IUserImpersonationService impersonationService)
         {
             _donorService = donorService;

@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private ProgramRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private const int OnlineGivingProgramsPageViewId = 1038;
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

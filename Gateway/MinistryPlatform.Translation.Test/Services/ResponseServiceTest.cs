@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("SignupToServeReminders")).Returns(2203);
@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
         private ResponseRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private readonly int EventParticipantPageId = 281;

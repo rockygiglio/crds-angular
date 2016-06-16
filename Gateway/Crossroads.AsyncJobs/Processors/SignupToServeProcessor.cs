@@ -14,9 +14,9 @@ namespace Crossroads.AsyncJobs.Processors
     {
         private readonly IServeService _serveService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
-        public SignupToServeProcessor(IServeService serveService, IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService)
+        public SignupToServeProcessor(IServeService serveService, IConfigurationWrapper configurationWrapper, IAuthenticationRepository authenticationService)
             : base(authenticationService, configurationWrapper)
         {
             this._serveService = serveService;

@@ -13,14 +13,14 @@ namespace crds_angular.test.Services
     {
 
         private AddressService _fixture;
-        private Mock<MPServices.IAddressService> _mpAddressServiceMock;
+        private Mock<MPServices.IAddressRepository> _mpAddressServiceMock;
 
         [SetUp]
         public void SetUp()
         {
             AutoMapperConfig.RegisterMappings();
 
-            _mpAddressServiceMock = new Mock<MPServices.IAddressService>(MockBehavior.Strict);
+            _mpAddressServiceMock = new Mock<MPServices.IAddressRepository>(MockBehavior.Strict);
 
             _fixture = new AddressService(_mpAddressServiceMock.Object);            
         }

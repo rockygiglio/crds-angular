@@ -8,15 +8,15 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
-using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IAttributeRepository = MinistryPlatform.Translation.Services.Interfaces.IAttributeRepository;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 
 namespace crds_angular.Services
 {
     public class GroupSearchService : IGroupSearchService
     {
-        private readonly IGroupService _mpGroupService;
-        private readonly IAttributeService _attributeService;
+        private readonly IGroupRepository _mpGroupService;
+        private readonly IAttributeRepository _attributeService;
         private readonly int GroupGoalAttributeTypeId;
         private readonly int GroupTypeAttributeTypeId;
         private readonly int ParticipantGoalAttributeTypeId;
@@ -51,8 +51,8 @@ namespace crds_angular.Services
         private List<string> _inMarketZipCodes;
         private Dictionary<int, int> _goalMatches;
 
-        public GroupSearchService(IGroupService mpGroupService,
-                                  IAttributeService attributeService, 
+        public GroupSearchService(IGroupRepository mpGroupService,
+                                  IAttributeRepository attributeService, 
                                   IConfigurationWrapper configurationWrapper)
         {
             _mpGroupService = mpGroupService;

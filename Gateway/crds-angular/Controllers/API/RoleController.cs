@@ -12,9 +12,9 @@ namespace crds_angular.Controllers.API
     public class RoleController : MPAuth
     {
 
-        private readonly IContactService _contactSerivce;
+        private readonly IContactRepository _contactSerivce;
 
-        public RoleController(IContactService contactSerivce)
+        public RoleController(IContactRepository contactSerivce)
         {
             _contactSerivce = contactSerivce;
         }

@@ -20,10 +20,10 @@ namespace MinistryPlatform.Translation.Test.Services
         private const int _groupsParticipantsSubPageId = 88;
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IParticipantService> _participantService;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
 
         private OpportunityServiceImpl _fixture;
 
@@ -32,10 +32,10 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var now = DateTime.Now;
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _participantService = new Mock<IParticipantService>();
-            _apiUserService = new Mock<IApiUserService>();
+            _apiUserService = new Mock<IApiUserRepository>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");

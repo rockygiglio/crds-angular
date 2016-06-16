@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _segmentationBasePageViewId = Convert.ToInt32(AppSettings("SegmentationBasePageViewId"));
         private readonly int _subscribersBasePageViewId = Convert.ToInt32(AppSettings("Subscribers"));
 
-        public BulkEmailRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
+        public BulkEmailRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
             base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

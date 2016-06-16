@@ -21,17 +21,17 @@ namespace crds_angular.Controllers.API
     public class CheckScannerController : MPAuth
     {
         private readonly bool _asynchronous;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly ICheckScannerService _checkScannerService;
-        private readonly ICommunicationService _communicationService;
+        private readonly ICommunicationRepository _communicationService;
         private readonly MessageQueue _donationsQueue;
         private readonly IMessageFactory _messageFactory;
         private readonly ICryptoProvider _cryptoProvider;
 
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
-                                      IAuthenticationService authenticationService,
-                                      ICommunicationService communicationService,
+                                      IAuthenticationRepository authenticationService,
+                                      ICommunicationRepository communicationService,
                                       ICryptoProvider cryptoProvider,
                                       IMessageQueueFactory messageQueueFactory = null,
                                       IMessageFactory messageFactory = null)

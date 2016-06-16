@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IFormSubmissionService
+    public interface IFormSubmissionRepository
     {
         List<MpFormField> GetFieldsForForm(int formId);
         int GetFormFieldId(int crossroadsId);

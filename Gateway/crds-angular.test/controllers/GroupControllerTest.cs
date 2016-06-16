@@ -26,7 +26,7 @@ namespace crds_angular.test.controllers
     {
         private GroupController fixture;
         private Mock<crds_angular.Services.Interfaces.IGroupService> groupServiceMock;
-        private Mock<IAuthenticationService> authenticationServiceMock;
+        private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IParticipantService> participantServiceMock;
         private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;        
         private Mock<IGroupSearchService> groupSearchServiceMock;
@@ -37,7 +37,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
-            authenticationServiceMock = new Mock<IAuthenticationService>();
+            authenticationServiceMock = new Mock<IAuthenticationRepository>();
             participantServiceMock = new Mock<IParticipantService>();
             addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
             groupSearchServiceMock = new Mock<IGroupSearchService>();

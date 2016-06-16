@@ -3,17 +3,17 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
+using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
 
 namespace crds_angular.Services
 {
     public class DonorStatementService : IDonorStatementService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (DonorService));
-        private readonly IDonorService _mpDonorService;
+        private readonly IDonorRepository _mpDonorService;
 
 
-        public DonorStatementService(IDonorService mpDonorService)
+        public DonorStatementService(IDonorRepository mpDonorService)
         {
             _mpDonorService = mpDonorService;           
         }

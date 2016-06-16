@@ -16,7 +16,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using WebGrease.Css.Extensions;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 
 namespace crds_angular.Services
 {
@@ -30,17 +30,17 @@ namespace crds_angular.Services
 
     public class ServeService : MinistryPlatformBaseService, IServeService
     {
-        private readonly IContactService _contactService;
-        private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
-        private readonly IGroupParticipantService _groupParticipantService;
-        private readonly IGroupService _groupService;
+        private readonly IContactRepository _contactService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
+        private readonly IGroupParticipantRepository _groupParticipantService;
+        private readonly IGroupRepository _groupService;
         private readonly IOpportunityService _opportunityService;
         private readonly IParticipantService _participantService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IResponseService _responseService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
@@ -53,17 +53,17 @@ namespace crds_angular.Services
 
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ServeService(IContactService contactService,
-                            IContactRelationshipService contactRelationshipService,
+        public ServeService(IContactRepository contactService,
+                            IContactRelationshipRepository contactRelationshipService,
                             IOpportunityService opportunityService,
-                            MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
+                            MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
                             IParticipantService participantService,
-                            IGroupParticipantService groupParticipantService,
-                            IGroupService groupService,
-                            ICommunicationService communicationService,
-                            IAuthenticationService authenticationService,
+                            IGroupParticipantRepository groupParticipantService,
+                            IGroupRepository groupService,
+                            ICommunicationRepository communicationService,
+                            IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IApiUserService apiUserService,
+                            IApiUserRepository apiUserService,
                             IResponseService responseService)
         {
             _contactService = contactService;

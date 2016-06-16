@@ -15,8 +15,8 @@ using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
+using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
@@ -24,19 +24,19 @@ namespace crds_angular.test.Services
     [TestFixture]
     public class ServeServiceTest
     {
-        private Mock<IContactRelationshipService> _contactRelationshipService;
-        private Mock<IContactService> _contactService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private Mock<IContactRepository> _contactService;
         private Mock<IOpportunityService> _opportunityService;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
-        private Mock<IEventService> _eventService;
+        private Mock<IEventRepository> _eventService;
         private Mock<IParticipantService> _participantService;
-        private Mock<IGroupParticipantService> _groupParticipantService;
-        private Mock<IGroupService> _groupService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IGroupParticipantRepository> _groupParticipantService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IResponseService> _responseService;
 
         private ServeService _fixture;
@@ -79,19 +79,19 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
-            _contactService = new Mock<IContactService>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
+            _contactService = new Mock<IContactRepository>();
             _opportunityService = new Mock<IOpportunityService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _personService = new Mock<crds_angular.Services.Interfaces.IPersonService>();
-            _eventService = new Mock<IEventService>();
+            _eventService = new Mock<IEventRepository>();
             _serveService = new Mock<IServeService>();
             _participantService = new Mock<IParticipantService>();
-            _groupParticipantService = new Mock<IGroupParticipantService>();
-            _groupService = new Mock<IGroupService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _groupParticipantService = new Mock<IGroupParticipantRepository>();
+            _groupService = new Mock<IGroupRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _apiUserService = new Mock<IApiUserService>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _responseService = new Mock<IResponseService>();
 
             fakeOpportunity.EventTypeId = 3;

@@ -10,10 +10,10 @@ namespace crds_angular.Controllers.API
 {
     public class SubscriptionsController : MPAuth
     {
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionService;
 
-        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationService authenticationService)
+        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationRepository authenticationService)
         {
             _subscriptionService = subscriptionService;
             _authenticationService = authenticationService;

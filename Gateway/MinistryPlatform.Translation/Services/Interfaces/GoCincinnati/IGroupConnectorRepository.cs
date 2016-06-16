@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.Interfaces.GoCincinnati
 {
-    public interface IGroupConnectorService
+    public interface IGroupConnectorRepository
     {
         int CreateGroupConnector(int registrationId, bool privateGroup);
         int CreateGroupConnectorRegistration(int groupConnectorId, int registrationId);

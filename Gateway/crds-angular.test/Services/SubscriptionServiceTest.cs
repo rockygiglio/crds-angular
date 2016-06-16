@@ -13,14 +13,14 @@ namespace crds_angular.test.Services
 
         private Mock<MPInterfaces.IMinistryPlatformService> _ministryPlatformService;
         private Mock<Util.Interfaces.IEmailListHandler> _emailListHandler;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<MPInterfaces.IMinistryPlatformService>();
             _emailListHandler = new Mock<Util.Interfaces.IEmailListHandler>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
 
             _subscriptionService = new SubscriptionsService(_ministryPlatformService.Object, _emailListHandler.Object, _apiUserService.Object);
 

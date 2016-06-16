@@ -11,17 +11,17 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class GroupParticipantRepository : IGroupParticipantService
+    public class GroupParticipantRepository : IGroupParticipantRepository
     {
         private readonly IDbConnection _dbConnection;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
 
         public GroupParticipantRepository(IDbConnection dbConnection,
                                        IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
-                                       IApiUserService apiUserService)
+                                       IApiUserRepository apiUserService)
 
         {
             _dbConnection = dbConnection;

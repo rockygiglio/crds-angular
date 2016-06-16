@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public ProjectTypeRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public ProjectTypeRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
         }

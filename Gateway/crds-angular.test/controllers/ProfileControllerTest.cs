@@ -26,12 +26,12 @@ namespace crds_angular.test.controllers
 
         private Mock<crds_angular.Services.Interfaces.IPersonService> _personServiceMock;
         private Mock<IServeService> _serveServiceMock;
-        private Mock<IAuthenticationService> _authenticationServiceMock;
+        private Mock<IAuthenticationRepository> _authenticationServiceMock;
         private Mock<crds_angular.Services.Interfaces.IDonorService> _donorService;
         private Mock<IUserImpersonationService> _impersonationService;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IUserService> _userService;
-        private Mock<IContactRelationshipService> _contactRelationshipService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _config;
 
         private string _authType;
@@ -46,15 +46,15 @@ namespace crds_angular.test.controllers
             _serveServiceMock = new Mock<IServeService>();
             _donorService = new Mock<IDonorService>();
             _impersonationService = new Mock<IUserImpersonationService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _userService = new Mock<IUserService>();
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _config = new Mock<IConfigurationWrapper>();
 
             _config.Setup(mocked => mocked.GetConfigValue("AdminGetProfileRoles")).Returns("123,456");
 
             _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object);
-            _authenticationServiceMock = new Mock<IAuthenticationService>();
+            _authenticationServiceMock = new Mock<IAuthenticationRepository>();
 
             _authType = "auth_type";
             _authToken = "auth_token";

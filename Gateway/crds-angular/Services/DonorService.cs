@@ -12,7 +12,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
+using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
 
 namespace crds_angular.Services
 {
@@ -20,10 +20,10 @@ namespace crds_angular.Services
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (DonorService));
 
-        private readonly IDonorService _mpDonorService;
-        private readonly IContactService _mpContactService;
+        private readonly IDonorRepository _mpDonorService;
+        private readonly IContactRepository _mpContactService;
         private readonly Interfaces.IPaymentService _paymentService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IPledgeService _pledgeService;
         public const string DefaultInstitutionName = "Bank";
         public const string DonorRoutingNumberDefault = "0";
@@ -43,9 +43,9 @@ namespace crds_angular.Services
         private readonly int _recurringGiftCancelEmailTemplateId;
         private readonly int _capitalCampaignPledgeTypeId;
 
-        public DonorService(IDonorService mpDonorService, IContactService mpContactService,
+        public DonorService(IDonorRepository mpDonorService, IContactRepository mpContactService,
             Interfaces.IPaymentService paymentService, IConfigurationWrapper configurationWrapper,
-            IAuthenticationService authenticationService, IPledgeService pledgeService)
+            IAuthenticationRepository authenticationService, IPledgeService pledgeService)
         {
             _mpDonorService = mpDonorService;
             _mpContactService = mpContactService;

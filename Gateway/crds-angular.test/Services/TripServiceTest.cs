@@ -9,53 +9,53 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IDonationService = MinistryPlatform.Translation.Services.Interfaces.IDonationService;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IDonationRepository = MinistryPlatform.Translation.Services.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
+using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
     public class TripServiceTest
     {
-        private Mock<IEventParticipantService> _eventParticipantService;
-        private Mock<IDonationService> _donationService;
-        private Mock<IGroupService> _groupService;
-        private Mock<IFormSubmissionService> _formSubmissionService;
-        private Mock<IEventService> _eventService;
-        private Mock<IDonorService> _donorService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
+        private Mock<IDonationRepository> _donationService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<IFormSubmissionRepository> _formSubmissionService;
+        private Mock<IEventRepository> _eventService;
+        private Mock<IDonorRepository> _donorService;
         private Mock<IPledgeService> _pledgeService;
-        private Mock<ICampaignService> _campaignService;
+        private Mock<ICampaignRepository> _campaignService;
         private Mock<IPrivateInviteService> _privateInviteService;
-        private Mock<ICommunicationService> _communicationService;
-        private Mock<IContactService> _contactService;
-        private Mock<IContactRelationshipService> _contactRelationshipService;
+        private Mock<ICommunicationRepository> _communicationService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
-        private Mock<IDestinationService> _destinationService;
+        private Mock<IDestinationRepository> _destinationService;
         private TripService _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _eventParticipantService = new Mock<IEventParticipantService>();
-            _donationService = new Mock<IDonationService>();
-            _groupService = new Mock<IGroupService>();
-            _formSubmissionService = new Mock<IFormSubmissionService>();
-            _eventService = new Mock<IEventService>();
-            _donorService = new Mock<IDonorService>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>();
+            _donationService = new Mock<IDonationRepository>();
+            _groupService = new Mock<IGroupRepository>();
+            _formSubmissionService = new Mock<IFormSubmissionRepository>();
+            _eventService = new Mock<IEventRepository>();
+            _donorService = new Mock<IDonorRepository>();
             _pledgeService = new Mock<IPledgeService>();
-            _campaignService = new Mock<ICampaignService>();
+            _campaignService = new Mock<ICampaignRepository>();
             _privateInviteService = new Mock<IPrivateInviteService>();
-            _communicationService = new Mock<ICommunicationService>();
-            _contactService = new Mock<IContactService>();
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
+            _communicationService = new Mock<ICommunicationRepository>();
+            _contactService = new Mock<IContactRepository>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _personService = new Mock<IPersonService>();
             _serveService = new Mock<IServeService>();
-            _destinationService = new Mock<IDestinationService>();
+            _destinationService = new Mock<IDestinationRepository>();
 
             _fixture = new TripService(_eventParticipantService.Object,
                                        _donationService.Object,

@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private BulkEmailRepository _fixture;
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
 
@@ -26,7 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _fixture = new BulkEmailRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);

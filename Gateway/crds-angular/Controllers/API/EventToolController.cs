@@ -12,10 +12,10 @@ namespace crds_angular.Controllers.API
 {
     public class EventToolController : MPAuth
     {
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventToolController(IApiUserService apiUserService, IEventService eventService)
+        public EventToolController(IApiUserRepository apiUserService, IEventService eventService)
         {
             _eventService = eventService;
             _apiUserService = apiUserService;

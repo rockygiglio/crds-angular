@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private ContactRelationshipRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private readonly int CONTACT_RELATIONSHIP_PAGE = 265;
@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _fixture = new ContactRelationshipRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

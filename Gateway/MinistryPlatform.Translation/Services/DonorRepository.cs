@@ -17,7 +17,7 @@ using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class DonorRepository : BaseRepository, IDonorService
+    public class DonorRepository : BaseRepository, IDonorRepository
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonorRepository));
 
@@ -48,13 +48,13 @@ namespace MinistryPlatform.Translation.Services
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IProgramService _programService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly ICryptoProvider _crypto;
         private readonly DateTimeFormatInfo _dateTimeFormat;
         
 
-        public DonorRepository(IMinistryPlatformService ministryPlatformService, IProgramService programService, ICommunicationService communicationService, IAuthenticationService authenticationService, IContactService contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
+        public DonorRepository(IMinistryPlatformService ministryPlatformService, IProgramService programService, ICommunicationRepository communicationService, IAuthenticationRepository authenticationService, IContactRepository contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

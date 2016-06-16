@@ -11,7 +11,7 @@ using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
 
 namespace crds_angular.test.Services
@@ -19,35 +19,35 @@ namespace crds_angular.test.Services
     [TestFixture]
     public class ChildcareServiceTest
     {
-        private Mock<IEventParticipantService> _eventParticipantService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IContactService> _contactService;
-        private Mock<IEventService> _eventService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<IEventRepository> _eventService;
         private Mock<IParticipantService> _participantService;
         private Mock<IServeService> _serveService;
         private Mock<IDateTime> _dateTimeWrapper;
         // Interfaces.IEventService crdsEventService, IApiUserService apiUserService
         private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<IChildcareRequestService> _childcareRequestService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IChildcareRequestRepository> _childcareRequestService;
 
         private ChildcareService _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _eventParticipantService = new Mock<IEventParticipantService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _contactService = new Mock<IContactService>();
-            _eventService = new Mock<IEventService>();
+            _contactService = new Mock<IContactRepository>();
+            _eventService = new Mock<IEventRepository>();
             _participantService = new Mock<IParticipantService>();
             _serveService = new Mock<IServeService>();
             _dateTimeWrapper = new Mock<IDateTime>();
             _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
-            _apiUserService = new Mock<IApiUserService>();
-            _childcareRequestService = new Mock<IChildcareRequestService>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _childcareRequestService = new Mock<IChildcareRequestRepository>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,

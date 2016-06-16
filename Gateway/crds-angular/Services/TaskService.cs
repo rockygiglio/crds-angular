@@ -14,13 +14,13 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (TaskService));
 
         private readonly MPInterfaces.ITaskRepository _taskRepository;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IUserImpersonationService _impersonationService;
         private readonly MPInterfaces.IUserService _userService;
 
         public TaskService(MPInterfaces.ITaskRepository taskRepository,
-                           MPInterfaces.IApiUserService apiUserService,
+                           MPInterfaces.IApiUserRepository apiUserService,
                            IConfigurationWrapper configWrapper,
                            IUserImpersonationService impersonationService,
                            MPInterfaces.IUserService userService)

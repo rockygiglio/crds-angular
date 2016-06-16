@@ -2,7 +2,7 @@ using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.Interfaces.GoCincinnati
 {
-    public interface IRegistrationService
+    public interface IRegistrationRepository
     {
         int CreateRegistration(MpRegistration registration);
         int AddAgeGroup(int registrationId, int attributeId, int count);

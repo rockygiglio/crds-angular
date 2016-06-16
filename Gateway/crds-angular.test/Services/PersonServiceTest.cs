@@ -16,9 +16,9 @@ namespace crds_angular.test.Services
     internal class PersonServiceTest_opportunityService
     {
         private Mock<IObjectAttributeService> _objectAttributeService;
-        private Mock<MPInterfaces.IContactService> _contactService;
-        private Mock<MPInterfaces.IAuthenticationService> _authenticationService;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
+        private Mock<MPInterfaces.IContactRepository> _contactService;
+        private Mock<MPInterfaces.IAuthenticationRepository> _authenticationService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
         private Mock<MPInterfaces.IParticipantService> _participantService;
         private Mock<MPInterfaces.IUserService> _userService;
 
@@ -34,12 +34,12 @@ namespace crds_angular.test.Services
             _objectAttributeService = new Mock<IObjectAttributeService>();
             var allAttributesDto = new ObjectAllAttributesDTO();
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
-            _contactService = new Mock<MPInterfaces.IContactService>();
-            _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
+            _contactService = new Mock<MPInterfaces.IContactRepository>();
+            _authenticationService = new Mock<MPInterfaces.IAuthenticationRepository>();
             _participantService = new Mock<MPInterfaces.IParticipantService>();
             _userService = new Mock<MPInterfaces.IUserService>();
 
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);

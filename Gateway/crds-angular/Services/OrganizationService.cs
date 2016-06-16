@@ -9,9 +9,9 @@ namespace crds_angular.Services
     public class OrganizationService : IOrganizationService
     {
         private readonly MPInterfaces.IOrganizationService _mpOrganizationService;
-        private readonly MPInterfaces.IApiUserService _mpApiUserService;
+        private readonly MPInterfaces.IApiUserRepository _mpApiUserService;
 
-        public OrganizationService(MPInterfaces.IOrganizationService organizationService, MPInterfaces.IApiUserService apiUserService)
+        public OrganizationService(MPInterfaces.IOrganizationService organizationService, MPInterfaces.IApiUserRepository apiUserService)
         {
             _mpOrganizationService = organizationService;
             _mpApiUserService = apiUserService;            

@@ -12,7 +12,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class EventRepository : BaseRepository, IEventService
+    public class EventRepository : BaseRepository, IEventRepository
     {
         private readonly log4net.ILog _logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -29,12 +29,12 @@ namespace MinistryPlatform.Translation.Services
             Convert.ToInt32(AppSettings("EventsReadyForReminder"));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IGroupService _groupService;
+        private readonly IGroupRepository _groupService;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
-                            IAuthenticationService authenticationService,
+                            IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IGroupService groupService)
+                            IGroupRepository groupService)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

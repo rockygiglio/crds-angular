@@ -8,19 +8,19 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using System.Linq;
 using AutoMapper;
 using MinistryPlatform.Translation.Models;
-using IFormBuilderService = MinistryPlatform.Translation.Services.Interfaces.IFormBuilderService;
+using IFormBuilderRepository = MinistryPlatform.Translation.Services.Interfaces.IFormBuilderRepository;
 
 namespace crds_angular.Services
 {
     public class FormBuilderService : crds_angular.Services.Interfaces.IFormBuilderService
     {
         private readonly ILog logger = LogManager.GetLogger(typeof (FormBuilderService));
-        private readonly IFormBuilderService _mpFormBuilderService;
+        private readonly IFormBuilderRepository _mpFormBuilderService;
         private readonly IConfigurationWrapper _configurationWrapper;
 
         private readonly int _undividedGroupsPageViewId;
 
-        public FormBuilderService(IFormBuilderService mpFormBuilderService,                
+        public FormBuilderService(IFormBuilderRepository mpFormBuilderService,                
                                   IConfigurationWrapper configurationWrapper)
         {
             _mpFormBuilderService = mpFormBuilderService;

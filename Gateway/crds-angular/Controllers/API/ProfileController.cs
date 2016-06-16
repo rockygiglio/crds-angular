@@ -26,12 +26,12 @@ namespace crds_angular.Controllers.API
         private readonly IServeService _serveService;
         private readonly IDonorService _donorService;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly IAuthenticationService _authenticationService ;
+        private readonly IAuthenticationRepository _authenticationService ;
         private readonly IUserService _userService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly List<int> _allowedAdminGetProfileRoles;
 
-        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationService authenticationService, IUserService userService, IContactRelationshipService contactRelationshipService, IConfigurationWrapper config)
+        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserService userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config)
         {
             _personService = personService;
             _serveService = serveService;

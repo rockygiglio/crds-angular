@@ -13,9 +13,9 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
-using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IAttributeRepository = MinistryPlatform.Translation.Services.Interfaces.IAttributeRepository;
+using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
@@ -24,17 +24,17 @@ namespace crds_angular.Services
     {
         private readonly ILog logger = LogManager.GetLogger(typeof (GroupService));
 
-        private readonly IGroupService _mpGroupService;
+        private readonly IGroupRepository _mpGroupService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IEventService _eventService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly IEventRepository _eventService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IServeService _serveService;
         private readonly IParticipantService _participantService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IAttributeService _attributeService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IAttributeRepository _attributeService;
 
 
         /// <summary>
@@ -45,17 +45,17 @@ namespace crds_angular.Services
         private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
 
-        public GroupService(IGroupService mpGroupService,
+        public GroupService(IGroupRepository mpGroupService,
                             IConfigurationWrapper configurationWrapper,
-                            IEventService eventService,
-                            IContactRelationshipService contactRelationshipService,
+                            IEventRepository eventService,
+                            IContactRelationshipRepository contactRelationshipService,
                             IServeService serveService,
                             IParticipantService participantService,
-                            ICommunicationService communicationService,
-                            IContactService contactService, 
+                            ICommunicationRepository communicationService,
+                            IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
-                            IApiUserService apiUserService, 
-                            IAttributeService attributeService)
+                            IApiUserRepository apiUserService, 
+                            IAttributeRepository attributeService)
 
         {
             _mpGroupService = mpGroupService;

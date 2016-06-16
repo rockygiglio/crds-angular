@@ -19,31 +19,31 @@ namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
-        private readonly IChildcareRequestService _childcareRequestService;
-        private readonly ICommunicationService _communicationService;
+        private readonly IChildcareRequestRepository _childcareRequestService;
+        private readonly ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactService _contactService;
-        private readonly IEventParticipantService _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
+        private readonly IContactRepository _contactService;
+        private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
         private readonly IParticipantService _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
-        public ChildcareService(IEventParticipantService eventParticipantService,
-                                ICommunicationService communicationService,
+        public ChildcareService(IEventParticipantRepository eventParticipantService,
+                                ICommunicationRepository communicationService,
                                 IConfigurationWrapper configurationWrapper,
-                                IContactService contactService,
-                                MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
+                                IContactRepository contactService,
+                                MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
                                 IParticipantService participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, 
+                                IApiUserRepository apiUserService, 
                                 Interfaces.IEventService crdsEventService, 
-                                IChildcareRequestService childcareRequestService)
+                                IChildcareRequestRepository childcareRequestService)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;

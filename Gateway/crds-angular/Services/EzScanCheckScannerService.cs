@@ -17,12 +17,12 @@ namespace crds_angular.Services
         private readonly ICheckScannerDao _checkScannerDao;
         private readonly IDonorService _donorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (EzScanCheckScannerService));
-        private readonly MPServices.IDonorService _mpDonorService;
+        private readonly MPServices.IDonorRepository _mpDonorService;
         private readonly IPaymentService _paymentService;
 
         private const int MinistryPlatformCheckNumberMaxLength = 15;
       
-        public EzScanCheckScannerService(ICheckScannerDao checkScannerDao, IDonorService donorService, IPaymentService paymentService, MPServices.IDonorService mpDonorService)
+        public EzScanCheckScannerService(ICheckScannerDao checkScannerDao, IDonorService donorService, IPaymentService paymentService, MPServices.IDonorRepository mpDonorService)
         {
             _checkScannerDao = checkScannerDao;
             _donorService = donorService;

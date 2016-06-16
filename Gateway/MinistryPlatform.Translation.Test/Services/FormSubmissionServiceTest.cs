@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private FormSubmissionRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IDbConnection> _dbConnection;
         private MpFormResponse _mockForm;
@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _dbConnection = new Mock<IDbConnection>();
 

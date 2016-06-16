@@ -16,14 +16,14 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private UserRepository _fixture;
 
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
 
         [SetUp]
         public void SetUp()
         {
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
 

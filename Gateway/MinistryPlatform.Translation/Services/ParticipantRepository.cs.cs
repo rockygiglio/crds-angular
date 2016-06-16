@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Services
     {
         private IMinistryPlatformService _ministryPlatformService;
 
-        public ParticipantService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService , IConfigurationWrapper configurationWrapper)
+        public ParticipantService(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService , IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             this._ministryPlatformService = ministryPlatformService;

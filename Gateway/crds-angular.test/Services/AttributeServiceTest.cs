@@ -10,12 +10,12 @@ namespace crds_angular.test.Services
     public class AttributeServiceTest
     {
         private AttributeService _fixture;
-        private Mock<MPServices.IAttributeService> _mpAttributeService;
+        private Mock<MPServices.IAttributeRepository> _mpAttributeService;
 
         [SetUp]
         public void SetUp()
         {
-            _mpAttributeService = new Mock<MPServices.IAttributeService>(MockBehavior.Strict);
+            _mpAttributeService = new Mock<MPServices.IAttributeRepository>(MockBehavior.Strict);
 
             _fixture = new AttributeService(_mpAttributeService.Object);
         }

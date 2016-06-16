@@ -25,8 +25,8 @@ namespace crds_angular.test.controllers
         private CheckScannerController _fixture;
         private Mock<IConfigurationWrapper> _configuration;
         private Mock<ICheckScannerService> _checkScannerService;
-        private Mock<IAuthenticationService> _authenticationService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IMessageQueueFactory> _messageQueueFactory;
         private Mock<IMessageFactory> _messageFactory;
         private Mock<ICryptoProvider> _cryptoProvider; 
@@ -39,8 +39,8 @@ namespace crds_angular.test.controllers
         {
             _configuration = new Mock<IConfigurationWrapper>();
             _checkScannerService = new Mock<ICheckScannerService>(MockBehavior.Strict);
-            _authenticationService = new Mock<IAuthenticationService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _messageQueueFactory = new Mock<IMessageQueueFactory>(MockBehavior.Strict);
             _messageFactory = new Mock<IMessageFactory>(MockBehavior.Strict);
             _cryptoProvider = new Mock<ICryptoProvider>();

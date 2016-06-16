@@ -15,15 +15,15 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private ObjectAttributeService _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<Translation.Services.Interfaces.IApiUserService> _apiUserService;
+        private Mock<Translation.Services.Interfaces.IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();            
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});

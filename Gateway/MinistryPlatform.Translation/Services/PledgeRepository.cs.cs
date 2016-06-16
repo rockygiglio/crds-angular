@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _pledgePageId;
         private readonly int _myHouseholdPledges;
 
-        public PledgeService(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public PledgeService(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

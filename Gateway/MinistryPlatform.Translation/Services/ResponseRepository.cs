@@ -12,13 +12,13 @@ namespace MinistryPlatform.Translation.Services
 {
     public class ResponseRepository : BaseRepository, IResponseService
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
 
         private readonly int _signupToServeRemindersId;
 
-        public ResponseRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
+        public ResponseRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService)
             : base(authenticationService, configurationWrapper)
         {
             _authenticationService = authenticationService;

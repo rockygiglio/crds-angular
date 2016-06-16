@@ -20,10 +20,10 @@ namespace crds_angular.test.Services
     public class DonationServiceTest
     {
         private DonationService _fixture;
-        private Mock<MPServices.IDonationService> _mpDonationService;
-        private Mock<MPServices.IDonorService> _mpDonorService;
+        private Mock<MPServices.IDonationRepository> _mpDonationService;
+        private Mock<MPServices.IDonorRepository> _mpDonorService;
         private Mock<IPaymentService> _paymentService;
-        private Mock<MPServices.IContactService> _contactService;
+        private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
 
         [SetUp]
@@ -31,10 +31,10 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
 
-            _mpDonationService = new Mock<MPServices.IDonationService>(MockBehavior.Strict);
-            _mpDonorService = new Mock<MPServices.IDonorService>(MockBehavior.Strict);
+            _mpDonationService = new Mock<MPServices.IDonationRepository>(MockBehavior.Strict);
+            _mpDonorService = new Mock<MPServices.IDonorRepository>(MockBehavior.Strict);
             _paymentService = new Mock<IPaymentService>();
-            _contactService = new Mock<MPServices.IContactService>();
+            _contactService = new Mock<MPServices.IContactRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorStatementTypeFamily")).Returns(456);

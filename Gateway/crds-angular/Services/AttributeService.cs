@@ -9,9 +9,9 @@ namespace crds_angular.Services
 {
     public class AttributeService : IAttributeService
     {
-        private readonly MPInterfaces.IAttributeService _attributeService;
+        private readonly MPInterfaces.IAttributeRepository _attributeService;
 
-        public AttributeService(MPInterfaces.IAttributeService attributeService)
+        public AttributeService(MPInterfaces.IAttributeRepository attributeService)
         {
             _attributeService = attributeService;
         }

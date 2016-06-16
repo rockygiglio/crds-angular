@@ -8,11 +8,11 @@ using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class AttributeRepository : BaseRepository, IAttributeService
+    public class AttributeRepository : BaseRepository, IAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
             
-        public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

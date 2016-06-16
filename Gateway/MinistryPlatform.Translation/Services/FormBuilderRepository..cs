@@ -9,11 +9,11 @@ using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class FormBuilderRepository : BaseRepository, IFormBuilderService
+    public class FormBuilderRepository : BaseRepository, IFormBuilderRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
             
-        public FormBuilderRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public FormBuilderRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

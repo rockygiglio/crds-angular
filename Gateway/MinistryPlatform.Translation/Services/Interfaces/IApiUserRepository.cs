@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IApiUserService
+    public interface IApiUserRepository
     {
         string GetToken();
     }

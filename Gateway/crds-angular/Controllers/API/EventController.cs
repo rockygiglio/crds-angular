@@ -15,10 +15,10 @@ namespace crds_angular.Controllers.API
     public class EventController : MPAuth
     {
         private IMinistryPlatformService _ministryPlatformService;        
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService)
+        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventService eventService)
         {
             this._ministryPlatformService = ministryPlatformService;
             _eventService = eventService;

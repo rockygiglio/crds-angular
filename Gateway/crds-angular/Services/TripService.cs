@@ -11,49 +11,49 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
-using IDonationService = MinistryPlatform.Translation.Services.Interfaces.IDonationService;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IDonationRepository = MinistryPlatform.Translation.Services.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 using PledgeCampaign = crds_angular.Models.Crossroads.Stewardship.PledgeCampaign;
 
 namespace crds_angular.Services
 {
     public class TripService : MinistryPlatformBaseService, ITripService
     {
-        private readonly IEventParticipantService _eventParticipantService;
-        private readonly IDonationService _donationService;
-        private readonly IGroupService _groupService;
-        private readonly IFormSubmissionService _formSubmissionService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _mpEventService;
-        private readonly IDonorService _mpDonorService;
+        private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly IDonationRepository _donationService;
+        private readonly IGroupRepository _groupService;
+        private readonly IFormSubmissionRepository _formSubmissionService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _mpEventService;
+        private readonly IDonorRepository _mpDonorService;
         private readonly IPledgeService _mpPledgeService;
-        private readonly ICampaignService _campaignService;
+        private readonly ICampaignRepository _campaignService;
         private readonly IPrivateInviteService _privateInviteService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IPersonService _personService;
         private readonly IServeService _serveService;
-        private readonly IDestinationService _destinationService;
+        private readonly IDestinationRepository _destinationService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (TripService));
 
-        public TripService(IEventParticipantService eventParticipant,
-                           IDonationService donationService,
-                           IGroupService groupService,
-                           IFormSubmissionService formSubmissionService,
-                           MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
-                           IDonorService donorService,
+        public TripService(IEventParticipantRepository eventParticipant,
+                           IDonationRepository donationService,
+                           IGroupRepository groupService,
+                           IFormSubmissionRepository formSubmissionService,
+                           MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
+                           IDonorRepository donorService,
                            IPledgeService pledgeService,
-                           ICampaignService campaignService,
+                           ICampaignRepository campaignService,
                            IPrivateInviteService privateInviteService,
-                           ICommunicationService communicationService,
-                           IContactService contactService,
-                           IContactRelationshipService contactRelationshipService,
+                           ICommunicationRepository communicationService,
+                           IContactRepository contactService,
+                           IContactRelationshipRepository contactRelationshipService,
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationService destinationService)
+                           IDestinationRepository destinationService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;

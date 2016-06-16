@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IEventParticipantService
+    public interface IEventParticipantRepository
     {
         bool AddDocumentsToTripParticipant(List<MpTripDocuments> documents, int eventParticipantId);
         List<MpTripParticipant> TripParticipants(string search);

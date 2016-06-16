@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class AuthenticationServiceImpl : IAuthenticationService
+    public class AuthenticationServiceImpl : IAuthenticationRepository
     {
         private PlatformServiceClient platformService;
         private IMinistryPlatformService ministryPlatformService;

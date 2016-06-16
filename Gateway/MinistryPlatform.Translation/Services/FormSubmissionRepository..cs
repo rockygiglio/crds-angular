@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class FormSubmissionRepository : BaseRepository, IFormSubmissionService
+    public class FormSubmissionRepository : BaseRepository, IFormSubmissionRepository
     {
         private readonly int _formResponsePageId = AppSettings("FormResponsePageId");
         private readonly int _formAnswerPageId = AppSettings("FormAnswerPageId");
@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private IDbConnection _dbConnection;
 
-        public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService,configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

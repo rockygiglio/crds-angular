@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models.EventReservations;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IEquipmentService
+    public interface IEquipmentRepository
     {
         int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token);
         List<Equipment> GetEquipmentByLocationId(int locationId);

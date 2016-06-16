@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IDonationService
+    public interface IDonationRepository
     {
         int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate, string statusNote = null);
         int UpdateDonationStatus(string processorPaymentId, int statusId, DateTime statusDate, string statusNote = null);

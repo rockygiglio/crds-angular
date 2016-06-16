@@ -18,21 +18,21 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (AccountService));
 
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly ICommunicationService _communicationService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionsService;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILookupService _lookupService;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IParticipantService _participantService;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
-            ICommunicationService communicationService, 
-            IAuthenticationService authenticationService, 
+            ICommunicationRepository communicationService, 
+            IAuthenticationRepository authenticationService, 
             ISubscriptionsService subscriptionService, 
             IMinistryPlatformService ministryPlatformService, 
             ILookupService lookupService,
-            IApiUserService apiUserService,
+            IApiUserRepository apiUserService,
             IParticipantService participantService)
         {
             _configurationWrapper = configurationWrapper;

@@ -21,10 +21,10 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IProgramService> _programService;
-        private Mock<ICommunicationService> _communicationService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<ICommunicationRepository> _communicationService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configuration;
-        private Mock<IContactService> _contactService;
+        private Mock<IContactRepository> _contactService;
         private Mock<ICryptoProvider> _crypto;
 
         private DonorRepository _fixture;
@@ -34,9 +34,9 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _programService = new Mock<IProgramService>();
-            _communicationService = new Mock<ICommunicationService>();
-            _authService = new Mock<IAuthenticationService>();
-            _contactService = new Mock<IContactService>();
+            _communicationService = new Mock<ICommunicationRepository>();
+            _authService = new Mock<IAuthenticationRepository>();
+            _contactService = new Mock<IContactRepository>();
             _crypto = new Mock<ICryptoProvider>();
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("MyHouseholdDonationRecurringGifts")).Returns(523);

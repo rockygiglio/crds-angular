@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Services
 
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ObjectAttributeService(IAuthenticationService authenticationService,
+        public ObjectAttributeService(IAuthenticationRepository authenticationService,
             IConfigurationWrapper configurationWrapper,
             IMinistryPlatformService ministryPlatformService)
             : base(authenticationService, configurationWrapper)

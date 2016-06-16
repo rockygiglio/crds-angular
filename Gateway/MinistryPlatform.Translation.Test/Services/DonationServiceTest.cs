@@ -18,10 +18,10 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private DonationRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IDonorService> _donorService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IDonorRepository> _donorService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IPledgeService> _pledgeService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<ICommunicationRepository> _communicationService;
 
         [SetUp]
         public void SetUp()
@@ -29,10 +29,10 @@ namespace MinistryPlatform.Translation.Test.Services
             AutoMapperConfig.RegisterMappings();
 
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
-            _donorService = new Mock<IDonorService>(MockBehavior.Strict);
-            _authService = new Mock<IAuthenticationService>();
+            _donorService = new Mock<IDonorRepository>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationRepository>();
             _pledgeService = new Mock<IPledgeService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _communicationService = new Mock<ICommunicationRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
             configuration.Setup(mocked => mocked.GetConfigIntValue("Donations")).Returns(9090);

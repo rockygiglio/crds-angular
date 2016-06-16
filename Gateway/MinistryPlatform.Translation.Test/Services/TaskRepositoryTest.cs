@@ -14,14 +14,14 @@ namespace MinistryPlatform.Translation.Test
         private TaskRepository _fixture;
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
-            _authService = new Mock<IAuthenticationService>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
 
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("TasksNeedingAutoStarted")).Returns(2212);

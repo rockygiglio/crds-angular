@@ -3,8 +3,8 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IDestinationService
+    public interface IFormBuilderRepository
     {
-        List<MpTripDocuments> DocumentsForDestination(int destinationId);
+        List<MpGroup> GetGroupsUndividedSession(int pageViewId);
     }
 }

@@ -3,12 +3,12 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ApiUserRepository : IApiUserService
+    public class ApiUserRepository : IApiUserRepository
     {
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
-        public ApiUserRepository(IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService)
+        public ApiUserRepository(IConfigurationWrapper configurationWrapper, IAuthenticationRepository authenticationService)
         {
             _configurationWrapper = configurationWrapper;
             _authenticationService = authenticationService;

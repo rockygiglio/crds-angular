@@ -25,7 +25,7 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupService));
 
         private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private string _token;
         private System.Timers.Timer _refreshTokenTimer;
@@ -34,7 +34,7 @@ namespace crds_angular.Services
 
         public BulkEmailSyncService(
             MPInterfaces.IBulkEmailRepository bulkEmailRepository,
-            MPInterfaces.IApiUserService apiUserService,
+            MPInterfaces.IApiUserRepository apiUserService,
             IConfigurationWrapper configWrapper)
         {
             _bulkEmailRepository = bulkEmailRepository;

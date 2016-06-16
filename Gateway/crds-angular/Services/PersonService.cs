@@ -15,19 +15,19 @@ namespace crds_angular.Services
 {
     public class PersonService : MinistryPlatformBaseService, IPersonService
     {
-        private readonly MPServices.IContactService _contactService;
+        private readonly MPServices.IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly MPServices.IApiUserService _apiUserService;
+        private readonly MPServices.IApiUserRepository _apiUserService;
         private readonly MPServices.IParticipantService _participantService;
         private readonly MPServices.IUserService _userService;
-        private readonly MPServices.IAuthenticationService _authenticationService;
+        private readonly MPServices.IAuthenticationRepository _authenticationService;
 
-        public PersonService(MPServices.IContactService contactService, 
+        public PersonService(MPServices.IContactRepository contactService, 
             IObjectAttributeService objectAttributeService, 
-            MPServices.IApiUserService apiUserService,
+            MPServices.IApiUserRepository apiUserService,
             MPServices.IParticipantService participantService,
             MPServices.IUserService userService,
-            MPServices.IAuthenticationService authenticationService)
+            MPServices.IAuthenticationRepository authenticationService)
         {
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;

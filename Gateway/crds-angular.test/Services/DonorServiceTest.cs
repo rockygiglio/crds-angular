@@ -14,7 +14,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using RestSharp.Extensions;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
+using IDonorRepository = MinistryPlatform.Translation.Services.Interfaces.IDonorRepository;
 
 namespace crds_angular.test.Services
 {
@@ -22,11 +22,11 @@ namespace crds_angular.test.Services
     {
         private DonorService _fixture;
 
-        private Mock<IDonorService> _mpDonorService;
-        private Mock<IContactService> _mpContactService;
+        private Mock<IDonorRepository> _mpDonorService;
+        private Mock<IContactRepository> _mpContactService;
         private Mock<IPaymentService> _paymentService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IPledgeService> _pledgeService; 
         private const string GuestGiverDisplayName = "Guest Giver";
 
@@ -47,10 +47,10 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
 
-            _mpDonorService = new Mock<IDonorService>(MockBehavior.Strict);
-            _mpContactService = new Mock<IContactService>(MockBehavior.Strict);
+            _mpDonorService = new Mock<IDonorRepository>(MockBehavior.Strict);
+            _mpContactService = new Mock<IContactRepository>(MockBehavior.Strict);
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
-            _authenticationService = new Mock<IAuthenticationService>(MockBehavior.Strict);
+            _authenticationService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _pledgeService = new Mock<IPledgeService>(MockBehavior.Strict);
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();

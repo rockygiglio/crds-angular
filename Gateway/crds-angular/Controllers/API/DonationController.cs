@@ -21,21 +21,21 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
 
-        private readonly MPInterfaces.IDonorService _mpDonorService;
+        private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly IPaymentService _stripeService;
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly MPInterfaces.IDonationService _mpDonationService;
+        private readonly MPInterfaces.IDonationRepository _mpDonationService;
         private readonly MPInterfaces.IPledgeService _mpPledgeService;
 
-        public DonationController(MPInterfaces.IDonorService mpDonorService,
+        public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentService stripeService,
-                                  MPInterfaces.IAuthenticationService authenticationService,
+                                  MPInterfaces.IAuthenticationRepository authenticationService,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
-                                  MPInterfaces.IDonationService mpDonationService,
+                                  MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeService mpPledgeService,
                                   IUserImpersonationService impersonationService)
         {

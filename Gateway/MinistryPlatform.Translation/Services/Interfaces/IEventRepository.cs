@@ -6,7 +6,7 @@ using Participant = MinistryPlatform.Translation.Models.People.Participant;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IEventService
+    public interface IEventRepository
     {
         int CreateEvent(MpEventReservationDto eventReservationReservation);
         int SafeRegisterParticipant(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0);

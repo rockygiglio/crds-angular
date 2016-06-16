@@ -7,9 +7,9 @@ namespace crds_angular.Services
 {
     public class GroupConnectorService : IGroupConnectorService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService _mpGroupConnectorService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository _mpGroupConnectorService;
 
-        public GroupConnectorService(MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService groupConnectorService)
+        public GroupConnectorService(MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository groupConnectorService)
         {
             _mpGroupConnectorService = groupConnectorService;
         }

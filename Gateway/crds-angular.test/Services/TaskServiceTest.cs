@@ -16,7 +16,7 @@ namespace crds_angular.test.Services
     public class TaskServiceTest
     {
         private Mock<ITaskRepository> _taskRepository;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IUserImpersonationService> _impersonationService;
         private Mock<IUserService> _userService;
@@ -27,7 +27,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _taskRepository = new Mock<ITaskRepository>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _impersonationService = new Mock<IUserImpersonationService>(MockBehavior.Strict);
             _userService = new Mock<IUserService>();

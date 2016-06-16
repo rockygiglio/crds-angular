@@ -12,13 +12,13 @@ namespace crds_angular.Services
 {
     public class VolunteerApplicationService : IVolunteerApplicationService
     {
-        private readonly IFormSubmissionService _formSubmissionService;
+        private readonly IFormSubmissionRepository _formSubmissionService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private List<MpFormField> _formFields;
 
         private readonly IServeService _serveService;
 
-        public VolunteerApplicationService(IFormSubmissionService formSubmissionService,
+        public VolunteerApplicationService(IFormSubmissionRepository formSubmissionService,
             IConfigurationWrapper configurationWrapper, IServeService serveService)
         {
             _formSubmissionService = formSubmissionService;

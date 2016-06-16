@@ -15,14 +15,14 @@ namespace crds_angular.Services
     {
         private readonly MPInterfaces.IObjectAttributeService _mpObjectAttributeService;
         private readonly IAttributeService _attributeService;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
-        private readonly MPInterfaces.IAttributeService _mpAttributeService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly MPInterfaces.IAttributeRepository _mpAttributeService;
 
         public ObjectAttributeService(
             MPInterfaces.IObjectAttributeService mpObjectAttributeService,
             IAttributeService attributeService,
-            MPInterfaces.IApiUserService apiUserService,
-            MPInterfaces.IAttributeService mpAttributeService)
+            MPInterfaces.IApiUserRepository apiUserService,
+            MPInterfaces.IAttributeRepository mpAttributeService)
         {
             _mpObjectAttributeService = mpObjectAttributeService;
             _attributeService = attributeService;

@@ -31,8 +31,8 @@ namespace crds_angular.test.controllers
         private Mock<IDonorService> _donorService;
         private Mock<IDonationService> _donationService;
         private Mock<IPaymentService> _paymentService;
-        private Mock<IAuthenticationService> _authenticationService;
-        private Mock<MPInterfaces.IDonorService> _mpDonorService;
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<MPInterfaces.IDonorRepository> _mpDonorService;
         private Mock<IUserImpersonationService> _impersonationService;
         private string _authType;
         private string _authToken;
@@ -57,8 +57,8 @@ namespace crds_angular.test.controllers
             _donorService = new Mock<IDonorService>();
             _donationService = new Mock<IDonationService>();
             _paymentService = new Mock<IPaymentService>();
-            _authenticationService = new Mock<IAuthenticationService>();
-            _mpDonorService = new Mock<MPInterfaces.IDonorService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
+            _mpDonorService = new Mock<MPInterfaces.IDonorRepository>();
             _impersonationService = new Mock<IUserImpersonationService>();
             _fixture = new DonorController(_donorService.Object, _paymentService.Object, _donationService.Object, _mpDonorService.Object, _authenticationService.Object, _impersonationService.Object);
 

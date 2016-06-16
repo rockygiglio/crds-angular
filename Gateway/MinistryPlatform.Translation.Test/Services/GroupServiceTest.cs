@@ -20,9 +20,9 @@ namespace MinistryPlatform.Translation.Test.Services
         private GroupRepository fixture;
         private Mock<IMinistryPlatformService> ministryPlatformService;
         private Mock<IConfigurationWrapper> configWrapper;
-        private Mock<IAuthenticationService> authService;
-        private Mock<ICommunicationService> communicationService;
-        private Mock<IContactService> contactService;
+        private Mock<IAuthenticationRepository> authService;
+        private Mock<ICommunicationRepository> communicationService;
+        private Mock<IContactRepository> contactService;
         private Mock<IContentBlockService> contentBlockService;
         private readonly int GroupsParticipantsPageId = 298;
         private readonly int GroupsParticipantsSubPage = 88;
@@ -36,9 +36,9 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             ministryPlatformService = new Mock<IMinistryPlatformService>();
             configWrapper = new Mock<IConfigurationWrapper>();
-            authService = new Mock<IAuthenticationService>();
-            communicationService = new Mock<ICommunicationService>();
-            contactService = new Mock<IContactService>();
+            authService = new Mock<IAuthenticationRepository>();
+            communicationService = new Mock<ICommunicationRepository>();
+            contactService = new Mock<IContactRepository>();
             contentBlockService = new Mock<IContentBlockService>();
             fixture = new GroupRepository(ministryPlatformService.Object, configWrapper.Object, authService.Object, communicationService.Object, contactService.Object, contentBlockService.Object);
 

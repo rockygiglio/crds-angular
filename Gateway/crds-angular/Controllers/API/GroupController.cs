@@ -22,7 +22,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IGroupService groupService;        
-        private readonly IAuthenticationService authenticationService;
+        private readonly IAuthenticationRepository authenticationService;
         private readonly IParticipantService participantService;
         private readonly Services.Interfaces.IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
@@ -31,7 +31,7 @@ namespace crds_angular.Controllers.API
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
 
         public GroupController(Services.Interfaces.IGroupService groupService,
-                               IAuthenticationService authenticationService,
+                               IAuthenticationRepository authenticationService,
                                IParticipantService participantService,
                                Services.Interfaces.IAddressService addressService,
                                Services.Interfaces.IGroupSearchService groupSearchService)

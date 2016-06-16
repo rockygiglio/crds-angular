@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
 
-        public RoomRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configuration)
+        public RoomRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

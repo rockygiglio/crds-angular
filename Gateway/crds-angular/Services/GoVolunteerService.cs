@@ -10,7 +10,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
-using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorRepository;
 using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
 
 namespace crds_angular.Services
@@ -19,29 +19,29 @@ namespace crds_angular.Services
 
     {
         private readonly IAttributeService _attributeService;
-        private readonly MPInterfaces.ICommunicationService _communicationService;
+        private readonly MPInterfaces.ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly MPInterfaces.IContactRelationshipService _contactRelationshipService;
-        private readonly MPInterfaces.IContactService _contactService;
-        private readonly IGroupConnectorService _groupConnectorService;
+        private readonly MPInterfaces.IContactRelationshipRepository _contactRelationshipService;
+        private readonly MPInterfaces.IContactRepository _contactService;
+        private readonly IGroupConnectorRepository _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
         private readonly int _otherEquipmentId;
         private readonly MPInterfaces.IParticipantService _participantService;
         private readonly MPInterfaces.IProjectTypeService _projectTypeService;
-        private readonly IRegistrationService _registrationService;
+        private readonly IRegistrationRepository _registrationService;
         private readonly IGoSkillsService _skillsService;
         private readonly MPInterfaces.IUserService _userService;
 
         public GoVolunteerService(MPInterfaces.IParticipantService participantService,
-                                  IRegistrationService registrationService,
-                                  MPInterfaces.IContactService contactService,
-                                  IGroupConnectorService groupConnectorService,
+                                  IRegistrationRepository registrationService,
+                                  MPInterfaces.IContactRepository contactService,
+                                  IGroupConnectorRepository groupConnectorService,
                                   IConfigurationWrapper configurationWrapper,
-                                  MPInterfaces.IContactRelationshipService contactRelationshipService,
+                                  MPInterfaces.IContactRelationshipRepository contactRelationshipService,
                                   MPInterfaces.IProjectTypeService projectTypeService,
                                   IAttributeService attributeService,
                                   IGoSkillsService skillsService,
-                                  MPInterfaces.ICommunicationService comunicationService,
+                                  MPInterfaces.ICommunicationRepository comunicationService,
                                   MPInterfaces.IUserService userService)
         {
             _participantService = participantService;

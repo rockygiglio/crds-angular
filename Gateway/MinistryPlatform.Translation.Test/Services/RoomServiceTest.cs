@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _config;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
 
         private RoomRepository _fixture;
 
@@ -23,7 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _config = new Mock<IConfigurationWrapper>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
 
             _authenticationService.Setup(mocked => mocked.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object>
             {

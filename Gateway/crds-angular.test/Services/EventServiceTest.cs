@@ -7,8 +7,8 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Services.Interfaces;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IEventRepository = MinistryPlatform.Translation.Services.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
@@ -19,19 +19,19 @@ namespace crds_angular.test.Services
     [TestFixture]
     public class EventServiceTest 
     {
-        private Mock<IContactRelationshipService> _contactRelationshipService;
-        private Mock<IContactService> _contactService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
-        private Mock<IEventService> _eventService;
+        private Mock<IEventRepository> _eventService;
         private Mock<IParticipantService> _participantService;
-        private Mock<IGroupParticipantService> _groupParticipantService;
-        private Mock<IGroupService> _groupService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IGroupParticipantRepository> _groupParticipantService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IRoomService> _roomService;
-        private Mock<IEquipmentService> _equipmentService;
-        private Mock<IEventParticipantService> _eventParticipantService;
+        private Mock<IEquipmentRepository> _equipmentService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
 
         private EventService _fixture;
 
@@ -40,21 +40,21 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
           
-            _contactRelationshipService = new Mock<IContactRelationshipService>(MockBehavior.Strict);
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
-            _contactService = new Mock<IContactService>(MockBehavior.Strict);
-            _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _communicationService = new Mock<ICommunicationService>(MockBehavior.Strict);
+            _contactService = new Mock<IContactRepository>(MockBehavior.Strict);
+            _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
+            _communicationService = new Mock<ICommunicationRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
-            _groupParticipantService = new Mock<IGroupParticipantService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
+            _groupParticipantService = new Mock<IGroupParticipantRepository>(MockBehavior.Strict);
             _participantService = new Mock<IParticipantService>(MockBehavior.Strict);
-            _eventService = new Mock<IEventService>();
+            _eventService = new Mock<IEventRepository>();
             _roomService = new Mock<IRoomService>();
-            _equipmentService= new Mock<IEquipmentService>();
-            _eventParticipantService = new Mock<IEventParticipantService>(MockBehavior.Strict);
+            _equipmentService= new Mock<IEquipmentRepository>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();

@@ -19,7 +19,7 @@ namespace crds_angular.test.controllers
         private EventController controller;
 
         private Mock<IMinistryPlatformService> _ministryPlatfromServiceMock;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IEventService> _eventService;
 
 
@@ -29,7 +29,7 @@ namespace crds_angular.test.controllers
         {
             _ministryPlatfromServiceMock = new Mock<IMinistryPlatformService>();
 
-            _apiUserService = new Mock<IApiUserService>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
             _eventService = new Mock<IEventService>();

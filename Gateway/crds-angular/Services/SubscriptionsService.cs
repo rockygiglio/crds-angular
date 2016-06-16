@@ -10,8 +10,8 @@ namespace crds_angular.Services
     {
         private readonly MPInterfaces.IMinistryPlatformService _ministryPlatformService;
         private readonly Util.Interfaces.IEmailListHandler _emailListHandler;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
-        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService, Util.Interfaces.IEmailListHandler emailListHandler, MPInterfaces.IApiUserService apiUserService)
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService, Util.Interfaces.IEmailListHandler emailListHandler, MPInterfaces.IApiUserRepository apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
             _emailListHandler = emailListHandler;

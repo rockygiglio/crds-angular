@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _onlineGivingProgramsPageViewId;
         private readonly int _programsPageId;
 
-        public ProgramRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public ProgramRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

@@ -8,11 +8,11 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class EventParticipantRepository : BaseRepository, IEventParticipantService
+    public class EventParticipantRepository : BaseRepository, IEventParticipantRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 
-        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

@@ -19,7 +19,7 @@ using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
@@ -27,19 +27,19 @@ namespace crds_angular.test.Services
     public class GroupServiceTest 
     {
         private GroupService fixture;
-        private Mock<MPServices.IAuthenticationService> authenticationService;
-        private Mock<MPServices.IGroupService> groupService;
-        private Mock<MPServices.IEventService> eventService;
-        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
+        private Mock<MPServices.IAuthenticationRepository> authenticationService;
+        private Mock<MPServices.IGroupRepository> groupService;
+        private Mock<MPServices.IEventRepository> eventService;
+        private Mock<MPServices.IContactRelationshipRepository> contactRelationshipService;     
         private Mock<IServeService> serveService;
-        private Mock<IGroupService> _groupService;
+        private Mock<IGroupRepository> _groupService;
         private Mock<MPServices.IParticipantService> participantService;
-        private Mock<MPServices.ICommunicationService> _communicationService;
-        private Mock<MPServices.IContactService> _contactService;
+        private Mock<MPServices.ICommunicationRepository> _communicationService;
+        private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> config;
         private Mock<IObjectAttributeService> _objectAttributeService;
-        private Mock<MPServices.IApiUserService> _apiUserService;
-        private Mock<MPServices.IAttributeService> _attributeService;
+        private Mock<MPServices.IApiUserRepository> _apiUserService;
+        private Mock<MPServices.IAttributeRepository> _attributeService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -66,19 +66,19 @@ namespace crds_angular.test.Services
             Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
             AutoMapperConfig.RegisterMappings();
 
-            authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<IGroupService>();
-            eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
-            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();
+            authenticationService = new Mock<MPServices.IAuthenticationRepository>();
+            groupService = new Mock<IGroupRepository>();
+            eventService = new Mock<MPServices.IEventRepository>(MockBehavior.Strict);
+            contactRelationshipService = new Mock<MPServices.IContactRelationshipRepository>();
             serveService = new Mock<IServeService>();
             participantService = new Mock<MPServices.IParticipantService>();
-            _groupService = new Mock<IGroupService>();
-            _communicationService = new Mock<MPServices.ICommunicationService>();
-            _contactService = new Mock<MPServices.IContactService>();
+            _groupService = new Mock<IGroupRepository>();
+            _communicationService = new Mock<MPServices.ICommunicationRepository>();
+            _contactService = new Mock<MPServices.IContactRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
-            _apiUserService = new Mock<MPServices.IApiUserService>();
-            _attributeService = new Mock<MPServices.IAttributeService>();
+            _apiUserService = new Mock<MPServices.IApiUserRepository>();
+            _attributeService = new Mock<MPServices.IAttributeRepository>();
 
             config = new Mock<IConfigurationWrapper>();
 

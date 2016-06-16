@@ -3,8 +3,8 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IAttributeService
+    public interface IDestinationRepository
     {
-        List<MpAttribute> GetAttributes(int? attributeTypeId);
+        List<MpTripDocuments> DocumentsForDestination(int destinationId);
     }
 }

@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _autoStartedTaskPageViewId;
 
-        public TaskRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
+        public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
             base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

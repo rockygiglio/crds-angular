@@ -15,7 +15,7 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly int _eventPage = Convert.ToInt32(AppSettings("Events"));
         private readonly IParticipantService _participantService;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly int _groupParticpantsSubPageView = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _opportunityPage = Convert.ToInt32(AppSettings("OpportunityPage"));
@@ -24,10 +24,10 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _contactOpportunityResponses = Convert.ToInt32(AppSettings("ContactOpportunityResponses"));
 
         public OpportunityServiceImpl(IMinistryPlatformService ministryPlatformService,
-                                      IAuthenticationService authenticationService,
+                                      IAuthenticationRepository authenticationService,
                                       IConfigurationWrapper configurationWrapper,
                                       IParticipantService participantService,
-            IApiUserService apiUserService)
+            IApiUserRepository apiUserService)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

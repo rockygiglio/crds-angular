@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Services
     {
         private readonly IMinistryPlatformService _ministryPlatformServiceImpl;
 
-        public LookupRepository(IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformServiceImpl)
+        public LookupRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformServiceImpl)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformServiceImpl = ministryPlatformServiceImpl;

@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IContactService
+    public interface IContactRepository
     {
         string GetContactEmail(int contactId);
         MpMyContact GetContactById(int contactId);

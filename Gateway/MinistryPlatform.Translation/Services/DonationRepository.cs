@@ -15,7 +15,7 @@ using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class DonationRepository : BaseRepository, IDonationService
+    public class DonationRepository : BaseRepository, IDonationRepository
     {
         private readonly int _donationsPageId;
         private readonly int _donationDistributionPageId;
@@ -35,13 +35,13 @@ namespace MinistryPlatform.Translation.Services
         private readonly int _donationDistributionsSubPage;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IDonorService _donorService;
-        private readonly ICommunicationService _communicationService;
+        private readonly IDonorRepository _donorService;
+        private readonly ICommunicationRepository _communicationService;
         private readonly IPledgeService _pledgeService;
         
         private readonly int _donationStatusSucceeded;
        
-        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorService donorService, ICommunicationService communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationService authenticationService, IConfigurationWrapper configurationWrapper)
+        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

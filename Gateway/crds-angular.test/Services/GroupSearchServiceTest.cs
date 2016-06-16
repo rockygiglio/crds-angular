@@ -12,16 +12,16 @@ using Moq;
 using NUnit.Framework;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
 using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Services.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {
     public class GroupSearchServiceTest
     {
         private GroupSearchService _fixture;
-        private Mock<IGroupService> _groupService;
+        private Mock<IGroupRepository> _groupService;
         private Mock<IConfigurationWrapper> _config;
-        private Mock<MPServices.IAttributeService> _attributeService;
+        private Mock<MPServices.IAttributeRepository> _attributeService;
         private const int GroupGoalConnectWithCommunity = 6999;
         private const int GroupGoalMakeFriends = 7002;
         private const int GroupGoalLearnAndGrow = 7000;
@@ -45,8 +45,8 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _groupService = new Mock<IGroupService>();
-            _attributeService = new Mock<MPServices.IAttributeService>();
+            _groupService = new Mock<IGroupRepository>();
+            _attributeService = new Mock<MPServices.IAttributeRepository>();
             
             _config = new Mock<IConfigurationWrapper>();
 
