@@ -51,12 +51,6 @@ module.exports = function(config) {
     port: 9876,
     webpack: {
       devtool: 'inline-source-map',
-      externals: {
-        stripe: 'Stripe',
-        angular: 'angular',
-        moment: 'moment'
-
-      },
       module: {
         loaders: [
           {
