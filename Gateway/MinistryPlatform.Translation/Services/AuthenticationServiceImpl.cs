@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
-using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Services.Interfaces;
 using Newtonsoft.Json.Linq;

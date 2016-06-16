@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Utils;
 using MinistryPlatform.Translation.Helpers;
-using Newtonsoft.Json.Linq;
 
 namespace MinistryPlatform.Translation.Services
 {
