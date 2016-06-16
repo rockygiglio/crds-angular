@@ -55,7 +55,7 @@ module.exports = {
             {
               test: /\.js$/,
               include: [
-                path.resolve(__dirname, 'app'), 
+                path.resolve(__dirname, 'app'),
                 path.resolve(__dirname, 'node_modules/angular-stripe')
               ],
               loader: 'ng-annotate!babel-loader'

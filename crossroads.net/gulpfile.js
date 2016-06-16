@@ -63,6 +63,14 @@ function htmlReplace(devBuild) {
 
   gulp.src('./lib/load-image.all.min.js')
       .pipe(gulp.dest('./assets'));
+
+  if (!devBuild) {
+    var rootedCoreCss = '.' + assets.core.css;
+    gutil.log('[start]', 'Copying ' + rootedCoreCss + ' to ./assets/core.css');
+    gulp.src(rootedCoreCss)
+      .pipe(rename('core.css'))
+      .pipe(gulp.dest('./assets'));
+  }
 }
 
 var browserSyncCompiles = 0;
