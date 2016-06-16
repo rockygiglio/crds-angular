@@ -127,7 +127,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public MessageTemplate GetTemplate(int templateId)
+        public MpMessageTemplate GetTemplate(int templateId)
         {
             var pageRecords = _ministryPlatformService.GetRecordDict(_messagePageId, templateId, ApiLogin());
 
@@ -136,7 +136,7 @@ namespace MinistryPlatform.Translation.Services
                 throw new InvalidOperationException("Couldn't find message template.");
             }
 
-            var template = new MessageTemplate
+            var template = new MpMessageTemplate
             {
                 Body = pageRecords["Body"].ToString(),
                 Subject = pageRecords["Subject"].ToString()

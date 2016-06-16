@@ -151,7 +151,7 @@ namespace crds_angular.Services
                 {
                     _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
                     var eventId = childcareEvents.Where((ev) => ev.Key == ccareDates.ChildcareRequestDateId).Select( (ev) => ev.Value).SingleOrDefault();
-                    var eventGroup = new EventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
+                    var eventGroup = new MpEventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
                     var currentGroups = _eventService.GetGroupsForEvent(eventId).Select((g) => g.GroupId).ToList();
                     if (!currentGroups.Contains(request.GroupId))
                     {
@@ -464,7 +464,7 @@ namespace crds_angular.Services
 
         private static MpCommunication FormatCommunication(int authorUserId,
                                                          int domainId,
-                                                         MessageTemplate template,
+                                                         MpMessageTemplate template,
                                                          MyContact fromContact,
                                                          MyContact replyToContact,
                                                          int participantContactId,
@@ -485,7 +485,7 @@ namespace crds_angular.Services
             return communication;
         }
 
-        private void LogError(EventParticipant participant, Exception ex)
+        private void LogError(MpEventParticipant participant, Exception ex)
         {
             var participantId = participant.ParticipantId;
             var groupId = participant.GroupId;

@@ -423,7 +423,7 @@ namespace crds_angular.Services
 
         }
 
-        public List<GroupContactDTO> PotentialVolunteers(int groupId, Models.Crossroads.Events.Event evnt, List<GroupParticipant> groupMembers)
+        public List<GroupContactDTO> PotentialVolunteers(int groupId, Models.Crossroads.Events.Event evnt, List<MpGroupParticipant> groupMembers)
         {
             var responses = _opportunityService.GetContactsOpportunityResponseByGroupAndEvent(groupId, evnt.EventId).Select(res =>
             {
@@ -469,7 +469,7 @@ namespace crds_angular.Services
 
         }
 
-        private bool RespondedOnWeekend(Models.Crossroads.Events.Event evnt, GroupParticipant gm)
+        private bool RespondedOnWeekend(Models.Crossroads.Events.Event evnt, MpGroupParticipant gm)
         {
 
             // this person did not respond, they are a potential contact so far
@@ -756,7 +756,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServeRole NewServingRole(GroupServingParticipant record)
+        private ServeRole NewServingRole(MpGroupServingParticipant record)
         {
             return new ServeRole
             {
@@ -770,7 +770,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServingTime NewServingTime(GroupServingParticipant record)
+        private ServingTime NewServingTime(MpGroupServingParticipant record)
         {
             return new ServingTime
             {
@@ -780,7 +780,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServingTeam NewServingTeam(GroupServingParticipant record)
+        private ServingTeam NewServingTeam(MpGroupServingParticipant record)
         {
             return new ServingTeam
             {
@@ -797,7 +797,7 @@ namespace crds_angular.Services
             };
         }
 
-        private TeamMember NewTeamMember(GroupServingParticipant record)
+        private TeamMember NewTeamMember(MpGroupServingParticipant record)
         {
             // new team member
             var member = new TeamMember
@@ -816,7 +816,7 @@ namespace crds_angular.Services
             return member;
         }
 
-        private ServeRsvp NewServeRsvp(GroupServingParticipant record)
+        private ServeRsvp NewServeRsvp(MpGroupServingParticipant record)
         {
             if (record.Rsvp != null && !((bool) record.Rsvp))
             {

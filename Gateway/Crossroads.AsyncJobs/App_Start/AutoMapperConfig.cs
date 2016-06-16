@@ -9,7 +9,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using Group = MinistryPlatform.Translation.Models.Group;
+using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
 using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace Crossroads.AsyncJobs
@@ -22,13 +22,13 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.EmailNotifications,
                     opts => opts.MapFrom(src => src["Bulk_Email_Opt_Out"]));
 
-            Mapper.CreateMap<Group, OpportunityGroup>()
+            Mapper.CreateMap<MpGroup, OpportunityGroup>()
                 .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.GroupId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventTypeId))
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
 
-            Mapper.CreateMap<GroupParticipant, OpportunityGroupParticipant>()
+            Mapper.CreateMap<MpGroupParticipant, OpportunityGroupParticipant>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
                 .ForMember(dest => dest.GroupRoleTitle, opts => opts.MapFrom(src => src.GroupRoleTitle))

@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class GroupSearchResult
+    public class MpGroupSearchResult
     {
         public int GroupId { get; set; }
         // TODO: Cleanup
@@ -20,6 +20,6 @@ namespace MinistryPlatform.Translation.Models
         public int RemainingCapacity { get; set; }
         public int ContactId { get; set; }
         public MpAddress Address { get; set; }
-        public GroupSearchAttributes SearchAttributes { get; set; }
+        public MpGroupSearchAttributes SearchAttributes { get; set; }
     }
 }

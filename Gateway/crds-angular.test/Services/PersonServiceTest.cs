@@ -24,7 +24,7 @@ namespace crds_angular.test.Services
 
         private PersonService _fixture;
         private MyContact _myContact;
-        private List<HouseholdMember> _householdMembers;
+        private List<MpHouseholdMember> _householdMembers;
 
         private readonly DateTime startDate = new DateTime(2015, 2, 21);
 
@@ -71,7 +71,7 @@ namespace crds_angular.test.Services
                 Address_ID = 6,
                 Attendance_Start_Date = startDate
             };
-            _householdMembers = new List<HouseholdMember>();
+            _householdMembers = new List<MpHouseholdMember>();
 
             _fixture = new PersonService(_contactService.Object, _objectAttributeService.Object, _apiUserService.Object, _participantService.Object, _userService.Object, _authenticationService.Object);
 

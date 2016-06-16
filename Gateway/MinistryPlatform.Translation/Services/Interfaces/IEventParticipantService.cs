@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         bool AddDocumentsToTripParticipant(List<MpTripDocuments> documents, int eventParticipantId);
         List<MpTripParticipant> TripParticipants(string search);
-        List<EventParticipant> GetChildCareParticipants(int daysBeforeEvent);
-        List<EventParticipant> GetEventParticipants(int eventId, int? roomId = null);
+        List<MpEventParticipant> GetChildCareParticipants(int daysBeforeEvent);
+        List<MpEventParticipant> GetEventParticipants(int eventId, int? roomId = null);
     }
 }

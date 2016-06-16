@@ -80,7 +80,7 @@ namespace crds_angular.test.Services
 
             var participant = new GroupParticipantDTO();
             
-            _groupService.Setup(mocked => mocked.GetSearchResults(groupTypeId)).Returns(It.IsAny<List<GroupSearchResult>>());
+            _groupService.Setup(mocked => mocked.GetSearchResults(groupTypeId)).Returns(It.IsAny<List<MpGroupSearchResult>>());
             _attributeService.Setup(mocked => mocked.GetAttributes(null)).Returns(It.IsAny<List<MpAttribute>>());
             
             //var result =  _fixture.FindMatches(groupTypeId, participant);

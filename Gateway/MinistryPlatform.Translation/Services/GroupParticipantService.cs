@@ -38,7 +38,7 @@ namespace MinistryPlatform.Translation.Services
             return groupParticipant != null ? groupParticipant.ToInt("Group_Participant_ID") : 0;
         }
 
-        public List<GroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
+        public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
             var connection = _dbConnection;
             try
@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Services
                 var command = CreateSqlCommand(participants, from, to);
                 command.Connection = connection;
                 var reader = command.ExecuteReader();
-                var groupServingParticipants = new List<GroupServingParticipant>();
+                var groupServingParticipants = new List<MpGroupServingParticipant>();
                 var rowNumber = 0;
                 var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
                 while (reader.Read())
@@ -56,7 +56,7 @@ namespace MinistryPlatform.Translation.Services
                     var rowContactId = reader.GetInt32(reader.GetOrdinal("Contact_ID"));
                     var loggedInUser = (loggedInContactId == rowContactId);
                     rowNumber = rowNumber + 1;
-                    var participant = new GroupServingParticipant();
+                    var participant = new MpGroupServingParticipant();
                     participant.ContactId = rowContactId;
                     participant.EventType = reader.GetString(reader.GetOrdinal("Event_Type"));
                     participant.EventTypeId = reader.GetInt32(reader.GetOrdinal("Event_Type_ID"));

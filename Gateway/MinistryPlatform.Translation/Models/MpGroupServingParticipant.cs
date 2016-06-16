@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class GroupServingParticipant
+    public class MpGroupServingParticipant
     {
         public int ContactId { get; set; }
         public int DomainId { get; set; }

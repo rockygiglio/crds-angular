@@ -243,7 +243,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(viewKey, It.IsAny<string>(), searchString, sortString, 0)).Returns(dictList);
 
-            var getTemplateResponse = new MessageTemplate()
+            var getTemplateResponse = new MpMessageTemplate()
             {
                 Body = "Test Body Content",
                 Subject = "Test Email Subject Line"
@@ -518,7 +518,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(viewKey, It.IsAny<string>(), searchString, sortString, 0)).Returns(dictList);
 
-            var getTemplateResponse = new MessageTemplate()
+            var getTemplateResponse = new MpMessageTemplate()
             {
                 Body = "Test Body Content",
                 Subject = "Test Email Subject Line"
@@ -706,7 +706,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int donationAmt = 4343;
             const string paymentType = "Bank";
 
-            var getTemplateResponse = new MessageTemplate()
+            var getTemplateResponse = new MpMessageTemplate()
             {
                 Body = "Your payment was rejected.  Darn.",
                 Subject = "Test Decline Email"
@@ -804,7 +804,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Email_Address = "giving@crossroads.net"
             };
 
-            var getTemplateResponse = new MessageTemplate()
+            var getTemplateResponse = new MpMessageTemplate()
             {
                 Body = "Your payment was rejected.  Darn.",
                 Subject = "Test Decline Email"

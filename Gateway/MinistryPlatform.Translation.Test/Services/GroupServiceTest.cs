@@ -234,17 +234,17 @@ namespace MinistryPlatform.Translation.Test.Services
         public void testIsUserInGroup()
         {
             int participantId = 123;
-            List<GroupParticipant> groupParticipants = new List<GroupParticipant>
+            List<MpGroupParticipant> groupParticipants = new List<MpGroupParticipant>
             {
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 1111
                 },
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 2222
                 },
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 123
                 }
@@ -441,7 +441,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var end = DateTime.Now.AddYears(2);
             const int groupId = 854725;
 
-            var newGroup = new Group()
+            var newGroup = new MpGroup()
             {
                 Name = "New Testing Group",
                 GroupDescription = "The best group ever created for testing stuff and things",              

@@ -121,7 +121,7 @@ namespace crds_angular.Models.Crossroads.Profile
         public string State { get; set; }
 
         [JsonProperty(PropertyName = "householdMembers")]
-        public List<HouseholdMember> HouseholdMembers { get; set; }
+        public List<MpHouseholdMember> HouseholdMembers { get; set; }
 
         [JsonProperty(PropertyName = "attributeTypes")]
         public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
@@ -170,9 +170,9 @@ namespace crds_angular.Models.Crossroads.Profile
             };
         }
 
-        public Household GetHousehold()
+        public MpHousehold GetHousehold()
         {
-            return new Household
+            return new MpHousehold
             {
                 Household_ID = HouseholdId,
                 Home_Phone = HomePhone,

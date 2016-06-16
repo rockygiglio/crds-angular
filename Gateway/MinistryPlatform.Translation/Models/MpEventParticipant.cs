@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class EventParticipant
+    public class MpEventParticipant
     {
         public bool ChildcareRequired { get; set; }
         public int ContactId { get; set; }

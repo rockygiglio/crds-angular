@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 { 
-    public class Location
+    public class MpLocation
     {
         public int LocationId { get; set; }
         public string LocationName { get; set; }

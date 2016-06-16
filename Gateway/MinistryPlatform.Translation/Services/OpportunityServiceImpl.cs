@@ -355,7 +355,7 @@ namespace MinistryPlatform.Translation.Services
             return recordId;
         }
 
-        public Group GetGroupParticipantsForOpportunity(int opportunityId, string token)
+        public MpGroup GetGroupParticipantsForOpportunity(int opportunityId, string token)
         {
             var opp = _ministryPlatformService.GetRecordDict(_opportunityPage, opportunityId, token);
             var groupId = opp.ToInt("Add_to_Group");
@@ -367,10 +367,10 @@ namespace MinistryPlatform.Translation.Services
                                                                        groupId,
                                                                        apiToken,
                                                                        searchString);
-            var participants = new List<GroupParticipant>();
+            var participants = new List<MpGroupParticipant>();
             foreach (var groupParticipant in group)
             {
-                participants.Add(new GroupParticipant
+                participants.Add(new MpGroupParticipant
                 {
                     ContactId = groupParticipant.ToInt("Contact_ID"),
                     GroupRoleId = groupParticipant.ToInt("Group_Role_ID"),
@@ -380,7 +380,7 @@ namespace MinistryPlatform.Translation.Services
                     ParticipantId = groupParticipant.ToInt("dp_RecordID")
                 });
             }
-            var retGroup = new Group
+            var retGroup = new MpGroup
             {
                 GroupId = groupId,
                 Name = groupName,

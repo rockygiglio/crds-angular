@@ -211,16 +211,16 @@ namespace crds_angular.test.Services
             };
             _roomService.Setup(mocked => mocked.GetRoomReservations(123)).Returns(r);
 
-            var p = new List<List<EventParticipant>>
+            var p = new List<List<MpEventParticipant>>
             {
-                new List<EventParticipant>
+                new List<MpEventParticipant>
                 {
-                    new EventParticipant()
+                    new MpEventParticipant()
                 },
-                new List<EventParticipant>
+                new List<MpEventParticipant>
                 {
-                    new EventParticipant(),
-                    new EventParticipant()
+                    new MpEventParticipant(),
+                    new MpEventParticipant()
                 }
             };
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);

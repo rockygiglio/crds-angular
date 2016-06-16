@@ -105,7 +105,7 @@ namespace crds_angular.Controllers.API
             return Authorized(token =>
             {
                 var group = _opportunityService.GetGroupParticipantsForOpportunity(id, token);
-                var oppGrp = Mapper.Map<Group, OpportunityGroup>(group);
+                var oppGrp = Mapper.Map<MpGroup, OpportunityGroup>(group);
                 return Ok(oppGrp);
             });
         }

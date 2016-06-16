@@ -520,7 +520,7 @@ namespace crds_angular.Services
             _contactService.UpdateContact(registration.Self.ContactId, dict);
 
             // update the user record?
-            MinistryPlatformUser user = _userService.GetByAuthenticationToken(token);
+            MpUser user = _userService.GetByAuthenticationToken(token);
             user.UserId = registration.Self.EmailAddress;
             user.UserEmail = registration.Self.EmailAddress;
             user.DisplayName = registration.Self.LastName + ", " + registration.Self.FirstName;

@@ -335,12 +335,12 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService.UpdateRecord(_eventPageNeedReminders, dict, token);
         }
 
-        public List<Group> GetGroupsForEvent(int eventId)
+        public List<MpGroup> GetGroupsForEvent(int eventId)
         {
             return _groupService.GetGroupsForEvent(eventId);
         }
 
-        public List<EventGroup> GetEventGroupsForEvent(int eventId, string token)
+        public List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
             var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
@@ -350,7 +350,7 @@ namespace MinistryPlatform.Translation.Services
                 return null;
             }
 
-            return records.Select(record => new EventGroup
+            return records.Select(record => new MpEventGroup
             {
                 EventGroupId = record.ToInt("Event_Group_ID"),
                 EventId = record.ToInt("Event_ID"),
@@ -361,7 +361,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public void DeleteEventGroup(EventGroup eventGroup, string token)
+        public void DeleteEventGroup(MpEventGroup eventGroup, string token)
         {
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
         }
@@ -432,7 +432,7 @@ namespace MinistryPlatform.Translation.Services
             return GetEventsData(token, searchString);
         }
 
-        public int CreateEventGroup(EventGroup eventGroup, string token)
+        public int CreateEventGroup(MpEventGroup eventGroup, string token)
         {
             var groupDictionary = new Dictionary<string, object>
             {
@@ -456,7 +456,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public void UpdateEventGroup(EventGroup eventGroup, string token)
+        public void UpdateEventGroup(MpEventGroup eventGroup, string token)
         {
             var groupDictionary = new Dictionary<string, object>
             {

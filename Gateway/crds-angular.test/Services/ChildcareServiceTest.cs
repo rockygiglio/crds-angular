@@ -179,7 +179,7 @@ namespace crds_angular.test.Services
             var notificationTemplateId = 0985627;
             var defaultAuthorId = 9087345;
 
-            var template = new MessageTemplate()
+            var template = new MpMessageTemplate()
             {
                 Body = "Some long string of text",
                 Subject = "A subject"
@@ -249,15 +249,15 @@ namespace crds_angular.test.Services
         {
             const int daysBefore = 999;
             const int emailTemplateId = 77;
-            var participants = new List<EventParticipant>
+            var participants = new List<MpEventParticipant>
             {
-                new EventParticipant
+                new MpEventParticipant
                 {
                     ParticipantId = 1,
                     EventId = 123,
                     ContactId = 987654
                 },
-                new EventParticipant
+                new MpEventParticipant
                 {
                     ParticipantId = 2,
                     EventId = 456,
@@ -283,7 +283,7 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("NumberOfDaysBeforeEventToSend")).Returns(daysBefore);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
-            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MessageTemplate());            
+            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MpMessageTemplate());            
             _eventParticipantService.Setup(m => m.GetChildCareParticipants(daysBefore)).Returns(participants);
             _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 

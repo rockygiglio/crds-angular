@@ -41,7 +41,7 @@ namespace crds_angular.test.Services
 
         private ServeService _fixture;
 
-        private MessageTemplate mockRsvpChangedTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpChangedTemplate = new MpMessageTemplate
         {
             Body =
                 "This message is to confirm that you have changed your rsvp from [Previous_Opportunity_Name] to [Opportunity_Name]." +
@@ -50,7 +50,7 @@ namespace crds_angular.test.Services
             Subject = "Serving RSVP Confirmation"
         };
 
-        private MessageTemplate mockRsvpNoTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpNoTemplate = new MpMessageTemplate
         {
             Body =
                 "Thank you for notifying us that you cannot serve with [Group_Name] from [Start_Date] to [End_Date]." +
@@ -59,7 +59,7 @@ namespace crds_angular.test.Services
             Subject = "Serving RSVP Confirmation"
         };
 
-        private MessageTemplate mockRsvpYesTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpYesTemplate = new MpMessageTemplate
         {
             Body = "Thank you for signing up to serve with [Opportunity_Name] from [Start_Date] to [End_Date]!" +
                    "On the day you are serving, please report to [Room] at [Shift_Start] and plan on staying until [Shift_End]." +
@@ -286,12 +286,12 @@ namespace crds_angular.test.Services
             Assert.AreEqual(1, servingTime.ServingTeams.Count);
         }
 
-        private static List<GroupServingParticipant> MockGroupServingParticipants()
+        private static List<MpGroupServingParticipant> MockGroupServingParticipants()
         {
             var startDate = DateTime.Today;
-            var servingParticipants = new List<GroupServingParticipant>
+            var servingParticipants = new List<MpGroupServingParticipant>
             {
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -318,7 +318,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -345,7 +345,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -372,7 +372,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -921,11 +921,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<GroupParticipant> SetupGroupParticipants()
+        private static List<MpGroupParticipant> SetupGroupParticipants()
         {
-            return new List<GroupParticipant>
+            return new List<MpGroupParticipant>
             {
-                new GroupParticipant()
+                new MpGroupParticipant()
                 {
                     ContactId = 1234,
                     GroupRoleId = 1,
@@ -934,7 +934,7 @@ namespace crds_angular.test.Services
                     NickName = "Matt",
                     ParticipantId = 4321
                 },
-                new GroupParticipant()
+                new MpGroupParticipant()
                 {
                     ContactId = 2345,
                     GroupRoleId = 1,

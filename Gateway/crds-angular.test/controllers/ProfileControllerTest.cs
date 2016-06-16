@@ -69,7 +69,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestAdminGetProfileUnauthorized()
         {
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 UserRecordId = 987
             };
@@ -86,7 +86,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestAdminGetProfile()
         {
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 UserRecordId = 987
             };

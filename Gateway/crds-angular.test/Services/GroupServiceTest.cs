@@ -112,13 +112,13 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldThrowCommunityGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 3,
                 Full = true,
-                Participants = new List<GroupParticipant>
+                Participants = new List<MpGroupParticipant>
                 {
-                    new GroupParticipant()
+                    new MpGroupParticipant()
                 }
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
@@ -139,13 +139,13 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldThrowCommunityGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 2,
                 Full = false,
-                Participants = new List<GroupParticipant>
+                Participants = new List<MpGroupParticipant>
                 {
-                    new GroupParticipant()
+                    new MpGroupParticipant()
                 }
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
@@ -166,11 +166,11 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldAddParticipantsToCommunityGroupAndEvents()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 0,
                 Full = false,
-                Participants = new List<GroupParticipant>()
+                Participants = new List<MpGroupParticipant>()
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
@@ -203,11 +203,11 @@ namespace crds_angular.test.Services
         [Test]
         public void testGetGroupDetails()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 0,
                 Full = true,
-                Participants = new List<GroupParticipant>(),
+                Participants = new List<MpGroupParticipant>(),
                 GroupType = 90210,
                 WaitList = true,
                 WaitListGroupId = 10101,
@@ -223,9 +223,9 @@ namespace crds_angular.test.Services
 
             groupService.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(eventList);
 
-            var relations = new List<GroupSignupRelationships>
+            var relations = new List<MpGroupSignupRelationships>
             {
-                new GroupSignupRelationships {RelationshipId = 111}
+                new MpGroupSignupRelationships {RelationshipId = 111}
             };
             groupService.Setup(mocked => mocked.GetGroupSignupRelations(90210)).Returns(relations);
 
@@ -244,8 +244,8 @@ namespace crds_angular.test.Services
             {
                 ParticipantId = 555,
             };
-            groupService.Setup(mocked => mocked.checkIfUserInGroup(555, It.IsAny<List<GroupParticipant>>())).Returns(false);
-            groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<GroupParticipant>>())).Returns(false);
+            groupService.Setup(mocked => mocked.checkIfUserInGroup(555, It.IsAny<List<MpGroupParticipant>>())).Returns(false);
+            groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<MpGroupParticipant>>())).Returns(false);
 
             var attributes = new ObjectAllAttributesDTO();            
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
@@ -270,9 +270,9 @@ namespace crds_angular.test.Services
             const int participantId = 54;
             const int groupTypeId = 19;
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-                new Group
+                new MpGroup
                 {
                     GroupId = 321,
                     CongregationId = 5,
@@ -315,7 +315,7 @@ namespace crds_angular.test.Services
             var start = DateTime.Now;
             var end = DateTime.Now.AddYears(2);
 
-            var newGroup = new Group()
+            var newGroup = new MpGroup()
             {
                 Name = "New Testing Group",
                 GroupDescription = "The best group ever created for testing stuff and things",
@@ -422,9 +422,9 @@ namespace crds_angular.test.Services
                 groupId = 98765
             };
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-               new Group(){}
+               new MpGroup(){}
             };
 
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
@@ -441,9 +441,9 @@ namespace crds_angular.test.Services
             const int groupId = 98765;
             var participant = new Participant() { ParticipantId = 100 };
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-               new Group()
+               new MpGroup()
                {
                    GroupId = 98765
                }
@@ -455,7 +455,7 @@ namespace crds_angular.test.Services
                 groupId = 98765
             };
 
-            var template = new MessageTemplate()
+            var template = new MpMessageTemplate()
             {
                 Subject = "You Can Join My Group",
                 Body = "This is a journey group."

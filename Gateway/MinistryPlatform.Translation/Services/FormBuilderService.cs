@@ -19,12 +19,12 @@ namespace MinistryPlatform.Translation.Services
             _ministryPlatformService = ministryPlatformService;
         }
 
-        public List<Group> GetGroupsUndividedSession(int pageViewId)
+        public List<MpGroup> GetGroupsUndividedSession(int pageViewId)
         {
             var token = base.ApiLogin();
             var records = _ministryPlatformService.GetPageViewRecords(pageViewId, token);
 
-            return records.Select(record => new Group
+            return records.Select(record => new MpGroup
             {
 
                 GroupId = record.ToInt("dp_RecordID"),

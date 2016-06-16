@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class EventGroup
+    public class MpEventGroup
     {
         public int EventGroupId { get; set; }
         public int EventId { get; set; }

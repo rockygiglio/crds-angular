@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         int UnregisterParticipantForEvent(int participantId, int eventId);
         List<MpEvent> GetEvents(string eventType, string token);
         List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token);
-        List<Group> GetGroupsForEvent(int eventId);
+        List<MpGroup> GetGroupsForEvent(int eventId);
         bool EventHasParticipant(int eventId, int participantId);
         MpEvent GetEvent(int eventId);
         List<MpEvent> GetEventsByParentEventId(int parentEventId);
@@ -22,11 +22,11 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         IEnumerable<MpEvent> EventsByPageViewId(string token, int pageViewId, string search);
         IEnumerable<Participant> EventParticipants(string token, int eventId);
         void SetReminderFlag(int eventId, string token);
-        List<EventGroup> GetEventGroupsForEvent(int eventId, string token);
+        List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token);
         //void CopyEventGroup(EventGroup eventGroup);
-        void DeleteEventGroup(EventGroup eventGroup, string token);
-        int CreateEventGroup(EventGroup eventGroup, string token);
-        void UpdateEventGroup(EventGroup eventGroup, string token);
+        void DeleteEventGroup(MpEventGroup eventGroup, string token);
+        int CreateEventGroup(MpEventGroup eventGroup, string token);
+        void UpdateEventGroup(MpEventGroup eventGroup, string token);
 
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);

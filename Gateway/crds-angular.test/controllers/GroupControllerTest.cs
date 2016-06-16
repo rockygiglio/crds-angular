@@ -172,7 +172,7 @@ namespace crds_angular.test.controllers
             int groupId = 333;
             int contactId = 777;
 
-            Group g = new Group();
+            MpGroup g = new MpGroup();
             g.GroupId = 333;
             g.GroupType = 8;
             g.GroupRole = "Member";
@@ -191,7 +191,7 @@ namespace crds_angular.test.controllers
 
             authenticationServiceMock.Setup(mocked => mocked.GetContactId(fixture.Request.Headers.Authorization.ToString())).Returns(contactId);
 
-            var relationRecord = new GroupSignupRelationships
+            var relationRecord = new MpGroupSignupRelationships
             {
                 RelationshipId = 1,
                 RelationshipMinAge = 00,
@@ -230,7 +230,7 @@ namespace crds_angular.test.controllers
         public void testAddParticipantToCommunityGroupWhenGroupFull()
         {
             int groupId = 333;
-            Group g = new Group();
+            MpGroup g = new MpGroup();
             g.GroupId = 333;
             g.GroupType = 8;
             g.GroupRole = "Member";

@@ -16,7 +16,7 @@ using MinistryPlatform.Translation.Models;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
-using Group = MinistryPlatform.Translation.Models.Group;
+using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
 using Response = MinistryPlatform.Translation.Models.Response;
 
 namespace crds_angular.App_Start
@@ -36,13 +36,13 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.EmailNotifications,
                     opts => opts.MapFrom(src => src["Bulk_Email_Opt_Out"]));
 
-            Mapper.CreateMap<Group, OpportunityGroup>()
+            Mapper.CreateMap<MpGroup, OpportunityGroup>()
                 .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.GroupId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventTypeId))
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
 
-            Mapper.CreateMap<GroupParticipant, OpportunityGroupParticipant>()
+            Mapper.CreateMap<MpGroupParticipant, OpportunityGroupParticipant>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
                 .ForMember(dest => dest.GroupRoleTitle, opts => opts.MapFrom(src => src.GroupRoleTitle))
@@ -229,16 +229,16 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
             Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 
-            Mapper.CreateMap<Group, GroupDTO>()
+            Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
 
-            Mapper.CreateMap<GroupDTO, Group>()
+            Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
 
 
-            Mapper.CreateMap<GroupSearchResult, GroupDTO>()
+            Mapper.CreateMap<MpGroupSearchResult, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
 
             Mapper.CreateMap<MpAddress, AddressDTO>()
@@ -255,7 +255,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
-            Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
+            Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
 
         }
     }

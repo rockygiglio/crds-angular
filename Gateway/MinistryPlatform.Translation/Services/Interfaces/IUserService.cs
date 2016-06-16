@@ -6,15 +6,15 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IUserService
     {
-        MinistryPlatformUser GetByUserId(string userId);
-        MinistryPlatformUser GetByAuthenticationToken(string authToken);
+        MpUser GetByUserId(string userId);
+        MpUser GetByAuthenticationToken(string authToken);
         void UpdateUser(Dictionary<string, object> userUpdateValues);
-        void UpdateUser(MinistryPlatformUser user);
+        void UpdateUser(MpUser user);
         int GetUserIdByUsername(string username);
         int GetContactIdByUserId(int userId);
-        MinistryPlatformUser GetUserByResetToken(string resetToken);
+        MpUser GetUserByResetToken(string resetToken);
         List<MpRoleDto> GetUserRoles(int userId);
 
-        MinistryPlatformUser GetUserByRecordId(int recordId);
+        MpUser GetUserByRecordId(int recordId);
     }
 }

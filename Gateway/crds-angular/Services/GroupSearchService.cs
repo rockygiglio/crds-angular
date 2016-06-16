@@ -121,7 +121,7 @@ namespace crds_angular.Services
             return groups;
         }
 
-        private IEnumerable<GroupSearchResult> FilterSearchResults(GroupParticipantDTO participant, IEnumerable<GroupSearchResult> mpGroups)
+        private IEnumerable<MpGroupSearchResult> FilterSearchResults(GroupParticipantDTO participant, IEnumerable<MpGroupSearchResult> mpGroups)
         {
             ObjectSingleAttributeDTO participantGoal;
             ObjectSingleAttributeDTO gender;
@@ -195,7 +195,7 @@ namespace crds_angular.Services
             return participantGoal.Value.AttributeId == _goalMatches[groupGoalId.Value];
         }
 
-        private List<GroupDTO> ConvertToGroupDto(IEnumerable<GroupSearchResult> mpGroups, List<MpAttribute> mpAttributes)
+        private List<GroupDTO> ConvertToGroupDto(IEnumerable<MpGroupSearchResult> mpGroups, List<MpAttribute> mpAttributes)
         {
             var groups = new List<GroupDTO>();
 
@@ -234,7 +234,7 @@ namespace crds_angular.Services
             return groups;
         }
 
-        private ObjectAttributeTypeDTO GetPetAttributes(List<MpAttribute> mpAttributes, GroupSearchAttributes searchAttributes)
+        private ObjectAttributeTypeDTO GetPetAttributes(List<MpAttribute> mpAttributes, MpGroupSearchAttributes searchAttributes)
         {
             var petsAttributeType = mpAttributes.First(x => x.AttributeTypeId == GroupPetsAttributeTypeId);
 

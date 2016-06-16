@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class HouseholdMember
+    public class MpHouseholdMember
     {
         public int ContactId { get; set; }
         public string FirstName { get; set; }

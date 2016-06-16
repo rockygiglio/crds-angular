@@ -18,6 +18,6 @@ namespace crds_angular.Services.Interfaces
         Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded);
         List<int> SaveServeRsvp(string token, SaveRsvpDto dto);
         void SendReminderEmails();
-        List<GroupContactDTO> PotentialVolunteers(int groupId, crds_angular.Models.Crossroads.Events.Event evt, List<GroupParticipant> groupMembers );
+        List<GroupContactDTO> PotentialVolunteers(int groupId, crds_angular.Models.Crossroads.Events.Event evt, List<MpGroupParticipant> groupMembers );
     }
 }

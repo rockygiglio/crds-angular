@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class GroupSearchAttributes
+    public class MpGroupSearchAttributes
     {
         public int? TypeId { get; set; }
         public int? GoalId { get; set; }

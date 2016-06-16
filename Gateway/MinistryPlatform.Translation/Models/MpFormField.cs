@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class FormField
+    public class MpFormField
     {
         public int FormFieldId { get; set; }
         public int CrossroadsId { get; set; }

@@ -80,7 +80,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public List<EventParticipant> GetChildCareParticipants(int daysBeforeEvent)
+        public List<MpEventParticipant> GetChildCareParticipants(int daysBeforeEvent)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace MinistryPlatform.Translation.Services
                                                                          apiToken,
                                                                          search)));
 
-                return records.Select(viewRecord => new EventParticipant
+                return records.Select(viewRecord => new MpEventParticipant
                 {
                     ChildcareRequired = viewRecord.ToBool("Child_Care_Requested"),
                     ContactId = viewRecord.ToInt("Contact_ID"),
@@ -114,7 +114,7 @@ namespace MinistryPlatform.Translation.Services
             }
         }
 
-        public List<EventParticipant> GetEventParticipants(int eventId, int? roomId = null)
+        public List<MpEventParticipant> GetEventParticipants(int eventId, int? roomId = null)
         {
             var searchString = roomId == null ? null : string.Format(",,,\"{0}\"", roomId);
 
@@ -123,7 +123,7 @@ namespace MinistryPlatform.Translation.Services
                 var records = 
                     WithApiLogin(
                         apiToken => _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, apiToken, searchString));
-                return records.Select(viewRecord => new EventParticipant
+                return records.Select(viewRecord => new MpEventParticipant
                 {
                     EventParticipantId = viewRecord.ToInt("Event_Participant_ID"),
                     ParticipantId = viewRecord.ToInt("Participant_ID"),

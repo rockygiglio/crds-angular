@@ -29,11 +29,11 @@ namespace MinistryPlatform.Translation.Services
             return MapOrganizations(result);
         }
 
-        public List<Location> GetLocationsForOrganization(int orgId, string token)
+        public List<MpLocation> GetLocationsForOrganization(int orgId, string token)
         {
             var result = _ministryPlatformService.GetSubpageViewRecords(_configurationWrapper.GetConfigIntValue("LocationsForOrg"), orgId, token);
 
-            return result.Select(record => new Location
+            return result.Select(record => new MpLocation
             {
                 LocationId = record.ToInt("Location ID"),
                 LocationName = record.ToString("Location Name"),

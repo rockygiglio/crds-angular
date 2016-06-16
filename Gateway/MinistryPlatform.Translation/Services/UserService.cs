@@ -23,17 +23,17 @@ namespace MinistryPlatform.Translation.Services
             _usersPageId = _configurationWrapper.GetConfigIntValue("Users");
         }
 
-        public MinistryPlatformUser GetByUserId(string userId)
+        public MpUser GetByUserId(string userId)
         {
             var searchString = string.Format("\"{0}\",", userId);
             return (GetUser(searchString));
         }
 
-        public MinistryPlatformUser GetUserByRecordId(int recordId)
+        public MpUser GetUserByRecordId(int recordId)
         {
             var record = _ministryPlatformService.GetRecordDict(_usersPageId, recordId, ApiLogin());
 
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 CanImpersonate = record["Can_Impersonate"] as bool? ?? false,
                 Guid = record.ContainsKey("User_GUID") ? record["User_GUID"].ToString() : null,
@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Services
             return (user);
         }
 
-        public MinistryPlatformUser GetByAuthenticationToken(string authToken)
+        public MpUser GetByAuthenticationToken(string authToken)
         {
             var contactId = _authenticationService.GetContactId(authToken);
 
@@ -53,13 +53,13 @@ namespace MinistryPlatform.Translation.Services
             return (GetUser(searchString));
         }
 
-        public MinistryPlatformUser GetUserByResetToken(string resetToken)
+        public MpUser GetUserByResetToken(string resetToken)
         {
             var searchString = string.Format(",,,,,\"{0}\"", resetToken);
             return (GetUser(searchString));
         }
 
-        private MinistryPlatformUser GetUser(string searchString)
+        private MpUser GetUser(string searchString)
         {
             var records = _ministryPlatformService.GetPageViewRecords(_usersApiLookupPageViewId, ApiLogin(), searchString);
             if (records == null || !records.Any())
@@ -68,7 +68,7 @@ namespace MinistryPlatform.Translation.Services
             }
 
             var record = records.First();
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 CanImpersonate = record["Can_Impersonate"] as bool? ?? false,
                 Guid = record.ContainsKey("User_GUID") ? record["User_GUID"].ToString() : null,
@@ -99,7 +99,7 @@ namespace MinistryPlatform.Translation.Services
             MinistryPlatformService.UpdateRecord(Convert.ToInt32(ConfigurationManager.AppSettings["Users"]), userUpdateValues, ApiLogin());
         }
 
-        public void UpdateUser(MinistryPlatformUser user)
+        public void UpdateUser(MpUser user)
         {
             var userDict = new Dictionary<string, object>()
             {               

@@ -8,6 +8,6 @@ namespace MinistryPlatform.Translation.Services.Interfaces
     {
         MPOrganization GetOrganization(String name, string token);
         List<MPOrganization> GetOrganizations(string token);
-        List<Location> GetLocationsForOrganization(int organizationId, string token);
+        List<MpLocation> GetLocationsForOrganization(int organizationId, string token);
     }
 }

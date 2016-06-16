@@ -79,7 +79,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var mpGroup = Mapper.Map<Group>(group);
+                var mpGroup = Mapper.Map<MpGroup>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
                 var configuration = ObjectAttributeConfigurationFactory.Group();
@@ -97,7 +97,7 @@ namespace crds_angular.Services
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
-            Group group;
+            MpGroup group;
             try
             {
                 group = _mpGroupService.getGroupDetails(groupId);
@@ -164,7 +164,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void checkSpaceRemaining(List<ParticipantSignup> participants, Group group)
+        private void checkSpaceRemaining(List<ParticipantSignup> participants, MpGroup group)
         {
             var numParticipantsToAdd = participants.Count;
             var spaceRemaining = group.TargetSize - group.Participants.Count;
@@ -174,7 +174,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void decrementCapacity(int capacityNeeded, Group group)
+        private void decrementCapacity(int capacityNeeded, MpGroup group)
         {
             group.RemainingCapacity = group.RemainingCapacity - capacityNeeded;
             logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
@@ -214,7 +214,7 @@ namespace crds_angular.Services
             try
             {
                 var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p =>
-                                                                                                    new GroupParticipant
+                                                                                                    new MpGroupParticipant
                                                                                                     {
                                                                                                         ContactId = p.ContactId,
                                                                                                         LastName = p.LastName,
@@ -234,7 +234,7 @@ namespace crds_angular.Services
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
         {
             int participantId = participant.ParticipantId;
-            Group g = _mpGroupService.getGroupDetails(groupId);
+            MpGroup g = _mpGroupService.getGroupDetails(groupId);
 
             var signupRelations = _mpGroupService.GetGroupSignupRelations(g.GroupType);
 
@@ -308,7 +308,7 @@ namespace crds_angular.Services
                 return null;
             }
 
-            var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
+            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             var configuration = ObjectAttributeConfigurationFactory.Group();
             var mpAttributes = _attributeService.GetAttributes(null);
@@ -387,7 +387,7 @@ namespace crds_angular.Services
             {
                 return null;
             }
-            var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+            var participants = groupParticipants.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
 
             var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
 

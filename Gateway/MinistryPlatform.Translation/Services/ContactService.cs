@@ -171,11 +171,11 @@ namespace MinistryPlatform.Translation.Services
             return records.Select(record => (int) record["Contact_ID"]).ToList();
         }
 
-        public List<HouseholdMember> GetHouseholdFamilyMembers(int householdId)
+        public List<MpHouseholdMember> GetHouseholdFamilyMembers(int householdId)
         {
             var token = ApiLogin();
             var familyRecords = _ministryPlatformService.GetSubpageViewRecords("HouseholdMembers", householdId, token);
-            var family = familyRecords.Select(famRec => new HouseholdMember
+            var family = familyRecords.Select(famRec => new MpHouseholdMember
             {
                 ContactId = famRec.ToInt("Contact_ID"),
                 FirstName = famRec.ToString("First_Name"),

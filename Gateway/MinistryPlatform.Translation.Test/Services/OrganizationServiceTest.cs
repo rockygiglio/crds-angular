@@ -148,7 +148,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _mpServiceMock.Setup(m => m.GetSubpageViewRecords(LocPage, It.IsAny<int>(), FakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
             var ret = _fixture.GetLocationsForOrganization(1, FakeToken);
-            Assert.IsInstanceOf<List<Location>>(ret);
+            Assert.IsInstanceOf<List<MpLocation>>(ret);
             Assert.IsNotNull(ret);
         }
 

@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
         Opportunity GetOpportunityById(int opportunityId, string token);
         int GetOpportunitySignupCount(int opportunityId, int eventId, string token);
         List<DateTime> GetAllOpportunityDates(int id, string token);
-        Group GetGroupParticipantsForOpportunity(int id, string token);
+        MpGroup GetGroupParticipantsForOpportunity(int id, string token);
         DateTime GetLastOpportunityDate(int opportunityId, string token);
         int DeleteResponseToOpportunities(int participantId, int opportunityId, int eventId);
         int RespondToOpportunity(string token, int opportunityId, string comments);

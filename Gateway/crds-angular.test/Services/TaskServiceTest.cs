@@ -64,7 +64,7 @@ namespace crds_angular.test.Services
 
             testTasks.Add(testTask);
 
-            MinistryPlatformUser user = new MinistryPlatformUser();
+            MpUser user = new MpUser();
             user.CanImpersonate = true;
             user.Guid = "DAFD35F3-C8AA-4B9D-B302-AA5F0160E544";
             user.UserEmail = "test@test.com";

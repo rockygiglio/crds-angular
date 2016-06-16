@@ -6,7 +6,7 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 {
     public interface IGroupService
     {
-        int CreateGroup(Group group);
+        int CreateGroup(MpGroup group);
 
         int addParticipantToGroup(int participantId,
                                   int groupId,
@@ -18,30 +18,30 @@ namespace MinistryPlatform.Translation.Services.Interfaces
 
         IList<MpEvent> getAllEventsForGroup(int groupId);
 
-        Group getGroupDetails(int groupId);
+        MpGroup getGroupDetails(int groupId);
 
-        bool checkIfUserInGroup(int participantId, IList<GroupParticipant> participants);
+        bool checkIfUserInGroup(int participantId, IList<MpGroupParticipant> participants);
 
         bool checkIfRelationshipInGroup(int relationshipId, IList<int> currRelationshipList);
 
-        List<GroupSignupRelationships> GetGroupSignupRelations(int groupType);
+        List<MpGroupSignupRelationships> GetGroupSignupRelations(int groupType);
 
         bool ParticipantQualifiedServerGroupMember(int groupId, int participantId);
         bool ParticipantGroupMember(int groupId, int participantId);
 
-        List<Group> GetGroupsForEvent(int eventId);
+        List<MpGroup> GetGroupsForEvent(int eventId);
 
         void SendCommunityGroupConfirmationEmail(int participantId, int groupId, bool waitlist, bool childcareNeeded);
-        List<GroupParticipant> getEventParticipantsForGroup(int groupId, int eventId);
+        List<MpGroupParticipant> getEventParticipantsForGroup(int groupId, int eventId);
 
         IList<string> GetEventTypesForGroup(int groupId, string token = null);
 
-        List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
+        List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
-        void UpdateGroupRemainingCapacity(Group group);
+        void UpdateGroupRemainingCapacity(MpGroup group);
 
-        List<GroupParticipant> GetGroupParticipants(int groupId);
+        List<MpGroupParticipant> GetGroupParticipants(int groupId);
 
-        List<GroupSearchResult> GetSearchResults(int groupTypeId);
+        List<MpGroupSearchResult> GetSearchResults(int groupTypeId);
     }
 }

@@ -37,12 +37,12 @@ namespace MinistryPlatform.Translation.Services
             return formFieldId;
         }
 
-        public List<FormField> GetFieldsForForm(int formId)
+        public List<MpFormField> GetFieldsForForm(int formId)
         {
             var searchString = string.Format(",,,,{0}", formId);
             var formFields = _ministryPlatformService.GetPageViewRecords(_formFieldCustomPage, ApiLogin(), searchString);
 
-            return formFields.Select(formField => new FormField
+            return formFields.Select(formField => new MpFormField
             {
                 CrossroadsId = formField.ToInt("CrossroadsId"),
                 FieldLabel = formField.ToString("Field_Label"),

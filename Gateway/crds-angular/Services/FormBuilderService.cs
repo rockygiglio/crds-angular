@@ -32,7 +32,7 @@ namespace crds_angular.Services
         {
             var pageViewId = GetPageViewId(templateType);
             var groupList = _mpFormBuilderService.GetGroupsUndividedSession(pageViewId);
-            return groupList.Select(Mapper.Map<Group, GroupDTO>).ToList();
+            return groupList.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
         }
 
         private int GetPageViewId(string templateType)

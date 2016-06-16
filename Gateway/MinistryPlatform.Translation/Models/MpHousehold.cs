@@ -1,6 +1,6 @@
 ﻿namespace MinistryPlatform.Translation.Models
 {
-    public class Household
+    public class MpHousehold
     {
         public string Home_Phone { get; set; }
         public int? Congregation_ID { get; set; }

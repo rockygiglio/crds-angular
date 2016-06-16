@@ -14,7 +14,7 @@ namespace crds_angular.Services
     {
         private readonly IFormSubmissionService _formSubmissionService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private List<FormField> _formFields;
+        private List<MpFormField> _formFields;
 
         private readonly IServeService _serveService;
 

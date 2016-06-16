@@ -632,24 +632,24 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var household = new List<HouseholdMember>
+            var household = new List<MpHouseholdMember>
             {
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 678,
                     StatementTypeId = 456
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 123,
                     StatementTypeId = 456
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 444,
                     StatementTypeId = 455
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 345,
                     StatementTypeId = 456
@@ -951,24 +951,24 @@ namespace crds_angular.test.Services
             };
 
 
-            var householdMembers = new List<HouseholdMember>
+            var householdMembers = new List<MpHouseholdMember>
             {
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 678,
                     StatementTypeId = 456
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 123,
                     StatementTypeId = 456
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 444,
                     StatementTypeId = 455
                 },
-                new HouseholdMember
+                new MpHouseholdMember
                 {
                     DonorId = 345,
                     StatementTypeId = 456

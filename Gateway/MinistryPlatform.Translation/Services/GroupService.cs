@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Services
             this._contentBlockService = contentBlockService;
         }
 
-        public int CreateGroup(Group group)
+        public int CreateGroup(MpGroup group)
         {
             logger.Debug("Adding group");
 
@@ -122,9 +122,9 @@ namespace MinistryPlatform.Translation.Services
             return (groupParticipantId);
         }
 
-        public Group getGroupDetails(int groupId)
+        public MpGroup getGroupDetails(int groupId)
         {
-            return (WithApiLogin<Group>(apiToken =>
+            return (WithApiLogin<MpGroup>(apiToken =>
             {
                 logger.Debug("Getting group details for group " + groupId);
                 var groupDetails = ministryPlatformService.GetRecordDict(GroupsPageId, groupId, apiToken, false);
@@ -133,7 +133,7 @@ namespace MinistryPlatform.Translation.Services
                     logger.Debug("No group found for group id " + groupId);
                     return (null);
                 }
-                var g = new Group();
+                var g = new MpGroup();
 
                 object gid = null;
                 groupDetails.TryGetValue("Group_ID", out gid);
@@ -236,7 +236,7 @@ namespace MinistryPlatform.Translation.Services
             }));
         }
 
-        public List<GroupParticipant> GetGroupParticipants(int groupId)
+        public List<MpGroupParticipant> GetGroupParticipants(int groupId)
         {
             return (WithApiLogin(apiToken =>
             {
@@ -244,13 +244,13 @@ namespace MinistryPlatform.Translation.Services
             }));
         }
 
-        public List<GroupSearchResult> GetSearchResults(int groupTypeId)
+        public List<MpGroupSearchResult> GetSearchResults(int groupTypeId)
         {
             var apiToken = ApiLogin();
             var pageId = GetSearchPageViewId(groupTypeId);
             var records = ministryPlatformService.GetPageViewRecords(pageId, apiToken);
 
-            return records.Select(record => new GroupSearchResult()
+            return records.Select(record => new MpGroupSearchResult()
             {
                 GroupId = record.ToInt("Group_ID"),
                 ContactId = record.ToInt("Contact_Id"),
@@ -275,7 +275,7 @@ namespace MinistryPlatform.Translation.Services
                 // TODO: Do we need email address?
                 //PrimaryContactEmail = record.ToString("PrimaryEmail")
 
-                SearchAttributes = new GroupSearchAttributes()
+                SearchAttributes = new MpGroupSearchAttributes()
                 {
                     TypeId = record.ToNullableInt("Group_Type"),
                     GoalId = record.ToNullableInt("Group_Goal"),
@@ -297,9 +297,9 @@ namespace MinistryPlatform.Translation.Services
             throw new ArgumentException(message);
         }
 
-        private List<GroupParticipant> LoadGroupParticipants(int groupId, string token)
+        private List<MpGroupParticipant> LoadGroupParticipants(int groupId, string token)
         {
-                var groupParticipants = new List<GroupParticipant>();
+                var groupParticipants = new List<MpGroupParticipant>();
                 logger.Debug("Getting participants for group " + groupId);
                 var participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
                 if (participants != null && participants.Count > 0)
@@ -310,7 +310,7 @@ namespace MinistryPlatform.Translation.Services
                         p.TryGetValue("Participant_ID", out pid);
                         if (pid != null)
                         {
-                            groupParticipants.Add(new GroupParticipant
+                            groupParticipants.Add(new MpGroupParticipant
                             {
                                 ContactId = p.ToInt("Contact_ID"),
                                 ParticipantId = p.ToInt("Participant_ID"),
@@ -381,7 +381,7 @@ namespace MinistryPlatform.Translation.Services
             return teams.Count != 0;
         }
 
-        public bool checkIfUserInGroup(int participantId, IList<GroupParticipant> groupParticipants)
+        public bool checkIfUserInGroup(int participantId, IList<MpGroupParticipant> groupParticipants)
         {
             return groupParticipants.Select(p => p.ParticipantId).Contains(participantId);
         }
@@ -391,16 +391,16 @@ namespace MinistryPlatform.Translation.Services
             return currRelationshipsList.Contains(relationshipId);
         }
 
-        public List<GroupSignupRelationships> GetGroupSignupRelations(int groupType)
+        public List<MpGroupSignupRelationships> GetGroupSignupRelations(int groupType)
         {
-            var response = WithApiLogin<List<GroupSignupRelationships>>(
+            var response = WithApiLogin<List<MpGroupSignupRelationships>>(
                 apiToken =>
                 {
                     var relationRecords = ministryPlatformService.GetSubPageRecords(GroupSignupRelationsPageId,
                                                                                     groupType,
                                                                                     apiToken);
 
-                    return relationRecords.Select(relationRecord => new GroupSignupRelationships
+                    return relationRecords.Select(relationRecord => new MpGroupSignupRelationships
                     {
                         RelationshipId = relationRecord.ToInt("Relationship_ID"),
                         RelationshipMinAge = relationRecord.ToNullableInt("Min_Age"),
@@ -410,7 +410,7 @@ namespace MinistryPlatform.Translation.Services
             return response;
         }
 
-        public List<Group> GetGroupsForEvent(int eventId)
+        public List<MpGroup> GetGroupsForEvent(int eventId)
         {
             var searchString = string.Format("\"{0}\",", eventId);
             var pageViewId = _configurationWrapper.GetConfigIntValue("GroupsByEventId");
@@ -420,7 +420,7 @@ namespace MinistryPlatform.Translation.Services
             {
                 return null;
             }
-            return records.Select(record => new Group
+            return records.Select(record => new MpGroup
             {
                 GroupId = record.ToInt("Group_ID"),
                 Name = record.ToString("Group_Name")
@@ -472,23 +472,23 @@ namespace MinistryPlatform.Translation.Services
             _communicationService.SendMessage(confirmation);
         }
 
-        public List<GroupParticipant> getEventParticipantsForGroup(int groupId, int eventId)
+        public List<MpGroupParticipant> getEventParticipantsForGroup(int groupId, int eventId)
         {
             var records = ministryPlatformService.GetPageViewRecords("ParticipantsByGroupAndEvent", ApiLogin(), String.Format("{0},{1}", groupId, eventId));
-            return records.Select(rec => new GroupParticipant
+            return records.Select(rec => new MpGroupParticipant
             {
                 ContactId = rec.ToInt("Contact_ID"), NickName = rec.ToString("Nickname"), LastName = rec.ToString("Last_Name")
             }).ToList();
         }
 
-        public List<Group> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
+        public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
-                return new List<Group>();
+                return new List<MpGroup>();
             }
-            return groupDetails.Select(details => new Group()
+            return groupDetails.Select(details => new MpGroup()
             {
                 GroupId = details.ToInt("Group_ID"),
                 CongregationId = details.ToInt("Congregation_ID"),
@@ -518,7 +518,7 @@ namespace MinistryPlatform.Translation.Services
             }).ToList();
         }
 
-        public void UpdateGroupRemainingCapacity(Group group)
+        public void UpdateGroupRemainingCapacity(MpGroup group)
         {
             logger.Debug("Updating group: " + group.GroupId + " : " + group.Name);
 
