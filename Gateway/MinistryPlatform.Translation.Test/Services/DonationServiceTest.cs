@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IDonorRepository> _donorService;
         private Mock<IAuthenticationRepository> _authService;
-        private Mock<IPledgeService> _pledgeService;
+        private Mock<IPledgeRepository> _pledgeService;
         private Mock<ICommunicationRepository> _communicationService;
 
         [SetUp]
@@ -31,7 +31,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
             _donorService = new Mock<IDonorRepository>(MockBehavior.Strict);
             _authService = new Mock<IAuthenticationRepository>();
-            _pledgeService = new Mock<IPledgeService>();
+            _pledgeService = new Mock<IPledgeRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();

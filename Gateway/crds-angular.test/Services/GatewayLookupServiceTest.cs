@@ -15,13 +15,13 @@ namespace crds_angular.test.Services
     {
         private GatewayLookupService _fixture;
         private Mock<IApiUserRepository> _apiUserService;
-        private Mock<ILookupService> _lookupService;
+        private Mock<ILookupRepository> _lookupService;
 
         [SetUp]
         public void Setup()
         {
             _apiUserService = new Mock<IApiUserRepository>();
-            _lookupService = new Mock<ILookupService>();
+            _lookupService = new Mock<ILookupRepository>();
 
             _fixture = new GatewayLookupService(_lookupService.Object, _apiUserService.Object);
         }

@@ -26,23 +26,23 @@ namespace crds_angular.Services
         private readonly IGroupConnectorRepository _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
         private readonly int _otherEquipmentId;
-        private readonly MPInterfaces.IParticipantService _participantService;
-        private readonly MPInterfaces.IProjectTypeService _projectTypeService;
+        private readonly MPInterfaces.IParticipantRepository _participantService;
+        private readonly MPInterfaces.IProjectTypeRepository _projectTypeService;
         private readonly IRegistrationRepository _registrationService;
         private readonly IGoSkillsService _skillsService;
-        private readonly MPInterfaces.IUserService _userService;
+        private readonly MPInterfaces.IUserRepository _userService;
 
-        public GoVolunteerService(MPInterfaces.IParticipantService participantService,
+        public GoVolunteerService(MPInterfaces.IParticipantRepository participantService,
                                   IRegistrationRepository registrationService,
                                   MPInterfaces.IContactRepository contactService,
                                   IGroupConnectorRepository groupConnectorService,
                                   IConfigurationWrapper configurationWrapper,
                                   MPInterfaces.IContactRelationshipRepository contactRelationshipService,
-                                  MPInterfaces.IProjectTypeService projectTypeService,
+                                  MPInterfaces.IProjectTypeRepository projectTypeService,
                                   IAttributeService attributeService,
                                   IGoSkillsService skillsService,
                                   MPInterfaces.ICommunicationRepository comunicationService,
-                                  MPInterfaces.IUserService userService)
+                                  MPInterfaces.IUserRepository userService)
         {
             _participantService = participantService;
             _registrationService = registrationService;

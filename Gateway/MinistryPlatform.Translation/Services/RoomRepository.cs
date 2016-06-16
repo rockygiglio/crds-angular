@@ -11,7 +11,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class RoomRepository : BaseRepository, IRoomService
+    public class RoomRepository : BaseRepository, IRoomRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));

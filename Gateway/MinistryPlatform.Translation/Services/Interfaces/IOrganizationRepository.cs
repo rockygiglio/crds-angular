@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IOrganizationService
+    public interface IOrganizationRepository
     {
         MPOrganization GetOrganization(String name, string token);
         List<MPOrganization> GetOrganizations(string token);

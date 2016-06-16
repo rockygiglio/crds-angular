@@ -19,7 +19,7 @@ namespace crds_angular.test.Services
         private Mock<IApiUserRepository> _apiUserService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IUserImpersonationService> _impersonationService;
-        private Mock<IUserService> _userService;
+        private Mock<IUserRepository> _userService;
 
         private TaskService _fixture;
 
@@ -30,7 +30,7 @@ namespace crds_angular.test.Services
             _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _impersonationService = new Mock<IUserImpersonationService>(MockBehavior.Strict);
-            _userService = new Mock<IUserService>();
+            _userService = new Mock<IUserRepository>();
 
             _fixture = new TaskService(_taskRepository.Object,
                                        _apiUserService.Object,

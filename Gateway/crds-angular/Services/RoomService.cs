@@ -7,11 +7,11 @@ namespace crds_angular.Services
 {
     public class RoomService : IRoomService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IRoomService _roomService;
+        private readonly MinistryPlatform.Translation.Services.Interfaces.IRoomRepository _roomService;
         private readonly MinistryPlatform.Translation.Services.Interfaces.IEquipmentRepository _equipmentService;
         private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
 
-        public RoomService(MinistryPlatform.Translation.Services.Interfaces.IRoomService roomService,
+        public RoomService(MinistryPlatform.Translation.Services.Interfaces.IRoomRepository roomService,
                            MinistryPlatform.Translation.Services.Interfaces.IEquipmentRepository equipmentService,
                            MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService)
         {

@@ -19,7 +19,7 @@ namespace crds_angular.test.Services
     {
         private GoSkillsService _fixture;
         private Mock<IApiUserRepository> _apiUserService;
-        private Mock<ISkillsService> _skillsService;
+        private Mock<ISkillsRepository> _skillsService;
         private Mock<crds_angular.Services.Interfaces.IObjectAttributeService> _objectAttributeService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IContactRepository> _contactService;
@@ -29,7 +29,7 @@ namespace crds_angular.test.Services
         public void Setup()
         {
             _apiUserService = new Mock<IApiUserRepository>();
-            _skillsService = new Mock<ISkillsService>();
+            _skillsService = new Mock<ISkillsRepository>();
             _objectAttributeService = new Mock<crds_angular.Services.Interfaces.IObjectAttributeService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _contactService = new Mock<IContactRepository>();

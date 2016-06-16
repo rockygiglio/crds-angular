@@ -21,10 +21,10 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactRepository _contactService;
         private readonly IEmailCommunication _emailCommunication;
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userService;
         private readonly IAuthenticationRepository _authenticationService;
 
-        public LoginService(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IContactRepository contactService, IEmailCommunication emailCommunication, IUserService userService)
+        public LoginService(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IContactRepository contactService, IEmailCommunication emailCommunication, IUserRepository userService)
         {
             _configurationWrapper = configurationWrapper;
             _contactService = contactService;

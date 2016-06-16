@@ -17,9 +17,9 @@ namespace crds_angular.Controllers.API
 {
     public class OpportunityController : MPAuth
     {
-        private readonly IOpportunityService _opportunityService;
+        private readonly IOpportunityRepository _opportunityService;
 
-        public OpportunityController(IOpportunityService opportunityService)
+        public OpportunityController(IOpportunityRepository opportunityService)
         {
             _opportunityService = opportunityService;
         }

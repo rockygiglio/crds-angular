@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IPledgeService
+    public interface IPledgeRepository
     {
         int CreatePledge(int donorId, int pledgeCampaignId, decimal totalPledge);
         bool DonorHasPledge(int pledgeCampaignId, int donorId);

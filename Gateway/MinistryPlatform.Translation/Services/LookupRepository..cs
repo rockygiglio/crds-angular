@@ -8,7 +8,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class LookupRepository : BaseRepository, ILookupService
+    public class LookupRepository : BaseRepository, ILookupRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformServiceImpl;
 

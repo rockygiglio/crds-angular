@@ -24,7 +24,7 @@ namespace crds_angular.Services
         private readonly IContactRepository _mpContactService;
         private readonly Interfaces.IPaymentService _paymentService;
         private readonly IAuthenticationRepository _authenticationService;
-        private readonly IPledgeService _pledgeService;
+        private readonly IPledgeRepository _pledgeService;
         public const string DefaultInstitutionName = "Bank";
         public const string DonorRoutingNumberDefault = "0";
         public const string DonorAccountNumberDefault = "0";
@@ -45,7 +45,7 @@ namespace crds_angular.Services
 
         public DonorService(IDonorRepository mpDonorService, IContactRepository mpContactService,
             Interfaces.IPaymentService paymentService, IConfigurationWrapper configurationWrapper,
-            IAuthenticationRepository authenticationService, IPledgeService pledgeService)
+            IAuthenticationRepository authenticationService, IPledgeRepository pledgeService)
         {
             _mpDonorService = mpDonorService;
             _mpContactService = mpContactService;

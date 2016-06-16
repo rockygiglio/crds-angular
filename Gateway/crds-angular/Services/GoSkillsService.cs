@@ -18,10 +18,10 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly ISkillsService _skillsService;
+        private readonly ISkillsRepository _skillsService;
 
         public GoSkillsService(IApiUserRepository apiUserService,
-                               ISkillsService skillsService,
+                               ISkillsRepository skillsService,
                                IObjectAttributeService objectAttributeService,
                                IContactRepository contactService,
                                IConfigurationWrapper configurationWrapper)

@@ -30,8 +30,8 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserService;
         private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IGroupParticipantRepository _groupParticipantService;
-        private readonly IParticipantService _participantService;
-        private readonly IRoomService _roomService;
+        private readonly IParticipantRepository _participantService;
+        private readonly IRoomRepository _roomService;
         private readonly IEquipmentRepository _equipmentService;
         private readonly IEventParticipantRepository _eventParticipantService;
 
@@ -54,8 +54,8 @@ namespace crds_angular.Services
                             IApiUserRepository apiUserService,
                             IContactRelationshipRepository contactRelationshipService,
                             IGroupParticipantRepository groupParticipantService,
-                            IParticipantService participantService,
-                            IRoomService roomService,
+                            IParticipantRepository participantService,
+                            IRoomRepository roomService,
                             IEquipmentRepository equipmentService,
                             IEventParticipantRepository eventParticipantService)
         {

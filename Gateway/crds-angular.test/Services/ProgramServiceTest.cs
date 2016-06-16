@@ -14,12 +14,12 @@ namespace crds_angular.test.Services
     public class ProgramServiceTest
     {
         private ProgramService _fixture;
-        private Mock<MPServices.IProgramService> _mpProgramService;
+        private Mock<MPServices.IProgramRepository> _mpProgramService;
 
         [SetUp]
         public void SetUp()
         {
-            _mpProgramService = new Mock<MPServices.IProgramService>();
+            _mpProgramService = new Mock<MPServices.IProgramRepository>();
             _fixture = new ProgramService(_mpProgramService.Object);
 
             AutoMapperConfig.RegisterMappings();

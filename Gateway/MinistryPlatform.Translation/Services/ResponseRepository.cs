@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ResponseRepository : BaseRepository, IResponseService
+    public class ResponseRepository : BaseRepository, IResponseRepository
     {
         private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;

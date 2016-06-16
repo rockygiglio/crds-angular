@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface ISkillsService
+    public interface ISkillsRepository
     {
         List<MpGoVolunteerSkill> GetGoVolunteerSkills(string token);
     }    

@@ -33,7 +33,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IContactRelationshipRepository> contactRelationshipService;     
         private Mock<IServeService> serveService;
         private Mock<IGroupRepository> _groupService;
-        private Mock<MPServices.IParticipantService> participantService;
+        private Mock<MPServices.IParticipantRepository> participantService;
         private Mock<MPServices.ICommunicationRepository> _communicationService;
         private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> config;
@@ -71,7 +71,7 @@ namespace crds_angular.test.Services
             eventService = new Mock<MPServices.IEventRepository>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipRepository>();
             serveService = new Mock<IServeService>();
-            participantService = new Mock<MPServices.IParticipantService>();
+            participantService = new Mock<MPServices.IParticipantRepository>();
             _groupService = new Mock<IGroupRepository>();
             _communicationService = new Mock<MPServices.ICommunicationRepository>();
             _contactService = new Mock<MPServices.IContactRepository>();

@@ -2,7 +2,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IPrivateInviteService
+    public interface IPrivateInviteRepository
     {
         MpPrivateInvite Create(int pledgeCampaignId, string emailAddress, string recipientName, string token);
         bool PrivateInviteValid(int pledgeCampaignId, string guid, string emailAddress);

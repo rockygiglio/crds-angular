@@ -11,10 +11,10 @@ namespace crds_angular.Services
 {
     public class GatewayLookupService : IGatewayLookupService
     {
-        private readonly ILookupService _lookupService;
+        private readonly ILookupRepository _lookupService;
         private readonly IApiUserRepository _mpApiUserService;
 
-        public GatewayLookupService(ILookupService lookupService, IApiUserRepository apiUserService)
+        public GatewayLookupService(ILookupRepository lookupService, IApiUserRepository apiUserService)
         {
             _lookupService = lookupService;
             _mpApiUserService = apiUserService;

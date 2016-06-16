@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IParticipantService
+    public interface IParticipantRepository
     {
         Participant GetParticipant(int contactId);
         List<MpResponse> GetParticipantResponses(int participantId);

@@ -37,11 +37,11 @@ namespace MinistryPlatform.Translation.Services
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IDonorRepository _donorService;
         private readonly ICommunicationRepository _communicationService;
-        private readonly IPledgeService _pledgeService;
+        private readonly IPledgeRepository _pledgeService;
         
         private readonly int _donationStatusSucceeded;
        
-        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeService pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeRepository pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;

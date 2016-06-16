@@ -15,7 +15,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ObjectAttributeService : BaseRepository, IObjectAttributeService
+    public class ObjectAttributeService : BaseRepository, IObjectAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
 

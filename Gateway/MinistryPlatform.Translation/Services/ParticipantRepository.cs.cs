@@ -9,7 +9,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class ParticipantService : BaseRepository, IParticipantService
+    public class ParticipantService : BaseRepository, IParticipantRepository
     {
         private IMinistryPlatformService _ministryPlatformService;
 

@@ -26,9 +26,9 @@ namespace crds_angular.Services
         private readonly IFormSubmissionRepository _formSubmissionService;
         private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _mpEventService;
         private readonly IDonorRepository _mpDonorService;
-        private readonly IPledgeService _mpPledgeService;
+        private readonly IPledgeRepository _mpPledgeService;
         private readonly ICampaignRepository _campaignService;
-        private readonly IPrivateInviteService _privateInviteService;
+        private readonly IPrivateInviteRepository _privateInviteService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
         private readonly IContactRelationshipRepository _contactRelationshipService;
@@ -44,9 +44,9 @@ namespace crds_angular.Services
                            IFormSubmissionRepository formSubmissionService,
                            MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
                            IDonorRepository donorService,
-                           IPledgeService pledgeService,
+                           IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,
-                           IPrivateInviteService privateInviteService,
+                           IPrivateInviteRepository privateInviteService,
                            ICommunicationRepository communicationService,
                            IContactRepository contactService,
                            IContactRelationshipRepository contactRelationshipService,

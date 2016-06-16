@@ -23,7 +23,7 @@ namespace crds_angular.Controllers.API
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IGroupService groupService;        
         private readonly IAuthenticationRepository authenticationService;
-        private readonly IParticipantService participantService;
+        private readonly IParticipantRepository participantService;
         private readonly Services.Interfaces.IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
 
@@ -32,7 +32,7 @@ namespace crds_angular.Controllers.API
 
         public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationRepository authenticationService,
-                               IParticipantService participantService,
+                               IParticipantRepository participantService,
                                Services.Interfaces.IAddressService addressService,
                                Services.Interfaces.IGroupSearchService groupSearchService)
         {

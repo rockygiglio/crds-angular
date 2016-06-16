@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface ILookupService
+    public interface ILookupRepository
     {
         Dictionary<string, object> EmailSearch(string email, string token);
 

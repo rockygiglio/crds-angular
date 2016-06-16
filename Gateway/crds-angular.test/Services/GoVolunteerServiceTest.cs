@@ -26,12 +26,12 @@ namespace crds_angular.test.Services
         private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
         private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactRepository> _contactService;
         private readonly Mock<IGroupConnectorRepository> _groupConnectorService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IParticipantService> _participantService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IProjectTypeService> _projectTypeService;
+        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IParticipantRepository> _participantService;
+        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IProjectTypeRepository> _projectTypeService;
         private readonly Mock<IRegistrationRepository> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationRepository> _commnuicationService;
-        private readonly Mock<IUserService> _userService;
+        private readonly Mock<IUserRepository> _userService;
 
 
         public GoVolunteerServiceTest()
@@ -42,11 +42,11 @@ namespace crds_angular.test.Services
             _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _contactService = new Mock<IContactRepository>();
             _groupConnectorService = new Mock<IGroupConnectorRepository>();
-            _participantService = new Mock<IParticipantService>();
-            _projectTypeService = new Mock<IProjectTypeService>();
+            _participantService = new Mock<IParticipantRepository>();
+            _projectTypeService = new Mock<IProjectTypeRepository>();
             _registrationService = new Mock<IRegistrationRepository>();
             _skillsService = new Mock<IGoSkillsService>();
-            _userService = new Mock<IUserService>();
+            _userService = new Mock<IUserRepository>();
             _fixture = new GoVolunteerService(_participantService.Object, 
                 _registrationService.Object, 
                 _contactService.Object, 

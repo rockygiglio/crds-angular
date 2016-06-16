@@ -6,7 +6,7 @@ using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IOpportunityService
+    public interface IOpportunityRepository
     {
 
         MpOpportunity GetOpportunityById(int opportunityId, string token);

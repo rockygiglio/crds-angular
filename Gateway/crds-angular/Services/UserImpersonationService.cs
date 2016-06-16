@@ -12,13 +12,13 @@ namespace crds_angular.Services
     /// </summary>
     public class UserImpersonationService : IUserImpersonationService
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userService;
 
         /// <summary>
         /// Construct a new UserImpersonationService with the given IUserService.
         /// </summary>
         /// <param name="userService">An IUserService for performing user lookups</param>
-        public UserImpersonationService(IUserService userService)
+        public UserImpersonationService(IUserRepository userService)
         {
             _userService = userService;
         }

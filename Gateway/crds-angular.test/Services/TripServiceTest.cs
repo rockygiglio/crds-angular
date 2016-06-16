@@ -25,9 +25,9 @@ namespace crds_angular.test.Services
         private Mock<IFormSubmissionRepository> _formSubmissionService;
         private Mock<IEventRepository> _eventService;
         private Mock<IDonorRepository> _donorService;
-        private Mock<IPledgeService> _pledgeService;
+        private Mock<IPledgeRepository> _pledgeService;
         private Mock<ICampaignRepository> _campaignService;
-        private Mock<IPrivateInviteService> _privateInviteService;
+        private Mock<IPrivateInviteRepository> _privateInviteService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IContactRepository> _contactService;
         private Mock<IContactRelationshipRepository> _contactRelationshipService;
@@ -46,9 +46,9 @@ namespace crds_angular.test.Services
             _formSubmissionService = new Mock<IFormSubmissionRepository>();
             _eventService = new Mock<IEventRepository>();
             _donorService = new Mock<IDonorRepository>();
-            _pledgeService = new Mock<IPledgeService>();
+            _pledgeService = new Mock<IPledgeRepository>();
             _campaignService = new Mock<ICampaignRepository>();
-            _privateInviteService = new Mock<IPrivateInviteService>();
+            _privateInviteService = new Mock<IPrivateInviteRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contactRelationshipService = new Mock<IContactRelationshipRepository>();

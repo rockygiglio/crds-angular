@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private IPledgeService _fixture;
+        private IPledgeRepository _fixture;
 
         [SetUp]
         public void SetUp()

@@ -11,10 +11,10 @@ using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class OpportunityServiceImpl : BaseRepository, IOpportunityService
+    public class OpportunityServiceImpl : BaseRepository, IOpportunityRepository
     {
         private readonly int _eventPage = Convert.ToInt32(AppSettings("Events"));
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantRepository _participantService;
         private readonly IApiUserRepository _apiUserService;
         private readonly int _groupParticpantsSubPageView = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -26,7 +26,7 @@ namespace MinistryPlatform.Translation.Services
         public OpportunityServiceImpl(IMinistryPlatformService ministryPlatformService,
                                       IAuthenticationRepository authenticationService,
                                       IConfigurationWrapper configurationWrapper,
-                                      IParticipantService participantService,
+                                      IParticipantRepository participantService,
             IApiUserRepository apiUserService)
             : base(authenticationService, configurationWrapper)
         {

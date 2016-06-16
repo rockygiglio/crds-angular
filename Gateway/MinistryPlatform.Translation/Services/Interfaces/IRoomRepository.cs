@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models.EventReservations;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IRoomService
+    public interface IRoomRepository
     {
         int CreateRoomReservation(MpRoomReservationDto roomReservation, string token);
         List<MpRoom> GetRoomsByLocationId(int locationId);

@@ -9,7 +9,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Services;
 using MinistryPlatform.Translation.Services.Interfaces;
-using ILookupService = MinistryPlatform.Translation.Services.Interfaces.ILookupService;
+using ILookupRepository = MinistryPlatform.Translation.Services.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {
@@ -22,18 +22,18 @@ namespace crds_angular.Services
         private readonly IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionsService;
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ILookupService _lookupService;
+        private readonly ILookupRepository _lookupService;
         private readonly IApiUserRepository _apiUserService;
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantRepository _participantService;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
             ICommunicationRepository communicationService, 
             IAuthenticationRepository authenticationService, 
             ISubscriptionsService subscriptionService, 
             IMinistryPlatformService ministryPlatformService, 
-            ILookupService lookupService,
+            ILookupRepository lookupService,
             IApiUserRepository apiUserService,
-            IParticipantService participantService)
+            IParticipantRepository participantService)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;

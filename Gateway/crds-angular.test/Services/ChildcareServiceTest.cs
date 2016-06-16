@@ -24,7 +24,7 @@ namespace crds_angular.test.Services
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IContactRepository> _contactService;
         private Mock<IEventRepository> _eventService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IParticipantRepository> _participantService;
         private Mock<IServeService> _serveService;
         private Mock<IDateTime> _dateTimeWrapper;
         // Interfaces.IEventService crdsEventService, IApiUserService apiUserService
@@ -42,7 +42,7 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _contactService = new Mock<IContactRepository>();
             _eventService = new Mock<IEventRepository>();
-            _participantService = new Mock<IParticipantService>();
+            _participantService = new Mock<IParticipantRepository>();
             _serveService = new Mock<IServeService>();
             _dateTimeWrapper = new Mock<IDateTime>();
             _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();

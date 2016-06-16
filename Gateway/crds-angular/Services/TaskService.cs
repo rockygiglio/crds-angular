@@ -17,13 +17,13 @@ namespace crds_angular.Services
         private readonly MPInterfaces.IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly MPInterfaces.IUserService _userService;
+        private readonly MPInterfaces.IUserRepository _userService;
 
         public TaskService(MPInterfaces.ITaskRepository taskRepository,
                            MPInterfaces.IApiUserRepository apiUserService,
                            IConfigurationWrapper configWrapper,
                            IUserImpersonationService impersonationService,
-                           MPInterfaces.IUserService userService)
+                           MPInterfaces.IUserRepository userService)
         {
             _taskRepository = taskRepository;
             _apiUserService = apiUserService;

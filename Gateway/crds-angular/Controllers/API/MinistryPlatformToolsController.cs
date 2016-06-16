@@ -11,9 +11,9 @@ namespace crds_angular.Controllers.API
 {
     public class MinistryPlatformToolsController: MPAuth
     {
-        private readonly ISelectionService _selectionService;
+        private readonly ISelectionRepository _selectionService;
 
-        public MinistryPlatformToolsController(ISelectionService selectionService)
+        public MinistryPlatformToolsController(ISelectionRepository selectionService)
         {
             _selectionService = selectionService;
         }

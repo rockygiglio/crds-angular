@@ -35,13 +35,13 @@ namespace crds_angular.Services
         private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
         private readonly IGroupParticipantRepository _groupParticipantService;
         private readonly IGroupRepository _groupService;
-        private readonly IOpportunityService _opportunityService;
-        private readonly IParticipantService _participantService;
+        private readonly IOpportunityRepository _opportunityService;
+        private readonly IParticipantRepository _participantService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IApiUserRepository _apiUserService;
-        private readonly IResponseService _responseService;
+        private readonly IResponseRepository _responseService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -55,16 +55,16 @@ namespace crds_angular.Services
 
         public ServeService(IContactRepository contactService,
                             IContactRelationshipRepository contactRelationshipService,
-                            IOpportunityService opportunityService,
+                            IOpportunityRepository opportunityService,
                             MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
-                            IParticipantService participantService,
+                            IParticipantRepository participantService,
                             IGroupParticipantRepository groupParticipantService,
                             IGroupRepository groupService,
                             ICommunicationRepository communicationService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
                             IApiUserRepository apiUserService,
-                            IResponseService responseService)
+                            IResponseRepository responseService)
         {
             _contactService = contactService;
             _contactRelationshipService = contactRelationshipService;

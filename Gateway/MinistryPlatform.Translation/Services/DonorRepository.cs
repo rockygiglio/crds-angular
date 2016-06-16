@@ -47,14 +47,14 @@ namespace MinistryPlatform.Translation.Services
         public const string HashKey = "Mcc3#e758ebe8Seb1fdeF628dbK796e5";
 
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly IProgramService _programService;
+        private readonly IProgramRepository _programService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
         private readonly ICryptoProvider _crypto;
         private readonly DateTimeFormatInfo _dateTimeFormat;
         
 
-        public DonorRepository(IMinistryPlatformService ministryPlatformService, IProgramService programService, ICommunicationRepository communicationService, IAuthenticationRepository authenticationService, IContactRepository contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
+        public DonorRepository(IMinistryPlatformService ministryPlatformService, IProgramRepository programService, ICommunicationRepository communicationService, IAuthenticationRepository authenticationService, IContactRepository contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;

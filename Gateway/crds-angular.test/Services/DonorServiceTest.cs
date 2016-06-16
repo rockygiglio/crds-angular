@@ -27,7 +27,7 @@ namespace crds_angular.test.Services
         private Mock<IPaymentService> _paymentService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IAuthenticationRepository> _authenticationService;
-        private Mock<IPledgeService> _pledgeService; 
+        private Mock<IPledgeRepository> _pledgeService; 
         private const string GuestGiverDisplayName = "Guest Giver";
 
         private const int StatementFrequencyNever = 9;
@@ -51,7 +51,7 @@ namespace crds_angular.test.Services
             _mpContactService = new Mock<IContactRepository>(MockBehavior.Strict);
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
             _authenticationService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
-            _pledgeService = new Mock<IPledgeService>(MockBehavior.Strict);
+            _pledgeService = new Mock<IPledgeRepository>(MockBehavior.Strict);
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorStatementFrequencyNever")).Returns(StatementFrequencyNever);

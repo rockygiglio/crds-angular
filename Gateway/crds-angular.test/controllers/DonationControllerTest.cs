@@ -33,7 +33,7 @@ namespace crds_angular.test.controllers
         private Mock<IDonationService> gatewayDonationServiceMock;
         private Mock<IUserImpersonationService> impersonationService;
         private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationRepository> mpDonationService; 
-        private Mock<IPledgeService> mpPledgeService;
+        private Mock<IPledgeRepository> mpPledgeService;
         private string authToken;
         private string authType;
 
@@ -45,7 +45,7 @@ namespace crds_angular.test.controllers
             stripeServiceMock = new Mock<IPaymentService>();
             authenticationServiceMock = new Mock<IAuthenticationRepository>();
             gatewayDonationServiceMock = new Mock<IDonationService>();
-            mpPledgeService = new Mock<IPledgeService>();
+            mpPledgeService = new Mock<IPledgeRepository>();
             impersonationService = new Mock<IUserImpersonationService>();
             mpDonationService = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationRepository>();
 

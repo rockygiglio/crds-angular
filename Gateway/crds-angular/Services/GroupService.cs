@@ -29,7 +29,7 @@ namespace crds_angular.Services
         private readonly IEventRepository _eventService;
         private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IServeService _serveService;
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantRepository _participantService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
@@ -50,7 +50,7 @@ namespace crds_angular.Services
                             IEventRepository eventService,
                             IContactRelationshipRepository contactRelationshipService,
                             IServeService serveService,
-                            IParticipantService participantService,
+                            IParticipantRepository participantService,
                             ICommunicationRepository communicationService,
                             IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 

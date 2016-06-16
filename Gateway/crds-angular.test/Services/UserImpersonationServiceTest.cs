@@ -14,13 +14,13 @@ namespace crds_angular.test.Services
     {
         private UserImpersonationService _fixture;
 
-        private Mock<IUserService> _userService;
+        private Mock<IUserRepository> _userService;
         private Mock<Func<bool>> _action;
 
         [SetUp]
         public void SetUp()
         {
-            _userService = new Mock<IUserService>(MockBehavior.Strict);
+            _userService = new Mock<IUserRepository>(MockBehavior.Strict);
             _action = new Mock<Func<bool>>(MockBehavior.Strict);
 
             _fixture = new UserImpersonationService(_userService.Object);

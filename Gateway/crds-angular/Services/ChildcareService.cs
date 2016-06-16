@@ -26,7 +26,7 @@ namespace crds_angular.Services
         private readonly IEventParticipantRepository _eventParticipantService;
         private readonly MinistryPlatform.Translation.Services.Interfaces.IEventRepository _eventService;
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantRepository _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
         private readonly IApiUserRepository _apiUserService;
@@ -38,7 +38,7 @@ namespace crds_angular.Services
                                 IConfigurationWrapper configurationWrapper,
                                 IContactRepository contactService,
                                 MinistryPlatform.Translation.Services.Interfaces.IEventRepository eventService,
-                                IParticipantService participantService,
+                                IParticipantRepository participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
                                 IApiUserRepository apiUserService, 

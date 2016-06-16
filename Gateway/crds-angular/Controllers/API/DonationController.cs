@@ -28,7 +28,7 @@ namespace crds_angular.Controllers.API
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
         private readonly MPInterfaces.IDonationRepository _mpDonationService;
-        private readonly MPInterfaces.IPledgeService _mpPledgeService;
+        private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentService stripeService,
@@ -36,7 +36,7 @@ namespace crds_angular.Controllers.API
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
                                   MPInterfaces.IDonationRepository mpDonationService,
-                                  MPInterfaces.IPledgeService mpPledgeService,
+                                  MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService)
         {
             _mpDonorService = mpDonorService;

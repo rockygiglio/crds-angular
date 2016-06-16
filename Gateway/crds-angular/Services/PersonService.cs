@@ -18,15 +18,15 @@ namespace crds_angular.Services
         private readonly MPServices.IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly MPServices.IApiUserRepository _apiUserService;
-        private readonly MPServices.IParticipantService _participantService;
-        private readonly MPServices.IUserService _userService;
+        private readonly MPServices.IParticipantRepository _participantService;
+        private readonly MPServices.IUserRepository _userService;
         private readonly MPServices.IAuthenticationRepository _authenticationService;
 
         public PersonService(MPServices.IContactRepository contactService, 
             IObjectAttributeService objectAttributeService, 
             MPServices.IApiUserRepository apiUserService,
-            MPServices.IParticipantService participantService,
-            MPServices.IUserService userService,
+            MPServices.IParticipantRepository participantService,
+            MPServices.IUserRepository userService,
             MPServices.IAuthenticationRepository authenticationService)
         {
             _contactService = contactService;

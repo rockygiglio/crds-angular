@@ -30,7 +30,7 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IDonorService> _donorService;
         private Mock<IUserImpersonationService> _impersonationService;
         private Mock<IAuthenticationRepository> _authenticationService;
-        private Mock<IUserService> _userService;
+        private Mock<IUserRepository> _userService;
         private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _config;
 
@@ -47,7 +47,7 @@ namespace crds_angular.test.controllers
             _donorService = new Mock<IDonorService>();
             _impersonationService = new Mock<IUserImpersonationService>();
             _authenticationService = new Mock<IAuthenticationRepository>();
-            _userService = new Mock<IUserService>();
+            _userService = new Mock<IUserRepository>();
             _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _config = new Mock<IConfigurationWrapper>();
 

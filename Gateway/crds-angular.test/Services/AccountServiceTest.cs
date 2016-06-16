@@ -14,12 +14,12 @@ namespace crds_angular.test.Services
     {
         private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<ILookupService> _lookupService;
+        private Mock<ILookupRepository> _lookupService;
         private Mock<ICommunicationRepository> _comunicationService;
         private Mock<ISubscriptionsService> _subscriptionService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IApiUserRepository> _apiUserService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IParticipantRepository> _participantService;
 
         private AccountService _fixture;
 
@@ -28,12 +28,12 @@ namespace crds_angular.test.Services
         {
             _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _lookupService = new Mock<ILookupService>();
+            _lookupService = new Mock<ILookupRepository>();
             _comunicationService = new Mock<ICommunicationRepository>();
             _subscriptionService = new Mock<ISubscriptionsService>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _apiUserService = new Mock<IApiUserRepository>();
-            _participantService = new Mock<IParticipantService>();
+            _participantService = new Mock<IParticipantRepository>();
 
             _fixture = new AccountService(_configurationWrapper.Object,
                                           _comunicationService.Object,

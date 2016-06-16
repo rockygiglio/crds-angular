@@ -9,9 +9,9 @@ namespace crds_angular.Services
 {
     public class ProgramService : IProgramService
     {
-        private readonly MPServices.IProgramService _programService;
+        private readonly MPServices.IProgramRepository _programService;
 
-        public ProgramService(MPServices.IProgramService programService)
+        public ProgramService(MPServices.IProgramRepository programService)
         {
             _programService = programService;
         }

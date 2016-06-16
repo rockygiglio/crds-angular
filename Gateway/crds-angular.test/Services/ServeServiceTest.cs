@@ -26,18 +26,18 @@ namespace crds_angular.test.Services
     {
         private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IContactRepository> _contactService;
-        private Mock<IOpportunityService> _opportunityService;
+        private Mock<IOpportunityRepository> _opportunityService;
         private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
         private Mock<IEventRepository> _eventService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IParticipantRepository> _participantService;
         private Mock<IGroupParticipantRepository> _groupParticipantService;
         private Mock<IGroupRepository> _groupService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IApiUserRepository> _apiUserService;
-        private Mock<IResponseService> _responseService;
+        private Mock<IResponseRepository> _responseService;
 
         private ServeService _fixture;
 
@@ -81,18 +81,18 @@ namespace crds_angular.test.Services
         {
             _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _contactService = new Mock<IContactRepository>();
-            _opportunityService = new Mock<IOpportunityService>();
+            _opportunityService = new Mock<IOpportunityRepository>();
             _authenticationService = new Mock<IAuthenticationRepository>();
             _personService = new Mock<crds_angular.Services.Interfaces.IPersonService>();
             _eventService = new Mock<IEventRepository>();
             _serveService = new Mock<IServeService>();
-            _participantService = new Mock<IParticipantService>();
+            _participantService = new Mock<IParticipantRepository>();
             _groupParticipantService = new Mock<IGroupParticipantRepository>();
             _groupService = new Mock<IGroupRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _apiUserService = new Mock<IApiUserRepository>();
-            _responseService = new Mock<IResponseService>();
+            _responseService = new Mock<IResponseRepository>();
 
             fakeOpportunity.EventTypeId = 3;
             fakeOpportunity.GroupContactId = 23;

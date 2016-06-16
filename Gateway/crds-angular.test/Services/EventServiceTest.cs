@@ -23,13 +23,13 @@ namespace crds_angular.test.Services
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<IEventRepository> _eventService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IParticipantRepository> _participantService;
         private Mock<IGroupParticipantRepository> _groupParticipantService;
         private Mock<IGroupRepository> _groupService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IApiUserRepository> _apiUserService;
-        private Mock<IRoomService> _roomService;
+        private Mock<IRoomRepository> _roomService;
         private Mock<IEquipmentRepository> _equipmentService;
         private Mock<IEventParticipantRepository> _eventParticipantService;
 
@@ -50,9 +50,9 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _groupParticipantService = new Mock<IGroupParticipantRepository>(MockBehavior.Strict);
-            _participantService = new Mock<IParticipantService>(MockBehavior.Strict);
+            _participantService = new Mock<IParticipantRepository>(MockBehavior.Strict);
             _eventService = new Mock<IEventRepository>();
-            _roomService = new Mock<IRoomService>();
+            _roomService = new Mock<IRoomRepository>();
             _equipmentService= new Mock<IEquipmentRepository>();
             _eventParticipantService = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 

@@ -3,7 +3,7 @@ using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IProjectTypeService
+    public interface IProjectTypeRepository
     {
         List<MpProjectType> GetProjectTypes();
     }

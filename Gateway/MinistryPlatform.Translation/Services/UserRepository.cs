@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Services.Interfaces;
 
 namespace MinistryPlatform.Translation.Services
 {
-    public class UserRepository : BaseRepository, IUserService
+    public class UserRepository : BaseRepository, IUserRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _usersApiLookupPageViewId;

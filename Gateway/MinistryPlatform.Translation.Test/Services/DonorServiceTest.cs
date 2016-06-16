@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Test.Services
     public class DonorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IProgramService> _programService;
+        private Mock<IProgramRepository> _programService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configuration;
@@ -33,7 +33,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _programService = new Mock<IProgramService>();
+            _programService = new Mock<IProgramRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _contactService = new Mock<IContactRepository>();

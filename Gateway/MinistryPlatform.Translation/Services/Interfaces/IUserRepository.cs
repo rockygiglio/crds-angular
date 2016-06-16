@@ -4,7 +4,7 @@ using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Services.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         MpUser GetByUserId(string userId);
         MpUser GetByAuthenticationToken(string authToken);

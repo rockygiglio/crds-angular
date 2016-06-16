@@ -19,7 +19,7 @@ namespace crds_angular.test.Services
 
         private ObjectAttributeService _fixture;
         private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
-        private Mock<MPInterfaces.IObjectAttributeService> _contactAttributeService;
+        private Mock<MPInterfaces.IObjectAttributeRepository> _contactAttributeService;
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
         private Mock<MPInterfaces.IAttributeRepository> _mpAttributeService;
         private List<ObjectSingleAttributeDTO> _updatedAttributes = new List<ObjectSingleAttributeDTO>();
@@ -34,7 +34,7 @@ namespace crds_angular.test.Services
         public void Setup()
         {
             _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>(MockBehavior.Strict);
-            _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeService>();
+            _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeRepository>();
             _attributeService = new Mock<GateWayInterfaces.IAttributeService>();
             _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
             _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>();
