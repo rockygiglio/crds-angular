@@ -22,6 +22,8 @@ delete from [dbo].event_groups where group_id in (select group_id from [dbo].gro
 
 update [dbo].Pledge_Campaigns set EVENT_ID = null, Program_id = null where Campaign_Name = @tripName;
 
+Delete from [dbo].event_equipment where event_id in (select event_id from events where event_title = @tripName);
+
 delete FROM [dbo].events where event_title = @tripName;
 
 --Delete all donations for Midgar's program.
