@@ -48,7 +48,7 @@ delete from donation_distributions where donation_id in (select donation_id from
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
 --Delete any pledges associated to the pledge campaign
-delete from [dbo].cr_Campaign_Age_Exception wehre pledge_campaign_id = @pledgeCampaignId;
+delete from [dbo].cr_Campaign_Age_Exception where pledge_campaign_id = @pledgeCampaignId;
 
 delete from [dbo].cr_Campaign_Private_Invitation where pledge_campaign_id = @pledgeCampaignId;
 
