@@ -4,7 +4,6 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using FsCheck;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models;
 using Equipment = crds_angular.Models.Crossroads.GoVolunteer.Equipment;
 using Random = System.Random;
@@ -74,24 +73,24 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static MinistryPlatform.Models.Communication Communication(MyContact sender, MyContact sendee, int templateId)
+        public static MpCommunication Communication(MpMyContact sender, MpMyContact sendee, int templateId)
         {           
-            return new Communication()
+            return new MpCommunication()
             {
                 AuthorUserId = RandomInt(),
                 DomainId = RandomInt(),
                 EmailBody = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                 EmailSubject = Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                FromContact = new Contact() {ContactId = sender.Contact_ID, EmailAddress = sender.Email_Address},
+                FromContact = new MpContact() {ContactId = sender.Contact_ID, EmailAddress = sender.Email_Address},
                 MergeData = new Dictionary<string, object>(),
-                ReplyToContact = new Contact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
+                ReplyToContact = new MpContact() {ContactId = sendee.Contact_ID, EmailAddress = sendee.Email_Address},
                 TemplateId = templateId
             };
         }
 
-        public static MyContact ContactFromRegistrant(Registrant r)
+        public static MpMyContact ContactFromRegistrant(Registrant r)
         {
-            return new MyContact()
+            return new MpMyContact()
             {
                 Age = RandomInt(),
                 Contact_ID = r.ContactId,
@@ -247,9 +246,9 @@ namespace crds_angular.test
             }, size).ToList();
         }
 
-        public static MyContact MyContact(int contactId = 0)
+        public static MpMyContact MyContact(int contactId = 0)
         {
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Address_ID = RandomInt(),
                 Address_Line_1 = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,

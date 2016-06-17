@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -9,16 +9,16 @@ namespace MinistryPlatform.Translation.Test.Services
 {
     public class DestinationServiceTest
     {
-        private DestinationService _fixture;
+        private DestinationRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         [SetUp]
         public void Setup()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("api-password");
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("TripDestinationDocuments")).Returns(1234);
 
-            _fixture = new DestinationService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new DestinationRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

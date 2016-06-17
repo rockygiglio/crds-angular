@@ -5,7 +5,7 @@ using System.Web;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -14,16 +14,16 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (TaskService));
 
         private readonly MPInterfaces.ITaskRepository _taskRepository;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly MPInterfaces.IUserService _userService;
+        private readonly MPInterfaces.IUserRepository _userService;
 
         public TaskService(MPInterfaces.ITaskRepository taskRepository,
-                           MPInterfaces.IApiUserService apiUserService,
+                           MPInterfaces.IApiUserRepository apiUserService,
                            IConfigurationWrapper configWrapper,
                            IUserImpersonationService impersonationService,
-                           MPInterfaces.IUserService userService)
+                           MPInterfaces.IUserRepository userService)
         {
             _taskRepository = taskRepository;
             _apiUserService = apiUserService;

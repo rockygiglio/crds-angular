@@ -6,24 +6,24 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
 {
     public class GoSkillsService : IGoSkillsService
     {
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly ISkillsService _skillsService;
+        private readonly ISkillsRepository _skillsService;
 
-        public GoSkillsService(IApiUserService apiUserService,
-                               ISkillsService skillsService,
+        public GoSkillsService(IApiUserRepository apiUserService,
+                               ISkillsRepository skillsService,
                                IObjectAttributeService objectAttributeService,
-                               IContactService contactService,
+                               IContactRepository contactService,
                                IConfigurationWrapper configurationWrapper)
         {
             _apiUserService = apiUserService;
@@ -63,15 +63,15 @@ namespace crds_angular.Services
 
         public void UpdateSkills(int participantId, List<GoSkills> skills, string token)
         {
-            ObjectAttributeConfiguration configuration;
+            MpObjectAttributeConfiguration configuration;
             if (token == String.Empty)
             {
                 token = _apiUserService.GetToken();
-                configuration = ObjectAttributeConfigurationFactory.Contact();
+                configuration = MpObjectAttributeConfigurationFactory.Contact();
             }
             else
             {
-                configuration = ObjectAttributeConfigurationFactory.MyContact();
+                configuration = MpObjectAttributeConfigurationFactory.MyContact();
             }
 
             var contactObs = Observable.Start(() => _contactService.GetContactByParticipantId(participantId));
@@ -138,7 +138,7 @@ namespace crds_angular.Services
         private ObjectAttributeTypeDTO ContactSkills(string token, string apiToken)
         {
             var contact = _contactService.GetMyProfile(token);
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contact.Contact_ID, configuration);
             ObjectAttributeTypeDTO contactSkills;
             var skillsAttributeTypeId = _configurationWrapper.GetConfigIntValue("AttributeTypeIdSkills");

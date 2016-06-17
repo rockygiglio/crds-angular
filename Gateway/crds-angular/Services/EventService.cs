@@ -7,13 +7,13 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models.EventReservations;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using WebGrease.Css.Extensions;
-using Event = MinistryPlatform.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
-using TranslationEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using TranslationEventService = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 
 namespace crds_angular.Services
 {
@@ -23,17 +23,17 @@ namespace crds_angular.Services
 
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly TranslationEventService _eventService;
-        private readonly IGroupService _groupService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly IGroupRepository _groupService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly IGroupParticipantService _groupParticipantService;
-        private readonly IParticipantService _participantService;
-        private readonly IRoomService _roomService;
-        private readonly IEquipmentService _equipmentService;
-        private readonly IEventParticipantService _eventParticipantService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
+        private readonly IGroupParticipantRepository _groupParticipantService;
+        private readonly IParticipantRepository _participantService;
+        private readonly IRoomRepository _roomService;
+        private readonly IEquipmentRepository _equipmentService;
+        private readonly IEventParticipantRepository _eventParticipantService;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -46,18 +46,18 @@ namespace crds_angular.Services
 
 
         public EventService(TranslationEventService eventService,
-                            IGroupService groupService,
-                            ICommunicationService communicationService,
-                            IContactService contactService,
+                            IGroupRepository groupService,
+                            ICommunicationRepository communicationService,
+                            IContactRepository contactService,
                             IContentBlockService contentBlockService,
                             IConfigurationWrapper configurationWrapper,
-                            IApiUserService apiUserService,
-                            IContactRelationshipService contactRelationshipService,
-                            IGroupParticipantService groupParticipantService,
-                            IParticipantService participantService,
-                            IRoomService roomService,
-                            IEquipmentService equipmentService,
-                            IEventParticipantService eventParticipantService)
+                            IApiUserRepository apiUserService,
+                            IContactRelationshipRepository contactRelationshipService,
+                            IGroupParticipantRepository groupParticipantService,
+                            IParticipantRepository participantService,
+                            IRoomRepository roomService,
+                            IEquipmentRepository equipmentService,
+                            IEventParticipantRepository eventParticipantService)
         {
             _eventService = eventService;
             _groupService = groupService;
@@ -238,7 +238,7 @@ namespace crds_angular.Services
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
         {
-            var equipmentReservation = new EquipmentReservationDto();
+            var equipmentReservation = new MpEquipmentReservationDto();
             equipmentReservation.Cancelled = false;
             equipmentReservation.EquipmentId = equipment.EquipmentId;
             equipmentReservation.EventId = eventId;
@@ -249,7 +249,7 @@ namespace crds_angular.Services
 
         private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
         {
-            var equipmentReservation = new EquipmentReservationDto();
+            var equipmentReservation = new MpEquipmentReservationDto();
             equipmentReservation.Cancelled = equipment.Cancelled;
             equipmentReservation.EquipmentId = equipment.EquipmentId;
             equipmentReservation.EventEquipmentId = equipment.EquipmentReservationId;
@@ -261,7 +261,7 @@ namespace crds_angular.Services
 
         private void AddRoom(int eventId, EventRoomDto room, string token)
         {
-            var roomReservation = new RoomReservationDto();
+            var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = false;
             roomReservation.EventId = eventId;
             roomReservation.Hidden = room.Hidden;
@@ -277,7 +277,7 @@ namespace crds_angular.Services
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
         {
-            var roomReservation = new RoomReservationDto();
+            var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = room.Cancelled;
             roomReservation.EventId = eventId;
             roomReservation.EventRoomId = room.RoomReservationId;
@@ -294,7 +294,7 @@ namespace crds_angular.Services
 
         private int AddEvent(EventToolDto eventTool)
         {
-            var eventDto = new EventReservationDto();
+            var eventDto = new MpEventReservationDto();
             eventDto.CongregationId = eventTool.CongregationId;
             eventDto.ContactId = eventTool.ContactId;
             eventDto.Description = eventTool.Description;
@@ -316,7 +316,7 @@ namespace crds_angular.Services
             return eventId;
         }
 
-        public Event GetEvent(int eventId)
+        public MpEvent GetEvent(int eventId)
         {
             return _eventService.GetEvent(eventId);
         }
@@ -442,7 +442,7 @@ namespace crds_angular.Services
             eventList.ForEach(evt => { SendPrimaryContactReminderEmail(evt, token); });
         }
 
-        private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, Event childcareEvent, IList<Participant> children, string token)
+        private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, MpEvent childcareEvent, IList<Participant> children, string token)
         {
             try
             {
@@ -574,7 +574,7 @@ namespace crds_angular.Services
             _communicationService.SendMessage(comm);
         }
 
-        private HtmlElement SetupTable(List<RegisterEventObj> regData, Event evnt)
+        private HtmlElement SetupTable(List<RegisterEventObj> regData, MpEvent evnt)
         {
             var tableAttrs = new Dictionary<string, string>()
             {
@@ -620,7 +620,7 @@ namespace crds_angular.Services
             public bool ChildcareRequested { get; set; }
         }
 
-        public Event GetMyChildcareEvent(int parentEventId, string token)
+        public MpEvent GetMyChildcareEvent(int parentEventId, string token)
         {
             var participantRecord = _participantService.GetParticipantRecord(token);
             if (!_eventService.EventHasParticipant(parentEventId, participantRecord.ParticipantId))
@@ -632,7 +632,7 @@ namespace crds_angular.Services
             return childcareEvent;
         }
 
-        public Event GetChildcareEvent(int parentEventId)
+        public MpEvent GetChildcareEvent(int parentEventId)
         {
             var childEvents = _eventService.GetEventsByParentEventId(parentEventId);
             var childcareEvents = childEvents.Where(childEvent => childEvent.EventType == "Childcare").ToList();
@@ -690,14 +690,14 @@ namespace crds_angular.Services
             return true;
         }
 
-        public List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
+        public List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate)
         {
             var eventTemplates = _eventService.GetEventsBySite(site, token, startDate, endDate);
 
             return eventTemplates;
         }
 
-        public List<Event> GetEventTemplatesBySite(string site, string token)
+        public List<MpEvent> GetEventTemplatesBySite(string site, string token)
         {
             var eventTemplates = _eventService.GetEventTemplatesBySite(site, token);
 

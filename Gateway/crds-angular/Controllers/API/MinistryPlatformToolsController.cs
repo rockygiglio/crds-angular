@@ -4,16 +4,16 @@ using System.Net;
 using System.Web.Http;
 using crds_angular.Models.Json;
 using crds_angular.Security;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
 {
     public class MinistryPlatformToolsController: MPAuth
     {
-        private readonly ISelectionService _selectionService;
+        private readonly ISelectionRepository _selectionService;
 
-        public MinistryPlatformToolsController(ISelectionService selectionService)
+        public MinistryPlatformToolsController(ISelectionRepository selectionService)
         {
             _selectionService = selectionService;
         }

@@ -16,7 +16,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Util;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Owin;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 
 namespace crds_angular.Security
 {
@@ -52,7 +52,7 @@ namespace crds_angular.Security
                 var authorized = "";
                 if (Request.Headers.TryGetValues("RefreshToken", out refreshTokens) && refreshTokens.Any())
                 {
-                    var authData = AuthenticationService.RefreshToken(refreshTokens.FirstOrDefault());
+                    var authData = AuthenticationRepository.RefreshToken(refreshTokens.FirstOrDefault());
                     if (authData != null)
                     {
                         authorized = authData["token"].ToString();

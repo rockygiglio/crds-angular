@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Net;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
 using System.Collections.Generic;
-using MinistryPlatform.Models.Attributes;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
     public class MinistryPlatformRestServiceTest
     {
-        private MinistryPlatformRestService _fixture;
+        private MinistryPlatformRestRepository _fixture;
 
         private Mock<IRestClient> _restClient;
 
@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _restClient = new Mock<IRestClient>();
-            _fixture = new MinistryPlatformRestService(_restClient.Object);
+            _fixture = new MinistryPlatformRestRepository(_restClient.Object);
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
     }
 
-    [RestApiTable(Name = "MP_Table_Name")]
+    [MpRestApiTable(Name = "MP_Table_Name")]
     internal class TestModelWithRestApiTable
     {
         [JsonProperty(PropertyName = "ID")]

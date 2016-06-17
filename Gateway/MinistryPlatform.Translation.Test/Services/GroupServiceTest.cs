@@ -4,25 +4,25 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Communication = MinistryPlatform.Models.Communication;
+using Communication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
     [TestFixture]
     public class GroupServiceTest
     {
-        private GroupService fixture;
+        private GroupRepository fixture;
         private Mock<IMinistryPlatformService> ministryPlatformService;
         private Mock<IConfigurationWrapper> configWrapper;
-        private Mock<IAuthenticationService> authService;
-        private Mock<ICommunicationService> communicationService;
-        private Mock<IContactService> contactService;
+        private Mock<IAuthenticationRepository> authService;
+        private Mock<ICommunicationRepository> communicationService;
+        private Mock<IContactRepository> contactService;
         private Mock<IContentBlockService> contentBlockService;
         private readonly int GroupsParticipantsPageId = 298;
         private readonly int GroupsParticipantsSubPage = 88;
@@ -36,11 +36,11 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             ministryPlatformService = new Mock<IMinistryPlatformService>();
             configWrapper = new Mock<IConfigurationWrapper>();
-            authService = new Mock<IAuthenticationService>();
-            communicationService = new Mock<ICommunicationService>();
-            contactService = new Mock<IContactService>();
+            authService = new Mock<IAuthenticationRepository>();
+            communicationService = new Mock<ICommunicationRepository>();
+            contactService = new Mock<IContactRepository>();
             contentBlockService = new Mock<IContentBlockService>();
-            fixture = new GroupService(ministryPlatformService.Object, configWrapper.Object, authService.Object, communicationService.Object, contactService.Object, contentBlockService.Object);
+            fixture = new GroupRepository(ministryPlatformService.Object, configWrapper.Object, authService.Object, communicationService.Object, contactService.Object, contentBlockService.Object);
 
 
             configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
@@ -234,17 +234,17 @@ namespace MinistryPlatform.Translation.Test.Services
         public void testIsUserInGroup()
         {
             int participantId = 123;
-            List<GroupParticipant> groupParticipants = new List<GroupParticipant>
+            List<MpGroupParticipant> groupParticipants = new List<MpGroupParticipant>
             {
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 1111
                 },
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 2222
                 },
-                new GroupParticipant
+                new MpGroupParticipant
                 {
                     ParticipantId = 123
                 }
@@ -441,7 +441,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var end = DateTime.Now.AddYears(2);
             const int groupId = 854725;
 
-            var newGroup = new Group()
+            var newGroup = new MpGroup()
             {
                 Name = "New Testing Group",
                 GroupDescription = "The best group ever created for testing stuff and things",              
@@ -460,7 +460,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 MeetingTime = "18000",
                 GroupRoleId = 16,
                 MinimumAge = 0,
-                Address = new Address()
+                Address = new MpAddress()
                 {
                     Address_ID = 43567
                 }

@@ -5,8 +5,8 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -16,10 +16,10 @@ namespace crds_angular.test.Services
     public class TaskServiceTest
     {
         private Mock<ITaskRepository> _taskRepository;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IUserImpersonationService> _impersonationService;
-        private Mock<IUserService> _userService;
+        private Mock<IUserRepository> _userService;
 
         private TaskService _fixture;
 
@@ -27,10 +27,10 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _taskRepository = new Mock<ITaskRepository>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _impersonationService = new Mock<IUserImpersonationService>(MockBehavior.Strict);
-            _userService = new Mock<IUserService>();
+            _userService = new Mock<IUserRepository>();
 
             _fixture = new TaskService(_taskRepository.Object,
                                        _apiUserService.Object,
@@ -64,7 +64,7 @@ namespace crds_angular.test.Services
 
             testTasks.Add(testTask);
 
-            MinistryPlatformUser user = new MinistryPlatformUser();
+            MpUser user = new MpUser();
             user.CanImpersonate = true;
             user.Guid = "DAFD35F3-C8AA-4B9D-B302-AA5F0160E544";
             user.UserEmail = "test@test.com";

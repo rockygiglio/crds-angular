@@ -1,8 +1,8 @@
 ﻿using crds_angular.Models.Crossroads;
-using MinistryPlatform.Models;
 using System.Collections.Generic;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using crds_angular.Models.Crossroads.Groups;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services.Interfaces
 {

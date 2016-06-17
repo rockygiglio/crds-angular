@@ -10,7 +10,7 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -24,7 +24,7 @@ namespace crds_angular.test.controllers
 
         //private Mock<IPersonService> _personServiceMock;
         private Mock<IServeService> _serveServiceMock;
-        private Mock<IAuthenticationService> _authenticationServiceMock;
+        private Mock<IAuthenticationRepository> _authenticationServiceMock;
         private Mock<IMessageFactory> _messageFactoryMock;
         private Mock<IMessageQueueFactory> _messageQueryFactoryMock;
         private Mock<IConfigurationWrapper> _configurationMock;
@@ -37,7 +37,7 @@ namespace crds_angular.test.controllers
         {
             //_personServiceMock = new Mock<IPersonService>();
             _serveServiceMock = new Mock<IServeService>();
-            _authenticationServiceMock= new Mock<IAuthenticationService>();
+            _authenticationServiceMock= new Mock<IAuthenticationRepository>();
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageQueryFactoryMock = new Mock<IMessageQueueFactory>();
             _configurationMock = new Mock<IConfigurationWrapper>();

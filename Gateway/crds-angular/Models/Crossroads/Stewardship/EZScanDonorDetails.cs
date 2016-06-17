@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship
@@ -14,6 +14,6 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty(PropertyName = "DonorId")]
         public string DonorId { get; set; }
         [JsonProperty(PropertyName = "PostalAddress")]
-        public PostalAddress Address { get; set; }
+        public MpPostalAddress Address { get; set; }
     }
 }

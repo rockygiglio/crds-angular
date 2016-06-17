@@ -8,10 +8,10 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
-using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -19,30 +19,30 @@ namespace crds_angular.Services
 
     {
         private readonly IAttributeService _attributeService;
-        private readonly MPInterfaces.ICommunicationService _communicationService;
+        private readonly MPInterfaces.ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly MPInterfaces.IContactRelationshipService _contactRelationshipService;
-        private readonly MPInterfaces.IContactService _contactService;
-        private readonly IGroupConnectorService _groupConnectorService;
+        private readonly MPInterfaces.IContactRelationshipRepository _contactRelationshipService;
+        private readonly MPInterfaces.IContactRepository _contactService;
+        private readonly IGroupConnectorRepository _groupConnectorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (GoVolunteerService));
         private readonly int _otherEquipmentId;
-        private readonly MPInterfaces.IParticipantService _participantService;
-        private readonly MPInterfaces.IProjectTypeService _projectTypeService;
-        private readonly IRegistrationService _registrationService;
+        private readonly MPInterfaces.IParticipantRepository _participantService;
+        private readonly MPInterfaces.IProjectTypeRepository _projectTypeService;
+        private readonly IRegistrationRepository _registrationService;
         private readonly IGoSkillsService _skillsService;
-        private readonly MPInterfaces.IUserService _userService;
+        private readonly MPInterfaces.IUserRepository _userService;
 
-        public GoVolunteerService(MPInterfaces.IParticipantService participantService,
-                                  IRegistrationService registrationService,
-                                  MPInterfaces.IContactService contactService,
-                                  IGroupConnectorService groupConnectorService,
+        public GoVolunteerService(MPInterfaces.IParticipantRepository participantService,
+                                  IRegistrationRepository registrationService,
+                                  MPInterfaces.IContactRepository contactService,
+                                  IGroupConnectorRepository groupConnectorService,
                                   IConfigurationWrapper configurationWrapper,
-                                  MPInterfaces.IContactRelationshipService contactRelationshipService,
-                                  MPInterfaces.IProjectTypeService projectTypeService,
+                                  MPInterfaces.IContactRelationshipRepository contactRelationshipService,
+                                  MPInterfaces.IProjectTypeRepository projectTypeService,
                                   IAttributeService attributeService,
                                   IGoSkillsService skillsService,
-                                  MPInterfaces.ICommunicationService comunicationService,
-                                  MPInterfaces.IUserService userService)
+                                  MPInterfaces.ICommunicationRepository comunicationService,
+                                  MPInterfaces.IUserRepository userService)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -87,7 +87,7 @@ namespace crds_angular.Services
 
                 if (registration.SpouseParticipation)
                 {
-                    var spouse = Observable.Start<Contact>(() => SpouseInformation(registration));
+                    var spouse = Observable.Start<MpContact>(() => SpouseInformation(registration));
                     spouse.Subscribe(contact =>
                     {
                         if (contact != null)
@@ -377,13 +377,13 @@ namespace crds_angular.Services
             }
         }
 
-        private Contact SpouseInformation(Registration registration)
+        private MpContact SpouseInformation(Registration registration)
         {
             
 
             if (!AddSpouse(registration))
             {
-                return new Contact()
+                return new MpContact()
                 {
                     ContactId = registration.Spouse.ContactId,
                     EmailAddress = registration.Spouse.EmailAddress ?? _contactService.GetContactEmail(registration.Spouse.ContactId)
@@ -396,7 +396,7 @@ namespace crds_angular.Services
                                                                                          registration.Spouse.EmailAddress,
                                                                                          registration.Spouse.DateOfBirth,
                                                                                          registration.Spouse.MobilePhone));
-                contact.Subscribe<Contact>(c =>
+                contact.Subscribe<MpContact>(c =>
                 {
                     Observable.CombineLatest(
                         Observable.Start(() => { _participantService.CreateParticipantRecord(c.ContactId); }),
@@ -411,7 +411,7 @@ namespace crds_angular.Services
 
         private void CreateRelationship(Registration registration, int contactId)
         {
-            var relationship = new MinistryPlatform.Models.Relationship
+            var relationship = new MpRelationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("MarriedTo"),
                 RelatedContactID = contactId,
@@ -443,7 +443,7 @@ namespace crds_angular.Services
 
         private int CreateRegistration(Registration registration, int participantId)
         {
-            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.Registration();
+            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration();
             registrationDto.ParticipantId = participantId;
             var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
@@ -456,7 +456,7 @@ namespace crds_angular.Services
             return Registration(registrationDto);
         }
 
-        private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.Registration registrationDto)
+        private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration registrationDto)
         {
             int registrationId;
             try
@@ -520,7 +520,7 @@ namespace crds_angular.Services
             _contactService.UpdateContact(registration.Self.ContactId, dict);
 
             // update the user record?
-            MinistryPlatformUser user = _userService.GetByAuthenticationToken(token);
+            MpUser user = _userService.GetByAuthenticationToken(token);
             user.UserId = registration.Self.EmailAddress;
             user.UserEmail = registration.Self.EmailAddress;
             user.DisplayName = registration.Self.LastName + ", " + registration.Self.FirstName;

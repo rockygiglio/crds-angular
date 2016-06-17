@@ -3,31 +3,31 @@ using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.People;
-using MinistryPlatform.Translation.Services;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using Participant = MinistryPlatform.Models.Participant;
+using MinistryPlatform.Translation.Repositories;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 
 namespace crds_angular.Services
 {
     public class PersonService : MinistryPlatformBaseService, IPersonService
     {
-        private readonly MPServices.IContactService _contactService;
+        private readonly MPServices.IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly MPServices.IApiUserService _apiUserService;
-        private readonly MPServices.IParticipantService _participantService;
-        private readonly MPServices.IUserService _userService;
-        private readonly MPServices.IAuthenticationService _authenticationService;
+        private readonly MPServices.IApiUserRepository _apiUserService;
+        private readonly MPServices.IParticipantRepository _participantService;
+        private readonly MPServices.IUserRepository _userService;
+        private readonly MPServices.IAuthenticationRepository _authenticationService;
 
-        public PersonService(MPServices.IContactService contactService, 
+        public PersonService(MPServices.IContactRepository contactService, 
             IObjectAttributeService objectAttributeService, 
-            MPServices.IApiUserService apiUserService,
-            MPServices.IParticipantService participantService,
-            MPServices.IUserService userService,
-            MPServices.IAuthenticationService authenticationService)
+            MPServices.IApiUserRepository apiUserService,
+            MPServices.IParticipantRepository participantService,
+            MPServices.IUserRepository userService,
+            MPServices.IAuthenticationRepository authenticationService)
         {
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
@@ -45,7 +45,7 @@ namespace crds_angular.Services
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
 
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
 
             Participant participant = _participantService.GetParticipant(person.ContactId);
@@ -89,7 +89,7 @@ namespace crds_angular.Services
 
             // TODO: Should this move to _contactService or should update move it's call out to this service?
             var apiUser = _apiUserService.GetToken();
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiUser, contactId, configuration);
             person.AttributeTypes = attributesTypes.MultiSelect;
             person.SingleAttributes = attributesTypes.SingleSelect;
@@ -97,9 +97,9 @@ namespace crds_angular.Services
             return person;
         }
 
-        public List<RoleDto> GetLoggedInUserRoles(string token)
+        public List<MpRoleDto> GetLoggedInUserRoles(string token)
         {
-            return GetMyRecords.GetMyRoles(token);
+            return GetMyRecordsRepository.GetMyRoles(token);
         }
 
         public Person GetLoggedInUserProfile(String token)

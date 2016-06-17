@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Test.Helpers;
 using Moq;
 using NUnit.Framework;
@@ -18,9 +18,9 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
-            _authService = new Mock<IAuthenticationService>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
-            _groupService = new Mock<IGroupService>(MockBehavior.Strict);
+            _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -28,14 +28,14 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("EventsBySite")).Returns(2222);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new EventService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
+            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
         }
 
-        private EventService _fixture;
+        private EventRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<IGroupService> _groupService;
+        private Mock<IGroupRepository> _groupService;
         private const int EventParticipantPageId = 281;
         private const int EventParticipantStatusDefaultId = 2;
         private const int EventsPageId = 308;

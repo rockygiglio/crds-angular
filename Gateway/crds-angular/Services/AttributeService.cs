@@ -2,16 +2,16 @@
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
     public class AttributeService : IAttributeService
     {
-        private readonly MPInterfaces.IAttributeService _attributeService;
+        private readonly MPInterfaces.IAttributeRepository _attributeService;
 
-        public AttributeService(MPInterfaces.IAttributeService attributeService)
+        public AttributeService(MPInterfaces.IAttributeRepository attributeService)
         {
             _attributeService = attributeService;
         }
@@ -34,7 +34,7 @@ namespace crds_angular.Services
             return attributeTypes.Values.ToList();
         }
 
-        public AttributeDTO ConvertAttributeToAttributeDto(Attribute attribute)
+        public AttributeDTO ConvertAttributeToAttributeDto(MpAttribute attribute)
         {
             var attributeDto = new AttributeDTO
             {
@@ -49,7 +49,7 @@ namespace crds_angular.Services
             return attributeDto;
         }
 
-        private static int GetOrCreateAttributeTypeDto(Attribute attribute, Dictionary<int, AttributeTypeDTO> attributeTypes)
+        private static int GetOrCreateAttributeTypeDto(MpAttribute attribute, Dictionary<int, AttributeTypeDTO> attributeTypes)
         {
             var attributeTypeDto = new AttributeTypeDTO()
             {

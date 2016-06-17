@@ -7,12 +7,12 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using FsCheck;
-using MinistryPlatform.Translation.Services.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces.GoCincinnati;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using Moq;
 using NUnit.Framework;
 using IAttributeService = crds_angular.Services.Interfaces.IAttributeService;
-using IGroupConnectorService = MinistryPlatform.Translation.Services.Interfaces.GoCincinnati.IGroupConnectorService;
+using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
 
 namespace crds_angular.test.Services
 {
@@ -23,30 +23,30 @@ namespace crds_angular.test.Services
 
         private readonly Mock<IAttributeService> _attributeService;
         private readonly Mock<IConfigurationWrapper> _configurationWrapper;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactRelationshipService> _contactRelationshipService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IContactService> _contactService;
-        private readonly Mock<IGroupConnectorService> _groupConnectorService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IParticipantService> _participantService;
-        private readonly Mock<MinistryPlatform.Translation.Services.Interfaces.IProjectTypeService> _projectTypeService;
-        private readonly Mock<IRegistrationService> _registrationService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRepository> _contactService;
+        private readonly Mock<IGroupConnectorRepository> _groupConnectorService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository> _participantService;
+        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IProjectTypeRepository> _projectTypeService;
+        private readonly Mock<IRegistrationRepository> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
-        private readonly Mock<ICommunicationService> _commnuicationService;
-        private readonly Mock<IUserService> _userService;
+        private readonly Mock<ICommunicationRepository> _commnuicationService;
+        private readonly Mock<IUserRepository> _userService;
 
 
         public GoVolunteerServiceTest()
         {
             _attributeService = new Mock<IAttributeService>();
-            _commnuicationService = new Mock<ICommunicationService>();
+            _commnuicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
-            _contactService = new Mock<IContactService>();
-            _groupConnectorService = new Mock<IGroupConnectorService>();
-            _participantService = new Mock<IParticipantService>();
-            _projectTypeService = new Mock<IProjectTypeService>();
-            _registrationService = new Mock<IRegistrationService>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
+            _contactService = new Mock<IContactRepository>();
+            _groupConnectorService = new Mock<IGroupConnectorRepository>();
+            _participantService = new Mock<IParticipantRepository>();
+            _projectTypeService = new Mock<IProjectTypeRepository>();
+            _registrationService = new Mock<IRegistrationRepository>();
             _skillsService = new Mock<IGoSkillsService>();
-            _userService = new Mock<IUserService>();
+            _userService = new Mock<IUserRepository>();
             _fixture = new GoVolunteerService(_participantService.Object, 
                 _registrationService.Object, 
                 _contactService.Object, 

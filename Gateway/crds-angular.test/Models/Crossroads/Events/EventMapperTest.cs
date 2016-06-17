@@ -1,5 +1,6 @@
 ﻿using crds_angular.Models.Crossroads.Events;
 using NUnit.Framework;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 
 namespace crds_angular.test.Models.Crossroads.Events
@@ -24,7 +25,7 @@ namespace crds_angular.test.Models.Crossroads.Events
         public void ShouldMapFromTranslationToGateway()
         {
             crds_angular.Models.Crossroads.Events.Event gatewayEvent = 
-                AutoMapper.Mapper.Map<MinistryPlatform.Models.Event, crds_angular.Models.Crossroads.Events.Event>(
+                AutoMapper.Mapper.Map<MpEvent, crds_angular.Models.Crossroads.Events.Event>(
                     EventHelpers.TranslationEvent()
                 );
             Assert.AreEqual(gatewayEvent.name, EventHelpers.GatewayEvent().name);

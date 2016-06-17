@@ -2,10 +2,10 @@
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Test.Helpers;
 
 namespace MinistryPlatform.Translation.Test.Services
@@ -14,23 +14,23 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _config;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
 
-        private RoomService _fixture;
+        private RoomRepository _fixture;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _config = new Mock<IConfigurationWrapper>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
 
             _authenticationService.Setup(mocked => mocked.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object>
             {
                 {"token", "abc"}
             });
 
-            _fixture = new RoomService(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
+            _fixture = new RoomRepository(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
         }
 
         [Test]

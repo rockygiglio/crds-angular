@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Contacts")).Returns(292);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Households")).Returns(327);
@@ -31,19 +31,19 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
 
-            _fixture = new ContactService(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
+            _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
         }
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
-        private ContactService _fixture;
+        private Mock<IAuthenticationRepository> _authService;
+        private ContactRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
 
         [Test]
         public void GetContactByParticipantId()
         {
             const int participantId = 99999;
-            var expectedContact = new MyContact
+            var expectedContact = new MpMyContact
             {
                 Contact_ID = 11111,
                 Email_Address = "andy@dalton.nfl",
@@ -228,7 +228,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactId = _fixture.CreateSimpleContact(firstname, lastname, email, dob, mobile);
 
-            Assert.IsInstanceOf<Contact>(contactId);
+            Assert.IsInstanceOf<MpContact>(contactId);
             Assert.AreEqual(123, contactId.ContactId);
 
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,

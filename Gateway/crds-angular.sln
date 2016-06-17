@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinistryPlatform.Translatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinistryPlatform.Translation.Test", "MinistryPlatform.Translation.Test\MinistryPlatform.Translation.Test.csproj", "{B8EF01EE-DFB9-4162-A485-46EC2CB03B34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinistryPlatform.Models", "MinistryPlatform.Models\MinistryPlatform.Models.csproj", "{CD41507E-91AC-4C60-96E2-5CAC25F49A76}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.Utilities", "Crossroads.Utilities\Crossroads.Utilities.csproj", "{61238A82-D410-4330-BD25-889239FC7873}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.Utilities.Test", "Crossroads.Utilities.Test\Crossroads.Utilities.Test.csproj", "{EF27AE14-DE4B-4F98-81F1-F16A9B00592B}"
@@ -28,7 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.AsyncJobs", "Cro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossroads.AsyncJobs.Test", "Crossroads.AsyncJobs.Test\Crossroads.AsyncJobs.Test.csproj", "{B343A60C-8448-4F8C-AC73-EF4DE7188FC2}"
 	ProjectSection(ProjectDependencies) = postProject
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76} = {CD41507E-91AC-4C60-96E2-5CAC25F49A76}
 		{CC650D93-731C-4613-B358-FB4C76237455} = {CC650D93-731C-4613-B358-FB4C76237455}
 	EndProjectSection
 EndProject
@@ -82,14 +79,6 @@ Global
 		{B8EF01EE-DFB9-4162-A485-46EC2CB03B34}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{B8EF01EE-DFB9-4162-A485-46EC2CB03B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8EF01EE-DFB9-4162-A485-46EC2CB03B34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Demo|Any CPU.ActiveCfg = Demo|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Demo|Any CPU.Build.0 = Demo|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Integration|Any CPU.Build.0 = Integration|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD41507E-91AC-4C60-96E2-5CAC25F49A76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61238A82-D410-4330-BD25-889239FC7873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61238A82-D410-4330-BD25-889239FC7873}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61238A82-D410-4330-BD25-889239FC7873}.Demo|Any CPU.ActiveCfg = Demo|Any CPU

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,9 +12,9 @@ namespace MinistryPlatform.Translation.Test.Services
     public class PledgeCampaignServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private IPledgeService _fixture;
+        private IPledgeRepository _fixture;
 
         [SetUp]
         public void SetUp()
@@ -22,7 +22,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int mockPledgesPageId = 9876;
 
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
@@ -31,7 +31,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("Pledges")).Returns(mockPledgesPageId);
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("MyHouseholdPledges")).Returns(525);
 
-            _fixture = new PledgeService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new PledgeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

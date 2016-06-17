@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,16 +12,16 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ParticipantServiceTest
     {
-        private ParticipantService _fixture;
+        private ParticipantRepository _fixture;
         private Mock<IMinistryPlatformService> _mpServiceMock;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         [SetUp]
         public void SetUp()
         {
             _mpServiceMock = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("Participants")).Returns(355);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new ParticipantService(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ParticipantRepository(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

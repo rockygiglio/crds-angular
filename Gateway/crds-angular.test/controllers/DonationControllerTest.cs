@@ -11,10 +11,10 @@ using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Json;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -26,28 +26,28 @@ namespace crds_angular.test.controllers
     class DonationControllerTest
     {
         private DonationController fixture;
-        private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService> donorServiceMock;
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> donorServiceMock;
         private Mock<IPaymentService> stripeServiceMock;
-        private Mock<IAuthenticationService> authenticationServiceMock;
+        private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IDonorService> gatewayDonorServiceMock;
         private Mock<IDonationService> gatewayDonationServiceMock;
         private Mock<IUserImpersonationService> impersonationService;
-        private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationService> mpDonationService; 
-        private Mock<IPledgeService> mpPledgeService;
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository> mpDonationService; 
+        private Mock<IPledgeRepository> mpPledgeService;
         private string authToken;
         private string authType;
 
         [SetUp]
         public void SetUp()
         {
-            donorServiceMock = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService>();
+            donorServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>();
             gatewayDonorServiceMock = new Mock<IDonorService>();
             stripeServiceMock = new Mock<IPaymentService>();
-            authenticationServiceMock = new Mock<IAuthenticationService>();
+            authenticationServiceMock = new Mock<IAuthenticationRepository>();
             gatewayDonationServiceMock = new Mock<IDonationService>();
-            mpPledgeService = new Mock<IPledgeService>();
+            mpPledgeService = new Mock<IPledgeRepository>();
             impersonationService = new Mock<IUserImpersonationService>();
-            mpDonationService = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonationService>();
+            mpDonationService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository>();
 
             fixture = new DonationController(donorServiceMock.Object, stripeServiceMock.Object,
                 authenticationServiceMock.Object, gatewayDonorServiceMock.Object, gatewayDonationServiceMock.Object, mpDonationService.Object, mpPledgeService.Object, impersonationService.Object);
@@ -113,7 +113,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsImpersonationNotAllowed()
         {
-            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new ContactDonor
+            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new MpContactDonor
             {
                 Email = "me@here.com"
             });
@@ -133,7 +133,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsImpersonationUserNotFound()
         {
-            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new ContactDonor
+            donorServiceMock.Setup(mocked => mocked.GetEmailViaDonorId(123)).Returns(new MpContactDonor
             {
                 Email = "me@here.com"
             });
@@ -211,7 +211,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "bank"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -234,7 +234,7 @@ namespace crds_angular.test.controllers
 
             donorServiceMock.Setup(mocked => mocked.
                                        CreateDonationAndDistributionRecord(
-                                           It.Is<DonationAndDistributionRecord>(
+                                           It.Is<MpDonationAndDistributionRecord>(
                                                d => d.DonationAmt == createDonationDTO.Amount &&
                                                     d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                     d.DonorId == donor.DonorId &&
@@ -296,7 +296,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "junk bonds"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -309,7 +309,7 @@ namespace crds_angular.test.controllers
             };
 
             var pledgeId = 3456;
-            var pledge = new Pledge
+            var pledge = new MpPledge
             {
                 DonorId = 1,
                 PledgeCampaignId = 2,
@@ -332,7 +332,7 @@ namespace crds_angular.test.controllers
                 .Returns(charge);
 
             donorServiceMock.Setup(mocked => mocked.
-                CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                                d => d.DonationAmt == createDonationDTO.Amount &&
                                                     d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                     d.DonorId == donor.DonorId &&
@@ -395,7 +395,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "card"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -408,7 +408,7 @@ namespace crds_angular.test.controllers
             };
 
             var pledgeId = 3456;
-            var pledge = new Pledge
+            var pledge = new MpPledge
             {
                 DonorId = 1,
                 PledgeCampaignId = 2,
@@ -430,7 +430,7 @@ namespace crds_angular.test.controllers
 
 
             donorServiceMock.Setup(mocked => mocked.
-                CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                            d => d.DonationAmt == createDonationDTO.Amount &&
                                                 d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                 d.DonorId == donor.DonorId &&
@@ -495,7 +495,7 @@ namespace crds_angular.test.controllers
                 PaymentType = "bank"
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = contactId,
                 DonorId = 424242,
@@ -514,7 +514,7 @@ namespace crds_angular.test.controllers
                 Returns(charge);
 
             donorServiceMock.Setup(mocked => mocked.
-                                       CreateDonationAndDistributionRecord(It.Is<DonationAndDistributionRecord>(
+                                       CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
                                            d => d.DonationAmt == createDonationDTO.Amount &&
                                                 d.FeeAmt == charge.BalanceTransaction.Fee &&
                                                 d.DonorId == donor.DonorId &&

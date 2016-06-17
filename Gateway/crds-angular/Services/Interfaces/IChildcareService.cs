@@ -14,7 +14,7 @@ namespace crds_angular.Services.Interfaces
         void SaveRsvp(ChildcareRsvpDto saveRsvp, string token);
         void CreateChildcareRequest(ChildcareRequestDto request, String token);
         void ApproveChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token);
-        ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token);
+        MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token);
         void RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest, string token);
     }
 }

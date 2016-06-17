@@ -5,9 +5,9 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -16,15 +16,15 @@ namespace crds_angular.test.Services
     internal class PersonServiceTest_opportunityService
     {
         private Mock<IObjectAttributeService> _objectAttributeService;
-        private Mock<MPInterfaces.IContactService> _contactService;
-        private Mock<MPInterfaces.IAuthenticationService> _authenticationService;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
-        private Mock<MPInterfaces.IParticipantService> _participantService;
-        private Mock<MPInterfaces.IUserService> _userService;
+        private Mock<MPInterfaces.IContactRepository> _contactService;
+        private Mock<MPInterfaces.IAuthenticationRepository> _authenticationService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<MPInterfaces.IParticipantRepository> _participantService;
+        private Mock<MPInterfaces.IUserRepository> _userService;
 
         private PersonService _fixture;
-        private MyContact _myContact;
-        private List<HouseholdMember> _householdMembers;
+        private MpMyContact _myContact;
+        private List<MpHouseholdMember> _householdMembers;
 
         private readonly DateTime startDate = new DateTime(2015, 2, 21);
 
@@ -33,17 +33,17 @@ namespace crds_angular.test.Services
         {
             _objectAttributeService = new Mock<IObjectAttributeService>();
             var allAttributesDto = new ObjectAllAttributesDTO();
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(allAttributesDto);
-            _contactService = new Mock<MPInterfaces.IContactService>();
-            _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
-            _participantService = new Mock<MPInterfaces.IParticipantService>();
-            _userService = new Mock<MPInterfaces.IUserService>();
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
+            _contactService = new Mock<MPInterfaces.IContactRepository>();
+            _authenticationService = new Mock<MPInterfaces.IAuthenticationRepository>();
+            _participantService = new Mock<MPInterfaces.IParticipantRepository>();
+            _userService = new Mock<MPInterfaces.IUserRepository>();
 
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
-            _myContact = new MyContact
+            _myContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "contact@email.com",
@@ -71,7 +71,7 @@ namespace crds_angular.test.Services
                 Address_ID = 6,
                 Attendance_Start_Date = startDate
             };
-            _householdMembers = new List<HouseholdMember>();
+            _householdMembers = new List<MpHouseholdMember>();
 
             _fixture = new PersonService(_contactService.Object, _objectAttributeService.Object, _apiUserService.Object, _participantService.Object, _userService.Object, _authenticationService.Object);
 

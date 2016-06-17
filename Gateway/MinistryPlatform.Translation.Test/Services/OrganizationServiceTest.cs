@@ -4,8 +4,8 @@ using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _mpServiceMock = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
@@ -27,12 +27,12 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("LocationsForOrg")).Returns(LocPage);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new OrganizationService(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
+            _fixture = new OrganizationRepository(_authService.Object, _configWrapper.Object, _mpServiceMock.Object);
         }
 
-        private OrganizationService _fixture;
+        private OrganizationRepository _fixture;
         private Mock<IMinistryPlatformService> _mpServiceMock;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private const int OrgPage = 1234;
@@ -148,7 +148,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _mpServiceMock.Setup(m => m.GetSubpageViewRecords(LocPage, It.IsAny<int>(), FakeToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(LocationList());
             var ret = _fixture.GetLocationsForOrganization(1, FakeToken);
-            Assert.IsInstanceOf<List<Location>>(ret);
+            Assert.IsInstanceOf<List<MpLocation>>(ret);
             Assert.IsNotNull(ret);
         }
 

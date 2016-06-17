@@ -3,15 +3,15 @@ using System.Linq;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
     public class StaffContactService : IStaffContactService
     {
-        private readonly IContactService _contactService;
+        private readonly IContactRepository _contactService;
 
-        public StaffContactService(IContactService contactService)
+        public StaffContactService(IContactRepository contactService)
         {
             _contactService = contactService;
         }

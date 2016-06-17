@@ -7,7 +7,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 
 namespace crds_angular.Controllers.API

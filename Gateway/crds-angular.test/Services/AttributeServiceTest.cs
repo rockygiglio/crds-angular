@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {
     public class AttributeServiceTest
     {
         private AttributeService _fixture;
-        private Mock<MPServices.IAttributeService> _mpAttributeService;
+        private Mock<MPServices.IAttributeRepository> _mpAttributeService;
 
         [SetUp]
         public void SetUp()
         {
-            _mpAttributeService = new Mock<MPServices.IAttributeService>(MockBehavior.Strict);
+            _mpAttributeService = new Mock<MPServices.IAttributeRepository>(MockBehavior.Strict);
 
             _fixture = new AttributeService(_mpAttributeService.Object);
         }
@@ -41,11 +41,11 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result[1].Attributes.Count, 1, "Number of attributes for attributeType not correct");
         }
 
-        private List<Attribute> GetAttributesResults()
+        private List<MpAttribute> GetAttributesResults()
         {
-            return new List<Attribute>
+            return new List<MpAttribute>
             {
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 1,
                     Name=  "Attribute #1",
@@ -55,7 +55,7 @@ namespace crds_angular.test.Services
                     AttributeTypeName = "AttributeType #1",
                     PreventMultipleSelection = false
                 },
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 4,
                     Name=  "Attribute #2",
@@ -65,7 +65,7 @@ namespace crds_angular.test.Services
                     AttributeTypeName = "AttributeType #1",
                     PreventMultipleSelection = false
                 },
-                new Attribute()
+                new MpAttribute()
                 {
                     AttributeId = 7,
                     Name=  "Attribute #3",

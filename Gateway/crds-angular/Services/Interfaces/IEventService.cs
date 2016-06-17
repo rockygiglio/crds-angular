@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models.People;
-using Event = MinistryPlatform.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -11,7 +11,7 @@ namespace crds_angular.Services.Interfaces
         bool CreateEventReservation(EventToolDto eventTool, string token);
         EventToolDto GetEventReservation(int eventId);
         EventToolDto GetEventRoomDetails(int eventId);
-        Event GetEvent(int eventId);
+        MpEvent GetEvent(int eventId);
         void RegisterForEvent(EventRsvpDto eventDto, string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForPrimaryContactReminder(string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForReminder(string token);
@@ -19,13 +19,13 @@ namespace crds_angular.Services.Interfaces
         void SendReminderEmails();
         void SendPrimaryContactReminderEmails();
         List<Participant> MyChildrenParticipants(int contactId, IList<Participant> children, string token);
-        Event GetMyChildcareEvent(int parentEventId, string token);
-        Event GetChildcareEvent(int parentEventId);
+        MpEvent GetMyChildcareEvent(int parentEventId, string token);
+        MpEvent GetChildcareEvent(int parentEventId);
         bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token);
         EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token);
 
         bool CopyEventSetup(int eventTemplateId, int eventId, string token);
-        List<Event> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
-        List<Event> GetEventTemplatesBySite(string site, string token);
+        List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
+        List<MpEvent> GetEventTemplatesBySite(string site, string token);
     }
 }
