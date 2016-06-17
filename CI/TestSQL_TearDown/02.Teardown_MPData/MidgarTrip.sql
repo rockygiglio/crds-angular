@@ -48,6 +48,8 @@ delete from donation_distributions where donation_id in (select donation_id from
 delete from donations where donation_id in (select donation_id from @donationsTable);
 
 --Delete any pledges associated to the pledge campaign
+delete from [dbo].cr_Campaign_Private_Invitation where pledge_campaign_id = @pledgeCampaignId;
+
 delete from [dbo].pledges where pledge_campaign_id = @pledgeCampaignId;
 
 delete from [dbo].Group_Participants where group_id in (select group_id from [dbo].groups where group_name = @tripName);
