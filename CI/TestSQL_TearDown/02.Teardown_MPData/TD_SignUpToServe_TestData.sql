@@ -59,7 +59,7 @@ DELETE FROM Group_Participants WHERE Group_ID IN (SELECT Group_ID FROM Groups WH
 
 DELETE FROM Group_Participants WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');
 
-DELETE from [dbo].cr_childcare_request_dates where child_care_request_id in (select child_care_request_id from cr_childcare_requests where group_id in (select group_id from groups where group_name in ('t) KidsClub Oakley Group','(t) Superbowl Oakley Group')));
+DELETE from [dbo].cr_childcare_request_dates where childcare_request_id in (select childcare_request_id from cr_childcare_requests where group_id in (select group_id from groups where group_name in ('t) KidsClub Oakley Group','(t) Superbowl Oakley Group')));
 
 DELETE FROM [dbo].cr_childcare_requests WHERE GROUP_ID in (select group_id from groups where group_name in ('(t) KidsClub Oakley Group','(t) Superbowl Oakley Group'));
 
