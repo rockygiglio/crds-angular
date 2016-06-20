@@ -1,3 +1,5 @@
+require('../../../../app/app');
+
 describe('CommitmentList Directive', function() {
   var $compile;
   var $rootScope;
