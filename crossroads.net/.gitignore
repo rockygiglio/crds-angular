@@ -2,6 +2,9 @@
 logs
 *.log
 
+# tgz files
+*.tgz
+
 # Runtime data
 pids
 *.pid
@@ -16,6 +19,9 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+# node-waf configuration
+.lock-wscript
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
@@ -28,10 +34,10 @@ build/icons
 node_modules
 
 # Users Environment Variables
-.lock-wscript
 .idea
 
 assets/
+build/
 styles/main.css*
 styles/modules/*.css*
 styles/pages/*.css*

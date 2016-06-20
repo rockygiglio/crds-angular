@@ -26,13 +26,13 @@ module.exports = {
     give: './app/give/give.module.js',
     profile: './app/profile/profile.module.js',
     main: './app/app.js',
-    ang: './app/ang.js',
+    ang: './core/ang.js',
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
-    core: ['./node_modules/crds-core'],
+    core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js']
   },
-  watchPattern: 'app/**/**',
+  watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
