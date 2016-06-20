@@ -1,13 +1,17 @@
 use MinistryPlatform
 GO
 
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Group BirthDay Anniversaries' WHERE 
-Report_Path='/MPReports/CRDS Group BirthDay Anniversaries'  
-Go
-
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Donation Analysis' WHERE 
 Report_Path='/MPReports/CRDS Donation Analysis'  
-Go
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Event Listing' WHERE 
+Report_Path='/MPReports/CRDS Event Listing'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Event Setup' WHERE 
+Report_Path='/MPReports/CRDS Event Setup'
+GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Facilities Event Change Tracking' WHERE 
 Report_Path='/MPReports/CRDS Facilities Event Change Tracking '
@@ -17,9 +21,9 @@ UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS GivingByCo
 Report_Path='/MPReports/CRDS GivingByCongregation'
 GO
 
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSWeeklyGivingByCongregation' WHERE 
-Report_Path='/MPReports/CRDSWeeklyGivingByCongregation'
-GO
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Group BirthDay Anniversaries' WHERE 
+Report_Path='/MPReports/CRDS Group BirthDay Anniversaries'  
+Go
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Group Anniversaries' WHERE 
 Report_Path='/MPReports/CRDS Group Anniversaries'
@@ -33,6 +37,10 @@ UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Staff Tith
 Report_Path='/MPReports/CRDS Staff Tithing Report'
 GO
 
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Trip Export' WHERE 
+Report_Path='/MPReports/CRDS Trip Export'
+GO
+
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Volunteers by Group' WHERE 
 Report_Path='/MPReports/CRDS Volunteers by Group'
 GO
@@ -41,12 +49,16 @@ UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Volunteers
 Report_Path='/MPReports/CRDS Volunteers by Site'
 GO
 
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Event Listing' WHERE 
-Report_Path='/MPReports/CRDS Event Listing'
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSChildcareByDay' WHERE 
+Report_Path='/MPReports/CRDSChildcareByDay'
 GO
 
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Trip Export' WHERE 
-Report_Path='/MPReports/CRDS Trip Export'
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSTeamSummaryByDay' WHERE 
+Report_Path='/MPReports/CRDSTeamSummaryByDay'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSWeeklyGivingByCongregation' WHERE 
+Report_Path='/MPReports/CRDSWeeklyGivingByCongregation'
 GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSWeeklyGivingByProgram' WHERE 
@@ -67,18 +79,6 @@ GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/GO Trip Summary-CRDS' WHERE 
 Report_Path='/MPReports/GO Trip Summary-CRDS'
-GO
-
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Event Setup' WHERE 
-Report_Path='/MPReports/CRDS Event Setup'
-GO
-
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSChildcareByDay' WHERE 
-Report_Path='/MPReports/CRDSChildcareByDay'
-GO
-
-UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSTeamSummaryByDay' WHERE 
-Report_Path='/MPReports/CRDSTeamSummaryByDay'
 GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/Kids Club Volunteer Report' WHERE 
