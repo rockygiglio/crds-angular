@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Reflection.Emit;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.test.Models.Crossroads.Events
 {
@@ -13,9 +13,9 @@ namespace crds_angular.test.Models.Crossroads.Events
         private static readonly DateTime _startDate = new DateTime();
         private static readonly DateTime _endDate = new DateTime();
 
-        public static MinistryPlatform.Models.Contact Contact()
+        public static MpContact Contact()
         {
-            return new Contact()
+            return new MpContact()
             {
                 ContactId = 12,
                 EmailAddress = "test@test.com"
@@ -23,9 +23,9 @@ namespace crds_angular.test.Models.Crossroads.Events
         }
 
 
-        public static MinistryPlatform.Models.Event TranslationEvent()
+        public static MpEvent TranslationEvent()
         {
-            return new MinistryPlatform.Models.Event
+            return new MpEvent
             {
                 EventEndDate = _endDate,
                 EventId = _eventId,

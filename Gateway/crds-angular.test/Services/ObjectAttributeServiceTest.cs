@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
 using GateWayInterfaces = crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using ObjectAttributeService = crds_angular.Services.ObjectAttributeService;
 
 namespace crds_angular.test.Services
@@ -18,12 +18,12 @@ namespace crds_angular.test.Services
     {
 
         private ObjectAttributeService _fixture;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
-        private Mock<MPInterfaces.IObjectAttributeService> _contactAttributeService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<MPInterfaces.IObjectAttributeRepository> _contactAttributeService;
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
-        private Mock<MPInterfaces.IAttributeService> _mpAttributeService;
+        private Mock<MPInterfaces.IAttributeRepository> _mpAttributeService;
         private List<ObjectSingleAttributeDTO> _updatedAttributes = new List<ObjectSingleAttributeDTO>();
-        private List<ObjectAttribute> _currentAttributes = new List<ObjectAttribute>();
+        private List<MpObjectAttribute> _currentAttributes = new List<MpObjectAttribute>();
 
         private int _fakeContactId = 2186211;
         private string _fakeToken = "afaketoken";
@@ -33,11 +33,11 @@ namespace crds_angular.test.Services
         [SetUp]
         public void Setup()
         {
-            _mpAttributeService = new Mock<MPInterfaces.IAttributeService>(MockBehavior.Strict);
-            _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeService>();
+            _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>(MockBehavior.Strict);
+            _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeRepository>();
             _attributeService = new Mock<GateWayInterfaces.IAttributeService>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
-            _mpAttributeService = new Mock<MPInterfaces.IAttributeService>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>();
 
             _fixture = new ObjectAttributeService(_contactAttributeService.Object, _attributeService.Object, _apiUserService.Object, _mpAttributeService.Object);
             _updatedAttributes.Add(new ObjectSingleAttributeDTO
@@ -51,7 +51,7 @@ namespace crds_angular.test.Services
                 Notes = "New and Updated Notes"
  
             });  
-            _currentAttributes.Add(new ObjectAttribute
+            _currentAttributes.Add(new MpObjectAttribute
             {
                 AttributeTypeId = 2,
                 AttributeId = 23,
@@ -83,11 +83,11 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
 
             _contactAttributeService.Setup(x => x.GetCurrentObjectAttributes(_fakeToken, _fakeContactId, configuration, null)).Returns(_currentAttributes);
             _apiUserService.Setup(x => x.GetToken()).Returns(_fakeToken);
-            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), configuration)).Callback<string, ObjectAttribute, ObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
+            _contactAttributeService.Setup(x => x.UpdateAttribute(_fakeToken, It.IsAny<MpObjectAttribute>(), configuration)).Callback<string, MpObjectAttribute, MpObjectAttributeConfiguration>((id, actual, objectConfiguration) =>
             {
                 Assert.AreEqual(actual.Notes, _updatedNote);  
                 Assert.AreEqual(actual.ObjectAttributeId, 123456);
@@ -97,7 +97,7 @@ namespace crds_angular.test.Services
             _apiUserService.VerifyAll();
             _attributeService.VerifyAll();
             _mpAttributeService.VerifyAll();
-            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<ObjectAttribute>(), It.IsAny<ObjectAttributeConfiguration>()), Times.Once);
+            _contactAttributeService.Verify(update => update.UpdateAttribute(_fakeToken, It.IsAny<MpObjectAttribute>(), It.IsAny<MpObjectAttributeConfiguration>()), Times.Once);
             
 
         }

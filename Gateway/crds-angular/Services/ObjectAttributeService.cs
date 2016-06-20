@@ -4,25 +4,25 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using Attribute = MinistryPlatform.Models.Attribute;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
     public class ObjectAttributeService : IObjectAttributeService
     {
-        private readonly MPInterfaces.IObjectAttributeService _mpObjectAttributeService;
+        private readonly MPInterfaces.IObjectAttributeRepository _mpObjectAttributeService;
         private readonly IAttributeService _attributeService;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
-        private readonly MPInterfaces.IAttributeService _mpAttributeService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly MPInterfaces.IAttributeRepository _mpAttributeService;
 
         public ObjectAttributeService(
-            MPInterfaces.IObjectAttributeService mpObjectAttributeService,
+            MPInterfaces.IObjectAttributeRepository mpObjectAttributeService,
             IAttributeService attributeService,
-            MPInterfaces.IApiUserService apiUserService,
-            MPInterfaces.IAttributeService mpAttributeService)
+            MPInterfaces.IApiUserRepository apiUserService,
+            MPInterfaces.IAttributeRepository mpAttributeService)
         {
             _mpObjectAttributeService = mpObjectAttributeService;
             _attributeService = attributeService;
@@ -30,13 +30,13 @@ namespace crds_angular.Services
             _mpAttributeService = mpAttributeService;
         }
 
-        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration)
+        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration)
         {
             var mpAttributes = _mpAttributeService.GetAttributes(null);
             return GetObjectAttributes(token, objectId, configuration, mpAttributes);
         }
 
-        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, ObjectAttributeConfiguration configuration, List<Attribute> mpAttributes)
+        public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, List<MpAttribute> mpAttributes)
         {
             var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
 
@@ -49,7 +49,7 @@ namespace crds_angular.Services
         }
 
 
-        private Dictionary<int, ObjectAttributeTypeDTO> TranslateToAttributeTypeDtos(List<ObjectAttribute> mpObjectAttributes, List<Attribute> mpAttributes)
+        private Dictionary<int, ObjectAttributeTypeDTO> TranslateToAttributeTypeDtos(List<MpObjectAttribute> mpObjectAttributes, List<MpAttribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == false).ToList();
 
@@ -99,8 +99,8 @@ namespace crds_angular.Services
         }
 
         private Dictionary<int, ObjectSingleAttributeDTO> TranslateToSingleAttributeTypeDtos(
-            List<ObjectAttribute> mpObjectAttributes,
-            List<Attribute> mpAttributes)
+            List<MpObjectAttribute> mpObjectAttributes,
+            List<MpAttribute> mpAttributes)
         {
             var mpFilteredAttributes = mpAttributes.Where(x => x.PreventMultipleSelection == true).ToList();
 
@@ -131,7 +131,7 @@ namespace crds_angular.Services
 
         public void SaveObjectAttributes(int objectId,
                                          Dictionary<int, ObjectAttributeTypeDTO> objectAttributes,
-                                         Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes, ObjectAttributeConfiguration configuration)
+                                         Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes, MpObjectAttributeConfiguration configuration)
         {
             var currentAttributes = TranslateMultiToMPAttributes(objectAttributes);
             currentAttributes.AddRange(TranslateSingleToMPAttribute(objectSingleAttributes));
@@ -152,7 +152,7 @@ namespace crds_angular.Services
             }
         }
 
-        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, ObjectAttributeConfiguration configuration, bool parallel)
+        public void SaveObjectMultiAttribute(string token, int objectId, ObjectAttributeDTO objectAttribute, MpObjectAttributeConfiguration configuration, bool parallel)
         {
             objectAttribute.StartDate = ConvertToServerDate(objectAttribute.StartDate);
             if (objectAttribute.EndDate != null)
@@ -186,7 +186,7 @@ namespace crds_angular.Services
             return result;
         }
 
-        private void SaveAttribute(int objectId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration, bool parallel = false)
+        private void SaveAttribute(int objectId, MpObjectAttribute attribute, string token, MpObjectAttributeConfiguration configuration, bool parallel = false)
         {
             if (attribute.ObjectAttributeId == 0)
             {
@@ -216,7 +216,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void SaveAttributeAsync(int objectId, ObjectAttribute attribute, string token, ObjectAttributeConfiguration configuration)
+        private void SaveAttributeAsync(int objectId, MpObjectAttribute attribute, string token, MpObjectAttributeConfiguration configuration)
         {
             if (attribute.ObjectAttributeId == 0)
             {
@@ -230,9 +230,9 @@ namespace crds_angular.Services
             }
         }
 
-        private List<ObjectAttribute> TranslateMultiToMPAttributes(Dictionary<int, ObjectAttributeTypeDTO> objectAttributeTypes)
+        private List<MpObjectAttribute> TranslateMultiToMPAttributes(Dictionary<int, ObjectAttributeTypeDTO> objectAttributeTypes)
         {
-            var results = new List<ObjectAttribute>();
+            var results = new List<MpObjectAttribute>();
 
             if (objectAttributeTypes == null)
             {
@@ -245,9 +245,9 @@ namespace crds_angular.Services
             return results;
         }
 
-        private static ObjectAttribute TranslateMultiToMPAttribute(ObjectAttributeDTO objectAttribute, ObjectAttributeTypeDTO objectAttributeType)
+        private static MpObjectAttribute TranslateMultiToMPAttribute(ObjectAttributeDTO objectAttribute, ObjectAttributeTypeDTO objectAttributeType)
         {
-            var mpObjectAttribute = new ObjectAttribute();
+            var mpObjectAttribute = new MpObjectAttribute();
             if (objectAttribute == null)
             {
                 return mpObjectAttribute;
@@ -262,9 +262,9 @@ namespace crds_angular.Services
             return mpObjectAttribute;
         }
 
-        private List<ObjectAttribute> TranslateSingleToMPAttribute(Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes)
+        private List<MpObjectAttribute> TranslateSingleToMPAttribute(Dictionary<int, ObjectSingleAttributeDTO> objectSingleAttributes)
         {
-            var results = new List<ObjectAttribute>();
+            var results = new List<MpObjectAttribute>();
 
             if (objectSingleAttributes == null)
             {
@@ -280,7 +280,7 @@ namespace crds_angular.Services
                     continue;
                 }
 
-                var mpObjectAttribute = new ObjectAttribute()
+                var mpObjectAttribute = new MpObjectAttribute()
                 {
                     AttributeId = objectAttribute.Value.AttributeId,
                     AttributeTypeId = objectSingleAttribute.Key,
@@ -292,11 +292,11 @@ namespace crds_angular.Services
             return results;
         }
 
-        private List<ObjectAttribute> GetDataToSave(List<ObjectAttribute> currentAttributes, List<ObjectAttribute> persistedAttributes)
+        private List<MpObjectAttribute> GetDataToSave(List<MpObjectAttribute> currentAttributes, List<MpObjectAttribute> persistedAttributes)
         {
             // prevent side effects by cloning lists
-            currentAttributes = new List<ObjectAttribute>(currentAttributes);
-            persistedAttributes = new List<ObjectAttribute>(persistedAttributes);
+            currentAttributes = new List<MpObjectAttribute>(currentAttributes);
+            persistedAttributes = new List<MpObjectAttribute>(persistedAttributes);
 
             for (int index = currentAttributes.Count - 1; index >= 0; index--)
             {
@@ -343,7 +343,7 @@ namespace crds_angular.Services
                 persisted.EndDate = DateTime.Today;
             }
 
-            var dataToSave = new List<ObjectAttribute>(currentAttributes);
+            var dataToSave = new List<MpObjectAttribute>(currentAttributes);
             dataToSave.AddRange(persistedAttributes);
             return dataToSave;
         }

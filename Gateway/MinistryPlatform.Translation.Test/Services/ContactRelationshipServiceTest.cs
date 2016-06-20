@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -13,9 +13,9 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ContactRelationshipServiceTest
     {
-        private ContactRelationshipService _fixture;
+        private ContactRelationshipRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private readonly int CONTACT_RELATIONSHIP_PAGE = 265;
@@ -25,9 +25,9 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new ContactRelationshipService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ContactRelationshipRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 
@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int myId = 2186211;
 
 
-            Relationship r = new Relationship
+            MpRelationship r = new MpRelationship
             {
                 RelationshipID = 43,
                 EndDate = null,
@@ -78,9 +78,9 @@ namespace MinistryPlatform.Translation.Test.Services
             const int childId = 4384766;
             const int myId = 2186211;
 
-            var relationships = new List<Relationship>
+            var relationships = new List<MpRelationship>
             {
-                new Relationship
+                new MpRelationship
                 {
                     RelationshipID = 43,
                     RelatedContactID = childId,

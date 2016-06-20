@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -15,23 +14,23 @@ namespace MinistryPlatform.Translation.Test.Services
 {
     public class UserServiceTest
     {
-        private UserService _fixture;
+        private UserRepository _fixture;
 
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
 
         [SetUp]
         public void SetUp()
         {
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("UsersApiLookupPageView")).Returns(102030);
             _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new UserService(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new UserRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
         }
 
         [Test]

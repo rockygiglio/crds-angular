@@ -4,8 +4,8 @@ using System.Configuration;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -37,21 +37,21 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFailLogin()
         {
-            var obj = AuthenticationService.authenticate("", "");
+            var obj = AuthenticationRepository.authenticate("", "");
             Assert.IsNull(obj, "When not authenticated this should be null");
         }
 
         [Test]
         public void ShouldLogin()
         {
-            var obj = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var obj = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(obj, "When authenticated this should be a JObject");
         }
 
         [Test]
         public void ShouldReturnContactId()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             var token = authData["token"].ToString();
             var obj = _fixture.GetContactId(token);
             Assert.IsNotNull(obj, "Contact ID shouldn't be null");
@@ -60,11 +60,11 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldChangePassword()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             var token = authData["token"].ToString();
             var changed = _fixture.ChangePassword(token, NEW_PASSWORD);
             Assert.IsTrue(changed);
-            var obj = AuthenticationService.authenticate(USERNAME, NEW_PASSWORD);
+            var obj = AuthenticationRepository.authenticate(USERNAME, NEW_PASSWORD);
             Assert.IsNotNull(obj);
             var changedAgain = _fixture.ChangePassword(token, PASSWORD);
             Assert.IsTrue(changedAgain);
@@ -76,7 +76,7 @@ namespace MinistryPlatform.Translation.Test
 
             
             var pageId = Convert.ToInt32(ConfigurationManager.AppSettings["MyContact"]);
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             var token = authData["token"].ToString();
             var recordId = _fixture.GetContactId(token);
             Assert.IsNotNull(recordId, "Contact ID shouldn't be null");
@@ -91,7 +91,7 @@ namespace MinistryPlatform.Translation.Test
         {
             var uid = USERNAME;
             var pwd = PASSWORD;
-            var authData = AuthenticationService.authenticate(uid, pwd);
+            var authData = AuthenticationRepository.authenticate(uid, pwd);
             var token = authData["token"].ToString();
             var recordId = _fixture.GetContactId(token);
 

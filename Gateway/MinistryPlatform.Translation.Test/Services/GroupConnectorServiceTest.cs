@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services.GoCincinnati;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.GoCincinnati;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -13,15 +13,15 @@ namespace MinistryPlatform.Translation.Test.Services
     class GroupConnectorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
-        private GroupConnectorService _fixture;
+        private Mock<IAuthenticationRepository> _authService;
+        private GroupConnectorRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
 
             _configuration.Setup(mocked => mocked.GetConfigIntValue("GroupConnectorPageId")).Returns(467);
@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
-            _fixture = new GroupConnectorService(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
+            _fixture = new GroupConnectorRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
             
         }
 

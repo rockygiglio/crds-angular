@@ -5,18 +5,18 @@ using Crossroads.AsyncJobs.Interfaces;
 using Crossroads.AsyncJobs.Models;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace Crossroads.AsyncJobs.Processors
 {
-    public class SignupToServeProcessor : BaseService, IJobExecutor<SaveRsvpDto>
+    public class SignupToServeProcessor : BaseRepository, IJobExecutor<SaveRsvpDto>
     {
         private readonly IServeService _serveService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
-        public SignupToServeProcessor(IServeService serveService, IConfigurationWrapper configurationWrapper, IAuthenticationService authenticationService)
+        public SignupToServeProcessor(IServeService serveService, IConfigurationWrapper configurationWrapper, IAuthenticationRepository authenticationService)
             : base(authenticationService, configurationWrapper)
         {
             this._serveService = serveService;

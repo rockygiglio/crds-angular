@@ -10,7 +10,7 @@ using crds_angular.Security;
 using crds_angular.Util;
 using log4net;
 using MinistryPlatform.Translation.PlatformService;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,10 +18,10 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (ImageController));
         private readonly MPInterfaces.IMinistryPlatformService _mpService;
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
-        private readonly MPInterfaces.IApiUserService _apiUserService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly MPInterfaces.IApiUserRepository _apiUserService;
 
-        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationService authenticationService, MPInterfaces.IApiUserService apiUserService)
+        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationRepository authenticationService, MPInterfaces.IApiUserRepository apiUserService)
         {
             _authenticationService = authenticationService;
             _apiUserService = apiUserService;

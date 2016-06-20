@@ -5,57 +5,57 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IDonationService = MinistryPlatform.Translation.Services.Interfaces.IDonationService;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
     public class TripServiceTest
     {
-        private Mock<IEventParticipantService> _eventParticipantService;
-        private Mock<IDonationService> _donationService;
-        private Mock<IGroupService> _groupService;
-        private Mock<IFormSubmissionService> _formSubmissionService;
-        private Mock<IEventService> _eventService;
-        private Mock<IDonorService> _donorService;
-        private Mock<IPledgeService> _pledgeService;
-        private Mock<ICampaignService> _campaignService;
-        private Mock<IPrivateInviteService> _privateInviteService;
-        private Mock<ICommunicationService> _communicationService;
-        private Mock<IContactService> _contactService;
-        private Mock<IContactRelationshipService> _contactRelationshipService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
+        private Mock<IDonationRepository> _donationService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<IFormSubmissionRepository> _formSubmissionService;
+        private Mock<IEventRepository> _eventService;
+        private Mock<IDonorRepository> _donorService;
+        private Mock<IPledgeRepository> _pledgeService;
+        private Mock<ICampaignRepository> _campaignService;
+        private Mock<IPrivateInviteRepository> _privateInviteService;
+        private Mock<ICommunicationRepository> _communicationService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
-        private Mock<IDestinationService> _destinationService;
+        private Mock<IDestinationRepository> _destinationService;
         private TripService _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _eventParticipantService = new Mock<IEventParticipantService>();
-            _donationService = new Mock<IDonationService>();
-            _groupService = new Mock<IGroupService>();
-            _formSubmissionService = new Mock<IFormSubmissionService>();
-            _eventService = new Mock<IEventService>();
-            _donorService = new Mock<IDonorService>();
-            _pledgeService = new Mock<IPledgeService>();
-            _campaignService = new Mock<ICampaignService>();
-            _privateInviteService = new Mock<IPrivateInviteService>();
-            _communicationService = new Mock<ICommunicationService>();
-            _contactService = new Mock<IContactService>();
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>();
+            _donationService = new Mock<IDonationRepository>();
+            _groupService = new Mock<IGroupRepository>();
+            _formSubmissionService = new Mock<IFormSubmissionRepository>();
+            _eventService = new Mock<IEventRepository>();
+            _donorService = new Mock<IDonorRepository>();
+            _pledgeService = new Mock<IPledgeRepository>();
+            _campaignService = new Mock<ICampaignRepository>();
+            _privateInviteService = new Mock<IPrivateInviteRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
+            _contactService = new Mock<IContactRepository>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _personService = new Mock<IPersonService>();
             _serveService = new Mock<IServeService>();
-            _destinationService = new Mock<IDestinationService>();
+            _destinationService = new Mock<IDestinationRepository>();
 
             _fixture = new TripService(_eventParticipantService.Object,
                                        _donationService.Object,
@@ -81,21 +81,21 @@ namespace crds_angular.test.Services
             var mockMpSearchResponse = MockMpSearchResponse();
             _eventParticipantService.Setup(m => m.TripParticipants(It.IsAny<string>())).Returns(mockMpSearchResponse);
 
-            var mockPledge1 = new Pledge
+            var mockPledge1 = new MpPledge
             {
                 PledgeId = 1,
                 DonorId = mockMpSearchResponse[0].DonorId,
                 PledgeCampaignId = mockMpSearchResponse[0].CampaignId,
                 PledgeStatusId = 1
             };
-            var mockPledge2 = new Pledge
+            var mockPledge2 = new MpPledge
             {
                 PledgeId = 2,
                 DonorId = mockMpSearchResponse[1].DonorId,
                 PledgeCampaignId = mockMpSearchResponse[1].CampaignId,
                 PledgeStatusId = 1
             };
-            var mockPledge3 = new Pledge
+            var mockPledge3 = new MpPledge
             {
                 PledgeId = 3,
                 DonorId = mockMpSearchResponse[2].DonorId,
@@ -158,9 +158,9 @@ namespace crds_angular.test.Services
             Assert.AreEqual(0, myTrips.MyTrips[0].FundraisingDaysLeft);
         }
 
-        private Pledge mockPledgeCampaign()
+        private MpPledge mockPledgeCampaign()
         {
-            return new Pledge
+            return new MpPledge
             {
                 CampaignName = "",
                 CampaignStartDate = DateTime.Now,
@@ -177,11 +177,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripDistribution> MockFundingPastTripDonationsResponse()
+        private List<MpTripDistribution> MockFundingPastTripDonationsResponse()
         {
-            return new List<TripDistribution>
+            return new List<MpTripDistribution>
             {
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -202,11 +202,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripParticipant> mockTripParticipants()
+        private List<MpTripParticipant> mockTripParticipants()
         {
-            return new List<TripParticipant>
+            return new List<MpTripParticipant>
             {
-                new TripParticipant()
+                new MpTripParticipant()
                 {
                     EmailAddress = "myEmail@Address.com",
                     EventStartDate = new DateTime(2015, 10, 08),
@@ -226,11 +226,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private List<TripDistribution> MockTripDonationsResponse()
+        private List<MpTripDistribution> MockTripDonationsResponse()
         {
-            return new List<TripDistribution>
+            return new List<MpTripDistribution>
             {
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -248,7 +248,7 @@ namespace crds_angular.test.Services
                     DonationDate = DateTime.Today,
                     DonationAmount = 350
                 },
-                new TripDistribution
+                new MpTripDistribution
                 {
                     ContactId = 1234,
                     EventTypeId = 6,
@@ -269,11 +269,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<TripParticipant> MockMpSearchResponse()
+        private static List<MpTripParticipant> MockMpSearchResponse()
         {
-            return new List<TripParticipant>
+            return new List<MpTripParticipant>
             {
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "test@aol.com",
                     EventEndDate = new DateTime(2015, 7, 1),
@@ -288,7 +288,7 @@ namespace crds_angular.test.Services
                     CampaignId = 1,
                     DonorId = 1
                 },
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "test@aol.com",
                     EventEndDate = new DateTime(2015, 8, 1),
@@ -303,7 +303,7 @@ namespace crds_angular.test.Services
                     CampaignId = 2,
                     DonorId = 2
                 },
-                new TripParticipant
+                new MpTripParticipant
                 {
                     EmailAddress = "spec@aol.com",
                     EventEndDate = new DateTime(2015, 7, 1),

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -11,9 +11,9 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ProgramServiceTest
     {
-        private ProgramService _fixture;
+        private ProgramRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         private const int OnlineGivingProgramsPageViewId = 1038;
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             AutoMapperConfig.RegisterMappings();
 
-            _fixture = new ProgramService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ProgramRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

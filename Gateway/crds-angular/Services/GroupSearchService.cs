@@ -6,17 +6,17 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using Attribute = MinistryPlatform.Models.Attribute;
-using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using MinistryPlatform.Translation.Models;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
+using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.Services
 {
     public class GroupSearchService : IGroupSearchService
     {
-        private readonly IGroupService _mpGroupService;
-        private readonly IAttributeService _attributeService;
+        private readonly IGroupRepository _mpGroupService;
+        private readonly IAttributeRepository _attributeService;
         private readonly int GroupGoalAttributeTypeId;
         private readonly int GroupTypeAttributeTypeId;
         private readonly int ParticipantGoalAttributeTypeId;
@@ -51,8 +51,8 @@ namespace crds_angular.Services
         private List<string> _inMarketZipCodes;
         private Dictionary<int, int> _goalMatches;
 
-        public GroupSearchService(IGroupService mpGroupService,
-                                  IAttributeService attributeService, 
+        public GroupSearchService(IGroupRepository mpGroupService,
+                                  IAttributeRepository attributeService, 
                                   IConfigurationWrapper configurationWrapper)
         {
             _mpGroupService = mpGroupService;
@@ -121,7 +121,7 @@ namespace crds_angular.Services
             return groups;
         }
 
-        private IEnumerable<GroupSearchResult> FilterSearchResults(GroupParticipantDTO participant, IEnumerable<GroupSearchResult> mpGroups)
+        private IEnumerable<MpGroupSearchResult> FilterSearchResults(GroupParticipantDTO participant, IEnumerable<MpGroupSearchResult> mpGroups)
         {
             ObjectSingleAttributeDTO participantGoal;
             ObjectSingleAttributeDTO gender;
@@ -195,7 +195,7 @@ namespace crds_angular.Services
             return participantGoal.Value.AttributeId == _goalMatches[groupGoalId.Value];
         }
 
-        private List<GroupDTO> ConvertToGroupDto(IEnumerable<GroupSearchResult> mpGroups, List<Attribute> mpAttributes)
+        private List<GroupDTO> ConvertToGroupDto(IEnumerable<MpGroupSearchResult> mpGroups, List<MpAttribute> mpAttributes)
         {
             var groups = new List<GroupDTO>();
 
@@ -234,7 +234,7 @@ namespace crds_angular.Services
             return groups;
         }
 
-        private ObjectAttributeTypeDTO GetPetAttributes(List<Attribute> mpAttributes, GroupSearchAttributes searchAttributes)
+        private ObjectAttributeTypeDTO GetPetAttributes(List<MpAttribute> mpAttributes, MpGroupSearchAttributes searchAttributes)
         {
             var petsAttributeType = mpAttributes.First(x => x.AttributeTypeId == GroupPetsAttributeTypeId);
 
@@ -255,7 +255,7 @@ namespace crds_angular.Services
             return groupPets;
         }
 
-        private KeyValuePair<int, ObjectSingleAttributeDTO> ConvertToSingleAttribute(List<Attribute> mpAttributes, int attributeId)
+        private KeyValuePair<int, ObjectSingleAttributeDTO> ConvertToSingleAttribute(List<MpAttribute> mpAttributes, int attributeId)
         {
             var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeId);
             var groupSingleAttribute = new ObjectSingleAttributeDTO()
@@ -276,7 +276,7 @@ namespace crds_angular.Services
             return new KeyValuePair<int, ObjectSingleAttributeDTO>(mpAttribute.AttributeTypeId, groupSingleAttribute);            
         }
 
-        private ObjectAttributeDTO ConvertToMultiAttribute(List<Attribute> mpAttributes, int attributeId, bool selected)
+        private ObjectAttributeDTO ConvertToMultiAttribute(List<MpAttribute> mpAttributes, int attributeId, bool selected)
         {
             var mpAttribute = mpAttributes.First(x => x.AttributeId == attributeId);
 

@@ -3,8 +3,8 @@ using System.Data.Entity.Core;
 using crds_angular.Exceptions;
 using crds_angular.Services;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -14,13 +14,13 @@ namespace crds_angular.test.Services
     {
         private UserImpersonationService _fixture;
 
-        private Mock<IUserService> _userService;
+        private Mock<IUserRepository> _userService;
         private Mock<Func<bool>> _action;
 
         [SetUp]
         public void SetUp()
         {
-            _userService = new Mock<IUserService>(MockBehavior.Strict);
+            _userService = new Mock<IUserRepository>(MockBehavior.Strict);
             _action = new Mock<Func<bool>>(MockBehavior.Strict);
 
             _fixture = new UserImpersonationService(_userService.Object);
@@ -29,7 +29,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestWithImpersonationNotAuthorized()
         {
-            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MinistryPlatformUser
+            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MpUser
             {
                 CanImpersonate = false
             });
@@ -51,12 +51,12 @@ namespace crds_angular.test.Services
         [Test]
         public void TestWithImpersonationUserNotFound()
         {
-            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MinistryPlatformUser
+            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MpUser
             {
                 CanImpersonate = true
             });
 
-            _userService.Setup(mocked => mocked.GetByUserId("me@here.com")).Returns((MinistryPlatformUser)null);
+            _userService.Setup(mocked => mocked.GetByUserId("me@here.com")).Returns((MpUser)null);
 
             try
             {
@@ -75,12 +75,12 @@ namespace crds_angular.test.Services
         [Test]
         public void TestWithImpersonation()
         {
-            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MinistryPlatformUser
+            _userService.Setup(mocked => mocked.GetByAuthenticationToken("123")).Returns(new MpUser
             {
                 CanImpersonate = true
             });
 
-            _userService.Setup(mocked => mocked.GetByUserId("me@here.com")).Returns(new MinistryPlatformUser
+            _userService.Setup(mocked => mocked.GetByUserId("me@here.com")).Returns(new MpUser
             {
                 Guid = "12345"
             });

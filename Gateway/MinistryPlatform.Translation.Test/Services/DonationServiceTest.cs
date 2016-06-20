@@ -4,24 +4,24 @@ using crds_angular.App_Start;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
     public class DonationServiceTest
     {
-        private DonationService _fixture;
+        private DonationRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IDonorService> _donorService;
-        private Mock<IAuthenticationService> _authService;
-        private Mock<IPledgeService> _pledgeService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IDonorRepository> _donorService;
+        private Mock<IAuthenticationRepository> _authService;
+        private Mock<IPledgeRepository> _pledgeService;
+        private Mock<ICommunicationRepository> _communicationService;
 
         [SetUp]
         public void SetUp()
@@ -29,10 +29,10 @@ namespace MinistryPlatform.Translation.Test.Services
             AutoMapperConfig.RegisterMappings();
 
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
-            _donorService = new Mock<IDonorService>(MockBehavior.Strict);
-            _authService = new Mock<IAuthenticationService>();
-            _pledgeService = new Mock<IPledgeService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _donorService = new Mock<IDonorRepository>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationRepository>();
+            _pledgeService = new Mock<IPledgeRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
             configuration.Setup(mocked => mocked.GetConfigIntValue("Donations")).Returns(9090);
@@ -51,7 +51,7 @@ namespace MinistryPlatform.Translation.Test.Services
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
-            _fixture = new DonationService(_ministryPlatformService.Object, _donorService.Object, _communicationService.Object, _pledgeService.Object, configuration.Object, _authService.Object, configuration.Object);
+            _fixture = new DonationRepository(_ministryPlatformService.Object, _donorService.Object, _communicationService.Object, _pledgeService.Object, configuration.Object, _authService.Object, configuration.Object);
         }
 
         [Test]
@@ -587,11 +587,11 @@ namespace MinistryPlatform.Translation.Test.Services
             };
         }
 
-        private List<GPExportDatum> MockGPExportDataTest1()
+        private List<MpGPExportDatum> MockGPExportDataTest1()
         {
-            var dict = new List<GPExportDatum>
+            var dict = new List<MpGPExportDatum>
             {
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -614,7 +614,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -637,7 +637,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "SALE",
@@ -660,7 +660,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DepositId = 12341234,
                     DocumentType = "RETURNS",
@@ -688,11 +688,11 @@ namespace MinistryPlatform.Translation.Test.Services
             return dict;
         }
         
-        private List<GPExportDatum> MockGPExportDataTest2()
+        private List<MpGPExportDatum> MockGPExportDataTest2()
         {
-            return new List<GPExportDatum>
+            return new List<MpGPExportDatum>
             {
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340001",
                     DepositId = 12341234,
@@ -716,7 +716,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340001",
                     DepositId = 12341234,
@@ -740,7 +740,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340002",
                     DepositId = 12341234,
@@ -764,7 +764,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340002",
                     DepositId = 12341234,
@@ -788,7 +788,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340003",
                     DepositId = 12341234,
@@ -812,7 +812,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
                 },
-                new GPExportDatum
+                new MpGPExportDatum
                 {
                     DocumentNumber = "123412340003",
                     DepositId = 12341234,

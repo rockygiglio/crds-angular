@@ -6,12 +6,12 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using Participant = MinistryPlatform.Translation.Models.People.Participant;
 
 namespace crds_angular.test.Services
@@ -19,35 +19,35 @@ namespace crds_angular.test.Services
     [TestFixture]
     public class ChildcareServiceTest
     {
-        private Mock<IEventParticipantService> _eventParticipantService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IContactService> _contactService;
-        private Mock<IEventService> _eventService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<IEventRepository> _eventService;
+        private Mock<IParticipantRepository> _participantService;
         private Mock<IServeService> _serveService;
         private Mock<IDateTime> _dateTimeWrapper;
         // Interfaces.IEventService crdsEventService, IApiUserService apiUserService
         private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<IChildcareRequestService> _childcareRequestService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IChildcareRequestRepository> _childcareRequestService;
 
         private ChildcareService _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _eventParticipantService = new Mock<IEventParticipantService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _contactService = new Mock<IContactService>();
-            _eventService = new Mock<IEventService>();
-            _participantService = new Mock<IParticipantService>();
+            _contactService = new Mock<IContactRepository>();
+            _eventService = new Mock<IEventRepository>();
+            _participantService = new Mock<IParticipantRepository>();
             _serveService = new Mock<IServeService>();
             _dateTimeWrapper = new Mock<IDateTime>();
             _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
-            _apiUserService = new Mock<IApiUserService>();
-            _childcareRequestService = new Mock<IChildcareRequestService>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _childcareRequestService = new Mock<IChildcareRequestRepository>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,
@@ -179,13 +179,13 @@ namespace crds_angular.test.Services
             var notificationTemplateId = 0985627;
             var defaultAuthorId = 9087345;
 
-            var template = new MessageTemplate()
+            var template = new MpMessageTemplate()
             {
                 Body = "Some long string of text",
                 Subject = "A subject"
             };
 
-            var request = new ChildcareRequestEmail()
+            var request = new MpChildcareRequestEmail()
             {
                 RequestId = 1,
                 RequesterEmail = "lakshmi@lak.shmi",
@@ -218,16 +218,16 @@ namespace crds_angular.test.Services
                 {"Base_Url", "https://localhost:3000"}
             };
 
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 TemplateId = 0,
                 DomainId = 0,
                 AuthorUserId = defaultAuthorId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ToContacts = new List<Contact> { new Contact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                FromContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ReplyToContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
+                ToContacts = new List<MpContact> { new MpContact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
                 MergeData = mergeData
             };
 
@@ -235,7 +235,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultUserAuthorId")).Returns(defaultAuthorId);
             _communicationService.Setup(m => m.GetTemplate(notificationTemplateId)).Returns(template);
             _configurationWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("https://localhost:3000");
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 
             _fixture.SendChildcareRequestNotification(request);
 
@@ -249,15 +249,15 @@ namespace crds_angular.test.Services
         {
             const int daysBefore = 999;
             const int emailTemplateId = 77;
-            var participants = new List<EventParticipant>
+            var participants = new List<MpEventParticipant>
             {
-                new EventParticipant
+                new MpEventParticipant
                 {
                     ParticipantId = 1,
                     EventId = 123,
                     ContactId = 987654
                 },
-                new EventParticipant
+                new MpEventParticipant
                 {
                     ParticipantId = 2,
                     EventId = 456,
@@ -265,32 +265,32 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var mockPrimaryContact = new Contact
+            var mockPrimaryContact = new MpContact
             {
                 ContactId = 98765,
                 EmailAddress = "wonder-woman@ip.com"
             };
 
-            var defaultContact = new MyContact
+            var defaultContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "gmail@gmail.com"
             };
 
-            var mockEvent1 = new Event {EventType = "Childcare", PrimaryContact = mockPrimaryContact};
-            var mockEvent2 = new Event {EventType = "DoggieDaycare", PrimaryContact = mockPrimaryContact};
-            var mockEvents = new List<Event> {mockEvent1, mockEvent2};
+            var mockEvent1 = new MpEvent {EventType = "Childcare", PrimaryContact = mockPrimaryContact};
+            var mockEvent2 = new MpEvent {EventType = "DoggieDaycare", PrimaryContact = mockPrimaryContact};
+            var mockEvents = new List<MpEvent> {mockEvent1, mockEvent2};
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("NumberOfDaysBeforeEventToSend")).Returns(daysBefore);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
-            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MessageTemplate());            
+            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MpMessageTemplate());            
             _eventParticipantService.Setup(m => m.GetChildCareParticipants(daysBefore)).Returns(participants);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 
             var kids = new List<Participant> { new Participant { ContactId = 456321987 } };
             _crdsEventService.Setup(m => m.EventParticpants(987654321, It.IsAny<string>())).Returns(kids);
-            var mockChildcareEvent = new Event {EventId = 987654321};
-            var mockContact = new Contact
+            var mockChildcareEvent = new MpEvent {EventId = 987654321};
+            var mockContact = new MpContact
             {
                 ContactId = 8888888,
                 EmailAddress = "sometest@test.com"
@@ -310,7 +310,7 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _eventParticipantService.VerifyAll();
             _communicationService.VerifyAll();
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Exactly(2));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
         }
     }

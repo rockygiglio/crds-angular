@@ -12,8 +12,8 @@ using crds_angular.Services.Interfaces;
 using crds_angular.Util;
 using log4net;
 using Microsoft.Ajax.Utilities;
-using MinistryPlatform.Models;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -21,22 +21,22 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
 
-        private readonly MPInterfaces.IDonorService _mpDonorService;
+        private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly IPaymentService _stripeService;
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly MPInterfaces.IDonationService _mpDonationService;
-        private readonly MPInterfaces.IPledgeService _mpPledgeService;
+        private readonly MPInterfaces.IDonationRepository _mpDonationService;
+        private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
 
-        public DonationController(MPInterfaces.IDonorService mpDonorService,
+        public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentService stripeService,
-                                  MPInterfaces.IAuthenticationService authenticationService,
+                                  MPInterfaces.IAuthenticationRepository authenticationService,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
-                                  MPInterfaces.IDonationService mpDonationService,
-                                  MPInterfaces.IPledgeService mpPledgeService,
+                                  MPInterfaces.IDonationRepository mpDonationService,
+                                  MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService)
         {
             _mpDonorService = mpDonorService;
@@ -203,7 +203,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var donationAndDistribution = new DonationAndDistributionRecord
+                var donationAndDistribution = new MpDonationAndDistributionRecord
                 {
                     DonationAmt = dto.Amount,
                     FeeAmt = fee,
@@ -261,7 +261,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var donationAndDistribution = new DonationAndDistributionRecord
+                var donationAndDistribution = new MpDonationAndDistributionRecord
                 {
                     DonationAmt = dto.Amount,
                     FeeAmt = fee,

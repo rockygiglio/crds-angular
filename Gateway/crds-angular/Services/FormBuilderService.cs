@@ -4,23 +4,23 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Linq;
 using AutoMapper;
-using MinistryPlatform.Models;
-using IFormBuilderService = MinistryPlatform.Translation.Services.Interfaces.IFormBuilderService;
+using MinistryPlatform.Translation.Models;
+using IFormBuilderRepository = MinistryPlatform.Translation.Repositories.Interfaces.IFormBuilderRepository;
 
 namespace crds_angular.Services
 {
     public class FormBuilderService : crds_angular.Services.Interfaces.IFormBuilderService
     {
         private readonly ILog logger = LogManager.GetLogger(typeof (FormBuilderService));
-        private readonly IFormBuilderService _mpFormBuilderService;
+        private readonly IFormBuilderRepository _mpFormBuilderService;
         private readonly IConfigurationWrapper _configurationWrapper;
 
         private readonly int _undividedGroupsPageViewId;
 
-        public FormBuilderService(IFormBuilderService mpFormBuilderService,                
+        public FormBuilderService(IFormBuilderRepository mpFormBuilderService,                
                                   IConfigurationWrapper configurationWrapper)
         {
             _mpFormBuilderService = mpFormBuilderService;
@@ -32,7 +32,7 @@ namespace crds_angular.Services
         {
             var pageViewId = GetPageViewId(templateType);
             var groupList = _mpFormBuilderService.GetGroupsUndividedSession(pageViewId);
-            return groupList.Select(Mapper.Map<Group, GroupDTO>).ToList();
+            return groupList.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
         }
 
         private int GetPageViewId(string templateType)

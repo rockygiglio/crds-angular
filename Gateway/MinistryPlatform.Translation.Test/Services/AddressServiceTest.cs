@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 
@@ -16,9 +16,9 @@ namespace MinistryPlatform.Translation.Test.Services
     public class AddressServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IConfigurationWrapper> _configuration;
-        private AddressService _fixture;
+        private AddressRepository _fixture;
         private readonly int _addressPageId;
 
 
@@ -26,11 +26,11 @@ namespace MinistryPlatform.Translation.Test.Services
         public void Setup()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _apiUserService = new Mock<IApiUserService>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("useme");
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Addresses")).Returns(271);
-            _fixture = new AddressService(_configuration.Object,_ministryPlatformService.Object, _apiUserService.Object);
+            _fixture = new AddressRepository(_configuration.Object,_ministryPlatformService.Object, _apiUserService.Object);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string apiToken = "useme";
             const int addressId = 785645;
 
-            var addr = new Address()
+            var addr = new MpAddress()
             {
                 Address_Line_1 = "321 Road Ln",
                 Address_Line_2 = "Suite 100",
@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            var addr = new Address()
+            var addr = new MpAddress()
             {
                 Address_ID = 12345,
                 Address_Line_1 = "321 Road Ln",

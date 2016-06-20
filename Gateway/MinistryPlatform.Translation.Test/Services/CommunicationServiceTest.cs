@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -11,20 +11,20 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class CommunicationServiceTest
     {
-        private CommunicationService _fixture;
+        private CommunicationRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new CommunicationService(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new CommunicationRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

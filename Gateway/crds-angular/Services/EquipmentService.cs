@@ -7,9 +7,9 @@ namespace crds_angular.Services
 {
     public class EquipmentService : IEquipmentService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEquipmentService _mpEquipmentService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEquipmentRepository _mpEquipmentService;
 
-        public EquipmentService(MinistryPlatform.Translation.Services.Interfaces.IEquipmentService equipmentService)
+        public EquipmentService(MinistryPlatform.Translation.Repositories.Interfaces.IEquipmentRepository equipmentService)
         {
             _mpEquipmentService = equipmentService;
         }

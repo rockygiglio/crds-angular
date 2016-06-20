@@ -11,13 +11,13 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Event = MinistryPlatform.Models.Event;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 namespace crds_angular.test.controllers
 {
@@ -26,8 +26,8 @@ namespace crds_angular.test.controllers
     {
         private GroupController fixture;
         private Mock<crds_angular.Services.Interfaces.IGroupService> groupServiceMock;
-        private Mock<IAuthenticationService> authenticationServiceMock;
-        private Mock<IParticipantService> participantServiceMock;
+        private Mock<IAuthenticationRepository> authenticationServiceMock;
+        private Mock<IParticipantRepository> participantServiceMock;
         private Mock<crds_angular.Services.Interfaces.IAddressService> addressServiceMock;        
         private Mock<IGroupSearchService> groupSearchServiceMock;
         private string authType;
@@ -37,8 +37,8 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
-            authenticationServiceMock = new Mock<IAuthenticationService>();
-            participantServiceMock = new Mock<IParticipantService>();
+            authenticationServiceMock = new Mock<IAuthenticationRepository>();
+            participantServiceMock = new Mock<IParticipantRepository>();
             addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
             groupSearchServiceMock = new Mock<IGroupSearchService>();
 
@@ -72,10 +72,10 @@ namespace crds_angular.test.controllers
                 }
             };
 
-            List<Event> events = new List<Event>();
-            Event e1 = new Event();
+            List<MpEvent> events = new List<MpEvent>();
+            MpEvent e1 = new MpEvent();
             e1.EventId = 101;
-            Event e2 = new Event();
+            MpEvent e2 = new MpEvent();
             e2.EventId = 202;
             events.Add(e1);
             events.Add(e2);
@@ -172,7 +172,7 @@ namespace crds_angular.test.controllers
             int groupId = 333;
             int contactId = 777;
 
-            Group g = new Group();
+            MpGroup g = new MpGroup();
             g.GroupId = 333;
             g.GroupType = 8;
             g.GroupRole = "Member";
@@ -191,7 +191,7 @@ namespace crds_angular.test.controllers
 
             authenticationServiceMock.Setup(mocked => mocked.GetContactId(fixture.Request.Headers.Authorization.ToString())).Returns(contactId);
 
-            var relationRecord = new GroupSignupRelationships
+            var relationRecord = new MpGroupSignupRelationships
             {
                 RelationshipId = 1,
                 RelationshipMinAge = 00,
@@ -230,7 +230,7 @@ namespace crds_angular.test.controllers
         public void testAddParticipantToCommunityGroupWhenGroupFull()
         {
             int groupId = 333;
-            Group g = new Group();
+            MpGroup g = new MpGroup();
             g.GroupId = 333;
             g.GroupType = 8;
             g.GroupRole = "Member";

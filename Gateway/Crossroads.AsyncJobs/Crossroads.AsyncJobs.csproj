@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -249,10 +250,6 @@
     <ProjectReference Include="..\Crossroads.Utilities\Crossroads.Utilities.csproj">
       <Project>{61238A82-D410-4330-BD25-889239FC7873}</Project>
       <Name>Crossroads.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MinistryPlatform.Models\MinistryPlatform.Models.csproj">
-      <Project>{cd41507e-91ac-4c60-96e2-5cac25f49a76}</Project>
-      <Name>MinistryPlatform.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\MinistryPlatform.Translation\MinistryPlatform.Translation.csproj">
       <Project>{cc650d93-731c-4613-b358-fb4c76237455}</Project>

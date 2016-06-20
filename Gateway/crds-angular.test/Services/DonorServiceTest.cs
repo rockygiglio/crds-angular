@@ -8,13 +8,13 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using RestSharp.Extensions;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 
 namespace crds_angular.test.Services
 {
@@ -22,12 +22,12 @@ namespace crds_angular.test.Services
     {
         private DonorService _fixture;
 
-        private Mock<IDonorService> _mpDonorService;
-        private Mock<IContactService> _mpContactService;
+        private Mock<IDonorRepository> _mpDonorService;
+        private Mock<IContactRepository> _mpContactService;
         private Mock<IPaymentService> _paymentService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IAuthenticationService> _authenticationService;
-        private Mock<IPledgeService> _pledgeService; 
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<IPledgeRepository> _pledgeService; 
         private const string GuestGiverDisplayName = "Guest Giver";
 
         private const int StatementFrequencyNever = 9;
@@ -47,11 +47,11 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
 
-            _mpDonorService = new Mock<IDonorService>(MockBehavior.Strict);
-            _mpContactService = new Mock<IContactService>(MockBehavior.Strict);
+            _mpDonorService = new Mock<IDonorRepository>(MockBehavior.Strict);
+            _mpContactService = new Mock<IContactRepository>(MockBehavior.Strict);
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
-            _authenticationService = new Mock<IAuthenticationService>(MockBehavior.Strict);
-            _pledgeService = new Mock<IPledgeService>(MockBehavior.Strict);
+            _authenticationService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
+            _pledgeService = new Mock<IPledgeRepository>(MockBehavior.Strict);
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("DonorStatementFrequencyNever")).Returns(StatementFrequencyNever);
@@ -72,7 +72,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetDonorForEmail()
         {
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             _mpDonorService.Setup(mocked => mocked.GetPossibleGuestContactDonor("me@here.com")).Returns(donor);
             var response = _fixture.GetContactDonorForEmail("me@here.com");
 
@@ -84,7 +84,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetDonorForAuthenticatedUser()
         {
-            var donor = new ContactDonor();
+            var donor = new MpContactDonor();
             _authenticationService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
             _mpDonorService.Setup(mocked => mocked.GetContactDonor(123)).Returns(donor);
             var response = _fixture.GetContactDonorForAuthenticatedUser("authToken");
@@ -98,7 +98,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldReturnExistingDonorWithExistingStripeId()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 67890,
@@ -150,7 +150,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldCreateNewDonorForExistingContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 0,
@@ -182,7 +182,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldCreateNewDonorForExistingRegisteredContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 0,
@@ -217,7 +217,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldUpdateExistingDonorForExistingContact()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 456,
@@ -249,12 +249,12 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldAddNewDonorAccountToExistingDonor()
         {
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 ContactId = 12345,
                 DonorId = 456,
                 Email = "me@here.com",
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     AccountNumber = "123456789",
                     EncryptedAccount = "enc12345",
@@ -298,7 +298,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123",
@@ -344,13 +344,13 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = 1
             };
             const int recurringGiftId = 888;
 
-            var recurringGift = new CreateDonationDistDto
+            var recurringGift = new MpCreateDonationDistDto
             {
                 ProgramName = "Crossroads",
                 Amount = 123.45M,
@@ -405,7 +405,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123",
@@ -451,7 +451,7 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = 1
             };
@@ -512,7 +512,7 @@ namespace crds_angular.test.Services
                 StartDate = DateTime.Parse("1973-10-15")
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123"
@@ -537,7 +537,7 @@ namespace crds_angular.test.Services
                 Id = "sub_123"
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = null
             };
@@ -575,9 +575,9 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetRecurringGiftsForAuthenticatedUser()
         {
-            var records = new List<RecurringGift>
+            var records = new List<MpRecurringGift>
             {
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 123,
                     DonorID = 123123,
@@ -597,7 +597,7 @@ namespace crds_angular.test.Services
                     ProcessorId = "cus_123",
                     ProcessorAccountId = "card_123"
                 },
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 124,
                     DonorID = 123123,
@@ -617,7 +617,7 @@ namespace crds_angular.test.Services
                     ProcessorId = "cus_456",
                     ProcessorAccountId = "ba_456"
                 },
-                new RecurringGift
+                new MpRecurringGift
                 {
                     RecurringGiftId = 125,
                     DonorID = 123123,
@@ -728,7 +728,7 @@ namespace crds_angular.test.Services
         {
             const string authUserToken = "auth";
             const int recurringGiftId = 123;
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 DonorId = 456,
                 SubscriptionId = "sub_123",
@@ -782,12 +782,12 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -824,13 +824,13 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -883,14 +883,14 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123",
                 Email = "me@here.com"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -937,7 +937,7 @@ namespace crds_angular.test.Services
 
             const int newRecurringGiftId = 765;
 
-            var newRecurringGift = new CreateDonationDistDto
+            var newRecurringGift = new MpCreateDonationDistDto
             {
                 Amount = 80000,
                 ProgramId = "3",
@@ -952,7 +952,7 @@ namespace crds_angular.test.Services
                 Recurrence = "12th of the month",
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = congregationId
             };
@@ -1015,14 +1015,14 @@ namespace crds_angular.test.Services
                 StartDate = today
             };
 
-            var donor = new ContactDonor
+            var donor = new MpContactDonor
             {
                 DonorId = 456,
                 ProcessorId = "cus_123",
                 Email = "me@here.com"
             };
 
-            var existingGift = new CreateDonationDistDto
+            var existingGift = new MpCreateDonationDistDto
             {
                 Amount = 50000,
                 ProgramId = "3",
@@ -1067,7 +1067,7 @@ namespace crds_angular.test.Services
 
             const int newRecurringGiftId = 765;
 
-            var newRecurringGift = new CreateDonationDistDto
+            var newRecurringGift = new MpCreateDonationDistDto
             {
                 Amount = 80000,
                 ProgramId = "3",
@@ -1080,7 +1080,7 @@ namespace crds_angular.test.Services
                 DonorId = 789
             };
 
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Congregation_ID = congregationId
             };
@@ -1127,11 +1127,11 @@ namespace crds_angular.test.Services
 
             var userAuthToken = "auth";
 
-            var pledgeList = new List<Pledge>
+            var pledgeList = new List<MpPledge>
             {
-                new Pledge(){CampaignName = "Oldest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2000")},
-                new Pledge(){CampaignName = "Youngest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016")},
-                new Pledge(){CampaignName = "Middle Campaign", PledgeStatus = "Active",CampaignStartDate = DateTime.Parse("1/1/2010")}
+                new MpPledge(){CampaignName = "Oldest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2000")},
+                new MpPledge(){CampaignName = "Youngest Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016")},
+                new MpPledge(){CampaignName = "Middle Campaign", PledgeStatus = "Active",CampaignStartDate = DateTime.Parse("1/1/2010")}
             }; 
 
             _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32 [1] )).Returns(pledgeList);
@@ -1153,11 +1153,11 @@ namespace crds_angular.test.Services
 
             var userAuthToken = "auth";
 
-            var pledgeList = new List<Pledge>
+            var pledgeList = new List<MpPledge>
             {
-                new Pledge(){CampaignName = "Active Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016") },
-                new Pledge(){CampaignName = "Completed Campaign", PledgeStatus = "Completed", CampaignStartDate = DateTime.Parse("1/1/2010")},
-                new Pledge(){CampaignName = "Inactive Campaign", PledgeStatus = "Discontinued", CampaignStartDate = DateTime.Parse("1/1/2000")}
+                new MpPledge(){CampaignName = "Active Campaign", PledgeStatus = "Active", CampaignStartDate = DateTime.Parse("1/1/2016") },
+                new MpPledge(){CampaignName = "Completed Campaign", PledgeStatus = "Completed", CampaignStartDate = DateTime.Parse("1/1/2010")},
+                new MpPledge(){CampaignName = "Inactive Campaign", PledgeStatus = "Discontinued", CampaignStartDate = DateTime.Parse("1/1/2000")}
             };
 
             _pledgeService.Setup(mocked => mocked.GetPledgesForAuthUser(userAuthToken, new System.Int32[1])).Returns(pledgeList);
