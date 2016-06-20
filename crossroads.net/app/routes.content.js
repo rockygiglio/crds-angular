@@ -147,9 +147,9 @@
     if (_.endsWith(link, '/') === false) {
       return link + '/';
     }
+    console.log('test');
 
     return link;
   }
-
 
 })();
