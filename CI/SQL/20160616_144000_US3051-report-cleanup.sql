@@ -17,6 +17,10 @@ UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS GivingByCo
 Report_Path='/MPReports/CRDS GivingByCongregation'
 GO
 
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSWeeklyGivingByCongregation' WHERE 
+Report_Path='/MPReports/CRDSWeeklyGivingByCongregation'
+GO
+
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Group Anniversaries' WHERE 
 Report_Path='/MPReports/CRDS Group Anniversaries'
 GO
@@ -35,6 +39,14 @@ GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Volunteers by Site' WHERE 
 Report_Path='/MPReports/CRDS Volunteers by Site'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Event Listing' WHERE 
+Report_Path='/MPReports/CRDS Event Listing'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDS Trip Export' WHERE 
+Report_Path='/MPReports/CRDS Trip Export'
 GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/CRDSWeeklyGivingByProgram' WHERE 
@@ -71,4 +83,12 @@ GO
 
 UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/Kids Club Volunteer Report' WHERE 
 Report_Path='/MPReports/Kids Club Volunteer Report'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/Selected Program Groups Multi Week Roster-CRDS' WHERE 
+Report_Path='/MPReports/Selected Program Groups Multi Week Roster-CRDS'
+GO
+
+UPDATE [dbo].[dp_reports] SET Report_Path='/MPReports/Crossroads/Statement 4 Columns - CRDS' WHERE 
+Report_Path='/MPReports/Statement 4 Columns - CRDS'
 GO
