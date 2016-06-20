@@ -2,16 +2,13 @@
 USE [MinistryPlatform]
 GO
 
-if((select url from dp_bookmarks where name = 'crossroads.net') like "%demo%")
-{
- DECLARE @processorID as varchar(255)
- SET @processorID = 'cus_6YjXxCzFsV300g';
-}
+DECLARE @processorID as varchar(255);
+
+IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%DEMO%'
+	SET @processorID = 'cus_6YjXxCzFsV300g';
 ELSE
-{
- DECLARE @processorID as varchar(255)
- SET @processorID = 'cus_8Lez4HV887Qnwo';
-}
+	SET @processorID = 'cus_8Lez4HV887Qnwo';
+	
 --Guest Giving ACCOUNT
 --Contact Record
 SET IDENTITY_INSERT [dbo].[Contacts] ON;
