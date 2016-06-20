@@ -148,9 +148,7 @@
     background-color: #d9dbe0;
     .map-position {
       @extend .vertical-bottom;
-      @media (min-width: $screen-md-min) {
-        @extend .vertical-center;
-      }
+      top: 50%;
       .map-content {
         background-color: rgba(217, 219, 224, 0.9);
         padding-top: $line-height-computed;
