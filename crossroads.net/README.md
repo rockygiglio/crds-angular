@@ -58,8 +58,17 @@ Mac and Linux:
 
 **Keep in mind that this way of setting environment variables will not be persistent, windows users will have to add this variable in system settings and linux/mac users will have to set it in their .bashrc/.zshrc files for persistence.**
 
+###Install Third Party Dependencies
+To install all 3rd party dependencies run the following command in your crds-angular/crossroads.net folder. This will look at the package.json file and install all the dependencies that are configured. It may take several minutes
+
+``` npm install ```
+
 ###Build
-To just build the project, run `gulp build-dev` for a dev build, or `gulp build` for production.
+To just build the project, run one of the following gulp commands
+* `gulp` - builds the development configuration, and starts the webpack webserver listening on http port 8080
+* `gulp browser-sync-dev` - builds the development configuration, and starts a browser-sync webserver listening on port 3000. This is good for live reloads.
+* `gulp build-dev` - builds the development configuration, and outputs files to the assets/ folder
+* `gulp build` - builds the production configuration, and outputs files to the assets/folder
 
 ###Test
 There are two types of tests available, Unit Tests and Functional Tests. 
