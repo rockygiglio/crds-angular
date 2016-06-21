@@ -4,7 +4,7 @@ GO
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%DEMO%'
+IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
 	SET @processorID = 'cus_6YjXxCzFsV300g';
 ELSE
 	SET @processorID = 'cus_8Lez4HV887Qnwo';
@@ -39,16 +39,13 @@ UPDATE [dbo].Contacts set Donor_Record = @donor_id where contact_id = @contactID
 GO
 
 --Registered Account - Mpcrds+20@gmail.com contact record
-if((select url from dp_bookmarks where name = 'crossroads.net') like "%demo%")
-{
- DECLARE @processorID as varchar(255)
+DECLARE @processorID as varchar(255);
+
+IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
  SET @processorID = 'cus_6Woe7iX2PlkGeb';
-}
 ELSE
-{
- DECLARE @processorID as varchar(255)
  SET @processorID = 'cus_8Lf397wd4AxozZ';
-}
+
 
 DECLARE @contactID as int
 set @contactID = (select contact_id from contacts where Email_Address = 'mpcrds+20@gmail.com' and Last_Name = 'Kendricks');
