@@ -197,7 +197,11 @@
       $rootScope.userid = null;
       $rootScope.username = null;
       vm.addRedirectRoute(toState, toParams);
-      event.preventDefault();
+
+      if (event) {
+        event.preventDefault();
+      }
+
       $state.go('login');
     }
     
