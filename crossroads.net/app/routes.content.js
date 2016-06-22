@@ -65,7 +65,7 @@
                 childPromise = childPromise.then(function() {
                   if (ContentPageService.page.canViewType === 'LoggedInUsers') {
                     $state.next.data.isProtected = true;
-                    var promise = Session.verifyAuthentication(event, $state.next.name, $state.next.data, $state.toParams);
+                    var promise = Session.verifyAuthentication(null, $state.next.name, $state.next.data, $state.toParams);
                     return promise;
                   }
 
