@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 
@@ -8,10 +8,10 @@ namespace crds_angular.Services
 {
     public class OrganizationService : IOrganizationService
     {
-        private readonly MPInterfaces.IOrganizationService _mpOrganizationService;
-        private readonly MPInterfaces.IApiUserService _mpApiUserService;
+        private readonly MPInterfaces.IOrganizationRepository _mpOrganizationService;
+        private readonly MPInterfaces.IApiUserRepository _mpApiUserService;
 
-        public OrganizationService(MPInterfaces.IOrganizationService organizationService, MPInterfaces.IApiUserService apiUserService)
+        public OrganizationService(MPInterfaces.IOrganizationRepository organizationService, MPInterfaces.IApiUserRepository apiUserService)
         {
             _mpOrganizationService = organizationService;
             _mpApiUserService = apiUserService;            

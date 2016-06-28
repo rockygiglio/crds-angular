@@ -6,8 +6,8 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
@@ -18,21 +18,21 @@ namespace crds_angular.test.Services
     public class GoSkillsServiceTest
     {
         private GoSkillsService _fixture;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<ISkillsService> _skillsService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<ISkillsRepository> _skillsService;
         private Mock<crds_angular.Services.Interfaces.IObjectAttributeService> _objectAttributeService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IContactService> _contactService;
+        private Mock<IContactRepository> _contactService;
         private const int SKILLSATTRIBUTETYPEID = 123;
 
         [SetUp]
         public void Setup()
         {
-            _apiUserService = new Mock<IApiUserService>();
-            _skillsService = new Mock<ISkillsService>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _skillsService = new Mock<ISkillsRepository>();
             _objectAttributeService = new Mock<crds_angular.Services.Interfaces.IObjectAttributeService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _contactService = new Mock<IContactService>();
+            _contactService = new Mock<IContactRepository>();
             _fixture = new GoSkillsService(_apiUserService.Object, _skillsService.Object, _objectAttributeService.Object, _contactService.Object, _configurationWrapper.Object);
             
         }
@@ -63,7 +63,7 @@ namespace crds_angular.test.Services
             var participantId = TestHelpers.RandomInt();
             _configurationWrapper.Setup(m => m.GetConfigIntValue("AttributeTypeIdSkills")).Returns(SKILLSATTRIBUTETYPEID);
             _contactService.Setup(m => m.GetContactByParticipantId(participantId)).Returns(contact);
-            _objectAttributeService.Setup(m => m.GetObjectAttributes(token, contact.Contact_ID, It.IsAny<ObjectAttributeConfiguration>())).Returns(currentSkills);
+            _objectAttributeService.Setup(m => m.GetObjectAttributes(token, contact.Contact_ID, It.IsAny<MpObjectAttributeConfiguration>())).Returns(currentSkills);
 
             var toEndDate = _fixture.SkillsToEndDate(skills, currentSkills.MultiSelect[1].Attributes).Select(sk =>
             {
@@ -78,7 +78,7 @@ namespace crds_angular.test.Services
                 {
                     skill.EndDate = It.IsAny<DateTime>();
                 }
-                _objectAttributeService.Setup(m => m.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, It.IsAny<ObjectAttributeConfiguration>(), false));
+                _objectAttributeService.Setup(m => m.SaveObjectMultiAttribute(token, contact.Contact_ID, skill, It.IsAny<MpObjectAttributeConfiguration>(), false));
                 _objectAttributeService.Verify();
             });
             _fixture.UpdateSkills(participantId, skills, token);            

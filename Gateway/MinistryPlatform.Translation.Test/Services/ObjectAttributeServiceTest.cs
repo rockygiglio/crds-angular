@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -13,21 +13,21 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ObjectAttributeServiceTest
     {
-        private ObjectAttributeService _fixture;
+        private ObjectAttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<Translation.Services.Interfaces.IApiUserService> _apiUserService;
+        private Mock<Translation.Repositories.Interfaces.IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();            
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new ObjectAttributeService(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new ObjectAttributeRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.GetSubpageViewRecords(It.IsAny<int>(), contactId, It.IsAny<string>(), "", "", 0))
                 .Returns(getSubpageViewRecordsResponse);
 
-            var configuration = ObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributes = _fixture.GetCurrentObjectAttributes("fakeToken", contactId, configuration, null).ToList();
 
             _ministryPlatformService.VerifyAll();

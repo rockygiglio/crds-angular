@@ -17,5 +17,9 @@ DELETE FROM Events WHERE Event_Title = '(t) 1Time Mason with ChildCare - Childca
 
 DELETE from group_participants where group_id in (select group_id from groups where group_name like '(t) 1Time Mason Group%');
 
+DELETE from [dbo].cr_childcare_request_dates where childcare_request_id in (select childcare_request_id from cr_childcare_requests where group_id in (select group_id from groups where group_name in ('(t) 1Time Mason Group with ChildCare')));
+
+DELETE FROM [dbo].cr_childcare_requests WHERE GROUP_ID in (select group_id from groups where group_name in ('(t) 1Time Mason Group with ChildCare'));
+
 DELETE FROM Groups WHERE Group_Name = '(t) 1Time Mason Group with ChildCare';
 GO

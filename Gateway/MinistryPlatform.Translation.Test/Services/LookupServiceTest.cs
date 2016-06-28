@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.Models.Lookups;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -17,18 +17,18 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     class LookupServiceTest
     {
-        private LookupService _fixture;
+        private LookupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
       
         [SetUp]
         public void Setup()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new LookupService(_authenticationService.Object, _configurationWrapper.Object,  _ministryPlatformService.Object);
+            _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object,  _ministryPlatformService.Object);
             
         }
 
@@ -41,8 +41,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 var wt = WorkTeams();    
                 _configurationWrapper.Setup(m => m.GetConfigIntValue("WorkTeams")).Returns(config);
                 _ministryPlatformService.Setup(m => m.GetLookupRecords(config, token)).Returns(wt);
-                var returnVal = _fixture.GetList<MPWorkTeams>(token);
-                Assert.IsInstanceOf<IEnumerable<MPWorkTeams>>(returnVal);
+                var returnVal = _fixture.GetList<MpWorkTeams>(token);
+                Assert.IsInstanceOf<IEnumerable<MpWorkTeams>>(returnVal);
                 Assert.AreEqual(wt.Count, returnVal.Count());
             }).QuickCheckThrowOnFailure();
         }
@@ -55,8 +55,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 var oo = OtherOrgs();
                 _configurationWrapper.Setup(m => m.GetConfigIntValue("OtherOrgs")).Returns(config);
                 _ministryPlatformService.Setup(m => m.GetLookupRecords(config, token)).Returns(oo);
-                var returnVal = _fixture.GetList<MPOtherOrganization>(token);
-                Assert.IsInstanceOf<IEnumerable<MPOtherOrganization>>(returnVal);
+                var returnVal = _fixture.GetList<MpOtherOrganization>(token);
+                Assert.IsInstanceOf<IEnumerable<MpOtherOrganization>>(returnVal);
                 Assert.AreEqual(oo.Count, returnVal.Count());
 
             }).QuickCheckThrowOnFailure();

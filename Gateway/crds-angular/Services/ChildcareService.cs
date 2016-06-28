@@ -11,39 +11,39 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
-        private readonly IChildcareRequestService _childcareRequestService;
-        private readonly ICommunicationService _communicationService;
+        private readonly IChildcareRequestRepository _childcareRequestService;
+        private readonly ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IContactService _contactService;
-        private readonly IEventParticipantService _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
+        private readonly IContactRepository _contactService;
+        private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _eventService;
         private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantRepository _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
-        public ChildcareService(IEventParticipantService eventParticipantService,
-                                ICommunicationService communicationService,
+        public ChildcareService(IEventParticipantRepository eventParticipantService,
+                                ICommunicationRepository communicationService,
                                 IConfigurationWrapper configurationWrapper,
-                                IContactService contactService,
-                                MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
-                                IParticipantService participantService,
+                                IContactRepository contactService,
+                                MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
+                                IParticipantRepository participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
-                                IApiUserService apiUserService, 
+                                IApiUserRepository apiUserService, 
                                 Interfaces.IEventService crdsEventService, 
-                                IChildcareRequestService childcareRequestService)
+                                IChildcareRequestRepository childcareRequestService)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -151,7 +151,7 @@ namespace crds_angular.Services
                 {
                     _childcareRequestService.DecisionChildcareRequestDate(ccareDates.ChildcareRequestDateId, true);
                     var eventId = childcareEvents.Where((ev) => ev.Key == ccareDates.ChildcareRequestDateId).Select( (ev) => ev.Value).SingleOrDefault();
-                    var eventGroup = new EventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
+                    var eventGroup = new MpEventGroup() {Closed = false, Created = true, EventId = eventId, GroupId = request.GroupId};
                     var currentGroups = _eventService.GetGroupsForEvent(eventId).Select((g) => g.GroupId).ToList();
                     if (!currentGroups.Contains(request.GroupId))
                     {
@@ -191,13 +191,13 @@ namespace crds_angular.Services
             }
         }
 
-        private ChildcareRequestDate GetChildcareDateFromList(List<ChildcareRequestDate> allDates, DateTime date)
+        private MpChildcareRequestDate GetChildcareDateFromList(List<MpChildcareRequestDate> allDates, DateTime date)
         {
-            var requestedDate = new ChildcareRequestDate();
+            var requestedDate = new MpChildcareRequestDate();
             return allDates.SingleOrDefault(d => date.Date == d.RequestDate.Date); 
         }
 
-        private int GetApprovalStatus(List<ChildcareRequestDate> datesFromMP, List<ChildcareRequestDate> datesApproving)
+        private int GetApprovalStatus(List<MpChildcareRequestDate> datesFromMP, List<MpChildcareRequestDate> datesApproving)
         {
             if (datesFromMP.Count > datesApproving.Count)
             {
@@ -228,7 +228,7 @@ namespace crds_angular.Services
             }
         }
 
-        public ChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
+        public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
         {
             try
             {
@@ -241,7 +241,7 @@ namespace crds_angular.Services
             return null;
         }
 
-        private void SendChildcareRequestDecisionNotification(int requestId, List<ChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
+        private void SendChildcareRequestDecisionNotification(int requestId, List<MpChildcareRequestDate> childcareRequestDates, ChildcareRequestDto childcareRequest, int templateId, String token)
         {
             var childcareRequestEmail = _childcareRequestService.GetChildcareRequest(requestId, token);;
             var template = _communicationService.GetTemplate(templateId);
@@ -268,16 +268,16 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
                 {"Congregation", childcareRequestEmail.CongregationName }
             };
-            var toContactsList = new List<Contact> {new Contact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
+            var toContactsList = new List<MpContact> {new MpContact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
 
 
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
-                ReplyToContact = new Contact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
+                FromContact = new MpContact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail},
+                ReplyToContact = new MpContact { ContactId = childcareRequestEmail.ChildcareContactId, EmailAddress = childcareRequestEmail.ChildcareContactEmail },
                 ToContacts = toContactsList,
                 MergeData = mergeData
             };
@@ -293,7 +293,7 @@ namespace crds_angular.Services
 
         }
 
-        public void SendChildcareRequestNotification( ChildcareRequestEmail request)
+        public void SendChildcareRequestNotification( MpChildcareRequestEmail request)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareRequestNotificationTemplate");
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");          
@@ -313,14 +313,14 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
-            var communication = new Communication
+            var communication = new MpCommunication
              {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
-                ReplyToContact = new Contact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
-                ToContacts = new List<Contact> {new Contact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                FromContact = new MpContact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ReplyToContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
                 MergeData = mergeData
              };
 
@@ -451,10 +451,10 @@ namespace crds_angular.Services
             }
         }
 
-        private static MyContact ReplyToContact(Event childEvent)
+        private static MpMyContact ReplyToContact(MpEvent childEvent)
         {
             var contact = childEvent.PrimaryContact;
-            var replyToContact = new MyContact
+            var replyToContact = new MpMyContact
             {
                 Contact_ID = contact.ContactId,
                 Email_Address = contact.EmailAddress
@@ -462,30 +462,30 @@ namespace crds_angular.Services
             return replyToContact;
         }
 
-        private static Communication FormatCommunication(int authorUserId,
+        private static MpCommunication FormatCommunication(int authorUserId,
                                                          int domainId,
-                                                         MessageTemplate template,
-                                                         MyContact fromContact,
-                                                         MyContact replyToContact,
+                                                         MpMessageTemplate template,
+                                                         MpMyContact fromContact,
+                                                         MpMyContact replyToContact,
                                                          int participantContactId,
                                                          string participantEmail,
                                                          Dictionary<string, object> mergeData)
         {
-            var communication = new Communication
+            var communication = new MpCommunication
             {
                 AuthorUserId = authorUserId,
                 DomainId = domainId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
-                ReplyToContact = new Contact {ContactId = replyToContact.Contact_ID, EmailAddress = replyToContact.Email_Address},
-                ToContacts = new List<Contact> {new Contact {ContactId = participantContactId, EmailAddress = participantEmail}},
+                FromContact = new MpContact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
+                ReplyToContact = new MpContact {ContactId = replyToContact.Contact_ID, EmailAddress = replyToContact.Email_Address},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = participantContactId, EmailAddress = participantEmail}},
                 MergeData = mergeData
             };
             return communication;
         }
 
-        private void LogError(EventParticipant participant, Exception ex)
+        private void LogError(MpEventParticipant participant, Exception ex)
         {
             var participantId = participant.ParticipantId;
             var groupId = participant.GroupId;

@@ -12,9 +12,8 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
 using log4net;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
@@ -23,8 +22,8 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IGroupService groupService;        
-        private readonly IAuthenticationService authenticationService;
-        private readonly IParticipantService participantService;
+        private readonly IAuthenticationRepository authenticationService;
+        private readonly IParticipantRepository participantService;
         private readonly Services.Interfaces.IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
 
@@ -32,8 +31,8 @@ namespace crds_angular.Controllers.API
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
 
         public GroupController(Services.Interfaces.IGroupService groupService,
-                               IAuthenticationService authenticationService,
-                               IParticipantService participantService,
+                               IAuthenticationRepository authenticationService,
+                               IParticipantRepository participantService,
                                Services.Interfaces.IAddressService addressService,
                                Services.Interfaces.IGroupSearchService groupSearchService)
         {

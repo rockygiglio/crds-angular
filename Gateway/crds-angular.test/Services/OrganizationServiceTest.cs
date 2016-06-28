@@ -10,7 +10,7 @@ using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {
@@ -18,8 +18,8 @@ namespace crds_angular.test.Services
     public class OrganizationServiceTest
     {
         private OrganizationService _fixture;
-        private Mock<MPInterfaces.IOrganizationService> _organizationService;
-        private Mock<MPInterfaces.IApiUserService> _apiUserService;
+        private Mock<MPInterfaces.IOrganizationRepository> _organizationService;
+        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
 
         private const string apiUserToken = "somerandomstring";
         private const int CONTACTID = 123456789;
@@ -30,8 +30,8 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _organizationService = new Mock<MPInterfaces.IOrganizationService>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserService>();
+            _organizationService = new Mock<MPInterfaces.IOrganizationRepository>();
+            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
             _fixture = new OrganizationService(_organizationService.Object, _apiUserService.Object);
 
             _apiUserService.Setup(m => m.GetToken()).Returns(apiUserToken);

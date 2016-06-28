@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using FsCheck;
@@ -12,19 +12,19 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class SkillsServiceTest
     {
-        private SkillsService _fixture;
+        private SkillsRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         
         [SetUp]
         public void Setup()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
 
-            _fixture = new SkillsService(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new SkillsRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
             
         }
 

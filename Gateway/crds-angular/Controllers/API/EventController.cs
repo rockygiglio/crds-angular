@@ -7,7 +7,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Json;
 using crds_angular.Security;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 
 namespace crds_angular.Controllers.API
@@ -15,10 +15,10 @@ namespace crds_angular.Controllers.API
     public class EventController : MPAuth
     {
         private IMinistryPlatformService _ministryPlatformService;        
-        private readonly IApiUserService _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserService apiUserService, IEventService eventService)
+        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventService eventService)
         {
             this._ministryPlatformService = ministryPlatformService;
             _eventService = eventService;

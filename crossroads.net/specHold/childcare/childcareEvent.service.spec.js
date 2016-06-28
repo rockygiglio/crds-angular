@@ -1,6 +1,3 @@
-require('crds-core');
-require('../../app/ang');
-
 require('../../app/childcare');
 
 describe('Childcare Event Service', function() {

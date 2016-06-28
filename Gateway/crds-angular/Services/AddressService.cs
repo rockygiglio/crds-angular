@@ -4,22 +4,22 @@ using System.Linq;
 using System.Web;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IAddressService _mpAddressService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository _mpAddressService;
 
-        public AddressService(MinistryPlatform.Translation.Services.Interfaces.IAddressService mpAddressService)
+        public AddressService(MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository mpAddressService)
         {
             _mpAddressService = mpAddressService;
         }
 
         public void FindOrCreateAddress(AddressDTO address)
         {
-            var mpAddress = AutoMapper.Mapper.Map<Address>(address);
+            var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
             var found = FindExistingAddress(address, mpAddress);
             if (found)
             {
@@ -29,12 +29,12 @@ namespace crds_angular.Services
             address.AddressID = CreateAddress(mpAddress);
         }
 
-        private int CreateAddress(Address address)
+        private int CreateAddress(MpAddress address)
         {
             return _mpAddressService.Create(address);
         }
 
-        private bool FindExistingAddress(AddressDTO address, Address mpAddress)
+        private bool FindExistingAddress(AddressDTO address, MpAddress mpAddress)
         {
             var result = _mpAddressService.FindMatches(mpAddress);
             if (result.Count > 0)

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models.Childcare;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,12 +12,12 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ChildcareRequestServiceTest
     {
-        private Mock<IEventService> _eventService;
+        private Mock<IEventRepository> _eventService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<IConfigurationWrapper> _configuration;
-        private Mock<IGroupService> _groupService;
-        private ChildcareRequestService _fixture;
+        private Mock<IGroupRepository> _groupService;
+        private ChildcareRequestRepository _fixture;
 
         private int _childcareRequestPage = 36;
         private int _childcareRequestPending = 3;
@@ -25,22 +25,22 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void Setup()
         {
-            _eventService = new Mock<IEventService>();
+            _eventService = new Mock<IEventRepository>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _apiUserService = new Mock<IApiUserService>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("useme");
-            _eventService = new Mock<IEventService>();
-            _groupService = new Mock<IGroupService>();
+            _eventService = new Mock<IEventRepository>();
+            _groupService = new Mock<IGroupRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPageId")).Returns(_childcareRequestPage);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPending")).Returns(_childcareRequestPending);
-            _fixture = new ChildcareRequestService(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object, _groupService.Object);
+            _fixture = new ChildcareRequestRepository(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object, _groupService.Object);
         }
 
         [Test]
         public void CreateRequest()
         {
-            var request = new ChildcareRequest
+            var request = new MpChildcareRequest
             {
                 RequesterId = 1,
                 LocationId = 2,

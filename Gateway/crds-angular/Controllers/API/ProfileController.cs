@@ -13,8 +13,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
 
@@ -27,12 +26,12 @@ namespace crds_angular.Controllers.API
         private readonly IServeService _serveService;
         private readonly IDonorService _donorService;
         private readonly IUserImpersonationService _impersonationService;
-        private readonly IAuthenticationService _authenticationService ;
-        private readonly IUserService _userService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly IAuthenticationRepository _authenticationService ;
+        private readonly IUserRepository _userService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly List<int> _allowedAdminGetProfileRoles;
 
-        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationService authenticationService, IUserService userService, IContactRelationshipService contactRelationshipService, IConfigurationWrapper config)
+        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserRepository userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config)
         {
             _personService = personService;
             _serveService = serveService;

@@ -3,17 +3,17 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.Subscription;
 
 namespace crds_angular.Controllers.API
 {
     public class SubscriptionsController : MPAuth
     {
-        private readonly MPInterfaces.IAuthenticationService _authenticationService;
+        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionService;
 
-        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationService authenticationService)
+        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationRepository authenticationService)
         {
             _subscriptionService = subscriptionService;
             _authenticationService = authenticationService;

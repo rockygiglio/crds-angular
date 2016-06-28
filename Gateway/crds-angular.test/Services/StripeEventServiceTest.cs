@@ -6,8 +6,8 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models.DTO;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models.DTO;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -22,7 +22,7 @@ namespace crds_angular.test.Services
         private StripeEventService _fixture;
         private Mock<IPaymentService> _paymentService;
         private Mock<IDonationService> _donationService;
-        private Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService> _mpDonorService;
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> _mpDonorService;
 
         [SetUp]
         public void SetUp()
@@ -35,7 +35,7 @@ namespace crds_angular.test.Services
 
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
             _donationService = new Mock<IDonationService>(MockBehavior.Strict);
-            _mpDonorService = new Mock<MinistryPlatform.Translation.Services.Interfaces.IDonorService>(MockBehavior.Strict);
+            _mpDonorService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>(MockBehavior.Strict);
 
             _fixture = new StripeEventService(_paymentService.Object, _donationService.Object, _mpDonorService.Object, configuration.Object);
         }
@@ -500,7 +500,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 Frequency = 1,
                 RecurringGiftId = recurringGiftId,
@@ -546,7 +546,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var gift = new CreateDonationDistDto
+            var gift = new MpCreateDonationDistDto
             {
                 Frequency = frequency,
                 RecurringGiftId = recurringGiftId,

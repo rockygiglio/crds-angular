@@ -2,7 +2,7 @@
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(token =>
             {
-                var configuration = ObjectAttributeConfigurationFactory.MyContact();
+                var configuration = MpObjectAttributeConfigurationFactory.MyContact();
                 _objectAttributeService.SaveObjectMultiAttribute(token, contactId, objectAttribute, configuration);
                 return this.Ok();
             });

@@ -88,10 +88,17 @@ SET IDENTITY_INSERT [dbo].[Contacts] OFF;
 --This command resets the identity value so that if someone adds contacts a big ID. 
 DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
+DECLARE @processorID as varchar(255);
+
+IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
+	SET @processorID = 'cus_8gGoksUHAuJgQi';
+ELSE
+	SET @processorID = 'cus_8gGm4dhM3ul1Cp';
+
 -- Cloud Strife Donor RECORD
 INSERT INTO [dbo].Donors 
 (Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID) VALUES
-(@contactID,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null);
+(@contactID,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,@processorID);
 
 --Contact_Household record
 INSERT INTO Contact_Households 
@@ -178,10 +185,18 @@ SET IDENTITY_INSERT [dbo].[Contacts] OFF;
 --This command resets the identity value so that if someone adds contacts a big ID is not used. 
 DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
+DECLARE @processorID as varchar(255);
+
+IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
+	SET @processorID = 'cus_85UsQReBytr2dn';
+ELSE
+	SET @processorID = 'cus_8gGvY5NF7fPjI8';
+
+
 --Tifa Lockhart Donor RECORD
 INSERT INTO [dbo].Donors 
 (Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID        ) VALUES
-(@contactID,1                     ,1                ,2                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'cus_85UsQReBytr2dn');
+(@contactID,1                     ,1                ,2                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'');
 
 --Contact_Household record
 INSERT INTO Contact_Households 

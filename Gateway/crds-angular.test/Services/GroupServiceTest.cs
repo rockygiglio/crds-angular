@@ -10,36 +10,36 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
-using Attribute = MinistryPlatform.Models.Attribute;
-using Event = MinistryPlatform.Models.Event;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
-using Participant = MinistryPlatform.Models.Participant;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
 {
     public class GroupServiceTest 
     {
         private GroupService fixture;
-        private Mock<MPServices.IAuthenticationService> authenticationService;
-        private Mock<MPServices.IGroupService> groupService;
-        private Mock<MPServices.IEventService> eventService;
-        private Mock<MPServices.IContactRelationshipService> contactRelationshipService;     
+        private Mock<MPServices.IAuthenticationRepository> authenticationService;
+        private Mock<MPServices.IGroupRepository> groupService;
+        private Mock<MPServices.IEventRepository> eventService;
+        private Mock<MPServices.IContactRelationshipRepository> contactRelationshipService;     
         private Mock<IServeService> serveService;
-        private Mock<IGroupService> _groupService;
-        private Mock<MPServices.IParticipantService> participantService;
-        private Mock<MPServices.ICommunicationService> _communicationService;
-        private Mock<MPServices.IContactService> _contactService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<MPServices.IParticipantRepository> participantService;
+        private Mock<MPServices.ICommunicationRepository> _communicationService;
+        private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> config;
         private Mock<IObjectAttributeService> _objectAttributeService;
-        private Mock<MPServices.IApiUserService> _apiUserService;
-        private Mock<MPServices.IAttributeService> _attributeService;
+        private Mock<MPServices.IApiUserRepository> _apiUserService;
+        private Mock<MPServices.IAttributeRepository> _attributeService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -66,19 +66,19 @@ namespace crds_angular.test.Services
             Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
             AutoMapperConfig.RegisterMappings();
 
-            authenticationService = new Mock<MPServices.IAuthenticationService>();
-            groupService = new Mock<IGroupService>();
-            eventService = new Mock<MPServices.IEventService>(MockBehavior.Strict);
-            contactRelationshipService = new Mock<MPServices.IContactRelationshipService>();
+            authenticationService = new Mock<MPServices.IAuthenticationRepository>();
+            groupService = new Mock<IGroupRepository>();
+            eventService = new Mock<MPServices.IEventRepository>(MockBehavior.Strict);
+            contactRelationshipService = new Mock<MPServices.IContactRelationshipRepository>();
             serveService = new Mock<IServeService>();
-            participantService = new Mock<MPServices.IParticipantService>();
-            _groupService = new Mock<IGroupService>();
-            _communicationService = new Mock<MPServices.ICommunicationService>();
-            _contactService = new Mock<MPServices.IContactService>();
+            participantService = new Mock<MPServices.IParticipantRepository>();
+            _groupService = new Mock<IGroupRepository>();
+            _communicationService = new Mock<MPServices.ICommunicationRepository>();
+            _contactService = new Mock<MPServices.IContactRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
-            _apiUserService = new Mock<MPServices.IApiUserService>();
-            _attributeService = new Mock<MPServices.IAttributeService>();
+            _apiUserService = new Mock<MPServices.IApiUserRepository>();
+            _attributeService = new Mock<MPServices.IAttributeRepository>();
 
             config = new Mock<IConfigurationWrapper>();
 
@@ -112,13 +112,13 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldThrowCommunityGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 3,
                 Full = true,
-                Participants = new List<GroupParticipant>
+                Participants = new List<MpGroupParticipant>
                 {
-                    new GroupParticipant()
+                    new MpGroupParticipant()
                 }
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
@@ -139,13 +139,13 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldThrowCommunityGroupIsFullExceptionWhenNotEnoughSpaceRemaining()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 2,
                 Full = false,
-                Participants = new List<GroupParticipant>
+                Participants = new List<MpGroupParticipant>
                 {
-                    new GroupParticipant()
+                    new MpGroupParticipant()
                 }
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
@@ -166,11 +166,11 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldAddParticipantsToCommunityGroupAndEvents()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 0,
                 Full = false,
-                Participants = new List<GroupParticipant>()
+                Participants = new List<MpGroupParticipant>()
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
@@ -178,11 +178,11 @@ namespace crds_angular.test.Services
             groupService.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(888456);
             groupService.Setup(mocked => mocked.SendCommunityGroupConfirmationEmail(It.IsAny<int>(), 456, true, false));
 
-            var events = new List<Event>
+            var events = new List<MpEvent>
             {
-                new Event {EventId = 777},
-                new Event {EventId = 555},
-                new Event {EventId = 444}
+                new MpEvent {EventId = 777},
+                new MpEvent {EventId = 555},
+                new MpEvent {EventId = 444}
             };
             groupService.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
 
@@ -203,18 +203,18 @@ namespace crds_angular.test.Services
         [Test]
         public void testGetGroupDetails()
         {
-            var g = new Group
+            var g = new MpGroup
             {
                 TargetSize = 0,
                 Full = true,
-                Participants = new List<GroupParticipant>(),
+                Participants = new List<MpGroupParticipant>(),
                 GroupType = 90210,
                 WaitList = true,
                 WaitListGroupId = 10101,
                 GroupId = 98765
             };
 
-            var eventList = new List<Event>()
+            var eventList = new List<MpEvent>()
             {
                 EventHelpers.TranslationEvent()
             };
@@ -223,15 +223,15 @@ namespace crds_angular.test.Services
 
             groupService.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(eventList);
 
-            var relations = new List<GroupSignupRelationships>
+            var relations = new List<MpGroupSignupRelationships>
             {
-                new GroupSignupRelationships {RelationshipId = 111}
+                new MpGroupSignupRelationships {RelationshipId = 111}
             };
             groupService.Setup(mocked => mocked.GetGroupSignupRelations(90210)).Returns(relations);
 
-            var contactRelations = new List<ContactRelationship>
+            var contactRelations = new List<MpContactRelationship>
             {
-                new ContactRelationship
+                new MpContactRelationship
                 {
                     Contact_Id = 333,
                     Relationship_Id = 111,
@@ -244,11 +244,11 @@ namespace crds_angular.test.Services
             {
                 ParticipantId = 555,
             };
-            groupService.Setup(mocked => mocked.checkIfUserInGroup(555, It.IsAny<List<GroupParticipant>>())).Returns(false);
-            groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<GroupParticipant>>())).Returns(false);
+            groupService.Setup(mocked => mocked.checkIfUserInGroup(555, It.IsAny<List<MpGroupParticipant>>())).Returns(false);
+            groupService.Setup(mocked => mocked.checkIfUserInGroup(222, It.IsAny<List<MpGroupParticipant>>())).Returns(false);
 
             var attributes = new ObjectAllAttributesDTO();            
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributes);
 
             var response = fixture.getGroupDetails(456, 777, participant, "auth token");
 
@@ -270,9 +270,9 @@ namespace crds_angular.test.Services
             const int participantId = 54;
             const int groupTypeId = 19;
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-                new Group
+                new MpGroup
                 {
                     GroupId = 321,
                     CongregationId = 5,
@@ -287,7 +287,7 @@ namespace crds_angular.test.Services
                     MeetingDayId = 3,
                     MeetingTime = "10 AM",
                     AvailableOnline = false,
-                    Address = new Address()
+                    Address = new MpAddress()
                     {
                         Address_Line_1 = "123 Sesame St",
                         Address_Line_2 = "",
@@ -301,7 +301,7 @@ namespace crds_angular.test.Services
             var attributes = new ObjectAllAttributesDTO();
 
             groupService.Setup(mocked => mocked.GetGroupsByTypeForParticipant(token, participantId, groupTypeId)).Returns(groups);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<Attribute>>())).Returns(attributes);
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
 
             var grps = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
            
@@ -315,7 +315,7 @@ namespace crds_angular.test.Services
             var start = DateTime.Now;
             var end = DateTime.Now.AddYears(2);
 
-            var newGroup = new Group()
+            var newGroup = new MpGroup()
             {
                 Name = "New Testing Group",
                 GroupDescription = "The best group ever created for testing stuff and things",
@@ -407,7 +407,7 @@ namespace crds_angular.test.Services
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
 
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -422,16 +422,16 @@ namespace crds_angular.test.Services
                 groupId = 98765
             };
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-               new Group(){}
+               new MpGroup(){}
             };
 
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<Communication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -441,9 +441,9 @@ namespace crds_angular.test.Services
             const int groupId = 98765;
             var participant = new Participant() { ParticipantId = 100 };
 
-            var groups = new List<Group>()
+            var groups = new List<MpGroup>()
             {
-               new Group()
+               new MpGroup()
                {
                    GroupId = 98765
                }
@@ -455,12 +455,12 @@ namespace crds_angular.test.Services
                 groupId = 98765
             };
 
-            var template = new MessageTemplate()
+            var template = new MpMessageTemplate()
             {
                 Subject = "You Can Join My Group",
                 Body = "This is a journey group."
             };
-            var contact = new MyContact()
+            var contact = new MpMyContact()
             {
                 Contact_ID = 7689
             };
@@ -471,13 +471,13 @@ namespace crds_angular.test.Services
             groupService.Setup(x => x.GetGroupsByTypeForParticipant(token, participant.ParticipantId, JOURNEY_GROUP_ID)).Returns(groups);
             _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<ObjectAttributeConfiguration>(), It.IsAny<List<Attribute>>())).Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false)).Verifiable();            
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();            
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(), false), Times.Once);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
         }
     }
 }

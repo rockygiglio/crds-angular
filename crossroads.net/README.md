@@ -6,19 +6,33 @@ The client facing website for crossroads church.
 The first thing you'll need to get started is NodeJS. Head over to [http://nodejs.org/](http://nodejs.org) and install based on your operating system. Once you pull down the code, just run `npm i` to install all dependencies locally.
 
 #### Core Functionality
-If you are developing a module that can be considered a core module (used throughout the site in different modules) then you will also need to pull down [crds-core](https://github.com/crdschurch/crds-corejs).
+If you are developing a module that can be considered a core module then the files should be stored under ./core folder
 
-To test the core-module in the main site, use the `npm link` tool. 
-* cd into crds-core and type `npm link`
-* cd into crds-angular/crossroads.net and type `npm link crds-core`
-This will create a symbolic link in your node_modules directory to your local copy of crds-core
+This is the core angular module for the Crossroads.net site. It includes multiple dependencies used throughout the crossroads ecosystem including:
+* Angular
+* Angular Resource
+* Angular Cookies
+* Angular Messages
+* Angular Sanitize
+* Angular Stripe
+* Ui-Router *may be removed in the future*
+* Ui-Bootstrap
+* [UI Event](http://htmlpreview.github.io/?https://github.com/angular-ui/ui-event/master/demo/index.html)
+* [Angular Growl 2](https://github.com/JanStevens/angular-growl-2)
+* [Angular Payments](https://github.com/laurihy/angular-payments) *may be removed in the future*
+* [Angular Stripe](https://github.com/bendrucker/angular-stripe)  *may be removed in the future*
+* [Angular Toggle Switch](http://cgarvis.github.io/angular-toggle-switch/) *may be removed in the future*
+* lodash
+* moment
 
 #### Builds
 
 We use gulp scripts to build and run webpack so you will also need to install gulp globally.  This is not required, but makes command-line tasks easier later on.  To install gulp globally, use one of the following commands.  Both will install gulp into the NodeJS path, which is presumably already on your OS's execution PATH.
 
-For Windows users (replace the prefix value below with the path to your NodeJS install):
+For Windows users (replace the prefix value below with the path to your NodeJS install): 
+Ensure you are running the command prompt as administrator
 ``` npm set prefix "C:\Program Files\nodejs" ```
+
 ``` npm install -g gulp ```
 
 Mac and Linux (replace the prefix value below with the path to your NodeJS install):
@@ -44,8 +58,17 @@ Mac and Linux:
 
 **Keep in mind that this way of setting environment variables will not be persistent, windows users will have to add this variable in system settings and linux/mac users will have to set it in their .bashrc/.zshrc files for persistence.**
 
+###Install Third Party Dependencies
+To install all 3rd party dependencies run the following command in your crds-angular/crossroads.net folder. This will look at the package.json file and install all the dependencies that are configured. It may take several minutes
+
+``` npm install ```
+
 ###Build
-To just build the project, run `gulp build-dev` for a dev build, or `gulp build` for production.
+To just build the project, run one of the following gulp commands
+* `gulp` - builds the development configuration, and starts the webpack webserver listening on http port 8080
+* `gulp browser-sync-dev` - builds the development configuration, and starts a browser-sync webserver listening on port 3000. This is good for live reloads.
+* `gulp build-dev` - builds the development configuration, and outputs files to the assets/ folder
+* `gulp build` - builds the production configuration, and outputs files to the assets/folder
 
 ###Test
 There are two types of tests available, Unit Tests and Functional Tests. 
@@ -62,8 +85,12 @@ Windows users can run:
 Mac and Linux users can run:
 ``` npm install -g karma-cli ```
 
-Once karma-cli is installed, just run `karma start crossroads.conf.js` which will open chrome and run the tests. Click the debug button to see the results. Refreshing this page will re-run the tests.
 
+Once karma-cli is installed, just run the commands below which will open chrome and run the tests. Click the debug button to see the results. Refreshing this page will re-run the tests.
+
+* For the main application run `karma start crossroads.conf.js`
+* For the core folders run `karma start core.tests.conf.js`
+ 
 #### Functional Tests
 We use protractor to run the tests and Jasmine to write the specs. You will need to install protractor globally. 
 
@@ -160,3 +187,6 @@ A .jscsrc file exists to use AirBnB styleguide
 * For Sublime Text 3, [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter-jscs/)
 * For IntelliJ, [jscs-plugin](https://github.com/idok/jscs-plugin)
 
+### ESLint
+A .eslintrc file has already been added to the project
+* For IntelliJ - Navigate to **File | Settings | Languages and Frameworks | JavaScript | Code Quality Tools | ESLint** and check the Enable box

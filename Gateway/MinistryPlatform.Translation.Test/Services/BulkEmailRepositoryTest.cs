@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using crds_angular.App_Start;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private BulkEmailRepository _fixture;
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
 
@@ -26,7 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
             _fixture = new BulkEmailRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,
@@ -66,7 +66,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,
@@ -92,7 +92,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var contactPublications = GenerateContactPublications(1);
 
-            BulkEmailSubscriberOpt bulkEmailSubscriberOpt = new BulkEmailSubscriberOpt
+            MpBulkEmailSubscriberOpt bulkEmailSubscriberOpt = new MpBulkEmailSubscriberOpt
             {
                 EmailAddress = "test@test.com",
                 PublicationID = 1,

@@ -7,21 +7,21 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using Attribute = MinistryPlatform.Models.Attribute;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.test.Services
 {
     public class GroupSearchServiceTest
     {
         private GroupSearchService _fixture;
-        private Mock<IGroupService> _groupService;
+        private Mock<IGroupRepository> _groupService;
         private Mock<IConfigurationWrapper> _config;
-        private Mock<MPServices.IAttributeService> _attributeService;
+        private Mock<MPServices.IAttributeRepository> _attributeService;
         private const int GroupGoalConnectWithCommunity = 6999;
         private const int GroupGoalMakeFriends = 7002;
         private const int GroupGoalLearnAndGrow = 7000;
@@ -45,8 +45,8 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _groupService = new Mock<IGroupService>();
-            _attributeService = new Mock<MPServices.IAttributeService>();
+            _groupService = new Mock<IGroupRepository>();
+            _attributeService = new Mock<MPServices.IAttributeRepository>();
             
             _config = new Mock<IConfigurationWrapper>();
 
@@ -80,8 +80,8 @@ namespace crds_angular.test.Services
 
             var participant = new GroupParticipantDTO();
             
-            _groupService.Setup(mocked => mocked.GetSearchResults(groupTypeId)).Returns(It.IsAny<List<GroupSearchResult>>());
-            _attributeService.Setup(mocked => mocked.GetAttributes(null)).Returns(It.IsAny<List<Attribute>>());
+            _groupService.Setup(mocked => mocked.GetSearchResults(groupTypeId)).Returns(It.IsAny<List<MpGroupSearchResult>>());
+            _attributeService.Setup(mocked => mocked.GetAttributes(null)).Returns(It.IsAny<List<MpAttribute>>());
             
             //var result =  _fixture.FindMatches(groupTypeId, participant);
             

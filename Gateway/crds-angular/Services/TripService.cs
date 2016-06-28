@@ -8,52 +8,52 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
-using Event = MinistryPlatform.Models.Event;
-using IDonationService = MinistryPlatform.Translation.Services.Interfaces.IDonationService;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
+using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using PledgeCampaign = crds_angular.Models.Crossroads.Stewardship.PledgeCampaign;
 
 namespace crds_angular.Services
 {
     public class TripService : MinistryPlatformBaseService, ITripService
     {
-        private readonly IEventParticipantService _eventParticipantService;
-        private readonly IDonationService _donationService;
-        private readonly IGroupService _groupService;
-        private readonly IFormSubmissionService _formSubmissionService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _mpEventService;
-        private readonly IDonorService _mpDonorService;
-        private readonly IPledgeService _mpPledgeService;
-        private readonly ICampaignService _campaignService;
-        private readonly IPrivateInviteService _privateInviteService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly IDonationRepository _donationService;
+        private readonly IGroupRepository _groupService;
+        private readonly IFormSubmissionRepository _formSubmissionService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _mpEventService;
+        private readonly IDonorRepository _mpDonorService;
+        private readonly IPledgeRepository _mpPledgeService;
+        private readonly ICampaignRepository _campaignService;
+        private readonly IPrivateInviteRepository _privateInviteService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IPersonService _personService;
         private readonly IServeService _serveService;
-        private readonly IDestinationService _destinationService;
+        private readonly IDestinationRepository _destinationService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (TripService));
 
-        public TripService(IEventParticipantService eventParticipant,
-                           IDonationService donationService,
-                           IGroupService groupService,
-                           IFormSubmissionService formSubmissionService,
-                           MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
-                           IDonorService donorService,
-                           IPledgeService pledgeService,
-                           ICampaignService campaignService,
-                           IPrivateInviteService privateInviteService,
-                           ICommunicationService communicationService,
-                           IContactService contactService,
-                           IContactRelationshipService contactRelationshipService,
+        public TripService(IEventParticipantRepository eventParticipant,
+                           IDonationRepository donationService,
+                           IGroupRepository groupService,
+                           IFormSubmissionRepository formSubmissionService,
+                           MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
+                           IDonorRepository donorService,
+                           IPledgeRepository pledgeService,
+                           ICampaignRepository campaignService,
+                           IPrivateInviteRepository privateInviteService,
+                           ICommunicationRepository communicationService,
+                           IContactRepository contactService,
+                           IContactRelationshipRepository contactRelationshipService,
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationService destinationService)
+                           IDestinationRepository destinationService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
@@ -146,7 +146,7 @@ namespace crds_angular.Services
                 : FormatTripResponse(responses);
         }
 
-        private static TripApplicantResponse FormatTripResponse(List<TripFormResponse> responses)
+        private static TripApplicantResponse FormatTripResponse(List<MpTripFormResponse> responses)
         {
             var tripInfo = responses
                 .Select(r =>
@@ -203,7 +203,7 @@ namespace crds_angular.Services
             return fam;
         }
 
-        private static List<string> ValidateResponse(int selectionCount, int formResponseId, List<TripFormResponse> responses)
+        private static List<string> ValidateResponse(int selectionCount, int formResponseId, List<MpTripFormResponse> responses)
         {
             var messages = new List<string>();
             if (responses.Count == 0)
@@ -395,7 +395,7 @@ namespace crds_angular.Services
             return groupParticipants;
         }
 
-        private int AddGroupParticipant(int groupId, int groupRoleId, DateTime groupStartDate, IList<Event> events, TripApplicant applicant)
+        private int AddGroupParticipant(int groupId, int groupRoleId, DateTime groupStartDate, IList<MpEvent> events, TripApplicant applicant)
         {
             if (_groupService.ParticipantGroupMember(groupId, applicant.ParticipantId))
             {
@@ -405,7 +405,7 @@ namespace crds_angular.Services
             return groupParticipantId;
         }
 
-        private void SendTripParticipantSuccess(int contactId, IList<Event> events)
+        private void SendTripParticipantSuccess(int contactId, IList<MpEvent> events)
         {
             var htmlTable = FormatParticipantEventTable(events).Build();
 
@@ -413,7 +413,7 @@ namespace crds_angular.Services
             SendMessage("TripParticipantSuccessTemplate", contactId, mergeData);
         }
 
-        private HtmlElement FormatParticipantEventTable(IEnumerable<Event> events)
+        private HtmlElement FormatParticipantEventTable(IEnumerable<MpEvent> events)
         {
             var tableAttrs = new Dictionary<string, string>()
             {
@@ -450,22 +450,22 @@ namespace crds_angular.Services
             return invite.PrivateInvitationId;
         }
 
-        private Communication PrivateInviteCommunication(PrivateInvite invite)
+        private MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var mergeData = SetMergeData(invite.PledgeCampaignIdText, invite.PledgeCampaignId, invite.InvitationGuid, invite.RecipientName);
 
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
-                ReplyToContact = new Contact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
-                ToContacts = new List<Contact> {new Contact{ContactId = fromContact.Contact_ID, EmailAddress = invite.EmailAddress}},
+                FromContact = new MpContact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
+                ReplyToContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = fromContact.Contact_ID, EmailAddress = invite.EmailAddress}},
                 MergeData = mergeData
             };
         }
@@ -504,7 +504,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void EventRegistration(IEnumerable<Event> events, TripApplicant applicant, int destinationId)
+        private void EventRegistration(IEnumerable<MpEvent> events, TripApplicant applicant, int destinationId)
         {
             var destinationDocuments = _destinationService.DocumentsForDestination(destinationId);
             foreach (var e in events)
@@ -525,12 +525,12 @@ namespace crds_angular.Services
             try
             {
                 UpdateChildSponsorship(dto);
-                var formResponse = new FormResponse();
+                var formResponse = new MpFormResponse();
                 formResponse.ContactId = dto.ContactId; //contact id of the person the application is for
                 formResponse.FormId = _configurationWrapper.GetConfigIntValue("TripApplicationFormId");
                 formResponse.PledgeCampaignId = dto.PledgeCampaignId;
 
-                formResponse.FormAnswers = new List<FormAnswer>(FormatFormAnswers(dto));
+                formResponse.FormAnswers = new List<MpFormAnswer>(FormatFormAnswers(dto));
 
                 var formResponseId = _formSubmissionService.SubmitFormResponse(formResponse);
 
@@ -622,7 +622,7 @@ namespace crds_angular.Services
                 return;
             }
             // Update the relationship
-            var relationship = new Relationship
+            var relationship = new MpRelationship
             {
                 RelationshipID = _configurationWrapper.GetConfigIntValue("SponsoredChild"),
                 RelatedContactID = childId,
@@ -653,60 +653,60 @@ namespace crds_angular.Services
             return createChild(sponsoredChild);
         }
 
-        private IEnumerable<FormAnswer> FormatFormAnswers(TripApplicationDto applicationData)
+        private IEnumerable<MpFormAnswer> FormatFormAnswers(TripApplicationDto applicationData)
         {
-            var answers = new List<FormAnswer>();
+            var answers = new List<MpFormAnswer>();
 
             var page2 = applicationData.PageTwo;
 
-            answers.Add(new FormAnswer {Response = page2.Allergies, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Allergies")});
-            answers.Add(new FormAnswer {Response = page2.Conditions, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Conditions")});
-            answers.Add(new FormAnswer {Response = page2.GuardianFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianFirstName")});
-            answers.Add(new FormAnswer {Response = page2.GuardianLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianLastName")});
-            answers.Add(new FormAnswer {Response = page2.Referral, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Referral")});
-            answers.Add(new FormAnswer {Response = page2.Why, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Why")});
+            answers.Add(new MpFormAnswer {Response = page2.Allergies, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Allergies")});
+            answers.Add(new MpFormAnswer {Response = page2.Conditions, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Conditions")});
+            answers.Add(new MpFormAnswer {Response = page2.GuardianFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianFirstName")});
+            answers.Add(new MpFormAnswer {Response = page2.GuardianLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianLastName")});
+            answers.Add(new MpFormAnswer {Response = page2.Referral, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Referral")});
+            answers.Add(new MpFormAnswer {Response = page2.Why, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Why")});
 
             var page3 = applicationData.PageThree;
-            answers.Add(new FormAnswer {Response = page3.EmergencyContactEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactEmail")});
-            answers.Add(new FormAnswer {Response = page3.EmergencyContactFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactFirstName")});
-            answers.Add(new FormAnswer {Response = page3.EmergencyContactLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactLastName")});
-            answers.Add(new FormAnswer {Response = page3.EmergencyContactPrimaryPhone, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactPrimaryPhone")});
-            answers.Add(new FormAnswer
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactEmail")});
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactFirstName")});
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactLastName")});
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactPrimaryPhone, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactPrimaryPhone")});
+            answers.Add(new MpFormAnswer
             {
                 Response = page3.EmergencyContactSecondaryPhone,
                 FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactSecondaryPhone")
             });
 
             var page4 = applicationData.PageFour;
-            answers.Add(new FormAnswer {Response = page4.GroupCommonName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GroupCommonName")});
-            answers.Add(new FormAnswer {Response = page4.InterestedInGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.InterestedInGroupLeader")});
-            answers.Add(new FormAnswer {Response = page4.Lottery, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Lottery")});
-            answers.Add(new FormAnswer {Response = page4.RoommateFirstChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateFirstChoice")});
-            answers.Add(new FormAnswer {Response = page4.RoommateSecondChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateSecondChoice")});
-            answers.Add(new FormAnswer {Response = page4.SupportPersonEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SupportPersonEmail")});
-            answers.Add(new FormAnswer {Response = page4.WhyGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.WhyGroupLeader")});
+            answers.Add(new MpFormAnswer {Response = page4.GroupCommonName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GroupCommonName")});
+            answers.Add(new MpFormAnswer {Response = page4.InterestedInGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.InterestedInGroupLeader")});
+            answers.Add(new MpFormAnswer {Response = page4.Lottery, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Lottery")});
+            answers.Add(new MpFormAnswer {Response = page4.RoommateFirstChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateFirstChoice")});
+            answers.Add(new MpFormAnswer {Response = page4.RoommateSecondChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateSecondChoice")});
+            answers.Add(new MpFormAnswer {Response = page4.SupportPersonEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SupportPersonEmail")});
+            answers.Add(new MpFormAnswer {Response = page4.WhyGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.WhyGroupLeader")});
 
             var page5 = applicationData.PageFive;
-            answers.Add(new FormAnswer {Response = page5.NolaFirstChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeam")});
-            answers.Add(new FormAnswer {Response = page5.NolaFirstChoiceExperience, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeamExperience")});
-            answers.Add(new FormAnswer {Response = page5.NolaSecondChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SecondChoiceWorkTeam")});
+            answers.Add(new MpFormAnswer {Response = page5.NolaFirstChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeam")});
+            answers.Add(new MpFormAnswer {Response = page5.NolaFirstChoiceExperience, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.FirstChoiceWorkTeamExperience")});
+            answers.Add(new MpFormAnswer {Response = page5.NolaSecondChoiceWorkTeam, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SecondChoiceWorkTeam")});
 
             var page6 = applicationData.PageSix;
-            answers.Add(new FormAnswer {Response = page6.DescribeExperienceAbroad, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.DescribeExperienceAbroad")});
-            answers.Add(new FormAnswer {Response = page6.ExperienceAbroad, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.ExperienceAbroad")});
-            answers.Add(new FormAnswer
+            answers.Add(new MpFormAnswer {Response = page6.DescribeExperienceAbroad, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.DescribeExperienceAbroad")});
+            answers.Add(new MpFormAnswer {Response = page6.ExperienceAbroad, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.ExperienceAbroad")});
+            answers.Add(new MpFormAnswer
             {
                 Response = page6.InternationalTravelExpericence,
                 FieldId = _configurationWrapper.GetConfigIntValue("TripForm.InternationalTravelExpericence")
             });
-            answers.Add(new FormAnswer {Response = page6.PassportNumber, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportNumber")});
-            answers.Add(new FormAnswer {Response = page6.PassportCountry, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportCountry")});
-            answers.Add(new FormAnswer {Response = page6.PassportExpirationDate, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportExpirationDate")});
-            answers.Add(new FormAnswer {Response = page6.PassportFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportFirstName")});
-            answers.Add(new FormAnswer {Response = page6.PassportLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportLastName")});
-            answers.Add(new FormAnswer {Response = page6.PassportMiddleName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportMiddleName")});
-            answers.Add(new FormAnswer {Response = page6.PastAbuseHistory, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PastAbuseHistory")});
-            answers.Add(new FormAnswer {Response = page6.ValidPassport, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.ValidPassport")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportNumber, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportNumber")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportCountry, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportCountry")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportExpirationDate, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportExpirationDate")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportFirstName")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportLastName")});
+            answers.Add(new MpFormAnswer {Response = page6.PassportMiddleName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PassportMiddleName")});
+            answers.Add(new MpFormAnswer {Response = page6.PastAbuseHistory, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.PastAbuseHistory")});
+            answers.Add(new MpFormAnswer {Response = page6.ValidPassport, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.ValidPassport")});
 
             return answers;
         }

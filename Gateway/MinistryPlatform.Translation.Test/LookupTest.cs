@@ -4,8 +4,8 @@ using System.Configuration;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.PlatformService;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Test
 
         private AuthenticationServiceImpl _fixture;
         private PlatformServiceClient _platformService;
-        private LookupService _lookupService;
+        private LookupRepository _lookupRepository;
         private IConfigurationWrapper _configurationWrapper;
         private IMinistryPlatformService _ministryPlatformService;
 
@@ -32,53 +32,53 @@ namespace MinistryPlatform.Translation.Test
             _configurationWrapper = new ConfigurationWrapper();
             _platformService = new PlatformServiceClient();
             _ministryPlatformService = new MinistryPlatformServiceImpl(_platformService, _configurationWrapper);
-            _lookupService = new LookupService(_fixture, _configurationWrapper, _ministryPlatformService);
+            _lookupRepository = new LookupRepository(_fixture, _configurationWrapper, _ministryPlatformService);
             _fixture = new AuthenticationServiceImpl(_platformService, _ministryPlatformService);
         }
 
         [Test]
         public void ShouldReturnAValidObjectWithUserIdAndEmailAddress()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
-            var emails = _lookupService.EmailSearch(EMAIL, token);
+            var emails = _lookupRepository.EmailSearch(EMAIL, token);
             Assert.IsNotEmpty(emails);
         }
 
         [Test]
         public void ShouldReturnValidObjectForUpperCaseEmailAddress()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
-            var emails = _lookupService.EmailSearch(EMAIL.ToUpper(), token);
+            var emails = _lookupRepository.EmailSearch(EMAIL.ToUpper(), token);
             Assert.IsNotEmpty(emails);
         }
 
         [Test]
         public void ShouldBeEmpty()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
-            var emails = _lookupService.EmailSearch("CRAP@CRAP.com", token);
+            var emails = _lookupRepository.EmailSearch("CRAP@CRAP.com", token);
             Assert.IsEmpty(emails);
         }
 
         [Test]
         public void ShouldFindListOfGenders()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> genders = _lookupService.Genders(token);
+            List<Dictionary<string, object>> genders = _lookupRepository.Genders(token);
             Assert.IsNotEmpty(genders);
             genders.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -86,10 +86,10 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfMaritalStatus()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> maritalStatus = _lookupService.MaritalStatus(token);
+            List<Dictionary<string, object>> maritalStatus = _lookupRepository.MaritalStatus(token);
             Assert.IsNotEmpty(maritalStatus);
             maritalStatus.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -97,10 +97,10 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfServiceProviders()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> ServiceProviders = _lookupService.ServiceProviders(token);
+            List<Dictionary<string, object>> ServiceProviders = _lookupRepository.ServiceProviders(token);
             Assert.IsNotEmpty(ServiceProviders);
             ServiceProviders.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -108,10 +108,10 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfStates()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> States = _lookupService.States(token);
+            List<Dictionary<string, object>> States = _lookupRepository.States(token);
             Assert.IsNotEmpty(States);
             States.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -119,10 +119,10 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfCountries()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> Countries = _lookupService.Countries(token);
+            List<Dictionary<string, object>> Countries = _lookupRepository.Countries(token);
             Assert.IsNotEmpty(Countries);
             Countries.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -131,11 +131,11 @@ namespace MinistryPlatform.Translation.Test
         public void ShouldFindListOfCrossroadsLocations()
         {
             var clifton = new Dictionary<string, object> { { "dp_RecordID", 11 }, { "dp_RecordName", "Uptown" } };
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
 
             var token = authData["token"].ToString();
-            var crossroadsLocations = _lookupService.CrossroadsLocations(token);
+            var crossroadsLocations = _lookupRepository.CrossroadsLocations(token);
             Assert.IsNotEmpty(crossroadsLocations);
 
             Assert.Contains(clifton, crossroadsLocations);
@@ -145,10 +145,10 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfMinistries()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
-            List<Dictionary<string, object>> ministriesList = _lookupService.Ministries(token);
+            List<Dictionary<string, object>> ministriesList = _lookupRepository.Ministries(token);
             Assert.IsNotEmpty(ministriesList);
             ministriesList.ForEach(x => { Assert.IsInstanceOf<Dictionary<string, object>>(x); });
         }
@@ -156,38 +156,38 @@ namespace MinistryPlatform.Translation.Test
         [Test]
         public void ShouldFindListOfChildCareLocations()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
-            var childcarelocations = _lookupService.ChildcareLocations(token);
+            var childcarelocations = _lookupRepository.ChildcareLocations(token);
             Assert.IsNotEmpty(childcarelocations);
         }
 
         [Test]
         public void ShouldFindGroups()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
 
-            var groups = _lookupService.GroupsByCongregationAndMinistry(token,"1","11");
+            var groups = _lookupRepository.GroupsByCongregationAndMinistry(token,"1","11");
             Assert.IsNotEmpty(groups);
         }
 
         [Test]
         public void ShouldFindChildcareTimes()
         {
-            var authData = AuthenticationService.authenticate(USERNAME, PASSWORD);
+            var authData = AuthenticationRepository.authenticate(USERNAME, PASSWORD);
             Assert.IsNotNull(authData);
             var token = authData["token"].ToString();
             var contactId = _fixture.GetContactId(token);
             Assert.IsNotNull(contactId);
 
-            var times = _lookupService.ChildcareTimesByCongregation(token, "1");
+            var times = _lookupRepository.ChildcareTimesByCongregation(token, "1");
             Assert.IsNotEmpty(times);
         }
     }

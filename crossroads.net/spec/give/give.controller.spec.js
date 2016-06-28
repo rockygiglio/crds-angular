@@ -1,6 +1,3 @@
-require('crds-core');
-require('../../app/ang');
-
 require('../../app/common/common.module');
 require('../../app/give/give.module');
 require('../../app/app');

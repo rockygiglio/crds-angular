@@ -15,8 +15,8 @@ using System.Web.Http.Results;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Json;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.controllers
 {
@@ -25,8 +25,8 @@ namespace crds_angular.test.controllers
         private CheckScannerController _fixture;
         private Mock<IConfigurationWrapper> _configuration;
         private Mock<ICheckScannerService> _checkScannerService;
-        private Mock<IAuthenticationService> _authenticationService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IMessageQueueFactory> _messageQueueFactory;
         private Mock<IMessageFactory> _messageFactory;
         private Mock<ICryptoProvider> _cryptoProvider; 
@@ -39,8 +39,8 @@ namespace crds_angular.test.controllers
         {
             _configuration = new Mock<IConfigurationWrapper>();
             _checkScannerService = new Mock<ICheckScannerService>(MockBehavior.Strict);
-            _authenticationService = new Mock<IAuthenticationService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _messageQueueFactory = new Mock<IMessageQueueFactory>(MockBehavior.Strict);
             _messageFactory = new Mock<IMessageFactory>(MockBehavior.Strict);
             _cryptoProvider = new Mock<ICryptoProvider>();
@@ -198,7 +198,7 @@ namespace crds_angular.test.controllers
             var donorDetail = new EZScanDonorDetails
             {
                 DisplayName = "Peyton Manning",
-                Address = new PostalAddress()
+                Address = new MpPostalAddress()
                 {
                     Line1 = "1 Superbowl Way",
                     Line2 = "Suite 1000",

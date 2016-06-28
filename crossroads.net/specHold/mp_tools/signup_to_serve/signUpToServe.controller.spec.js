@@ -1,6 +1,3 @@
-require('crds-core');
-require('../../../app/ang');
-
 require('../../../app/app');
 
 describe('Signup To Serve Tool', function(){

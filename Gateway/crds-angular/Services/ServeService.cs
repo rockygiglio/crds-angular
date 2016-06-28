@@ -12,11 +12,11 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using WebGrease.Css.Extensions;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 
 namespace crds_angular.Services
 {
@@ -30,18 +30,18 @@ namespace crds_angular.Services
 
     public class ServeService : MinistryPlatformBaseService, IServeService
     {
-        private readonly IContactService _contactService;
-        private readonly IContactRelationshipService _contactRelationshipService;
-        private readonly MinistryPlatform.Translation.Services.Interfaces.IEventService _eventService;
-        private readonly IGroupParticipantService _groupParticipantService;
-        private readonly IGroupService _groupService;
-        private readonly IOpportunityService _opportunityService;
-        private readonly IParticipantService _participantService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IContactRepository _contactService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _eventService;
+        private readonly IGroupParticipantRepository _groupParticipantService;
+        private readonly IGroupRepository _groupService;
+        private readonly IOpportunityRepository _opportunityService;
+        private readonly IParticipantRepository _participantService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IApiUserService _apiUserService;
-        private readonly IResponseService _responseService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IResponseRepository _responseService;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -53,18 +53,18 @@ namespace crds_angular.Services
 
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ServeService(IContactService contactService,
-                            IContactRelationshipService contactRelationshipService,
-                            IOpportunityService opportunityService,
-                            MinistryPlatform.Translation.Services.Interfaces.IEventService eventService,
-                            IParticipantService participantService,
-                            IGroupParticipantService groupParticipantService,
-                            IGroupService groupService,
-                            ICommunicationService communicationService,
-                            IAuthenticationService authenticationService,
+        public ServeService(IContactRepository contactService,
+                            IContactRelationshipRepository contactRelationshipService,
+                            IOpportunityRepository opportunityService,
+                            MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
+                            IParticipantRepository participantService,
+                            IGroupParticipantRepository groupParticipantService,
+                            IGroupRepository groupService,
+                            ICommunicationRepository communicationService,
+                            IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IApiUserService apiUserService,
-                            IResponseService responseService)
+                            IApiUserRepository apiUserService,
+                            IResponseRepository responseService)
         {
             _contactService = contactService;
             _contactRelationshipService = contactRelationshipService;
@@ -277,7 +277,7 @@ namespace crds_angular.Services
             return capacity;
         }
 
-        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, MinistryPlatform.Models.Event, bool> saveFunc = null)
+        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, MpEvent, bool> saveFunc = null)
         {
             var updatedEvents = new List<int>();
 
@@ -315,7 +315,7 @@ namespace crds_angular.Services
             var groupContact = _contactService.GetContactById(opportunity.GroupContactId);
 
             var toContact = _contactService.GetContactById(dto.ContactId);
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
             try
             {
                 var fromDate = GetTimeStamp(opportunity.ShiftStart);
@@ -423,7 +423,7 @@ namespace crds_angular.Services
 
         }
 
-        public List<GroupContactDTO> PotentialVolunteers(int groupId, Models.Crossroads.Events.Event evnt, List<GroupParticipant> groupMembers)
+        public List<GroupContactDTO> PotentialVolunteers(int groupId, Models.Crossroads.Events.Event evnt, List<MpGroupParticipant> groupMembers)
         {
             var responses = _opportunityService.GetContactsOpportunityResponseByGroupAndEvent(groupId, evnt.EventId).Select(res =>
             {
@@ -469,7 +469,7 @@ namespace crds_angular.Services
 
         }
 
-        private bool RespondedOnWeekend(Models.Crossroads.Events.Event evnt, GroupParticipant gm)
+        private bool RespondedOnWeekend(Models.Crossroads.Events.Event evnt, MpGroupParticipant gm)
         {
 
             // this person did not respond, they are a potential contact so far
@@ -494,7 +494,7 @@ namespace crds_angular.Services
             return otherResponses.Any();
         }
 
-        private static DateTime IncrementSequenceDate(Event @event, DateTime sequenceDate, int increment)
+        private static DateTime IncrementSequenceDate(MpEvent @event, DateTime sequenceDate, int increment)
         {
             if (@event.EventStartDate.Date > sequenceDate.Date)
             {
@@ -511,11 +511,11 @@ namespace crds_angular.Services
             return templateId;
         }
 
-        private static Opportunity PreviousOpportunity(Dictionary<string, object> response, Opportunity previousOpportunity)
+        private static MpOpportunity PreviousOpportunity(Dictionary<string, object> response, MpOpportunity previousOpportunity)
         {
-            if (response.ToNullableObject<Opportunity>("previousOpportunity") != null)
+            if (response.ToNullableObject<MpOpportunity>("previousOpportunity") != null)
             {
-                previousOpportunity = response.ToNullableObject<Opportunity>("previousOpportunity");
+                previousOpportunity = response.ToNullableObject<MpOpportunity>("previousOpportunity");
             }
             return previousOpportunity;
         }
@@ -525,8 +525,8 @@ namespace crds_angular.Services
                                                       List<int> opportunityIds,
                                                       bool signUp,
                                                       Participant participant,
-                                                      Event @event,
-                                                      MyContact groupLeader)
+                                                      MpEvent @event,
+                                                      MpMyContact groupLeader)
         {
             var response = signUp
                 ? HandleYesRsvp(participant, @event, opportunityId, opportunityIds, token)
@@ -534,7 +534,7 @@ namespace crds_angular.Services
             return response;
         }
 
-        private Opportunity GetOpportunity(string token, int opportunityId, List<int> opportunityIds)
+        private MpOpportunity GetOpportunity(string token, int opportunityId, List<int> opportunityIds)
         {
             var opportunity = (opportunityId > 0)
                 ? _opportunityService.GetOpportunityById(opportunityId, token)
@@ -548,7 +548,7 @@ namespace crds_angular.Services
             return templateId;
         }
 
-        private List<Event> GetEventsInRange(string token, int eventTypeId, DateTime startDate, DateTime endDate)
+        private List<MpEvent> GetEventsInRange(string token, int eventTypeId, DateTime startDate, DateTime endDate)
         {
             var events =
                 _eventService.GetEventsByTypeForRange(eventTypeId, startDate, endDate, token)
@@ -558,14 +558,14 @@ namespace crds_angular.Services
         }
 
         private Dictionary<string, object> HandleYesRsvp(Participant participant,
-                                                         Event e,
+                                                         MpEvent e,
                                                          int opportunityId,
                                                          IReadOnlyCollection<int> opportunityIds,
                                                          String token)
         {
             var templateId = AppSetting("RsvpYesTemplate");
             var deletedRSVPS = new List<int>();
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
 
             var opportunity = _opportunityService.GetOpportunityById(opportunityId,token);
             //Try to register this user for the event
@@ -603,13 +603,13 @@ namespace crds_angular.Services
         }
 
         private Dictionary<string, object> HandleNoRsvp(Participant participant,
-                                                        Event e,
+                                                        MpEvent e,
                                                         List<int> opportunityIds,
                                                         string token,
-                                                        MyContact groupLeader)
+                                                        MpMyContact groupLeader)
         {
             int templateId;
-            Opportunity previousOpportunity = null;
+            MpOpportunity previousOpportunity = null;
 
             try
             {
@@ -657,7 +657,7 @@ namespace crds_angular.Services
             };
         }
 
-        private void SendCancellationMessage(MyContact groupLeader, string volunteerName, string volunteerEmail, string teamName, string opportunityName, string eventDateTime)
+        private void SendCancellationMessage(MpMyContact groupLeader, string volunteerName, string volunteerEmail, string teamName, string opportunityName, string eventDateTime)
         {
             var templateId = AppSetting("RsvpYesToNo");
 
@@ -675,19 +675,19 @@ namespace crds_angular.Services
             _communicationService.SendMessage(communication);
         }
 
-        private Communication SetupCommunication(int templateId, MyContact groupContact, MyContact toContact, Dictionary<string, object> mergeData)
+        private MpCommunication SetupCommunication(int templateId, MpMyContact groupContact, MpMyContact toContact, Dictionary<string, object> mergeData)
         {
             var template = _communicationService.GetTemplate(templateId);
             var defaultContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address},
-                ReplyToContact = new Contact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
-                ToContacts = new List<Contact> {new Contact {ContactId = toContact.Contact_ID, EmailAddress = toContact.Email_Address}},
+                FromContact = new MpContact {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address},
+                ReplyToContact = new MpContact {ContactId = groupContact.Contact_ID, EmailAddress = groupContact.Email_Address},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = toContact.Contact_ID, EmailAddress = toContact.Email_Address}},
                 MergeData = mergeData
             };
         }
@@ -729,14 +729,14 @@ namespace crds_angular.Services
 
         private Dictionary<string, object> SetupMergeData(int contactId,
                                                           int opportunityId,
-                                                          Opportunity previousOpportunity,
-                                                          Opportunity currentOpportunity,
+                                                          MpOpportunity previousOpportunity,
+                                                          MpOpportunity currentOpportunity,
                                                           DateTime startDate,
                                                           DateTime endDate,
-                                                          MyContact groupContact,
+                                                          MpMyContact groupContact,
                                                           String htmlTable)
         {
-            MyContact volunteer = _contactService.GetContactById(contactId);
+            MpMyContact volunteer = _contactService.GetContactById(contactId);
             return new Dictionary<string, object>
             {
                 {"Opportunity_Name", opportunityId == 0 ? "Not Available" : currentOpportunity.OpportunityName},
@@ -756,7 +756,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServeRole NewServingRole(GroupServingParticipant record)
+        private ServeRole NewServingRole(MpGroupServingParticipant record)
         {
             return new ServeRole
             {
@@ -770,7 +770,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServingTime NewServingTime(GroupServingParticipant record)
+        private ServingTime NewServingTime(MpGroupServingParticipant record)
         {
             return new ServingTime
             {
@@ -780,7 +780,7 @@ namespace crds_angular.Services
             };
         }
 
-        private ServingTeam NewServingTeam(GroupServingParticipant record)
+        private ServingTeam NewServingTeam(MpGroupServingParticipant record)
         {
             return new ServingTeam
             {
@@ -797,7 +797,7 @@ namespace crds_angular.Services
             };
         }
 
-        private TeamMember NewTeamMember(GroupServingParticipant record)
+        private TeamMember NewTeamMember(MpGroupServingParticipant record)
         {
             // new team member
             var member = new TeamMember
@@ -816,7 +816,7 @@ namespace crds_angular.Services
             return member;
         }
 
-        private ServeRsvp NewServeRsvp(GroupServingParticipant record)
+        private ServeRsvp NewServeRsvp(MpGroupServingParticipant record)
         {
             if (record.Rsvp != null && !((bool) record.Rsvp))
             {

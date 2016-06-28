@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -13,13 +13,13 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class FormSubmissionServiceTest
     {
-        private FormSubmissionService _fixture;
+        private FormSubmissionRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authService;
+        private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IDbConnection> _dbConnection;
-        private FormResponse _mockForm;
-        private FormAnswer _mockAnswer1, _mockAnswer2, _mockAnswer3;
+        private MpFormResponse _mockForm;
+        private MpFormAnswer _mockAnswer1, _mockAnswer2, _mockAnswer3;
         private const int formResponsePageId = 424;
         private const int formAnswerPageId = 425;
         private const int responseId = 2;
@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _dbConnection = new Mock<IDbConnection>();
 
@@ -36,9 +36,9 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new FormSubmissionService(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object);
 
-            _mockAnswer1 = new FormAnswer
+            _mockAnswer1 = new MpFormAnswer
             {
                 FieldId = 375,
                 FormResponseId = responseId,
@@ -46,7 +46,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Response = "Test Last Name"
             };
 
-            _mockAnswer2 = new FormAnswer
+            _mockAnswer2 = new MpFormAnswer
             {
                 FieldId = 376,
                 FormResponseId = responseId,
@@ -54,7 +54,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Response = "Test First Name"
             };
 
-            _mockAnswer3 = new FormAnswer
+            _mockAnswer3 = new MpFormAnswer
             {
                 FieldId = 377,
                 FormResponseId = responseId,
@@ -62,13 +62,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 Response = "Test Middle Initial"
             };
 
-            _mockForm = new FormResponse
+            _mockForm = new MpFormResponse
             {
                 FormId = 17,
                 ContactId = 2389887,
                 OpportunityId = 313,
                 OpportunityResponseId = 7329,
-                FormAnswers = new List<FormAnswer>
+                FormAnswers = new List<MpFormAnswer>
                 {
                     _mockAnswer1,
                     _mockAnswer2,

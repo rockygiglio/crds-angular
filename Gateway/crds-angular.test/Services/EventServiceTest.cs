@@ -4,11 +4,11 @@ using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Translation.Services.Interfaces;
-using Event = MinistryPlatform.Models.Event;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
@@ -19,19 +19,19 @@ namespace crds_angular.test.Services
     [TestFixture]
     public class EventServiceTest 
     {
-        private Mock<IContactRelationshipService> _contactRelationshipService;
-        private Mock<IContactService> _contactService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
-        private Mock<IEventService> _eventService;
-        private Mock<IParticipantService> _participantService;
-        private Mock<IGroupParticipantService> _groupParticipantService;
-        private Mock<IGroupService> _groupService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IEventRepository> _eventService;
+        private Mock<IParticipantRepository> _participantService;
+        private Mock<IGroupParticipantRepository> _groupParticipantService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<IRoomService> _roomService;
-        private Mock<IEquipmentService> _equipmentService;
-        private Mock<IEventParticipantService> _eventParticipantService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IRoomRepository> _roomService;
+        private Mock<IEquipmentRepository> _equipmentService;
+        private Mock<IEventParticipantRepository> _eventParticipantService;
 
         private EventService _fixture;
 
@@ -40,21 +40,21 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
           
-            _contactRelationshipService = new Mock<IContactRelationshipService>(MockBehavior.Strict);
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
-            _contactService = new Mock<IContactService>(MockBehavior.Strict);
-            _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _communicationService = new Mock<ICommunicationService>(MockBehavior.Strict);
+            _contactService = new Mock<IContactRepository>(MockBehavior.Strict);
+            _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
+            _communicationService = new Mock<ICommunicationRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
-            _apiUserService = new Mock<IApiUserService>(MockBehavior.Strict);
-            _groupParticipantService = new Mock<IGroupParticipantService>(MockBehavior.Strict);
-            _participantService = new Mock<IParticipantService>(MockBehavior.Strict);
-            _eventService = new Mock<IEventService>();
-            _roomService = new Mock<IRoomService>();
-            _equipmentService= new Mock<IEquipmentService>();
-            _eventParticipantService = new Mock<IEventParticipantService>(MockBehavior.Strict);
+            _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
+            _groupParticipantService = new Mock<IGroupParticipantRepository>(MockBehavior.Strict);
+            _participantService = new Mock<IParticipantRepository>(MockBehavior.Strict);
+            _eventService = new Mock<IEventRepository>();
+            _roomService = new Mock<IRoomRepository>();
+            _equipmentService= new Mock<IEquipmentRepository>();
+            _eventParticipantService = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
@@ -81,25 +81,25 @@ namespace crds_angular.test.Services
         {
             const string search = "";
             const string apiToken = "qwerty1234";
-            var defaultContact = new MyContact()
+            var defaultContact = new MpMyContact()
             {
                 Contact_ID = 321,
                 Email_Address = "default@email.com"
             };
 
-            var testEvent = new Event ()
+            var testEvent = new MpEvent ()
             {
                 EventId = 32,
                 EventStartDate = new DateTime(),
                 EventEndDate = new DateTime().AddHours(2),
-                PrimaryContact = new Contact()
+                PrimaryContact = new MpContact()
                 {
                     EmailAddress = "test@test.com",
                     ContactId = 4321
                 }
             };
 
-            var testEventList = new List<Event>()
+            var testEventList = new List<MpEvent>()
             {
                testEvent
             };
@@ -128,8 +128,8 @@ namespace crds_angular.test.Services
                     {"Event_Start_Time", evt.StartDate.ToShortTimeString()}               
                 };
 
-                var contact = new Contact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
-                var fakeCommunication = new Communication()
+                var contact = new MpContact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
+                var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
                     DomainId = 1,
@@ -139,10 +139,10 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = 14909,
-                    ToContacts = new List<Contact>() { contact }
+                    ToContacts = new List<MpContact>() { contact }
                 };
 
-                var testContact = new MyContact()
+                var testContact = new MpMyContact()
                 {
                     Contact_ID = 9876,
                     Email_Address = "ghj@cr.net"
@@ -170,7 +170,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetEventRoomDetails()
         {
-            var e = new Event
+            var e = new MpEvent
             {
                 EventTitle = "title",
                 CongregationId = 12,
@@ -180,9 +180,9 @@ namespace crds_angular.test.Services
             };
             _eventService.Setup(mocked => mocked.GetEvent(123)).Returns(e);
 
-            var r = new List<RoomReservationDto>
+            var r = new List<MpRoomReservationDto>
             {
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = false,
                     Hidden = false,
@@ -195,7 +195,7 @@ namespace crds_angular.test.Services
                     Name = "name 1",
                     Label = "label 1"
                 },
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = true,
                     Hidden = true,
@@ -211,16 +211,16 @@ namespace crds_angular.test.Services
             };
             _roomService.Setup(mocked => mocked.GetRoomReservations(123)).Returns(r);
 
-            var p = new List<List<EventParticipant>>
+            var p = new List<List<MpEventParticipant>>
             {
-                new List<EventParticipant>
+                new List<MpEventParticipant>
                 {
-                    new EventParticipant()
+                    new MpEventParticipant()
                 },
-                new List<EventParticipant>
+                new List<MpEventParticipant>
                 {
-                    new EventParticipant(),
-                    new EventParticipant()
+                    new MpEventParticipant(),
+                    new MpEventParticipant()
                 }
             };
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);
@@ -259,7 +259,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetEventReservation()
         {
-            var e = new Event
+            var e = new MpEvent
             {
                 EventTitle = "title",
                 CongregationId = 12,
@@ -269,9 +269,9 @@ namespace crds_angular.test.Services
             };
             _eventService.Setup(mocked => mocked.GetEvent(123)).Returns(e);
 
-            var r = new List<RoomReservationDto>
+            var r = new List<MpRoomReservationDto>
             {
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = false,
                     Hidden = false,
@@ -284,7 +284,7 @@ namespace crds_angular.test.Services
                     Name = "name 1",
                     Label = "label 1"
                 },
-                new RoomReservationDto
+                new MpRoomReservationDto
                 {
                     Cancelled = true,
                     Hidden = true,
@@ -300,17 +300,17 @@ namespace crds_angular.test.Services
             };
             _roomService.Setup(mocked => mocked.GetRoomReservations(123)).Returns(r);
 
-            var q = new List<List<EquipmentReservationDto>>()
+            var q = new List<List<MpEquipmentReservationDto>>()
             {
-                 new List<EquipmentReservationDto>{
-                    new EquipmentReservationDto
+                 new List<MpEquipmentReservationDto>{
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = false,
                         EquipmentId = 1,
                         EventRoomId = 11,
                         QuantityRequested = 111
                     },
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = true,
                         EquipmentId = 2,
@@ -319,16 +319,16 @@ namespace crds_angular.test.Services
                     }
 
                 },
-                new List<EquipmentReservationDto>
+                new List<MpEquipmentReservationDto>
                 {
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = false,
                         EquipmentId = 3,
                         EventRoomId = 33,
                         QuantityRequested = 333
                     },
-                    new EquipmentReservationDto
+                    new MpEquipmentReservationDto
                     {
                         Cancelled = true,
                         EquipmentId = 4,

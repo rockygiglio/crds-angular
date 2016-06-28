@@ -10,39 +10,38 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Opportunities;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using Participant = MinistryPlatform.Models.Participant;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
     public class ServeServiceTest
     {
-        private Mock<IContactRelationshipService> _contactRelationshipService;
-        private Mock<IContactService> _contactService;
-        private Mock<IOpportunityService> _opportunityService;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<IOpportunityRepository> _opportunityService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
-        private Mock<IEventService> _eventService;
-        private Mock<IParticipantService> _participantService;
-        private Mock<IGroupParticipantService> _groupParticipantService;
-        private Mock<IGroupService> _groupService;
-        private Mock<ICommunicationService> _communicationService;
+        private Mock<IEventRepository> _eventService;
+        private Mock<IParticipantRepository> _participantService;
+        private Mock<IGroupParticipantRepository> _groupParticipantService;
+        private Mock<IGroupRepository> _groupService;
+        private Mock<ICommunicationRepository> _communicationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<IResponseService> _responseService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IResponseRepository> _responseService;
 
         private ServeService _fixture;
 
-        private MessageTemplate mockRsvpChangedTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpChangedTemplate = new MpMessageTemplate
         {
             Body =
                 "This message is to confirm that you have changed your rsvp from [Previous_Opportunity_Name] to [Opportunity_Name]." +
@@ -51,7 +50,7 @@ namespace crds_angular.test.Services
             Subject = "Serving RSVP Confirmation"
         };
 
-        private MessageTemplate mockRsvpNoTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpNoTemplate = new MpMessageTemplate
         {
             Body =
                 "Thank you for notifying us that you cannot serve with [Group_Name] from [Start_Date] to [End_Date]." +
@@ -60,7 +59,7 @@ namespace crds_angular.test.Services
             Subject = "Serving RSVP Confirmation"
         };
 
-        private MessageTemplate mockRsvpYesTemplate = new MessageTemplate
+        private MpMessageTemplate mockRsvpYesTemplate = new MpMessageTemplate
         {
             Body = "Thank you for signing up to serve with [Opportunity_Name] from [Start_Date] to [End_Date]!" +
                    "On the day you are serving, please report to [Room] at [Shift_Start] and plan on staying until [Shift_End]." +
@@ -73,27 +72,27 @@ namespace crds_angular.test.Services
         private readonly int rsvpNoId = 11299;
         private readonly int rsvpChangeId = 11366;
 
-        private Opportunity fakeOpportunity = new Opportunity();
-        private MyContact fakeGroupContact = new MyContact();
-        private MyContact fakeMyContact = new MyContact();
+        private MpOpportunity fakeOpportunity = new MpOpportunity();
+        private MpMyContact fakeGroupContact = new MpMyContact();
+        private MpMyContact fakeMyContact = new MpMyContact();
 
         [SetUp]
         public void SetUp()
         {
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
-            _contactService = new Mock<IContactService>();
-            _opportunityService = new Mock<IOpportunityService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
+            _contactService = new Mock<IContactRepository>();
+            _opportunityService = new Mock<IOpportunityRepository>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _personService = new Mock<crds_angular.Services.Interfaces.IPersonService>();
-            _eventService = new Mock<IEventService>();
+            _eventService = new Mock<IEventRepository>();
             _serveService = new Mock<IServeService>();
-            _participantService = new Mock<IParticipantService>();
-            _groupParticipantService = new Mock<IGroupParticipantService>();
-            _groupService = new Mock<IGroupService>();
-            _communicationService = new Mock<ICommunicationService>();
+            _participantService = new Mock<IParticipantRepository>();
+            _groupParticipantService = new Mock<IGroupParticipantRepository>();
+            _groupService = new Mock<IGroupRepository>();
+            _communicationService = new Mock<ICommunicationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _apiUserService = new Mock<IApiUserService>();
-            _responseService = new Mock<IResponseService>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _responseService = new Mock<IResponseRepository>();
 
             fakeOpportunity.EventTypeId = 3;
             fakeOpportunity.GroupContactId = 23;
@@ -120,7 +119,7 @@ namespace crds_angular.test.Services
 
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
-            var myContact = new MyContact
+            var myContact = new MpMyContact
             {
                 Contact_ID = 123456,
                 Email_Address = "contact@email.com",
@@ -225,9 +224,9 @@ namespace crds_angular.test.Services
                     {"Shift_End", fakeServeReminder.ShiftEnd}
                  };
 
-                var contact = new Contact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
-                var toContact = new Contact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
-                var fakeCommunication = new Communication()
+                var contact = new MpContact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
+                var toContact = new MpContact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
+                var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
                     DomainId = 1,
@@ -237,7 +236,7 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = defaultEmailTemplate,
-                    ToContacts = new List<Contact>() {toContact}
+                    ToContacts = new List<MpContact>() {toContact}
                 };
 
                 _contactService.Setup(m => m.GetContactById(fakeServeReminder.SignedupContactId)).Returns(fakeMyContact);
@@ -287,12 +286,12 @@ namespace crds_angular.test.Services
             Assert.AreEqual(1, servingTime.ServingTeams.Count);
         }
 
-        private static List<GroupServingParticipant> MockGroupServingParticipants()
+        private static List<MpGroupServingParticipant> MockGroupServingParticipants()
         {
             var startDate = DateTime.Today;
-            var servingParticipants = new List<GroupServingParticipant>
+            var servingParticipants = new List<MpGroupServingParticipant>
             {
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -319,7 +318,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -346,7 +345,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -373,7 +372,7 @@ namespace crds_angular.test.Services
                     ParticipantNickname = "Servy",
                     Rsvp = true
                 },
-                new GroupServingParticipant
+                new MpGroupServingParticipant
                 {
                     ContactId = 2,
                     DomainId = 1,
@@ -404,13 +403,13 @@ namespace crds_angular.test.Services
             return servingParticipants;
         }
 
-        private static List<ContactRelationship> MockContactRelationships()
+        private static List<MpContactRelationship> MockContactRelationships()
         {
-            var mockRelationships = new List<ContactRelationship>();
-            var mockRelationship1 = new ContactRelationship();
+            var mockRelationships = new List<MpContactRelationship>();
+            var mockRelationship1 = new MpContactRelationship();
             mockRelationship1.Contact_Id = 1111111;
             mockRelationship1.Participant_Id = 1;
-            var mockRelationship2 = new ContactRelationship();
+            var mockRelationship2 = new MpContactRelationship();
             mockRelationship2.Contact_Id = 123456;
             mockRelationship2.Participant_Id = 2;
             mockRelationships.Add(mockRelationship1);
@@ -419,13 +418,13 @@ namespace crds_angular.test.Services
         }
 
         [Test, TestCaseSource("OpportunityCapacityCases")]
-        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<Response> mockResponses,
+        public void OpportunityCapacityHasMinHasMax(int? min, int? max, List<MinistryPlatform.Translation.Models.MpResponse> mockResponses,
             Capacity expectedCapacity)
         {
             const int opportunityId = 9999;
             const int eventId = 1000;
 
-            var opportunity = new Opportunity();
+            var opportunity = new MpOpportunity();
             opportunity.MaximumNeeded = max;
             opportunity.MinimumNeeded = min;
             opportunity.OpportunityId = opportunityId;
@@ -450,7 +449,7 @@ namespace crds_angular.test.Services
         {
             new object[]
             {
-                10, 20, new List<Response>(),
+                10, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 10,
@@ -464,7 +463,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                10, null, new List<Response>(),
+                10, null, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 10,
@@ -478,7 +477,7 @@ namespace crds_angular.test.Services
             },
             new object[]
             {
-                null, 20, new List<Response>(),
+                null, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
                     Available = 20,
@@ -522,11 +521,11 @@ namespace crds_angular.test.Services
             const int opportunityId = 9999;
             const int eventId = 1000;
 
-            var opportunity = new Opportunity();
+            var opportunity = new MpOpportunity();
             opportunity.MaximumNeeded = null;
             opportunity.MinimumNeeded = null;
             opportunity.OpportunityId = opportunityId;
-            opportunity.Responses = new List<Response>();
+            opportunity.Responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
 
             _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
                 .Returns(opportunity.Responses);
@@ -556,14 +555,14 @@ namespace crds_angular.test.Services
             _opportunityService.Setup(m => m.DeleteResponseToOpportunities(47, 1, 1)).Returns(1);
 
             // The previous Opportunity
-            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new Opportunity()
+            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new MpOpportunity()
             {
                 OpportunityId = 1,
                 OpportunityName = "Previous Opportunity"
             });
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -595,15 +594,15 @@ namespace crds_angular.test.Services
 
             _communicationService.Verify(m => m.GetTemplate(rsvpChangeId));
 
-            var comm = new Communication
+            var comm = new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = mockRsvpChangedTemplate.Body,
                 EmailSubject = mockRsvpChangedTemplate.Subject,
-                FromContact = new Contact {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address},
-                ReplyToContact = new Contact { ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address },
-                ToContacts = new List<Contact> {new Contact{ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address}}
+                FromContact = new MpContact {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address},
+                ReplyToContact = new MpContact { ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address}}
             };
 
             var mergeData = new Dictionary<string, object>
@@ -620,8 +619,8 @@ namespace crds_angular.test.Services
                 {"Previous_Opportunity_Name", It.IsAny<string>()}
             };
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<Communication>(), false));
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<Communication>(),false));
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(),false));
         }
 
         [Test]
@@ -637,7 +636,7 @@ namespace crds_angular.test.Services
             SetUpRSVPMocks(contactId, eventTypeId, opportunityId, signUp, SetupMockEvents());
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -671,7 +670,7 @@ namespace crds_angular.test.Services
                 (m => m.RespondToOpportunity(47, opportunityId, It.IsAny<string>(), It.IsAny<int>(), signUp)),
                 Times.Exactly(5));
 
-            Opportunity o = new Opportunity();
+            MpOpportunity o = new MpOpportunity();
             o.OpportunityName = "Whatever";
             o.OpportunityId = opportunityId;
             o.ShiftStart = new TimeSpan();
@@ -703,9 +702,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111                
             };
 
-            var otherResponses = new List<MPResponse>
+            var otherResponses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MPResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -717,12 +716,12 @@ namespace crds_angular.test.Services
             };
 
             // no responses for Saturday...
-            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MPResponse>());
-            
+            _opportunityService.Setup(m => m.GetContactsOpportunityResponseByGroupAndEvent(groupId, eventId)).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
+
             // there is no response for the first participant for Saturday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants.First().ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants.First().ParticipantId, saturday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             // there is a response for the first participant for Sunday...
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
@@ -730,14 +729,14 @@ namespace crds_angular.test.Services
             )).Returns(otherResponses);
 
             // there is not a response for the second participant for Saturday
-             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, saturday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+            _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, saturday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
             
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 1);
@@ -765,9 +764,9 @@ namespace crds_angular.test.Services
                 PrimaryContactId = 11111
             };
 
-            var responses = new List<MPResponse>
+            var responses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MPResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants[0].ContactId,
                     Event_ID = eventId,
@@ -776,7 +775,7 @@ namespace crds_angular.test.Services
                     Response_Date = DateTime.Now,
                     Response_Result_ID = 2
                 },
-                new MPResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants[1].ContactId,
                     Event_ID = eventId,
@@ -787,9 +786,9 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var otherResponses = new List<MPResponse>
+            var otherResponses = new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>
             {
-                new MPResponse()
+                new MinistryPlatform.Translation.Models.Opportunities.MpResponse()
                 {
                     Contact_ID = groupParticipants.First().ContactId,
                     Event_ID = eventId,
@@ -810,15 +809,15 @@ namespace crds_angular.test.Services
 
             // there is not a response for the second participant for Sunday
             _opportunityService.Setup(m => m.SearchResponseByGroupAndEvent(
-                String.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
-            )).Returns(new List<MPResponse>());
+                string.Format(",,{0},,,,{1}", groupParticipants[1].ParticipantId, sunday.ToMinistryPlatformSearchFormat())
+            )).Returns(new List<MinistryPlatform.Translation.Models.Opportunities.MpResponse>());
 
             var potentialVolunteers = _fixture.PotentialVolunteers(groupId, evt, groupParticipants);
             Assert.AreEqual(potentialVolunteers.Count, 0);
         }
 
         [Test, TestCaseSource("AllMockEvents")]
-        public void RespondToServeOpportunityYesForEveryOtherWeek(List<Event> mockEvents)
+        public void RespondToServeOpportunityYesForEveryOtherWeek(List<MpEvent> mockEvents)
         {
             const int contactId = 8;
             const int opportunityId = 12;
@@ -834,7 +833,7 @@ namespace crds_angular.test.Services
             _opportunityService.Setup(m => m.GetOpportunityById(opportunityId, It.IsAny<string>()))
                 .Returns(fakeOpportunity);
 
-            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new Opportunity()
+            _opportunityService.Setup(m => m.GetOpportunityById(1, It.IsAny<string>())).Returns(new MpOpportunity()
             {
                 OpportunityId = 1,
                 OpportunityName = "Previous Opportunity",
@@ -842,7 +841,7 @@ namespace crds_angular.test.Services
             });
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MyContact()
+            _contactService.Setup(m => m.GetContactById(1234)).Returns(new MpMyContact()
             {
                 Email_Address = "gmail@google.com",
                 Contact_ID = 1234567890
@@ -890,31 +889,31 @@ namespace crds_angular.test.Services
             new[] {SetupWeekNotInSequentialOrderMockEvents()}
         };
 
-        private static List<Event> SetupMockEvents()
+        private static List<MpEvent> SetupMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
@@ -922,11 +921,11 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<GroupParticipant> SetupGroupParticipants()
+        private static List<MpGroupParticipant> SetupGroupParticipants()
         {
-            return new List<GroupParticipant>
+            return new List<MpGroupParticipant>
             {
-                new GroupParticipant()
+                new MpGroupParticipant()
                 {
                     ContactId = 1234,
                     GroupRoleId = 1,
@@ -935,7 +934,7 @@ namespace crds_angular.test.Services
                     NickName = "Matt",
                     ParticipantId = 4321
                 },
-                new GroupParticipant()
+                new MpGroupParticipant()
                 {
                     ContactId = 2345,
                     GroupRoleId = 1,
@@ -947,36 +946,36 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMissingInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMissingInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 29)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 6,
                     EventStartDate = new DateTime(2015, 2, 5)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 2, 12)
@@ -984,26 +983,26 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMissingNotInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMissingNotInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
@@ -1011,31 +1010,31 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekMutipleMissingInMySeriesMockEvents()
+        private static List<MpEvent> SetupWeekMutipleMissingInMySeriesMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 6,
                     EventStartDate = new DateTime(2015, 2, 5)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 2, 12)
@@ -1043,31 +1042,31 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static List<Event> SetupWeekNotInSequentialOrderMockEvents()
+        private static List<MpEvent> SetupWeekNotInSequentialOrderMockEvents()
         {
-            return new List<Event>
+            return new List<MpEvent>
             {
-                new Event
+                new MpEvent
                 {
                     EventId = 2,
                     EventStartDate = new DateTime(2015, 1, 8)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 5,
                     EventStartDate = new DateTime(2015, 1, 29)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 4,
                     EventStartDate = new DateTime(2015, 1, 22)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 1,
                     EventStartDate = new DateTime(2015, 1, 1)
                 },
-                new Event
+                new MpEvent
                 {
                     EventId = 3,
                     EventStartDate = new DateTime(2015, 1, 15)
@@ -1076,7 +1075,7 @@ namespace crds_angular.test.Services
         }
 
         private void SetUpRSVPMocks(int contactId, int eventTypeId, int opportunityId, bool signUp,
-            List<Event> mockEvents)
+            List<MpEvent> mockEvents)
         {
             var mockParticipant = new Participant
             {
@@ -1100,22 +1099,22 @@ namespace crds_angular.test.Services
             }
         }
         
-        private static List<Response> MockTwentyResponses()
+        private static List<MinistryPlatform.Translation.Models.MpResponse> MockTwentyResponses()
         {
-            var responses = new List<Response>();
+            var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new Response {Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
             }
             return responses;
         }
 
-        private static List<Response> MockFifteenResponses()
+        private static List<MinistryPlatform.Translation.Models.MpResponse> MockFifteenResponses()
         {
-            var responses = new List<Response>();
+            var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new Response {Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
             }
             return responses;
         }

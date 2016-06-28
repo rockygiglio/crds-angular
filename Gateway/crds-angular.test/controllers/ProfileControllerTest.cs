@@ -10,9 +10,9 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
@@ -26,12 +26,12 @@ namespace crds_angular.test.controllers
 
         private Mock<crds_angular.Services.Interfaces.IPersonService> _personServiceMock;
         private Mock<IServeService> _serveServiceMock;
-        private Mock<IAuthenticationService> _authenticationServiceMock;
+        private Mock<IAuthenticationRepository> _authenticationServiceMock;
         private Mock<crds_angular.Services.Interfaces.IDonorService> _donorService;
         private Mock<IUserImpersonationService> _impersonationService;
-        private Mock<IAuthenticationService> _authenticationService;
-        private Mock<IUserService> _userService;
-        private Mock<IContactRelationshipService> _contactRelationshipService;
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<IUserRepository> _userService;
+        private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IConfigurationWrapper> _config;
 
         private string _authType;
@@ -46,15 +46,15 @@ namespace crds_angular.test.controllers
             _serveServiceMock = new Mock<IServeService>();
             _donorService = new Mock<IDonorService>();
             _impersonationService = new Mock<IUserImpersonationService>();
-            _authenticationService = new Mock<IAuthenticationService>();
-            _userService = new Mock<IUserService>();
-            _contactRelationshipService = new Mock<IContactRelationshipService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
+            _userService = new Mock<IUserRepository>();
+            _contactRelationshipService = new Mock<IContactRelationshipRepository>();
             _config = new Mock<IConfigurationWrapper>();
 
             _config.Setup(mocked => mocked.GetConfigValue("AdminGetProfileRoles")).Returns("123,456");
 
             _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object);
-            _authenticationServiceMock = new Mock<IAuthenticationService>();
+            _authenticationServiceMock = new Mock<IAuthenticationRepository>();
 
             _authType = "auth_type";
             _authToken = "auth_token";
@@ -69,12 +69,12 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestAdminGetProfileUnauthorized()
         {
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 UserRecordId = 987
             };
             _userService.Setup(mocked => mocked.GetByAuthenticationToken(_authType + " " + _authToken)).Returns(user);
-            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns((List<RoleDto>) null);
+            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns((List<MpRoleDto>) null);
 
             var result = _fixture.AdminGetProfile(13579);
             Assert.IsNotNull(result);
@@ -86,18 +86,18 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestAdminGetProfile()
         {
-            var user = new MinistryPlatformUser
+            var user = new MpUser
             {
                 UserRecordId = 987
             };
             _userService.Setup(mocked => mocked.GetByAuthenticationToken(_authType + " " + _authToken)).Returns(user);
-            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns(new List<RoleDto>
+            _userService.Setup(mocked => mocked.GetUserRoles(987)).Returns(new List<MpRoleDto>
             {
-                new RoleDto
+                new MpRoleDto
                 {
                     Id = 765
                 },
-                new RoleDto
+                new MpRoleDto
                 {
                     Id = 456
                 }
@@ -180,9 +180,9 @@ namespace crds_angular.test.controllers
             };
 
 
-            var familyList = new List<ContactRelationship>
+            var familyList = new List<MpContactRelationship>
             {
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = heather.Age,
                     Contact_Id = heather.ContactId,
@@ -193,7 +193,7 @@ namespace crds_angular.test.controllers
                     Email_Address = heather.Email,
                     HighSchoolGraduationYear = 0
                 },
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = 12,
                     Contact_Id = 13579,
@@ -216,9 +216,9 @@ namespace crds_angular.test.controllers
         [Test]
         public void ShouldNotReturnSpouse()
         {
-           var familyList = new List<ContactRelationship>
+           var familyList = new List<MpContactRelationship>
             {
-                new ContactRelationship()
+                new MpContactRelationship()
                 {
                     Age = 12,
                     Contact_Id = 13579,
