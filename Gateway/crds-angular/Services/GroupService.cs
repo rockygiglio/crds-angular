@@ -8,14 +8,14 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Services.Interfaces;
-using Attribute = MinistryPlatform.Models.Attribute;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
-using IAttributeService = MinistryPlatform.Translation.Services.Interfaces.IAttributeService;
-using IEventService = MinistryPlatform.Translation.Services.Interfaces.IEventService;
-using IGroupService = MinistryPlatform.Translation.Services.Interfaces.IGroupService;
+using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
+using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 
 namespace crds_angular.Services
@@ -24,17 +24,17 @@ namespace crds_angular.Services
     {
         private readonly ILog logger = LogManager.GetLogger(typeof (GroupService));
 
-        private readonly IGroupService _mpGroupService;
+        private readonly IGroupRepository _mpGroupService;
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly IEventService _eventService;
-        private readonly IContactRelationshipService _contactRelationshipService;
+        private readonly IEventRepository _eventService;
+        private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly IServeService _serveService;
-        private readonly IParticipantService _participantService;
-        private readonly ICommunicationService _communicationService;
-        private readonly IContactService _contactService;
+        private readonly IParticipantRepository _participantService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IAttributeService _attributeService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IAttributeRepository _attributeService;
 
 
         /// <summary>
@@ -45,17 +45,17 @@ namespace crds_angular.Services
         private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
 
-        public GroupService(IGroupService mpGroupService,
+        public GroupService(IGroupRepository mpGroupService,
                             IConfigurationWrapper configurationWrapper,
-                            IEventService eventService,
-                            IContactRelationshipService contactRelationshipService,
+                            IEventRepository eventService,
+                            IContactRelationshipRepository contactRelationshipService,
                             IServeService serveService,
-                            IParticipantService participantService,
-                            ICommunicationService communicationService,
-                            IContactService contactService, 
+                            IParticipantRepository participantService,
+                            ICommunicationRepository communicationService,
+                            IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
-                            IApiUserService apiUserService, 
-                            IAttributeService attributeService)
+                            IApiUserRepository apiUserService, 
+                            IAttributeRepository attributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -79,10 +79,10 @@ namespace crds_angular.Services
         {
             try
             {
-                var mpGroup = Mapper.Map<Group>(group);
+                var mpGroup = Mapper.Map<MpGroup>(group);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
-                var configuration = ObjectAttributeConfigurationFactory.Group();
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)
@@ -97,7 +97,7 @@ namespace crds_angular.Services
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
-            Group group;
+            MpGroup group;
             try
             {
                 group = _mpGroupService.getGroupDetails(groupId);
@@ -126,7 +126,7 @@ namespace crds_angular.Services
                                                                participant.childCareNeeded,
                                                                DateTime.Now);
 
-                    var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
+                    var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
                     _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
 
                     if (participant.capacityNeeded > 0)
@@ -164,7 +164,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void checkSpaceRemaining(List<ParticipantSignup> participants, Group group)
+        private void checkSpaceRemaining(List<ParticipantSignup> participants, MpGroup group)
         {
             var numParticipantsToAdd = participants.Count;
             var spaceRemaining = group.TargetSize - group.Participants.Count;
@@ -174,7 +174,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void decrementCapacity(int capacityNeeded, Group group)
+        private void decrementCapacity(int capacityNeeded, MpGroup group)
         {
             group.RemainingCapacity = group.RemainingCapacity - capacityNeeded;
             logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
@@ -184,7 +184,7 @@ namespace crds_angular.Services
         public List<Event> GetGroupEvents(int groupId, string token)
         {
             var eventTypes = _mpGroupService.GetEventTypesForGroup(groupId, token);
-            var events = new List<MinistryPlatform.Models.Event>();
+            var events = new List<MinistryPlatform.Translation.Models.MpEvent>();
             foreach (var eventType in eventTypes.Where(eventType => !string.IsNullOrEmpty(eventType)))
             {
                 events.AddRange(_eventService.GetEvents(eventType, token));
@@ -214,7 +214,7 @@ namespace crds_angular.Services
             try
             {
                 var groupMembers = _mpGroupService.getGroupDetails(groupId).Participants.Select(p =>
-                                                                                                    new GroupParticipant
+                                                                                                    new MpGroupParticipant
                                                                                                     {
                                                                                                         ContactId = p.ContactId,
                                                                                                         LastName = p.LastName,
@@ -234,7 +234,7 @@ namespace crds_angular.Services
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
         {
             int participantId = participant.ParticipantId;
-            Group g = _mpGroupService.getGroupDetails(groupId);
+            MpGroup g = _mpGroupService.getGroupDetails(groupId);
 
             var signupRelations = _mpGroupService.GetGroupSignupRelations(g.GroupType);
 
@@ -242,7 +242,7 @@ namespace crds_angular.Services
 
             var events = _mpGroupService.getAllEventsForGroup(groupId);
 
-            ContactRelationship[] familyToReturn = null;
+            MpContactRelationship[] familyToReturn = null;
 
             if (currRelationships != null)
             {
@@ -251,7 +251,7 @@ namespace crds_angular.Services
             }
 
             var apiToken = _apiUserService.GetToken();
-            var configuration = ObjectAttributeConfigurationFactory.Group();
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, groupId, configuration);
 
             var detail = new GroupDTO();
@@ -265,7 +265,7 @@ namespace crds_angular.Services
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
                 if (events != null)
                 {
-                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Models.Event, crds_angular.Models.Crossroads.Events.Event>).ToList();
+                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Translation.Models.MpEvent, crds_angular.Models.Crossroads.Events.Event>).ToList();
                 }
                 //the first instance of family must always be the logged in user
                 var fam = new SignUpFamilyMembers
@@ -308,9 +308,9 @@ namespace crds_angular.Services
                 return null;
             }
 
-            var groupDetail = groupsByType.Select(Mapper.Map<Group, GroupDTO>).ToList();
+            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.Group();
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
             var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
@@ -349,22 +349,22 @@ namespace crds_angular.Services
         }
 
 
-        private Communication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
+        private MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
-            return new Communication
+            return new MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new Contact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
-                ReplyToContact = new Contact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
-                ToContacts = new List<Contact> { new Contact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
+                FromContact = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new MpContact {ContactId = DefaultContactEmailId, EmailAddress = replyTo.Email_Address },
+                ToContacts = new List<MpContact> { new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = communication.emailAddress } },
                 MergeData = mergeData
             };
         }
@@ -387,9 +387,9 @@ namespace crds_angular.Services
             {
                 return null;
             }
-            var participants = groupParticipants.Select(Mapper.Map<GroupParticipant, GroupParticipantDTO>).ToList();
+            var participants = groupParticipants.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
 
-            var configuration = ObjectAttributeConfigurationFactory.GroupParticipant();
+            var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
             var mpAttributes = _attributeService.GetAttributes(null);

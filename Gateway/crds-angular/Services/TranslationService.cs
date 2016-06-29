@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.Collections.Generic;
 using System;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Repositories;
 using System.Configuration;
 using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.PlatformService;
@@ -56,7 +56,7 @@ namespace crds_angular.Services
         
         public static Dictionary<string, object> Login(string username, string password)
         {
-            return (AuthenticationService.authenticate(username, password));
+            return (AuthenticationRepository.authenticate(username, password));
         }
 
         public static dynamic DecodeJson(string json)

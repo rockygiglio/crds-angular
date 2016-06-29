@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using Address = crds_angular.Models.MP.Address;
 
@@ -121,7 +121,7 @@ namespace crds_angular.Models.Crossroads.Profile
         public string State { get; set; }
 
         [JsonProperty(PropertyName = "householdMembers")]
-        public List<HouseholdMember> HouseholdMembers { get; set; }
+        public List<MpHouseholdMember> HouseholdMembers { get; set; }
 
         [JsonProperty(PropertyName = "attributeTypes")]
         public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
@@ -135,9 +135,9 @@ namespace crds_angular.Models.Crossroads.Profile
         [JsonProperty(PropertyName = "attendanceStartDate")]
         public DateTime? AttendanceStartDate { get; set; }
 
-        public MyContact GetContact()
+        public MpMyContact GetContact()
         {
-            return new MyContact
+            return new MpMyContact
             {
                 Contact_ID = ContactId,
                 Email_Address = EmailAddress,
@@ -170,9 +170,9 @@ namespace crds_angular.Models.Crossroads.Profile
             };
         }
 
-        public Household GetHousehold()
+        public MpHousehold GetHousehold()
         {
-            return new Household
+            return new MpHousehold
             {
                 Household_ID = HouseholdId,
                 Home_Phone = HomePhone,

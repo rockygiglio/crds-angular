@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -20,29 +20,29 @@ namespace MinistryPlatform.Translation.Test.Services
         private const int _groupsParticipantsSubPageId = 88;
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<IParticipantService> _participantService;
-        private Mock<IApiUserService> _apiUserService;
+        private Mock<IParticipantRepository> _participantService;
+        private Mock<IApiUserRepository> _apiUserService;
 
-        private OpportunityServiceImpl _fixture;
+        private OpportunityRepository _fixture;
 
         [SetUp]
         public void SetUp()
         {
             var now = DateTime.Now;
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-            _participantService = new Mock<IParticipantService>();
-            _apiUserService = new Mock<IApiUserService>();
+            _participantService = new Mock<IParticipantRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
 
-            _fixture = new OpportunityServiceImpl(_ministryPlatformService.Object,
+            _fixture = new OpportunityRepository(_ministryPlatformService.Object,
                                                   _authenticationService.Object,
                                                   _configWrapper.Object,
                                                   _participantService.Object,
@@ -166,7 +166,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.VerifyAll();
 
             Assert.IsNotNull(response);
-            Assert.IsInstanceOf<Response>(response);
+            Assert.IsInstanceOf<MpResponse>((object)response);
             Assert.AreEqual(mockResponse[0]["dp_RecordID"], response.Response_ID);
         }
 
@@ -305,7 +305,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var token = It.IsAny<string>();
             _ministryPlatformService.Setup(m => m.CreateRecord(pageKey, p1, token, true)).Returns(27);
 
-            var dto = new RespondToOpportunityDto {OpportunityId = 1, Participants = new List<int> {100, 200, 300}};
+            var dto = new MpRespondToOpportunityDto {OpportunityId = 1, Participants = new List<int> {100, 200, 300}};
             Assert.DoesNotThrow(() => _fixture.RespondToOpportunity(dto));
 
             _ministryPlatformService.Verify(

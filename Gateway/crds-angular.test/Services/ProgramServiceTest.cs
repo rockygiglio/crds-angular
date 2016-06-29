@@ -4,9 +4,9 @@ using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices=MinistryPlatform.Translation.Repositories.Interfaces;
 using NUnit.Framework;
 
 namespace crds_angular.test.Services
@@ -14,12 +14,12 @@ namespace crds_angular.test.Services
     public class ProgramServiceTest
     {
         private ProgramService _fixture;
-        private Mock<MPServices.IProgramService> _mpProgramService;
+        private Mock<MPServices.IProgramRepository> _mpProgramService;
 
         [SetUp]
         public void SetUp()
         {
-            _mpProgramService = new Mock<MPServices.IProgramService>();
+            _mpProgramService = new Mock<MPServices.IProgramRepository>();
             _fixture = new ProgramService(_mpProgramService.Object);
 
             AutoMapperConfig.RegisterMappings();
@@ -28,16 +28,16 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetOnlineGivingProgramsForProgramType()
         {
-            var programs = new List<Program>
+            var programs = new List<MpProgram>
             {
-                new Program
+                new MpProgram
                 {
                     CommunicationTemplateId = 1,
                     Name = "Program 1",
                     ProgramId = 2,
                     ProgramType = 3
                 },
-                new Program
+                new MpProgram
                 {
                     CommunicationTemplateId = 4,
                     Name = "Program 2",
@@ -65,16 +65,16 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetOnlineGivingPrograms()
         {
-            var programs = new List<Program>
+            var programs = new List<MpProgram>
             {
-                new Program
+                new MpProgram
                 {
                     CommunicationTemplateId = 1,
                     Name = "Program 1",
                     ProgramId = 2,
                     ProgramType = 3
                 },
-                new Program
+                new MpProgram
                 {
                     CommunicationTemplateId = 4,
                     Name = "Program 2",
@@ -102,7 +102,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetProgramByIdReturnsNull()
         {
-            _mpProgramService.Setup(mocked => mocked.GetProgramById(3)).Returns((Program) null);
+            _mpProgramService.Setup(mocked => mocked.GetProgramById(3)).Returns((MpProgram) null);
 
             var result = _fixture.GetProgramById(3);
             _mpProgramService.VerifyAll();
@@ -112,7 +112,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetProgramById()
         {
-            var program = new Program
+            var program = new MpProgram
             {
                 CommunicationTemplateId = 1,
                 Name = "Program 1",

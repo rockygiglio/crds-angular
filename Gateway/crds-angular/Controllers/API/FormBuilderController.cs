@@ -6,7 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 
 

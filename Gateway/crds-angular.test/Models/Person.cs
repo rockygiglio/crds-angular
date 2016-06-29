@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.test.Models
 {
@@ -12,7 +12,7 @@ namespace crds_angular.test.Models
         public void ShouldReturnContactType()
         {
             var contact = _person.GetContact();
-            Assert.That(contact, Is.TypeOf<MyContact>());
+            Assert.That(contact, Is.TypeOf<MpMyContact>());
             Assert.AreEqual(_person.EmailAddress, contact.Email_Address);
 
         }
@@ -21,7 +21,7 @@ namespace crds_angular.test.Models
         public void ShouldReturnHouseholdType()
         {
             var household = _person.GetHousehold();
-            Assert.That(household, Is.TypeOf<MinistryPlatform.Models.Household>());
+            Assert.That(household, Is.TypeOf<MpHousehold>());
             Assert.AreEqual(_person.CongregationId, household.Congregation_ID);
 
         }

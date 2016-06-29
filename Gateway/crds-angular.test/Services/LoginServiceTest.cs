@@ -3,7 +3,7 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -16,22 +16,22 @@ namespace crds_angular.test.Services
 
         private Mock<ILog> _logger;
 
-        private Mock<MPInterfaces.IAuthenticationService> _authenticationService;
+        private Mock<MPInterfaces.IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<MPInterfaces.IContactService> _contactService;
+        private Mock<MPInterfaces.IContactRepository> _contactService;
         private Mock<IEmailCommunication> _emailCommunication;
-        private Mock<MPInterfaces.IUserService> _userService;
+        private Mock<MPInterfaces.IUserRepository> _userService;
         
 
         [SetUp]
         public void SetUp()
         {
             _logger = new Mock<ILog>();
-            _authenticationService = new Mock<MPInterfaces.IAuthenticationService>();
+            _authenticationService = new Mock<MPInterfaces.IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _contactService = new Mock<MPInterfaces.IContactService>();
+            _contactService = new Mock<MPInterfaces.IContactRepository>();
             _emailCommunication = new Mock<IEmailCommunication>();
-            _userService = new Mock<MPInterfaces.IUserService>();
+            _userService = new Mock<MPInterfaces.IUserRepository>();
             
             _loginService = new LoginService(_authenticationService.Object, _configurationWrapper.Object, _contactService.Object, _emailCommunication.Object, _userService.Object);
 

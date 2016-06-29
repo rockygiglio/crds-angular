@@ -7,9 +7,9 @@ using crds_angular.Models.MP;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Services;
-using MinistryPlatform.Translation.Services.Interfaces;
-using ILookupService = MinistryPlatform.Translation.Services.Interfaces.ILookupService;
+using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Repositories.Interfaces;
+using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {
@@ -18,22 +18,22 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (AccountService));
 
         private readonly IConfigurationWrapper _configurationWrapper;
-        private readonly ICommunicationService _communicationService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ICommunicationRepository _communicationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionsService;
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ILookupService _lookupService;
-        private readonly IApiUserService _apiUserService;
-        private readonly IParticipantService _participantService;
+        private readonly ILookupRepository _lookupService;
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IParticipantRepository _participantService;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
-            ICommunicationService communicationService, 
-            IAuthenticationService authenticationService, 
+            ICommunicationRepository communicationService, 
+            IAuthenticationRepository authenticationService, 
             ISubscriptionsService subscriptionService, 
             IMinistryPlatformService ministryPlatformService, 
-            ILookupService lookupService,
-            IApiUserService apiUserService,
-            IParticipantService participantService)
+            ILookupRepository lookupService,
+            IApiUserRepository apiUserService,
+            IParticipantRepository participantService)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;

@@ -8,8 +8,8 @@ using crds_angular.Services.Interfaces;
 using crds_angular.Util;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
-using MPInterfaces = MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using RestSharp;
@@ -141,10 +141,10 @@ namespace crds_angular.test.Services
             Assert.AreEqual(newResponse.ErrorInSignupProcess, response.ErrorInSignupProcess);
         }
 
-        private List<BulkEmailPublication> GetPublications()
+        private List<MpBulkEmailPublication> GetPublications()
         {
-            List<BulkEmailPublication> publications = new List<BulkEmailPublication>();
-            publications.Add(new BulkEmailPublication
+            List<MpBulkEmailPublication> publications = new List<MpBulkEmailPublication>();
+            publications.Add(new MpBulkEmailPublication
             {
                 PublicationId = 1,
                 Title = "test",

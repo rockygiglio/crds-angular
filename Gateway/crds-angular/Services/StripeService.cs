@@ -12,7 +12,7 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using RestSharp.Extensions;
 
 namespace crds_angular.Services
@@ -388,7 +388,7 @@ namespace crds_angular.Services
             return refund;
         }
 
-        public StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, ContactDonor contactDonor)
+        public StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor)
         {
             var request = new RestRequest("plans", Method.POST);
 
@@ -396,9 +396,9 @@ namespace crds_angular.Services
 
             request.AddParameter("amount", (int)(recurringGiftDto.PlanAmount * Constants.StripeDecimalConversionValue));
             request.AddParameter("interval", interval);
-            request.AddParameter("name", string.Format("Donor ID #{0} {1}ly", contactDonor.DonorId, interval));
+            request.AddParameter("name", string.Format("Donor ID #{0} {1}ly", mpContactDonor.DonorId, interval));
             request.AddParameter("currency", "usd");
-            request.AddParameter("id", contactDonor.DonorId + " " + DateTime.Now);
+            request.AddParameter("id", mpContactDonor.DonorId + " " + DateTime.Now);
 
             var response = _stripeRestClient.Execute<StripePlan>(request);
             CheckStripeResponse("Invalid plan creation request", response);

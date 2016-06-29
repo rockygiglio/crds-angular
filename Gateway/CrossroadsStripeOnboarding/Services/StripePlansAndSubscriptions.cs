@@ -5,8 +5,8 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using CrossroadsStripeOnboarding.Models;
-using MinistryPlatform.Models;
 using RecurringGift = CrossroadsStripeOnboarding.Models.RecurringGift;
+using MinistryPlatform.Translation.Models;
 
 namespace CrossroadsStripeOnboarding.Services
 {
@@ -86,9 +86,9 @@ namespace CrossroadsStripeOnboarding.Services
             };
         }
 
-        private ContactDonor MapToContactDonor(RecurringGift gift)
+        private MpContactDonor MapToContactDonor(RecurringGift gift)
         {
-            return new ContactDonor
+            return new MpContactDonor
             {
                 DonorId = gift.Donor_ID,
             };

@@ -2,18 +2,18 @@
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using log4net;
-using MinistryPlatform.Models;
-using IDonorService = MinistryPlatform.Translation.Services.Interfaces.IDonorService;
+using MinistryPlatform.Translation.Models;
+using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 
 namespace crds_angular.Services
 {
     public class DonorStatementService : IDonorStatementService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (DonorService));
-        private readonly IDonorService _mpDonorService;
+        private readonly IDonorRepository _mpDonorService;
 
 
-        public DonorStatementService(IDonorService mpDonorService)
+        public DonorStatementService(IDonorRepository mpDonorService)
         {
             _mpDonorService = mpDonorService;           
         }
@@ -21,13 +21,13 @@ namespace crds_angular.Services
         public DonorStatementDTO GetDonorStatement(string token)
         {            
             var mpDonorStatement = _mpDonorService.GetDonorStatement(token);            
-            var donorStatement = Mapper.Map<DonorStatement, DonorStatementDTO>(mpDonorStatement);
+            var donorStatement = Mapper.Map<MpDonorStatement, DonorStatementDTO>(mpDonorStatement);
             return donorStatement;
         }
 
         public void SaveDonorStatement(string token, DonorStatementDTO donorStatement)
         {
-            var mpDonorStatement = Mapper.Map<DonorStatementDTO, DonorStatement>(donorStatement);
+            var mpDonorStatement = Mapper.Map<DonorStatementDTO, MpDonorStatement>(donorStatement);
             _mpDonorService.UpdateDonorStatement(token, mpDonorStatement);
         }
     }

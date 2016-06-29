@@ -1,8 +1,8 @@
 ﻿namespace MinistryPlatform.Translation.Models.Lookups
 {
-    public class MPWorkTeams
+    public class MpWorkTeams
     {
-        public MPWorkTeams(int workTeamId, string workTeamName)
+        public MpWorkTeams(int workTeamId, string workTeamName)
         {
             WorkTeamId = workTeamId;
             WorkTeam = workTeamName;

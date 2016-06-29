@@ -5,10 +5,10 @@ using crds_angular.DataAccess.Interfaces;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using MPServices=MinistryPlatform.Translation.Services.Interfaces;
+using MPServices=MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
 {
@@ -18,7 +18,7 @@ namespace crds_angular.test.Services
         private Mock<ICheckScannerDao> _checkScannerDao;
         private Mock<IDonorService> _donorService;
         private Mock<IPaymentService> _paymentService;
-        private Mock<MPServices.IDonorService> _mpDonorService;
+        private Mock<MPServices.IDonorRepository> _mpDonorService;
 
         [SetUp]
         public void SetUp()
@@ -26,7 +26,7 @@ namespace crds_angular.test.Services
             _checkScannerDao = new Mock<ICheckScannerDao>(MockBehavior.Strict);
             _donorService = new Mock<IDonorService>(MockBehavior.Strict);
             _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
-            _mpDonorService = new Mock<MPServices.IDonorService>(MockBehavior.Strict);
+            _mpDonorService = new Mock<MPServices.IDonorRepository>(MockBehavior.Strict);
             _fixture = new EzScanCheckScannerService(_checkScannerDao.Object, _donorService.Object, _paymentService.Object, _mpDonorService.Object);
             AutoMapperConfig.RegisterMappings();
         }
@@ -119,12 +119,12 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var contactDonorExisting = new ContactDonor
+            var contactDonorExisting = new MpContactDonor
             {
                 ProcessorId = "111000111",
                 DonorId = 111111,
                 RegisteredUser = true,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     DonorAccountId = Int32.Parse(donorAcctId),
                     ProcessorId = "cus_aeirhsjidhriuewiwq",
@@ -159,7 +159,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(d =>
+                        It.Is<MpDonationAndDistributionRecord>(d =>
                                                                  d.DonationAmt == checks[0].Amount &&
                                                                  d.FeeAmt == 123 &&
                                                                  d.DonorId == contactDonorExisting.DonorId &&
@@ -231,20 +231,20 @@ namespace crds_angular.test.Services
             _checkScannerDao.Setup(mocked => mocked.UpdateCheckStatus(44444, true, null));
 
             // donor without account for ez scan check
-            var contactDonorNonExistingStripeCustomer = new ContactDonor
+            var contactDonorNonExistingStripeCustomer = new MpContactDonor
             {
                 ProcessorId = "cus_444000444",
                 DonorId = 444444,
                 ContactId = 444444,
                 RegisteredUser = true,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     DonorAccountId = 440044,
                     Token = "tok986"
                 }
             };
 
-            var contactDonorNonExistingStripeCustomerWithoutAccount = new ContactDonor
+            var contactDonorNonExistingStripeCustomerWithoutAccount = new MpContactDonor
             {
                 ProcessorId = "cus_444000444",
                 DonorId = 444444,
@@ -272,7 +272,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((MpContactDonor)null);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout + "88");
@@ -295,7 +295,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(
                mocked =>
                    mocked.CreateOrUpdateContactDonor(
-                       It.IsAny<ContactDonor>(),
+                       It.IsAny<MpContactDonor>(),
                        It.IsAny<string>(),
                        string.Empty,
                        It.IsAny<string>(),
@@ -315,7 +315,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(
                 mocked =>
                     mocked.CreateDonationAndDistributionRecord(
-                        It.Is<DonationAndDistributionRecord>(d =>
+                        It.Is<MpDonationAndDistributionRecord>(d =>
                                                                  d.DonationAmt == checks[0].Amount &&
                                                                  d.FeeAmt == null &&
                                                                  d.DonorId == contactDonorNonExistingStripeCustomerWithoutAccount.DonorId &&
@@ -368,13 +368,13 @@ namespace crds_angular.test.Services
                 RoutingNumber = routingNumber
             };
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = donorId,
-                Details = new ContactDetails
+                Details = new MpContactDetails
              {
                 DisplayName = displayName,
-                Address = new PostalAddress()
+                Address = new MpPostalAddress()
                 {
                     Line1 = addr1,
                     Line2 = addr2,
@@ -422,12 +422,12 @@ namespace crds_angular.test.Services
                 ScanDate = DateTime.Now.AddHours(2)
             };
 
-            var contactDonorExisting = new ContactDonor
+            var contactDonorExisting = new MpContactDonor
             {
                 ProcessorId = "111000111",
                 DonorId = 111111,
                 RegisteredUser = true,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorId = "111000111",
                     ProcessorAccountId = "111111"
@@ -467,13 +467,13 @@ namespace crds_angular.test.Services
                 ScanDate = DateTime.Now.AddHours(2)
             };
 
-            var contactDonorExisting = new ContactDonor
+            var contactDonorExisting = new MpContactDonor
             {
                 ContactId = 123,
                 ProcessorId = "111000111",
                 DonorId = 111111,
                 RegisteredUser = true,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorId = "111000111",
                     ProcessorAccountId = "111111"
@@ -514,12 +514,12 @@ namespace crds_angular.test.Services
             };
 
 
-            var contactDonorNew = new ContactDonor
+            var contactDonorNew = new MpContactDonor
             {
                 ProcessorId = "222000222",
                 DonorId = 222222,
                 RegisteredUser = false,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
@@ -532,7 +532,7 @@ namespace crds_angular.test.Services
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
       
-            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((MpContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
             _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, check.Name1)).Returns(token);
@@ -540,7 +540,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(
                 mocked =>
                     mocked.CreateOrUpdateContactDonor(
-                        It.Is<ContactDonor>(
+                        It.Is<MpContactDonor>(
                             o => 
                                 o.Details.DisplayName.Equals(check.Name1) && o.Details.Address.Line1.Equals(check.Address.Line1) && o.Details.Address.Line2.Equals(check.Address.Line2) &&
                                 o.Details.Address.City.Equals(check.Address.City) && o.Details.Address.State.Equals(check.Address.State) && o.Details.Address.PostalCode.Equals(check.Address.PostalCode) &&
@@ -589,12 +589,12 @@ namespace crds_angular.test.Services
             };
 
 
-            var contactDonorNew = new ContactDonor
+            var contactDonorNew = new MpContactDonor
             {
                 ProcessorId = "222000222",
                 DonorId = 222222,
                 RegisteredUser = false,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
@@ -607,8 +607,8 @@ namespace crds_angular.test.Services
             const string decrypAcct = "6015268542";
             const string decryptRout = "042000314";
 
-            _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns((ContactDonor)null);
-            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns((MpContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((MpContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
             _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, check.Name1)).Returns(token);
@@ -616,7 +616,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(
                 mocked =>
                     mocked.CreateOrUpdateContactDonor(
-                        It.Is<ContactDonor>(
+                        It.Is<MpContactDonor>(
                             o =>
                                 o.Details.DisplayName.Equals(check.Name1) && o.Details.Address.Line1.Equals(check.Address.Line1) && o.Details.Address.Line2.Equals(check.Address.Line2) &&
                                 o.Details.Address.City.Equals(check.Address.City) && o.Details.Address.State.Equals(check.Address.State) && o.Details.Address.PostalCode.Equals(check.Address.PostalCode) &&
@@ -664,19 +664,19 @@ namespace crds_angular.test.Services
                 ScanDate = DateTime.Now.AddHours(2)
             };
 
-            var contactDonorByDonorId = new ContactDonor
+            var contactDonorByDonorId = new MpContactDonor
             {
                 ProcessorId = "333000333",
                 DonorId = 333333,
                 ContactId = 3333
             };
 
-            var contactDonorNew = new ContactDonor
+            var contactDonorNew = new MpContactDonor
             {
                 ProcessorId = "222000222",
                 DonorId = 222222,
                 RegisteredUser = false,
-                Account = new DonorAccount
+                Account = new MpDonorAccount
                 {
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
                 }
@@ -690,7 +690,7 @@ namespace crds_angular.test.Services
             const string decryptRout = "042000314";
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(check.DonorId.Value)).Returns(contactDonorByDonorId);
-            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((ContactDonor)null);
+            _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(check.AccountNumber, check.RoutingNumber)).Returns((MpContactDonor)null);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.AccountNumber)).Returns(decrypAcct);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(check.RoutingNumber)).Returns(decryptRout);
             _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct, decryptRout, check.Name1)).Returns(token);
@@ -698,7 +698,7 @@ namespace crds_angular.test.Services
             _donorService.Setup(
                 mocked =>
                     mocked.CreateOrUpdateContactDonor(
-                        It.Is<ContactDonor>(
+                        It.Is<MpContactDonor>(
                             o =>
                                 o.Details.DisplayName.Equals(check.Name1) && o.Details.Address.Line1.Equals(check.Address.Line1) && o.Details.Address.Line2.Equals(check.Address.Line2) &&
                                 o.Details.Address.City.Equals(check.Address.City) && o.Details.Address.State.Equals(check.Address.State) && o.Details.Address.PostalCode.Equals(check.Address.PostalCode) &&

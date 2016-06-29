@@ -1,3 +1,4 @@
+var del = require('del');
 var gulp = require('gulp');
 var watch = require('gulp-watch');
 var gutil = require('gulp-util');
@@ -63,6 +64,14 @@ function htmlReplace(devBuild) {
 
   gulp.src('./lib/load-image.all.min.js')
       .pipe(gulp.dest('./assets'));
+
+  if (!devBuild) {
+    var rootedCoreCss = '.' + assets.core.css;
+    gutil.log('[start]', 'Copying ' + rootedCoreCss + ' to ./assets/core.css');
+    gulp.src(rootedCoreCss)
+      .pipe(rename('core.css'))
+      .pipe(gulp.dest('./assets'));
+  }
 }
 
 var browserSyncCompiles = 0;
@@ -73,13 +82,6 @@ var webPackDevConfigs = [Object.create(webPackDevConfig)];
 
 // Start the development server
 gulp.task('default', ['webpack-dev-server']);
-
-gulp.task('init', function() {
-  var version = process.env.CRDS_CORE_VERSION || '*';
-  gulp.src(['package.json'])
-    .pipe(replace(/\"crds-core\":(.*)/, '\"crds-core\": \"' + version  + '\",'))
-    .pipe(gulp.dest('./'));
-});
 
 // Build and watch cycle (another option for development)
 // Advantage: No server required, can run app from filesystem
@@ -145,11 +147,12 @@ gulp.task('browser-sync-dev', ['build-browser-sync'], function() {
 });
 
 // Production build
-gulp.task('build', ['webpack:build']);
+gulp.task('build', ['clean-assets'], function() {
+  gulp.start('webpack:build')
+});
 
 // For convenience, an 'alias' to webpack-dev-server
 gulp.task('start', ['webpack-dev-server']);
-
 
 // Run the development server
 gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
@@ -292,4 +295,11 @@ gulp.task('apache-site-config', function() {
   gulp.src('./app/apache_site.conf')
       .pipe(replace('__PRERENDER_IO_API_KEY__', apiKey))
       .pipe(gulp.dest('./'));
+});
+
+// cleanup assets folder
+gulp.task('clean-assets', function () {
+  return del([
+    'assets/**/**'
+  ]);
 });

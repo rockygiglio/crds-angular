@@ -1,6 +1,6 @@
 ﻿using System;
-using MinistryPlatform.Models.Attributes;
-using MinistryPlatform.Translation.Services;
+using MinistryPlatform.Translation.Models.Attributes;
+using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
@@ -10,14 +10,14 @@ namespace MinistryPlatform.Translation.Test.Services
     [Category("IntegrationTests")]
     public class MinistryPlatformRestServiceIntegrationTest
     {
-        private MinistryPlatformRestService _fixture;
+        private MinistryPlatformRestRepository _fixture;
 
         private string _authToken;
 
         [TestFixtureSetUp]
         public void SetupAll()
         {
-            var auth = AuthenticationService.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
+            var auth = AuthenticationRepository.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
             _authToken = auth["token"].ToString();
         }
 
@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
-            _fixture = new MinistryPlatformRestService(restClient);
+            _fixture = new MinistryPlatformRestRepository(restClient);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
     }
 
-    [RestApiTable(Name = "Payment_Types")]
+    [MpRestApiTable(Name = "Payment_Types")]
     public class MyPaymentType
     {
         [JsonProperty(PropertyName = "Payment_Type_ID")]

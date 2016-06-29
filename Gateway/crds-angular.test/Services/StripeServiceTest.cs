@@ -12,7 +12,7 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
-using MinistryPlatform.Models;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.test.Services
@@ -596,7 +596,7 @@ namespace crds_angular.test.Services
             };
             var interval = EnumMemberSerializationUtils.ToEnumString(recurringGiftDto.PlanInterval);
 
-            var contactDonor = new ContactDonor
+            var contactDonor = new MpContactDonor
             {
                 DonorId = 678,
                 ProcessorId = "cus_123"

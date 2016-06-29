@@ -11,12 +11,13 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
-using MinistryPlatform.Models;
 using MinistryPlatform.Translation.Extensions;
-using Address = MinistryPlatform.Models.Address;
+using MinistryPlatform.Translation.Models;
+using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using Group = MinistryPlatform.Models.Group;
-using Response = MinistryPlatform.Models.Response;
+using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
+using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
+using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace crds_angular.App_Start
 {
@@ -35,13 +36,13 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.EmailNotifications,
                     opts => opts.MapFrom(src => src["Bulk_Email_Opt_Out"]));
 
-            Mapper.CreateMap<Group, OpportunityGroup>()
+            Mapper.CreateMap<MpGroup, OpportunityGroup>()
                 .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.GroupId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventTypeId))
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
 
-            Mapper.CreateMap<GroupParticipant, OpportunityGroupParticipant>()
+            Mapper.CreateMap<MpGroupParticipant, OpportunityGroupParticipant>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
                 .ForMember(dest => dest.GroupRoleTitle, opts => opts.MapFrom(src => src.GroupRoleTitle))
@@ -49,7 +50,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.NickName))
                 .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId));
 
-            Mapper.CreateMap<Response, OpportunityResponseDto>()
+            Mapper.CreateMap<MpResponse, OpportunityResponseDto>()
                 .ForMember(dest => dest.Closed, opts => opts.MapFrom(src => src.Closed))
                 .ForMember(dest => dest.Comments, opts => opts.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.Event_ID))
@@ -59,34 +60,34 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.ResponseId, opts => opts.MapFrom(src => src.Response_ID))
                 .ForMember(dest => dest.ResponseResultId, opts => opts.MapFrom(src => src.Response_Result_ID));
 
-            Mapper.CreateMap<DonationBatch, DonationBatchDTO>()
+            Mapper.CreateMap<MpDonationBatch, DonationBatchDTO>()
                 .ForMember(dest => dest.BatchName, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ProcessorTransferId))
                 .ForMember(dest => dest.DepositId, opts => opts.MapFrom(src => src.DepositId))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id));
 
-            Mapper.CreateMap<Dictionary<string, object>, DonationBatch>()
+            Mapper.CreateMap<Dictionary<string, object>, MpDonationBatch>()
                 .ForMember(dest => dest.BatchName, opts => opts.MapFrom(src => src.ToString("Batch_Name")))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ToString("Processor_Transfer_ID")))
                 .ForMember(dest => dest.DepositId, opts => opts.MapFrom(src => src.ToNullableInt("Deposit_ID", false)))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ContainsKey("dp_RecordID") ? src.ToInt("dp_RecordID", false) : src.ToInt("Batch_ID", false)));
 
-            Mapper.CreateMap<Dictionary<string, object>, Program>()
+            Mapper.CreateMap<Dictionary<string, object>, MpProgram>()
                 .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ToInt("Program_ID", false)))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ToString("Program_Name")))
                 .ForMember(dest => dest.ProgramType, opts => opts.MapFrom(src => src.ToInt("Program_Type_ID", false)))
                 .ForMember(dest => dest.CommunicationTemplateId, opts => opts.MapFrom(src => src.ContainsKey("Communication_ID") ? src.ToNullableInt("Communication_ID", false) : (int?)null))
                 .ForMember(dest => dest.AllowRecurringGiving, opts => opts.MapFrom(src => src.ToBool("Allow_Recurring_Giving", false)));
 
-            Mapper.CreateMap<Program, ProgramDTO>()
+            Mapper.CreateMap<MpProgram, ProgramDTO>()
                 .ForMember(dest => dest.ProgramType, opts => opts.MapFrom(src => src.ProgramType))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.CommunicationTemplateId, opts => opts.MapFrom(src => src.CommunicationTemplateId))
                 .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ProgramId));
 
-            Mapper.CreateMap<Deposit, DepositDTO>();
+            Mapper.CreateMap<MpDeposit, DepositDTO>();
 
-            Mapper.CreateMap<Dictionary<string, object>, Deposit>()
+            Mapper.CreateMap<Dictionary<string, object>, MpDeposit>()
                 .ForMember(dest => dest.DepositDateTime, opts => opts.MapFrom(src => src.ToDate("Deposit_Date", false)))
                 .ForMember(dest => dest.DepositName, opts => opts.MapFrom(src => src.ToString("Deposit_Name")))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ToInt("Deposit_ID", false)))
@@ -95,7 +96,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Exported, opts => opts.MapFrom(src => src.ToBool("Exported", false)))
                 .ForMember(dest => dest.ProcessorTransferId, opts => opts.MapFrom(src => src.ToString("Processor_Transfer_ID")));
 
-            Mapper.CreateMap<GPExportDatum, GPExportDatumDTO>()
+            Mapper.CreateMap<MpGPExportDatum, GPExportDatumDTO>()
                 .ForMember(dest => dest.DocumentNumber, opts => opts.MapFrom(src => src.DocumentNumber))
                 .ForMember(dest => dest.DocumentDescription, opts => opts.MapFrom(src => src.BatchName))
                 .ForMember(dest => dest.BatchId, opts => opts.MapFrom(src => src.BatchName))
@@ -107,7 +108,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
                 .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate  )));
 
-            Mapper.CreateMap<Donation, DonationDTO>()
+            Mapper.CreateMap<MpDonation, DonationDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationAmt))
                 .ForMember(dest => dest.DonationDate, opts => opts.MapFrom(src => src.donationDate))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.donationStatus))
@@ -136,15 +137,15 @@ namespace crds_angular.App_Start
                   
                 });
                 
-            Mapper.CreateMap<ContactDonor, EZScanDonorDetails>()
+            Mapper.CreateMap<MpContactDonor, EZScanDonorDetails>()
                 .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Details.DisplayName))
                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Details.Address));
            
-            Mapper.CreateMap<DonationDistribution, DonationDistributionDTO>()
+            Mapper.CreateMap<MpDonationDistribution, DonationDistributionDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationDistributionAmt))
                 .ForMember(dest => dest.ProgramName, opts => opts.MapFrom(src => src.donationDistributionProgram));
 
-            Mapper.CreateMap<MyContact, Person>()
+            Mapper.CreateMap<MpMyContact, Person>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.Contact_ID))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.Email_Address))
                 .ForMember(dest => dest.NickName, opts => opts.MapFrom(src => src.Nickname))
@@ -179,7 +180,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.PassportMiddlename, opts => opts.MapFrom(src => src.Passport_Middlename))
                 .ForMember(dest => dest.PassportCountry, opts => opts.MapFrom(src => src.Passport_Country));
 
-            Mapper.CreateMap<RecurringGift, RecurringGiftDto>()
+            Mapper.CreateMap<MpRecurringGift, RecurringGiftDto>()
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.RecurringGiftId))
                 .ForMember(dest => dest.DonorID, opts => opts.MapFrom(src => src.DonorID))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
@@ -205,7 +206,7 @@ namespace crds_angular.App_Start
                     };
                 });
 
-            Mapper.CreateMap<Pledge, PledgeDto>()
+            Mapper.CreateMap<MpPledge, PledgeDto>()
                 .ForMember(dest => dest.PledgeCampaign, opts => opts.MapFrom(src => src.CampaignName))
                 .ForMember(dest => dest.TotalPledge, opts => opts.MapFrom(src => src.PledgeTotal))
                 .ForMember(dest => dest.CampaignStartDate, opts => opts.MapFrom(src => src.CampaignStartDate.ToString("MMMM d, yyyy")))
@@ -213,10 +214,10 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.CampaignTypeId, opts => opts.MapFrom(src => src.CampaignTypeId))
                 .ForMember(dest => dest.CampaignTypeName, opts => opts.MapFrom(src => src.CampaignTypeName));
 
-            Mapper.CreateMap<DonorStatement, DonorStatementDTO>();
-            Mapper.CreateMap<DonorStatementDTO, DonorStatement>();
+            Mapper.CreateMap<MpDonorStatement, DonorStatementDTO>();
+            Mapper.CreateMap<DonorStatementDTO, MpDonorStatement>();
 
-            Mapper.CreateMap<MinistryPlatform.Models.Event, Models.Crossroads.Events.Event>()
+            Mapper.CreateMap<MpEvent, Models.Crossroads.Events.Event>()
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.EventId))
                 .ForMember(dest => dest.name, opts => opts.MapFrom(src => src.EventTitle))
                 .ForMember(dest => dest.location, opts => opts.MapFrom(src => src.Congregation))
@@ -225,36 +226,36 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.EventStartDate))
                 .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EventEndDate));
 
-            Mapper.CreateMap<BulkEmailSubscriberOptDTO, BulkEmailSubscriberOpt>();
-            Mapper.CreateMap<BulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
+            Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
+            Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 
-            Mapper.CreateMap<Group, GroupDTO>()
+            Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
 
-            Mapper.CreateMap<GroupDTO, Group>()
+            Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
 
 
-            Mapper.CreateMap<GroupSearchResult, GroupDTO>()
+            Mapper.CreateMap<MpGroupSearchResult, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
 
-            Mapper.CreateMap<Address, AddressDTO>()
+            Mapper.CreateMap<MpAddress, AddressDTO>()
                 .ForMember(dest => dest.AddressLine1, opts => opts.MapFrom(src => src.Address_Line_1))
                 .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
                 .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
                 .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
                 .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
 
-            Mapper.CreateMap<AddressDTO, Address>()
+            Mapper.CreateMap<AddressDTO, MpAddress>()
                 .ForMember(dest => dest.Address_Line_1, opts => opts.MapFrom(src => src.AddressLine1))
                 .ForMember(dest => dest.Address_Line_2, opts => opts.MapFrom(src => src.AddressLine2))
                 .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))
                 .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
-            Mapper.CreateMap<GroupParticipant, GroupParticipantDTO>();
+            Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
 
         }
     }

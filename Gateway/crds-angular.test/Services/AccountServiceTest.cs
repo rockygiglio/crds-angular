@@ -4,7 +4,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,28 +12,28 @@ namespace crds_angular.test.Services
 {
     public class AccountServiceTests
     {
-        private Mock<IAuthenticationService> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
-        private Mock<ILookupService> _lookupService;
-        private Mock<ICommunicationService> _comunicationService;
+        private Mock<ILookupRepository> _lookupService;
+        private Mock<ICommunicationRepository> _comunicationService;
         private Mock<ISubscriptionsService> _subscriptionService;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IApiUserService> _apiUserService;
-        private Mock<IParticipantService> _participantService;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IParticipantRepository> _participantService;
 
         private AccountService _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _authenticationService = new Mock<IAuthenticationService>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _lookupService = new Mock<ILookupService>();
-            _comunicationService = new Mock<ICommunicationService>();
+            _lookupService = new Mock<ILookupRepository>();
+            _comunicationService = new Mock<ICommunicationRepository>();
             _subscriptionService = new Mock<ISubscriptionsService>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _apiUserService = new Mock<IApiUserService>();
-            _participantService = new Mock<IParticipantService>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _participantService = new Mock<IParticipantRepository>();
 
             _fixture = new AccountService(_configurationWrapper.Object,
                                           _comunicationService.Object,

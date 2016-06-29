@@ -6,9 +6,9 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using log4net;
-using MinistryPlatform.Models;
-using MPServices = MinistryPlatform.Translation.Services.Interfaces;
+using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.Utilities.Extensions;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {
@@ -17,12 +17,12 @@ namespace crds_angular.Services
         private readonly ICheckScannerDao _checkScannerDao;
         private readonly IDonorService _donorService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (EzScanCheckScannerService));
-        private readonly MPServices.IDonorService _mpDonorService;
+        private readonly MPServices.IDonorRepository _mpDonorService;
         private readonly IPaymentService _paymentService;
 
         private const int MinistryPlatformCheckNumberMaxLength = 15;
       
-        public EzScanCheckScannerService(ICheckScannerDao checkScannerDao, IDonorService donorService, IPaymentService paymentService, MPServices.IDonorService mpDonorService)
+        public EzScanCheckScannerService(ICheckScannerDao checkScannerDao, IDonorService donorService, IPaymentService paymentService, MPServices.IDonorRepository mpDonorService)
         {
             _checkScannerDao = checkScannerDao;
             _donorService = donorService;
@@ -84,7 +84,7 @@ namespace crds_angular.Services
                                                                                 stripeCustomerSource.id,
                                                                                 stripeCustomer.id).ToString();
 
-                        contactDonor.Account = new DonorAccount
+                        contactDonor.Account = new MpDonorAccount
                         {
                             DonorAccountId = int.Parse(donorAccountId),
                             ProcessorId = stripeCustomer.id,
@@ -108,7 +108,7 @@ namespace crds_angular.Services
                  
                     var programId = batchDetails.ProgramId == null ? null : batchDetails.ProgramId + "";
 
-                    var donationAndDistribution = new DonationAndDistributionRecord
+                    var donationAndDistribution = new MpDonationAndDistributionRecord
                     {
                         DonationAmt = check.Amount,
                         FeeAmt = fee,
@@ -153,37 +153,37 @@ namespace crds_angular.Services
             var account = _mpDonorService.DecryptCheckValue(accountNumber);
             var routing = _mpDonorService.DecryptCheckValue(routingNumber);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-            return (Mapper.Map<ContactDonor, EZScanDonorDetails>(_donorService.GetContactDonorForCheckAccount(encryptedKey)));
+            return (Mapper.Map<MpContactDonor, EZScanDonorDetails>(_donorService.GetContactDonorForCheckAccount(encryptedKey)));
             
         }
 
-        public ContactDonor CreateDonor(CheckScannerCheck checkDetails)
+        public MpContactDonor CreateDonor(CheckScannerCheck checkDetails)
         {
-            ContactDonor contactDonorById = null;
+            MpContactDonor mpContactDonorById = null;
             // If scanned check has a donor id, try to use it to lookup the donor
             if (checkDetails.DonorId != null && checkDetails.DonorId > 0)
             {
-                contactDonorById = _donorService.GetContactDonorForDonorId(checkDetails.DonorId.Value);
+                mpContactDonorById = _donorService.GetContactDonorForDonorId(checkDetails.DonorId.Value);
             }
 
-            // Get the contactDonor and info based off of the account and routing number to see if we need to create a new one
-            var contactDonorByAccount = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new ContactDonor();
+            // Get the MpContactDonor and info based off of the account and routing number to see if we need to create a new one
+            var contactDonorByAccount = _donorService.GetContactDonorForDonorAccount(checkDetails.AccountNumber, checkDetails.RoutingNumber) ?? new MpContactDonor();
 
-            // if find by contact donor id is used then contact donor found by id matches contact donor 
+            // if find by mpContact donor id is used then mpContact donor found by id matches mpContact donor 
             // found by account and account has stripe token
-            if (contactDonorById != null && contactDonorById.ContactId == contactDonorByAccount.ContactId &&
+            if (mpContactDonorById != null && mpContactDonorById.ContactId == contactDonorByAccount.ContactId &&
                 contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
-            // if find by contact donor id is not used then contact donor 
+            // if find by mpContact donor id is not used then mpContact donor 
             // found by account has stripe token
-            else if (contactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.HasPaymentProcessorInfo())
+            else if (mpContactDonorById == null && contactDonorByAccount.Account != null && contactDonorByAccount.Account.HasPaymentProcessorInfo())
             {
                 return contactDonorByAccount;
             }
 
-            var contactDonor = contactDonorById ?? contactDonorByAccount;
+            var contactDonor = mpContactDonorById ?? contactDonorByAccount;
 
             var account = _mpDonorService.DecryptCheckValue(checkDetails.AccountNumber);
             var routing = _mpDonorService.DecryptCheckValue(checkDetails.RoutingNumber);
@@ -191,10 +191,10 @@ namespace crds_angular.Services
             var token = _paymentService.CreateToken(account, routing, checkDetails.Name1);
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
 
-            contactDonor.Details = new ContactDetails
+            contactDonor.Details = new MpContactDetails
             {
                 DisplayName = checkDetails.Name1,
-                Address = new PostalAddress
+                Address = new MpPostalAddress
                 {
                     Line1 = checkDetails.Address.Line1,
                     Line2 = checkDetails.Address.Line2,
@@ -206,7 +206,7 @@ namespace crds_angular.Services
 
             var newDonor = _donorService.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, null, DateTime.Now);
 
-            newDonor.Account = new DonorAccount
+            newDonor.Account = new MpDonorAccount
             {
                 AccountNumber = account,
                 RoutingNumber = routing,

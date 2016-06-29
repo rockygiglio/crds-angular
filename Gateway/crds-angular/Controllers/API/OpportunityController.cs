@@ -9,17 +9,17 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Security;
 using Crossroads.Utilities.Extensions;
-using MinistryPlatform.Models;
-using MinistryPlatform.Models.DTO;
-using MinistryPlatform.Translation.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
     public class OpportunityController : MPAuth
     {
-        private readonly IOpportunityService _opportunityService;
+        private readonly IOpportunityRepository _opportunityService;
 
-        public OpportunityController(IOpportunityService opportunityService)
+        public OpportunityController(IOpportunityRepository opportunityService)
         {
             _opportunityService = opportunityService;
         }
@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (int))]
         [Route("api/opportunity/save-qualified-server")]
-        public IHttpActionResult Post([FromBody] RespondToOpportunityDto opportunityResponse)
+        public IHttpActionResult Post([FromBody] MpRespondToOpportunityDto opportunityResponse)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace crds_angular.Controllers.API
             return Authorized(token =>
             {
                 var group = _opportunityService.GetGroupParticipantsForOpportunity(id, token);
-                var oppGrp = Mapper.Map<Group, OpportunityGroup>(group);
+                var oppGrp = Mapper.Map<MpGroup, OpportunityGroup>(group);
                 return Ok(oppGrp);
             });
         }
@@ -117,7 +117,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 var response = _opportunityService.GetOpportunityResponse(contactId, id);
-                var mapped = Mapper.Map<Response, OpportunityResponseDto>(response);
+                var mapped = Mapper.Map<MpResponse, OpportunityResponseDto>((MpResponse)response);
                 return Ok(mapped);
             }
             catch (Exception exception)
