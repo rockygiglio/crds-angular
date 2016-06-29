@@ -361,6 +361,22 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
+        public List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token)
+        {
+            var searchString = string.Format(",,,\"{0}\"", groupId);
+            var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
+
+            return records?.Select(record => new MpEventGroup
+            {
+                EventGroupId = record.ToInt("Event_Group_ID"),
+                EventId = record.ToInt("Event_ID"),
+                GroupId = record.ToInt("Group_ID"),
+                RoomId = record.ToNullableInt("Room_ID"),
+                Closed = record.ToBool("Closed"),
+                EventRoomId = record.ToNullableInt("Event_Room_ID")
+            }).ToList();
+        }
+
         public void DeleteEventGroup(MpEventGroup eventGroup, string token)
         {
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
