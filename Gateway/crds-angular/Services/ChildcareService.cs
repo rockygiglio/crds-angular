@@ -234,6 +234,7 @@ namespace crds_angular.Services
 
         public ChildcareDashboardDto GetChildcareDashboard(int contactId)
         {
+            var dashboard = new ChildcareDashboardDto();
             var token = _apiUserService.GetToken();
 
             //Figure out who is a head in my household
@@ -241,14 +242,38 @@ namespace crds_angular.Services
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
             var houseHeads = household.Where(h => h.HouseholdPosition == _configurationWrapper.GetConfigValue("Household_Position_Default_ID"));
 
-            var groups = new List<GroupDTO>();
             //Find community groups for house heads
             foreach (var head in houseHeads)
             {
                 var participant = _participantService.GetParticipant(head.ContactId);
-                groups.AddRange(_groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, "CommunityGroup"));
+                var groups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, _configurationWrapper.GetConfigIntValue("GroupTypeForCommunityGroup"));
+                //Find events that my groups are approved for
+                foreach (var group in groups)
+                {
+                    var groupEvents = _eventService.GetEventGroupsForGroup(group.GroupId, token);
+                    foreach (var ev in groupEvents)
+                    {
+                        var eventDetails = _eventService.GetEvent(ev.EventId);
+                        if (dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
+                        {
+                            var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
+                            //Date exists, add group
+                            ccEvent.Groups.Add(new ChildcareGroup
+                            {
+                                GroupName = group.GroupName,
+                                EventStartTime = eventDetails.EventStartDate,
+                                EventEndTime = eventDetails.EventEndDate,
+                                LocationName = eventDetails.Congregation,
+                                GroupMemberName = head.Nickname + ' ' + head.LastName,
+                                MaxAge = 8,
+                                MaxGradYear = 2024
+                            });
+                        }
+                    }
+                }
             }
-            return new ChildcareDashboardDto();
+
+            return dashboard;
         }
 
         public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
