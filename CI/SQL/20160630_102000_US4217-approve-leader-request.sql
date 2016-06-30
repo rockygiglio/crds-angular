@@ -23,8 +23,7 @@ BEGIN
 		[Active],
 		[To_Contact],
 		[Time_Zone],
-		[Locale],
-		[Sendgrid_Template_ID])
+		[Locale])
 	VALUES(5,
 		'You''ve been approved to be a Small Group Leader.',
 		'Thanks [Nickname]!<div style="margin: 0px; padding: 0px; font-family: Verdana; font-size: 12px; background-color: rgb(255, 255, 255);">You have been approved to be a Small Group Leader at Crossroads!</div>',
@@ -38,7 +37,6 @@ BEGIN
 		NULL,
 		1,
 		1,
-		NULL,
 		NULL,
 		NULL,
 		NULL)
