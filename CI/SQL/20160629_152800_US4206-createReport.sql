@@ -1,15 +1,18 @@
 USE [MinistryPlatform]
 GO
 
+SET IDENTITY_INSERT dp_Reports ON 
 INSERT INTO [dbo].[dp_Reports]
-           ([Report_Name]
+           ([Report_ID]
+		   ,[Report_Name]
            ,[Description]
            ,[Report_Path]
            ,[Pass_Selected_Records]
            ,[Pass_LinkTo_Records]
            ,[On_Reports_Tab])
      VALUES
-           ('Persons of Interest Report'
+           (281
+		   ,'Persons of Interest Report'
            ,'Person of interest report, show partcipant picture instead of contact'
            ,'/MPReports/crossroads/CRDS Persons of Interest Report'
            ,1
@@ -18,3 +21,4 @@ INSERT INTO [dbo].[dp_Reports]
 GO
 
 
+SET IDENTITY_INSERT dp_Reports OFF 

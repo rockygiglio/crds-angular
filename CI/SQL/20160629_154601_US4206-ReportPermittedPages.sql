@@ -1,6 +1,8 @@
 USE [MinistryPlatform]
 GO
 
+SET IDENTITY_INSERT dp_Report_Pages ON 
+
 IF NOT EXISTS ( SELECT * FROM dp_Report_Pages 
                 WHERE Report_Page_ID = 1952
                    AND Report_ID = 281
@@ -21,4 +23,5 @@ IF NOT EXISTS ( SELECT * FROM dp_Report_Pages
  END
 
 
+ SET IDENTITY_INSERT dp_Report_Pages OFF 
 
