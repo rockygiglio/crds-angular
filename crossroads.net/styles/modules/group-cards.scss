@@ -1,0 +1,48 @@
+.my-group-card-round-plus {
+  background: $brand-primary;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  height: 2em;
+  width: 2em;
+  line-height: 2em;
+  text-align: center;
+  @extend .center-block;
+}
+
+.my-groups {
+  display: flex;
+  flex-wrap: wrap;
+
+  card {
+    width: 40%;
+    margin: 1%;
+    background-color: #d9d9d9;
+    border-style: solid;
+    border-width: thin;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+
+    .title {
+      font-weight: 500;
+      color: #222222;
+      line-height: 1.22222222;
+      font-size: 19px;
+      margin-top: 16px;
+
+      span {
+        font-weight: 300;
+      }
+    }
+  }
+
+  .card:nth-of-type(2n) {
+    margin-right: 0;
+  }
+
+  .card:nth-of-type(2n+1) {
+    margin-left: 0;
+  }
+}
