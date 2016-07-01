@@ -94,7 +94,7 @@ class RequestChildcareController {
           Childcare_Start_Time: null,
           Childcare_End_Time: null,
           Meeting_Day: null, dp_RecordID: -1,
-          Deactivate_Date: null
+          End_Date: null
         }];
         this.filteredTimes = this.preferredTimes;
       });
@@ -126,11 +126,11 @@ class RequestChildcareController {
   onStartDateChange(startDate) {
     this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
-      if (time.Deactivate_Date === null) { return true; }
+      if (time.End_Date === null) { return true; }
 
       var preferredStart = moment(startDate);
-      var deactivateDate = moment(time.Deactivate_Date);
-      return preferredStart.isBefore(deactivateDate) || preferredStart.isSame(deactivateDate);
+      var endDate = moment(time.End_Date);
+      return preferredStart.isBefore(endDate) || preferredStart.isSame(endDate);
     });
   }
 
