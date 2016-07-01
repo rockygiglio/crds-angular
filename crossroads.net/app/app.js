@@ -40,6 +40,7 @@ require('ui-select/dist/select.css');
   require('./explore');
   require('./gotrips');
   require('./my_serve');
+  require('./childcare_dashboard');
   require('./brave_at_home');
   require('./volunteer_signup');
   require('./volunteer_application');
