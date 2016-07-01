@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Childcare;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
@@ -24,8 +25,9 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IContactRepository _contactService;
         private readonly IEventParticipantRepository _eventParticipantService;
-        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _eventService;
-        private readonly crds_angular.Services.Interfaces.IEventService _crdsEventService;
+        private readonly IEventRepository _eventService;
+        private readonly IEventService _crdsEventService;
+        private readonly IGroupService _groupService;
         private readonly IParticipantRepository _participantService;
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
@@ -37,13 +39,14 @@ namespace crds_angular.Services
                                 ICommunicationRepository communicationService,
                                 IConfigurationWrapper configurationWrapper,
                                 IContactRepository contactService,
-                                MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
+                                IEventRepository eventService,
                                 IParticipantRepository participantService,
                                 IServeService serveService,
                                 IDateTime dateTimeWrapper,
                                 IApiUserRepository apiUserService, 
-                                Interfaces.IEventService crdsEventService, 
-                                IChildcareRequestRepository childcareRequestService)
+                                IEventService crdsEventService, 
+                                IChildcareRequestRepository childcareRequestService,
+                                IGroupService groupService)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -56,6 +59,7 @@ namespace crds_angular.Services
             _serveService = serveService;
             _dateTimeWrapper = dateTimeWrapper;
             _apiUserService = apiUserService;
+            _groupService = groupService;
         }
 
         public List<FamilyMember> MyChildren(string token)
@@ -226,6 +230,50 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Reject Childcare failed", ex);
             }
+        }
+
+        public ChildcareDashboardDto GetChildcareDashboard(int contactId)
+        {
+            var dashboard = new ChildcareDashboardDto();
+            var token = _apiUserService.GetToken();
+
+            //Figure out who is a head in my household
+            var contact = _contactService.GetContactById(contactId);
+            var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
+            var houseHeads = household.Where(h => h.HouseholdPosition == _configurationWrapper.GetConfigValue("Household_Position_Default_ID"));
+
+            //Find community groups for house heads
+            foreach (var head in houseHeads)
+            {
+                var participant = _participantService.GetParticipant(head.ContactId);
+                var groups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, _configurationWrapper.GetConfigIntValue("GroupTypeForCommunityGroup"));
+                //Find events that my groups are approved for
+                foreach (var group in groups)
+                {
+                    var groupEvents = _eventService.GetEventGroupsForGroup(group.GroupId, token);
+                    foreach (var ev in groupEvents)
+                    {
+                        var eventDetails = _eventService.GetEvent(ev.EventId);
+                        if (dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
+                        {
+                            var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
+                            //Date exists, add group
+                            ccEvent.Groups.Add(new ChildcareGroup
+                            {
+                                GroupName = group.GroupName,
+                                EventStartTime = eventDetails.EventStartDate,
+                                EventEndTime = eventDetails.EventEndDate,
+                                LocationName = eventDetails.Congregation,
+                                GroupMemberName = head.Nickname + ' ' + head.LastName,
+                                MaxAge = 8,
+                                MaxGradYear = 2024
+                            });
+                        }
+                    }
+                }
+            }
+
+            return dashboard;
         }
 
         public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
