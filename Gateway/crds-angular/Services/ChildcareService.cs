@@ -240,7 +240,7 @@ namespace crds_angular.Services
             //Figure out who is a head in my household
             var contact = _contactService.GetContactById(contactId);
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition == _configurationWrapper.GetConfigValue("Household_Position_Default_ID"));
+            var houseHeads = household.Where(h => h.HouseholdPosition.StartsWith("Head"));
 
             //Find community groups for house heads
             foreach (var head in houseHeads)
@@ -256,19 +256,25 @@ namespace crds_angular.Services
                         var eventDetails = _eventService.GetEvent(ev.EventId);
                         if (dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
                         {
-                            var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
-                            //Date exists, add group
-                            ccEvent.Groups.Add(new ChildcareGroup
+                            dashboard.AvailableChildcareDates.Add(new ChildCareDate
                             {
-                                GroupName = group.GroupName,
-                                EventStartTime = eventDetails.EventStartDate,
-                                EventEndTime = eventDetails.EventEndDate,
-                                LocationName = eventDetails.Congregation,
-                                GroupMemberName = head.Nickname + ' ' + head.LastName,
-                                MaxAge = 8,
-                                MaxGradYear = 2024
+                                EventDate = eventDetails.EventStartDate.Date
                             });
                         }
+
+                        //Date exists, add group
+                        var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
+                        ccEvent.Groups.Add(new ChildcareGroup
+                        {
+                            GroupName = group.GroupName,
+                            EventStartTime = eventDetails.EventStartDate,
+                            EventEndTime = eventDetails.EventEndDate,
+                            LocationName = eventDetails.Congregation,
+                            GroupMemberName = head.Nickname + ' ' + head.LastName,
+                            MaxAge = 8,
+                            MaxGradYear = 2024
+                        });
+                        
                     }
                 }
             }
