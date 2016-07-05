@@ -6,4 +6,4 @@ export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL).
   directive('myGroups', myGroupsComponent);
 
-import card from './card'
+import card from './group_card'
