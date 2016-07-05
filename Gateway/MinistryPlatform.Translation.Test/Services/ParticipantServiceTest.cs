@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -48,7 +47,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Email Address", "email-address"},
                     {"Nickname", "nick-name"},
                     {"Display Name", "display-name"},
-                    {"Age", 99}
+                    {"Age", 99},
+                    {"Approved_Small_Group_Leader", true }
                 }
             };
 
@@ -62,15 +62,48 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("nick-name", participant.PreferredName);
             Assert.AreEqual("email-address", participant.EmailAddress);
             Assert.AreEqual(100, participant.ParticipantId);
+            Assert.IsTrue(participant.ApprovedSmallGroupLeader);
+        }
+
+        [Test]
+        public void TestGetParticipantRecord()
+        {
+            const string token = "tok123";
+
+            const string viewKey = "MyParticipantRecords";
+            var mockDictionaryList = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Contact_ID", 99999},
+                    {"dp_RecordID", 100},
+                    {"Email_Address", "email-address"},
+                    {"Nickname", "nick-name"},
+                    {"Display_Name", "display-name"},
+                    {"Age", 99},
+                    {"Approved_Small_Group_Leader", true }
+                }
+            };
+
+            _mpServiceMock.Setup(m => m.GetRecordsDict(viewKey, token, string.Empty, string.Empty)).Returns(mockDictionaryList);
+
+            var participant = _fixture.GetParticipantRecord(token);
+
+            _mpServiceMock.VerifyAll();
+
+            Assert.IsNotNull(participant);
+            Assert.AreEqual("nick-name", participant.PreferredName);
+            Assert.AreEqual("email-address", participant.EmailAddress);
+            Assert.AreEqual(100, participant.ParticipantId);
+            Assert.IsTrue(participant.ApprovedSmallGroupLeader);
         }
 
         [Test]
 
-        public void shouldCreateParticipantRecord()
+        public void TestCreateParticipantRecord()
         {
             const int contactId = 9999;
-            DateTime date = DateTime.Now; 
-            string dateString = date.ToString();
+            var date = DateTime.Now; 
 
             var mockDictionary = new Dictionary<string, object>
             {
@@ -79,9 +112,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact ID", 99999},
             };
 
-          
             _mpServiceMock.Setup(
-                mocked => mocked.CreateRecord(355, It.IsAny<Dictionary<String,Object>>(), "ABC", false))
+                mocked => mocked.CreateRecord(355, It.IsAny<Dictionary<string,object>>(), "ABC", false))
                 .Returns(123);
 
             var participant = _fixture.CreateParticipantRecord(contactId);

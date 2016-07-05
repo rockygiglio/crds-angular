@@ -11,5 +11,6 @@ namespace MinistryPlatform.Translation.Models
         public string DisplayName { get; set; }
         public int Age { get; set; }
         public DateTime? AttendanceStart { get; set; }
+        public bool ApprovedSmallGroupLeader { get; set; }
     }
 }
