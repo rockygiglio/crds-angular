@@ -2,8 +2,7 @@ export default function ChildcareRoutes($stateProvider) {
   $stateProvider.state('childcare-dashboard', {
     parent: 'noSideBar',
     url: '/childcare-dashboard',
-    controller: 'ChildcareDashboardController as childcaredashboard',
-    templateUrl: 'childcare_dashboard/childcareDashboard.html',
+    template: '<childcare-dashboard></childcare-dashboard>',
     data: {
       isProtected: true,
       meta: {
