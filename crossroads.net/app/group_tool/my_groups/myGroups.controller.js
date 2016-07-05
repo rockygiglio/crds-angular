@@ -19,13 +19,6 @@ export default class MyGroupsController {
       },
       {
         leader: false,
-        name: 'Marriage Growth',
-        focus: 'Marriage',
-        time: 'Moday\'s at 9:30pm, Every Other Week',
-        location: '8115 Montgomery Road, Cincinnati OH, 45243'
-      },
-      {
-        leader: false,
         name: 'Bible Study',
         focus: 'Reaching Jesus',
         time: 'Friday\'s at 9:30am, Every Three Week',
