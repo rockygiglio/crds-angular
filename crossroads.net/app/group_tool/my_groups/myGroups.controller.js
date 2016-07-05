@@ -1,6 +1,5 @@
-class MyGroupsController {
+export default class MyGroupsController {
   /*@ngInject*/
   constructor() {}
 
 }
-export default MyGroupsController;

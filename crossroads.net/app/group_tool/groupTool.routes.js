@@ -29,5 +29,17 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           description: ''
         }
       }
+    })
+    .state('grouptool.create', {
+      parent: 'noSideBar',
+      url: '/groups/create',
+      template: '<create-group></create-group>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Create a Group',
+          description: ''
+        }
+      }
     });
 }
