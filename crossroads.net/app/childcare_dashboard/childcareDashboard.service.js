@@ -1,6 +1,3 @@
-class ChildcareDashboardService {
-  /*ngInject*/
-  constructor(){}
-}
+class ChildcareDashboardService { }
 
 export default ChildcareDashboardService;

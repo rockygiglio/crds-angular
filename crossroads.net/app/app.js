@@ -11,7 +11,6 @@ require('ui-select/dist/select.css');
   var constants = require('./constants');
 
   angular.module(constants.MODULES.CROSSROADS, [
-      constants.MODULES.CHILDCARE,
       constants.MODULES.CHILDCARE_DASHBOARD,
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
@@ -40,7 +39,6 @@ require('ui-select/dist/select.css');
   require('./explore');
   require('./gotrips');
   require('./my_serve');
-//  require('./childcare_dashboard');
   require('./brave_at_home');
   require('./volunteer_signup');
   require('./volunteer_application');
