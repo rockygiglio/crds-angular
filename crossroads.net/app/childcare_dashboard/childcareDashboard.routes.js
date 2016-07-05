@@ -11,8 +11,10 @@ export default function ChildcareRoutes($stateProvider) {
       }
     },
     resolve: {
+      ChildcareDashboardService: 'ChildcareDashboardService',
       loggedin: crds_utilities.checkLoggedin,
       $cookies: '$cookies',
+      //TODO: resolve that deterimines if I'm allowed to view dashboard
     }
   });
 }
