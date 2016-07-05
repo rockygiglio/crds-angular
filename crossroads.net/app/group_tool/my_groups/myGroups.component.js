@@ -2,7 +2,7 @@ import controller  from './myGroups.controller';
 
 MyGroupsComponent.$inject = [ ];
 
-function MyGroupsComponent() {
+export default function MyGroupsComponent() {
 
   let myGroupsComponent = {
     restrict: 'E',
@@ -15,4 +15,3 @@ function MyGroupsComponent() {
   return myGroupsComponent;
 
 }
-export default MyGroupsComponent;
