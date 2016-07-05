@@ -42,7 +42,6 @@ namespace crds_angular.Services
         /// </summary>
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
-        private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
 
         public GroupService(IGroupRepository mpGroupService,

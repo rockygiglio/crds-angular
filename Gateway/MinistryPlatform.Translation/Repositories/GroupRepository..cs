@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int GroupSignupRelationsPageId = Convert.ToInt32((AppSettings("GroupSignUpRelations")));
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
-        private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
+        private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
         private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
 
@@ -483,7 +483,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
-            var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
+            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView, token, String.Format(",{0},,,{1}", participantId, groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
@@ -505,6 +505,8 @@ namespace MinistryPlatform.Translation.Repositories
                 MeetingDayId = details.ToInt("Meeting_Day_ID"),
                 MeetingTime = details.ToString("Meeting_Time"),
                 AvailableOnline = details.ToBool("Available_Online"),
+                MaximumAge = details.ToInt("Maximum_Age"),
+                RemainingCapacity = details.ToInt("Remaining_Capacity"),
                 Address = new MpAddress()
                 {
                     Address_ID = details.ToInt("Address_ID"),

@@ -21,6 +21,7 @@ namespace MinistryPlatform.Translation.Models
         public bool ChildCareAvailable { get; set; }
         public string Congregation { get; set; }
         public int MinimumAge { get; set; }
+        public int MaximumAge { get; set; }
         public string GroupDescription { get; set; }
         public int MinistryId { get; set; }
         public string MeetingTime { get; set; }

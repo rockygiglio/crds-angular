@@ -37,19 +37,19 @@ namespace crds_angular.Models.Crossroads.Childcare
         [JsonProperty(PropertyName = "eventEndTime")]
         public DateTime EventEndTime { get; set; }
 
-        [JsonProperty(PropertyName = "eventDate")]
+        [JsonProperty(PropertyName = "groupMemberName")]
         public string GroupMemberName { get; set; }
 
         [JsonProperty(PropertyName = "groupName")]
         public string GroupName { get; set; }
 
-        [JsonProperty(PropertyName = "Location")]
-        public string LocationName { get; set; }
+        [JsonProperty(PropertyName = "congregationId")]
+        public int CongregationId { get; set; }
 
         [JsonProperty(PropertyName = "maxAge")]
-        public int MaxAge { get; set; }
+        public int MaximumAge { get; set; }
 
-        [JsonProperty(PropertyName = "maxGradYear")]
-        public int MaxGradYear { get; set; }
+        [JsonProperty(PropertyName = "remainingCapacity")]
+        public int RemainingCapacity { get; set; }
     }
 }

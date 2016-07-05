@@ -254,7 +254,7 @@ namespace crds_angular.Services
                     foreach (var ev in groupEvents)
                     {
                         var eventDetails = _eventService.GetEvent(ev.EventId);
-                        if (dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
+                        if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
                         {
                             dashboard.AvailableChildcareDates.Add(new ChildCareDate
                             {
@@ -269,10 +269,10 @@ namespace crds_angular.Services
                             GroupName = group.GroupName,
                             EventStartTime = eventDetails.EventStartDate,
                             EventEndTime = eventDetails.EventEndDate,
-                            LocationName = eventDetails.Congregation,
+                            CongregationId = eventDetails.CongregationId,
                             GroupMemberName = head.Nickname + ' ' + head.LastName,
-                            MaxAge = 8,
-                            MaxGradYear = 2024
+                            MaximumAge = group.MaximumAge,
+                            RemainingCapacity = group.RemainingCapacity
                         });
                         
                     }

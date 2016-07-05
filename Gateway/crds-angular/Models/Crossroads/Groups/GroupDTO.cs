@@ -64,6 +64,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "minAge")]
         public int OnlineRsvpMinimumAge { get; set; }
 
+        [JsonProperty(PropertyName = "maxAge")]
+        public int MaximumAge { get; set; }
+
         public List<SignUpFamilyMembers> SignUpFamilyMembers { get; set; }
 
         [JsonProperty(PropertyName = "events")]
