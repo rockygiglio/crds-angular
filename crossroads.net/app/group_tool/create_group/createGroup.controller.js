@@ -23,7 +23,6 @@ export default class CreateGroupController {
 
         (err) => {
             this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);  
-            this.ready = true;
             this.location.path('/grouptool/leader');
         });
     }
