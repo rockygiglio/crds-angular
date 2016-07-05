@@ -4,10 +4,10 @@ GroupCardComponent.$inject = [ ];
 
 export default function GroupCardComponent() {
 
-  let groupCardComponent = {
-    restrict: 'E',
-    scope: {
-      detail: '='
+  let cardComponent = {
+    bindings: {
+      detail: '<',
+      group: '<'
     },
     templateUrl: 'group_card/groupCard.html',
     controller: controller,
@@ -15,6 +15,6 @@ export default function GroupCardComponent() {
     bindToController: true
   };
 
-  return groupCardComponent;
+  return cardComponent;
 
 }

@@ -4,4 +4,4 @@ import html from './groupCard.html';
 
 export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL).
-  directive('groupCard', groupCardComponent);
+  component('groupCard', groupCardComponent());

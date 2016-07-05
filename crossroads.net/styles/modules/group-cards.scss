@@ -1,17 +1,10 @@
-.my-group-card-round-plus {
-  background: $brand-primary;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 3rem;
-  font-weight: bold;
-  height: 2em;
-  width: 2em;
-  line-height: 2em;
-  text-align: center;
-  @extend .center-block;
+.my-groups-links {
+  padding-left: 0px;
+  margin-left: -65px;
 }
 
 .my-groups {
+  padding-right: 0px;
   display: flex;
   flex-wrap: wrap;
 
@@ -20,8 +13,7 @@
     margin: 1%;
 
     .group-details {
-      height: 275px;
-      max-height: 275px;
+      height: 375px;
       background-color: #d9d9d9;
       border-style: solid;
       border-width: thin;
@@ -40,6 +32,14 @@
           font-weight: 300;
         }
       }
+
+      .group-buttons {
+        margin-top: 9px;
+
+        button {
+          width: 175px;
+        }
+      }
     }
 
     .group-details:nth-of-type(2n) {
@@ -51,15 +51,14 @@
     }
 
     .group-action {
-      height: 275px;
-      max-height: 275px;
+      height: 375px;
 
-      .group-pad {
+      div.group-pad {
         background-color: #fff;
         height: 10%;
       }
 
-      .group-panel {
+      div.group-panel {
         height: 45%;
         text-align: center;
         border-style: solid;

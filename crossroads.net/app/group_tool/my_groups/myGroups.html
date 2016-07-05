@@ -1,10 +1,20 @@
 <span dynamic-content="$root.MESSAGES.myGroupsHeader.content | html"></span>
 <div class="row">
-  <div class="my-groups">
-    <group-card detail="true"></group-card>
-    <group-card detail="true"></group-card>
-    <group-card detail="true"></group-card>
-    <group-card detail="false"></group-card>
+  <div class="col-md-10 my-groups">
+    <group-card ng-repeat="group in myGroups.groups" detail="true" group="group"></group-card>
     <group-card detail="false"></group-card>
   </div>
+  <div class="col-md-2 my-groups-links" >
+    <nav class="bs-docs-sidebar">
+      <ul class="nav bs-docs-sidenav">
+        <li>
+          <a href="#">Study Resources</a>
+          <a href="#">Being a Leader</a>
+          <a href="#">Contact Support</a>
+          <a href="#">Send Feedback</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
 </div>
