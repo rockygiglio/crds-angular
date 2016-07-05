@@ -10,7 +10,11 @@ SET ANSI_NULLS ON
 SET ANSI_PADDING ON
 SET ANSI_WARNINGS ON
 GO
+
+If NOT EXISTS(Select * from sys.columns where Name = N'Online_Meetings' and Object_ID = Object_ID(N'Groups'))
+BEGIN
 ALTER TABLE dbo.Groups ADD
-	Online_Meetings bit NOT NULL DEFAULT (0)
+	Online_Meetings bit NOT NULL DEFAULT (0);
+End
 GO
 COMMIT
