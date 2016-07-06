@@ -2,3 +2,9 @@
 <div ng-show='createGroup.ready'>
   Hi. This is where you will create a group if you are an approved group leader.
 </div>
+
+<formly-form model="createGroup.model" fields="createGroup.fields">
+  <button type="submit" class="btn btn-default" ng-click="createGroup.submit(createGroup.user)">Submit</button>
+</formly-form>
+<pre>{{createGroup.model | json}}</pre>
+<pre>{{createGroup.fields | json}}</pre>
