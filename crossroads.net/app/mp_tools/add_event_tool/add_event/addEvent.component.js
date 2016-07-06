@@ -80,6 +80,9 @@
           endTime: endDate
         };
       }
+      else {
+          vm.eventTypeChanged();
+      }
     }
 
     function dateTime(dateForDate, dateForTime) {
