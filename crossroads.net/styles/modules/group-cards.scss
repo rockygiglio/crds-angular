@@ -1,6 +1,10 @@
 .my-groups-links {
-  padding-left: 0px;
+  padding-left: 2%;
   margin-left: -65px;
+
+  a {
+    border-radius: 3px;
+  }
 }
 
 .my-groups {
@@ -9,17 +13,17 @@
   flex-wrap: wrap;
 
   group-card {
-    width: 40%;
+    width: 45%;
     margin: 1%;
 
-    .group-details {
+    .group-detail {
       height: 375px;
       background-color: #d9d9d9;
       border-style: solid;
       border-width: thin;
-      padding-left: 2%;
-      padding-right: 2%;
-      padding-bottom: 2%;
+      padding-left: 7%;
+      padding-right: 7%;
+      padding-bottom: 7%;
 
       .group-title {
         font-weight: 500;
@@ -33,6 +37,10 @@
         }
       }
 
+      .group-details {
+        height: 83%;
+      }
+
       .group-buttons {
         margin-top: 9px;
 
@@ -42,11 +50,11 @@
       }
     }
 
-    .group-details:nth-of-type(2n) {
+    .group-detail:nth-of-type(2n) {
       margin-right: 0;
     }
 
-    .group-details:nth-of-type(2n+1) {
+    .group-detail:nth-of-type(2n+1) {
       margin-left: 0;
     }
 
@@ -55,19 +63,21 @@
 
       div.group-pad {
         background-color: #fff;
-        height: 10%;
+        height: 5%;
       }
 
       div.group-panel {
-        height: 45%;
+        height: 47.5%;
         text-align: center;
         border-style: solid;
         border-width: thin;
         background-color: #d9d9d9;
+        cursor: pointer;
 
         svg {
-          width: 60px;
-          height: 60px;
+          margin-top: 13px;
+          width: 66px;
+          height: 66px;
         }
 
         .group-title {
@@ -75,7 +85,7 @@
           color: #222222;
           line-height: 1.22222222;
           font-size: 19px;
-          margin-top: 16px;
+          margin-top: 10%;
         }
       }
     }

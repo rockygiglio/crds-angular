@@ -11,13 +11,15 @@
       editMode: false,
       eventData: {
         event: {},
-        rooms: []
+        rooms: [],
+        group: {}
       },
       getEventDto: function(eventData) {
         var reminderDays = null;
         if (eventData.event.reminderDays !== undefined) {
           reminderDays = (eventData.event.reminderDays.dp_RecordID > 0) ? eventData.event.reminderDays.dp_RecordID : null;
         }
+
 
         return {
           congregationId: eventData.event.congregation.dp_RecordID,
@@ -34,7 +36,12 @@
           reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
           sendReminder: eventData.event.sendReminder,
+          maximumAge: eventData.event.maximumAge,
+          minimumChildren: eventData.event.minimumChildren,
+          maximumChildren: eventData.event.maximumChildren,
+          group: getGroupDto(eventData.event),
           rooms: _.map(eventData.rooms, function(r) { return getRoomDto(r); })
+         
         };
       },
 
@@ -64,12 +71,39 @@
             sendReminder: event.sendReminder,
             startTime: new Date(event.startDateTime),
             endTime: new Date(event.endDateTime),
-            eventTitle: event.title
+            eventTitle: event.title,
+            maximumAge: event.maximumAge,
+            minimumChildren: event.minimumChildren,
+            maximumChildren: event.maximumChildren
           },
           rooms: _.map(event.rooms, function(r) { return fromRoomDto(r); })
         };
       }
     };
+
+    function getGroupDto(groupData) {
+      // group type 27 is childcare. There is no selection for this in the event tool.
+      // ministry 2 is Kids club. There is no selection for this in the event tool.
+      // TODO: Need to find a way to remove this hard code
+
+      if (groupData.eventType.dp_RecordName != "Childcare") {
+        return null;
+      }
+
+      var groupDto = {
+        groupname: "__childcaregroup",
+        grouptypeid: 27,
+        ministryid: 2,
+        congregationid: groupData.congregation.Congregation_ID,
+        contactid: groupData.primaryContact.contactId,
+        startdate: moment(groupData.startDateTime).utc().format(),
+        maximumage: groupData.maximumAge,
+        minimumparticipants: groupData.minimumChildren,
+        maximumparticipants: groupData.maximumChildren
+      }
+
+      return groupDto;
+    }
 
     function getRoomDto(room) {
       var roomDto = {
