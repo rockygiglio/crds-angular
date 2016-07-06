@@ -267,6 +267,20 @@ namespace crds_angular.Services
                         }
 
                         //Date exists, add group
+                        var eligibleChildren = new List<ChildcareRsvp>();
+                        foreach (var member in household)
+                        {
+                            if (!member.HouseholdPosition?.StartsWith("Head") ?? false)
+                            {
+                                eligibleChildren.Add(new ChildcareRsvp
+                                {
+                                    ContactId = member.ContactId,
+                                    DisplayName = member.Nickname + ' ' + member.LastName,
+                                    ChildEligible = true, //(member.age < group.MaximumAge),
+                                    ChildHasRsvp = IsChildRsvpd(member.ContactId, eventDetails.EventId, token)
+                                });
+                            }
+                        }
                         var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
                         ccEvent.Groups.Add(new ChildcareGroup
                         {
@@ -276,7 +290,8 @@ namespace crds_angular.Services
                             CongregationId = eventDetails.CongregationId,
                             GroupMemberName = head.Nickname + ' ' + head.LastName,
                             MaximumAge = group.MaximumAge,
-                            RemainingCapacity = group.RemainingCapacity
+                            RemainingCapacity = group.RemainingCapacity,
+                            EligibleChildren = eligibleChildren
                         });
                         
                     }
@@ -284,6 +299,14 @@ namespace crds_angular.Services
             }
 
             return dashboard;
+        }
+
+        private bool IsChildRsvpd(int contactId, int eventId, string token)
+        {
+            var participant = _participantService.GetParticipant(contactId);
+            var childGroups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 27);
+            var groups = _eventService.GetEventGroupsForEvent(eventId, token);
+            return groups.Any(grp => childGroups.Any(c => c.GroupId == grp.GroupId));
         }
 
         public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
