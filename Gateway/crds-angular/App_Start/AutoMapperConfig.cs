@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
@@ -17,6 +18,7 @@ using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
+using MpInvitationOrRequest = MinistryPlatform.Translation.Models.MpInvitation;
 using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace crds_angular.App_Start
@@ -41,6 +43,14 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventTypeId))
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
+
+            Mapper.CreateMap<Invitation,MpInvitation > ()
+                .ForMember(dest => dest.SourceId, opts => opts.MapFrom(src => src.SourceId))
+                .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.RecipientName, opts => opts.MapFrom(src => src.RecipientName))
+                .ForMember(dest => dest.RequestDate, opts => opts.MapFrom(src => src.RequestDate))
+                .ForMember(dest => dest.InvitationType, opts => opts.MapFrom(src => src.InvitationType));
 
             Mapper.CreateMap<MpGroupParticipant, OpportunityGroupParticipant>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
