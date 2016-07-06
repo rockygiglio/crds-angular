@@ -11,7 +11,7 @@ GO
 SET ANSI_PADDING ON
 GO
 
-IF NOT EXISTS (select * from sys.objects where Object_ID = Object_ID(N'dbo.cr_Invitations') and Type = N'U')
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE Object_ID = Object_ID(N'dbo.cr_Invitations') and Type = N'U')
 BEGIN
 CREATE TABLE [dbo].[cr_Invitations](
 	[Invitation_ID] [int] IDENTITY(1,1) NOT NULL,
@@ -67,5 +67,3 @@ REFERENCES [dbo].[Group_Roles] ([Group_Role_ID])
 
 ALTER TABLE [dbo].[cr_Invitations] CHECK CONSTRAINT [FK_cr_Invitations_Group_Roles]
 END
-
-
