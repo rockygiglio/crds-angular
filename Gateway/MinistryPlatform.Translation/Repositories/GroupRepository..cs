@@ -205,6 +205,13 @@ namespace MinistryPlatform.Translation.Repositories
                     g.RemainingCapacity = (short)rc;
                 }
 
+                object mx = null;
+                groupDetails.TryGetValue("Maximum_Age", out mx);
+                if (mx != null)
+                {
+                    g.MaximumAge = (int) mx;
+                }
+
                 if (g.WaitList)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,

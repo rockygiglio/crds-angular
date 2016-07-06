@@ -230,6 +230,11 @@ namespace crds_angular.Services
             }
         }
 
+        public GroupDTO GetGroupDetails(int groupId)
+        {
+            return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(groupId));
+        }
+
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
         {
             int participantId = participant.ParticipantId;

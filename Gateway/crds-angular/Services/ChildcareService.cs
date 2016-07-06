@@ -240,7 +240,7 @@ namespace crds_angular.Services
             //Figure out who is a head in my household
             var contact = _contactService.GetContactById(contactId);
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition?.StartsWith("Head") ?? false);
+            var houseHeads = household.Where(h => h.HouseholdPosition?.StartsWith("Head") ?? false); //TODO: Get rid of magic string. Household Position
             if (!houseHeads.Any(h => h.ContactId == contactId))
             {
                 throw new NotHeadOfHouseholdException(contactId);
@@ -267,17 +267,19 @@ namespace crds_angular.Services
                         }
 
                         //Date exists, add group
+                        var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == 27); //TODO: Get rid of magic number. Childcare Group Type
+                        var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
                         var eligibleChildren = new List<ChildcareRsvp>();
                         foreach (var member in household)
                         {
-                            if (!member.HouseholdPosition?.StartsWith("Head") ?? false)
+                            if (!member.HouseholdPosition?.StartsWith("Head") ?? false) //TODO: Get rid of magic string. Household Position
                             {
                                 eligibleChildren.Add(new ChildcareRsvp
                                 {
                                     ContactId = member.ContactId,
                                     DisplayName = member.Nickname + ' ' + member.LastName,
-                                    ChildEligible = true, //(member.age < group.MaximumAge),
-                                    ChildHasRsvp = IsChildRsvpd(member.ContactId, eventDetails.EventId, token)
+                                    ChildEligible = (member.Age < ccEventGroup.MaximumAge),
+                                    ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
                                 });
                             }
                         }
@@ -289,7 +291,7 @@ namespace crds_angular.Services
                             EventEndTime = eventDetails.EventEndDate,
                             CongregationId = eventDetails.CongregationId,
                             GroupMemberName = head.Nickname + ' ' + head.LastName,
-                            MaximumAge = group.MaximumAge,
+                            MaximumAge = ccEventGroup.MaximumAge,
                             RemainingCapacity = group.RemainingCapacity,
                             EligibleChildren = eligibleChildren
                         });
@@ -301,12 +303,11 @@ namespace crds_angular.Services
             return dashboard;
         }
 
-        private bool IsChildRsvpd(int contactId, int eventId, string token)
+        private bool IsChildRsvpd(int contactId, GroupDTO ccEventGroup, string token)
         {
             var participant = _participantService.GetParticipant(contactId);
-            var childGroups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 27);
-            var groups = _eventService.GetEventGroupsForEvent(eventId, token);
-            return groups.Any(grp => childGroups.Any(c => c.GroupId == grp.GroupId));
+            var childGroups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 27); //TODO: Get rid of magic number. Childcare Group Type
+            return childGroups.Any(c => c.GroupId == ccEventGroup.GroupId);
         }
 
         public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId, string token)
