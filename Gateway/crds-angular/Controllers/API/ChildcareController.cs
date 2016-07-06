@@ -218,6 +218,12 @@ namespace crds_angular.Controllers.API
                 {
                     return Ok(_childcareService.GetChildcareDashboard(contactId));
                 }
+                catch (NotHeadOfHouseholdException notHead)
+                {
+                    var json = JsonConvert.SerializeObject(notHead.Message, Formatting.Indented);
+                    var message = new HttpResponseMessage(HttpStatusCode.NotAcceptable) {Content = new StringContent(json)};
+                    throw new HttpResponseException(message);
+                }
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Get Childcare Dashboard Failed", e);

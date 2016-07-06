@@ -240,7 +240,11 @@ namespace crds_angular.Services
             //Figure out who is a head in my household
             var contact = _contactService.GetContactById(contactId);
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition.StartsWith("Head"));
+            var houseHeads = household.Where(h => h.HouseholdPosition?.StartsWith("Head") ?? false);
+            if (!houseHeads.Any(h => h.ContactId == contactId))
+            {
+                throw new NotHeadOfHouseholdException(contactId);
+            }
 
             //Find community groups for house heads
             foreach (var head in houseHeads)

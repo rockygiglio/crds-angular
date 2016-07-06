@@ -281,6 +281,7 @@
     <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Exceptions\EventMissingException.cs" />
     <Compile Include="Exceptions\MoreThanOneRecordException.cs" />
+    <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareRequestDto.cs" />
