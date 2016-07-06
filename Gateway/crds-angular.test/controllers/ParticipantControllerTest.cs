@@ -28,7 +28,7 @@ namespace crds_angular.test.controllers
         public void TestGetParticipant()
         {
             var participant = new MinistryPlatform.Translation.Models.Participant();
-            _groupService.Setup(mocked => mocked.GetParticipantRecord($"{AuthType} {AuthToken}")).Returns(participant);
+            _groupService.Setup(mocked => mocked.GetParticipantRecord(string.Format("{0} {1}", AuthType, AuthToken))).Returns(participant);
 
             var result = _fixture.GetParticipant();
             Assert.IsNotNull(result);
