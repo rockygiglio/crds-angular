@@ -8,7 +8,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE Object_ID = Object_ID(N'dbo.cr_Invitation_Types') and Type = N'U')
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE Object_ID = Object_ID(N'dbo.cr_Invitation_Types') AND Type = N'U')
 BEGIN
 CREATE TABLE [dbo].[cr_Invitation_Types](
 	[Invitation_Type_ID] [int] IDENTITY(1,1) NOT NULL,

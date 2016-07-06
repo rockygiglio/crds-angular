@@ -1,7 +1,7 @@
 Use [MinistryPlatform]
 GO
 
-IF NOT EXISTS (select * from cr_Invitation_Types where Invitation_Type = 'Groups')
+IF NOT EXISTS (SELECT * FROM cr_Invitation_Types WHERE Invitation_Type = 'Groups')
 BEGIN
 INSERT INTO [dbo].cr_Invitation_Types 
 (Invitation_Type, Description)  VALUES
@@ -9,7 +9,7 @@ INSERT INTO [dbo].cr_Invitation_Types
 END
 GO
 
-IF NOT EXISTS (select * from cr_Invitation_Types where Invitation_Type = 'Trips')
+IF NOT EXISTS (SELECT * FROM cr_Invitation_Types WHERE Invitation_Type = 'Trips')
 BEGIN
 INSERT INTO [dbo].cr_Invitation_Types 
 (Invitation_Type, Description)  VALUES
