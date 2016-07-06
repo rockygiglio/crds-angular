@@ -35,9 +35,13 @@ namespace crds_angular.Services
 
 
 
-        public List<Invitation> GetInvitees(int GroupId)
+        public List<Invitation> GetInvitees(int SourceId, string token )
         {
-            return null;
+            var invitees = _groupToolRepository.GetInvitees(SourceId, token);
+
+            var mpGroupInvitations = invitees.Select(x => Mapper.Map<Invitation>(x));
+
+            return mpGroupInvitations.ToList();
         }
 
 

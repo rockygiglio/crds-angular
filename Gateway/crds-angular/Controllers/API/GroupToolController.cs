@@ -35,21 +35,21 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("POST")]
-        [Route("api/grouptool/request-to-join")]
+        [Route("api/grouptool/join-request")]
         public IHttpActionResult CreateRequestToJoin([FromBody] Invitation dto)
         {
             throw new NotImplementedException();
         }
 
         [AcceptVerbs("GET")]
-        [Route("api/grouptool/{GroupId}/inviteesAndRequestors")]
-        public IHttpActionResult GetInvitees(int GroupId)
+        [Route("api/grouptool/{GroupId}/invitees-and-requestors")]
+        public IHttpActionResult GetInvitees(int SourceId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                     var invitessAndRequestors = groupToolService.GetInvitees(GroupId);
+                    var invitessAndRequestors = groupToolService.GetInvitees(SourceId, token);
                     return Ok(invitessAndRequestors);
                 }
                 catch (Exception exception)

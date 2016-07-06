@@ -17,6 +17,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
         private readonly int _invitationPageId;
+        private readonly int _invitationEmailTemplateId;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 
@@ -25,18 +26,21 @@ namespace MinistryPlatform.Translation.Repositories
         public InvitationRepository(IMinistryPlatformService ministryPlatformService,
                                IConfigurationWrapper configurationWrapper,
                                IAuthenticationRepository authenticationService,
-                               ICommunicationRepository communicationService)
+                               ICommunicationRepository communicationService,
+                               IContactRepository contactService)
             : base(authenticationService, configurationWrapper)
         {
             this._ministryPlatformService = ministryPlatformService;
             this._configurationWrapper = configurationWrapper;
+            this._contactService = contactService;
             this._communicationService = communicationService;
             this._invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
+            this._invitationEmailTemplateId = _configurationWrapper.GetConfigIntValue("InvitationEmailTemplateId");
         }
 
         public bool CreateInvitation(MpInvitation dto, string token)
         {
-            var invitationType = (int) dto.InvitationType;
+            var invitationType = (int)dto.InvitationType;
 
             var values = new Dictionary<string, object>
             {
@@ -49,12 +53,45 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var privateInviteId = _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
+                _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
+
+                var emailTemplate = _communicationService.GetTemplate(_invitationEmailTemplateId);
+                var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+                var from = new MpContact
+                {
+                    ContactId = fromContact.Contact_ID,
+                    EmailAddress = fromContact.Email_Address
+                };
+
+                var domainId = Convert.ToInt32(AppSettings("DomainId"));
+
+                var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        ContactId = fromContact.Contact_ID,
+                        EmailAddress = dto.EmailAddress
+                    }
+                };
+
+
+                var confirmation = new MpCommunication
+                {
+                    EmailBody = emailTemplate.Body,
+                    EmailSubject = emailTemplate.Subject,
+                    AuthorUserId = 5,
+                    DomainId = domainId,
+                    FromContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
+                    ReplyToContact = from,
+                    TemplateId = _invitationEmailTemplateId,
+                    ToContacts = to
+                };
+                _communicationService.SendMessage(confirmation);
                 return true;
             }
             catch (Exception e)
             {
-                throw new ApplicationException(string.Format("Create Private Invitation failed.  Invitation Type: {0}, Source Id: {1}", dto.InvitationType, dto.SourceId), e);
+                throw new ApplicationException(string.Format("Create Invitation failed.  Invitation Type: {0}, Source Id: {1}", dto.InvitationType, dto.SourceId), e);
             }
         }
 

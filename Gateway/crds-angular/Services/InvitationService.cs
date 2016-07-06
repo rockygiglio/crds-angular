@@ -40,10 +40,6 @@ namespace crds_angular.Services
 
             var invite = _invitationRepository.CreateInvitation(mpGroupInvitation, token);
             
-//            var invite = _privateInviteService.Create(dto.PledgeCampaignId, dto.EmailAddress, dto.RecipientName, token);
-//            var communication = PrivateInviteCommunication(invite);
-//            _communicationService.SendMessage(communication);
-
             return true;
         }
 
