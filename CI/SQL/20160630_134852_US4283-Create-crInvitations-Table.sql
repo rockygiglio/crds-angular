@@ -18,6 +18,7 @@ CREATE TABLE [dbo].[cr_Invitations](
 	[Email_Address] [dbo].[dp_Email] NOT NULL,
 	[Recipient_Name] [nvarchar](75) NOT NULL,
 	[Group_Role_ID] [int] NULL,
+	[Invitation_Date] [datetime] not NULL,
 	[Invitation_GUID] [uniqueidentifier] NOT NULL,
 	[Invitation_Used] [bit] NOT NULL,
 	[Domain_ID] [int] NOT NULL,
@@ -33,6 +34,9 @@ SET ANSI_PADDING OFF
 GO
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_GUID]  DEFAULT (newid()) FOR [Invitation_GUID]
+GO
+
+ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_Date]  DEFAULT (GetDate()) FOR [Invitation_Date]
 GO
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_Used]  DEFAULT ((0)) FOR [Invitation_Used]
