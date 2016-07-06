@@ -11,7 +11,7 @@ SET ANSI_PADDING ON
 SET ANSI_WARNINGS ON
 GO
 
-If NOT EXISTS(Select * from sys.columns where Name = N'Online_Meetings' and Object_ID = Object_ID(N'Groups'))
+If NOT EXISTS(SELECT * FROM sys.columns WHERE Name = N'Online_Meetings' AND Object_ID = Object_ID(N'Groups'))
 BEGIN
 ALTER TABLE dbo.Groups ADD
 	Online_Meetings bit NOT NULL DEFAULT (0);

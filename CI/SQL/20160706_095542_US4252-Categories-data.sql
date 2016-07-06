@@ -1,43 +1,43 @@
 Use [MinistryPlatform]
 GO
 
-IF NOT EXISTS(Select * from cr_Categories where Category = 'Healing')
+IF NOT EXISTS(SELECT * FROM cr_Categories WHERE Category = 'Healing')
 BEGIN
 INSERT INTO [dbo].[cr_Categories] 
 (Category ,Description,Domain_ID) VALUES
-('Healing',null       ,1        );
+('Healing',NULL       ,1        );
 END
 GO
 
-IF NOT EXISTS(Select * from cr_Categories where Category = 'Interest')
+IF NOT EXISTS(SELECT * FROM cr_Categories WHERE Category = 'Interest')
 BEGIN
 INSERT INTO [dbo].[cr_Categories] 
 (Category  ,Description,Domain_ID) VALUES
-('Interest',null       ,1         );
+('Interest',NULL       ,1         );
 END
 GO
 
-IF NOT EXISTS(Select * from cr_Categories where Category = 'Life Stages')
+IF NOT EXISTS(SELECT * FROM cr_Categories WHERE Category = 'Life Stages')
 BEGIN
 INSERT INTO [dbo].[cr_Categories]
 (Category     ,Description,Domain_ID) VALUES
-('Life Stages',null       ,1        );
+('Life Stages',NULL       ,1        );
 END
 GO
 
-IF NOT EXISTS(Select * from cr_Categories where Category = 'Neighborhoods')
+IF NOT EXISTS(SELECT * FROM cr_Categories WHERE Category = 'Neighborhoods')
 BEGIN
 INSERT INTO [dbo].[cr_Categories] 
 (Category       ,Description,Domain_ID) VALUES
-('Neighborhoods',null       ,1        );
+('Neighborhoods',NULL       ,1        );
 END
 GO
 
-IF NOT EXISTS(Select * from cr_Categories where Category = 'Spritual Growth')
+IF NOT EXISTS(SELECT * FROM cr_Categories WHERE Category = 'Spritual Growth')
 BEGIN
 INSERT INTO [dbo].[cr_Categories] 
 (Category          ,Description,Domain_ID) VALUES
-('Spiritual Growth',null       ,1        );
+('Spiritual Growth',NULL       ,1        );
 END
 GO
 

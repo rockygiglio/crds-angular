@@ -11,7 +11,7 @@ GO
 
 SET ANSI_PADDING ON
 GO
-IF NOT EXISTS (select * from sys.objects where Object_ID = Object_ID(N'dbo.cr_Categories') and Type = N'U')
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE Object_ID = Object_ID(N'dbo.cr_Categories') AND Type = N'U')
 BEGIN
 CREATE TABLE dbo.cr_Categories
 	(
