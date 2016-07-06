@@ -12,9 +12,9 @@ export default class ParticipantService {
       return this.resource(__API_ENDPOINT__ + 'api/participant').get().$promise; 
     } else {
       this.log.info('Unauthenticated, no participant');
-      var promise = deferred.defer();
-      promise.resolve();
-      return promise;
+      var promised = this.deferred.defer();
+      promised.resolve({'ApprovedSmallGroupLeader': false});
+      return promised.promise;
     };
   }
 }
