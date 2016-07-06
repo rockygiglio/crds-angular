@@ -14,7 +14,9 @@ export default function ChildcareRoutes($stateProvider) {
       ChildcareDashboardService: 'ChildcareDashboardService',
       loggedin: crds_utilities.checkLoggedin,
       $cookies: '$cookies',
-      //TODO: resolve that deterimines if I'm allowed to view dashboard
+      FetchChildcareDates: function(ChildcareDashboardService) {
+        return ChildcareDashboardService.fetchChildcareDates().$promise;
+      }
     }
   });
 }

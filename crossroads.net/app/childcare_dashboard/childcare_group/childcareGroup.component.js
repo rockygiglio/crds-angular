@@ -1,9 +1,13 @@
 import ChildcareDashboardGroupController from './childcareDashboardGroup.controller';
 
 let ChildcareGroup = {
-  bindings: {},
+  bindings: {
+    communityGroup: '=',
+    eventDate: '='
+  },
   templateUrl: 'childcare_group/childcareGroup.html',
-  controller: ChildcareDashboardGroupController
+  controller: ChildcareDashboardGroupController,
+  controllerAs: 'childcareGroup'
 };
 
 export default ChildcareGroup;

@@ -15,5 +15,6 @@ var childcareModule = angular.module(constants.MODULES.CHILDCARE_DASHBOARD, ['cr
 
 require('./childcareDashboard.html');
 require('./childcare_intro/childcareIntro.html');
+require('./childcare_group/childcareGroup.html');
 
 export default childcareModule;

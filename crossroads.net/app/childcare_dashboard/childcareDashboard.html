@@ -1,4 +1,16 @@
 <h3>Childcare Dashboard</h3>
 <hr>
-<childcare-intro />
+<childcare-intro> </childcare-intro>
 
+<div ng-if="!childcare.isGroupsEmpty()">
+  <div ng-repeat="evt in childcare.childcareObj.childcareDates">
+    <h4> {{evt.eventDate | date:'fullDate'}} </h4>
+    <hr />
+    <childcare-group 
+      ng-repeat='cg in evt.communityGroups' 
+      community-group='cg'
+      event-date='evt.eventDate'
+    >
+    </childcare-group>
+  </div>
+</div>

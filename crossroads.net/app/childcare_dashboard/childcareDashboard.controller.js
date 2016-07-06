@@ -1,5 +1,14 @@
+/*@ngInject*/
 class ChildcareDashboardController {
-  /*@ngInject*/
-    constructor(){}
+    constructor(ChildcareDashboardService){
+      this.childcareService = ChildcareDashboardService;
+      this.childcareObj = this.childcareService.getChildcareDates();
+    }
+
+    isGroupsEmpty() {
+      return this.childcareObj['childcareDates'].length < 1;
+    }
+
+
   }
   export default ChildcareDashboardController;
