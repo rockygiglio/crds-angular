@@ -12,7 +12,7 @@ INSERT INTO [dbo].[dp_Reports]
            ,[On_Reports_Tab])
      VALUES
            (287
-		   ,'Double Booked Rooms-CRDS'
+		   ,'Double Booked Rooms'
            ,'Event Room Double Booked by Congregation'
            ,'/MPReports/Crossroads/Event Room Double Booked-CRDS'
            ,0

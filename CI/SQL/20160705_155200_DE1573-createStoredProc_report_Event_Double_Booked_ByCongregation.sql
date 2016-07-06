@@ -45,7 +45,7 @@ SELECT ER.Event_Room_ID
 FROM         Event_Rooms ER
  INNER JOIN dp_Domains Dom ON Dom.Domain_ID = ER.Domain_ID
  INNER JOIN Rooms R ON R.Room_ID = ER.Room_ID
- INNER JOIN Events E ON E.Event_ID = ER.Event_ID AND Event_Start_Date >= Getdate() AND ISNULL(E.Congration_ID,0) = ISNULL(@CongregationID,ISNULL(E.Congregation_ID,0)) 
+ INNER JOIN Events E ON E.Event_ID = ER.Event_ID AND Event_Start_Date >= Getdate() AND ISNULL(E.Congregation_ID,0) = ISNULL(@CongregationID,ISNULL(E.Congregation_ID,0)) 
  INNER JOIN Contacts ON E.Primary_Contact = Contacts.Contact_ID
  OUTER APPLY (SELECT     ERC.Event_Room_ID AS Confli_Event_Room_ID, EC.Event_Title AS Confli_Event_Title, EC.Event_ID AS Confli_Event_ID, RIGHT(CONVERT(Varchar, DATEADD(n, 
                                                    - (1 * EC.Minutes_for_Setup), EC.Event_Start_Date), 100), 7) AS Conflict_Hold_Start, RIGHT(CONVERT(Varchar, DATEADD(n, EC.Minutes_for_Cleanup, 
