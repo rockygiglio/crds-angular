@@ -362,7 +362,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
-            string searchString = "," + participantId + ",,," + groupTypeId;
+            string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
 
             configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
 
