@@ -20,6 +20,8 @@ namespace crds_angular.Models.Crossroads.Childcare
     {
         [JsonProperty(PropertyName = "eventDate")]
         public DateTime EventDate { get; set; }
+        [JsonProperty(PropertyName = "cancelled")]
+        public bool Cancelled { get; set; }
         [JsonProperty(PropertyName = "communityGroups")]
         public List<ChildcareGroup> Groups { get; set;}
 

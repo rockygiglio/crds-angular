@@ -262,7 +262,8 @@ namespace crds_angular.Services
                         {
                             dashboard.AvailableChildcareDates.Add(new ChildCareDate
                             {
-                                EventDate = eventDetails.EventStartDate.Date
+                                EventDate = eventDetails.EventStartDate.Date,
+                                Cancelled = eventDetails.Cancelled
                             });
                         }
 

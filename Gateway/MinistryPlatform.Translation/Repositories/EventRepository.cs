@@ -186,7 +186,8 @@ namespace MinistryPlatform.Translation.Repositories
                         ContactId = record.ToInt("Contact_ID"),
                         EmailAddress = record.ToString("Email_Address")
                     },
-                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID")
+                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID"),
+                    Cancelled = record.ToBool("Cancelled")
                 };
 
 
