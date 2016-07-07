@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
 using log4net;
-using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using crds_angular.Services.Interfaces;
-using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
 {
@@ -45,20 +37,20 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Return all pending invitations
         /// </summary>
-        /// <param name="SourceId">An integer identifying a group or a trip campaign or some entity to be named later</param>
-        /// <param name="InvitationTypeId">An integer indicating which invitations are to be returned. For example, Groups or Trips or a source to be identified later.</param>
+        /// <param name="sourceId">An integer identifying a group or a trip campaign or some entity to be named later</param>
+        /// <param name="invitationTypeId">An integer indicating which invitations are to be returned. For example, Groups or Trips or a source to be identified later.</param>
         /// <returns>A list of Invitation DTOs</returns>
         [AcceptVerbs("GET")]
         [RequiresAuthorization]
         [ResponseType(typeof(List<Invitation>))]
-        [Route("api/grouptool/invitations/{SourceId}/{InvitationTypeId}")]
-        public IHttpActionResult GetInvitations(int SourceId, int InvitationTypeId)
+        [Route("api/grouptool/invitations/{sourceId}/{invitationTypeId}")]
+        public IHttpActionResult GetInvitations(int sourceId, int invitationTypeId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var invitessAndRequestors = groupToolService.GetInvitations(SourceId, InvitationTypeId, token);
+                    var invitessAndRequestors = groupToolService.GetInvitations(sourceId, invitationTypeId, token);
                     return Ok(invitessAndRequestors);
                 }
                 catch (Exception exception)
@@ -68,6 +60,5 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
-
     }
 }

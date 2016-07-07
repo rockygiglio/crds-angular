@@ -55,7 +55,7 @@ namespace MinistryPlatform.Translation.Repositories
                             SourceId = p.ToInt("Source_ID"),
                             EmailAddress = p.ToString("Email_address"),
                             GroupRoleId = p.ToInt("Group_Role_ID"),
-                            InvitationType = (InvitationType)p.ToInt("Invitation_Type_ID"),
+                            InvitationType = p.ToInt("Invitation_Type_ID"),
                             RecipientName = p.ToString("Recipient_Name"),
                             RequestDate = p.ToDate("Invitation_Date")
                         });

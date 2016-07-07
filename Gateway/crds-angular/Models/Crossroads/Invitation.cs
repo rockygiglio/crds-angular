@@ -24,14 +24,9 @@ namespace crds_angular.Models.Crossroads
         public DateTime RequestDate { get; set; }
 
         [JsonProperty(PropertyName = "invitationType")]
-        public InvitationType InvitationType { get; set; }
+        public int InvitationType { get; set; }
 
 
     }
 
-    public enum InvitationType
-    {
-        Group = 1,
-        Trip = 2
-    }
 }

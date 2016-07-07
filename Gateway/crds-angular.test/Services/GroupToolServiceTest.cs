@@ -21,7 +21,6 @@ using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
-using InvitationType = MinistryPlatform.Translation.Models.InvitationType;
 using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
@@ -67,8 +66,8 @@ namespace crds_angular.test.Services
                 new MpInvitation
                 {
                     EmailAddress = "dudley@doright.com",
-                    GroupRoleId = 16,
-                    InvitationType = InvitationType.Group,
+                    GroupRoleId = 16, // 16 = Group member
+                    InvitationType = 1, // 1 = Group invitation type
                     RecipientName = "Dudley Doright",
                     RequestDate = new DateTime(2016, 7, 6)
                 }
@@ -79,8 +78,8 @@ namespace crds_angular.test.Services
                 new MpInvitation
                 {
                     EmailAddress = "jker@gmail.com",
-                    GroupRoleId = 16,
-                    InvitationType = InvitationType.Group,
+                    GroupRoleId = 16, // 16 = Group member
+                    InvitationType = 1, // 1 = Group invitation type
                     RecipientName = "Joe",
                     RequestDate = new DateTime(2016, 7, 5)
                 }
@@ -91,8 +90,8 @@ namespace crds_angular.test.Services
                 new MpInvitation
                 {
                     EmailAddress = "doubleDown@joker.com",
-                    GroupRoleId = 16,
-                    InvitationType = InvitationType.Group,
+                    GroupRoleId = 16, // 16 = Group member
+                    InvitationType = 1, // 1 = Group invitation type
                     RecipientName = "Joe from Chicago",
                     RequestDate = new DateTime(2016, 7, 4)
                 }
@@ -103,8 +102,8 @@ namespace crds_angular.test.Services
                 new MpInvitation
                 {
                     EmailAddress = "ratso@rizzo.com",
-                    GroupRoleId = 22,
-                    InvitationType = InvitationType.Group,
+                    GroupRoleId = 22, // 16 = Group member
+                    InvitationType = 1, // 1 = Group invitation type
                     RecipientName = "Ratso Rizzo",
                     RequestDate = new DateTime(2016, 7, 3)
                 }

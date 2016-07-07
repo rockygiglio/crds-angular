@@ -52,8 +52,8 @@ namespace crds_angular.test.Services
             var invitation = new Invitation()
             {
                 EmailAddress = "dudley@doright.com",
-                GroupRoleId = 16,
-                InvitationType = crds_angular.Models.Crossroads.InvitationType.Group,
+                GroupRoleId = 16, // 16 = Co-leader invitation
+                InvitationType = 1, // 1 = group invitation
                 RecipientName = "Dudley Doright",
                 RequestDate = new DateTime(2016, 7, 6)
             };

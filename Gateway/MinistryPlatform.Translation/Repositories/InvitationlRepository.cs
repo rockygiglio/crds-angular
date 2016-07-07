@@ -54,45 +54,50 @@ namespace MinistryPlatform.Translation.Repositories
             try
             {
                 _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
-
-                var emailTemplate = _communicationService.GetTemplate(_invitationEmailTemplateId);
-                var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-                var from = new MpContact
-                {
-                    ContactId = fromContact.Contact_ID,
-                    EmailAddress = fromContact.Email_Address
-                };
-
-                var domainId = Convert.ToInt32(AppSettings("DomainId"));
-
-                var to = new List<MpContact>
-                {
-                    new MpContact
-                    {
-                        ContactId = fromContact.Contact_ID,
-                        EmailAddress = dto.EmailAddress
-                    }
-                };
-
-
-                var confirmation = new MpCommunication
-                {
-                    EmailBody = emailTemplate.Body,
-                    EmailSubject = emailTemplate.Subject,
-                    AuthorUserId = 5,
-                    DomainId = domainId,
-                    FromContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
-                    ReplyToContact = from,
-                    TemplateId = _invitationEmailTemplateId,
-                    ToContacts = to
-                };
-                _communicationService.SendMessage(confirmation);
+                SendEmail(dto.EmailAddress);
                 return true;
             }
             catch (Exception e)
             {
                 throw new ApplicationException(string.Format("Create Invitation failed.  Invitation Type: {0}, Source Id: {1}", dto.InvitationType, dto.SourceId), e);
             }
+        }
+
+        private void SendEmail(string emailAddress)
+        {
+            var emailTemplate = _communicationService.GetTemplate(_invitationEmailTemplateId);
+            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var from = new MpContact
+            {
+                ContactId = fromContact.Contact_ID,
+                EmailAddress = fromContact.Email_Address
+            };
+
+            var domainId = Convert.ToInt32(AppSettings("DomainId"));
+
+            var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        ContactId = fromContact.Contact_ID,
+                        EmailAddress = emailAddress
+                    }
+                };
+
+
+            var confirmation = new MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = 5,
+                DomainId = domainId,
+                FromContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = from,
+                TemplateId = _invitationEmailTemplateId,
+                ToContacts = to
+            };
+            _communicationService.SendMessage(confirmation);
+
         }
 
     }

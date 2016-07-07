@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Security;
 using log4net;
-using MinistryPlatform.Translation.Exceptions;
-using MinistryPlatform.Translation.Repositories.Interfaces;
-using crds_angular.Services.Interfaces;
-using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
 {
@@ -22,14 +14,11 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IInvitationService invitationService;        
-        private readonly IAuthenticationRepository authenticationService;
 
 
-        public InvitationController(Services.Interfaces.IInvitationService invitationService,
-                               IAuthenticationRepository authenticationService)
+        public InvitationController(Services.Interfaces.IInvitationService invitationService)
         {
             this.invitationService = invitationService;
-            this.authenticationService = authenticationService;
 
         }
 
