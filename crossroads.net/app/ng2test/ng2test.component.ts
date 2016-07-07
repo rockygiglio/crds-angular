@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import * as moment from 'moment';
+declare var moment: any;
 
 @Component({
   selector: 'ng2-test',
