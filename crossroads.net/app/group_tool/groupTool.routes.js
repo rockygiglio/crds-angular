@@ -41,5 +41,29 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           description: ''
         }
       }
+    })
+    .state('grouptool.detail', {
+      parent: 'noSideBar',
+      url: '/groups/detail/:groupId',
+      template: '<group-detail></group-detail>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Group Detail',
+          description: ''
+        }
+      }
+    })
+    .state('grouptool.detail.about', {
+      url: '/about',
+      template: '<group-detail-about></group-detail-about>'
+    })
+    .state('grouptool.detail.participants', {
+      url: '/participants',
+      template: '<group-detail-participants></group-detail-participants>'
+    })
+    .state('grouptool.detail.requests', {
+      url: '/requests',
+      template: '<group-detail-requests></group-detail-requests>'
     });
 }
