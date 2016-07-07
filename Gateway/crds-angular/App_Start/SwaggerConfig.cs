@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -243,6 +244,13 @@ namespace crds_angular
 
             if (isAuthorized && !allowAnonymous)
             {
+                // Setup parameters if the endpoint doesn't have any.  This prevents
+                // a null pointer exception when adding the new authorization parameter.
+                if (operation.parameters == null)
+                {
+                    operation.parameters = new List<Parameter>();
+                }
+
                 operation.parameters.Add(new Parameter
                 {
                     name = "Authorization",
