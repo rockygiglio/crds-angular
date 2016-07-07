@@ -44,7 +44,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail', {
       parent: 'noSideBar',
-      url: '/groups/detail/:groupId',
+      url: '/groups/detail/{groupId:int}',
       template: '<group-detail></group-detail>',
       data: {
         isProtected: true,
@@ -52,11 +52,16 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           title: 'Group Detail',
           description: ''
         }
+      },
+      resolve: {
+        groupId: ['$stateParams', function ($stateParams) {
+          return $stateParams.groupId;
+        }]
       }
     })
     .state('grouptool.detail.about', {
       url: '/about',
-      template: '<group-detail-about></group-detail-about>'
+      template: '<group-detail-about></group-detail-about>'      
     })
     .state('grouptool.detail.participants', {
       url: '/participants',
