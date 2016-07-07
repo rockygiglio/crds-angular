@@ -35,7 +35,73 @@ export default class ParticipantService {
 
   getGroupParticipants(groupId) {
     var promised = this.deferred.defer();
-    promised.resolve({ 'groupId': groupId, 'participants': [] });
+    promised.resolve({
+      'groupId': groupId, 'participants': [
+        {
+          'contactId': 1670863,
+          'participantId': 456,
+          'name': 'Betty Smith',
+          'leader': true,
+          'email': 'bettyjj2000@yahoo.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Ted Baldwin',
+          'leader': false,
+          'email': 'tedb@gmail.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Sam Hanks',
+          'leader': false,
+          'email': 'samguy@hotmail.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Jennie Jones',
+          'leader': false,
+          'email': 'jenniejj2000@yahoo.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Sara Baldwin',
+          'leader': false,
+          'email': 'sarab@hotmail.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Jimmy Hatfield',
+          'leader': false,
+          'email': 'jhat@hotmail.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Freddie Jones',
+          'leader': false,
+          'email': 'FreddieJ@yahoo.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Jamie Hanks',
+          'leader': false,
+          'email': 'jaha95@gmail.com'
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Kerrir Hatfield',
+          'leader': false,
+          'email': 'hatk@gmail.com'
+        },
+      ]
+    });
     return promised.promise;
   }
 
