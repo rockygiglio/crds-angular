@@ -18,17 +18,17 @@ VALUES
 ,'My Current Small Groups'
 ,461    
 ,'Group Tool Small Group View'         
-,'Group_Type_ID_Table.[Group_Type_ID] AS [Group Type ID]
-, Groups.[Group_ID] AS [Group ID]
-, Groups.[Group_Name] AS [Group Name]
-, Meeting_Day_ID_Table.[Meeting_Day] AS [Meeting Day]
-, Groups.[Meeting_Time] AS [Meeting Time]
-, Meeting_Frequency_ID_Table.[Meeting_Frequency] AS [Meeting Frequency]
-, Offsite_Meeting_Address_Table.[Address_Line_1] AS [Address Line 1]
-, Offsite_Meeting_Address_Table.[Address_Line_2] AS [Address Line 2]
+,'Group_Type_ID_Table.[Group_Type_ID] AS [Group_Type_ID]
+, Groups.[Group_ID] AS [Group_ID]
+, Groups.[Group_Name] AS [Group_Name]
+, Meeting_Day_ID_Table.[Meeting_Day] AS [Meeting_Day]
+, Groups.[Meeting_Time] AS [Meeting_Time]
+, Meeting_Frequency_ID_Table.[Meeting_Frequency] AS [Meeting_Frequency]
+, Offsite_Meeting_Address_Table.[Address_Line_1] AS [Address_Line_1]
+, Offsite_Meeting_Address_Table.[Address_Line_2] AS [Address_Line_2]
 , Offsite_Meeting_Address_Table.[City] AS [City]
-, Offsite_Meeting_Address_Table.[State/Region] AS [State/Region]
-, Offsite_Meeting_Address_Table.[Postal_Code] AS [Postal Code]'
+, Offsite_Meeting_Address_Table.[State/Region] AS [State_Region]
+, Offsite_Meeting_Address_Table.[Postal_Code] AS [Postal_Code]'
 , 'Group_Type_ID_Table.[Group_Type_ID] = 1'
 )
 

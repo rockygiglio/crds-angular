@@ -418,5 +418,27 @@ namespace crds_angular.Services
                 currentParticpant.particpantId = participant.ParticipantId;
             }
         }
+
+        public List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token)
+        {
+            var smallGroups = _mpGroupService.GetSmallGroupsForAuthenticatedUser(token);
+            if (smallGroups == null)
+            {
+                return null;
+            }
+
+            var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeService.GetAttributes(90);
+            //foreach (var group in groupDetail)
+            //{
+            //    var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+            //    group.AttributeTypes = attributesTypes.MultiSelect;
+            //    group.SingleAttributes = attributesTypes.SingleSelect;
+            //}
+
+            return groupDetail;
+        }
     }
 }

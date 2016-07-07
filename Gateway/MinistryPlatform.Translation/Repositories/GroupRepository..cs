@@ -555,7 +555,7 @@ namespace MinistryPlatform.Translation.Repositories
         /// <returns></returns>
         public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
         {
-            var groups = ministryPlatformService.GetRecordsDict(MySmallGroupsPageView, userToken);
+            var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
             return groups.Select(MapRecordToMpGroup).ToList();
         }
 
@@ -574,7 +574,7 @@ namespace MinistryPlatform.Translation.Repositories
                     Address_Line_1 = record["Address_Line_1"] as string,
                     Address_Line_2 = record["Address_Line_2"] as string,
                     City = record["City"] as string,
-                    State = record["State/Region"] as string,
+                    State = record["State_Region"] as string,
                     Postal_Code = record["Postal_Code"] as string
                 }
             };
