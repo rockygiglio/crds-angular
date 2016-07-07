@@ -52,11 +52,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           title: 'Group Detail',
           description: ''
         }
-      },
-      resolve: {
-        groupId: ['$stateParams', function ($stateParams) {
-          return $stateParams.groupId;
-        }]
       }
     })
     .state('grouptool.detail.about', {
