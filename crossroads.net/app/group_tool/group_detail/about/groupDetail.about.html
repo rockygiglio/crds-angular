@@ -33,12 +33,12 @@
           <span ng-repeat='leader in groupDetailAbout.data.leaders'>{{leader.name}}<span ng-if='!$last'>,&nbsp;</span></span>
         </div>
         <div class='col-sm-2'><strong>Childcare</strong></div>
-        <div class='col-sm-4'>{{groupDetailAbout.data.childcare ? 'Yes' : 'No'}}</div>
+        <div class='col-sm-4'>{{groupDetailAbout.data.childcare | yesNo}}</div>
       </div>
       <div class='row'>
         <div class='col-sm-6'></div>
         <div class='col-sm-2'><strong>Cats or Dogs</strong></div>
-        <div class='col-sm-4'>{{groupDetailAbout.data.pets ? 'Yes' : 'No'}}</div>
+        <div class='col-sm-4'>{{groupDetailAbout.data.pets | yesNo}}</div>
       </div>
       <div class='row'>
         <div class='col-sm-2'><strong>Description</strong></div>
