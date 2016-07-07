@@ -36,12 +36,12 @@ namespace MinistryPlatform.Translation.Repositories
             this._invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
         }
 
-        public List<MpInvitation> GetInvitations(int SourceId, int InvitationTypeId, string token)
+        public List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId, string token)
         {
             var mpInvitations = new List<MpInvitation>();
             try
             {
-                var searchString = $",,,{SourceId},{InvitationTypeId},,false";
+                var searchString = $",,,{sourceId},{invitationTypeId},,false";
                 var mpResults = _ministryPlatformService.GetRecords(_invitationPageId, token, searchString, string.Empty);
                 var invitations = MPFormatConversion.MPFormatToList(mpResults);
 
@@ -64,12 +64,12 @@ namespace MinistryPlatform.Translation.Repositories
                 }
                 else
                 {
-                    logger.Debug($"No pending invitations found for SourceId = {SourceId}, InvitationTypeId = {InvitationTypeId} ");
+                    logger.Debug($"No pending invitations found for SourceId = {sourceId}, InvitationTypeId = {invitationTypeId} ");
                 }
             }
             catch (Exception exception)
             {
-                logger.Debug($"Exception thrown while retrieving invitations for SourceId = {SourceId}, InvitationTypeId = {InvitationTypeId} ");
+                logger.Debug($"Exception thrown while retrieving invitations for SourceId = {sourceId}, InvitationTypeId = {invitationTypeId} ");
                 logger.Debug($"Exception message:  {exception.Message} ");
             }
             return mpInvitations;

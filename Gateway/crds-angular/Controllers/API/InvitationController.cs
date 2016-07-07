@@ -39,8 +39,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var success = invitationService.CreateInvitation(dto, token);
-                    return Ok(success);
+                    return Ok(invitationService.CreateInvitation(dto, token));
                 }
                 catch (Exception exception)
                 {

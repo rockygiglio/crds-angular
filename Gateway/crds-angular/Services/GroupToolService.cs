@@ -12,17 +12,14 @@ namespace crds_angular.Services
     {
 
         private readonly IGroupToolRepository _groupToolRepository;
-        private readonly ICommunicationRepository _communicationService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
         public GroupToolService(
-                           IGroupToolRepository groupToolRepository,
-                           ICommunicationRepository communicationService)
+                           IGroupToolRepository groupToolRepository)
         {
 
             _groupToolRepository = groupToolRepository;
-            _communicationService = communicationService;
 
         }
 

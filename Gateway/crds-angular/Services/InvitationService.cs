@@ -33,7 +33,7 @@ namespace crds_angular.Services
 
         }
 
-        public bool CreateInvitation(Invitation dto, string token)
+        public int CreateInvitation(Invitation dto, string token)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace crds_angular.Services
             {
                 var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
                 _logger.Error(message, e);
-                return false;
+                return -1;
             }
         }
     }

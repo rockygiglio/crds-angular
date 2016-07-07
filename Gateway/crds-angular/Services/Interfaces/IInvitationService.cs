@@ -6,6 +6,6 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IInvitationService
     {
-        bool CreateInvitation(Invitation dto, string token);
+        int CreateInvitation(Invitation dto, string token);
     }
 }

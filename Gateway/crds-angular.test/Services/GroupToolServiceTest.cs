@@ -39,7 +39,7 @@ namespace crds_angular.test.Services
 
             communicationService = new Mock<MPServices.ICommunicationRepository>();
             groupToolRepository = new Mock<MPServices.IGroupToolRepository>();
-            groupToolService = new GroupToolService(groupToolRepository.Object, communicationService.Object);
+            groupToolService = new GroupToolService(groupToolRepository.Object);
 
         }
 

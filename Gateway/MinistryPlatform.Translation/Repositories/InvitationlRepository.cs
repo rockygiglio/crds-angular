@@ -38,7 +38,7 @@ namespace MinistryPlatform.Translation.Repositories
             this._invitationEmailTemplateId = _configurationWrapper.GetConfigIntValue("InvitationEmailTemplateId");
         }
 
-        public bool CreateInvitation(MpInvitation dto, string token)
+        public int CreateInvitation(MpInvitation dto, string token)
         {
             var invitationType = (int)dto.InvitationType;
 
@@ -53,9 +53,9 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
+                var invitationId = _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
                 SendEmail(dto.EmailAddress);
-                return true;
+                return invitationId;
             }
             catch (Exception e)
             {

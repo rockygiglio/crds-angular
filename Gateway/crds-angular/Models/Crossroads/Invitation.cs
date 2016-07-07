@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads
