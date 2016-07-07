@@ -14,9 +14,26 @@ export default function ChildcareRoutes($stateProvider) {
       ChildcareDashboardService: 'ChildcareDashboardService',
       loggedin: crds_utilities.checkLoggedin,
       $cookies: '$cookies',
-      FetchChildcareDates: function(ChildcareDashboardService) {
-        return ChildcareDashboardService.fetchChildcareDates().$promise;
-      }
+      $q: '$q',
+      FetchChildcareDates: fetchChildcareDates
     }
   });
+
+  function fetchChildcareDates(ChildcareDashboardService, $q) {
+    var deferred = $q.defer();
+    var cds = ChildcareDashboardService.fetchChildcareDates();
+    cds.$promise.then((data) => {
+      console.log(data);
+      ChildcareDashboardService.childcareDates = data;
+      deferred.resolve();
+    }, (err) => {
+      if (err.status === 406) {
+        ChildcareDashboardService.headOfHouseholdError = true;
+        deferred.resolve();
+      }
+      deferred.reject();
+    });
+    return deferred.promise;
+  }
+
 }

@@ -9,6 +9,9 @@ class ChildcareDashboardController {
       return this.childcareObj['childcareDates'].length < 1;
     }
 
+    isError() {
+      this.childcareService.headOfHouseholdError;
+    }
 
   }
   export default ChildcareDashboardController;

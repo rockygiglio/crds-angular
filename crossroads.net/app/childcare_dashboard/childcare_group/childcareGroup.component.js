@@ -3,7 +3,8 @@ import ChildcareDashboardGroupController from './childcareDashboardGroup.control
 let ChildcareGroup = {
   bindings: {
     communityGroup: '=',
-    eventDate: '='
+    eventDate: '=',
+    cancelled: '='
   },
   templateUrl: 'childcare_group/childcareGroup.html',
   controller: ChildcareDashboardGroupController,

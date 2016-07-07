@@ -21,7 +21,6 @@ describe('Childcare Dashboard Controller', () => {
    log = $injector.get('$log');
 
    childcareDashboardService = new ChildcareDashboardService(resource, cookies);
-
    spyOn(cookies, 'get').and.returnValue(uid);
   }));
 

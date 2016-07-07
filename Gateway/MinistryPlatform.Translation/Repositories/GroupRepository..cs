@@ -72,6 +72,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Remaining_Capacity", group.RemainingCapacity },
                 {"Enable_Waiting_List", group.WaitList },
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants },
+                {"Maximum_Participants", group.MaximumParticipants }
             };
 
             var groupId =

@@ -39,7 +39,6 @@ describe('Childcare Dashboard Service', () => {
 
      childcareService.fetchChildcareDates();
      httpBackend.flush();
-     expect(childcareService.childcareDates.childcareDates).toEqual([]);
   });
 
 });

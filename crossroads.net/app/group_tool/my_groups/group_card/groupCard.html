@@ -1,0 +1,95 @@
+<div class="group-detail" ng-if="groupCard.detail">
+  <div class="group-details">
+    <div class="row">
+      <div class="group-title">Group Name
+        <span ng-if="groupCard.group.leader">(Leader)</span>
+        <span ng-if="!groupCard.group.leader">(Participant)</span>
+      </div>
+    </div>
+    <div class="row">
+      <div>{{ groupCard.group.name }}</div>
+    </div>
+
+    <div class="row">
+      <div class="group-title">Group Focus</div>
+    </div>
+    <div class="row">
+      <div>{{ groupCard.group.focus }}</div>
+    </div>
+
+    <div class="row">
+      <div class="group-title">Meeting Time</div>
+    </div>
+    <div class="row">
+      <div>{{ groupCard.group.time }}</div>
+    </div>
+
+    <div class="row">
+      <div class="group-title">Meeting Location</div>
+    </div>
+    <div class="row">
+      <div>{{ groupCard.group.location }}</div>
+    </div>
+  </div>
+
+  <div class="group-buttons">
+    <div class="row">
+      <button>
+      <svg viewBox="0 0 32 32" class="icon icon-eye2">
+        <use xlink:href="#eye2"></use>
+      </svg>
+        View Group Details
+      </button>
+      <button ng-if="groupCard.group.leader">
+      <svg viewBox="0 0 32 32" class="icon icon-mail5">
+        <use xlink:href="#mail5"></use>
+      </svg>
+        Email Group
+      </button>
+    </div>
+  </div>
+
+  <div class="group-buttons">
+    <div class="row">
+      <button ng-if="groupCard.group.leader">
+        <svg viewBox="0 0 32 32" class="icon icon-pencil4">
+          <use xlink:href="#pencil4"></use>
+        </svg>
+        Edit Group Details
+      </button>
+      <button ng-if="groupCard.group.leader">
+        <svg viewBox="0 0 32 32" class="icon icon-user6">
+          <use xlink:href="#user6"></use>
+        </svg>
+        View Invites
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="group-action" ng-if="!groupCard.detail">
+  <div class="group-panel">
+    <div class="row">
+      <div class="group-title">Find Another Group</div>
+    </div>
+    
+    <div class="row">
+      <svg viewBox="0 0 32 32" class="icon search3">
+        <use xlink:href="#search3"></use>
+      </svg>
+    </div>
+  </div>
+
+  <div class="group-pad"></div>
+
+  <div class="group-panel">
+    <div class="row">
+      <div class="group-title">Lead a Group</div>
+    </div>
+    <div class="row">
+      <svg viewBox="0 0 32 32" class="icon plus4">
+          <use xlink:href="#plus4"></use>
+      </svg>
+    </div>
+  </div>
+</div>

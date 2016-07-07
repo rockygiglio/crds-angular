@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using crds_angular.Models.Crossroads.Groups;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Events
@@ -9,7 +10,7 @@ namespace crds_angular.Models.Crossroads.Events
     {
         public EventToolDto()
         {
-            this.Rooms = new List<EventRoomDto>();
+            Rooms = new List<EventRoomDto>();
         }
 
         [JsonProperty(PropertyName = "congregationId")]
@@ -68,6 +69,7 @@ namespace crds_angular.Models.Crossroads.Events
         [Required]
         public string Title { get; set; }
 
-        
+        [JsonProperty(PropertyName = "group")]
+        public GroupDTO Group { get; set; }
     }
 }

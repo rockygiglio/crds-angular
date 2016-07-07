@@ -32,6 +32,7 @@ namespace crds_angular.Services
         private readonly IServeService _serveService;
         private readonly IDateTime _dateTimeWrapper;
         private readonly IApiUserRepository _apiUserService;
+        private readonly int _childcareGroupType;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (ChildcareService));
 
@@ -60,6 +61,8 @@ namespace crds_angular.Services
             _dateTimeWrapper = dateTimeWrapper;
             _apiUserService = apiUserService;
             _groupService = groupService;
+
+            _childcareGroupType = _configurationWrapper.GetConfigIntValue("ChildcareGroupType");
         }
 
         public List<FamilyMember> MyChildren(string token)
@@ -240,7 +243,7 @@ namespace crds_angular.Services
             //Figure out who is a head in my household
             var contact = _contactService.GetContactById(contactId);
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition?.StartsWith("Head") ?? false); //TODO: Get rid of magic string. Household Position
+            var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")); //TODO: Get rid of magic string. Household Position
             if (!houseHeads.Any(h => h.ContactId == contactId))
             {
                 throw new NotHeadOfHouseholdException(contactId);
@@ -268,12 +271,12 @@ namespace crds_angular.Services
                         }
 
                         //Date exists, add group
-                        var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == 27); //TODO: Get rid of magic number. Childcare Group Type
+                        var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
                         var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
                         var eligibleChildren = new List<ChildcareRsvp>();
                         foreach (var member in household)
                         {
-                            if (!member.HouseholdPosition?.StartsWith("Head") ?? false) //TODO: Get rid of magic string. Household Position
+                            if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD")) //TODO: Get rid of magic string. Household Position
                             {
                                 eligibleChildren.Add(new ChildcareRsvp
                                 {
@@ -307,7 +310,7 @@ namespace crds_angular.Services
         private bool IsChildRsvpd(int contactId, GroupDTO ccEventGroup, string token)
         {
             var participant = _participantService.GetParticipant(contactId);
-            var childGroups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, 27); //TODO: Get rid of magic number. Childcare Group Type
+            var childGroups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, _childcareGroupType);
             return childGroups.Any(c => c.GroupId == ccEventGroup.GroupId);
         }
 
