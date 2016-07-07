@@ -33,7 +33,8 @@
           ng-model="child.rsvpness"
           on-label="✓"
           off-label="✕"
-          class="pull-right">
+          class="pull-right"
+          ng-disabled="childcareGroup.isEventClosed()">
         <toggle-switch>
       </li>
     </ul> 
