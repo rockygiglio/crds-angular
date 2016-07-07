@@ -11,6 +11,8 @@ GO
 SET ANSI_PADDING ON
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE Object_ID = Object_ID(N'dbo.cr_Invitations') AND Type = N'U')
+BEGIN
 CREATE TABLE [dbo].[cr_Invitations](
 	[Invitation_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Source_ID] [int] NOT NULL,
@@ -28,42 +30,40 @@ CREATE TABLE [dbo].[cr_Invitations](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
+
 
 SET ANSI_PADDING OFF
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_GUID]  DEFAULT (newid()) FOR [Invitation_GUID]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_Date]  DEFAULT (GetDate()) FOR [Invitation_Date]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Invitation_Used]  DEFAULT ((0)) FOR [Invitation_Used]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] ADD  CONSTRAINT [DF_cr_Invitations_Domain_ID]  DEFAULT ((1)) FOR [Domain_ID]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations]  WITH CHECK ADD  CONSTRAINT [FK_cr_Invitations_cr_Invitation_Types] FOREIGN KEY([Invitation_Type_ID])
 REFERENCES [dbo].[cr_Invitation_Types] ([Invitation_Type_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] CHECK CONSTRAINT [FK_cr_Invitations_cr_Invitation_Types]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations]  WITH CHECK ADD  CONSTRAINT [FK_cr_Invitations_Dp_Domains] FOREIGN KEY([Domain_ID])
 REFERENCES [dbo].[dp_Domains] ([Domain_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] CHECK CONSTRAINT [FK_cr_Invitations_Dp_Domains]
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] WITH CHECK ADD CONSTRAINT [FK_cr_Invitations_Group_Roles] FOREIGN KEY([Group_Role_ID])
 REFERENCES [dbo].[Group_Roles] ([Group_Role_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Invitations] CHECK CONSTRAINT [FK_cr_Invitations_Group_Roles]
-GO
-
-
+END
