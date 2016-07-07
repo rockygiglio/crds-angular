@@ -12,6 +12,18 @@ class ChildcareDashboardGroupController {
     }
   }
 
+  getCongregation(congregationId) {
+    console.log(this.childcareService.congregations);
+    const record = this.childcareService.congregations.filter((con) => {
+      return con.dp_RecordID === congregationId;
+    });
+
+    if (record.length > 0) {
+      return record[0].dp_RecordName;
+    }
+    return 'Unknown';
+  }
+
   hasEligibleChildren() {
     if (this.communityGroup === undefined) {
       return false;
@@ -26,17 +38,6 @@ class ChildcareDashboardGroupController {
     return rsvpd.length > 0;
   }
 
-  showMessage(){
-    return this.message.length >0;
-  }
-
-  isEventClosed() {
-    const today = moment();
-    const otherDate = moment(this.eventDate);
-    var diff = today.diff(otherDate, 'days');
-    return diff >= -7;
-  }
-
   isEventCancelled() {
     if (this.cancelled !== undefined && this.cancelled) {
       this.message = this.root.MESSAGES.childcareEventCancelled.content;
@@ -46,6 +47,18 @@ class ChildcareDashboardGroupController {
     return false;
   }
 
+  isEventClosed() {
+    const today = moment();
+    const otherDate = moment(this.eventDate);
+    var diff = today.diff(otherDate, 'days');
+    return diff >= -7;
+  }
+
+  showMessage(){
+    return this.message.length >0;
+  }
+
+  
 }
 export default ChildcareDashboardGroupController;
 

@@ -10,7 +10,7 @@ class ChildcareDashboardController {
     }
 
     isError() {
-      this.childcareService.headOfHouseholdError;
+      return this.childcareService.headOfHouseholdError;
     }
 
   }

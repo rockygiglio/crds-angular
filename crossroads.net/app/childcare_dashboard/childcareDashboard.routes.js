@@ -15,15 +15,29 @@ export default function ChildcareRoutes($stateProvider) {
       loggedin: crds_utilities.checkLoggedin,
       $cookies: '$cookies',
       $q: '$q',
-      FetchChildcareDates: fetchChildcareDates
+      LookupService: 'LookupService',
+      FetchChildcareDates: fetchChildcareDates,
+      Congregations: fetchCongregations
     }
   });
+
+  function fetchCongregations(LookupService, ChildcareDashboardService, $q) {
+    var deferred = $q.defer();
+    var lkups = LookupService.Congregations.query();
+    lkups.$promise.then( (data) => {
+      ChildcareDashboardService.congregations = data;
+      deferred.resolve();
+    }, (err) => {
+      console.log(err);
+      deferred.reject();
+    });
+    return deferred.promise;
+  }
 
   function fetchChildcareDates(ChildcareDashboardService, $q) {
     var deferred = $q.defer();
     var cds = ChildcareDashboardService.fetchChildcareDates();
     cds.$promise.then((data) => {
-      console.log(data);
       ChildcareDashboardService.childcareDates = data;
       deferred.resolve();
     }, (err) => {

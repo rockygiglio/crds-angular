@@ -28,6 +28,10 @@ describe('Childcare Group Component Controller', () => {
     cookies = $injector.get('$cookies');
     resource = $injector.get('$resource');
     childcareDashboardService = new ChildcareDashboardService(resource,cookies);
+    childcareDashboardService.congregations = [
+      { dp_RecordID: 1, dp_RecordName: 'Whateves' }
+    ];
+
     controller = new ChildcareDashboardGroupController(rootScope, childcareDashboardService);
     controller.communityGroup = {eligibleChildren: [] };
   }));
@@ -77,6 +81,16 @@ describe('Childcare Group Component Controller', () => {
     expect(controller.isEventCancelled()).toBe(true);
     expect(controller.message).toBe(rootScope.MESSAGES.childcareEventCancelled.content);
   });
+
+  it('should get the congregation from the list', () => {
+    expect(controller.getCongregation(1)).toBe('Whateves');
+  });
+
+  it('should return unknown congregation from the list if the id does not exist', () => {
+    expect(controller.getCongregation(2)).toBe('Unknown');
+  });
+
+
 
   function fakeCG(signedUp = true) {
     return {

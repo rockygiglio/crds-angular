@@ -5,7 +5,7 @@
       {{childcareGroup.communityGroup.groupMemberName}}</h3>
     <span> 
       {{childcareGroup.communityGroup.eventStartTime | date: 'h:mm'}}-{{childcareGroup.communityGroup.eventEndTime | date: 'shortTime'}}
-      at {{childcareGroup.communityGroup.congregationId}}
+      at {{childcareGroup.getCongregation(childcareGroup.communityGroup.congregationId)}}
     </span>
     <div class="pull-right">
       <span class="badge" ng-if="childcareGroup.isEventClosed()">
