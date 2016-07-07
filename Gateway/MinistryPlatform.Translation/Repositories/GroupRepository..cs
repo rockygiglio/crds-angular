@@ -28,6 +28,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
         private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
+        private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings(("MySmallGroupsPageView")));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -545,6 +546,38 @@ namespace MinistryPlatform.Translation.Repositories
             });
 
             logger.Debug("updated group: " + group.GroupId);
+        }
+
+        /// <summary>
+        /// Returns list of small groups from the My groups > My Small Groups view. 
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
+        {
+            var groups = ministryPlatformService.GetRecordsDict(MySmallGroupsPageView, userToken);
+            return groups.Select(MapRecordToMpGroup).ToList();
+        }
+
+        private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
+        {
+            return new MpGroup
+            {
+                GroupType = record["Group_Type_ID"] as int? ?? 0,
+                GroupId = record["Group_ID"] as int? ?? 0,
+                Name = record["Group_Name"] as string, 
+                MeetingDay = record["Meeting_Day"] as string,
+                MeetingTime = record["Meeting_Time"] as string,
+                MeetingFrequency = record["Meeting_Frequency"] as string,
+                Address = new MpAddress
+                {
+                    Address_Line_1 = record["Address_Line_1"] as string,
+                    Address_Line_2 = record["Address_Line_2"] as string,
+                    City = record["City"] as string,
+                    State = record["State/Region"] as string,
+                    Postal_Code = record["Postal_Code"] as string
+                }
+            };
         }
     }
 }
