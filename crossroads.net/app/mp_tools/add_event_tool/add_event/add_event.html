@@ -115,6 +115,7 @@
                       class="form-control" 
                       ng-model="evt.eventData.minimumChildren"
                       ng-required ="evt.childcareSelected()"
+                      ng-change="evt.checkMinMax(eventForm)"
                       name="minimumChildren" 
                       ng-min="0" 
                       ng-show="true"
@@ -127,6 +128,9 @@
                <span ng-message="min">
                 <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
               </span>
+              <span ng-message="minmax">
+                <span dynamic-content="$root.MESSAGES.childcareMinMaxMessage.content | html"></span>
+              </span>
            </ng-messages>
       </div>
 
@@ -137,6 +141,7 @@
                       class="form-control" 
                       ng-model="evt.eventData.maximumChildren"
                       ng-required ="evt.childcareSelected()"
+                      ng-change="evt.checkMinMax(eventForm)"
                       name="maximumChildren" 
                       ng-min="0" 
                       ng-show="true"
@@ -148,6 +153,9 @@
               </span>
               <span ng-message="min">
                 <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
+              </span>
+              <span ng-message="minmax">
+                <span dynamic-content="$root.MESSAGES.childcareMinMaxMessage.content | html"></span>
               </span>
            </ng-messages>
       </div>
