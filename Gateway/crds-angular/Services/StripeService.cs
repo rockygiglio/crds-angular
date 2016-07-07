@@ -308,7 +308,7 @@ namespace crds_angular.Services
             request.AddParameter("source", customerSourceId);
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
-            request.AddParameter("statement_descriptor", string.Format("CRDS CONVERTED CK{0}", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
+            request.AddParameter("statement_descriptor", string.Format("CK{0} CONVERTED", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);

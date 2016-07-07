@@ -275,6 +275,8 @@
     <Compile Include="Controllers\API\GoVolunteerController.cs" />
     <Compile Include="Controllers\API\InvitationController.cs" />
     <Compile Include="Controllers\API\GroupToolController.cs" />
+    <Compile Include="Controllers\API\ParticipantController.cs" />
+    
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />

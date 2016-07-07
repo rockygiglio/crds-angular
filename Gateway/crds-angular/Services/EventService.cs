@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Functions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using WebGrease.Css.Extensions;
@@ -226,6 +228,12 @@ namespace crds_angular.Services
                         AddEquipment(equipment, eventId, room, token);
                     }
                 }
+
+                if (eventTool.Group != null)
+                {
+                    var groupid = AddGroup(eventTool.Group);
+                    AddEventGroup(eventId, groupid, token);
+                }
             }
             catch (Exception ex)
             {
@@ -234,6 +242,51 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        private int AddGroup(GroupDTO group)
+        {
+            //translate the dto to the mp object
+            var mpgroup = new MpGroup
+            {
+                Name = @group.GroupName,
+                GroupType = @group.GroupTypeId,
+                Full = @group.GroupFullInd,
+                WaitList = @group.WaitListInd,
+                WaitListGroupId = @group.WaitListGroupId,
+                PrimaryContactName = @group.PrimaryContactName,
+                PrimaryContactEmail = @group.PrimaryContactEmail,
+                ChildCareAvailable = @group.ChildCareAvailable,
+                MinimumAge = @group.MaximumAge,
+                GroupDescription = @group.GroupDescription,
+                MinistryId = @group.MinistryId,
+                MeetingTime = @group.MeetingTime,
+                MeetingDayId = @group.MeetingDayId,
+                CongregationId = @group.CongregationId,
+                StartDate = @group.StartDate,
+                EndDate = @group.EndDate,
+                AvailableOnline = @group.AvailableOnline,
+                RemainingCapacity = @group.RemainingCapacity,
+                ContactId = @group.ContactId,
+                GroupRoleId = @group.GroupRoleId,
+                MaximumAge = @group.MaximumAge,
+                MinimumParticipants = @group.MinimumParticipants,
+                MaximumParticipants = @group.MaximumParticipants
+            };
+
+           return  _groupService.CreateGroup(mpgroup);
+        }
+
+        private int AddEventGroup(int eventId, int groupId, string token)
+        {
+            var eventGroup = new MpEventGroup
+            {
+                EventId = eventId,
+                GroupId = groupId,
+                DomainId = 1
+            };
+
+            return _eventService.CreateEventGroup(eventGroup, token);
         }
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
