@@ -43,5 +43,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpGroupParticipant> GetGroupParticipants(int groupId);
 
         List<MpGroupSearchResult> GetSearchResults(int groupTypeId);
+
+        List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken);
     }
 }
