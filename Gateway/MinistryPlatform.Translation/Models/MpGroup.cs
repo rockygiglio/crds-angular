@@ -34,7 +34,6 @@ namespace MinistryPlatform.Translation.Models
         public int ContactId { get; set; }
         public int GroupRoleId { get; set; }
         public MpAddress Address { get; set; }
-        public int MaximumAge { get; set; }
         public int MinimumParticipants { get; set; }
         public int MaximumParticipants { get; set; }
 
