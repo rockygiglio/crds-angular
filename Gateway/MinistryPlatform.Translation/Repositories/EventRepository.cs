@@ -368,7 +368,7 @@ namespace MinistryPlatform.Translation.Repositories
             var searchString = string.Format(",,,\"{0}\"", groupId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
-            if (records != null)
+            if (records == null)
             {
                 return null;
             }
