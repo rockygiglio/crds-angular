@@ -116,13 +116,16 @@
                       ng-model="evt.eventData.minimumChildren"
                       ng-required ="evt.childcareSelected()"
                       name="minimumChildren" 
-                      ng-max="999" 
+                      ng-min="0" 
                       ng-show="true"
                       ng-disabled="false">
           
             <ng-messages for="eventForm.minimumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'minimumChildren') && evt.childcareSelected()">
               <span ng-message="required">
                 <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+               <span ng-message="min">
+                <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
               </span>
            </ng-messages>
       </div>
@@ -142,6 +145,9 @@
           	<ng-messages for="eventForm.maximumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'maximumChildren') && evt.childcareSelected()">
               <span ng-message="required">
                 <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+              <span ng-message="min">
+                <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
               </span>
            </ng-messages>
       </div>
