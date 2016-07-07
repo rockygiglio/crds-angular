@@ -243,7 +243,7 @@ namespace crds_angular.Services
             //Figure out who is a head in my household
             var contact = _contactService.GetContactById(contactId);
             var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition?.StartsWith("Head") ?? false); //TODO: Get rid of magic string. Household Position
+            var houseHeads = household.Where(h => h.HouseholdPosition?.ToUpper().StartsWith("HEAD") ?? false); //TODO: Get rid of magic string. Household Position
             if (!houseHeads.Any(h => h.ContactId == contactId))
             {
                 throw new NotHeadOfHouseholdException(contactId);
@@ -276,7 +276,7 @@ namespace crds_angular.Services
                         var eligibleChildren = new List<ChildcareRsvp>();
                         foreach (var member in household)
                         {
-                            if (!member.HouseholdPosition?.StartsWith("Head") ?? false) //TODO: Get rid of magic string. Household Position
+                            if (!member.HouseholdPosition?.ToUpper().StartsWith("HEAD") ?? false) //TODO: Get rid of magic string. Household Position
                             {
                                 eligibleChildren.Add(new ChildcareRsvp
                                 {
