@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Translation;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -34,10 +36,43 @@ namespace MinistryPlatform.Translation.Repositories
             this._invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
         }
 
-        public List<MpInvitation> GetInvitees(int SourceId, string token)
+        public List<MpInvitation> GetInvitations(int SourceId, int InvitationTypeId, string token)
         {
-            _ministryPlatformService.GetRecords(_invitationPageId, token, "" )
-            return new List<MpInvitation>();
+            var mpInvitations = new List<MpInvitation>();
+            try
+            {
+                var searchString = $",,,{SourceId},{InvitationTypeId},,false";
+                var mpResults = _ministryPlatformService.GetRecords(_invitationPageId, token, searchString, string.Empty);
+                var invitations = MPFormatConversion.MPFormatToList(mpResults);
+
+                // Translate object format from MP to an MpInvitaion object
+                if (invitations != null && invitations.Count > 0)
+                {
+                    foreach (Dictionary<string, object> p in invitations)
+                    {
+                        mpInvitations.Add(new MpInvitation
+                        {
+                            SourceId = p.ToInt("Source_ID"),
+                            EmailAddress = p.ToString("Email_address"),
+                            GroupRoleId = p.ToInt("Group_Role_ID"),
+                            InvitationType = (InvitationType)p.ToInt("Invitation_Type_ID"),
+                            RecipientName = p.ToString("Recipient_Name"),
+                            RequestDate = p.ToDate("Invitation_Date")
+                        });
+
+                    }
+                }
+                else
+                {
+                    logger.Debug($"No pending invitations found for SourceId = {SourceId}, InvitationTypeId = {InvitationTypeId} ");
+                }
+            }
+            catch (Exception exception)
+            {
+                logger.Debug($"Exception thrown while retrieving invitations for SourceId = {SourceId}, InvitationTypeId = {InvitationTypeId} ");
+                logger.Debug($"Exception message:  {exception.Message} ");
+            }
+            return mpInvitations;
         }
 
     }

@@ -18,7 +18,7 @@ using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
-using MpInvitationOrRequest = MinistryPlatform.Translation.Models.MpInvitation;
+using MpInvitation = MinistryPlatform.Translation.Models.MpInvitation;
 using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace crds_angular.App_Start
@@ -45,6 +45,14 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
 
             Mapper.CreateMap<Invitation,MpInvitation > ()
+                .ForMember(dest => dest.SourceId, opts => opts.MapFrom(src => src.SourceId))
+                .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.RecipientName, opts => opts.MapFrom(src => src.RecipientName))
+                .ForMember(dest => dest.RequestDate, opts => opts.MapFrom(src => src.RequestDate))
+                .ForMember(dest => dest.InvitationType, opts => opts.MapFrom(src => src.InvitationType));
+
+            Mapper.CreateMap<MpInvitation, Invitation>()
                 .ForMember(dest => dest.SourceId, opts => opts.MapFrom(src => src.SourceId))
                 .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))

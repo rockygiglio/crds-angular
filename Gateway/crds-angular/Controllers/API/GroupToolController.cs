@@ -41,20 +41,29 @@ namespace crds_angular.Controllers.API
             throw new NotImplementedException();
         }
 
+
+        /// <summary>
+        /// Return all pending invitations
+        /// </summary>
+        /// <param name="SourceId">An integer identifying a group or a trip campaign or some entity to be named later</param>
+        /// <param name="InvitationTypeId">An integer indicating which invitations are to be returned. For example, Groups or Trips or a source to be identified later.</param>
+        /// <returns>A list of Invitation DTOs</returns>
         [AcceptVerbs("GET")]
-        [Route("api/grouptool/{GroupId}/invitees-and-requestors")]
-        public IHttpActionResult GetInvitees(int SourceId)
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<Invitation>))]
+        [Route("api/grouptool/invitations/{SourceId}/{InvitationTypeId}")]
+        public IHttpActionResult GetInvitations(int SourceId, int InvitationTypeId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var invitessAndRequestors = groupToolService.GetInvitees(SourceId, token);
+                    var invitessAndRequestors = groupToolService.GetInvitations(SourceId, InvitationTypeId, token);
                     return Ok(invitessAndRequestors);
                 }
                 catch (Exception exception)
                 {
-                    var apiError = new ApiErrorDto("CreateInvitation Failed", exception);
+                    var apiError = new ApiErrorDto("GetInvitations Failed", exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

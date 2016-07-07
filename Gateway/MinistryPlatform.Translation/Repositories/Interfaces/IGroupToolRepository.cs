@@ -6,7 +6,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IGroupToolRepository
     {
-        List<MpInvitation> GetInvitees(int SourceId, string token);
+        List<MpInvitation> GetInvitations(int SourceId, int InvitationTypeId, string token);
 
     }
 }

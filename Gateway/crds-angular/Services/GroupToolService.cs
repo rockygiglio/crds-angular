@@ -21,7 +21,7 @@ namespace crds_angular.Services
         private readonly IGroupToolRepository _groupToolRepository;
         private readonly ICommunicationRepository _communicationService;
 
-        private readonly ILog _logger = LogManager.GetLogger(typeof (GroupToolService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
         public GroupToolService(
                            IGroupToolRepository groupToolRepository,
@@ -33,17 +33,21 @@ namespace crds_angular.Services
 
         }
 
-
-
-        public List<Invitation> GetInvitees(int SourceId, string token )
+        public List<Invitation> GetInvitations(int SourceId, int InvitationTypeId, string token)
         {
-            var invitees = _groupToolRepository.GetInvitees(SourceId, token);
-
-            var mpGroupInvitations = invitees.Select(x => Mapper.Map<Invitation>(x));
-
-            return mpGroupInvitations.ToList();
+            var invitations = new List<Invitation>();
+            try
+            {
+                var mpInvitations = _groupToolRepository.GetInvitations(SourceId, InvitationTypeId, token);
+                mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
+            }
+            catch (Exception e)
+            {
+                var message = $"Exception retrieving invitations for SourceID = {SourceId}, InvitationID = {InvitationTypeId}.";
+                _logger.Error(message, e);
+                throw;
+            }
+            return invitations;
         }
-
-
     }
 }

@@ -6,6 +6,6 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IGroupToolService
     {
-        List<Invitation> GetInvitees(int SourceId, string token);
+        List<Invitation> GetInvitations(int SourceId, int InvitationType, string token);
     }
 }
