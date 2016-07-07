@@ -1,7 +1,6 @@
 /*@ngInject*/
 class ChildcareDashboardGroupController {
   constructor($rootScope, ChildcareDashboardService) {
-    console.log($rootScope.MESSAGES);
     this.message = '';
     this.root = $rootScope;
     this.childcareService = ChildcareDashboardService;
@@ -31,11 +30,20 @@ class ChildcareDashboardGroupController {
     return this.message.length >0;
   }
 
-  isEventClosed(){
+  isEventClosed() {
     const today = moment();
     const otherDate = moment(this.eventDate);
     var diff = today.diff(otherDate, 'days');
     return diff >= -7;
+  }
+
+  isEventCancelled() {
+    if (this.cancelled !== undefined && this.cancelled) {
+      this.message = this.root.MESSAGES.childcareEventCancelled.content;
+      return true;
+    }
+
+    return false;
   }
 
 }

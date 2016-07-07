@@ -9,12 +9,14 @@
     </span>
     <div class="pull-right">
       <span class="badge" ng-if="childcareGroup.isEventClosed()">
-        Event Closed 
+        Event Closed
       </span>
       <span class="badge" ng-if="childcareGroup.hasSignedUpChild()">
         Signed Up
       </span>
-      <span class="badge"> Canceled </span>
+      <span class="badge" ng-if="childcareGroup.isEventCancelled()">
+        Cancelled
+      </span>
     </div>
   </div>
     <ul class="list-group">

@@ -1,16 +1,32 @@
 <h3>Childcare Dashboard</h3>
-<hr>
-<childcare-intro> </childcare-intro>
 
-<div ng-if="!childcare.isGroupsEmpty()">
-  <div ng-repeat="evt in childcare.childcareObj.childcareDates">
-    <h4> {{evt.eventDate | date:'fullDate'}} </h4>
-    <hr />
-    <childcare-group 
-      ng-repeat='cg in evt.communityGroups' 
-      community-group='cg'
-      event-date='evt.eventDate'
-    >
-    </childcare-group>
+<div ng-if='childcare.isError()'>
+  <div class="alert alert-danger" role="alert">
+    <div dynamic-content="$root.MESSAGES.notHeadofHousehold.content | html"></div>
+  </div>
+</div>
+
+<div ng-if='!childcare.isError()'>
+  <hr>
+  <childcare-intro> </childcare-intro>
+
+  <div ng-if='childcare.isGroupsEmpty()'>
+    <div class="alert alert-warning" role="alert">
+      <div dynamic-content="$root.MESSAGES.childcareNoEvents.content | html"></div>
+    </div>
+  </div>
+
+  <div ng-if="!childcare.isGroupsEmpty()">
+    <div ng-repeat="evt in childcare.childcareObj.childcareDates">
+      <h4> {{evt.eventDate | date:'fullDate'}} </h4>
+      <hr />
+      <childcare-group 
+        ng-repeat='cg in evt.communityGroups' 
+        community-group='cg'
+        event-date='evt.eventDate'
+        cancelled='evt.cancelled'
+      >
+      </childcare-group>
+    </div>
   </div>
 </div>

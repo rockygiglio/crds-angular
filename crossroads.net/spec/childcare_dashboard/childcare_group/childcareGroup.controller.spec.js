@@ -21,7 +21,8 @@ describe('Childcare Group Component Controller', () => {
     rootScope = _$rootScope_;
     rootScope.MESSAGES = {
       childcareEventClosed: { content: 'test' },
-      noEligibleChildren: { content: 'test2' }
+      noEligibleChildren: { content: 'test2' },
+      childcareEventCancelled: { content: 'test3'}
     };
     log = $injector.get('$log');
     cookies = $injector.get('$cookies');
@@ -69,6 +70,12 @@ describe('Childcare Group Component Controller', () => {
   it('should indicate if there are no children signed up', () => {
     controller.communityGroup = fakeCG(false);
     expect(controller.hasSignedUpChild()).toBe(false);
+  });
+
+  it('should indicate that the event has been cancelled', () => {
+    controller.cancelled = true;
+    expect(controller.isEventCancelled()).toBe(true);
+    expect(controller.message).toBe(rootScope.MESSAGES.childcareEventCancelled.content);
   });
 
   function fakeCG(signedUp = true) {
