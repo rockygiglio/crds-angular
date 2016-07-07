@@ -240,50 +240,34 @@ export default class CreateGroupController {
                     }]
                 }
             }, {
-                key: 'group.ageRangeid',
+                key: 'groupAgeRangeIds',
                 type: 'multiCheckbox',
                 templateOptions: {
-                    valueProp: 'id',
+                    valueProp: 'groupAgeRangeId',
                     labelProp: 'ageRangeName',
                     options: [{
-                            group: {
-                                ageRangeid: 1
-                            },
+                            groupAgeRangeId: 1,
                             ageRangeName: 'Middle School Students'
                         }, {
-                            group: {
-                                ageRangeid: 2
-                            },
+                            groupAgeRangeId: 2,
                             ageRangeName: 'High School Students'
                         }, {
-                            group: {
-                                ageRangeid: 3
-                            },
+                            groupAgeRangeId: 3,
                             ageRangeName: 'College Students'
                         }, {
-                            group: {
-                                ageRangeid: 4
-                            },
+                            groupAgeRangeId: 4,
                             ageRangeName: '20\'s'
                         }, {
-                            group: {
-                                ageRangeid: 5
-                            },
+                            groupAgeRangeId: 5,
                             ageRangeName: '30\'s'
                         }, {
-                            group: {
-                                ageRangeid: 6
-                            },
+                            groupAgeRangeId: 6,
                             ageRangeName: '40\'s'
                         }, {
-                            group: {
-                                ageRangeid: 7
-                            },
+                            groupAgeRangeId: 7,
                             ageRangeName: '50\'s'
                         }, {
-                            group: {
-                                ageRangeid: 8
-                            },
+                            groupAgeRangeId: 8,
                             ageRangeName: '60\'s+'
                         }                                                             
                     ]
