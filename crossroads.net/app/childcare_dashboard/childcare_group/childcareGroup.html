@@ -25,7 +25,7 @@
         ng-if="childcareGroup.showMessage()">
         <div dynamic-content="childcareGroup.message | html"></div>
       </li>
-      <li ng-if="childcareGroup.hasEligibleChildren()" 
+      <li ng-if="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
           ng-repeat="child in childcareGroup.communityGroup.eligibleChildren"
           class="list-group-item">
         {{child.childName}} 
