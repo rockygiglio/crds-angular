@@ -43,7 +43,9 @@
     vm.startDateOpened = false;
     vm.validation = Validation;
     vm.validDateRange = validDateRange;
-
+    vm.childcareSelectedFlag = false;
+    vm.childcareSelected = childcareSelected;
+    vm.eventTypeChanged = eventTypeChanged;
     activate();
 
     ///////
@@ -77,6 +79,9 @@
           startTime: startDate,
           endTime: endDate
         };
+      }
+      else {
+          vm.eventTypeChanged();
       }
     }
 
@@ -121,6 +126,26 @@
       $event.stopPropagation();
       vm.startDateOpened = true;
     }
+
+    function childcareSelected() {
+      return vm.childcareSelectedFlag;
+    }
+
+    function eventTypeChanged() {
+      // if childcare is selected then show additional fields
+      // constrain congregations
+      if (vm.eventData.eventType.dp_RecordName === 'Childcare') {
+        vm.childcareSelectedFlag = true;
+        Lookup.query({ table: 'childcarelocations' }, function(locations) {vm.crossroadsLocations = locations;});
+      }
+      else {
+        vm.childcareSelectedFlag = false;
+        Lookup.query({ table: 'crossroadslocations' }, function(locations) {vm.crossroadsLocations = locations;});
+      }
+      
+    }
+
+
 
     function validDateRange(form) {
       if (form === undefined) {

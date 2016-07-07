@@ -11,7 +11,8 @@ namespace crds_angular.Models.Crossroads.Participants
                 .ForMember(dest => dest.Display_Name, opts => opts.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.Email_Address, opts => opts.MapFrom(src => src.EmailAddress))
                 .ForMember(dest => dest.Participant_ID, opts => opts.MapFrom(src => src.ParticipantId))
-                .ForMember(dest => dest.Attendance_Start_Date, opts => opts.MapFrom(src => src.AttendanceStart));
+                .ForMember(dest => dest.Attendance_Start_Date, opts => opts.MapFrom(src => src.AttendanceStart))
+                .ForMember(dest => dest.Approved_Small_Group_Leader, opts => opts.MapFrom(src => src.ApprovedSmallGroupLeader));
         }
     }
 }
