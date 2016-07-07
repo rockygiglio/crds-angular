@@ -5,9 +5,10 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        //"outFile": "assets/tsc.js",
         "sourceMap": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true
     },
     "exclude": [
         "node_modules",
