@@ -3,7 +3,7 @@ GO
 
 IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Category = 'Life Stages')
 BEGIN
-SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] ON;
 
 INSERT INTO Attribute_Categories 
 (Attribute_Category_ID,
@@ -16,12 +16,12 @@ VALUES
 0,
 1)
 
-SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF;
 END
 
 IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Category = 'Neighborhoods')
 BEGIN
-SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] ON;
 
 INSERT INTO Attribute_Categories 
 (Attribute_Category_ID,
@@ -34,12 +34,12 @@ VALUES
 0,
 1)
 
-SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF;
 END
 
 IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Category = 'Spiritual Growth')
 BEGIN
-SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] ON;
 
 INSERT INTO Attribute_Categories 
 (Attribute_Category_ID,
@@ -52,12 +52,12 @@ VALUES
 0,
 1)
 
-SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF;
 END
 
 IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Category = 'Interest')
 BEGIN
-SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] ON;
 
 INSERT INTO Attribute_Categories 
 (Attribute_Category_ID,
@@ -70,12 +70,12 @@ VALUES
 0,
 1)
 
-SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF;
 END
 
 IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Category = 'Healing')
 BEGIN
-SET IDENTITY_INSERT [dbo].[Attribute_Types] ON;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] ON;
 
 INSERT INTO Attribute_Categories 
 (Attribute_Category_ID,
@@ -88,5 +88,5 @@ VALUES
 0,
 1)
 
-SET IDENTITY_INSERT [dbo].[Attribute_Types] OFF;
+SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF;
 END
