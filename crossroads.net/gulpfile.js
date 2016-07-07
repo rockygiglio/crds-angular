@@ -41,6 +41,7 @@ function htmlReplace(devBuild) {
       give: { js: '/assets/give.js' },
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
+      boot: { js: '/assets/boot.js' },
       formbuilder: { js: '/assets/formbuilder.js' }
     };
   } else {
@@ -60,7 +61,8 @@ function htmlReplace(devBuild) {
       givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      boot: {src: assets.boot.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')
@@ -85,11 +87,11 @@ var webPackDevConfigs = [Object.create(webPackDevConfig)];
 gulp.task('default', ['tsc','webpack-dev-server']);
 
 // Compile any typescript files
-var tsProject = typescript.createProject("tsconfig.json");
+var tsProject = typescript.createProject("./app/tsconfig.json");
 gulp.task("tsc", function () {
     return tsProject.src()
         .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest("app"));
+        .js.pipe(gulp.dest("./dist"));
 });
 
 // Build and watch cycle (another option for development)
@@ -122,7 +124,6 @@ gulp.task('build-browser-sync', ['icons'], function() {
         .pipe(gulpWebpack(element))
         .pipe(gulp.dest('./assets'));
   });
-  htmlReplace(true);
 
   gulp.src('./lib/load-image.all.min.js') .pipe(gulp.dest('./assets'));
 

@@ -30,9 +30,12 @@ module.exports = {
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
-    formbuilder: ['./app/formBuilder/formBuilder.module.js']
+    formbuilder: ['./app/formBuilder/formBuilder.module.js'],
+    
+    // added in ng2 downgraded components
+    boot: ['./dist/boot.js']
   },
-  watchPattern: ['app/**/**','core/**/**'],
+  watchPattern: ['app/**/**','core/**/**','dist/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
