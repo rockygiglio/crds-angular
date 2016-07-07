@@ -10,5 +10,6 @@
         public bool Closed { get; set; }
         public int? EventRoomId { get; set; }
         public bool Created { get; set; }
+        public int GroupTypeId { get; set; }
     }
 }

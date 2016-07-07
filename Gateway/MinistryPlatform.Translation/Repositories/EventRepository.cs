@@ -358,7 +358,8 @@ namespace MinistryPlatform.Translation.Repositories
                 GroupId = record.ToInt("Group_ID"),
                 RoomId = record.ToNullableInt("Room_ID"),
                 Closed = record.ToBool("Closed"),
-                EventRoomId = record.ToNullableInt("Event_Room_ID")
+                EventRoomId = record.ToNullableInt("Event_Room_ID"),
+                GroupTypeId = record.ToInt("Group_Type_ID")
             }).ToList();
         }
 
