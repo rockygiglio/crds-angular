@@ -21,7 +21,7 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly ICommunicationRepository _communicationService;
 
-        private readonly ILog _logger = LogManager.GetLogger(typeof (GroupToolService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
         public InvitationService(
                            IInvitationRepository invitationRepository,
@@ -33,17 +33,21 @@ namespace crds_angular.Services
 
         }
 
-
         public bool CreateInvitation(Invitation dto, string token)
         {
-            var mpGroupInvitation = Mapper.Map<MpInvitation>(dto);
+            try
+            {
+                var mpGroupInvitation = Mapper.Map<MpInvitation>(dto);
 
-            var invite = _invitationRepository.CreateInvitation(mpGroupInvitation, token);
-            
-            return true;
+                return _invitationRepository.CreateInvitation(mpGroupInvitation, token);
+
+            }
+            catch (Exception e)
+            {
+                var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
+                _logger.Error(message, e);
+                return false;
+            }
         }
-
-
-
     }
 }
