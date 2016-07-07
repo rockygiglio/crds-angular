@@ -16,6 +16,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
       constants.MODULES.FORM_BUILDER,
+      constants.MODULES.FORMLY_BUILDER,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
       //constants.MODULES.GROUP_FINDER,

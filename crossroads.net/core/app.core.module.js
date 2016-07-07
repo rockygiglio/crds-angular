@@ -23,9 +23,7 @@
     'ui.mask',
     'ngImgCrop',
     'angular-stripe',
-    'ngAnimate',
-    'formly',
-    'formlyBootstrap'
+    'ngAnimate'
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',

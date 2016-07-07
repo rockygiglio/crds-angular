@@ -25,10 +25,9 @@ export default class CreateGroupController {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
                 this.location.path('/grouptool/leader');
             });
-
-        this.model = {};
-        this.fields = [
-            {
+        var profileAboutFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'profile.congregationId',
                 type: 'select',
                 templateOptions: {
@@ -71,7 +70,10 @@ export default class CreateGroupController {
                         genderLabel: 'Male'
                     }]
                 }
-            }, {
+            }]};
+        var profileAddressFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'profile.address.street',
                 type: 'input',
                 templateOptions: {
@@ -101,7 +103,10 @@ export default class CreateGroupController {
                 templateOptions: {
                     label: 'Zip'
                 }
-            }, {
+            }]};
+        var groupMeetingDateTimeFields = {
+            wrapper: '',
+            fieldGroup: [{
                 type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
@@ -124,7 +129,10 @@ export default class CreateGroupController {
                 templateOptions: {
                     label: 'Frequency'
                 }
-            }, {
+            }]};
+        var groupMeetingLocationFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'group.meeting.online',
                 type: 'radio',
                 templateOptions: {
@@ -202,7 +210,10 @@ export default class CreateGroupController {
                         pets: false
                     }]
                 }
-            }, {
+            }]};
+        var groupStartFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'group.startDate',
                 type: 'radio',
                 templateOptions: {
@@ -216,7 +227,10 @@ export default class CreateGroupController {
                         date: Date.now()
                     }]
                 }
-            }, {
+            }]};
+        var groupTypeFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'group.typeId',
                 type: 'radio',
                 templateOptions: {
@@ -239,7 +253,10 @@ export default class CreateGroupController {
                         typeId: 4
                     }]
                 }
-            }, {
+            }]};
+        var groupAgeFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'groupAgeRangeIds',
                 type: 'multiCheckbox',
                 templateOptions: {
@@ -272,19 +289,22 @@ export default class CreateGroupController {
                         }                                                             
                     ]
                 }
-          }, {
+            }]};
+        var groupAboutFields = {
+            wrapper: '',
+            fieldGroup: [{
                 key: 'group.groupName',
                 type: 'input',
                 templateOptions: {
                     label: 'Group Name'
                 }
-          },{
+            },{
                 key: 'group.groupDescription',
                 type: 'textarea',
                 templateOptions: {
                     label: 'Group Description'
                 }
-          },{
+            },{
                 key: 'group.availableOnline',
                 type: 'radio',
                 templateOptions: {
@@ -298,7 +318,12 @@ export default class CreateGroupController {
                         accessLabel: 'Private'
                     }]
                 }
-            }
-        ];
-    }
+            }]};
+
+        this.model = {};
+        this.fields = [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields, 
+            groupMeetingLocationFields, groupStartFields, groupTypeFields, groupAgeFields, groupAboutFields];
+
+    
+}
 }
