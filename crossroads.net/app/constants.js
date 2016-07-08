@@ -5,6 +5,7 @@
     // MODULE NAMES
     MODULES: {
       CHILDCARE: 'crossroads.childcare',
+      CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',
       COMMON: 'crossroads.common',
       COMMUNITY_GROUPS: 'crossroads.community',

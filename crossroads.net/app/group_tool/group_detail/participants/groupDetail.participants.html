@@ -1,0 +1,61 @@
+<div class='container-fluid' ng-if='groupDetailParticipants.currentView === "List" || groupDetailParticipants.currentView === "Edit"'>
+  <div class='row'>
+    <div class='col-md-12 group-participants'>
+      <group-detail-participant-card ng-repeat='participant in groupDetailParticipants.data.participants' participant='participant' edit='groupDetailParticipants.currentView === "Edit"'></group-detail-participant-card>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+      <p class='text-center' ng-if='groupDetailParticipants.currentView === "List"'>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("Email")'>Email Group</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("Edit")'>Edit</a>
+      </p>
+      <p class='text-center' ng-if='groupDetailParticipants.currentView === "Edit"'>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.undeleteParticipants()'>Cancel</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.deleteParticipants()'>Save</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class='container-fluid' ng-if='groupDetailParticipants.currentView === "Email"'>
+  <form>
+    <div class='row'>
+      <div class='col-md-6 col-md-offset-3'>
+
+        <div class='row'>
+          <div class='col-md-12'>
+            <h3>Email Group</h3>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-md-12'>
+            <div class='form-group'>
+              <label for='emailSubject' class='wide-label'>Subject</label>
+              <input type='text' class='form-control' name='emailSubject'></input>
+            </div>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-md-12'>
+            <div class='form-group'>
+              <label for='emailMessage' class='wide-label'>Message</label>
+              <textarea type='textarea' rows='8' class='form-control' name='emailMessage'></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-md-12'>
+            <p class='text-center'>
+              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("List")'>Cancel</a>
+              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("List")'>Send</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

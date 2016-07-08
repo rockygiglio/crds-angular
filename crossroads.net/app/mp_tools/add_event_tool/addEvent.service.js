@@ -86,7 +86,7 @@
       // ministry 2 is Kids club. There is no selection for this in the event tool.
       // TODO: Need to find a way to remove this hard code
 
-      if (groupData.eventType.dp_RecordName != "Childcare") {
+      if (groupData.eventType.dp_RecordName != 'Childcare') {
         return null;
       }
 

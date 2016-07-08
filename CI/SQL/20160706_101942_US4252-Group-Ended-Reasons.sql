@@ -21,10 +21,3 @@ INSERT INTO [dbo].[Group_Ended_Reasons]
 (Group_Ended_Reason , Description                                                              , Domain_ID) VALUES
 ('We didn''t click.', 'It wasn''t a good fit, so we''re starting over. No biggie...it happens.', 1        );
 END
-
-IF NOT EXISTS(SELECT * FROM [dbo].[Group_Ended_Reasons] WHERE Group_Ended_Reason = 'Other')
-BEGIN
-INSERT INTO [dbo].[Group_Ended_Reasons]
-(Group_Ended_Reason , Description        , Domain_ID) VALUES
-('Other'            , 'Fill in the blank', 1        );
-END

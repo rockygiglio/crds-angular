@@ -1,10 +1,10 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(Participant, $location, $log) {
+    constructor(ParticipantService, $location, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.location = $location;
-        this.participantService = Participant;
+        this.participantService = ParticipantService;
 
         this.ready = false;
         this.approvedLeader = false;
@@ -219,24 +219,9 @@ export default class CreateGroupController {
         var groupStartFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Is this a new group?',
-                sectionHelp: 'If you’re starting from scratch, let us know and tell us when you’ll be starting.'
+                sectionLabel: 'Tell us the start date of your group.'
             },
             fieldGroup: [{
-                key: 'group.new',
-                type: 'radio',
-                templateOptions: {
-                    labelProp: 'label',
-                    valueProp: 'date',
-                    inline: false,
-                    options: [{
-                        label: 'Yes',
-                    },{
-                        label: 'No',
-                        date: Date.now()
-                    }]
-                }
-            }, {
                 key: 'group.startDate',
                 type: 'input',
                 templateOptions: {
