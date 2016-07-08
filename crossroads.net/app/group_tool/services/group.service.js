@@ -12,6 +12,7 @@ export default class ParticipantService {
 
     promised.resolve([
       {
+        id: 123,
         leader: true,
         name: 'John and Jenny\'s Married Couples New Testament Study Group',
         focus: '1 John',
@@ -19,6 +20,7 @@ export default class ParticipantService {
         location: '8115 Montgomery Road, Cincinnati OH, 45243'
       },
       {
+        id: 456,
         leader: false,
         name: 'Financial Help',
         focus: 'Budgeting',
@@ -26,6 +28,7 @@ export default class ParticipantService {
         location: '8115 Montgomery Road, Cincinnati OH, 45243'
       },
       {
+        id: 789,
         leader: false,
         name: 'Bible Study',
         focus: 'Reaching Jesus',
@@ -137,7 +140,35 @@ export default class ParticipantService {
 
   getGroupRequests(groupId) {
     var promised = this.deferred.defer();
-    promised.resolve({ 'groupId': groupId, 'requests': [] });
+    promised.resolve({
+      'groupId': groupId,
+      'requests': [
+        {
+          'contactId': 1670863,
+          'participantId': 456,
+          'name': 'Chris Jackson',
+          'requestType': 'requested',
+          'emailAddress': 'cj101@gmail.com',
+          'dateRequested': new Date(2016, 5, 20)
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Sally Jackson',
+          'requestType': 'requested',
+          'emailAddress': 'sallyj@yahoo.com',
+          'dateRequested': new Date(2016, 5, 15)
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Donny Franks',
+          'requestType': 'invited',
+          'emailAddress': 'donnyf@gmail.com',
+          'dateRequested': new Date(2016, 4, 15)
+        },
+      ]
+    });
     return promised.promise;
   }
 }
