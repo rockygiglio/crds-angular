@@ -59,7 +59,8 @@ namespace MinistryPlatform.Translation.Repositories
                 ParticipantId = result.ToInt("dp_RecordID"),
                 EmailAddress = result.ToString("Email_Address"),
                 PreferredName = result.ToString("Nickname"),
-                DisplayName = result.ToString("Display_Name")
+                DisplayName = result.ToString("Display_Name"),
+                ApprovedSmallGroupLeader = result.ToBool("Approved_Small_Group_Leader")
             };
 
             return participant;
@@ -85,7 +86,8 @@ namespace MinistryPlatform.Translation.Repositories
                     EmailAddress = record.ToString("Email Address"),
                     PreferredName = record.ToString("Nickname"), 
                     DisplayName =  record.ToString("Display Name"), 
-                    Age = record.ToInt("Age")
+                    Age = record.ToInt("Age"),
+                    ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader")
                 };
             }
             catch (Exception ex)

@@ -42,7 +42,6 @@ namespace crds_angular.Services
         /// </summary>
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
-        private readonly int MyCurrentGroupsPageView;
         private readonly int JourneyGroupId;
 
         public GroupService(IGroupRepository mpGroupService,
@@ -229,6 +228,11 @@ namespace crds_angular.Services
             {
                 throw new ApplicationException(e.Message);
             }
+        }
+
+        public GroupDTO GetGroupDetails(int groupId)
+        {
+            return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(groupId));
         }
 
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)

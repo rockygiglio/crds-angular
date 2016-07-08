@@ -12,5 +12,6 @@ namespace MinistryPlatform.Translation.Models
         public string HouseholdPosition { get; set; }
         public int? StatementTypeId { get; set; }
         public int? DonorId { get; set; }
+        public int Age { get; set; }
     }
 }
