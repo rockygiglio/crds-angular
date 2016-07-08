@@ -9,7 +9,8 @@
             <span class='group-participant-name'>
               {{groupDetailParticipantCard.participant.name}}
             </span>
-            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.leader'> (Leader)</span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "leader"'> (Leader)</span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "apprentice"'> (Apprentice)</span>
             <br>
           </div>
         </div>
