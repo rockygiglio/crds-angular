@@ -3,8 +3,6 @@
 
   require('lodash');
   require('api-check');
-  require('angular-formly');
-  require('angular-formly-templates-bootstrap');
   require('expose?moment!moment');
   require('expose?imgix!../lib/imgix.min');
   require('expose?fastclick!fastclick');

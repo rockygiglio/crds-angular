@@ -1,13 +1,8 @@
-(function() {
-  'use strict';
-  module.exports = groupToolFormlyBuilderConfig;
+groupToolFormlyBuilderConfig.$inject = ['formlyConfigProvider'];
 
-  groupToolFormlyBuilderConfig.$inject = ['groupToolFormlyBuilderConfig'];
-
-  function groupToolFormlyBuilderConfig(formlyConfigProvider) {
-    formlyConfigProvider.setWrapper({
-        name: 'createGroup',
-        templateUrl: 'formlyWrappers/createGroupWrapper.html'
-    });
-  };
-})();
+export default function groupToolFormlyBuilderConfig(formlyConfigProvider) {
+  formlyConfigProvider.setWrapper({
+      name: 'createGroup',
+      templateUrl: 'formlyWrappers/createGroupWrapper.html'
+  });
+};
