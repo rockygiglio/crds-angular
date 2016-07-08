@@ -78,6 +78,12 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "meetingTime")]
         public string MeetingTime { get; set; }
 
+        [JsonProperty(PropertyName = "meetingFrequency")]
+        public string MeetingFrequency { get; set; }
+
+        [JsonProperty(PropertyName = "meetingTimeFrequency")]
+        public string MeetingTimeFrequency { get; set; }
+
         [JsonProperty(PropertyName = "groupRoleId")]
         public int GroupRoleId { get; set; }
 
@@ -98,6 +104,9 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "maximumParticipants")]
         public int MaximumParticipants { get; set; }
+
+        [JsonProperty(PropertyName = "Participants")]
+        public List<GroupParticipantDTO> Participants { get; set; }
 
         public GroupDTO()
         {

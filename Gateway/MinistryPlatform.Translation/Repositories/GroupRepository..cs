@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
         private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
-        private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings(("MySmallGroupsPageView")));
+        private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -576,7 +576,7 @@ namespace MinistryPlatform.Translation.Repositories
                 GroupId = record["Group_ID"] as int? ?? 0,
                 Name = record["Group_Name"] as string, 
                 MeetingDay = record["Meeting_Day"] as string,
-                MeetingTime = record["Meeting_Time"] as string,
+                MeetingTime = record.ToString("Meeting_Time"),
                 MeetingFrequency = record["Meeting_Frequency"] as string,
                 Address = new MpAddress
                 {
