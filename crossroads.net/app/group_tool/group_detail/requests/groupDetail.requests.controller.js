@@ -52,6 +52,7 @@ export default class GroupDetailRequestsController {
     
   approveRequest(request) {
     // TODO Call API to approve request, send email, etc
+    _.remove(this.data.requests, request);
     this.currentRequest = null;
     this.currentView = 'List';
   }
@@ -63,6 +64,7 @@ export default class GroupDetailRequestsController {
     
   denyRequest(request) {
     // TODO Call API to deny request, send email, etc
+    _.remove(this.data.requests, request);
     this.currentRequest = null;
     this.currentView = 'List';
   }
