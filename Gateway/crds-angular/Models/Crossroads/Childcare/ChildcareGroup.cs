@@ -30,6 +30,9 @@ namespace crds_angular.Models.Crossroads.Childcare
         [JsonProperty(PropertyName = "eligibleChildren")]
         public List<ChildcareRsvp> EligibleChildren { get; set; }
 
+        [JsonProperty(PropertyName = "childcareGroupId")]
+        public int ChildcareGroupId { get; set; }
+
         public ChildcareGroup()
         {
             EligibleChildren = new List<ChildcareRsvp>();
