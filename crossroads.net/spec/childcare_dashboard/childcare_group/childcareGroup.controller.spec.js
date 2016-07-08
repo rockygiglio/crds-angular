@@ -15,6 +15,7 @@ describe('Childcare Group Component Controller', () => {
       resource,
       cookies,
       controller,
+      modal,
       scope
       ;
 
@@ -29,16 +30,19 @@ describe('Childcare Group Component Controller', () => {
       childcareRsvpError: { content: 'test4'},
       childcareRsvpFull: 'childRsvpFull'
     };
+
     scope = rootScope.$new();
     log = $injector.get('$log');
     cookies = $injector.get('$cookies');
+    modal = $injector.get('$modal');
     resource = $injector.get('$resource');
+
     childcareDashboardService = new ChildcareDashboardService(resource,cookies);
     childcareDashboardService.congregations = [
       { dp_RecordID: 1, dp_RecordName: 'Whateves' }
     ];
 
-    controller = new ChildcareDashboardGroupController(rootScope, scope, childcareDashboardService);
+    controller = new ChildcareDashboardGroupController(rootScope, scope, modal, childcareDashboardService);
     controller.communityGroup = {eligibleChildren: [] };
 
     spyOn(rootScope, '$emit').and.callThrough();

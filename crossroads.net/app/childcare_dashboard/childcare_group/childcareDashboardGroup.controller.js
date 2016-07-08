@@ -1,7 +1,11 @@
+import NoTakeBacksController from './noTakeBacks.controller';
+require('./noTakeBacks.html');
+
 /*@ngInject*/
 class ChildcareDashboardGroupController {
-  constructor($rootScope, $scope, ChildcareDashboardService) {
+  constructor($rootScope, $scope, $modal, ChildcareDashboardService) {
     this.message = '';
+    this.modal = $modal;
     this.root = $rootScope;
     this.childcareService = ChildcareDashboardService;
     if(this.isEventClosed()) {
@@ -15,7 +19,15 @@ class ChildcareDashboardGroupController {
       this.communityGroup.eligibleChildren.forEach( (child) => {
         $scope.$watch( () => child.rsvpness, (newval, oldval) => { 
           if(oldval !== newval) {
-            this.rsvp(child, newval);
+            if (this.shouldAsk(oldval)) {
+              this.showModal().then( () => {
+                this.rsvp(child, newval);
+              }, () => {
+                child.rsvpness = oldval;
+              });
+            } else {
+              this.rsvp(child, newval);
+            }
           }
         });
       });
@@ -65,7 +77,6 @@ class ChildcareDashboardGroupController {
   }
 
   rsvp(child, status) {
-
     var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, status);
     resp.$promise.then(() => { 
 
@@ -80,8 +91,23 @@ class ChildcareDashboardGroupController {
     });
   }
 
+  shouldAsk(oldRsvp) {
+    return oldRsvp && this.isEventClosed();
+  }
+
   showMessage(){
     return this.message.length >0;
+  }
+
+  showModal() {
+    let modalInstance = this.modal.open({
+      templateUrl: 'childcare_group/noTakeBacks.html',
+      controller: NoTakeBacksController,
+      controllerAs: 'noTakeBacks',
+      size: 'sm'
+    });
+
+    return modalInstance.result;
   }
 
 
