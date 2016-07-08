@@ -6,6 +6,7 @@ class ChildcareDashboardService {
     this.congregations = [];
     this.headOfHouseholdError = false;
     this.dashboard = $resource(__API_ENDPOINT__ + `api/childcare/dashboard/:contactId`);
+    this.saveRsvp = $resource(__API_ENDPOINT__ + 'api/childcare/rsvp');
   }
 
   fetchChildcareDates() {
@@ -15,6 +16,15 @@ class ChildcareDashboardService {
 
   getChildcareDates() {
     return this.childcareDates;
+  }
+
+  saveRSVP(childId, groupId, registered) {
+    const dto = {
+      groupId,
+      childId,
+      registered
+    };
+    return this.saveRsvp.save(dto);
   }
 
   updateHeadOfHouseholdError(state) {

@@ -1,6 +1,6 @@
 /*@ngInject*/
 class ChildcareDashboardGroupController {
-  constructor($rootScope, ChildcareDashboardService) {
+  constructor($rootScope, $scope, ChildcareDashboardService) {
     this.message = '';
     this.root = $rootScope;
     this.childcareService = ChildcareDashboardService;
@@ -9,6 +9,16 @@ class ChildcareDashboardGroupController {
     }
     if(!this.hasEligibleChildren()) {
       this.message = $rootScope.MESSAGES.noEligibleChildren.content;
+    }
+
+    if (this.communityGroup !== undefined) {
+      this.communityGroup.eligibleChildren.forEach( (child) => {
+        $scope.$watch( () => child.rsvpness, (newval, oldval) => { 
+          if(oldval !== newval) {
+            this.rsvp(child, newval);
+          }
+        });
+      });
     }
   }
 
@@ -54,11 +64,27 @@ class ChildcareDashboardGroupController {
     return diff >= -7;
   }
 
+  rsvp(child, status) {
+
+    var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, status);
+    resp.$promise.then(() => { 
+
+    }, (err) => {
+      child.rsvpness = !status;
+      // display an error message...
+      if (err.statusCode === 412) {
+        this.root.$emit('notify', 'childcareRsvpFull');
+      } else {
+        this.root.$emit('notify', 'childcareRsvpError');
+      }
+    });
+  }
+
   showMessage(){
     return this.message.length >0;
   }
 
-  
+
 }
 export default ChildcareDashboardGroupController;
 
