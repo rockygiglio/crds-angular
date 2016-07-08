@@ -4,6 +4,7 @@ export default class MyGroupsController {
   constructor() {
     this.groups = [
       {
+        id: 123,
         leader: true,
         name: 'John and Jenny\'s Married Couples New Testament Study Group',
         focus: '1 John',
@@ -11,6 +12,7 @@ export default class MyGroupsController {
         location: '8115 Montgomery Road, Cincinnati OH, 45243'
       },
       {
+        id: 456,
         leader: false,
         name: 'Financial Help',
         focus: 'Budgeting',
@@ -18,6 +20,7 @@ export default class MyGroupsController {
         location: '8115 Montgomery Road, Cincinnati OH, 45243'
       },
       {
+        id: 789,
         leader: false,
         name: 'Bible Study',
         focus: 'Reaching Jesus',
