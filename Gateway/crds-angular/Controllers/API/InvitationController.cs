@@ -13,12 +13,12 @@ namespace crds_angular.Controllers.API
     public class InvitationController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IInvitationService invitationService;        
+        private readonly Services.Interfaces.IInvitationService _invitationService;        
 
 
         public InvitationController(Services.Interfaces.IInvitationService invitationService)
         {
-            this.invitationService = invitationService;
+            this._invitationService = invitationService;
 
         }
 
@@ -39,7 +39,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    return Ok(invitationService.CreateInvitation(dto, token));
+                    return Ok(_invitationService.CreateInvitation(dto, token));
                 }
                 catch (Exception exception)
                 {

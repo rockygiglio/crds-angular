@@ -12,7 +12,6 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "groupRoleId")]
         public int GroupRoleId { get; set; }
 
-
         [JsonProperty(PropertyName = "emailAddress")]
         public string EmailAddress { get; set; }
 
@@ -24,8 +23,6 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "invitationType")]
         public int InvitationType { get; set; }
-
-
     }
 
 }

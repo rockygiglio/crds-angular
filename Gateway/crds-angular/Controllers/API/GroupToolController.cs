@@ -14,15 +14,11 @@ namespace crds_angular.Controllers.API
     public class GroupToolController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupToolService groupToolService;        
-        private readonly IAuthenticationRepository authenticationService;
+        private readonly Services.Interfaces.IGroupToolService _groupToolService;        
 
-
-        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
-                               IAuthenticationRepository authenticationService)
+        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService)
         {
-            this.groupToolService = groupToolService;
-            this.authenticationService = authenticationService;
+            this._groupToolService = groupToolService;
 
         }
 
@@ -50,7 +46,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var invitessAndRequestors = groupToolService.GetInvitations(sourceId, invitationTypeId, token);
+                    var invitessAndRequestors = _groupToolService.GetInvitations(sourceId, invitationTypeId, token);
                     return Ok(invitessAndRequestors);
                 }
                 catch (Exception exception)

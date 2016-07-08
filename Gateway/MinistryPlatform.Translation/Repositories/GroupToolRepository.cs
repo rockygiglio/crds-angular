@@ -16,8 +16,6 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly ICommunicationRepository _communicationService;
-        private readonly IContactRepository _contactService;
-        private readonly IContentBlockService _contentBlockService;
         private readonly int _invitationPageId;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
