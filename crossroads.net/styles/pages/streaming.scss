@@ -1,9 +1,17 @@
-$live-imgix-domain: '//ample.imgix.net';
-$live-font-semi_cond: "acumin-pro-semi-condensed", sans-serif;
-$live-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
-$live-font-sans: "acumin-pro", sans-serif;
-$live-font-serif: "lexia", serif;
-$live-blue: #0795E3;
+// TODO Replace w/ CRDS endpoint once we have images in production S3 bucket.
+$streaming-imgix-domain: '//ample.imgix.net';
+
+// NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
+$streaming-font-semi_cond: "acumin-pro-semi-condensed", sans-serif;
+$streaming-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
+$streaming-font-sans: "acumin-pro", sans-serif;
+$streaming-font-serif: "lexia", serif;
+
+// NOTE This is a local deviation from CRDS pallette.
+//      We should move this into lib when these changes go global.
+$streaming-blue: #0795E3;
+
+// ----------------------------------------- ###
 
 @mixin crds-jumbotron {
   display: flex;
@@ -39,7 +47,7 @@ $live-blue: #0795E3;
     }
   }
   figcaption {
-    font-family: $live-font-extra_cond;
+    font-family: $streaming-font-extra_cond;
     display: inline-block;
     text-transform: uppercase;
     margin: 0 1em 0 0.5em;
@@ -66,10 +74,11 @@ $live-blue: #0795E3;
 // ----------------------------------------- ###
 
 streaming {
-  font-family: $live-font-sans;
+
+  font-family: $streaming-font-sans;
 
   h1, h2 {
-    font-family: $live-font-sans;
+    font-family: $streaming-font-sans;
     font-weight: 100;
   }
 
@@ -83,7 +92,7 @@ streaming {
   }
 
   .navbar-section {
-    background: $live-blue;
+    background: $streaming-blue;
     color: #FFF;
     text-align: center;
     padding: 0.75em 0 0.65em;
@@ -93,7 +102,7 @@ streaming {
       margin-top: 0.25em;
       text-transform: uppercase;
       font-size: 90%;
-      font-family: $live-font-semi_cond;
+      font-family: $streaming-font-semi_cond;
       color: #FFF;
     }
 
@@ -107,7 +116,7 @@ streaming {
       }
 
       i {
-        font-family: $live-font-serif;
+        font-family: $streaming-font-serif;
 
         font-style: italic;
         font-size: 123%;
@@ -131,7 +140,7 @@ streaming {
       }
 
       i, li.vr:before {
-        color: lighten($live-blue, 25%);
+        color: lighten($streaming-blue, 25%);
       }
 
       strong {
@@ -141,7 +150,7 @@ streaming {
       }
 
       small {
-        font-family: $live-font-semi_cond;
+        font-family: $streaming-font-semi_cond;
         text-transform: uppercase;
         font-size: 63%;
         font-weight: 200;
@@ -158,7 +167,7 @@ streaming {
 
   .intro {
     @include crds-jumbotron();
-    background: #2E2E30 url("#{$live-imgix-domain}/anywhere-hero.jpg?w=1&crop=faces&dpr=2&fit=crop");
+    background: #2E2E30 url("#{$streaming-imgix-domain}/anywhere-hero.jpg?w=1&crop=faces&dpr=2&fit=crop");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -190,7 +199,7 @@ streaming {
       position: relative;
 
       figcaption {
-        font-family: $live-font-serif;
+        font-family: $streaming-font-serif;
         font-style: italic;
         font-size: 85%;
         position: absolute;
@@ -217,7 +226,7 @@ streaming {
         margin-bottom: 0.75em;
 
         small {
-          font-family: $live-font-sans;
+          font-family: $streaming-font-sans;
           font-weight: 600;
           font-size: 32%;
           text-transform: uppercase;
@@ -240,7 +249,7 @@ streaming {
       margin-top: 2em;
 
       h3 {
-        font-family: $live-font-extra_cond;
+        font-family: $streaming-font-extra_cond;
         font-size: 170%;
         font-weight: 600;
         letter-spacing: -0.025em;
@@ -266,7 +275,7 @@ streaming {
         font-size: 90%;
         padding-top: 1em;
         &, li {
-          font-family: $live-font-sans;
+          font-family: $streaming-font-sans;
         }
         a {
           font-weight: 600;
@@ -349,7 +358,7 @@ streaming {
 
   .community {
     @include crds-jumbotron();
-    background: #1D3C50 url("#{$live-imgix-domain}/anywhere-map.jpg?w=1&dpr=2&fit=crop");
+    background: #1D3C50 url("#{$streaming-imgix-domain}/anywhere-map.jpg?w=1&dpr=2&fit=crop");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
