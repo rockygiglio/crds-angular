@@ -30,9 +30,9 @@ export class StreamspotService {
       .then(response => response.json().data.events
         .filter((event:Event) => moment() <= moment(event.start))
         .map((event:Event) => {
-          let date = moment(event.start);
-          event.dayOfYear = date.dayOfYear();
-          event.time = date.format('LT [EST]');
+          event.date = moment(event.start);
+          event.dayOfYear = event.date.dayOfYear();
+          event.time = event.date.format('LT [EST]');
           return event;
         })
       )
@@ -40,9 +40,12 @@ export class StreamspotService {
   }
 
   byDate(): Promise<Object[]> {
-    return this.get().then(response =>
-      _.groupBy(response, 'dayOfYear')
-    )
+    return this.get().then(response => {
+      return _.chain(response)
+        .sortBy('date')
+        .groupBy('dayOfYear')
+        .value();
+    })
   }
 
   private handleError(error: any) {
