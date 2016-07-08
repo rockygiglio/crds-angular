@@ -9,24 +9,26 @@ declare var moment: any;
 // TODO - placeholder for schedule if StreamspotService fails
 @Component({
   selector: 'schedule',
-  template: `<aside>
+  template: `
+    <aside>
       <div class="well">
-        <h3>Schedule</h3>
+        <h3>Live Stream Schedule</h3>
         <hr>
         <div class="row" *ngFor="let key of dayOfYear()">
           <div class="date">
-            {{displayDay(key)}}
+            <strong>{{ displayDate(key, 'day') }}</strong>{{ displayDate(key) }}
           </div>
           <div class="time">
             <ul class="list-unstyled">
               <li *ngFor="let event of events[key]">
-                {{event.time}}
+                {{ event.time }}
               </li>
             </ul>
           </div>
         </div>
       </div>
-    </aside>`,
+    </aside>
+  `,
   providers: [StreamspotService, HTTP_PROVIDERS]
 })
 
@@ -46,7 +48,11 @@ export class ScheduleComponent implements OnInit {
     return Object.keys(this.events);
   }
 
-  displayDay(dayOfYear: number): string {
-    return moment().dayOfYear(dayOfYear).format('dddd M/D');
+  displayDate(dayOfYear: number, type: string): string {
+    let format = 'M/D';
+    if (type == 'day') {
+      format = `dddd`
+    }
+    return moment().dayOfYear(dayOfYear).format(format);
   }
 }

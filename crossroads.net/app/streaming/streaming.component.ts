@@ -4,8 +4,8 @@ import { ScheduleComponent } from './schedule.component';
 
 @Component({
   selector: 'streaming',
-  template: `<schedule></schedule>`,
-  directives: [ScheduleComponent]
+  directives: [ScheduleComponent],
+  template: require('./streaming.component.html')
 })
 
 export class StreamingComponent {

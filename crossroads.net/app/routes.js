@@ -376,7 +376,7 @@
         })
         .state('live', {
           parent: 'screenWidth',
-          url: '/live',
+          url: '/live-v2',
           template: '<streaming></streaming>',
           data: {
             meta: {

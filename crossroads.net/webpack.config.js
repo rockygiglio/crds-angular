@@ -35,10 +35,10 @@ module.exports = {
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
     
     // added in ng2 downgraded components
-    boot: ['./dist/boot.js']
+    boot: ['./app/boot.js']
 
   },
-  watchPattern: ['app/**/**','core/**/**','dist/**/**'],
+  watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
