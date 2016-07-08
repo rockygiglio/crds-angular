@@ -41,63 +41,63 @@ export default class ParticipantService {
           'contactId': 1670863,
           'participantId': 456,
           'name': 'Betty Smith',
-          'leader': true,
+          'role': 'leader',
           'email': 'bettyjj2000@yahoo.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Ted Baldwin',
-          'leader': false,
+          'role': 'leader',
           'email': 'tedb@gmail.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Sam Hanks',
-          'leader': false,
+          'role': 'apprentice',
           'email': 'samguy@hotmail.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Jennie Jones',
-          'leader': false,
+          'role': 'member',
           'email': 'jenniejj2000@yahoo.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Sara Baldwin',
-          'leader': false,
+          'role': 'member',
           'email': 'sarab@hotmail.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Jimmy Hatfield',
-          'leader': false,
+          'role': 'member',
           'email': 'jhat@hotmail.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Freddie Jones',
-          'leader': false,
+          'role': 'member',
           'email': 'FreddieJ@yahoo.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Jamie Hanks',
-          'leader': false,
+          'role': 'member',
           'email': 'jaha95@gmail.com'
         },
         {
           'contactId': 123,
           'participantId': 456,
           'name': 'Kerrir Hatfield',
-          'leader': false,
+          'role': 'member',
           'email': 'hatk@gmail.com'
         },
       ]
