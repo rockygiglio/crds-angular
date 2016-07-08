@@ -1,7 +1,7 @@
 export default class GroupDetailParticipantCardController {
   /*@ngInject*/
-  constructor(Group, ImageService, $state) {
-    this.groupService = Group;
+  constructor(GroupService, ImageService, $state) {
+    this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
   }

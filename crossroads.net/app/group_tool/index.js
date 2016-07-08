@@ -6,8 +6,8 @@ import groupToolRouter from './groupTool.routes';
 export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL, [ CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON ]).
   config(groupToolRouter).
-  service('Participant', ParticipantService).
-  service('Group', GroupService)
+  service('ParticipantService', ParticipantService).
+  service('GroupService', GroupService)
   ;
 
 import myGroups from './my_groups';
