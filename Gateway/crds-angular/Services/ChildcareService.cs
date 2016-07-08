@@ -99,14 +99,16 @@ namespace crds_angular.Services
                 var participantSignup = new ParticipantSignup
                 {
                     particpantId = participant.ParticipantId,
-                    groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID")
+                    groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                    capacityNeeded = 1
                 };
 
-                _groupService.addParticipantsToGroup(saveRsvp.GroupId, new List<ParticipantSignup> { participantSignup });
+                _groupService.addParticipantToGroupNoEvents(saveRsvp.GroupId, participantSignup);
             }
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Save RSVP failed for group ({0}), contact ({1})", saveRsvp.GroupId, saveRsvp.ChildContactId), ex);
+                throw;
             }
         }
 

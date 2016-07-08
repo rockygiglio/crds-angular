@@ -12,6 +12,7 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
@@ -42,8 +43,18 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _childcareService.SaveRsvp(saveRsvp, token);
+                    if (saveRsvp.Registered)
+                    {
+                        _childcareService.SaveRsvp(saveRsvp, token);
+                    }
                     return Ok();
+                }
+                catch (GroupFullException e)
+                {
+                    var json = JsonConvert.SerializeObject(e.Message, Formatting.None);
+                    var message = new HttpResponseMessage(HttpStatusCode.PreconditionFailed);
+                    message.Content = new StringContent(json);
+                    throw new HttpResponseException(message);
                 }
                 catch (Exception e)
                 {
