@@ -12,23 +12,8 @@
     <DataSet Name="ministry_giving">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select 'MONTHLY GENERAL' as recurrance,count(d.Donor_ID) num_of_gifts, sum(rg.amount) gifts_for_ministry, sum(rg.amount * 1) total_monthly_ministry_expected, sum(rg.amount * 12) total_yearly_ministry_expected
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rgf.Frequency_ID = 2 --monthly
-		and p.Program_ID = 3 --General Giving
-		and rg.end_date is null
-		union all
-		select 'WEEKLY GENERAL' as recurrance,count(d.Donor_ID) num_of_gifts, sum(rg.amount) gifts_for_ministry,sum(rg.amount *52/12) total_monthly_ministry_expected, sum(rg.amount * 52) total_yearly_ministry_expected
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rgf.Frequency_ID = 1 --weekly
-		and p.Program_ID = 3 --General Giving
-		and rg.end_date is null</CommandText>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_CRDS_RecurringGifts_Ministry_giving</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -57,23 +42,8 @@
     <DataSet Name="II_giving">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select 'MONTHLY II' as recurrance,count(d.Donor_ID) num_of_gifts, sum(rg.amount) gifts_for_II, sum(rg.amount * 1) total_monthly_II_expected, sum(rg.amount * 12) total_yearly_II_expected
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rgf.Frequency_ID = 2 --monthly
-		and p.Program_ID = 146 --General Giving
-		and rg.end_date is null
-		union all 
-		select 'WEEKLY II' as recurrance,count(d.Donor_ID) num_of_gifts, sum(rg.amount) gifts_for_II,sum(rg.amount *52/12) total_monthly_II_expected, sum(rg.amount * 52) total_yearly_II_expected
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rgf.Frequency_ID = 1 --weekly
-		and p.Program_ID = 146 --General Giving
-		and rg.end_date is null</CommandText>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_CRDS_RecurringGifts_MonthlyII</CommandText>
       </Query>
       <Fields>
         <Field Name="recurrance">
@@ -101,20 +71,8 @@
     <DataSet Name="giving_counts">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select 'Unique Givers' as type,count(distinct d.Donor_ID) num_of_gifts
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rg.end_date is null
-		union all
---gives total OVERALL givers 
-		select 'Total Givers Setup' as type,count(d.Donor_ID) num_of_gifts 
-		from dbo.Recurring_Gifts rg, dbo.Recurring_Gift_Frequencies rgf, dbo.Programs p, dbo.Donors d
-		where rg.Frequency_ID = rgf.Frequency_ID
-		and rg.Program_ID = p.Program_ID
-		and rg.Donor_ID = d.Donor_ID
-		and rg.end_date is null</CommandText>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_CRDS_RecurringGifts_GivingCounts</CommandText>
       </Query>
       <Fields>
         <Field Name="type">
@@ -1633,6 +1591,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>a8dbc641-8f81-4e85-94ac-8408904f690d</rd:ReportID>
 </Report>
