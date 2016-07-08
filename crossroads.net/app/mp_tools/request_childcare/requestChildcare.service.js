@@ -11,7 +11,7 @@ class RequestChildcareService {
     return this.lookupService.ChildcareLocations.query((data) => {
       return data;
     },
-    
+
     (err) => {
       this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);  
       return [];

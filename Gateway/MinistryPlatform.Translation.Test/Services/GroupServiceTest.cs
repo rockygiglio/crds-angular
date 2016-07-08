@@ -358,11 +358,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetGroupsByTypeForParticipant()
         {
-            const int pageViewId = 2206;
+            const int pageViewId = 2307;
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
-            string searchString = ",," + groupTypeId;
+            string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
 
             configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
 
@@ -398,6 +398,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Time", "180000"},
                     {"Available_Online", false},
+                    {"Maximum_Age", 10 },
+                    {"Remaining_Capacity", 42},
                     {"Address_ID", 42934 },
                     {"Address_Line_1", "98 Center St"},
                     {"Address_Line_2", "Suite 1000"},
@@ -423,6 +425,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Time", "140000"},
                     {"Available_Online", true},
+                    {"Maximum_Age", 10},
+                    {"Remaining_Capacity", 42},
                     {"Address_ID", 42934 },
                     {"Address_Line_1", "86 Middle Rd"},
                     {"Address_Line_2", ""},
