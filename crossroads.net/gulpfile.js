@@ -13,6 +13,7 @@ var replace = require('gulp-replace');
 var rename = require('gulp-rename');
 var htmlreplace = require('gulp-html-replace');
 var connectHistory = require('connect-history-api-fallback');
+var embedTemplates = require('gulp-angular-embed-templates');
 
 var fallbackOptions = {
   index: '/index.html',
@@ -90,8 +91,9 @@ gulp.task('default', ['webpack-dev-server']);
 var tsProject = typescript.createProject("./app/tsconfig.json");
 gulp.task("tsc", function () {
     return tsProject.src()
+        .pipe(embedTemplates()) // inline templates
         .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest("./app"));
+        .js.pipe(gulp.dest("./dist"));
 });
 
 // Build and watch cycle (another option for development)
