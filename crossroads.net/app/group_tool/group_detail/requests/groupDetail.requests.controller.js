@@ -9,6 +9,9 @@ export default class GroupDetailRequestsController {
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
+    this.currentView = 'List';
+    this.currentRequest = null;
+    this.invite = null;
   }
 
   $onInit() {
@@ -25,5 +28,42 @@ export default class GroupDetailRequestsController {
       this.error = true;
       this.ready = true;
     });
+  }
+    
+  setView(newView) {
+    this.currentView = newView;
+  }
+
+  beginInvitation() {
+    this.invite = null;
+    this.currentView = 'Invite';
+  }
+    
+  sendInvitation(invitation) {
+    // TODO Call API to send invitation, etc
+    this.invite = null;
+    this.currentView = 'List';
+  }
+    
+  beginApproveRequest(request) {
+    this.currentRequest = request;
+    this.currentView = 'Approve';    
+  }
+    
+  approveRequest(request) {
+    // TODO Call API to approve request, send email, etc
+    this.currentRequest = null;
+    this.currentView = 'List';
+  }
+
+  beginDenyRequest(request) {
+    this.currentRequest = request;
+    this.currentView = 'Deny';    
+  }
+    
+  denyRequest(request) {
+    // TODO Call API to deny request, send email, etc
+    this.currentRequest = null;
+    this.currentView = 'List';
   }
 }

@@ -116,7 +116,7 @@ export default class ParticipantService {
           'name': 'Chris Jackson',
           'requestType': 'requested',
           'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 6, 20)
+          'dateRequested': new Date(2016, 5, 20)
         },
         {
           'contactId': 123,
@@ -124,7 +124,7 @@ export default class ParticipantService {
           'name': 'Sally Jackson',
           'requestType': 'requested',
           'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 6, 15)
+          'dateRequested': new Date(2016, 5, 15)
         },
         {
           'contactId': 123,
@@ -132,7 +132,7 @@ export default class ParticipantService {
           'name': 'Donny Franks',
           'requestType': 'invited',
           'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 5, 15)
+          'dateRequested': new Date(2016, 4, 15)
         },
       ]
     });
