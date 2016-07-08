@@ -4,7 +4,6 @@ import groupToolRouter from './groupTool.routes';
 import groupToolFormlyBuilderConfig from './groupTool.formlyConfig'
 import './formlyWrappers/createGroupWrapper.html'
 
-
 export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL, [ CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON,
                                           CONSTANTS.MODULES.FORMLY_BUILDER ]).

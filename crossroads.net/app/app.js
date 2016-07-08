@@ -3,7 +3,6 @@
 require('./childcare');
 require('./mp_tools');
 require('./group_tool');
-  
 require('ui-select/dist/select.css');
 
 (function() {
