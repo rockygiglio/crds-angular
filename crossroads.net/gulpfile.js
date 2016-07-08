@@ -84,14 +84,14 @@ var webPackConfigs = [Object.create(webpackConfig)];
 var webPackDevConfigs = [Object.create(webPackDevConfig)];
 
 // Start the development server
-gulp.task('default', ['tsc','webpack-dev-server']);
+gulp.task('default', ['webpack-dev-server']);
 
 // Compile any typescript files
 var tsProject = typescript.createProject("./app/tsconfig.json");
 gulp.task("tsc", function () {
     return tsProject.src()
         .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest("./dist"));
+        .js.pipe(gulp.dest("./app"));
 });
 
 // Build and watch cycle (another option for development)
@@ -109,7 +109,7 @@ gulp.task('build-dev', ['webpack:build-dev'], function() {
   gulp.watch(watchPatterns, ['webpack:build-dev']);
 });
 
-gulp.task('build-browser-sync', ['icons'], function() {
+gulp.task('build-browser-sync', ['tsc', 'icons'], function() {
   webPackDevConfigs.forEach(function(element) {
 
     element.devtool = 'eval';
@@ -165,7 +165,7 @@ gulp.task('build', ['clean-assets'], function() {
 gulp.task('start', ['webpack-dev-server']);
 
 // Run the development server
-gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
+gulp.task('webpack-dev-server', ['tsc','icons-watch'], function(callback) {
   webPackDevConfigs.forEach(function(element, index) {
 
     // Modify some webpack config options
@@ -203,7 +203,7 @@ gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
   gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#');
 });
 
-gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {
+gulp.task('webpack:build', ['tsc', 'icons', 'robots', 'apache-site-config'], function(callback) {
 
 
   webPackConfigs.forEach(function(element) {
@@ -217,6 +217,7 @@ gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(c
         }),
         new webpack.optimize.DedupePlugin()
     );
+
   });
 
   // run webpack
@@ -232,7 +233,7 @@ gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(c
   });
 });
 
-gulp.task('webpack:build-dev', ['icons'], function(callback) {
+gulp.task('webpack:build-dev', ['tsc', 'icons'], function(callback) {
 
   // run webpack
   webpack(webPackDevConfig).run(function(err, stats) {
