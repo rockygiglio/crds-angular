@@ -219,6 +219,8 @@
     <Compile Include="Services\GoSkillsServiceTest.cs" />
     <Compile Include="Services\GoVolunteerServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />
+    <Compile Include="Services\InvitationServiceTest.cs" />
+    <Compile Include="Services\GroupToolServiceTest.cs" />
     <Compile Include="Services\GroupServiceTest.cs" />
     <Compile Include="Services\ListHandlerTest.cs" />
     <Compile Include="Services\LoginServiceTest.cs" />

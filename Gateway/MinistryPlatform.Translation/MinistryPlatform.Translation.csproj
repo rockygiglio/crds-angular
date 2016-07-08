@@ -165,6 +165,7 @@
     <Compile Include="Models\Lookups\MpOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
     <Compile Include="Models\MpMessageTemplate.cs" />
+    <Compile Include="Models\MpInvitation.cs" />
     <Compile Include="Models\MpUser.cs" />
     <Compile Include="Models\MpGoVolunteerSkill.cs" />
     <Compile Include="Models\MPOrganization.cs" />
@@ -210,10 +211,14 @@
     <Compile Include="Repositories\CongregationRepository.cs" />
     <Compile Include="Repositories\GoCincinnati\GroupConnectorRepository.cs" />
     <Compile Include="Repositories\GoCincinnati\RegistrationRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
+    <Compile Include="Repositories\InvitationlRepository.cs" />
+    <Compile Include="Repositories\GroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IGroupConnectorRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IRegistrationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IChildcareRequestRepository.cs" />
     <Compile Include="Repositories\Interfaces\IFormBuilderRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IGroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\IMinistryPlatformRestRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformRestRepository..cs" />
     <Compile Include="Repositories\ProjectTypeRepository.cs" />
