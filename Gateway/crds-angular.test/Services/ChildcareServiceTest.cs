@@ -31,6 +31,7 @@ namespace crds_angular.test.Services
         private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
         private Mock<IApiUserRepository> _apiUserService;
         private Mock<IChildcareRequestRepository> _childcareRequestService;
+        private Mock<IGroupService> _groupService;
 
         private ChildcareService _fixture;
 
@@ -48,6 +49,7 @@ namespace crds_angular.test.Services
             _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
             _apiUserService = new Mock<IApiUserRepository>();
             _childcareRequestService = new Mock<IChildcareRequestRepository>();
+            _groupService = new Mock<IGroupService>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,
@@ -57,7 +59,7 @@ namespace crds_angular.test.Services
                                             _participantService.Object,
                                             _serveService.Object,
                                             _dateTimeWrapper.Object,
-                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object);
+                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object, _groupService.Object);
         }
 
         [Test]

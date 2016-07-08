@@ -25,5 +25,6 @@ namespace MinistryPlatform.Translation.Models
         public int CongregationId { get; set; }
         public int ReminderDaysPriorId { get; set; }
         public bool Template { get; set; }
+        public bool Cancelled { get; set; }
     }
 }
