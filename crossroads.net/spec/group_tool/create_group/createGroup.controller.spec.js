@@ -12,7 +12,7 @@ describe('CreateGroupController', () => {
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
     beforeEach(inject(function($injector) {
-        participantService = $injector.get('Participant'); 
+        participantService = $injector.get('ParticipantService'); 
         location = $injector.get('$location');
         log = $injector.get('$log');
         deferred = $injector.get('$q');
