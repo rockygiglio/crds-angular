@@ -107,7 +107,35 @@ export default class ParticipantService {
 
   getGroupRequests(groupId) {
     var promised = this.deferred.defer();
-    promised.resolve({ 'groupId': groupId, 'requests': [] });
+    promised.resolve({
+      'groupId': groupId,
+      'requests': [
+        {
+          'contactId': 1670863,
+          'participantId': 456,
+          'name': 'Chris Jackson',
+          'requestType': 'requested',
+          'emailAddress': 'cj101@gmail.com',
+          'dateRequested': new Date(2016, 6, 20)
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Sally Jackson',
+          'requestType': 'requested',
+          'emailAddress': 'sallyj@yahoo.com',
+          'dateRequested': new Date(2016, 6, 15)
+        },
+        {
+          'contactId': 123,
+          'participantId': 456,
+          'name': 'Donny Franks',
+          'requestType': 'invited',
+          'emailAddress': 'donnyf@gmail.com',
+          'dateRequested': new Date(2016, 5, 15)
+        },
+      ]
+    });
     return promised.promise;
   }
 }

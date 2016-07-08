@@ -8,7 +8,7 @@ export default function GroupDetailRequestsComponent() {
     restrict: 'E',
     templateUrl: 'requests/groupDetail.requests.html',
     controller: controller,
-    controllerAs: 'GroupDetailRequestsComponent',
+    controllerAs: 'groupDetailRequests',
     bindToController: true
   };
 
