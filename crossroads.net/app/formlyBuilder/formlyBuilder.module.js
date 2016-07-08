@@ -11,6 +11,6 @@
     ;
 
   //Require Templates
-  //require('./templates/formBuilder.html');
+  require('./wrappers/createGroupWrapper.html');
 
 })();

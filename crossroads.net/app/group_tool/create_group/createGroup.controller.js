@@ -26,12 +26,15 @@ export default class CreateGroupController {
                 this.location.path('/grouptool/leader');
             });
         var profileAboutFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'Tell us about yourself.'
+            },
             fieldGroup: [{
                 key: 'profile.congregationId',
                 type: 'select',
                 templateOptions: {
-                    label: 'What site do you regularly attend service at?',
+                    label: 'At what site do you regularly attend service?',
                     valueProp: 'congregationId',
                     labelProp: 'congregationName',
                     options: [{
@@ -59,7 +62,8 @@ export default class CreateGroupController {
                 key: 'profile.genderId',
                 type: 'radio',
                 templateOptions: {
-                    label: 'Birth Date',
+                    label: 'Gender',
+                    inline: true,
                     valueProp: 'genderId',
                     labelProp: 'genderLabel',
                     options: [{
@@ -72,7 +76,10 @@ export default class CreateGroupController {
                 }
             }]};
         var profileAddressFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'What’s your address?'
+            },
             fieldGroup: [{
                 key: 'profile.address.street',
                 type: 'input',
@@ -105,7 +112,11 @@ export default class CreateGroupController {
                 }
             }]};
         var groupMeetingDateTimeFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'When will your group meet?',
+                sectionHelp: 'To get the most out of your group, you’ll want to meet on a regular basis. We recommend weekly, but we want you to choose what’s best for your group.'
+            },
             fieldGroup: [{
                 type: 'radio',
                 templateOptions: {
@@ -124,6 +135,12 @@ export default class CreateGroupController {
                     label: 'Day'
                 }
             }, {
+                key: 'group.meeting.time',
+                type: 'input',
+                templateOptions: {
+                    label: 'Time'
+                }
+            }, {
                 key: 'group.meeting.frequency',
                 type: 'input',
                 templateOptions: {
@@ -131,7 +148,11 @@ export default class CreateGroupController {
                 }
             }]};
         var groupMeetingLocationFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'Tell us about your meeting place.',
+                sectionHelp: 'We’re not asking for the blueprint of your home, just a few details about where you’ll meet, if you have pets and if your group is kid-friendly.'
+            },
             fieldGroup: [{
                 key: 'group.meeting.online',
                 type: 'radio',
@@ -187,49 +208,47 @@ export default class CreateGroupController {
                     valueProp: 'childcare',
                     inline: true,
                     options: [{
-                        label: 'yes',
+                        label: 'Kids welcome at the group.',
                         childcare: true
                     },{
-                        label: 'no',
+                        label: 'No. (Parents are welcome, but make your own kid plans.)',
                         childcare: false
-                    }]
-                }
-            }, {
-                key: 'group.meeting.pets',
-                type: 'radio',
-                templateOptions: {
-                    label: 'Will there be cats or dogs at your meeting place?',
-                    labelProp: 'label',
-                    valueProp: 'pets',
-                    inline: true,
-                    options: [{
-                        label: 'yes',
-                        pets: true
-                    },{
-                        label: 'no',
-                        pets: false
                     }]
                 }
             }]};
         var groupStartFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'Is this a new group?',
+                sectionHelp: 'If you’re starting from scratch, let us know and tell us when you’ll be starting.'
+            },
             fieldGroup: [{
-                key: 'group.startDate',
+                key: 'group.new',
                 type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
                     valueProp: 'date',
                     inline: true,
                     options: [{
-                        label: 'yes',
+                        label: 'Yes',
                     },{
-                        label: 'no',
+                        label: 'No',
                         date: Date.now()
                     }]
                 }
+            }, {
+                key: 'group.startDate',
+                type: 'input',
+                templateOptions: {
+                    label: 'Start Date'
+                }
             }]};
         var groupTypeFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'What kind of group would you like to lead?',
+                sectionHelp: 'We’re not trying to recreate a scene from your school lunchroom. Some groups like to roll with just guys or strictly married couples.'
+            },
             fieldGroup: [{
                 key: 'group.typeId',
                 type: 'radio',
@@ -237,25 +256,26 @@ export default class CreateGroupController {
                     labelProp: 'label',
                     valueProp: 'typeId',
                     options: [{
-                        label: 'Anyone is welcome',
+                        label: 'Men and women together (like God intended).',
                         typeId: 0
                     },{
-                        label: 'Married couples group',
+                        label: 'Men only (no girls allowed).',
                         typeId: 1
                     },{
-                        label: 'Men only group',
+                        label: 'Women only (don\'t be a creeper, dude).',
                         typeId: 2
                     },{
-                        label: 'Women only group',
+                        label: 'Married couples (because you put a ring on it).',
                         typeId: 3
-                    },{
-                        label: 'Coed',
-                        typeId: 4
                     }]
                 }
             }]};
         var groupAgeFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'What age range is your group going to be?',
+                sectionHelp: 'Select as many as you like. If you want to lead middle and high school students, you must be approved by Student Ministry and complete a background check.'
+            },
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
                 type: 'multiCheckbox',
@@ -264,10 +284,10 @@ export default class CreateGroupController {
                     labelProp: 'ageRangeName',
                     options: [{
                             groupAgeRangeId: 1,
-                            ageRangeName: 'Middle School Students'
+                            ageRangeName: 'Middle School Students (Grades 6-8)'
                         }, {
                             groupAgeRangeId: 2,
-                            ageRangeName: 'High School Students'
+                            ageRangeName: 'High School Students (Grades 9-12)'
                         }, {
                             groupAgeRangeId: 3,
                             ageRangeName: 'College Students'
@@ -291,7 +311,11 @@ export default class CreateGroupController {
                 }
             }]};
         var groupAboutFields = {
-            wrapper: '',
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'Tell us what your group is all about.',
+                sectionHelp: 'Now’s the time to add some personality, and tell us all about your group. Keep in mind, this is the description people will see when they search for groups to join.'
+            },
             fieldGroup: [{
                 key: 'group.groupName',
                 type: 'input',
@@ -302,9 +326,17 @@ export default class CreateGroupController {
                 key: 'group.groupDescription',
                 type: 'textarea',
                 templateOptions: {
-                    label: 'Group Description'
+                    label: 'Group Description',
+                    rows: 6
                 }
-            },{
+            }]};
+        var groupVisibilityFields = {
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'Set your group to public or private.',
+                sectionHelp: 'Choose whether your group will be viewable to everyone or only the people in your group.'
+            },
+            fieldGroup: [{
                 key: 'group.availableOnline',
                 type: 'radio',
                 templateOptions: {
@@ -312,17 +344,17 @@ export default class CreateGroupController {
                     labelProp: 'accessLabel',
                     options: [{
                         accessId: 0,
-                        accessLabel: 'Public'
+                        accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
                     },{
                         accessId: 1,
-                        accessLabel: 'Private'
+                        accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
                     }]
                 }
             }]};
-
         this.model = {};
-        this.fields = [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields, 
-            groupMeetingLocationFields, groupStartFields, groupTypeFields, groupAgeFields, groupAboutFields];
+        this.fields = [profileAboutFields, profileAddressFields, groupTypeFields, 
+                        groupAgeFields, groupStartFields, groupMeetingDateTimeFields, 
+                        groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
 
     
 }
