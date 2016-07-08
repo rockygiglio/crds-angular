@@ -1,15 +1,15 @@
 /* ngInject */
 class ChildcareDashboardService { 
-  constructor($resource, $cookies) {
+  constructor($resource, Session) {
     this.resource = $resource;
-    this.cookies = $cookies;
+    this.session = Session;
     this.congregations = [];
     this.headOfHouseholdError = false;
     this.dashboard = $resource(__API_ENDPOINT__ + `api/childcare/dashboard/:contactId`);
   }
 
   fetchChildcareDates() {
-    const contactId = this.cookies.get('userId');
+    const contactId = this.session.exists('userId');
     return this.dashboard.get({contactId});
   }
 

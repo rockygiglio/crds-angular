@@ -12,19 +12,18 @@ describe('Childcare Dashboard Service', () => {
   let childcareService,
       resource,
       httpBackend,
-      cookies;
+      session;
 
   beforeEach(angular.mock.module(constants.MODULES.CHILDCARE_DASHBOARD));
 
   beforeEach(inject(function($injector) {
     resource = $injector.get('$resource');
-    cookies = $injector.get('$cookies');
+    session = $injector.get('Session');
     httpBackend = $injector.get('$httpBackend');
     console.log(ChildcareDashboardService);
-    childcareService = new ChildcareDashboardService(resource, cookies);
+    childcareService = new ChildcareDashboardService(resource, session);
 
-    spyOn(cookies, 'get').and.returnValue(uid);
-
+    spyOn(session, 'exists').and.returnValue(uid);
   }));
 
   afterEach(() => {
