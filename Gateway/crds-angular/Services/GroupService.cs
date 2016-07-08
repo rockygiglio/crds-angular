@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -11,7 +10,6 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using Attribute = MinistryPlatform.Translation.Models.MpAttribute;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
@@ -20,7 +18,7 @@ using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttribut
 
 namespace crds_angular.Services
 {
-    public class GroupService : crds_angular.Services.Interfaces.IGroupService
+    public class GroupService : IGroupService
     {
         private readonly ILog logger = LogManager.GetLogger(typeof (GroupService));
 
@@ -92,6 +90,48 @@ namespace crds_angular.Services
             }
 
             return group;
+        }
+
+        public void addParticipantToGroupNoEvents(int groupId, ParticipantSignup participant)
+        {
+            MpGroup group;
+            try
+            {
+                group = _mpGroupService.getGroupDetails(groupId);
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not retrieve group details for group {0}: {1}", groupId, e.Message);
+                logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            checkSpaceRemaining(new List<ParticipantSignup> {participant}, group);
+
+            try
+            {
+                var roleId = participant.groupRoleId ?? GroupRoleDefaultId;
+
+                var participantId = participant.particpantId.Value;
+                var groupParticipantId = _mpGroupService.addParticipantToGroup(participantId,
+                                                                           Convert.ToInt32(groupId),
+                                                                           roleId,
+                                                                           participant.childCareNeeded,
+                                                                           DateTime.Now);
+
+                var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
+                _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);
+
+                if (participant.capacityNeeded > 0)
+                {
+                    decrementCapacity(participant.capacityNeeded, group);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Could not add user to group", e);
+                throw;
+            }
         }
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)

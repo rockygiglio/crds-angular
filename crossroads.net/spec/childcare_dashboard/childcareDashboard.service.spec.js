@@ -5,7 +5,7 @@ import ChildcareDashboardService from '../../app/childcare_dashboard/childcareDa
 import childcareModule from '../../app/childcare_dashboard/childcareDashboard.module';
 
 describe('Childcare Dashboard Service', () => {
-  
+
   const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
   const uid = 1234567890;
 
@@ -31,13 +31,40 @@ describe('Childcare Dashboard Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should get and set a list of childcare dates', () => {
+  it('should get a list of childcare dates', () => {
     expect(childcareService.childcareDates).toBeUndefined();
     httpBackend.expectGET(`${endpoint}/childcare/dashboard/${uid}`)
       .respond(200, {'childcareDates': []});
-
      childcareService.fetchChildcareDates();
      httpBackend.flush();
+  });
+
+  it('should rsvp a child', () => {
+    const dto = {
+      groupId: 54321,
+      childId: 12345,
+      registered: true
+    };
+
+    httpBackend
+      .expectPOST(`${endpoint}/childcare/rsvp`, dto)
+      .respond(200);
+    childcareService.saveRSVP(dto.childId, dto.groupId, true);
+    httpBackend.flush();
+  });
+
+  it('should remove an rsvp for a child', () => {
+    const dto = {
+      groupId: 54321,
+      childId: 12345,
+      registered: false
+    };
+
+    httpBackend
+      .expectPOST(`${endpoint}/childcare/rsvp`, dto)
+      .respond(200);
+    childcareService.saveRSVP(dto.childId, dto.groupId, false);
+    httpBackend.flush();
   });
 
 });
