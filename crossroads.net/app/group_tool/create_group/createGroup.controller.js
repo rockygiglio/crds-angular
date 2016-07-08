@@ -63,7 +63,7 @@ export default class CreateGroupController {
                 type: 'radio',
                 templateOptions: {
                     label: 'Gender',
-                    inline: true,
+                    inline: false,
                     valueProp: 'genderId',
                     labelProp: 'genderLabel',
                     options: [{
@@ -121,7 +121,7 @@ export default class CreateGroupController {
                 type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
-                    inline: true,
+                    inline: false,
                     options: [{
                         label: 'Specific Day and Time',
                     },{
@@ -160,7 +160,7 @@ export default class CreateGroupController {
                     label: 'Where will your group meet?',
                     labelProp: 'label',
                     valueProp: 'online',
-                    inline: true,
+                    inline: false,
                     options: [{
                         label: 'Location',
                         online: false
@@ -206,7 +206,7 @@ export default class CreateGroupController {
                     label: 'Are you interested in leading a group with chilcare options?',
                     labelProp: 'label',
                     valueProp: 'childcare',
-                    inline: true,
+                    inline: false,
                     options: [{
                         label: 'Kids welcome at the group.',
                         childcare: true
@@ -228,7 +228,7 @@ export default class CreateGroupController {
                 templateOptions: {
                     labelProp: 'label',
                     valueProp: 'date',
-                    inline: true,
+                    inline: false,
                     options: [{
                         label: 'Yes',
                     },{
