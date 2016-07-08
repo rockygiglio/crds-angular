@@ -90,10 +90,15 @@ gulp.task('default', ['webpack-dev-server']);
 // Compile any typescript files
 var tsProject = typescript.createProject("./app/tsconfig.json");
 gulp.task("tsc", function () {
-    return tsProject.src()
-        .pipe(embedTemplates()) // inline templates
-        .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest("./dist"));
+  return tsProject.src()
+    .pipe(embedTemplates({
+          sourceType:'ts',
+          minimize:{
+            quotes: true,
+          }
+    }))
+    .pipe(typescript(tsProject))
+    .js.pipe(gulp.dest("./dist"));
 });
 
 // Build and watch cycle (another option for development)
