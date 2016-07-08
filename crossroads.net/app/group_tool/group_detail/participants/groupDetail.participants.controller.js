@@ -1,7 +1,7 @@
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
-  constructor(Group, ImageService, $state) {
-    this.groupService = Group;
+  constructor(GroupService, ImageService, $state) {
+    this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
 
@@ -32,6 +32,7 @@ export default class GroupDetailParticipantsController {
   }
 
   deleteParticipants() {
+    // TODO Implement backend call to delete (end-date) participant
     _.remove(this.data.participants, function(participant) {
         return participant.deleted === true;
     });
