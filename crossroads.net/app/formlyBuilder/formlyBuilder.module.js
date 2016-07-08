@@ -10,7 +10,4 @@
     .config(require('./formlyBuilder.config'))
     ;
 
-  //Require Templates
-  require('./wrappers/createGroupWrapper.html');
-
 })();
