@@ -33,7 +33,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = $"Exception retrieving invitations for SourceID = {sourceId}, InvitationTypeID = {invitationTypeId}.";
+                var message = string.Format("Exception retrieving invitations for SourceID = {0}, InvitationTypeID = {1}.", sourceId, invitationTypeId);
                 _logger.Error(message, e);
                 throw;
             }
