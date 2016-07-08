@@ -12,12 +12,11 @@ export default class GroupDetailParticipantsController {
   }
 
   $onInit() {
-    var imageBaseUrl = this.imageService.ProfileImageBaseURL;
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
       this.data = data;
-      _.forEach(this.data.participants, function(participant) {
-          participant.imageUrl = `${imageBaseUrl}${participant.contactId}`;
-      });
+      this.data.participants.forEach(function(participant) {
+        participant.imageUrl = `${this.imageService.ProfileImageBaseURL}${participant.contactId}`;
+      }, this);
       this.ready = true;
     },
     (err) => {

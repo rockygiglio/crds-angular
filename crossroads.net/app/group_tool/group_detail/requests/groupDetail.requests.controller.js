@@ -15,12 +15,11 @@ export default class GroupDetailRequestsController {
   }
 
   $onInit() {
-    var imageBaseUrl = this.imageService.ProfileImageBaseURL;
     this.groupService.getGroupRequests(this.groupId).then((data) => {
       this.data = data;
-      _.forEach(this.data.requests, function(request) {
-          request.imageUrl = `${imageBaseUrl}${request.contactId}`;
-      });
+      this.data.requests.forEach(function(request) {
+          request.imageUrl = `${this.imageService.ProfileImageBaseURL}${request.contactId}`;
+      }, this);
       this.ready = true;
     },
     (err) => {
