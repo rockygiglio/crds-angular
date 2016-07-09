@@ -1,3 +1,6 @@
+
+import SmallGroup from '../model/SmallGroup';
+
 export default class MyGroupsController {
 
   /*@ngInject*/
@@ -10,7 +13,12 @@ export default class MyGroupsController {
 
   $onInit() {
     this.groupService.getMyGroups().then((data) => {
-      this.groups = data;
+      this.groups = [];
+      
+      data.forEach(function(group) {
+        this.groups.push(new SmallGroup(group));
+      }, this);
+
       this.ready = true;
     },
     (err) => {
@@ -19,6 +27,5 @@ export default class MyGroupsController {
       this.ready = true;
     });
   }
-
 
 }

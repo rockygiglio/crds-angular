@@ -2,33 +2,33 @@
   <div class="group-details">
     <div class="row">
       <div class="group-title">Group Name
-        <span ng-if="groupCard.group.leader">(Leader)</span>
-        <span ng-if="!groupCard.group.leader">(Participant)</span>
+        <span ng-if="groupCard.group.isLeader()">(Leader)</span>
+        <span ng-if="!groupCard.group.isLeader()">(Participant)</span>
       </div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.name }}</div>
+      <div>{{ groupCard.group.groupName }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Group Focus</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.focus }}</div>
+      <div>{{ groupCard.group.categories() }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Meeting Time</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.time }}</div>
+      <div>{{ groupCard.group.meetingTimeFrequency }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Meeting Location</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.location }}</div>
+      <div>{{ groupCard.group.meetingLocation() }}</div>
     </div>
   </div>
 
