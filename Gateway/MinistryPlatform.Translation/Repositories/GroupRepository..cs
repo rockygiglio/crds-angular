@@ -26,9 +26,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
+        private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
         private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
+        private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -565,7 +567,15 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
         {
             var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
-            return groups.Select(MapRecordToMpGroup).ToList();
+            var mpGroupList = groups.Select(MapRecordToMpGroup).ToList();
+
+            foreach (MpGroup group in mpGroupList)
+            {
+                group.Participants = LoadGroupParticipants(group.GroupId, userToken).Where(p => p.GroupRoleId == GroupLeaderRoleId).ToList();
+            }
+
+            return mpGroupList;
+
         }
 
         private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
@@ -575,6 +585,7 @@ namespace MinistryPlatform.Translation.Repositories
                 GroupType = record["Group_Type_ID"] as int? ?? 0,
                 GroupId = record["Group_ID"] as int? ?? 0,
                 Name = record["Group_Name"] as string, 
+                GroupDescription = record["Description"] as string,
                 MeetingDay = record["Meeting_Day"] as string,
                 MeetingTime = record.ToString("Meeting_Time"),
                 MeetingFrequency = record["Meeting_Frequency"] as string,

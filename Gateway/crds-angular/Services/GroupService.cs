@@ -42,7 +42,6 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
         private readonly int JourneyGroupId;
-        private readonly int GroupLeaderRoleId;
 
         public GroupService(IGroupRepository mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -72,7 +71,6 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
-            GroupLeaderRoleId = configurationWrapper.GetConfigIntValue("GroupLeaderRoleId");
     }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -397,7 +395,7 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeService.GetAttributes(90);
             foreach (var participant in participants)
             {
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
@@ -433,29 +431,14 @@ namespace crds_angular.Services
             }
 
             var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
-
-            var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(90);
-
-            foreach (var  group in groupDetail)
-            {
-                List<MpGroupParticipant> groupMembers = _mpGroupService.getGroupDetails(group.GroupId).Participants.Where(participant => participant.GroupRoleId == GroupLeaderRoleId).Select(p =>
-                                                                                                    new MpGroupParticipant
-                                                                                                    {
-                                                                                                        ContactId = p.ContactId,
-                                                                                                        LastName = p.LastName,
-                                                                                                        NickName = p.NickName,
-                                                                                                        ParticipantId = p.ParticipantId
-                                                                                                    }
-                    ).ToList();
-                group.Participants = groupMembers.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
-            }
+            //var configuration = MpObjectAttributeConfigurationFactory.Group();
+            //var mpAttributes = _attributeService.GetAttributes(null);
 
             //foreach (var group in groupDetail)
             //{
-            //    var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
-            //    group.AttributeTypes = attributesTypes.MultiSelect;
-            //    group.SingleAttributes = attributesTypes.SingleSelect;
+                //var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                //group.AttributeTypes = attributesTypes.MultiSelect;
+                //group.SingleAttributes = attributesTypes.SingleSelect;
             //}
 
             return groupDetail;

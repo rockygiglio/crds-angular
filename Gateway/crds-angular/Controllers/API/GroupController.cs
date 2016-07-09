@@ -225,7 +225,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    //var participant = groupService.GetParticipantRecord(token);
                     var groups = groupService.GetSmallGroupsForAuthenticatedUser(token);
 
                     return Ok(groups);
