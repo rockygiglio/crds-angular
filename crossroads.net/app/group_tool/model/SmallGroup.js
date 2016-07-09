@@ -8,6 +8,9 @@ export default class SmallGroup {
     this.createSubObjects(jsonObject);
     this.deleteSubObjects(jsonObject);
     Object.assign(this, jsonObject);
+
+    this.categories();
+    this.isLeader();
   }
 
   createSubObjects(jsonObject) {
@@ -27,8 +30,17 @@ export default class SmallGroup {
   isLeader() {
     //TODO:: Remove this after implemented on backend
     if(this.leader === null || this.leader === undefined) {
-      this.groupRoleId = Math.floor((Math.random()*100)/4);
-      this.leader = (this.groupRoleId === 22)
+      let random = Math.floor(Math.random()*100)%4;
+
+      if(random === 0) {
+        this.leader = true;
+      } else if(random === 1) {
+        this.leader =  false;
+      } else if(random === 2) {
+        this.leader = true;
+      } else {
+        this.leader = false;
+      }
     }
 
     return this.leader;
@@ -44,16 +56,20 @@ export default class SmallGroup {
 
   categories() {
     //TODO:: This will change when categories are passed in
-    let random = Math.floor(Math.random()*100)%4;
+    if (this.category === null || this.category === undefined) {
+      let random = Math.floor(Math.random()*100)%4;
 
-    if(random === 0) {
-      return 'Financial';
-    } else if(random === 1) {
-      return 'Bible Study';
-    } else if(random === 2) {
-      return 'Marriage Growth, Listening, Financial';
-    } else {
-      return 'Bible Study, Financial, Stress Managment';
+      if(random === 0) {
+        this.category = 'Financial';
+      } else if(random === 1) {
+        this.category = 'Bible Study';
+      } else if(random === 2) {
+        this.category = 'Marriage Growth, Listening, Financial';
+      } else {
+        this.category = 'Bible Study, Financial, Stress Managment';
+      }
     }
+
+    return this.category;
   }
 }

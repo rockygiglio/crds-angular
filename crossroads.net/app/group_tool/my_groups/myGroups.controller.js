@@ -13,8 +13,6 @@ export default class MyGroupsController {
 
   $onInit() {
     this.groupService.getMyGroups().then((data) => {
-      this.groups = [];
-      
       data.forEach(function(group) {
         this.groups.push(new SmallGroup(group));
       }, this);
