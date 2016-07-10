@@ -1,3 +1,7 @@
+<div ng-if="myGroups.error" class="alert alert-danger" role="alert">
+   Error: {{myGroups.errorMsg}}
+</div>
+
 <span dynamic-content="$root.MESSAGES.myGroupsHeader.content | html"></span>
 <preloader full-screen='false' ng-if="!myGroups.ready"> </preloader>
 <div class="row" ng-if="myGroups.ready">

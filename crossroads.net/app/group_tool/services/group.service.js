@@ -1,4 +1,6 @@
 
+import SmallGroup from '../model/SmallGroup';
+
 export default class ParticipantService {
   /*@ngInject*/
   constructor($log, $resource, $q, AuthService) {
@@ -9,8 +11,25 @@ export default class ParticipantService {
   }
 
   getMyGroups() {
-    var promised = this.deferred.defer();
+    let promised = this.deferred.defer();
 
+    /*
+    promised.reject();
+    
+    return promised.promise.then((data) => {
+      let groups = [];
+
+      data.forEach(function(group) {
+        groups.push(new SmallGroup(group));
+      }, groups);
+
+      return groups;
+    },
+    (err) => {
+      err = {status: '404', statusText: 'No Groups Found'}
+      throw err;
+    });
+    */
     promised.resolve([
       {
         "groupName": "Learning and Growing In Life",
@@ -210,8 +229,19 @@ export default class ParticipantService {
         ]
       }
     ]);
+    
+    return promised.promise.then((data) => {
+      let groups = [];
 
-    return promised.promise;
+      data.forEach(function(group) {
+        groups.push(new SmallGroup(group));
+      }, groups);
+
+      return groups;
+    },
+    (err) => {
+      throw err;
+    });
   }
 
   getGroup(groupId) {
