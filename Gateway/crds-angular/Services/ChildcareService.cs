@@ -264,6 +264,7 @@ namespace crds_angular.Services
             {
                 throw new NotHeadOfHouseholdException(contactId);
             }
+            household.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
 
             //Find community groups for house heads
             foreach (var head in houseHeads)
