@@ -34,7 +34,7 @@
       .group-participant-leader {
         font-weight: 700;
         line-height: 1.625;
-        font-size: 1em;
+        font-size: .75em;
         margin-top: 16px;
 
         span {
@@ -50,6 +50,7 @@
         margin-top: 15px;
         width: 15px;
         height: 15px;
+        cursor: pointer;
       }
     }
 

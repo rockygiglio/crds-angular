@@ -134,6 +134,12 @@ namespace crds_angular.Services
             }
         }
 
+        public void endDateGroupParticipant(int groupId, int groupParticipantId)
+        {
+            
+           _mpGroupService.endDateGroupParticipant(groupParticipantId,groupId, DateTime.Now);
+        }
+
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
         {
             MpGroup group;
@@ -424,9 +430,9 @@ namespace crds_angular.Services
             return mergeData;
         }
 
-        public List<GroupParticipantDTO> GetGroupParticipants(int groupId)
+        public List<GroupParticipantDTO> GetGroupParticipants(int groupId, bool active = true)
         {
-            var groupParticipants = _mpGroupService.GetGroupParticipants(groupId);       
+            var groupParticipants = _mpGroupService.GetGroupParticipants(groupId, active);       
             if (groupParticipants == null)
             {
                 return null;

@@ -34,7 +34,7 @@
           on-label="✓"
           off-label="✕"
           class="pull-right"
-          ng-disabled="childcareGroup.isEventClosed()">
+          ng-disabled="childcareGroup.isEventClosed() && !child.rsvpness">
         <toggle-switch>
       </li>
     </ul> 

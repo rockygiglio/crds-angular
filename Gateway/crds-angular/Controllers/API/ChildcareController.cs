@@ -45,7 +45,11 @@ namespace crds_angular.Controllers.API
                 {
                     if (saveRsvp.Registered)
                     {
-                        _childcareService.SaveRsvp(saveRsvp, token);
+                        _childcareService.SaveRsvp(saveRsvp);
+                    }
+                    else
+                    {
+                        _childcareService.CancelRsvp(saveRsvp);
                     }
                     return Ok();
                 }

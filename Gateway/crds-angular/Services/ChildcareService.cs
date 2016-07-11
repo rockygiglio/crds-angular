@@ -90,7 +90,7 @@ namespace crds_angular.Services
             return myChildren;
         }
 
-        public void SaveRsvp(ChildcareRsvpDto saveRsvp, string token)
+        public void SaveRsvp(ChildcareRsvpDto saveRsvp)
         {
             var participant = _participantService.GetParticipant(saveRsvp.ChildContactId);
 
@@ -108,6 +108,23 @@ namespace crds_angular.Services
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Save RSVP failed for group ({0}), contact ({1})", saveRsvp.GroupId, saveRsvp.ChildContactId), ex);
+                throw;
+            }
+        }
+
+        public void CancelRsvp(ChildcareRsvpDto cancelRsvp)
+        {
+            try
+            {
+                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
+                if (groupParticipant != null)
+                {
+                    _groupService.endDateGroupParticipant(cancelRsvp.GroupId, groupParticipant.GroupParticipantId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Cancel RSVP failed for group ({0}), contact ({1})", cancelRsvp.GroupId, cancelRsvp.ChildContactId), ex);
                 throw;
             }
         }
