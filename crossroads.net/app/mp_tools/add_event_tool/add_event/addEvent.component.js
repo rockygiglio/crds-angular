@@ -133,6 +133,10 @@
     }
 
     function checkMinMax(form) {
+      if (vm.eventData.minimumChildren === undefined || vm.eventData.maximumChildren === undefined) {
+        return false;
+      }
+
       //set the proper error state
       if (vm.eventData.minimumChildren > vm.eventData.maximumChildren) {
         form.maximumChildren.$error.minmax = true;

@@ -22,6 +22,7 @@ var definePlugin = new webpack.DefinePlugin({
 
 module.exports = {
   entry: {
+    childcare: './app/childcare_dashboard/childcareDashboard.module.js',
     trips: './app/trips/trips.module.js',
     search: './app/search/search.module.js',
     media: './app/media/media.module.js',

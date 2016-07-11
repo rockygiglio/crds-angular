@@ -298,5 +298,46 @@ namespace MinistryPlatform.Translation.Test.Services
                 Assert.AreSame(ex, e.InnerException);
             }
         }
+
+        [Test]
+        public void ShouldGetFamilyWithAges()
+        {
+            var householdid = 1234567;
+
+            var familyMembersReturned = new List<Dictionary<string, object>>();
+
+            var childOne = new Dictionary<string, object>
+            {
+                {"Contact_ID", 1},
+                {"First_Name", "Bobby"},
+                {"Nickname", "Rob"},
+                {"Last_Name", "DropTables"},
+                {"Date_of_Birth", "2012-01-01"},
+                {"__Age", 4},
+                {"Household_Position", "Child"}
+            };
+
+            var childTwo = new Dictionary<string, object>
+            {
+                {"Contact_ID", 2},
+                {"First_Name", "Jane"},
+                {"Nickname", "Jane"},
+                {"Last_Name", "DropTables"},
+                {"Date_of_Birth", "2014-01-01"},
+                {"__Age", 2},
+                {"Household_Position", "Child"}
+            };
+
+
+            familyMembersReturned.Add(childOne);
+            familyMembersReturned.Add(childTwo);
+
+            var rc = _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("HouseholdMembers", 1234567, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), 0 )).Returns(familyMembersReturned);
+            
+            var family = _fixture.GetHouseholdFamilyMembers(householdid);
+
+            Assert.AreEqual(family.Count,2);
+            Assert.AreEqual(family[0].Age,4);
+        }
     }
 }

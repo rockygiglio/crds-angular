@@ -23,6 +23,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         IEnumerable<Participant> EventParticipants(string token, int eventId);
         void SetReminderFlag(int eventId, string token);
         List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token);
+        List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token);
         //void CopyEventGroup(EventGroup eventGroup);
         void DeleteEventGroup(MpEventGroup eventGroup, string token);
         int CreateEventGroup(MpEventGroup eventGroup, string token);

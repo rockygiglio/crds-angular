@@ -15,12 +15,11 @@ export default class GroupDetailRequestsController {
   }
 
   $onInit() {
-    var imageBaseUrl = this.imageService.ProfileImageBaseURL;
     this.groupService.getGroupRequests(this.groupId).then((data) => {
       this.data = data;
-      _.forEach(this.data.requests, function(request) {
-          request.imageUrl = `${imageBaseUrl}${request.contactId}`;
-      });
+      this.data.requests.forEach(function(request) {
+          request.imageUrl = `${this.imageService.ProfileImageBaseURL}${request.contactId}`;
+      }, this);
       this.ready = true;
     },
     (err) => {
@@ -52,6 +51,7 @@ export default class GroupDetailRequestsController {
     
   approveRequest(request) {
     // TODO Call API to approve request, send email, etc
+    _.remove(this.data.requests, request);
     this.currentRequest = null;
     this.currentView = 'List';
   }
@@ -63,6 +63,7 @@ export default class GroupDetailRequestsController {
     
   denyRequest(request) {
     // TODO Call API to deny request, send email, etc
+    _.remove(this.data.requests, request);
     this.currentRequest = null;
     this.currentView = 'List';
   }

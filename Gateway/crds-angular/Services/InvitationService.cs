@@ -44,7 +44,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
+                var message = string.Format("Exception creating invitation for {0}, SourceID = {1}.", dto.RecipientName, dto.SourceId);
                 _logger.Error(message, e);
                 return -1;
             }
