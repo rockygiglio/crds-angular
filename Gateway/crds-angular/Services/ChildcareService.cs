@@ -264,6 +264,7 @@ namespace crds_angular.Services
             {
                 throw new NotHeadOfHouseholdException(contactId);
             }
+            household.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
 
             //Find community groups for house heads
             foreach (var head in houseHeads)
@@ -277,6 +278,10 @@ namespace crds_angular.Services
                     foreach (var ev in groupEvents)
                     {
                         var eventDetails = _eventService.GetEvent(ev.EventId);
+                        if (eventDetails.EventStartDate < DateTime.Today)
+                        {
+                            continue;
+                        }
                         if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
                         {
                             dashboard.AvailableChildcareDates.Add(new ChildCareDate
