@@ -87,6 +87,15 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "singleAttributes")]
         public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
 
+        [JsonProperty(PropertyName = "maximumAge")]
+        public int MaximumAge { get; set; }
+
+        [JsonProperty(PropertyName = "minimumParticipants")]
+        public int MinimumParticipants { get; set; }
+
+        [JsonProperty(PropertyName = "maximumParticipants")]
+        public int MaximumParticipants { get; set; }
+
         public GroupDTO()
         {
             AttributeTypes = new Dictionary<int, ObjectAttributeTypeDTO>();

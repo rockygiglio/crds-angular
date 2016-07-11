@@ -12,7 +12,6 @@ using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
@@ -478,6 +477,51 @@ namespace crds_angular.test.Services
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+        }
+
+        [Test]
+        public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
+        {
+            var g = new MpGroup
+            {
+                TargetSize = 3,
+                Full = true,
+                Participants = new List<MpGroupParticipant>
+                {
+                    new MpGroupParticipant()
+                }
+            };
+            groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
+
+            try
+            {
+                fixture.addParticipantToGroupNoEvents(456, mockParticipantSignup.FirstOrDefault());
+                Assert.Fail("Expected exception was not thrown");
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof(GroupFullException), e);
+            }
+
+            groupService.VerifyAll();
+        }
+
+        [Test]
+        public void shouldAddParticipantsToCommunityGroupButNotEvents()
+        {
+            var g = new MpGroup
+            {
+                TargetSize = 0,
+                Full = false,
+                Participants = new List<MpGroupParticipant>()
+            };
+            groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
+
+            groupService.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(999456);
+            
+            fixture.addParticipantToGroupNoEvents(456, mockParticipantSignup.FirstOrDefault());
+
+            groupService.VerifyAll();
         }
     }
 }

@@ -158,7 +158,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Email_Address", "thecinnamonbagel@react.js"},
                     {"Parent_Event_ID", 6543219},
                     {"Congregation_ID", It.IsAny<int>()},
-                    {"Reminder_Days_Prior_ID", 2}
+                    {"Reminder_Days_Prior_ID", 2},
+                    {"Cancelled", false}
                 }
             };
             var searchString = eventId + ",";
@@ -384,7 +385,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     { "Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Domain_ID", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
                     { "Closed", Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault },
-                    { "Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
+                    { "Event_Room_ID", Gen.Sample(7, 1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault },
+                    { "Group_Type_ID",Gen.Sample(7,1, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault }
                 });
             }
 

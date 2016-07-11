@@ -16,7 +16,7 @@
 
     <div class="row">
 
-      <!-- Event Tupe -->
+      <!-- Event Type -->
       <div class="col-md-6">
         <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'eventType')}">
           <label class="required">Event Type</label>
@@ -24,6 +24,7 @@
                   name="eventType"
                   required
                   ng-model="evt.eventData.eventType"
+                  ng-change="evt.eventTypeChanged()"
                   ng-options="type.dp_RecordName for type in evt.eventTypes track by type.dp_RecordID">
             <option value=''>-- Choose an EventType -- </option>
           </select>
@@ -79,6 +80,88 @@
         </span>
       </ng-messages>
     </div>
+
+    <div ng-show="evt.childcareSelected()" >
+      <!-- Max Age -->
+      <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'maximumAge') && evt.childcareSelected() }">
+            <label class="required">Maximum Age:</label>
+            <input type="number" 
+                      class="form-control" 
+                      ng-model="evt.eventData.maximumAge"
+                      ng-required ="evt.childcareSelected()"
+                      name="maximumAge" 
+                      ng-max="12"
+                      ng-min="0" 
+                      ng-show="true"
+                      ng-disabled="false">
+          
+           <ng-messages for="eventForm.maximumAge.$error" ng-if="evt.validation.showErrors(eventForm, 'maximumAge') && evt.childcareSelected()">
+              <span ng-message="required">
+                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+              <span ng-message="max">
+                <span dynamic-content="$root.MESSAGES.childcareAgeMessage.content | html"></span>
+              </span>
+              <span ng-message="min">
+                <span dynamic-content="$root.MESSAGES.childcareAgeMessage.content | html"></span>
+              </span>
+           </ng-messages>
+      </div>
+
+      <!-- Min Participants -->
+      <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'minimumChildren') && evt.childcareSelected()}">
+            <label class="required">Minimum Number of Children:</label>
+            <input type="number" 
+                      class="form-control" 
+                      ng-model="evt.eventData.minimumChildren"
+                      ng-required ="evt.childcareSelected()"
+                      ng-change="evt.checkMinMax(eventForm)"
+                      name="minimumChildren" 
+                      ng-min="0" 
+                      ng-show="true"
+                      ng-disabled="false">
+          
+            <ng-messages for="eventForm.minimumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'minimumChildren') && evt.childcareSelected()">
+              <span ng-message="required">
+                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+               <span ng-message="min">
+                <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
+              </span>
+              <span ng-message="minmax">
+                <span dynamic-content="$root.MESSAGES.childcareMinMaxMessage.content | html"></span>
+              </span>
+           </ng-messages>
+      </div>
+
+      <!-- Max Participants -->
+      <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'maximumChildren') && evt.childcareSelected()}">
+            <label class="required">Maximum Number of Children:</label>
+            <input type="number" 
+                      class="form-control" 
+                      ng-model="evt.eventData.maximumChildren"
+                      ng-required ="evt.childcareSelected()"
+                      ng-change="evt.checkMinMax(eventForm)"
+                      name="maximumChildren" 
+                      ng-min="0" 
+                      ng-show="true"
+                      ng-disabled="false">
+          
+          	<ng-messages for="eventForm.maximumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'maximumChildren') && evt.childcareSelected()">
+              <span ng-message="required">
+                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+              </span>
+              <span ng-message="min">
+                <span dynamic-content="$root.MESSAGES.childcareMinimumMessage.content | html"></span>
+              </span>
+              <span ng-message="minmax">
+                <span dynamic-content="$root.MESSAGES.childcareMinMaxMessage.content | html"></span>
+              </span>
+           </ng-messages>
+      </div>
+
+    </div>
+
     <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'primaryContact')}">
       <label class="required">Primary Contact</label>
       <select class="form-control"
