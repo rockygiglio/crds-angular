@@ -558,9 +558,9 @@ namespace crds_angular.test.Services
 
             groupService.Setup(x => x.GetSmallGroupsForAuthenticatedUser(token)).Returns(newGroupList);
 
-           var Groups = fixture.GetSmallGroupsForAuthenticatedUser(token);
-           Assert.AreEqual(Groups.Count, 1);
-           Assert.AreEqual(Groups[0].GroupName, "Awesome Sweet Small Group");
+           var groups = fixture.GetSmallGroupsForAuthenticatedUser(token);
+           Assert.AreEqual(groups.Count, 1);
+           Assert.AreEqual(groups[0].GroupName, "Awesome Sweet Small Group");
 
         }
     }
