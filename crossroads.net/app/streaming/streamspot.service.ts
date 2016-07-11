@@ -39,6 +39,12 @@ export class StreamspotService {
       .catch(this.handleError);
   }
 
+  getUpcoming(): Promise<Event> {
+    return this.get().then(response => {
+      return _.head(response)
+    });
+  }
+
   byDate(): Promise<Object[]> {
     return this.get().then(response => {
       return _.chain(response)
