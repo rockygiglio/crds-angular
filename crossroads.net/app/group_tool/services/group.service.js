@@ -1,5 +1,5 @@
 
-import CONSTANTS from '../../../constants';
+import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
 
 export default class ParticipantService {
