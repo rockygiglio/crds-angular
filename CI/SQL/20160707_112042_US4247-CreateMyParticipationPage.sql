@@ -35,3 +35,11 @@ VALUES
 SET IDENTITY_INSERT [dbo].[dp_Page_Views] ON;
 
 END
+
+IF NOT EXISTS(SELECT * FROM dp_Page_Section_Pages WHERE page_id = 563 AND page_section_id = 17)
+BEGIN
+INSERT INTO [dbo].[dp_Page_Section_Pages]
+(Page_ID, Page_Section_ID) 
+VALUES
+(563    , 17)
+END
