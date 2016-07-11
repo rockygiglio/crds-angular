@@ -1,5 +1,5 @@
 // TODO Replace w/ CRDS endpoint once we have images in production S3 bucket.
-$streaming-imgix-domain: '//ample.imgix.net';
+$streaming-imgix-domain: '//crds-cms-uploads.imgix.net/content/images';
 
 // NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
 $streaming-font-semi_cond: "acumin-pro-semi-condensed", sans-serif;
@@ -167,7 +167,7 @@ streaming {
 
   .intro {
     @include crds-jumbotron();
-    background: #2E2E30 url("#{$streaming-imgix-domain}/anywhere-hero.jpg?w=1&crop=faces&dpr=2&fit=crop");
+    background: #2E2E30 url("#{$streaming-imgix-domain}/streaming--anywhere-hero.jpg?w=1&crop=faces&dpr=2&fit=crop");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -358,7 +358,7 @@ streaming {
 
   .community {
     @include crds-jumbotron();
-    background: #1D3C50 url("#{$streaming-imgix-domain}/anywhere-map.jpg?w=1&dpr=2&fit=crop");
+    background: #1D3C50 url("#{$streaming-imgix-domain}/streaming--anywhere-map.jpg?w=1&dpr=2&fit=crop");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
