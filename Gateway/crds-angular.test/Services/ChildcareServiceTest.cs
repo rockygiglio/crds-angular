@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -315,5 +316,26 @@ namespace crds_angular.test.Services
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
         }
+
+        [Test]
+        public void GetHeadsOfHousehold()
+        {
+            const int householdId = 1234;
+            const int contactId = 4321;
+
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(householdId))
+                .Returns(
+                    new List<MpHouseholdMember>()
+                    {
+                        new MpHouseholdMember() { Age = 36, ContactId = contactId, DateOfBirth = new DateTime(1980, 2, 21), FirstName = "Matt", LastName = "Silberangel", HouseholdPosition = "Head Of Household", Nickname = "Matt"},
+                        new MpHouseholdMember() { Age = 29, ContactId = 54879, DateOfBirth = new DateTime(1987, 11, 5), FirstName = "Leslie", LastName = "Silbernagel", HouseholdPosition = "Head of Household Spouse", Nickname = "Les"}
+                    }
+                );
+            var heads = _fixture.GetHeadsOfHousehold(contactId, householdId);
+            _contactService.VerifyAll();
+
+            Assert.AreEqual(2, heads.Item2.Count());
+        }
+
     }
 }

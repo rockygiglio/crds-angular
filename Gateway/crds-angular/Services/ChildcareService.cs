@@ -251,25 +251,23 @@ namespace crds_angular.Services
             }
         }
 
+        //TODO: SPLIT OUT INTO SMALLER METHODS AND WRITE TESTS!!!!!!!!!!!!!
         public ChildcareDashboardDto GetChildcareDashboard(int contactId)
         {
             var dashboard = new ChildcareDashboardDto();
             var token = _apiUserService.GetToken();
+            
+            var contact = _contactService.GetContactById(contactId);
 
             //Figure out who is a head in my household
-            var contact = _contactService.GetContactById(contactId);
-            var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")); //TODO: Get rid of magic string. Household Position
-            if (!houseHeads.Any(h => h.ContactId == contactId))
-            {
-                throw new NotHeadOfHouseholdException(contactId);
-            }
+            var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
 
             //Find community groups for house heads
-            foreach (var head in houseHeads)
+            foreach (var head in members.Item2)
             {
                 var participant = _participantService.GetParticipant(head.ContactId);
-                var groups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, _configurationWrapper.GetConfigIntValue("GroupTypeForCommunityGroup"));
+                var groups = _groupService.GetGroupsForParticipant(token, participant.ParticipantId);
+                
                 //Find events that my groups are approved for
                 foreach (var group in groups)
                 {
@@ -277,7 +275,7 @@ namespace crds_angular.Services
                     foreach (var ev in groupEvents)
                     {
                         var eventDetails = _eventService.GetEvent(ev.EventId);
-                        if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
+                        if (dashboard.AvailableChildcareDates.All(d => d.EventDate.Date != eventDetails.EventStartDate.Date))
                         {
                             dashboard.AvailableChildcareDates.Add(new ChildCareDate
                             {
@@ -290,7 +288,7 @@ namespace crds_angular.Services
                         var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
                         var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
                         var eligibleChildren = new List<ChildcareRsvp>();
-                        foreach (var member in household)
+                        foreach (var member in members.Item1)
                         {
                             if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD")) //TODO: Get rid of magic string. Household Position
                             {
@@ -320,8 +318,29 @@ namespace crds_angular.Services
                     }
                 }
             }
+            dashboard.AvailableChildcareDates = dashboard.AvailableChildcareDates.OrderBy(x => x.EventDate).ToList();
 
             return dashboard;
+        }
+
+        /// <summary>
+        /// Determine who is the head of household in a household.
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <param name="householdId"></param>
+        /// <returns> 
+        ///     A 2-tuple with the first element being a list of all family members and the second element being a list of heads of household.
+        ///     Throws a NotHeadOfHouseholdException if the contactId passed in is not a head of household
+        /// </returns>
+        public Tuple<List<MpHouseholdMember>, List<MpHouseholdMember> >  GetHeadsOfHousehold(int contactId, int householdId)
+        {
+            var household = _contactService.GetHouseholdFamilyMembers(householdId);
+            var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")).ToList(); //TODO: Get rid of magic string. Household Position
+            if (houseHeads.All(h => h.ContactId != contactId))
+            {
+                throw new NotHeadOfHouseholdException(contactId);
+            }
+            return new Tuple<List<MpHouseholdMember>, List<MpHouseholdMember>>(household, houseHeads);
         }
 
         private bool IsChildRsvpd(int contactId, GroupDTO ccEventGroup, string token)

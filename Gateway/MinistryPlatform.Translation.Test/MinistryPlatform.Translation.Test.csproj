@@ -132,7 +132,7 @@
     <Compile Include="Services\DonorServiceTest.cs" />
     <Compile Include="Services\ContactServiceTest.cs" />
     <Compile Include="Services\FormSubmissionServiceTest.cs" />
-    <Compile Include="Services\GroupServiceTest.cs" />
+    <Compile Include="Services\GroupRepositoryTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />
     <Compile Include="Services\OpportunityServiceTest.cs" />
     <Compile Include="Services\OrganizationServiceTest.cs" />
