@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Reactive.Linq;
 using crds_angular.Exceptions;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Serve;
@@ -91,25 +90,42 @@ namespace crds_angular.Services
             return myChildren;
         }
 
-        public void SaveRsvp(ChildcareRsvpDto saveRsvp, string token)
+        public void SaveRsvp(ChildcareRsvpDto saveRsvp)
         {
-            var participant = _participantService.GetParticipantRecord(token);
-            var participantId = 0;
+            var participant = _participantService.GetParticipant(saveRsvp.ChildContactId);
 
             try
             {
-                foreach (var p in saveRsvp.ChildParticipants)
+                var participantSignup = new ParticipantSignup
                 {
-                    participantId = p;
-                    _eventService.SafeRegisterParticipant(saveRsvp.EventId, participantId);
-                }
+                    particpantId = participant.ParticipantId,
+                    groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                    capacityNeeded = 1
+                };
 
-                //send email to parent
-                SendConfirmation(saveRsvp.EventId,participant,saveRsvp.ChildParticipants);
+                _groupService.addParticipantToGroupNoEvents(saveRsvp.GroupId, participantSignup);
             }
             catch (Exception ex)
             {
-                _logger.Error(string.Format("Save RSVP failed for event ({0}), participant ({1})", saveRsvp.EventId, participantId), ex);
+                _logger.Error(string.Format("Save RSVP failed for group ({0}), contact ({1})", saveRsvp.GroupId, saveRsvp.ChildContactId), ex);
+                throw;
+            }
+        }
+
+        public void CancelRsvp(ChildcareRsvpDto cancelRsvp)
+        {
+            try
+            {
+                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
+                if (groupParticipant != null)
+                {
+                    _groupService.endDateGroupParticipant(cancelRsvp.GroupId, groupParticipant.GroupParticipantId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(string.Format("Cancel RSVP failed for group ({0}), contact ({1})", cancelRsvp.GroupId, cancelRsvp.ChildContactId), ex);
+                throw;
             }
         }
 
@@ -297,7 +313,8 @@ namespace crds_angular.Services
                             GroupMemberName = head.Nickname + ' ' + head.LastName,
                             MaximumAge = ccEventGroup.MaximumAge,
                             RemainingCapacity = group.RemainingCapacity,
-                            EligibleChildren = eligibleChildren
+                            EligibleChildren = eligibleChildren,
+                            ChildcareGroupId = ccEventGroup.GroupId
                         });
                         
                     }
@@ -420,56 +437,6 @@ namespace crds_angular.Services
             }
 
 
-        }
-
-        private void SendConfirmation(int childcareEventId, Participant participant, IEnumerable<int> kids )
-        {
-            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareConfirmationTemplate");
-            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
-            var template = _communicationService.GetTemplate(templateId);
-            var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            const int domainId = 1;
-
-            var childEvent = _eventService.GetEvent(childcareEventId);
-
-            if (childEvent.ParentEventId == null)
-            {
-                throw new ApplicationException("SendConfirmation: Parent Event Not Found.");
-            }
-            var parentEventId = (int) childEvent.ParentEventId;
-
-            var mergeData = SetConfirmationMergeData(parentEventId, kids);
-            var replyToContact = ReplyToContact(childEvent);
-
-            var communication = FormatCommunication(authorUserId, domainId, template, fromContact, replyToContact, participant.ContactId, participant.EmailAddress, mergeData);
-            try
-            {
-                _communicationService.SendMessage(communication);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(string.Format("Send Childcare Confirmation email failed. Participant: {0}, Event: {1}", participant.ParticipantId, childcareEventId), ex);
-            }
-        }
-
-        private Dictionary<string, object> SetConfirmationMergeData(int parentEventId, IEnumerable<int> kids)
-        {
-            var parentEvent = _eventService.GetEvent(parentEventId);
-            var kidList = kids.Select(kid => _contactService.GetContactByParticipantId(kid)).Select(contact => contact.First_Name + " " + contact.Last_Name).ToList();
-
-            var html = new HtmlElement("ul");
-            var elements = kidList.Select(kid => new HtmlElement("li", kid));
-            foreach (var htmlElement in elements)
-            {
-                html.Append(htmlElement);
-            }
-            var mergeData = new Dictionary<string, object>
-            {
-                {"EventTitle", parentEvent.EventTitle},
-                {"EventStartDate", parentEvent.EventStartDate.ToString("g")},
-                {"ChildNames", html.Build()}
-            };
-            return mergeData;
         }
 
         public int SchoolGrade(int graduationYear)

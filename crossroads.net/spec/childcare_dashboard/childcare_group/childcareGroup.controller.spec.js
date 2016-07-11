@@ -1,6 +1,8 @@
 import constants from 'crds-constants';
 import ChildcareDashboardService from '../../../app/childcare_dashboard/childcareDashboard.service';
-import ChildcareDashboardGroupController from '../../../app/childcare_dashboard/childcare_group/childcareDashboardGroup.controller';
+
+import ChildcareDashboardGroupController from 
+  '../../../app/childcare_dashboard/childcare_group/childcareDashboardGroup.controller';
 
 /* jshint unused: false */
 import childcareModule from '../../../app/childcare_dashboard/childcareDashboard.module';
@@ -12,7 +14,9 @@ describe('Childcare Group Component Controller', () => {
       childcareDashboardService,
       resource,
       cookies,
-      controller
+      controller,
+      modal,
+      scope
       ;
 
   beforeEach(angular.mock.module(constants.MODULES.CHILDCARE_DASHBOARD));
@@ -22,18 +26,27 @@ describe('Childcare Group Component Controller', () => {
     rootScope.MESSAGES = {
       childcareEventClosed: { content: 'test' },
       noEligibleChildren: { content: 'test2' },
-      childcareEventCancelled: { content: 'test3'}
+      childcareEventCancelled: { content: 'test3'},
+      childcareRsvpError: { content: 'test4'},
+      childcareRsvpFull: 'childRsvpFull'
     };
+
+    scope = rootScope.$new();
     log = $injector.get('$log');
     cookies = $injector.get('$cookies');
+    modal = $injector.get('$modal');
     resource = $injector.get('$resource');
+
     childcareDashboardService = new ChildcareDashboardService(resource,cookies);
     childcareDashboardService.congregations = [
       { dp_RecordID: 1, dp_RecordName: 'Whateves' }
     ];
 
-    controller = new ChildcareDashboardGroupController(rootScope, childcareDashboardService);
+    controller = new ChildcareDashboardGroupController(rootScope, scope, modal, childcareDashboardService);
     controller.communityGroup = {eligibleChildren: [] };
+
+    spyOn(rootScope, '$emit').and.callThrough();
+
   }));
 
   it('should not have eligibile children', () => {
@@ -90,18 +103,88 @@ describe('Childcare Group Component Controller', () => {
     expect(controller.getCongregation(2)).toBe('Unknown');
   });
 
+  it('should save the rsvp when toggle is set to on', () => {
+    const cg = fakeCG(true);
+    controller.communityGroup = fakeCG(true);
+    spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
+      $promise: {
+        then: (success, error) => {
+          success({});
+        }
+      },
+      $resolved: true
+    });
+    var result = controller.rsvp(cg.eligibleChildren[0], true);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,true);
+  });
 
+  it('should cancel the rsvp when toggle is set to off', () => {
+    const cg = fakeCG(true);
+    controller.communityGroup = fakeCG(true);
+    spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
+      $promise: {
+        then: (success, error) => {
+          success({});
+        }
+      },
+      $resolved: true
+    });
+    var result = controller.rsvp(cg.eligibleChildren[0], false);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+  });
+
+  it('should display an error message when there is an error', () => {
+    controller.communityGroup = fakeCG(true);
+    spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
+      $promise: {
+        then: (success, error) => {
+          error({statusCode: 400});
+        }
+      },
+      $resolved: true
+    });
+
+    // imitate the behaviour of ngModel...
+    controller.communityGroup.eligibleChildren[0].rsvpness = false;
+    var result = controller.rsvp(controller.communityGroup.eligibleChildren[0], false);
+
+
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+    expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpError');
+  });
+
+  it('should display an error when the capacity is reached', () => {
+    controller.communityGroup = fakeCG(true);
+    spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
+      $promise: {
+        then: (success, error) => {
+          error({statusCode: 412});
+        }
+      },
+      $resolved: true
+    });
+
+    controller.communityGroup.eligibleChildren[0].rsvpness = false;
+    var result = controller.rsvp(controller.communityGroup.eligibleChildren[0], false);
+
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+    expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpFull');
+
+  });
 
   function fakeCG(signedUp = true) {
     return {
      congregationId: 1,
+     childcareGroupId: 1234,
      eligibleChildren:
        [
         {
           contactId: 100030266, 
           childName: 'Miles Silbernagel', 
-          eligible: true, 
-          rsvpness: signedUp 
+          eligible: true,
+          rsvpness: signedUp
         }
      ],
      eventEndTime: '2016-07-12T19:00:00',

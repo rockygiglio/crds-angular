@@ -40,10 +40,11 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         void UpdateGroupRemainingCapacity(MpGroup group);
 
-        List<MpGroupParticipant> GetGroupParticipants(int groupId);
+        List<MpGroupParticipant> GetGroupParticipants(int groupId, Boolean active);
 
         List<MpGroupSearchResult> GetSearchResults(int groupTypeId);
 
         List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken);
+        void endDateGroupParticipant(int participantId, int groupId, DateTime? endDate = null);
     }
 }
