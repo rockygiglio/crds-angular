@@ -87,12 +87,6 @@ export default class CreateGroupController {
                     label: 'Street'
                 }
             }, {
-                key: 'profile.address.street2',
-                type: 'input',
-                templateOptions: {
-                    label: 'Street 2'
-                }
-            }, {
                 key: 'profile.address.city',
                 type: 'input',
                 templateOptions: {
@@ -109,6 +103,12 @@ export default class CreateGroupController {
                 type: 'input',
                 templateOptions: {
                     label: 'Zip'
+                } 
+            }, {
+                key: 'profile.address.country',
+                type: 'input',
+                templateOptions: {
+                    label: 'Country'
                 }
             }]};
         var groupMeetingDateTimeFields = {
@@ -174,12 +174,6 @@ export default class CreateGroupController {
                 type: 'input',
                 templateOptions: {
                     label: 'Street'
-                }
-            }, {
-                key: 'group.meeting.address.street2',
-                type: 'input',
-                templateOptions: {
-                    label: 'Street 2'
                 }
             }, {
                 key: 'group.meeting.address.city',
