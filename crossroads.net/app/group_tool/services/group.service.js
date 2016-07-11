@@ -12,11 +12,12 @@ export default class ParticipantService {
   }
 
   getMyGroups() {
-    
     let promised = this.resource(__API_ENDPOINT__ + '/api/group/groupType/:groupTypeId').
-                          get({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
     
+    debugger;
     return promised.then((data) => {
+      debugger;
       let groups = [];
 
       data.forEach(function(group) {
