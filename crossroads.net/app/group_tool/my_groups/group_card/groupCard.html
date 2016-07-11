@@ -2,8 +2,7 @@
   <div class="group-details">
     <div class="row">
       <div class="group-title">Group Name
-        <span ng-if="groupCard.group.isLeader()">(Leader)</span>
-        <span ng-if="!groupCard.group.isLeader()">(Participant)</span>
+        <span>({{ groupCard.group.role() }})</span>
       </div>
     </div>
     <div class="row">

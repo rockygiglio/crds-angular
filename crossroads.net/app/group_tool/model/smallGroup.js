@@ -1,4 +1,5 @@
 
+import CONSTANTS from '../../../constants';
 import Address from './address';
 import Participant from './participant';
 
@@ -10,7 +11,6 @@ export default class SmallGroup {
     Object.assign(this, jsonObject);
 
     this.categories();
-    this.isLeader();
   }
 
   createSubObjects(jsonObject) {
@@ -27,23 +27,14 @@ export default class SmallGroup {
     delete jsonObject.Participants;
   }
 
-  isLeader() {
-    //TODO:: Remove this after implemented on backend
-    if(this.leader === null || this.leader === undefined) {
-      let random = Math.floor(Math.random()*100)%4;
-
-      if(random === 0) {
-        this.leader = true;
-      } else if(random === 1) {
-        this.leader =  false;
-      } else if(random === 2) {
-        this.leader = true;
-      } else {
-        this.leader = false;
-      }
+  role() {
+    if(this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER) {
+      return 'Leader';
+    } else if (this.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE) {
+      return 'Apprentice';
     }
 
-    return this.leader;
+    return 'Participant';
   }
 
   meetingLocation() {
