@@ -33,7 +33,8 @@ module.exports = {
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
-    formbuilder: ['./app/formBuilder/formBuilder.module.js']
+    formbuilder: ['./app/formBuilder/formBuilder.module.js'],
+    formlyBuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
