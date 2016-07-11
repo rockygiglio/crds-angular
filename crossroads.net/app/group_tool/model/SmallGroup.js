@@ -1,6 +1,6 @@
 
-import Address from './Address';
-import Participant from './Participant';
+import Address from './address';
+import Participant from './participant';
 
 export default class SmallGroup {
 

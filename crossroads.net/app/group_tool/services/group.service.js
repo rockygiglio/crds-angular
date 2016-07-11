@@ -1,5 +1,5 @@
 
-import SmallGroup from '../model/SmallGroup';
+import SmallGroup from '../model/smallGroup';
 
 export default class ParticipantService {
   /*@ngInject*/

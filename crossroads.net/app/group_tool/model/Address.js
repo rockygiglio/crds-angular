@@ -6,7 +6,7 @@ export default class Address {
   }
 
   toString() {
-    if(this.addressLine1 === null) {
+    if(this.zip === null) {
       return 'Online';
     }
     else if(this.addressLine2 === null) {
