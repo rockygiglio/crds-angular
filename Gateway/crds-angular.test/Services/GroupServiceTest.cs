@@ -293,7 +293,7 @@ namespace crds_angular.test.Services
                     StartDate = Convert.ToDateTime("2016-02-12"),
                     EndDate = Convert.ToDateTime("2018-02-12"),
                     MeetingDayId = 3,
-                    MeetingTime = "10 AM",
+                    MeetingTime = "10:00",
                     AvailableOnline = false,
                     Address = new MpAddress()
                     {
@@ -557,9 +557,10 @@ namespace crds_angular.test.Services
 
             groupService.Setup(x => x.GetSmallGroupsForAuthenticatedUser(token)).Returns(newGroupList);
 
-           var groups = fixture.GetSmallGroupsForAuthenticatedUser(token);
-           Assert.AreEqual(groups.Count, 1);
-           Assert.AreEqual(groups[0].GroupName, "Awesome Sweet Small Group");
+            var groups = fixture.GetSmallGroupsForAuthenticatedUser(token);
+            Assert.AreEqual(groups.Count, 1);
+            Assert.AreEqual(groups[0].GroupName, "Awesome Sweet Small Group");
+        }
 
         public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
