@@ -15,7 +15,7 @@ using Communication = MinistryPlatform.Translation.Models.MpCommunication;
 namespace MinistryPlatform.Translation.Test.Services
 {
     [TestFixture]
-    public class GroupServiceTest
+    public class GroupRepositoryTest
     {
         private GroupRepository fixture;
         private Mock<IMinistryPlatformService> ministryPlatformService;
@@ -375,6 +375,25 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(2, myGroups.Count);
             Assert.AreEqual("Full Throttle", myGroups[0].Name);
             Assert.AreEqual("Angels Unite", myGroups[1].Name);
+        }
+
+        [Test]
+        public void GetGroupsForParticipant()
+        {
+            const int pageViewId = 2307;
+            const string token = "logmein";
+            const int participantId = 123456789;        
+            string searchString = ",\"" + participantId + "\"";
+
+            configWrapper.Setup(m => m.GetConfigIntValue("CurrentGroupParticipantsByGroupTypePageView")).Returns(pageViewId);
+
+            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageViewId, token, searchString, It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(MockMyGroups);
+
+            fixture.GetGroupsForParticipant(token, participantId);
+
+            ministryPlatformService.VerifyAll();
+
         }
 
         private List<Dictionary<string, object>> MockMyGroups()

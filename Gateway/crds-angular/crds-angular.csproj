@@ -276,7 +276,6 @@
     <Compile Include="Controllers\API\InvitationController.cs" />
     <Compile Include="Controllers\API\GroupToolController.cs" />
     <Compile Include="Controllers\API\ParticipantController.cs" />
-    
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
@@ -335,6 +334,7 @@
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
     <Compile Include="Models\Crossroads\Invitation.cs" />
+    <Compile Include="Models\HouseHoldData.cs" />
     <Compile Include="Models\Json\EventCopyRequest.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
