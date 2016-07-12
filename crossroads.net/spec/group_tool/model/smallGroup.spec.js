@@ -118,6 +118,18 @@ describe('Group Tool SmallGroup', () => {
     });
   });
 
+  describe('isLeader()', () => {
+    it('is a Leader', () => {
+      smallGroup.groupRoleId = 22;
+      expect(smallGroup.isLeader()).toBeTruthy();
+    });
+
+    it('is not a Leader', () => {
+      smallGroup.groupRoleId = 66;
+      expect(smallGroup.isLeader()).toBeFalsy();
+    });
+  });
+
   describe('meetingLocation()', () => {
     it('there is an address', () => {
       expect(smallGroup.meetingLocation()).toEqual('Fake Street 98th, Madison IN, 47250');

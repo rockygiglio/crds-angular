@@ -28,6 +28,10 @@ export default class SmallGroup {
     delete jsonObject.Participants;
   }
 
+  isLeader() {
+   return this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER; 
+  }
+
   role() {
     if(this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER) {
       return 'Leader';

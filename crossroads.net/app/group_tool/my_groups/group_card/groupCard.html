@@ -39,7 +39,7 @@
       </svg>
         View Group Details
       </button>
-      <button ng-if="groupCard.group.leader">
+      <button ng-if="groupCard.group.isLeader()">
       <svg viewBox="0 0 32 32" class="icon icon-mail5">
         <use xlink:href="#mail5"></use>
       </svg>
@@ -50,13 +50,13 @@
 
   <div class="group-buttons">
     <div class="row">
-      <button ng-if="groupCard.group.leader">
+      <button ng-if="groupCard.group.isLeader()">
         <svg viewBox="0 0 32 32" class="icon icon-pencil4">
           <use xlink:href="#pencil4"></use>
         </svg>
         Edit Group Details
       </button>
-      <button ng-if="groupCard.group.leader">
+      <button ng-if="groupCard.group.isLeader()">
         <svg viewBox="0 0 32 32" class="icon icon-user6">
           <use xlink:href="#user6"></use>
         </svg>
