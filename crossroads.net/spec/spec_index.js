@@ -8,5 +8,6 @@ import core from '../core/core';
 import search from '../app/search/search.module';
 import media from '../app/media/media.module';
 import formly from '../app/formlyBuilder/formlyBuilder.module';
+
 var testsContext = require.context('./', true, /.spec$/);
 testsContext.keys().forEach(testsContext);

@@ -93,8 +93,8 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "minimumParticipants")]
         public int MinimumParticipants { get; set; }
 
-        [JsonProperty(PropertyName = "maximumParticipants")]
-        public int MaximumParticipants { get; set; }
+        [JsonProperty(PropertyName = "tartgetSize")]
+        public int TargetSize { get; set; }
 
         public GroupDTO()
         {
