@@ -261,7 +261,9 @@ namespace crds_angular.Services
             var contact = _contactService.GetContactById(contactId);
 
             //Figure out who is a head in my household
+
             var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
+            members.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
 
             //Find community groups for house heads
             foreach (var head in members.HeadsOfHousehold)
@@ -276,7 +278,12 @@ namespace crds_angular.Services
                     foreach (var ev in groupEvents)
                     {
                         var eventDetails = _eventService.GetEvent(ev.EventId);
-                        if (dashboard.AvailableChildcareDates.All(d => d.EventDate.Date != eventDetails.EventStartDate.Date))
+
+                        if (eventDetails.EventStartDate < DateTime.Today)
+                        {
+                            continue;
+                        }
+                        if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
                         {
                             dashboard.AvailableChildcareDates.Add(new ChildCareDate
                             {
