@@ -3,9 +3,12 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import 'rxjs/Rx';
+
 import { Event } from './event';
 declare var moment: any;
-declare var _: any;
 
 @Injectable()
 export class StreamspotService {
@@ -19,43 +22,23 @@ export class StreamspotService {
 
   constructor(private http: Http) { }
 
-  get(): Promise<Event[]> {
+  getEvents() {
     let headers = new Headers({
       'Content-Type': 'application/json',
       'x-API-Key': this.apiKey
-    })
+    });
     let url = `${this.url}/${this.id}/events`;
     return this.http.get(url, {headers: headers})
-      .toPromise()
-      .then(response => response.json().data.events
-        .filter((event:Event) => moment() <= moment(event.start))
-        .map((event:Event) => {
-          event.date = moment(event.start);
-          event.dayOfYear = event.date.dayOfYear();
-          event.time = event.date.format('LT [EST]');
-          return event;
-        })
-      )
-      .catch(this.handleError);
-  }
-
-  getUpcoming(): Promise<Event> {
-    return this.get().then(response => {
-      return _.head(response)
-    });
-  }
-
-  byDate(): Promise<Object[]> {
-    return this.get().then(response => {
-      return _.chain(response)
-        .sortBy('date')
-        .groupBy('dayOfYear')
-        .value();
-    })
-  }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+      .map(response => response.json().data.events)
+      .map((events: Array<Event>) => {
+        return events
+          .filter((event:Event) => moment() <= moment(event.start))
+          .map((event:Event) => {
+            event.date = moment(event.start);
+            event.dayOfYear = event.date.dayOfYear();
+            event.time = event.date.format('LT [EST]');
+            return event;
+          })
+      })
   }
 }

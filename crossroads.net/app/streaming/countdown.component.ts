@@ -2,24 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 
 import { Event } from './event';
+import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
 
 declare var moment: any;
+declare var _: any;
 
-// TODO - placeholder for schedule if StreamspotService fails
 @Component({
   selector: 'countdown',
   template: `
     <div class="upcoming" *ngIf="event">
       <i>Join the live stream in...</i>
       <ul class="list-inline">
-        <li><strong>{{ countdown('days') }}</strong> <small>days</small></li>
+        <li><strong>{{ displayCountdown('days') }}</strong> <small>days</small></li>
         <li class="vr"></li>
-        <li><strong>{{ countdown('hours') }}</strong> <small>hours</small></li>
+        <li><strong>{{ displayCountdown('hours') }}</strong> <small>hours</small></li>
         <li class="vr"></li>
-        <li><strong>{{ countdown('minutes') }}</strong> <small>min</small></li>
+        <li><strong>{{ displayCountdown('minutes') }}</strong> <small>min</small></li>
         <li class="vr"></li>
-        <li><strong>{{ countdown('seconds') }}</strong> <small>sec</small></li>
+        <li><strong>{{ displayCountdown('seconds') }}</strong> <small>sec</small></li>
       </ul>
     </div>
   `,
@@ -28,17 +29,21 @@ declare var moment: any;
 
 export class CountdownComponent implements OnInit {
   event: Event;
+  countdown: Countdown;
 
   constructor(private streamspotService: StreamspotService) { }
 
   ngOnInit() {
-    this.streamspotService.getUpcoming()
-      .then(event => {
+    this.streamspotService.getEvents()
+      .map((response: Array<any>) => {
+        return _.head(response)
+      })
+      .subscribe(event => {
         this.event = event;
       })
   }
 
-  countdown(type:string): string {
+  displayCountdown(type:string): string {
 
     let countdown = moment.duration(
        +this.event.date - +moment(),
@@ -55,5 +60,4 @@ export class CountdownComponent implements OnInit {
         return countdown.seconds();
     }
   }
-
 }
