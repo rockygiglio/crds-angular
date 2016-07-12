@@ -100,4 +100,38 @@ describe('Group Tool SmallGroup', () => {
       expect(smallGroup.participants[0].constructor.name).toEqual('Participant');
     });
   });
+
+  describe('role()', () => {
+    it('Leader role', () => {
+      smallGroup.groupRoleId = 22;
+      expect(smallGroup.role()).toEqual('Leader');
+    });
+
+    it('Apprentice role', () => {
+      smallGroup.groupRoleId = 66;
+      expect(smallGroup.role()).toEqual('Apprentice');
+    });
+
+    it('Participant role', () => {
+      smallGroup.groupRoleId = 16;
+      expect(smallGroup.role()).toEqual('Participant');
+    });
+  });
+
+  describe('meetingLocation()', () => {
+    it('there is an address', () => {
+      expect(smallGroup.meetingLocation()).toEqual('Fake Street 98th, Madison IN, 47250');
+    });
+
+    it('address is null', () => {
+      smallGroup.address = null;
+      expect(smallGroup.meetingLocation()).toEqual('Online');
+    });
+
+    it('address is undefined', () => {
+      smallGroup.address = undefined;
+      expect(smallGroup.meetingLocation()).toEqual('Online');
+    });
+  });
+
 });
