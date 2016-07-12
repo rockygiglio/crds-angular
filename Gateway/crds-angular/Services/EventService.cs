@@ -271,7 +271,7 @@ namespace crds_angular.Services
                 GroupRoleId = @group.GroupRoleId,
                 MaximumAge = @group.MaximumAge,
                 MinimumParticipants = @group.MinimumParticipants,
-                MaximumParticipants = @group.MaximumParticipants
+                TargetSize = @group.TargetSize
             };
 
            return  _groupService.CreateGroup(mpgroup);
