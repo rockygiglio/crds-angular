@@ -28,7 +28,9 @@ export class StreamspotService {
     return this.http.get(url, {headers: headers})
       .toPromise()
       .then(response => response.json().data.events
-        .filter((event:Event) => moment() <= moment(event.start))
+        .filter((event:Event) => {
+          return moment() <= moment(event.start) && event.deleted === null;
+        })
         .map((event:Event) => {
           event.date = moment(event.start);
           event.dayOfYear = event.date.dayOfYear();
