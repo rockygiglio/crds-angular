@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+require('wow.js');
 
+import { Component } from '@angular/core';
 import { ScheduleComponent } from './schedule.component';
+import { WOW } from 'wow.js';
+
+//declare var WOW: any;
 
 @Component({
   selector: 'streaming',
@@ -9,5 +13,7 @@ import { ScheduleComponent } from './schedule.component';
 })
 
 export class StreamingComponent {
-  constructor() { }
+  constructor() {
+    let wow = new WOW.init();
+  }
 }

@@ -8,19 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+require('wow.js');
 var core_1 = require('@angular/core');
 var schedule_component_1 = require('./schedule.component');
+var wow_js_1 = require('wow.js');
 var StreamingComponent = (function () {
     function StreamingComponent() {
+        var wow = new wow_js_1.WOW.init();
     }
     StreamingComponent = __decorate([
         core_1.Component({
             selector: 'streaming',
             directives: [schedule_component_1.ScheduleComponent],
-            template: require('./streaming.component.html')
+            templateUrl: './streaming.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], StreamingComponent);
     return StreamingComponent;
 }());
 exports.StreamingComponent = StreamingComponent;
+//# sourceMappingURL=streaming.component.js.map
