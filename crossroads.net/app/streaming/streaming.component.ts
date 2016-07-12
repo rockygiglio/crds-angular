@@ -9,5 +9,6 @@ import { ScheduleComponent } from './schedule.component';
 })
 
 export class StreamingComponent {
+  displayStreamCTA: boolean = false;
   constructor() { }
 }
