@@ -385,12 +385,56 @@ streaming {
   }
 
   .group-host {
-    @include crds-jumbotron();
     min-height: 500px;
+    header {
+      @include crds-jumbotron();
+    }
+    article {
+      margin-bottom: 3em;
+      font-size: 90%;
+      h3 {
+        font-size: 200%;
+        text-transform: uppercase;
+        font-family: $streaming-font-extra_cond;
+      }
+    }
     .btns > a {
       display: table-cell;
       vertical-align: middle;
     }
+    .container {
+      h3 {
+        margin-top: 0;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      .container {
+        display: flex;
+        flex-direction:column;
+        height: 100%;
+        > div {
+          flex:1;
+          display:flex;
+        }
+        article {
+          margin-bottom: 0;
+          width: 33%;
+          padding: 0 2em;
+          border-left: 1px solid $gray-lighter;
+          &:first-child {
+            border-left: none;
+          }
+        }
+      }
+    }
+
+    @media (min-width: $screen-md-min) {
+      .container {
+        padding: 2em 5em 0;
+      }
+    }
+
   }
 
 } // streaming

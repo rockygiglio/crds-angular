@@ -12,15 +12,17 @@ var core_1 = require('@angular/core');
 var schedule_component_1 = require('./schedule.component');
 var StreamingComponent = (function () {
     function StreamingComponent() {
+        this.displayStreamCTA = false;
     }
     StreamingComponent = __decorate([
         core_1.Component({
             selector: 'streaming',
             directives: [schedule_component_1.ScheduleComponent],
-            template: require('./streaming.component.html')
+            templateUrl: './streaming.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], StreamingComponent);
     return StreamingComponent;
 }());
 exports.StreamingComponent = StreamingComponent;
+//# sourceMappingURL=streaming.component.js.map
