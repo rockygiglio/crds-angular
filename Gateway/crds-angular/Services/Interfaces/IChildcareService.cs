@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
 using MinistryPlatform.Translation.Models;
@@ -19,6 +20,6 @@ namespace crds_angular.Services.Interfaces
         void RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest, string token);
         ChildcareDashboardDto GetChildcareDashboard(int contactId);
         void CancelRsvp(ChildcareRsvpDto cancelRsvp);
-        Tuple<List<MpHouseholdMember>, List<MpHouseholdMember>> GetHeadsOfHousehold(int contactId, int householdId);
+        HouseHoldData GetHeadsOfHousehold(int contactId, int householdId);
     }
 }

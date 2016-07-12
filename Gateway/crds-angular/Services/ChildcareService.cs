@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Exceptions;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
@@ -263,7 +264,7 @@ namespace crds_angular.Services
             var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
 
             //Find community groups for house heads
-            foreach (var head in members.Item2)
+            foreach (var head in members.HeadsOfHousehold)
             {
                 var participant = _participantService.GetParticipant(head.ContactId);
                 var groups = _groupService.GetGroupsForParticipant(token, participant.ParticipantId);
@@ -288,7 +289,7 @@ namespace crds_angular.Services
                         var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
                         var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
                         var eligibleChildren = new List<ChildcareRsvp>();
-                        foreach (var member in members.Item1)
+                        foreach (var member in members.AllMembers)
                         {
                             if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD")) //TODO: Get rid of magic string. Household Position
                             {
@@ -329,10 +330,10 @@ namespace crds_angular.Services
         /// <param name="contactId"></param>
         /// <param name="householdId"></param>
         /// <returns> 
-        ///     A 2-tuple with the first element being a list of all family members and the second element being a list of heads of household.
+        ///     A HouseholdData object 
         ///     Throws a NotHeadOfHouseholdException if the contactId passed in is not a head of household
         /// </returns>
-        public Tuple<List<MpHouseholdMember>, List<MpHouseholdMember> >  GetHeadsOfHousehold(int contactId, int householdId)
+        public HouseHoldData GetHeadsOfHousehold(int contactId, int householdId)
         {
             var household = _contactService.GetHouseholdFamilyMembers(householdId);
             var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")).ToList(); //TODO: Get rid of magic string. Household Position
@@ -340,7 +341,7 @@ namespace crds_angular.Services
             {
                 throw new NotHeadOfHouseholdException(contactId);
             }
-            return new Tuple<List<MpHouseholdMember>, List<MpHouseholdMember>>(household, houseHeads);
+            return new HouseHoldData() {AllMembers = household, HeadsOfHousehold = houseHeads};
         }
 
         private bool IsChildRsvpd(int contactId, GroupDTO ccEventGroup, string token)
