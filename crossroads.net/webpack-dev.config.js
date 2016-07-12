@@ -32,7 +32,7 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlyBuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
