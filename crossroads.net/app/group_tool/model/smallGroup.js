@@ -9,17 +9,18 @@ export default class SmallGroup {
     this.createSubObjects(jsonObject);
     this.deleteSubObjects(jsonObject);
     Object.assign(this, jsonObject);
-
-    this.categories();
   }
 
   createSubObjects(jsonObject) {
     this.address = (jsonObject.address === undefined || jsonObject.address === null) ? null : new Address(jsonObject.address);
     
-    this.participants = []
-    jsonObject.Participants.forEach(function(particpant) {
-      this.participants.push(new Participant(particpant));
-    }, this);
+    this.participants = [];
+    if(jsonObject.Participants != undefined && jsonObject.Participants != null)
+    {
+      jsonObject.Participants.forEach(function(particpant) {
+        this.participants.push(new Participant(particpant));
+      }, this);
+    }
   }
 
   deleteSubObjects(jsonObject) {
@@ -46,21 +47,7 @@ export default class SmallGroup {
   }
 
   categories() {
-    //TODO:: This will change when categories are passed in
-    if (this.category === null || this.category === undefined) {
-      let random = Math.floor(Math.random()*100)%4;
-
-      if(random === 0) {
-        this.category = 'Financial';
-      } else if(random === 1) {
-        this.category = 'Bible Study';
-      } else if(random === 2) {
-        this.category = 'Marriage Growth, Listening, Financial';
-      } else {
-        this.category = 'Bible Study, Financial, Stress Managment';
-      }
-    }
-
+    this.category = 'Marriage Growth, Listening, Financial';
     return this.category;
   }
 }

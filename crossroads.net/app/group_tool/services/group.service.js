@@ -2,7 +2,7 @@
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
 
-export default class ParticipantService {
+export default class GroupService {
   /*@ngInject*/
   constructor($log, $resource, $q, AuthService) {
     this.log = $log;
@@ -12,17 +12,13 @@ export default class ParticipantService {
   }
 
   getMyGroups() {
-    let promised = this.resource(__API_ENDPOINT__ + '/api/group/groupType/:groupTypeId').
+    let promised = this.resource(`${__API_ENDPOINT__}api/group/groupType/:groupTypeId`).
                           query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
-    
-    debugger;
-    return promised.then((data) => {
-      debugger;
-      let groups = [];
 
-      data.forEach(function(group) {
-        groups.push(new SmallGroup(group));
-      }, groups);
+    return promised.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
 
       return groups;
     },
