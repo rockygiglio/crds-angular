@@ -5,7 +5,13 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var definePlugin = new webpack.DefinePlugin({
   __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
   __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
+  __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
   __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M'),
+  __STRIPE_API_VERSION__: JSON.stringify(process.env.CRDS_STRIPE_API_VERSION),
+  __SOUNDCLOUD_API_KEY__: JSON.stringify(process.env.CRDS_SOUNDCLOUD_KEY || '67723f3ff9ea6bda29331ac06ce2960c'),
+  __AWS_SEARCH_ENDPOINT__:
+    JSON.stringify(process.env.CRDS_AWS_SEARCH_ENDPOINT ||
+      'https://vs9gac5tz7.execute-api.us-east-1.amazonaws.com/prod/')
 });
 
 module.exports = function(config) {
@@ -22,15 +28,13 @@ module.exports = function(config) {
     files: [
       'https://js.stripe.com/v2/',
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      './node_modules/angular/angular.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'spec-es6/spec_index.js'
+      { pattern: 'spec-es6/spec_index.js', watched: false },
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec-es6/spec_index.js': ['webpack','env']
+      'spec-es6/spec_index.js': ['webpack','env', 'sourcemap']
     },
 
     envPreprocessor: [
@@ -47,6 +51,7 @@ module.exports = function(config) {
     port: 9876,
 
     webpack: {
+      devtool: 'inline-source-map',
       module: {
         loaders: [
           {
@@ -57,9 +62,10 @@ module.exports = function(config) {
             test: /\.js$/,
             include: [
               path.resolve(__dirname, 'app'),
-              path.resolve(__dirname, './node_modules/angular-stripe')
+              path.resolve(__dirname, './node_modules/angular-stripe'),
+              path.resolve(__dirname, 'spec')
             ],
-            loader: 'babel-loader'
+            loader: 'ng-annotate!babel-loader'
           },
           {
             test: /\.scss$/,
@@ -84,6 +90,10 @@ module.exports = function(config) {
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
+    },
+
+    webpackServer: {
+      noInfo: true // prevent console spamming when running in Karma!
     },
 
     webpackMiddleware: {
@@ -115,8 +125,8 @@ module.exports = function(config) {
       require('karma-teamcity-reporter'),
       require('karma-phantomjs-launcher'),
       require('karma-env-preprocessor'),
+      require('karma-sourcemap-loader'),
       require('karma-es6-shim'),
     ]
-
   });
 };
