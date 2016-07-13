@@ -4,7 +4,7 @@ import Address from './address';
 import Participant from './participant';
 import Category from './category';
 
-export default class SymallGroup {
+export default class SmallGroup {
 
   constructor(jsonObject){
     this.createSubObjects(jsonObject);
