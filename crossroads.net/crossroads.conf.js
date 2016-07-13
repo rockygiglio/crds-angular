@@ -126,7 +126,7 @@ module.exports = function(config) {
       require('karma-html-reporter'),
       require('karma-chrome-launcher'),
       require('karma-env-preprocessor'),
-      require('karma-sourcemap-loader')
+      require('karma-sourcemap-loader'),
     ]
   });
 };

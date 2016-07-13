@@ -1,3 +1,4 @@
+
 import controller  from './groupCard.controller';
 
 GroupCardComponent.$inject = [ ];
