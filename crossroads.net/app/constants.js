@@ -83,6 +83,7 @@
       }
     },
     GROUP: {
+      ATTRIBUTE_TYPE_ID: 90,
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,

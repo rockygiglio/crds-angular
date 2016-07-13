@@ -2,8 +2,9 @@
 import CONSTANTS from '../../constants';
 import Address from './address';
 import Participant from './participant';
+import Category from './category';
 
-export default class SmallGroup {
+export default class SymallGroup {
 
   constructor(jsonObject){
     this.createSubObjects(jsonObject);
@@ -17,9 +18,23 @@ export default class SmallGroup {
     this.participants = [];
     if(jsonObject.Participants != undefined && jsonObject.Participants != null)
     {
-      jsonObject.Participants.forEach(function(particpant) {
-        this.participants.push(new Participant(particpant));
-      }, this);
+      this.participants = 
+        jsonObject.Participants.map((particpant) => {
+          return new Participant(particpant);
+        });
+    }
+
+    this.categories = [];
+    if(jsonObject.attributeTypes != undefined && jsonObject.attributeTypes != null &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != undefined &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != null &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != undefined &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != null)
+    {
+      this.categories = 
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes.map((attribute) => {
+          return new Category(attribute);
+        });
     }
   }
 
