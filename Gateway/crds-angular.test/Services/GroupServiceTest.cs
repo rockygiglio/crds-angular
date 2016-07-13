@@ -272,6 +272,24 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void GetGroupsForParticipant()
+        {
+            const string token = "1234frd32";
+            const int participantId = 54;
+
+            var attributes = new ObjectAllAttributesDTO();
+
+            groupService.Setup(mocked => mocked.GetGroupsForParticipant(token, participantId)).Returns(MockGroup());
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>())).Returns(attributes);
+
+            var grps = fixture.GetGroupsForParticipant(token, participantId);
+
+            groupService.VerifyAll();
+            Assert.IsNotNull(grps);
+
+        }
+
+        [Test]
         public void GetGroupsByTypeForParticipant()
         {
             const string token = "1234frd32";
@@ -604,6 +622,41 @@ namespace crds_angular.test.Services
             fixture.addParticipantToGroupNoEvents(456, mockParticipantSignup.FirstOrDefault());
 
             groupService.VerifyAll();
+        }
+
+
+        private List<MpGroup> MockGroup()
+        {
+            var groups = new List<MpGroup>()
+            {
+                new MpGroup
+                {
+                    GroupId = 321,
+                    CongregationId = 5,
+                    Name = "Test Journey Group 2016",
+                    GroupRoleId = 16,
+                    GroupDescription = "The group will test some new code",
+                    MinistryId = 8,
+                    ContactId = 4321,
+                    GroupType = 19,
+                    StartDate = Convert.ToDateTime("2016-02-12"),
+                    EndDate = Convert.ToDateTime("2018-02-12"),
+                    MeetingDayId = 3,
+                    MeetingTime = "10 AM",
+                    AvailableOnline = false,
+                    Address = new MpAddress()
+                    {
+                        Address_Line_1 = "123 Sesame St",
+                        Address_Line_2 = "",
+                        City = "South Side",
+                        State = "OH",
+                        Postal_Code = "12312"
+                    }
+                }
+            };
+
+            return groups;
+
         }
     }
 }

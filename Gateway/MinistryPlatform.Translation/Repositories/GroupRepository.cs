@@ -517,6 +517,44 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
+        public List<MpGroup> GetGroupsForParticipant(string token, int participantId)
+        {
+            var viewId = _configurationWrapper.GetConfigIntValue("CurrentGroupParticipantsByGroupTypePageView");           
+            var searchString = ",\"" + participantId + "\"";
+
+            var records = ministryPlatformService.GetPageViewRecords(viewId, token, searchString);
+            return records.Select(details => new MpGroup
+            {
+                GroupId = details.ToInt("Group_ID"),
+                CongregationId = details.ToInt("Congregation_ID"),
+                Name = details.ToString("Group_Name"),
+                GroupRoleId = details.ToInt("Group_Role_ID"),
+                GroupDescription = details.ToString("Description"),
+                MinistryId = details.ToInt("Ministry_ID"),
+                ContactId = details.ToInt("Primary_Contact"),
+                PrimaryContactName = details.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
+                GroupType = details.ToInt("Group_Type_ID"),
+                StartDate = details.ToDate("Start_Date"),
+                EndDate = details.ToNullableDate("End_Date"),
+                MeetingDayId = details.ToInt("Meeting_Day_ID"),
+                MeetingTime = details.ToString("Meeting_Time"),
+                AvailableOnline = details.ToBool("Available_Online"),
+                MaximumAge = details.ToInt("Maximum_Age"),
+                RemainingCapacity = details.ToInt("Remaining_Capacity"),
+                Address = new MpAddress()
+                {
+                    Address_ID = details.ToInt("Address_ID"),
+                    Address_Line_1 = details.ToString("Address_Line_1"),
+                    Address_Line_2 = details.ToString("Address_Line_2"),
+                    City = details.ToString("City"),
+                    State = details.ToString("State"),
+                    Postal_Code = details.ToString("Zip_Code"),
+                    Foreign_Country = details.ToString("Foreign_Country")
+                }
+            }).ToList();            
+        }
+
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,

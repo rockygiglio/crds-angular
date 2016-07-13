@@ -83,9 +83,9 @@ class ChildcareDashboardGroupController {
       child.rsvpness = !status;
       // display an error message...
       if (err.statusCode === 412) {
-        this.root.$emit('notify', 'childcareRsvpFull');
+        this.root.$emit('notify', this.root.MESSAGES.childcareRsvpFull);
       } else {
-        this.root.$emit('notify', 'childcareRsvpError');
+        this.root.$emit('notify', this.root.MESSAGES.childcareRsvpError);
       }
     });
   }

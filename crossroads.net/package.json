@@ -114,7 +114,10 @@
     "moment-recur": "^1.0.5",
     "ng-cache-loader": "0.0.8",
     "plangular-3": "^3.1.2",
-    "ui-select": "^0.17.1"
+    "ui-select": "^0.17.1",
+    "api-check": "~7.5.5",
+    "angular-formly": "~8.2.1",
+    "angular-formly-templates-bootstrap": "~6.4.0"
   },
   "browser": {
     "angular-aside": "./lib/angular-aside.js",

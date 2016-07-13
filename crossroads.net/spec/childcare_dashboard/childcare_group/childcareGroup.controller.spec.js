@@ -151,7 +151,7 @@ describe('Childcare Group Component Controller', () => {
 
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
-    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpError');
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpError);
   });
 
   it('should display an error when the capacity is reached', () => {
@@ -170,7 +170,7 @@ describe('Childcare Group Component Controller', () => {
 
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
-    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpFull');
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpFull);
 
   });
 

@@ -351,6 +351,25 @@ namespace crds_angular.Services
             return (detail);
         }
 
+        public List<GroupDTO> GetGroupsForParticipant(string token, int participantId)
+        {
+            var groups = _mpGroupService.GetGroupsForParticipant(token, participantId);
+            if (groups == null)
+                return null;
+
+            var groupDetail = groups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeService.GetAttributes(null);
+            foreach (var group in groupDetail)
+            {
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                group.AttributeTypes = attributesTypes.MultiSelect;
+                group.SingleAttributes = attributesTypes.SingleSelect;
+            }
+
+            return groupDetail;
+        }
+
         public List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
             var groupsByType = _mpGroupService.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
