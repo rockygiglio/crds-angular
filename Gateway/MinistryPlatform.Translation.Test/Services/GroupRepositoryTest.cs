@@ -358,15 +358,15 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetGroupsByTypeForParticipant()
         {
-            const int pageViewId = 2307;
+            const int pageId = 563;
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
 
-            configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
+            configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 
-            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageViewId, It.IsAny<string>(), searchString, It.IsAny<string>(), It.IsAny<int>()))
+            ministryPlatformService.Setup(m => m.GetRecordsDict(pageId, It.IsAny<string>(), searchString, It.IsAny<string>()))
                 .Returns(MockMyGroups());
 
             var myGroups = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
@@ -415,7 +415,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Start_Date", "2016-02-01"},
                     {"End_Date", "2018-02-11"},
                     {"Meeting_Day_ID", 5},
+                    {"Meeting_Day", "Monday" },
                     {"Meeting_Time", "180000"},
+                    {"Meeting_Frequency", "Monday's at 6:00 PM, Every Other Week" },
                     {"Available_Online", false},
                     {"Maximum_Age", 10 },
                     {"Remaining_Capacity", 42},
@@ -442,7 +444,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Start_Date", "2016-01-01"},
                     {"End_Date", "2020-01-01"},
                     {"Meeting_Day_ID", 4},
+                    {"Meeting_Day", "Wednesday" },
                     {"Meeting_Time", "140000"},
+                    {"Meeting_Frequency", "Wednesday's at 2:00 PM, Every Other Week" },
                     {"Available_Online", true},
                     {"Maximum_Age", 10},
                     {"Remaining_Capacity", 42},

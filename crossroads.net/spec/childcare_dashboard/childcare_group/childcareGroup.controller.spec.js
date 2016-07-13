@@ -159,7 +159,7 @@ describe('Childcare Group Component Controller', () => {
     spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
       $promise: {
         then: (success, error) => {
-          error({statusCode: 412});
+          error({status: 412});
         }
       },
       $resolved: true

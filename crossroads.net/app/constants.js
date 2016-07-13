@@ -85,10 +85,12 @@
     GROUP: {
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
+        SMALL_GROUPS: 1,
       },
       ROLES: {
         MEMBER: 16,
-        LEADER: 22
+        LEADER: 22,
+        APPRENTICE: 66,
       },
     },
   };

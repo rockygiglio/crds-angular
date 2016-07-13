@@ -1,10 +1,30 @@
-export default class ParticipantService {
+
+import CONSTANTS from '../../constants';
+import SmallGroup from '../model/smallGroup';
+
+export default class GroupService {
   /*@ngInject*/
   constructor($log, $resource, $q, AuthService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+  }
+
+  getMyGroups() {
+    let promised = this.resource(`${__API_ENDPOINT__}api/group/groupType/:groupTypeId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
+
+    return promised.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
+
+      return groups;
+    },
+    (err) => {
+      throw err;
+    });
   }
 
   getGroup(groupId) {
