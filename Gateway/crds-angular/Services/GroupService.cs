@@ -42,6 +42,7 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
         private readonly int JourneyGroupId;
+        private readonly int GroupCategoryAttributeTypeId;
 
         public GroupService(IGroupRepository mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -71,7 +72,8 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
-    }
+            GroupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
+        }
 
         public GroupDTO CreateGroup(GroupDTO group)
         {
@@ -381,7 +383,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeService.GetAttributes(GroupCategoryAttributeTypeId);
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
