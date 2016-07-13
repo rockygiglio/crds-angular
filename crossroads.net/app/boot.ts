@@ -1,4 +1,3 @@
-///<reference path="../typings/index.d.ts"/>
 
 require('es6-shim/es6-shim');
 import 'reflect-metadata';

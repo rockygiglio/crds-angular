@@ -66,10 +66,6 @@ module.exports = {
   module: {
     loaders: [
             {
-              test: require.resolve('wow.js/dist/wow.js'), 
-              loader: 'exports?this.WOW'
-            },
-            {
               test: /\.ts$/,
               loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
               exclude: [/\.(spec|e2e)\.ts$/]

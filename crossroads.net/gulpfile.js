@@ -2,7 +2,6 @@ var del = require('del');
 var gulp = require('gulp');
 var watch = require('gulp-watch');
 var gutil = require('gulp-util');
-var typescript = require('gulp-typescript');
 var webpack = require('webpack');
 var gulpWebpack = require('gulp-webpack');
 var WebpackDevServer = require('webpack-dev-server');
@@ -87,21 +86,6 @@ var webPackDevConfigs = [Object.create(webPackDevConfig)];
 // Start the development server
 gulp.task('default', ['webpack-dev-server']);
 
-// Compile any typescript files
-var tsProject = typescript.createProject("./app/tsconfig.json");
-gulp.task("tsc", function () {
-  return; //bypass tsc as we try to move to webpack
-  return tsProject.src()
-    .pipe(embedTemplates({
-          sourceType:'ts',
-          minimize:{
-            quotes: true,
-          }
-    }))
-    .pipe(typescript(tsProject))
-    .js.pipe(gulp.dest("./dist"));
-});
-
 // Build and watch cycle (another option for development)
 // Advantage: No server required, can run app from filesystem
 // Disadvantage: Requests are not blocked until bundle is available,
@@ -117,7 +101,7 @@ gulp.task('build-dev', ['webpack:build-dev'], function() {
   gulp.watch(watchPatterns, ['webpack:build-dev']);
 });
 
-gulp.task('build-browser-sync', ['tsc', 'icons'], function() {
+gulp.task('build-browser-sync', ['icons'], function() {
   webPackDevConfigs.forEach(function(element) {
 
     element.devtool = 'eval';
@@ -173,7 +157,7 @@ gulp.task('build', ['clean-assets'], function() {
 gulp.task('start', ['webpack-dev-server']);
 
 // Run the development server
-gulp.task('webpack-dev-server', ['tsc','icons-watch'], function(callback) {
+gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
   webPackDevConfigs.forEach(function(element, index) {
 
     // Modify some webpack config options
@@ -211,7 +195,7 @@ gulp.task('webpack-dev-server', ['tsc','icons-watch'], function(callback) {
   gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#');
 });
 
-gulp.task('webpack:build', ['tsc', 'icons', 'robots', 'apache-site-config'], function(callback) {
+gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {
 
 
   webPackConfigs.forEach(function(element) {
@@ -241,7 +225,7 @@ gulp.task('webpack:build', ['tsc', 'icons', 'robots', 'apache-site-config'], fun
   });
 });
 
-gulp.task('webpack:build-dev', ['tsc', 'icons'], function(callback) {
+gulp.task('webpack:build-dev', ['icons'], function(callback) {
 
   // run webpack
   webpack(webPackDevConfig).run(function(err, stats) {

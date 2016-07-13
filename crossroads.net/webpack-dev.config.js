@@ -33,7 +33,7 @@ module.exports = {
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
     
     // added in ng2 downgraded components
-    boot: ['./dist/boot.js']
+    boot: ['./app/boot.ts']
   },
   watchPattern: ['app/**/**','core/**/**','dist/**/**'],
   externals: {
@@ -45,6 +45,9 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   devtool: 'sourcemap',
   debug: true,
@@ -81,7 +84,12 @@ module.exports = {
             {
               test: /\.html$/,
               loader: 'ng-cache?prefix=[dir]'
-            }
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
     ]
   },
   plugins: [

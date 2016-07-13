@@ -29,6 +29,7 @@
   "homepage": "https://github.com/crdschurch/crds-angular",
   "devDependencies": {
     "angular-mocks": "~1.4.3",
+    "angular2-template-loader": "^0.4.0",
     "assets-webpack-plugin": "^2.2.0",
     "autoprefixer-loader": "^1.2.0",
     "awesome-typescript-loader": "^2.0.1",
@@ -51,7 +52,6 @@
     "gulp-replace": "^0.5.3",
     "gulp-stream": "0.0.2",
     "gulp-svg-sprite": "^1.2.7",
-    "gulp-typescript": "^2.13.6",
     "gulp-util": "^3.0.6",
     "gulp-watch": "^4.3.4",
     "gulp-webpack": "^1.5.0",
