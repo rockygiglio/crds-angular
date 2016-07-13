@@ -24,6 +24,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       url: '/groups/mine',
       template: '<my-groups></my-groups>',
       data: {
+        isProtected: true,
         meta: {
           title: 'My Groups',
           description: ''

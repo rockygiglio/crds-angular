@@ -1,3 +1,4 @@
+
 import controller  from './myGroups.controller';
 
 MyGroupsComponent.$inject = [ ];

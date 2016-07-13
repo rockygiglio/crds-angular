@@ -22,19 +22,19 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'es6-shim'],
 
     // list of files / patterns to load in the browser
     files: [
       'https://js.stripe.com/v2/',
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      { pattern: 'spec/spec_index.js', watched: false },
+      { pattern: 'spec-es6/spec_index.js', watched: false },
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec/spec_index.js': ['webpack','env', 'sourcemap']
+      'spec-es6/spec_index.js': ['webpack','env', 'sourcemap']
     },
 
     envPreprocessor: [
@@ -45,7 +45,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
+    reporters: ['teamcity'],
 
     // web server port
     port: 9876,
@@ -112,22 +112,21 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Plugins
     plugins: [
       require('karma-webpack'),
       require('karma-jasmine'),
-      require('karma-mocha-reporter'),
+      require('karma-teamcity-reporter'),
       require('karma-phantomjs-launcher'),
       require('karma-env-preprocessor'),
       require('karma-sourcemap-loader'),
+      require('karma-es6-shim'),
     ]
   });
 };

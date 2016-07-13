@@ -22,19 +22,19 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'es6-shim'],
 
     // list of files / patterns to load in the browser
     files: [
       'https://js.stripe.com/v2/',
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      { pattern: 'spec/spec_index.js', watched: false },
+      { pattern: 'spec-es6/spec_index.js', watched: false },
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec/spec_index.js': ['webpack','env', 'sourcemap']
+      'spec-es6/spec_index.js': ['webpack','env', 'sourcemap']
     },
 
     envPreprocessor: [
@@ -128,6 +128,7 @@ module.exports = function(config) {
       require('karma-phantomjs-launcher'),
       require('karma-env-preprocessor'),
       require('karma-sourcemap-loader'),
+      require('karma-es6-shim'),
     ]
   });
 };

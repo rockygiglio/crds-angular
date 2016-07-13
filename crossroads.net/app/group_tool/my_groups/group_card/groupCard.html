@@ -2,67 +2,76 @@
   <div class="group-details">
     <div class="row">
       <div class="group-title">Group Name
-        <span ng-if="groupCard.group.leader">(Leader)</span>
-        <span ng-if="!groupCard.group.leader">(Participant)</span>
+        <span>({{ groupCard.group.role() }})</span>
       </div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.name }}</div>
+      <div>{{ groupCard.group.groupName }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Group Focus</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.focus }}</div>
+      <div>{{ groupCard.group.categories() }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Meeting Time</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.time }}</div>
+      <div>{{ groupCard.group.meetingTimeFrequency }}</div>
     </div>
 
     <div class="row">
       <div class="group-title">Meeting Location</div>
     </div>
     <div class="row">
-      <div>{{ groupCard.group.location }}</div>
+      <div>{{ groupCard.group.meetingLocation() }}</div>
     </div>
   </div>
 
   <div class="group-buttons">
     <div class="row">
-      <button ng-click='groupCard.gotoGroupDetail(groupCard.group)'>
-      <svg viewBox="0 0 32 32" class="icon icon-eye2">
-        <use xlink:href="#eye2"></use>
-      </svg>
-        View Group Details
-      </button>
-      <button ng-if="groupCard.group.leader">
-      <svg viewBox="0 0 32 32" class="icon icon-mail5">
-        <use xlink:href="#mail5"></use>
-      </svg>
-        Email Group
-      </button>
+      <div class="col-md-6 col-sm-12">
+        <button ng-click='groupCard.gotoGroupDetail(groupCard.group)'>
+        <svg viewBox="0 0 32 32" class="icon icon-eye2">
+          <use xlink:href="#eye2"></use>
+        </svg>
+          View Group Details
+        </button>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <button ng-if="groupCard.group.isLeader()">
+        <svg viewBox="0 0 32 32" class="icon icon-mail5">
+          <use xlink:href="#mail5"></use>
+        </svg>
+          Email Group
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="group-buttons">
     <div class="row">
-      <button ng-if="groupCard.group.leader">
-        <svg viewBox="0 0 32 32" class="icon icon-pencil4">
-          <use xlink:href="#pencil4"></use>
-        </svg>
-        Edit Group Details
-      </button>
-      <button ng-if="groupCard.group.leader">
-        <svg viewBox="0 0 32 32" class="icon icon-user6">
-          <use xlink:href="#user6"></use>
-        </svg>
-        View Invites
-      </button>
+      <div class="col-md-6 col-sm-12">
+        <button ng-if="groupCard.group.isLeader()">
+          <svg viewBox="0 0 32 32" class="icon icon-pencil4">
+            <use xlink:href="#pencil4"></use>
+          </svg>
+          Edit Group Details
+        </button>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <button ng-if="groupCard.group.isLeader()">
+          <svg viewBox="0 0 32 32" class="icon icon-user6">
+            <use xlink:href="#user6"></use>
+          </svg>
+          View Invites
+        </button>
+      </div>
     </div>
   </div>
 </div>
