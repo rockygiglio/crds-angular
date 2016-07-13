@@ -358,11 +358,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetGroupsByTypeForParticipant()
         {
-            const int pageViewId = 2206;
+            const int pageViewId = 2307;
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
-            string searchString = ",," + groupTypeId;
+            string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
 
             configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
 
@@ -398,6 +398,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Time", "180000"},
                     {"Available_Online", false},
+                    {"Maximum_Age", 10 },
+                    {"Remaining_Capacity", 42},
                     {"Address_ID", 42934 },
                     {"Address_Line_1", "98 Center St"},
                     {"Address_Line_2", "Suite 1000"},
@@ -423,6 +425,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Time", "140000"},
                     {"Available_Online", true},
+                    {"Maximum_Age", 10},
+                    {"Remaining_Capacity", 42},
                     {"Address_ID", 42934 },
                     {"Address_Line_1", "86 Middle Rd"},
                     {"Address_Line_2", ""},
@@ -460,6 +464,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 MeetingTime = "18000",
                 GroupRoleId = 16,
                 MinimumAge = 0,
+                MaximumParticipants = 9,
+                MinimumParticipants = 8,
+                MaximumAge = 99,
                 Address = new MpAddress()
                 {
                     Address_ID = 43567
@@ -486,7 +493,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Child_Care_Available", false },
                 {"Remaining_Capacity", 8 },
                 {"Enable_Waiting_List", false },
-                {"Online_RSVP_Minimum_Age", 0 },                
+                {"Online_RSVP_Minimum_Age", 0 },
+                {"Maximum_Age", 99 },
+                {"Minimum_Participants", 8 },
+                {"Maximum_Participants", 9 }
 
             };
            

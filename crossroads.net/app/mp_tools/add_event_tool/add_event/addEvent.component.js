@@ -43,7 +43,10 @@
     vm.startDateOpened = false;
     vm.validation = Validation;
     vm.validDateRange = validDateRange;
-
+    vm.childcareSelectedFlag = false;
+    vm.childcareSelected = childcareSelected;
+    vm.eventTypeChanged = eventTypeChanged;
+    vm.checkMinMax = checkMinMax;
     activate();
 
     ///////
@@ -77,6 +80,9 @@
           startTime: startDate,
           endTime: endDate
         };
+      }
+      else {
+          vm.eventTypeChanged();
       }
     }
 
@@ -121,6 +127,50 @@
       $event.stopPropagation();
       vm.startDateOpened = true;
     }
+
+    function childcareSelected() {
+      return vm.childcareSelectedFlag;
+    }
+
+    function checkMinMax(form) {
+      if (vm.eventData.minimumChildren === undefined || vm.eventData.maximumChildren === undefined) {
+        return false;
+      }
+
+      //set the proper error state
+      if (vm.eventData.minimumChildren > vm.eventData.maximumChildren) {
+        form.maximumChildren.$error.minmax = true;
+        form.maximumChildren.$valid = false;
+        form.maximumChildren.$invalid = true;
+        form.maximumChildren.$dirty = true;
+        form.$valid = false;
+        form.$invalid = true;
+        return true;
+      }
+      else {
+        form.maximumChildren.$error.minmax = false;
+        form.maximumChildren.$error.endDate = false;
+        form.maximumChildren.$valid = true;
+        form.maximumChildren.$invalid = false;
+        return false;
+      }
+    }
+
+    function eventTypeChanged() {
+      // if childcare is selected then show additional fields
+      // constrain congregations
+      if (vm.eventData.eventType.dp_RecordName === 'Childcare') {
+        vm.childcareSelectedFlag = true;
+        Lookup.query({ table: 'childcarelocations' }, function(locations) {vm.crossroadsLocations = locations;});
+      }
+      else {
+        vm.childcareSelectedFlag = false;
+        Lookup.query({ table: 'crossroadslocations' }, function(locations) {vm.crossroadsLocations = locations;});
+      }
+      
+    }
+
+
 
     function validDateRange(form) {
       if (form === undefined) {
