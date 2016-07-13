@@ -5,7 +5,6 @@ import 'rxjs/add/operator/toPromise';
 
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-import 'rxjs/Rx';
 
 import { Event } from './event';
 declare var moment: any;
@@ -18,7 +17,7 @@ export class StreamspotService {
   //
   private url    = 'https://api.streamspot.com/broadcaster';  // URL to web api
   private apiKey = '82437b4d-4e38-42e2-83b6-148fcfaf36fb';
-  private id     = 'crossr4915'
+  private id     = 'crossr4915';
 
   constructor(private http: Http) { }
 

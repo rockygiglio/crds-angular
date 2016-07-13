@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 
+import {Observable} from 'rxjs/Rx';
+
 import { Event } from './event';
 import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
@@ -14,13 +16,13 @@ declare var _: any;
     <div class="upcoming" *ngIf="event">
       <i>Join the live stream in...</i>
       <ul class="list-inline">
-        <li><strong>{{ displayCountdown('days') }}</strong> <small>days</small></li>
+        <li><strong>{{ countdown.days }}</strong> <small>days</small></li>
         <li class="vr"></li>
-        <li><strong>{{ displayCountdown('hours') }}</strong> <small>hours</small></li>
+        <li><strong>{{ countdown.hours }}</strong> <small>hours</small></li>
         <li class="vr"></li>
-        <li><strong>{{ displayCountdown('minutes') }}</strong> <small>min</small></li>
+        <li><strong>{{ countdown.minutes }}</strong> <small>min</small></li>
         <li class="vr"></li>
-        <li><strong>{{ displayCountdown('seconds') }}</strong> <small>sec</small></li>
+        <li><strong>{{ countdown.seconds }}</strong> <small>sec</small></li>
       </ul>
     </div>
   `,
@@ -28,8 +30,8 @@ declare var _: any;
 })
 
 export class CountdownComponent implements OnInit {
-  event: Event;
-  countdown: Countdown;
+  event: Event = null;
+  countdown: Countdown = new Countdown;
 
   constructor(private streamspotService: StreamspotService) { }
 
@@ -40,24 +42,19 @@ export class CountdownComponent implements OnInit {
       })
       .subscribe(event => {
         this.event = event;
-      })
-  }
 
-  displayCountdown(type:string): string {
+        setInterval(() => {
+          let duration = moment.duration(
+            +this.event.date - +moment(),
+            'milliseconds'
+          );
+          this.countdown.days    = duration.days();
+          this.countdown.hours   = duration.hours();
+          this.countdown.minutes = duration.minutes();
+          this.countdown.seconds = duration.seconds();
+        }, 1000)
+      });
 
-    let countdown = moment.duration(
-       +this.event.date - +moment(),
-      'milliseconds'
-    );
-    switch (type) {
-      case 'days':
-        return countdown.days();
-      case 'hours':
-        return countdown.hours();
-      case 'minutes':
-        return countdown.minutes();
-      case 'seconds':
-        return countdown.seconds();
-    }
+
   }
 }
