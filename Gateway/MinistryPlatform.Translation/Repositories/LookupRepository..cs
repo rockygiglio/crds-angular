@@ -25,54 +25,55 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<Dictionary<string, object>> EventTypes(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("EventTypesLookup"), token);
         }
 
         public List<Dictionary<string, object>> Genders(string token = "")
         {
-            if (string.IsNullOrEmpty(token))
-            {
-                token = base.ApiLogin();
-            }
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Genders"), token);
         }
 
         public List<Dictionary<string, object>> MaritalStatus(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("MaritalStatus"), token);
         }
 
         public List<Dictionary<string, object>> ServiceProviders(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("ServiceProviders"), token);
         }
 
         public List<Dictionary<string, object>> States(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("States"), token);
         }
 
         public List<Dictionary<string, object>> Countries(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Countries"), token);
         }
 
         public List<Dictionary<string, object>> CrossroadsLocations(string token = "")
         {
-            if (string.IsNullOrEmpty(token))
-            {
-                token = base.ApiLogin();
-            }
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("CrossroadsLocations"), token);
         }
 
         public List<Dictionary<string, object>> ReminderDays(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("ReminderDaysLookup"), token);
         }
 
         public List<Dictionary<string, object>> WorkTeams(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(_configurationWrapper.GetConfigIntValue("WorkTeams"), token);
         }
 
@@ -100,16 +101,19 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<Dictionary<string, object>> MeetingDays(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("MeetingDay"), token);
         }
 
         public List<Dictionary<string, object>> Ministries(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Ministries"), token);
         }
 
         public List<Dictionary<string, object>> ChildcareLocations(string token)
         {
+            token = ApiLogonIfNotAuthenticated(token);
             return _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("CongregationsWithChildcarePageView"), token, "", "");
         }
 
@@ -126,6 +130,15 @@ namespace MinistryPlatform.Translation.Repositories
 
             var times = _ministryPlatformServiceImpl.GetPageViewRecords(AppSettings("ChildcareTimesByCongregation"), token, searchString);
             return times;
+        }
+
+        private string ApiLogonIfNotAuthenticated(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                token = base.ApiLogin();
+            }
+            return token;
         }
     }
 }
