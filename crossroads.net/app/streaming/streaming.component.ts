@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 import { ScheduleComponent } from './schedule.component';
 
+var WOW = require('wow.js/dist/wow.min.js');
+
 @Component({
   selector: 'streaming',
   directives: [ScheduleComponent],
@@ -10,5 +12,7 @@ import { ScheduleComponent } from './schedule.component';
 
 export class StreamingComponent {
   displayStreamCTA: boolean = false;
-  constructor() { }
+  constructor() {
+    new WOW().init();
+  }
 }
