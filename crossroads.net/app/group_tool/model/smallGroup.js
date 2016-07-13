@@ -31,10 +31,11 @@ export default class SymallGroup {
         jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != undefined &&
         jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != null)
     {
-      this.categories = 
-        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes.map((attribute) => {
-          return new Category(attribute);
-        });
+      jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes.forEach(function(attribute) {
+        if(attribute.selected) {
+          this.categories.push(new Category(attribute));
+        }
+      }, this);
     }
   }
 
@@ -65,8 +66,13 @@ export default class SymallGroup {
     return this.address.toString();
   }
 
-  categories() {
-    this.category = 'Marriage Growth, Listening, Financial';
-    return this.category;
+  categoriesToString() {
+    let categoriesString = this.categories.length > 0 ? `${this.categories[0]}` : '';
+
+    for(let idx=1; idx < this.categories.length; idx++) {
+      categoriesString += `, ${this.categories[idx].toString()}`;
+    }
+
+    return categoriesString;
   }
 }

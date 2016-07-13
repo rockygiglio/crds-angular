@@ -83,7 +83,7 @@ describe('Group Tool SmallGroup', () => {
               'attributeId': 1,
               'name': 'Boxing',
               'description': null,
-              'selected': false,
+              'selected': true,
               'startDate': '0001-01-01T00:00:00',
               'endDate': null,
               'notes': null,
@@ -95,7 +95,7 @@ describe('Group Tool SmallGroup', () => {
               'attributeId': 1,
               'name': 'Father\'s',
               'description': null,
-              'selected': false,
+              'selected': true,
               'startDate': '0001-01-01T00:00:00',
               'endDate': null,
               'notes': null,
@@ -181,9 +181,9 @@ describe('Group Tool SmallGroup', () => {
     });
   });
 
-  describe('categories()', () => {
+  describe('categoriesToString()', () => {
     it('is Interest\\ Boxing, Men\'s\\ Father\'s', () => {
-      expect(smallGroup.categories()).toEqual('Interest\\ Boxing, Men\'s\\ Father\'s');
+      expect(smallGroup.categoriesToString()).toEqual('Interest\\ Boxing, Men\'s\\ Father\'s');
     });
   });
 
