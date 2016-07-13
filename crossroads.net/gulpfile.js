@@ -90,6 +90,7 @@ gulp.task('default', ['webpack-dev-server']);
 // Compile any typescript files
 var tsProject = typescript.createProject("./app/tsconfig.json");
 gulp.task("tsc", function () {
+  return; //bypass tsc as we try to move to webpack
   return tsProject.src()
     .pipe(embedTemplates({
           sourceType:'ts',

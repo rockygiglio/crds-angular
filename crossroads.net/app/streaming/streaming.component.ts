@@ -2,7 +2,8 @@ require('wow.js');
 
 import { Component } from '@angular/core';
 import { ScheduleComponent } from './schedule.component';
-//import { WOW } from 'wow.js';
+/// <amd-dependency path="../../node_modules/wow.js/dist/wow.js" />
+//import WOW from 'wow.js';
 
 declare var WOW: any;
 
@@ -14,6 +15,6 @@ declare var WOW: any;
 
 export class StreamingComponent {
   constructor() {
-    let wow = new WOW.init();
+    let wow = new WOW().init();
   }
 }
