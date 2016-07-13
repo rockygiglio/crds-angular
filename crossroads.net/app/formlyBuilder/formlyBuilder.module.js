@@ -6,6 +6,6 @@
   angular.module(MODULE, ['crossroads.core', 
                           'crossroads.common'
                           ])
-    .config(require('./formlyBuilder.config'));
-
+    .config(require('./formlyBuilder.config'))
+    .run(require('./formlyBuilder.run'));
 })();

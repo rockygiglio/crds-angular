@@ -54,9 +54,12 @@ export default class CreateGroupController {
                 }
             }, {
                 key: 'profile.birthDate',
-                type: 'input',
+                type: 'datepicker',
                 templateOptions: {
-                    label: 'Birth Date'
+                    label: 'Birth Date',
+                    type: 'text',
+                    datepickerPopup: 'dd-MMMM-yyyy'
+
                 }
             }, {
                 key: 'profile.genderId',
