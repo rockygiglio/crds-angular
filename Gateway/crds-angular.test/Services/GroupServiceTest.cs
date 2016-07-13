@@ -642,7 +642,7 @@ namespace crds_angular.test.Services
                     StartDate = Convert.ToDateTime("2016-02-12"),
                     EndDate = Convert.ToDateTime("2018-02-12"),
                     MeetingDayId = 3,
-                    MeetingTime = "10 AM",
+                    MeetingTime = "10:00",
                     AvailableOnline = false,
                     Address = new MpAddress()
                     {
