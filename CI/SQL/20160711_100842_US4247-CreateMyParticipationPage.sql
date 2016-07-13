@@ -57,7 +57,7 @@ VALUES
 ,'Group_Participant_ID'    
 ,'Group_Participants.[Participant_ID] = (select participant_record from contacts where User_account = dp_UserID) AND
 (GROUP_ID_TABLE.End_Date IS NULL OR GROUP_ID_TABLE.End_Date >= GetDate()) AND (Group_Participants.End_Date is NULL OR Group_Participants.End_Date >= GetDate())'                                                 
-,true)
+,1)
 
 SET IDENTITY_INSERT [dbo].[dp_pages] OFF;
 END
