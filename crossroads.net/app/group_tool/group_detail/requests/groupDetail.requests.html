@@ -135,7 +135,7 @@
 </div>
 
 <div class='container-fluid' ng-if='groupDetailRequests.currentView === "Invite"'>
-  <form>
+  <ng-form name='invitationForm' submit='groupDetailRequests.sendInvitation(invitationForm, groupDetailRequests.invite)'>
     <div class='row'>
       <div class='col-md-6 col-md-offset-3'>
 
@@ -148,8 +148,8 @@
         <div class='row'>
           <div class='col-md-12'>
             <div class='form-group'>
-              <label for='name' class='wide-label'>Name</label>
-              <input type='text' class='form-control' name='name' ng-model='groupDetailRequests.invite.name'></input>
+              <label for='name' class='control-label required' ng-class='{"has-error": invitationForm.recipientName.$error}'>Name</label>
+              <input type='text' class='form-control' name='recipientName' ng-model='groupDetailRequests.invite.recipientName' ng-required='required'></input>
             </div>
           </div>
         </div>
@@ -157,8 +157,8 @@
         <div class='row'>
           <div class='col-md-12'>
             <div class='form-group'>
-              <label for='emailAddress' class='wide-label'>Email Address</label>
-              <input type='text' class='form-control' name='emailAddress' ng-model='groupDetailRequests.invite.emailAddress'></input>
+              <label for='emailAddress' class='control-label required'>Email Address</label>
+              <input type='text' class='form-control' name='emailAddress' ng-model='groupDetailRequests.invite.emailAddress' ng-required='required'></input>
             </div>
           </div>
         </div>
@@ -166,10 +166,10 @@
         <div class='row'>
           <div class='col-md-12'>
             <div class='form-group'>
-              <label for='role' class='wide-label'>This person's role will be:</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='participant'>Participant</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='coleader'>Co-Leader</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='apprentice'>Apprentice</label>
+              <label for='groupRoleId' class='control-label required'>This person's role will be:</label>
+              <label ng-repeat='role in groupDetailRequests.groupParticipantRoles' class='radio-inline'>
+                <input type="radio" name="groupRoleId" ng-model='groupDetailRequests.invite.groupRoleId' ng-required='required' value='{{role.id}}'/>{{role.label}}
+              </label>
             </div>
           </div>
         </div>
@@ -180,11 +180,11 @@
           <div class='col-md-12'>
             <p class='text-center'>
               <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.sendInvitation(groupDetailRequests.invite)'>Send</a>
+              <button type='submit' class='btn btn-primary'>Send</button>
             </p>
           </div>
         </div>
       </div>
     </div>
-  </form>
+  </ng-form>
 </div>

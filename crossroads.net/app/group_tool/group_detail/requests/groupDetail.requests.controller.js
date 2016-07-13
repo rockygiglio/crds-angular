@@ -1,3 +1,6 @@
+import CONSTANTS from 'crds-constants';
+import GroupInvitation from '../../model/groupInvitation';
+
 export default class GroupDetailRequestsController {
   /*@ngInject*/
   constructor(GroupService, ImageService, $state) {
@@ -12,9 +15,17 @@ export default class GroupDetailRequestsController {
     this.currentView = 'List';
     this.currentRequest = null;
     this.invite = null;
+    this.groupParticipantRoles = [
+      { 'id': CONSTANTS.GROUP.ROLES.MEMBER, 'label': 'Participant' },
+      { 'id': CONSTANTS.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
+      { 'id': CONSTANTS.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
+    ]
   }
 
   $onInit() {
+    this.ready = false;
+    this.error = false;
+
     this.groupService.getGroupRequests(this.groupId).then((data) => {
       this.data = data;
       this.data.requests.forEach(function(request) {
@@ -34,13 +45,20 @@ export default class GroupDetailRequestsController {
   }
 
   beginInvitation() {
-    this.invite = null;
+    this.invite = new GroupInvitation();
+    this.invite.sourceId = this.groupId;
     this.currentView = 'Invite';
   }
     
-  sendInvitation(invitation) {
+  sendInvitation(form, invitation) {
+    if(!form.$valid) {
+      return;
+    }
+    this.invite.requestDate = new Date();
+
     // TODO Call API to send invitation, etc
     this.invite = null;
+    this.$onInit();
     this.currentView = 'List';
   }
     
