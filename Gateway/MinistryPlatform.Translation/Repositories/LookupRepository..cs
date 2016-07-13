@@ -28,8 +28,12 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("EventTypesLookup"), token);
         }
 
-        public List<Dictionary<string, object>> Genders(string token)
+        public List<Dictionary<string, object>> Genders(string token = "")
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                token = base.ApiLogin();
+            }
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Genders"), token);
         }
 
@@ -53,8 +57,12 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("Countries"), token);
         }
 
-        public List<Dictionary<string, object>> CrossroadsLocations(string token)
+        public List<Dictionary<string, object>> CrossroadsLocations(string token = "")
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                token = base.ApiLogin();
+            }
             return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("CrossroadsLocations"), token);
         }
 

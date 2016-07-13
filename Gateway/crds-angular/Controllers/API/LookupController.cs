@@ -82,6 +82,39 @@ namespace crds_angular.Controllers.API
                 return Ok(ret);
             });
         }
+        /// <summary>
+        /// Get lookup values for genders
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/genders")]
+        [HttpGet]
+        public IHttpActionResult LookupGenders()
+        {
+            var ret = new List<Dictionary<string, object>>();
+            ret = _lookupRepository.Genders();
+            if (ret.Count == 0)
+            {
+                return this.BadRequest("table: genders");
+            }
+            return Ok(ret);
+        }
+
+        /// <summary>
+        /// Get lookup values for crossroads locations (sites)
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/locations")]
+        [HttpGet]
+        public IHttpActionResult LookupLocations()
+        {
+            var ret = new List<Dictionary<string, object>>();
+            ret = _lookupRepository.CrossroadsLocations();
+            if (ret.Count == 0)
+            {
+                return this.BadRequest("table: locations");
+            }
+            return Ok(ret);
+        }
 
         /// <summary>
         /// Get lookup values for table passed in
