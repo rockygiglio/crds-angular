@@ -25,7 +25,7 @@ VALUES
 ,10        
 ,'Group_Participants'
 ,'Group_Participant_ID'
-,true          
+,1          
 ,'Group_Participants.[Group_Participant_ID]
 , Participant_ID_Table.[Participant_ID]
 , Group_ID_Table.[Group_Name]
