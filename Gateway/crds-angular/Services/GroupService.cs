@@ -15,6 +15,7 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.Services
 {
@@ -41,6 +42,7 @@ namespace crds_angular.Services
         private readonly int GroupRoleDefaultId;
         private readonly int DefaultContactEmailId;
         private readonly int JourneyGroupId;
+        private readonly int GroupCategoryAttributeTypeId;
 
         public GroupService(IGroupRepository mpGroupService,
                             IConfigurationWrapper configurationWrapper,
@@ -70,6 +72,7 @@ namespace crds_angular.Services
             GroupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             DefaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             JourneyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
+            GroupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -390,7 +393,29 @@ namespace crds_angular.Services
 
             return groupDetail;
         }
-        
+
+        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId)
+        {
+            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeId);
+            if (groupsByType == null)
+            {
+                return null;
+            }
+
+            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeService.GetAttributes(GroupCategoryAttributeTypeId);
+            foreach (var group in groupDetail)
+            {
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                group.AttributeTypes = attributesTypes.MultiSelect;
+                group.SingleAttributes = attributesTypes.SingleSelect;
+            }
+
+            return groupDetail;
+        }
+
         public Participant GetParticipantRecord(string token) 
         {
             var participant = _participantService.GetParticipantRecord(token);            
@@ -461,7 +486,7 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeService.GetAttributes(90);
             foreach (var participant in participants)
             {
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
@@ -486,6 +511,28 @@ namespace crds_angular.Services
             {
                 currentParticpant.particpantId = participant.ParticipantId;
             }
+        }
+
+        public List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token)
+        {
+            var smallGroups = _mpGroupService.GetSmallGroupsForAuthenticatedUser(token);
+            if (smallGroups == null)
+            {
+                return null;
+            }
+
+            var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+            //var configuration = MpObjectAttributeConfigurationFactory.Group();
+            //var mpAttributes = _attributeService.GetAttributes(null);
+
+            //foreach (var group in groupDetail)
+            //{
+                //var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                //group.AttributeTypes = attributesTypes.MultiSelect;
+                //group.SingleAttributes = attributesTypes.SingleSelect;
+            //}
+
+            return groupDetail;
         }
     }
 }

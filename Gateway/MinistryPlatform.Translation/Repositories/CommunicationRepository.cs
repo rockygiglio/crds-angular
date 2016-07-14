@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -139,7 +141,11 @@ namespace MinistryPlatform.Translation.Repositories
             var template = new MpMessageTemplate
             {
                 Body = pageRecords["Body"].ToString(),
-                Subject = pageRecords["Subject"].ToString()
+                Subject = pageRecords["Subject"].ToString(),
+                FromContactId = pageRecords.ToInt("From_Contact"),
+                FromEmailAddress = Regex.Replace(pageRecords["From_Contact_Text"].ToString(), "^.*;\\s*", string.Empty),
+                ReplyToContactId = pageRecords.ToInt("Reply_to_Contact"),
+                ReplyToEmailAddress = Regex.Replace(pageRecords["Reply_to_Contact_Text"].ToString(), "^.*;\\s*", string.Empty)
             };
 
             return template;
