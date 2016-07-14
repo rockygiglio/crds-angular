@@ -32,29 +32,24 @@ export default class GroupService {
   }
 
   getGroup(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'groupName': 'John and Betty\'s Married Couples New Testament Study Group',
-      'groupDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      'category': 'Study / 1 John',
-      'type': 'Married couples group',
-      'ageRange': '50s',
-      'location': '9806 S. Springfield, Cincinnati OH, 45243',
-      'when': 'Fridays at 9:30am, Every Other Week',
-      'childcare': false,
-      'pets': true,
-      'leaders': [
-        { 'contactId': 1670863, 'participantId': 456, 'name': 'John Smith' },
-        { 'contactId': 789, 'participantId': 123, 'name': 'Betty Smith' },
-      ],
-      'primaryContact': {
-        'contactId': 1670863,
-        'participantId': 456,
-        'name': 'John Smith'
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
+
+      if(!groups || groups.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group not found'};
+        throw err;
       }
+      
+      return groups[0];
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
   getGroupParticipants(groupId) {
