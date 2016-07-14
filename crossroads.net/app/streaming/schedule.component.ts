@@ -9,26 +9,7 @@ declare var moment: any;
 // TODO - placeholder for schedule if StreamspotService fails
 @Component({
   selector: 'schedule',
-  template: `
-    <aside>
-      <div class="well">
-        <h3>Live Stream Schedule</h3>
-        <hr>
-        <div class="row" *ngFor="let key of dayOfYear()">
-          <div class="date">
-            <strong>{{ displayDate(key, 'day') }}</strong>{{ displayDate(key) }}
-          </div>
-          <div class="time">
-            <ul class="list-unstyled">
-              <li *ngFor="let event of events[key]">
-                {{ event.time }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </aside>
-  `,
+  templateUrl: './schedule.component.html',
   providers: [StreamspotService, HTTP_PROVIDERS]
 })
 
