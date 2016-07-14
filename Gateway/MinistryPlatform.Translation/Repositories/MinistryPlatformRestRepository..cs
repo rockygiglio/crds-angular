@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
+using System.Web;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -49,11 +51,11 @@ namespace MinistryPlatform.Translation.Repositories
         public List<T> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
             //https://adminint.crossroads.net/ministryplatformapi/procs/api_crds_getChildcareDashboard?@Domain_ID=1&@Contact_ID=2186211
-            var url = string.Format("/procs/{0}{1}", procedureName, FormatStoredProcParameters(parameters));
+            var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
-            var response = _ministryPlatformRestClient.Execute(request);
+            var response = _ministryPlatformRestClient.ExecuteAsGet(request, "GET");
             _authToken.Value = null;
             response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
 
@@ -67,7 +69,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
         {
-            return parameters.Aggregate("?", (current, param) => current + ("&" + (param.Key.StartsWith("@") ? param.Key : "@" + param.Key) + "=" + param.Value));
+            return parameters.Aggregate("?", (current, param) => current + ("&" + (param.Key.StartsWith("@") ? HttpUtility.UrlEncode(param.Key) : "%40" + param.Key) + "=" + param.Value));
         }
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null)
