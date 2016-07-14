@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
@@ -59,8 +60,6 @@ namespace crds_angular.Services
 
         public int CreateInvitation(Invitation dto, string token)
         {
-            ValidateInvitation(dto, token);
-
             try
             {
                 var mpInvitation = Mapper.Map<MpInvitation>(dto);
@@ -69,7 +68,7 @@ namespace crds_angular.Services
 
                 try
                 {
-                    SendEmail(mpInvitation);
+                    SendEmail(invitation);
                 }
                 catch (Exception e)
                 {
@@ -100,15 +99,16 @@ namespace crds_angular.Services
 
         private void ValidateGroupInvitation(Invitation dto, string token)
         {
-            var participants = _groupRepository.GetGroupParticipants(dto.SourceId, true);
-            if (participants == null || !participants.Any())
-            {
-                throw new ValidationException("You must be a group leader to invite others to this group (no active participants)");
-            }
             var me = _participantRepository.GetParticipantRecord(token);
             if (me == null)
             {
                 throw new ValidationException("You must be a group leader to invite others to this group (participant not found)");
+            }
+
+            var participants = _groupRepository.GetGroupParticipants(dto.SourceId, true);
+            if (participants == null || !participants.Any())
+            {
+                throw new ValidationException("You must be a group leader to invite others to this group (no active participants)");
             }
 
             var found = participants.Find(p => p.ParticipantId == me.ParticipantId && p.GroupRoleId == _groupRoleLeader);
@@ -118,7 +118,7 @@ namespace crds_angular.Services
             }
         }
 
-        // ReSharper disable once MemberCanBeMadeStatic.Local
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ValidateTripInvitation(Invitation dto, string token)
         {
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation

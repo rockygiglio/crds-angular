@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services;
@@ -32,10 +34,10 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
 
-            _communicationService = new Mock<ICommunicationRepository>();
-            _invitationRepository = new Mock<IInvitationRepository>();
-            _groupRepository = new Mock<IGroupRepository>();
-            _participantRepository = new Mock<IParticipantRepository>();
+            _communicationService = new Mock<ICommunicationRepository>(MockBehavior.Strict);
+            _invitationRepository = new Mock<IInvitationRepository>(MockBehavior.Strict);
+            _groupRepository = new Mock<IGroupRepository>(MockBehavior.Strict);
+            _participantRepository = new Mock<IParticipantRepository>(MockBehavior.Strict);
             var config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("GroupInvitationType")).Returns(GroupInvitationType);
@@ -49,23 +51,193 @@ namespace crds_angular.test.Services
             _fixture = new InvitationService(_invitationRepository.Object, _communicationService.Object, config.Object, _groupRepository.Object, _participantRepository.Object);
         }
 
-
         [Test]
         public void CanCreateInvitationsForGroups()
         {
-            var token = "dude";
+            const string token = "dude";
             var invitation = new Invitation()
             {
                 EmailAddress = "dudley@doright.com",
-                GroupRoleId = 16, // 16 = Co-leader invitation
-                InvitationType = 1, // 1 = group invitation
+                GroupRoleId = GroupRoleLeader,
+                InvitationType = GroupInvitationType,
                 RecipientName = "Dudley Doright",
-                RequestDate = new DateTime(2016, 7, 6)
+                RequestDate = new DateTime(2016, 7, 6),
+                SourceId = 33
             };
-            _invitationRepository.Setup(m => m.CreateInvitation(It.IsAny<MpInvitation>(), token));
 
-            var invitations = _fixture.CreateInvitation(invitation, token);
-            _invitationRepository.Verify(x => x.CreateInvitation(It.IsAny<MpInvitation>(), token), Times.Once);
+            var mpInvitation = new MpInvitation
+            {
+                InvitationType = invitation.InvitationType,
+                EmailAddress = invitation.EmailAddress,
+                GroupRoleId = invitation.GroupRoleId,
+                RecipientName = invitation.RecipientName,
+                RequestDate = invitation.RequestDate,
+                SourceId = invitation.SourceId,
+                InvitationGuid = "guid123",
+                InvitationId = 11
+            };
+            _invitationRepository.Setup(
+                m =>
+                    m.CreateInvitation(
+                        It.Is<MpInvitation>(
+                            i =>
+                                i.InvitationType == invitation.InvitationType && i.EmailAddress.Equals(invitation.EmailAddress) && i.GroupRoleId == invitation.GroupRoleId &&
+                                i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId),
+                        token)).Returns(mpInvitation);
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 12,
+                FromEmailAddress = "me@here.com",
+                ReplyToContactId = 34,
+                ReplyToEmailAddress = "you@there.com",
+                Subject = "subject"
+            };
+            _communicationService.Setup(mocked => mocked.GetTemplate(GroupInvitationEmailTemplate)).Returns(template);
+
+            _communicationService.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.Is<MpCommunication>(
+                            c =>
+                                c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                                c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                                c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                                c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(invitation.EmailAddress) &&
+                                c.MergeData["Invitation_GUID"].ToString().Equals(mpInvitation.InvitationGuid) &&
+                                c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName)),
+                        false)).Returns(77);
+
+            var invitationId = _fixture.CreateInvitation(invitation, token);
+            _invitationRepository.VerifyAll();
+            _communicationService.VerifyAll();
+            Assert.AreEqual(mpInvitation.InvitationId, invitationId);
+        }
+
+        [Test]
+        public void TestValidateGroupInvitation()
+        {
+            const string token = "dude";
+            var invitation = new Invitation()
+            {
+                EmailAddress = "dudley@doright.com",
+                GroupRoleId = GroupRoleLeader,
+                InvitationType = GroupInvitationType,
+                RecipientName = "Dudley Doright",
+                RequestDate = new DateTime(2016, 7, 6),
+                SourceId = 33
+            };
+
+            var participant = new Participant
+            {
+                ParticipantId = 654
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(participant);
+
+            var participants = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant
+                {
+                    GroupRoleId = GroupRoleLeader + 2,
+                    ParticipantId = participant.ParticipantId + 1
+                },
+                new MpGroupParticipant
+                {
+                    GroupRoleId = GroupRoleLeader,
+                    ParticipantId = participant.ParticipantId
+                }
+            };
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(invitation.SourceId, true)).Returns(participants);
+
+            _fixture.ValidateInvitation(invitation, token);
+            _participantRepository.VerifyAll();
+            _groupRepository.VerifyAll();
+        }
+
+        [Test]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestValidateGroupInvitationParticipantLookupFails()
+        {
+            const string token = "dude";
+            var invitation = new Invitation()
+            {
+                EmailAddress = "dudley@doright.com",
+                GroupRoleId = GroupRoleLeader,
+                InvitationType = GroupInvitationType,
+                RecipientName = "Dudley Doright",
+                RequestDate = new DateTime(2016, 7, 6),
+                SourceId = 33
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns((Participant)null);
+
+            _fixture.ValidateInvitation(invitation, token);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestValidateGroupInvitationNoParticipantsInGroup()
+        {
+            const string token = "dude";
+            var invitation = new Invitation()
+            {
+                EmailAddress = "dudley@doright.com",
+                GroupRoleId = GroupRoleLeader,
+                InvitationType = GroupInvitationType,
+                RecipientName = "Dudley Doright",
+                RequestDate = new DateTime(2016, 7, 6),
+                SourceId = 33
+            };
+
+            var participant = new Participant
+            {
+                ParticipantId = 654
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(participant);
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(invitation.SourceId, true)).Returns((List<MpGroupParticipant>)null);
+
+            _fixture.ValidateInvitation(invitation, token);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ValidationException))]
+        public void TestValidateGroupInvitationNotLeader()
+        {
+            const string token = "dude";
+            var invitation = new Invitation()
+            {
+                EmailAddress = "dudley@doright.com",
+                GroupRoleId = GroupRoleLeader,
+                InvitationType = GroupInvitationType,
+                RecipientName = "Dudley Doright",
+                RequestDate = new DateTime(2016, 7, 6),
+                SourceId = 33
+            };
+
+            var participant = new Participant
+            {
+                ParticipantId = 654
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(participant);
+
+            var participants = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant
+                {
+                    GroupRoleId = GroupRoleLeader + 2,
+                    ParticipantId = participant.ParticipantId + 1
+                },
+                new MpGroupParticipant
+                {
+                    GroupRoleId = GroupRoleLeader + 1,
+                    ParticipantId = participant.ParticipantId
+                }
+            };
+
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(invitation.SourceId, true)).Returns(participants);
+
+            _fixture.ValidateInvitation(invitation, token);
         }
     }
 }
