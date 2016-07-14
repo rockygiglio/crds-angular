@@ -1,9 +1,11 @@
+
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state) {
+  constructor(GroupService, ImageService, $state, $log) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
+    this.log = $log;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
