@@ -339,6 +339,11 @@ streaming {
         margin-top: 3em;
       }
     }
+
+    figure > a {
+      display: block;
+      width: 100%;
+    }
   }
 
   .ways-to-watch {
@@ -373,6 +378,7 @@ streaming {
   }
 
   .community {
+    @include clearfix();
     @include crds-jumbotron();
     background: #1D3C50 url("#{$streaming-imgix-domain}/streaming--anywhere-map.jpg?w=1&dpr=2&fit=crop");
     background-repeat: no-repeat;
@@ -385,7 +391,6 @@ streaming {
   }
 
   .group-host {
-    min-height: 500px;
     header {
       @include crds-jumbotron();
     }
@@ -414,7 +419,7 @@ streaming {
         flex-direction:column;
         height: 100%;
         > div {
-          flex:1;
+          flex: 1 0 auto;
           display:flex;
         }
         article {
