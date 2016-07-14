@@ -540,8 +540,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Enable_Waiting_List", false },
                 {"Online_RSVP_Minimum_Age", 0 },
                 {"Maximum_Age", 99 },
-                {"Minimum_Participants", 8 },
-                {"Maximum_Participants", 9 }
+                {"Minimum_Participants", 8 }
 
             };
            

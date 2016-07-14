@@ -71,20 +71,20 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Description", group.GroupDescription},
                 {"Start_Date", group.StartDate},
                 {"End_Date", endDate},
-                {"Target_Size", group.TargetSize},
-                {"Offsite_Meeting_Address", addressId},
-                {"Group_Is_Full", group.Full},
-                {"Available_Online", group.AvailableOnline},
-                {"Meeting_Time", group.MeetingTime},
-                {"Meeting_Day_Id", group.MeetingDayId},
-                {"Domain_ID", 1},
-                {"Child_Care_Available", group.ChildCareAvailable},
-                {"Remaining_Capacity", group.RemainingCapacity},
-                {"Enable_Waiting_List", group.WaitList},
-                {"Online_RSVP_Minimum_Age", group.MinimumAge},
-                {"Maximum_Age", group.MaximumAge},
-                {"Minimum_Participants", group.MinimumParticipants},
-                {"Maximum_Participants", group.MaximumParticipants}
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants }
+
             };
 
             var groupId =
