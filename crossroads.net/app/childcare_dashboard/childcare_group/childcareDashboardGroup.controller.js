@@ -72,7 +72,7 @@ class ChildcareDashboardGroupController {
     const today = moment({ hour:0, minute:0 });
     const otherDate = moment(this.eventDate).set({ hour: 0, minute: 0});
     var diff = today.diff(otherDate, 'days');
-    return diff >= -7;
+    return diff >= -6;
   }
 
   rsvp(child, status) {
