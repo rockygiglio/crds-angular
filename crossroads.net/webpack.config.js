@@ -37,6 +37,20 @@ module.exports = {
     formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
     boot: ['./dist/boot.js'],
   },
+  /*
+   * Options affecting the resolving of modules.
+   *
+   * See: http://webpack.github.io/docs/configuration.html#resolve
+   */
+  resolve: {
+
+    /*
+     * An array of extensions that should be used to resolve modules.
+     *
+     * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
+     */
+    extensions: ['', '.ts', '.js', '.json'],
+  },
   watchPattern: ['app/**/**','core/**/**','dist/**/**'],
   externals: {
     stripe: 'Stripe',
@@ -50,6 +64,15 @@ module.exports = {
   },
   module: {
     loaders: [
+            {
+              test: require.resolve('wow.js/dist/wow.js'), 
+              loader: 'exports?this.WOW'
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
             {
               test: /\.css$/,
               loader: 'style-loader!css-loader'
