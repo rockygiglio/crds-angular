@@ -46,6 +46,30 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
+        public List<T> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
+        {
+            //https://adminint.crossroads.net/ministryplatformapi/procs/api_crds_getChildcareDashboard?@Domain_ID=1&@Contact_ID=2186211
+            var url = string.Format("/procs/{0}{1}", procedureName, FormatStoredProcParameters(parameters));
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+
+            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+            if (content == null || !content.Any())
+            {
+                return default(List<T>);
+            }
+            return content;
+        }
+
+        private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
+        {
+            return parameters.Aggregate("?", (current, param) => current + ("&" + (param.Key.StartsWith("@") ? param.Key : "@" + param.Key) + "=" + param.Value));
+        }
+
         public List<T> Search<T>(string searchString = null, string selectColumns = null)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : string.Format("?$filter={0}", searchString);

@@ -265,12 +265,14 @@ namespace crds_angular.Services
             var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
             members.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
 
+
+
             //Find community groups for house heads
             foreach (var head in members.HeadsOfHousehold)
             {
                 var participant = _participantService.GetParticipant(head.ContactId);
-                var groups = _groupService.GetGroupsForParticipant(token, participant.ParticipantId);
-                
+                var groups = _groupService.GetGroupsForParticipant(token, participant.ParticipantId).Where(g => g.GroupTypeId != 0);
+
                 //Find events that my groups are approved for
                 foreach (var group in groups)
                 {
@@ -279,7 +281,7 @@ namespace crds_angular.Services
                     {
                         var eventDetails = _eventService.GetEvent(ev.EventId);
 
-                        if (eventDetails.EventStartDate < DateTime.Today)
+                        if (eventDetails.EventStartDate < DateTime.Today || eventDetails.EventType != "Childcare")
                         {
                             continue;
                         }

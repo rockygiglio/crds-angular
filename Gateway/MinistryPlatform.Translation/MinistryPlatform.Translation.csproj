@@ -211,6 +211,7 @@
     <Compile Include="Repositories\CongregationRepository.cs" />
     <Compile Include="Repositories\GoCincinnati\GroupConnectorRepository.cs" />
     <Compile Include="Repositories\GoCincinnati\RegistrationRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IChildcareRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
     <Compile Include="Repositories\InvitationlRepository.cs" />
     <Compile Include="Repositories\GroupToolRepository.cs" />
