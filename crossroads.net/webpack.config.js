@@ -35,23 +35,12 @@ module.exports = {
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
     formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
-    boot: ['./dist/boot.js'],
+    boot: ['./app/boot.ts']
   },
-  /*
-   * Options affecting the resolving of modules.
-   *
-   * See: http://webpack.github.io/docs/configuration.html#resolve
-   */
   resolve: {
-
-    /*
-     * An array of extensions that should be used to resolve modules.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
-     */
-    extensions: ['', '.ts', '.js', '.json'],
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
-  watchPattern: ['app/**/**','core/**/**','dist/**/**'],
+  watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
@@ -65,15 +54,6 @@ module.exports = {
   module: {
     loaders: [
             {
-              test: require.resolve('wow.js/dist/wow.js'), 
-              loader: 'exports?this.WOW'
-            },
-            {
-              test: /\.ts$/,
-              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
-              exclude: [/\.(spec|e2e)\.ts$/]
-            },
-            {
               test: /\.css$/,
               loader: 'style-loader!css-loader'
             },
@@ -85,26 +65,31 @@ module.exports = {
               ],
               loader: 'ng-annotate!babel-loader'
             },
-          {
-            test: /\.scss$/,
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
-          },
-          {
-            test: /\.(jpe?g|png|gif|svg)$/i,
-            loaders: ['image?bypassOnDebug&optimizationLevel=7&interlaced=false']
-          },
-          {
-            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff'
-          },
-          {
-            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file-loader'
-          },
-          {
-            test: /\.html$/,
-            loader: 'ng-cache?prefix=[dir]'
-          }
+            {
+              test: /\.scss$/,
+              loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
+            },
+            {
+              test: /\.(jpe?g|png|gif|svg)$/i,
+              loaders: ['image?bypassOnDebug&optimizationLevel=7&interlaced=false']
+            },
+            {
+              test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'url-loader?limit=10000&minetype=application/font-woff'
+            },
+            {
+              test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'file-loader'
+            },
+            {
+              test: /\.html$/,
+              loader: 'ng-cache?prefix=[dir]'
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
     ]
   },
   plugins: [
