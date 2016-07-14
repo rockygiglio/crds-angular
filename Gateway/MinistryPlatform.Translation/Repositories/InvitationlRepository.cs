@@ -35,7 +35,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Email_Address", dto.EmailAddress},
                 {"Recipient_Name", dto.RecipientName},
                 {"Group_Role_ID", dto.GroupRoleId },
-                {"Invitation_Type_ID", invitationType }
+                {"Invitation_Type_ID", invitationType },
+                {"Invitation_Date", dto.RequestDate }
             };
 
             try
