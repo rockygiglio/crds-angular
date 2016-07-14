@@ -41,7 +41,8 @@ function htmlReplace(devBuild) {
       give: { js: '/assets/give.js' },
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
-      formbuilder: { js: '/assets/formbuilder.js' }
+      formbuilder: { js: '/assets/formbuilder.js' },
+      formlybuilder: { js: '/assets/formlybuilder.js' }
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -61,6 +62,7 @@ function htmlReplace(devBuild) {
       givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
     })).pipe(gulp.dest('./'));
 

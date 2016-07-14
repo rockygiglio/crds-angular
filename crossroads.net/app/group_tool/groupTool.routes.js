@@ -16,6 +16,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       url: '/groups/mygroups',
       template: '<my-groups></my-groups>',
       data: {
+        isProtected: true,
         meta: {
           title: 'My Groups',
           description: ''
@@ -24,7 +25,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.create', {
       parent: 'noSideBar',
-      url: '/groups/create',
+      url: '/grouptool/create',
       template: '<create-group></create-group>',
       data: {
         isProtected: true,

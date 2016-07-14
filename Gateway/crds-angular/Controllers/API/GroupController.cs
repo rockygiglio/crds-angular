@@ -14,6 +14,7 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
@@ -203,6 +204,33 @@ namespace crds_angular.Controllers.API
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto("Error getting groups for group type ID " + groupTypeId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        /// <summary>
+        /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
+        /// If one or more groups are found, then the group detail data is returned.
+        /// If no groups are found, then an empty list will be returned.
+        /// </summary>
+        /// <returns>A list of all small groups for the given user (group type of 1)</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupContactDTO>))]
+        [Route("api/group/mine/{groupTypeId}/{groupId:int?}")]
+        public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var groups = groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                    return Ok(groups);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting Groups of type " + groupTypeId + " for logged in user.", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 

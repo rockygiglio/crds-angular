@@ -36,6 +36,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         IList<string> GetEventTypesForGroup(int groupId, string token = null);
 
+        List<MpGroup> GetGroupsForParticipant(string token, int participantId);
+
         List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
         void UpdateGroupRemainingCapacity(MpGroup group);
@@ -44,6 +46,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         List<MpGroupSearchResult> GetSearchResults(int groupTypeId);
 
+        List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken);
         void endDateGroupParticipant(int participantId, int groupId, DateTime? endDate = null);
+
+        List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null);
     }
 }

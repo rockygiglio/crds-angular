@@ -62,7 +62,7 @@ describe('Childcare Group Component Controller', () => {
   it('event should be closed if it is happening within 7 days of today', () => {
     const today = new Date();
     var nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + 7);
+    nextDate.setDate(nextDate.getDate() + 6);
     controller.eventDate = nextDate.toISOString();
     controller.communityGroup = fakeCG();
 
@@ -151,7 +151,7 @@ describe('Childcare Group Component Controller', () => {
 
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
-    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpError');
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpError);
   });
 
   it('should display an error when the capacity is reached', () => {
@@ -159,7 +159,7 @@ describe('Childcare Group Component Controller', () => {
     spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
       $promise: {
         then: (success, error) => {
-          error({statusCode: 412});
+          error({status: 412});
         }
       },
       $resolved: true
@@ -170,7 +170,7 @@ describe('Childcare Group Component Controller', () => {
 
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
-    expect(rootScope.$emit).toHaveBeenCalledWith('notify', 'childcareRsvpFull');
+    expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpFull);
 
   });
 
