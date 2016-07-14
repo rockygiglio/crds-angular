@@ -38,46 +38,55 @@ export default class CreateGroupController {
                     valueProp: 'congregationId',
                     labelProp: 'congregationName',
                     options: [{
-                            congregationId: '1',
-                            congregationName: 'site1',
+                        congregationId: '1',
+                        congregationName: 'Oakley',
+                    }, {
+                            congregationId: 6,
+                            congregationName: 'Mason',
                         }, {
-                            congregationId: '2',
-                            congregationName: 'site2',
+                            congregationId: 7,
+                            congregationName: 'Florence',
                         }, {
-                            congregationId: '3',
-                            congregationName: 'site3',
+                            congregationId: 8,
+                            congregationName: 'West Side',
                         }, {
-                            congregationId: '4',
-                            congregationName: 'site4',
-                        },                                                
+                            congregationId: 11,
+                            congregationName: 'Uptown'
+                        }, {
+                            congregationId: 16,
+                            congregationName: 'Oxford'
+                        }, {
+                            congregationId: 15,
+                            congregationName: 'Anywhere'
+                        }
                     ]
                 }
             }, {
-                key: 'profile.birthDate',
-                type: 'datepicker',
-                templateOptions: {
-                    label: 'Birth Date',
-                    type: 'text',
-                    datepickerPopup: 'dd-MMMM-yyyy'
-
-                }
-            }, {
-                key: 'profile.genderId',
-                type: 'radio',
-                templateOptions: {
-                    label: 'Gender',
-                    inline: false,
-                    valueProp: 'genderId',
-                    labelProp: 'genderLabel',
-                    options: [{
-                        genderId: 0,
-                        genderLabel: 'Female'
-                    },{
-                        genderId: 1,
-                        genderLabel: 'Male'
-                    }]
-                }
-            }]};
+                    key: 'profile.birthDate',
+                    type: 'datepicker',
+                    templateOptions: {
+                        label: 'Birth Date',
+                        type: 'text',
+                        datepickerPopup: 'MM/dd/yyyy'
+                    }
+                }, {
+                    key: 'profile.genderId',
+                    type: 'radio',
+                    templateOptions: {
+                        label: 'Gender',
+                        inline: false,
+                        valueProp: 'genderId',
+                        labelProp: 'genderLabel',
+                        options: [{
+                            genderId: 0,
+                            genderLabel: 'Female'
+                        }, {
+                                genderId: 1,
+                                genderLabel: 'Male'
+                            }]
+                    }
+                }]
+        };
         var profileAddressFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -90,30 +99,31 @@ export default class CreateGroupController {
                     label: 'Street'
                 }
             }, {
-                key: 'profile.address.city',
-                type: 'input',
-                templateOptions: {
-                    label: 'City'
-                }
-            }, {
-                key: 'profile.address.state',
-                type: 'input',
-                templateOptions: {
-                    label: 'State'
-                }
-            }, {
-                key: 'profile.address.zip',
-                type: 'input',
-                templateOptions: {
-                    label: 'Zip'
-                } 
-            }, {
-                key: 'profile.address.country',
-                type: 'input',
-                templateOptions: {
-                    label: 'Country'
-                }
-            }]};
+                    key: 'profile.address.city',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'City'
+                    }
+                }, {
+                    key: 'profile.address.state',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'State'
+                    }
+                }, {
+                    key: 'profile.address.zip',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'Zip'
+                    }
+                }, {
+                    key: 'profile.address.country',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'Country'
+                    }
+                }]
+        };
         var groupMeetingDateTimeFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -127,29 +137,64 @@ export default class CreateGroupController {
                     inline: false,
                     options: [{
                         label: 'Specific Day and Time',
-                    },{
-                        label: 'Flexible Meeting Times/Not Sure Yet',
-                    }]
+                    }, {
+                            label: 'Flexible Meeting Times/Not Sure Yet',
+                        }]
                 }
             }, {
-                key: 'group.meeting.day',
-                type: 'input',
-                templateOptions: {
-                    label: 'Day'
-                }
-            }, {
-                key: 'group.meeting.time',
-                type: 'input',
-                templateOptions: {
-                    label: 'Time'
-                }
-            }, {
-                key: 'group.meeting.frequency',
-                type: 'input',
-                templateOptions: {
-                    label: 'Frequency'
-                }
-            }]};
+                    key: 'group.meeting.day',
+                    type: 'select',
+                    templateOptions: {
+                        label: 'Day',
+                        valueProp: 'meetingDayId',
+                        labelProp: 'dayLabel',
+                        options: [{
+                            meetingDayId: 1,
+                            dayLabel: 'Sunday'
+                        }, {
+                            meetingDayId: 2, 
+                            dayLabel: 'Monday'
+                        }, {
+                            meetingDayId: 3,
+                            dayLabel: 'Tuesday'
+                        }, {
+                            meetingDayId: 4,
+                            dayLabel: 'Wednesday'
+                        }, {
+                            meetingDayId: 5,
+                            dayLabel: 'Thursday'
+                        }, {
+                            meetingDayId: 6,
+                            dayLabel: 'Friday'
+                        }, {
+                            meetingDayId: 7,
+                            dayLabel: 'Saturday'
+                        }]
+                    }
+                }, {
+                    key: 'group.meeting.time',
+                    type: 'timepicker',
+                    templateOptions: {
+                        label: 'Time',
+                        minuteStep: 15
+                    }
+                }, {
+                    key: 'group.meeting.frequency',
+                    type: 'select',
+                    templateOptions: {
+                        label: 'Frequency',
+                        valueProp: 'meetingFrequencyId',
+                        labelProp: 'meetingFrequencyDesc',
+                        options: [{
+                            meetingFrequencyId: 1,
+                            meetingFrequencyDesc: 'Every week' 
+                        }, {
+                            meetingFrequencyId: 2,
+                            meetingFrequencyDesc: 'Every other week'
+                        }]
+                    }
+                }]
+        };
         var groupMeetingLocationFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -167,52 +212,53 @@ export default class CreateGroupController {
                     options: [{
                         label: 'Location',
                         online: false
-                    },{
-                        label: 'Online',
-                        online: true
-                    }]
+                    }, {
+                            label: 'Online',
+                            online: true
+                        }]
                 }
             }, {
-                key: 'group.meeting.address.street',
-                type: 'input',
-                templateOptions: {
-                    label: 'Street'
-                }
-            }, {
-                key: 'group.meeting.address.city',
-                type: 'input',
-                templateOptions: {
-                    label: 'City'
-                }
-            }, {
-                key: 'group.meeting.address.state',
-                type: 'input',
-                templateOptions: {
-                    label: 'State'
-                }
-            }, {
-                key: 'group.meeting.address.zip',
-                type: 'input',
-                templateOptions: {
-                    label: 'Zip'
-                }
-            }, {
-                key: 'group.meeting.childcare',
-                type: 'radio',
-                templateOptions: {
-                    label: 'Are you interested in leading a group with chilcare options?',
-                    labelProp: 'label',
-                    valueProp: 'childcare',
-                    inline: false,
-                    options: [{
-                        label: 'Kids welcome at the group.',
-                        childcare: true
-                    },{
-                        label: 'No. (Parents are welcome, but make your own kid plans.)',
-                        childcare: false
-                    }]
-                }
-            }]};
+                    key: 'group.meeting.address.street',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'Street'
+                    }
+                }, {
+                    key: 'group.meeting.address.city',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'City'
+                    }
+                }, {
+                    key: 'group.meeting.address.state',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'State'
+                    }
+                }, {
+                    key: 'group.meeting.address.zip',
+                    type: 'input',
+                    templateOptions: {
+                        label: 'Zip'
+                    }
+                }, {
+                    key: 'group.meeting.childcare',
+                    type: 'radio',
+                    templateOptions: {
+                        label: 'Are you interested in leading a group with chilcare options?',
+                        labelProp: 'label',
+                        valueProp: 'childcare',
+                        inline: false,
+                        options: [{
+                            label: 'Kids welcome at the group.',
+                            childcare: true
+                        }, {
+                                label: 'No. (Parents are welcome, but make your own kid plans.)',
+                                childcare: false
+                            }]
+                    }
+                }]
+        };
         var groupStartFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -220,11 +266,14 @@ export default class CreateGroupController {
             },
             fieldGroup: [{
                 key: 'group.startDate',
-                type: 'input',
+                type: 'datepicker',
                 templateOptions: {
-                    label: 'Start Date'
+                    label: 'Start Date',
+                    type: 'text',
+                    datepickerPopup: 'MM/dd/yyyy'
                 }
-            }]};
+            }]
+        };
         var groupTypeFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -240,18 +289,19 @@ export default class CreateGroupController {
                     options: [{
                         label: 'Men and women together (like God intended).',
                         typeId: 0
-                    },{
-                        label: 'Men only (no girls allowed).',
-                        typeId: 1
-                    },{
-                        label: 'Women only (don\'t be a creeper, dude).',
-                        typeId: 2
-                    },{
-                        label: 'Married couples (because you put a ring on it).',
-                        typeId: 3
-                    }]
+                    }, {
+                            label: 'Men only (no girls allowed).',
+                            typeId: 1
+                        }, {
+                            label: 'Women only (don\'t be a creeper, dude).',
+                            typeId: 2
+                        }, {
+                            label: 'Married couples (because you put a ring on it).',
+                            typeId: 3
+                        }]
                 }
-            }]};
+            }]
+        };
         var groupAgeFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -265,9 +315,9 @@ export default class CreateGroupController {
                     valueProp: 'groupAgeRangeId',
                     labelProp: 'ageRangeName',
                     options: [{
-                            groupAgeRangeId: 1,
-                            ageRangeName: 'Middle School Students (Grades 6-8)'
-                        }, {
+                        groupAgeRangeId: 1,
+                        ageRangeName: 'Middle School Students (Grades 6-8)'
+                    }, {
                             groupAgeRangeId: 2,
                             ageRangeName: 'High School Students (Grades 9-12)'
                         }, {
@@ -288,10 +338,11 @@ export default class CreateGroupController {
                         }, {
                             groupAgeRangeId: 8,
                             ageRangeName: '60\'s+'
-                        }                                                             
+                        }
                     ]
                 }
-            }]};
+            }]
+        };
         var groupAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -304,14 +355,15 @@ export default class CreateGroupController {
                 templateOptions: {
                     label: 'Group Name'
                 }
-            },{
-                key: 'group.groupDescription',
-                type: 'textarea',
-                templateOptions: {
-                    label: 'Group Description',
-                    rows: 6
-                }
-            }]};
+            }, {
+                    key: 'group.groupDescription',
+                    type: 'textarea',
+                    templateOptions: {
+                        label: 'Group Description',
+                        rows: 6
+                    }
+                }]
+        };
         var groupVisibilityFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -327,17 +379,24 @@ export default class CreateGroupController {
                     options: [{
                         accessId: 0,
                         accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
-                    },{
-                        accessId: 1,
-                        accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
-                    }]
+                    }, {
+                            accessId: 1,
+                            accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
+                        }]
                 }
-            }]};
-        this.model = {};
-        this.fields = [profileAboutFields, profileAddressFields, groupTypeFields, 
-                        groupAgeFields, groupStartFields, groupMeetingDateTimeFields, 
-                        groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
+            }]
+        };
+        this.model = {
+            "group": {
+                "meeting": {
+                    "time": "1983-01-16T22:00:00.007Z"
+                }
+            }
+        };
+        this.fields = [profileAboutFields, profileAddressFields, groupTypeFields,
+            groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
+            groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
 
-    
-}
+
+    }
 }

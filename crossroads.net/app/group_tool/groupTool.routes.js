@@ -32,7 +32,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.create', {
       parent: 'noSideBar',
-      url: '/grouptool/create',
+      url: '/groups/create',
       template: '<create-group></create-group>',
       data: {
         isProtected: true,

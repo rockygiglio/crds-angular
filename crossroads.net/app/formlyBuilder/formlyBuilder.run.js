@@ -59,7 +59,7 @@
         ngModelAttrs: ngModelAttrs,
         templateOptions: {
           datepickerOptions: {
-            format: 'MM.dd.yyyy',
+            format: 'MM/dd/yyyy',
             initDate: new Date()
           }
         }
@@ -75,16 +75,49 @@
       }]
     });
 
-    function camelize(string) {
-      string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
-        return chr ? chr.toUpperCase() : '';
-      });
-      // Ensure 1st char is always lowercase
-      return string.replace(/^([A-Z])/, function (match, chr) {
-        return chr ? chr.toLowerCase() : '';
-      });
-    }
+    ngModelAttrs = {};
+
+    // attributes
+    angular.forEach([
+      'meridians',
+      'readonly-input',
+      'mousewheel',
+      'arrowkeys'
+    ], function (attr) {
+      ngModelAttrs[camelize(attr)] = { attribute: attr };
+    });
+
+    // bindings
+    angular.forEach([
+      'hour-step',
+      'minute-step',
+      'show-meridian'
+    ], function (binding) {
+      ngModelAttrs[camelize(binding)] = { bound: binding };
+    });
+
+    formlyConfig.setType({
+      name: 'timepicker',
+      template: '<timepicker ng-model="model[options.key]"></timepicker>',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+      defaultOptions: {
+        ngModelAttrs: ngModelAttrs,
+        templateOptions: {
+          datepickerOptions: {}
+        }
+      }
+    });
+
+  function camelize(string) {
+    string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
+      return chr ? chr.toUpperCase() : '';
+    });
+    // Ensure 1st char is always lowercase
+    return string.replace(/^([A-Z])/, function (match, chr) {
+      return chr ? chr.toLowerCase() : '';
+    });
+  }
 
 
-  };
+};
 })();
