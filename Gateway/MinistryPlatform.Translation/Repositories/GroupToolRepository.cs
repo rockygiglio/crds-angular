@@ -79,23 +79,23 @@ namespace MinistryPlatform.Translation.Repositories
             var mpInquiries = new List<MpInquiry>();
             try
             {
-                var invitations = _ministryPlatformService.GetSubPageRecords(this._groupInquiresSubPageId, groupId, token);
+                var inquiries = _ministryPlatformService.GetSubPageRecords(this._groupInquiresSubPageId, groupId, token);
                
-                // Translate object format from MP to an MpInvitaion object
-                if (invitations != null && invitations.Count > 0)
+                // Translate object format from MP to an MpInquiry object
+                if (inquiries != null && inquiries.Count > 0)
                 {
-                    foreach (Dictionary<string, object> p in invitations)
+                    foreach (Dictionary<string, object> p in inquiries)
                     {
                         mpInquiries.Add(new MpInquiry
                         {
                             InquiryId = p.ToInt("dp_RecordID"),
                             GroupId = groupId,
-                            ContactId = p.ToInt("Contact_ID"),
                             EmailAddress = p.ToString("Email"),
                             PhoneNumber = p.ToString("Phone"),
                             FirstName = p.ToString("First_Name"),
                             LastName = p.ToString("Last_Name"),
-                            RequestDate = p.ToDate("Inquiry_Date")
+                            RequestDate = p.ToDate("Inquiry_Date"),
+                            Placed = p.ToBool("Placed"),
                         });
                     }
                 }

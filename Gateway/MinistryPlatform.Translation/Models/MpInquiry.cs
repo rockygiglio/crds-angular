@@ -8,8 +8,6 @@ namespace MinistryPlatform.Translation.Models
 
         public int GroupId { get; set; }
 
-        public int ContactId { get; set; }
-
         public string EmailAddress { get; set; }
 
         public string PhoneNumber { get; set; }
@@ -19,6 +17,8 @@ namespace MinistryPlatform.Translation.Models
         public string LastName { get; set; }
 
         public DateTime RequestDate { get; set; }
+
+        public bool Placed { get; set; }
     }
 
 }

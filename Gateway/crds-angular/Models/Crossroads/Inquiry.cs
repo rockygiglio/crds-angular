@@ -17,13 +17,6 @@ namespace crds_angular.Models.Crossroads
         public int GroupId { get; set; }
 
         /// <summary>
-        /// The Contact ID for who the inquiry is associated to.
-        /// </summary>
-        [JsonProperty(PropertyName = "contactId")]
-        [Required]
-        public int ContactId { get; set; }
-
-        /// <summary>
         /// The email address to associate with the inquirier.  An email will be sent to this address.
         /// </summary>
         [JsonProperty(PropertyName = "emailAddress")]
@@ -58,7 +51,14 @@ namespace crds_angular.Models.Crossroads
         [Required]
         public DateTime RequestDate { get; set; }
 
-       
+        /// <summary>
+        /// True if they have been placed or denied.
+        /// </summary>
+        [JsonProperty(PropertyName = "placed")]
+        [Required]
+        public bool Placed { get; set; }
+
+
         /// <summary>
         /// The generated numeric ID of the inquirier's record. This is returned when creating an inquiry.
         /// </summary>
