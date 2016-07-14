@@ -14,8 +14,11 @@ export default class GroupDetailAboutController {
   $onInit() {
     this.groupService.getGroup(this.groupId).then((data) => {
       this.data = data;
-      var primaryContactId = _.get(this.data, 'primaryContact.contactId');
-      this.data.primaryContact.imageUrl = `${this.imageService.ProfileImageBaseURL}${primaryContactId}`;
+      var primaryContactId = this.data.contactId;
+      this.data.primaryContact = {
+        imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+        contactId: primaryContactId
+      };
       this.ready = true;
     },
     (err) => {

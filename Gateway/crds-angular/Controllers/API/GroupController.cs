@@ -218,14 +218,14 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of all small groups for the given user (group type of 1)</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupContactDTO>))]
-        [Route("api/group/mine/{groupTypeId}")]
-        public IHttpActionResult GetMyGroupsByType(int groupTypeId)
+        [Route("api/group/mine/{groupTypeId}/{groupId:int?}")]
+        public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var groups = groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId);
+                    var groups = groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
                     return Ok(groups);
                 }
                 catch (Exception ex)
