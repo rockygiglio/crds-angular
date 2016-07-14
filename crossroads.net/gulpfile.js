@@ -11,8 +11,13 @@ var svgSprite = require('gulp-svg-sprite');
 var replace = require('gulp-replace');
 var rename = require('gulp-rename');
 var htmlreplace = require('gulp-html-replace');
-var connectHistory = require('connect-history-api-fallback');
 var embedTemplates = require('gulp-angular-embed-templates');
+var browserSyncCompiles = 0;
+var browserSync = require('browser-sync').create();
+var webPackConfigs = [Object.create(webpackConfig)];
+var webPackDevConfigs = [Object.create(webPackDevConfig)];
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+var connectHistory = require('connect-history-api-fallback');
 
 var fallbackOptions = {
   index: '/index.html',
@@ -27,6 +32,7 @@ var fallbackOptions = {
   //]
 };
 
+// Replace script tags in index. Used for cache-buster
 function htmlReplace(devBuild) {
   var assets;
   if (devBuild) {
@@ -77,19 +83,37 @@ function htmlReplace(devBuild) {
   }
 }
 
-var browserSyncCompiles = 0;
-var browserSync = require('browser-sync').create();
-
-var webPackConfigs = [Object.create(webpackConfig)];
-var webPackDevConfigs = [Object.create(webPackDevConfig)];
 
 // Start the development server
 gulp.task('default', ['webpack-dev-server']);
+gulp.task('start', ['webpack-dev-server']);
 
-// Build and watch cycle (another option for development)
-// Advantage: No server required, can run app from filesystem
-// Disadvantage: Requests are not blocked until bundle is available,
-//               can serve an old app on refresh
+
+// cleanup assets folder
+gulp.task('clean-assets', function () {
+  return del([
+    'assets/**/**'
+  ]);
+});
+
+
+// Process apache_site.conf file to incorporate prerender.io API Key
+gulp.task('apache-site-config', function() {
+  var apiKey = process.env.CRDS_PRERENDER_IO_KEY || 'NO_API_KEY_DEFINED';
+
+  gulp.src('./app/apache_site.conf')
+      .pipe(replace('__PRERENDER_IO_API_KEY__', apiKey))
+      .pipe(gulp.dest('./'));
+});
+
+
+// Production build
+gulp.task('build', ['clean-assets'], function() {
+  gulp.start('webpack:build')
+});
+
+
+//Dev build
 gulp.task('build-dev', ['webpack:build-dev'], function() {
 
   var watchPatterns = [];
@@ -103,6 +127,18 @@ gulp.task('build-dev', ['webpack:build-dev'], function() {
 
 gulp.task('build-browser-sync', ['icons'], function() {
   webPackDevConfigs.forEach(function(element) {
+
+    // add in browser sync plugin for webpack
+    element.plugins.push(new BrowserSyncPlugin({
+      host: 'localhost',
+      port: 3000,
+      server: {
+        baseDir: ['./'],
+        middleware: [
+          connectHistory()
+        ]
+      }
+    }));
 
     element.devtool = 'eval';
     element.debug = true;
@@ -121,82 +157,55 @@ gulp.task('build-browser-sync', ['icons'], function() {
 
 });
 
-// Browser-Sync build
-// May be useful for live injection of SCSS / CSS changes for UI/UX
-// Also should reload pages when JS / HTML are regenerated
+
+// Call dev build and do browser sync
 gulp.task('browser-sync-dev', ['build-browser-sync'], function() {
-
-  // Watch for final assets to build
-  gulp.watch('./assets/*.js', function() {
-    gutil.log('JS files in assets folder modified', 'Count = ' + browserSyncCompiles);
-
-    if (browserSyncCompiles >= webPackConfigs.length) {
-      gutil.log('Forcing BrowserSync reload');
-      browserSync.reload();
-    }
-
-    browserSyncCompiles += 1;
-  });
-
-  browserSync.init({
-    server: {
-      baseDir: './',
-      middleware: [
-        connectHistory(fallbackOptions)
-      ]
-    }
-  });
+  //console.log(webPackDevConfigs.plugins);
+  gutil.log('Starting webpack.'); 
+  return;
 });
 
-// Production build
-gulp.task('build', ['clean-assets'], function() {
-  gulp.start('webpack:build')
-});
+// Run the development server 
+gulp.task('webpack-dev-server', ['icons-watch'], function(callback) { 
+  webPackDevConfigs.forEach(function(element, index) { 
+ 
+    // Modify some webpack config options 
+    element.devtool = 'eval'; 
+    element.debug = true; 
+    element.output.path = '/'; 
+    // Build app to assets - watch for changes 
+    gulp.src('app/**/**') 
+        .pipe(watch(element.watchPattern)) 
+        .pipe(gulpWebpack(element)) 
+        .pipe(gulp.dest('./assets')); 
+  }); 
+ 
+  new WebpackDevServer(webpack(webPackDevConfigs), { 
+    historyApiFallback: fallbackOptions, 
+    publicPath: '/assets/', 
+    quiet: false, 
+    watchDelay: 300, 
+    stats: { 
+      colors: true 
+    } 
+  }).listen(8080, 'localhost', function(err) { 
+        if(err){ 
+          throw new gutil.PluginError('webpack-dev-server', err); 
+        } 
+        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html'); 
+      }); 
+ 
+  htmlReplace(true); 
+ 
+  gulp.src('./lib/load-image.all.min.js') 
+      .pipe(gulp.dest('./assets')); 
+ 
+  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#'); 
+  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#'); 
+}); 
 
-// For convenience, an 'alias' to webpack-dev-server
-gulp.task('start', ['webpack-dev-server']);
-
-// Run the development server
-gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
-  webPackDevConfigs.forEach(function(element, index) {
-
-    // Modify some webpack config options
-    element.devtool = 'eval';
-    element.debug = true;
-    element.output.path = '/';
-    // Build app to assets - watch for changes
-    gulp.src('app/**/**')
-        .pipe(watch(element.watchPattern))
-        .pipe(gulpWebpack(element))
-        .pipe(gulp.dest('./assets'));
-  });
-
-  new WebpackDevServer(webpack(webPackDevConfigs), {
-    historyApiFallback: fallbackOptions,
-    publicPath: '/assets/',
-    quiet: false,
-    watchDelay: 300,
-    stats: {
-      colors: true
-    }
-  }).listen(8080, 'localhost', function(err) {
-        if(err){
-          throw new gutil.PluginError('webpack-dev-server', err);
-        }
-        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html');
-      });
-
-  htmlReplace(true);
-
-  gulp.src('./lib/load-image.all.min.js')
-      .pipe(gulp.dest('./assets'));
-
-  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#');
-  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#');
-});
-
+// webpack build for production
 gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {
-
 
   webPackConfigs.forEach(function(element) {
     // modify some webpack config options
@@ -225,6 +234,7 @@ gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(c
   });
 });
 
+// webpack build for dev
 gulp.task('webpack:build-dev', ['icons'], function(callback) {
 
   // run webpack
@@ -240,10 +250,9 @@ gulp.task('webpack:build-dev', ['icons'], function(callback) {
     htmlReplace(true);
 
     gulp.src('./lib/load-image.all.min.js')
-        .pipe(gulp.dest('./assets'));
+      .pipe(gulp.dest('./assets'));
 
   });
-
 
 });
 
@@ -261,7 +270,7 @@ gulp.task('icons', ['svg-sprite'], function() {
   gulp.src('build/icons/generated/defs/svg/sprite.defs.svg').pipe(rename('cr.svg')).pipe(gulp.dest('./assets'));
 });
 
-
+// svg sprite
 gulp.task('svg-sprite', function() {
   var config = {
     log: 'info',
@@ -289,20 +298,4 @@ gulp.task('robots', function() {
   gulp.src(robotsSourceFilename)
       .pipe(rename('robots.txt'))
       .pipe(gulp.dest('./'));
-});
-
-// Process apache_site.conf file to incorporate prerender.io API Key
-gulp.task('apache-site-config', function() {
-  var apiKey = process.env.CRDS_PRERENDER_IO_KEY || 'NO_API_KEY_DEFINED';
-
-  gulp.src('./app/apache_site.conf')
-      .pipe(replace('__PRERENDER_IO_API_KEY__', apiKey))
-      .pipe(gulp.dest('./'));
-});
-
-// cleanup assets folder
-gulp.task('clean-assets', function () {
-  return del([
-    'assets/**/**'
-  ]);
 });
