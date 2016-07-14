@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -31,6 +33,7 @@ namespace crds_angular.test.Services
         private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
         private Mock<IApiUserRepository> _apiUserService;
         private Mock<IChildcareRequestRepository> _childcareRequestService;
+        private Mock<IGroupService> _groupService;
 
         private ChildcareService _fixture;
 
@@ -48,6 +51,7 @@ namespace crds_angular.test.Services
             _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
             _apiUserService = new Mock<IApiUserRepository>();
             _childcareRequestService = new Mock<IChildcareRequestRepository>();
+            _groupService = new Mock<IGroupService>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,
@@ -57,7 +61,7 @@ namespace crds_angular.test.Services
                                             _participantService.Object,
                                             _serveService.Object,
                                             _dateTimeWrapper.Object,
-                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object);
+                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object, _groupService.Object);
         }
 
         [Test]
@@ -313,5 +317,47 @@ namespace crds_angular.test.Services
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
         }
+
+        [Test]
+        public void GetHeadsOfHousehold()
+        {
+            const int householdId = 1234;
+            const int contactId = 4321;
+
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(householdId))
+                .Returns(
+                    new List<MpHouseholdMember>()
+                    {
+                        new MpHouseholdMember() { Age = 36, ContactId = contactId, DateOfBirth = new DateTime(1980, 2, 21), FirstName = "Matt", LastName = "Silberangel", HouseholdPosition = "Head Of Household", Nickname = "Matt"},
+                        new MpHouseholdMember() { Age = 29, ContactId = 54879, DateOfBirth = new DateTime(1987, 11, 5), FirstName = "Leslie", LastName = "Silbernagel", HouseholdPosition = "Head of Household Spouse", Nickname = "Les"}
+                    }
+                );
+            var heads = _fixture.GetHeadsOfHousehold(contactId, householdId);
+            _contactService.VerifyAll();
+
+            Assert.AreEqual(2, heads.HeadsOfHousehold.Count());
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfNotHeadOfHousehold()
+        {
+            const int householdId = 1234;
+            const int contactId = 9087;
+
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(householdId))
+                .Returns(
+                    new List<MpHouseholdMember>()
+                    {
+                        new MpHouseholdMember() { Age = 36, ContactId = 123456, DateOfBirth = new DateTime(1980, 2, 21), FirstName = "Matt", LastName = "Silberangel", HouseholdPosition = "Head Of Household", Nickname = "Matt"},
+                        new MpHouseholdMember() { Age = 29, ContactId = 54879, DateOfBirth = new DateTime(1987, 11, 5), FirstName = "Leslie", LastName = "Silbernagel", HouseholdPosition = "Head of Household Spouse", Nickname = "Les"},
+                        new MpHouseholdMember() { Age = 8, ContactId = contactId, DateOfBirth = new DateTime(2008, 4, 3), FirstName = "Miles", LastName = "Silbernagel", HouseholdPosition = "Minor Child", Nickname = "Miles"}
+                    }
+                );
+
+            Assert.Throws<NotHeadOfHouseholdException>( () => _fixture.GetHeadsOfHousehold(contactId, householdId));
+            _contactService.VerifyAll();
+
+        }
+
     }
 }

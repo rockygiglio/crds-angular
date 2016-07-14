@@ -186,7 +186,8 @@ namespace MinistryPlatform.Translation.Repositories
                         ContactId = record.ToInt("Contact_ID"),
                         EmailAddress = record.ToString("Email_Address")
                     },
-                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID")
+                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID"),
+                    Cancelled = record.ToBool("Cancelled")
                 };
 
 
@@ -350,6 +351,27 @@ namespace MinistryPlatform.Translation.Repositories
                 return null;
             }
 
+            return records.Select(record => new MpEventGroup
+            {
+                EventGroupId = record.ToInt("Event_Group_ID"),
+                EventId = record.ToInt("Event_ID"),
+                GroupId = record.ToInt("Group_ID"),
+                RoomId = record.ToNullableInt("Room_ID"),
+                Closed = record.ToBool("Closed"),
+                EventRoomId = record.ToNullableInt("Event_Room_ID"),
+                GroupTypeId = record.ToInt("Group_Type_ID")
+            }).ToList();
+        }
+
+        public List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token)
+        {
+            var searchString = string.Format(",,,\"{0}\"", groupId);
+            var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
+
+            if (records == null)
+            {
+                return null;
+            }
             return records.Select(record => new MpEventGroup
             {
                 EventGroupId = record.ToInt("Event_Group_ID"),

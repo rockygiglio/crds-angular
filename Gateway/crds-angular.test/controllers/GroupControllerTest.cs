@@ -514,7 +514,7 @@ namespace crds_angular.test.controllers
 
             var participant = new List<GroupParticipantDTO>();
 
-            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId)).Returns(participant);
+            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId, true)).Returns(participant);
 
             IHttpActionResult result = fixture.GetGroupParticipants(groupId);
             Assert.IsNotNull(result);
@@ -529,7 +529,7 @@ namespace crds_angular.test.controllers
 
             var participant = new List<GroupParticipantDTO>();
 
-            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId)).Returns(participant);
+            groupServiceMock.Setup(mocked => mocked.GetGroupParticipants(groupId, true)).Returns(participant);
 
             IHttpActionResult result = fixture.GetGroupParticipants(groupId);
 

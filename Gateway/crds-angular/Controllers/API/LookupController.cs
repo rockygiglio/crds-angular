@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Web.Http.Results;
+using crds_angular.Models.Json;
 using crds_angular.Security;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Repositories;
@@ -26,61 +29,93 @@ namespace crds_angular.Controllers.API
         /// Get lookup values for table passed in
         /// </summary>
         [RequiresAuthorization]
-        [ResponseType(typeof (List<Dictionary<string, object>>))]
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
         [Route("api/lookup/{table?}")]
         [HttpGet]
         public IHttpActionResult Lookup(string table)
         {
             return Authorized(t =>
             {
-                var ret = new List<Dictionary<string, object>>();
-                switch (table)
-                {
-                    case "genders":
-                        ret = _lookupRepository.Genders(t);
-                        break;
-                    case "maritalstatus":
-                        ret = _lookupRepository.MaritalStatus(t);
-                        break;
-                    case "serviceproviders":
-                        ret = _lookupRepository.ServiceProviders(t);
-                        break;
-                    case "countries":
-                        ret = _lookupRepository.Countries(t);
-                        break;
-                    case "states":
-                        ret = _lookupRepository.States(t);
-                        break;
-                    case "crossroadslocations":
-                        ret = _lookupRepository.CrossroadsLocations(t);
-                        break;
-                    case "workteams":
-                        ret = _lookupRepository.WorkTeams(t);
-                        break;
-                    case "eventtypes":
-                        ret = _lookupRepository.EventTypes(t);
-                        break;
-                    case "reminderdays":
-                        ret = _lookupRepository.ReminderDays(t);
-                        break;
-                    case "meetingdays":
-                        ret = _lookupRepository.MeetingDays(t);
-                        break;
-                    case "ministries":
-                        ret = _lookupRepository.Ministries(t);
-                        break;
-                    case "childcarelocations":
-                        ret = _lookupRepository.ChildcareLocations(t);
-                        break;
-                    default:
-                        break;
-                }
-                if (ret.Count == 0)
-                {
-                    return this.BadRequest(string.Format("table: {0}", table));
-                }
-                return Ok(ret);
+                return LookupValues(table, t);
+            },
+            () =>
+            {
+                return LookupValues(table, "");
             });
+        }
+
+        private IHttpActionResult LookupValues(string table, string token)
+        {
+            var ret = new List<Dictionary<string, object>>();
+            switch (table)
+            {
+                case "genders":
+                    ret = _lookupRepository.Genders(token);
+                    break;
+                case "maritalstatus":
+                    ret = _lookupRepository.MaritalStatus(token);
+                    break;
+                case "serviceproviders":
+                    ret = _lookupRepository.ServiceProviders(token);
+                    break;
+                case "countries":
+                    ret = _lookupRepository.Countries(token);
+                    break;
+                case "states":
+                    ret = _lookupRepository.States(token);
+                    break;
+                case "crossroadslocations":
+                    // This returns Crossroads sites and NOT locations!
+                    ret = _lookupRepository.CrossroadsLocations(token);
+                    break;
+                case "workteams":
+                    ret = _lookupRepository.WorkTeams(token);
+                    break;
+                case "eventtypes":
+                    ret = _lookupRepository.EventTypes(token);
+                    break;
+                case "reminderdays":
+                    ret = _lookupRepository.ReminderDays(token);
+                    break;
+                case "meetingdays":
+                    ret = _lookupRepository.MeetingDays(token);
+                    break;
+                case "ministries":
+                    ret = _lookupRepository.Ministries(token);
+                    break;
+                case "childcarelocations":
+                    ret = _lookupRepository.ChildcareLocations(token);
+                    break;
+                default:
+                    break;
+            }
+            if (ret.Count == 0)
+            {
+                return this.BadRequest(string.Format("table: {0}", table));
+            }
+            return Ok(ret);
+
+        }
+        /// <summary>
+        /// Get lookup values for genders
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/genders")]
+        [HttpGet]
+        public IHttpActionResult LookupGenders()
+        {
+            return Lookup("genders");
+        }
+
+        /// <summary>
+        /// Get lookup values for crossroads sites
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/sites")]
+        [HttpGet]
+        public IHttpActionResult LookupSites()
+        {
+            return Lookup("crossroadslocations");
         }
 
         /// <summary>
@@ -121,7 +156,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof (Dictionary<string, object>))]
+        [ResponseType(typeof(Dictionary<string, object>))]
         [HttpGet]
         [Route("api/lookup/{userId}/find/{email?}")]
         public IHttpActionResult EmailExists(int userId, string email)
@@ -157,7 +192,7 @@ namespace crds_angular.Controllers.API
         protected static dynamic DecodeJson(string json)
         {
             var obj = System.Web.Helpers.Json.Decode(json);
-            if (obj.GetType() != typeof (DynamicJsonArray))
+            if (obj.GetType() != typeof(DynamicJsonArray))
             {
                 return null;
             }

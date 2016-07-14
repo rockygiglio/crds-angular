@@ -10,6 +10,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpMyContact GetContactByIdCard(string idCard);
         int GetContactIdByParticipantId(int participantId);
         List<MpHouseholdMember> GetHouseholdFamilyMembers(int householdId);
+        List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId);
         MpMyContact GetMyProfile(string token);
         int CreateContactForGuestGiver(string emailAddress, string displayName);
         int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard);

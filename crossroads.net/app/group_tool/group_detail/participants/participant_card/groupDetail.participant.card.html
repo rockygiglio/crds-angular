@@ -1,0 +1,33 @@
+<div class='group-participant' ng-class='{ "pending-delete": groupDetailParticipantCard.participant.deleted }'>
+  <div class='row'>
+      <div class='col-md-3'>
+        <img class='img-responsive imgix-fluid group-participant-image' ng-src='{{groupDetailParticipantCard.participant.imageUrl}}' err-src='{{groupDetailParticipantCard.defaultProfileImageUrl}}'>
+      </div>
+      <div class='col-md-7'>
+        <div class='row'>
+          <div class='col-md-12'>
+            <span class='group-participant-name'>
+              {{groupDetailParticipantCard.participant.name}}
+            </span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "leader"'> (Leader)</span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "apprentice"'> (Apprentice)</span>
+            <br>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col-md-12'>
+            <span class='group-participant-name'>
+              {{groupDetailParticipantCard.participant.email}}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <svg viewBox="0 0 32 32" class="icon icon-close" 
+          ng-if='groupDetailParticipantCard.edit && !groupDetailParticipantCard.participant.deleted'
+          ng-click='groupDetailParticipantCard.markParticipantDeleted(groupDetailParticipantCard.participant)'>
+          <use xlink:href="#close"></use>
+        </svg>
+      </div>
+  </div>
+</div>

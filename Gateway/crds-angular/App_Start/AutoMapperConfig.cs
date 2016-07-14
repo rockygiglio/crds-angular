@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
@@ -13,10 +14,12 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
+using MpInvitation = MinistryPlatform.Translation.Models.MpInvitation;
 using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace crds_angular.App_Start
@@ -41,6 +44,22 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventTypeId))
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Participants));
+
+            Mapper.CreateMap<Invitation,MpInvitation > ()
+                .ForMember(dest => dest.SourceId, opts => opts.MapFrom(src => src.SourceId))
+                .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.RecipientName, opts => opts.MapFrom(src => src.RecipientName))
+                .ForMember(dest => dest.RequestDate, opts => opts.MapFrom(src => src.RequestDate))
+                .ForMember(dest => dest.InvitationType, opts => opts.MapFrom(src => src.InvitationType));
+
+            Mapper.CreateMap<MpInvitation, Invitation>()
+                .ForMember(dest => dest.SourceId, opts => opts.MapFrom(src => src.SourceId))
+                .ForMember(dest => dest.GroupRoleId, opts => opts.MapFrom(src => src.GroupRoleId))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.RecipientName, opts => opts.MapFrom(src => src.RecipientName))
+                .ForMember(dest => dest.RequestDate, opts => opts.MapFrom(src => src.RequestDate))
+                .ForMember(dest => dest.InvitationType, opts => opts.MapFrom(src => src.InvitationType));
 
             Mapper.CreateMap<MpGroupParticipant, OpportunityGroupParticipant>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
@@ -231,12 +250,20 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
-                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType))
+                .AfterMap((src, dest) => {
+                    if (!string.IsNullOrEmpty(src.MeetingTime))
+                    {
+                        var timeSpan = TimeSpan.Parse(src.MeetingTime);
+                        var time = DateTime.Today.Add(timeSpan);                      
+                        dest.MeetingTimeFrequency = string.Format("{0}'s at {1}, {2}", src.MeetingDay, time.ToString("h:mm tt"), src.MeetingFrequency);
+                    }
+                }); 
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
-
+                
 
             Mapper.CreateMap<MpGroupSearchResult, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
@@ -256,6 +283,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
 
             Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
+
 
         }
     }

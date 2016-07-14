@@ -8,11 +8,10 @@ require('ui-select/dist/select.css');
 (function() {
   'use strict()';
 
-  var MODULE = 'crossroads';
   var constants = require('./constants');
 
   angular.module(constants.MODULES.CROSSROADS, [
-      constants.MODULES.CHILDCARE,
+      constants.MODULES.CHILDCARE_DASHBOARD,
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
       constants.MODULES.FORM_BUILDER,
@@ -25,7 +24,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.PROFILE,
       constants.MODULES.SEARCH,
       constants.MODULES.SIGNUP,
-      constants.MODULES.TRIPS,
+      constants.MODULES.TRIPS
    ]);
 
   angular.module(constants.MODULES.CROSSROADS)

@@ -20,6 +20,7 @@ var definePlugin = new webpack.DefinePlugin({
 
 module.exports = {
   entry: {
+    childcare: './app/childcare_dashboard/childcareDashboard.module.js',
     trips: './app/trips/trips.module.js',
     search: './app/search/search.module.js',
     media: './app/media/media.module.js',
@@ -31,9 +32,13 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
+<<<<<<< HEAD
     
     // added in ng2 downgraded components
     boot: ['./dist/boot.js']
+=======
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
+>>>>>>> development
   },
   watchPattern: ['app/**/**','core/**/**','dist/**/**'],
   externals: {

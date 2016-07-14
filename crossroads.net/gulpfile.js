@@ -37,13 +37,19 @@ function htmlReplace(devBuild) {
       common: { js: '/assets/common.js' },
       profile: { js: '/assets/profile.js' },
       trips: { js: '/assets/trips.js' },
+      childcare: { js: '/assets/childcare.js' },
       search: { js: '/assets/search.js' },
       media: { js: '/assets/media.js' },
       give: { js: '/assets/give.js' },
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
+<<<<<<< HEAD
       boot: { js: '/assets/boot.js' },
       formbuilder: { js: '/assets/formbuilder.js' }
+=======
+      formbuilder: { js: '/assets/formbuilder.js' },
+      formlybuilder: { js: '/assets/formlybuilder.js' }
+>>>>>>> development
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -57,13 +63,19 @@ function htmlReplace(devBuild) {
       commonjs: {src: assets.common.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       profilejs: {src: assets.profile.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       tripsjs: {src: assets.trips.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      childcarejs: {src: assets.childcare.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+<<<<<<< HEAD
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       boot: {src: assets.boot.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+=======
+      formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+>>>>>>> development
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')

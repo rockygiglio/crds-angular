@@ -90,7 +90,12 @@
 
         AddEvent.eventData.event = vm.event;
 
-        if (vm.allData.eventForm.$valid) {
+        // TODO: why does the form get set as valid even if
+        // the min and max children are invalid? 
+        if (vm.allData.eventForm.$valid &&
+            vm.allData.eventForm.maximumChildren.$valid &&
+            vm.allData.eventForm.minimumChildren.$valid
+           ) {
 
           AddEvent.currentPage = 2;
         } else {
