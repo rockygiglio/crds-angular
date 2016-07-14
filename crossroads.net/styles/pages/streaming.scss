@@ -203,7 +203,7 @@ streaming {
     }
 
     @media (min-width: $screen-sm-min) {
-      min-height: 792px;
+      height: 792px;
     }
   }
 
@@ -384,7 +384,9 @@ streaming {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    min-height: 622px;
+    @media (min-width: $screen-sm-min) {
+      height: 622px;
+    }
     &, h2 {
       color: #FFF;
     }
