@@ -86,7 +86,6 @@ gulp.task('default', ['webpack-dev-server']);
 gulp.task('start', ['webpack-dev-server']);
 gulp.task('bsd', ['browser-sync-dev']);
 
-
 // cleanup assets folder
 gulp.task('clean-assets', function () {
   return del([
