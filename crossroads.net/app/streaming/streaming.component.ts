@@ -3,8 +3,6 @@ import { ScheduleComponent } from './schedule.component';
 
 var WOW = require('wow.js/dist/wow.min.js');
 
-var WOW = require('wow.js/dist/wow.min.js');
-
 @Component({
   selector: 'streaming',
   directives: [ScheduleComponent],
