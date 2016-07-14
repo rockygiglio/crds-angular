@@ -91,8 +91,14 @@
       ROLES: {
         MEMBER: 16,
         LEADER: 22,
-        APPRENTICE: 66,
+        APPRENTICE: 66
       },
     },
+    INVITATION: {
+      TYPES: {
+        GROUP: 1,
+        TRIP: 2
+      }
+    }
   };
 })();
