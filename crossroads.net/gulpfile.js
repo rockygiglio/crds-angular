@@ -87,6 +87,7 @@ function htmlReplace(devBuild) {
 // Start the development server
 gulp.task('default', ['webpack-dev-server']);
 gulp.task('start', ['webpack-dev-server']);
+gulp.task('bsd', ['browser-sync-dev']);
 
 
 // cleanup assets folder
@@ -125,7 +126,8 @@ gulp.task('build-dev', ['webpack:build-dev'], function() {
   gulp.watch(watchPatterns, ['webpack:build-dev']);
 });
 
-gulp.task('build-browser-sync', ['icons'], function() {
+// run the browser sync dev server
+gulp.task('browser-sync-dev', ['icons'], function() {
   webPackDevConfigs.forEach(function(element) {
 
     // add in browser sync plugin for webpack
@@ -153,19 +155,13 @@ gulp.task('build-browser-sync', ['icons'], function() {
         .pipe(gulp.dest('./assets'));
   });
 
+  htmlReplace(true);
+
   gulp.src('./lib/load-image.all.min.js') .pipe(gulp.dest('./assets'));
 
 });
 
-
-// Call dev build and do browser sync
-gulp.task('browser-sync-dev', ['build-browser-sync'], function() {
-  //console.log(webPackDevConfigs.plugins);
-  gutil.log('Starting webpack.'); 
-  return;
-});
-
-// Run the development server 
+// Run the dev server 
 gulp.task('webpack-dev-server', ['icons-watch'], function(callback) { 
   webPackDevConfigs.forEach(function(element, index) { 
  
