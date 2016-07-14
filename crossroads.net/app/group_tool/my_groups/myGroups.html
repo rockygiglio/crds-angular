@@ -17,7 +17,7 @@
         <group-card group="group" detail="true"></group-card>
       </div>
       <div class="col-md-6 col-sm-12" ng-if="myGroups.groups.length > ($index + 1)" >
-        <group-card group="myGroups.groups[$index]" detail="true"></group-card>
+        <group-card group="myGroups.groups[$index + 1]" detail="true"></group-card>
       </div>
       <div class="col-md-6 col-sm-12" ng-if="myGroups.groups.length === ($index + 1)" >
         <group-card detail="false"></group-card>
