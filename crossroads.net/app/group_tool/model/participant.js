@@ -4,7 +4,13 @@ import constants from 'crds-constants';
 export default class Participant {
 
   constructor(jsonObject) {
-    Object.assign(this, jsonObject);
+    if(jsonObject) {
+      Object.assign(this, jsonObject);
+    } else {
+      this.groupRoleId = -1;
+      this.nickName = '';
+      this.lastName = '';
+    }
   }
 
   isLeader() {
@@ -16,6 +22,6 @@ export default class Participant {
   }
 
   displayName() {
-    return `${this.nickName} ${this.lastName}`;
+    return `${this.nickName} ${this.lastName}`.replace(/^\s+|\s+$/g,'');
   }
 }
