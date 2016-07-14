@@ -109,10 +109,12 @@ namespace crds_angular.test.Services
                                 c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName)),
                         false)).Returns(77);
 
-            var invitationId = _fixture.CreateInvitation(invitation, token);
+            var created = _fixture.CreateInvitation(invitation, token);
             _invitationRepository.VerifyAll();
             _communicationService.VerifyAll();
-            Assert.AreEqual(mpInvitation.InvitationId, invitationId);
+            Assert.AreSame(invitation, created);
+            Assert.AreEqual(mpInvitation.InvitationId, created.InvitationId);
+            Assert.AreEqual(mpInvitation.InvitationGuid, created.InvitationGuid);
         }
 
         [Test]

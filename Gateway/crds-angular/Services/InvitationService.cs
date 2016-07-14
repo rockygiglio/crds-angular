@@ -58,7 +58,7 @@ namespace crds_angular.Services
             _groupRoleLeader = configuration.GetConfigIntValue("GroupRoleLeader");
         }
 
-        public int CreateInvitation(Invitation dto, string token)
+        public Invitation CreateInvitation(Invitation dto, string token)
         {
             try
             {
@@ -75,13 +75,15 @@ namespace crds_angular.Services
                     _logger.Error(string.Format("Error sending email to {0} for invitation {1}", invitation.EmailAddress, invitation.InvitationGuid), e);
                 }
 
-                return invitation.InvitationId;
+                dto.InvitationGuid = invitation.InvitationGuid;
+                dto.InvitationId = invitation.InvitationId;
+                return dto;
             }
             catch (Exception e)
             {
                 var message = string.Format("Exception creating invitation for {0}, SourceID = {1}.", dto.RecipientName, dto.SourceId);
                 _logger.Error(message, e);
-                return -1;
+                throw new ApplicationException(message, e);
             }
         }
 
