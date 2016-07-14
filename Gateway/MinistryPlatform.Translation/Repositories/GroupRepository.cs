@@ -557,9 +557,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
-            var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
-                                                                          token,
-                                                                          String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView, token, String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
@@ -567,6 +566,17 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId)
+        {
+            var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
+                                                                          token,
+                                                                          String.Format(",,,,\"{0}\"", groupTypeId));
+            if (groupDetails == null || groupDetails.Count == 0)
+            {
+                return new List<MpGroup>();
+            }
+            return groupDetails.Select(MapRecordToMpGroup).ToList();
+        }
 
         public void UpdateGroupRemainingCapacity(MpGroup group)
         {
