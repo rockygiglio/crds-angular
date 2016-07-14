@@ -34,7 +34,7 @@
   <div class="group-buttons">
     <div class="row">
       <div class="col-md-6 col-sm-12">
-        <button ng-click='groupCard.gotoGroupDetail(groupCard.group)'>
+        <button type='button' ui-sref='grouptool.detail({groupId: groupCard.group.groupId})'>
         <svg viewBox="0 0 32 32" class="icon icon-eye2">
           <use xlink:href="#eye2"></use>
         </svg>
