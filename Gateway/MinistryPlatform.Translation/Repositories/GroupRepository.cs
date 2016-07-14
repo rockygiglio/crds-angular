@@ -566,11 +566,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
-                                                                          token,
-                                                                          String.Format(",,,,\"{0}\"", groupTypeId));
+                                                                      token,
+                                                                      string.Format(",,,{0},\"{1}\"",
+                                                                                    groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
+                                                                                    groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
