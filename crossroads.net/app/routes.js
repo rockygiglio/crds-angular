@@ -385,6 +385,17 @@
             }
           }
         })
+        .state('live-video', {
+          parent: 'noHeaderOrFooter',
+          url: '/stream',
+          template: '<temporarystream></temporarystream>',
+          data: {
+            meta: {
+              title: 'Something Else',
+              description: ''
+            }
+          }
+        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
