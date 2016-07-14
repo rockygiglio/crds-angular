@@ -1,3 +1,5 @@
+import GroupInvitation from '../model/groupInvitation';
+
 export default class ParticipantService {
   /*@ngInject*/
   constructor($log, $resource, $q, AuthService) {
@@ -5,6 +7,10 @@ export default class ParticipantService {
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+  }
+
+  sendGroupInvitation(invitation) {
+    return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
   }
 
   getGroup(groupId) {

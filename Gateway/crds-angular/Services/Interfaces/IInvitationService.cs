@@ -7,5 +7,6 @@ namespace crds_angular.Services.Interfaces
     public interface IInvitationService
     {
         int CreateInvitation(Invitation dto, string token);
+        void ValidateInvitation(Invitation dto, string token);
     }
 }

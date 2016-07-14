@@ -3,10 +3,11 @@ import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state) {
+  constructor(GroupService, ImageService, $state, $rootScope) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
+    this.rootScope = $rootScope;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
@@ -19,7 +20,9 @@ export default class GroupDetailRequestsController {
       { 'id': CONSTANTS.GROUP.ROLES.MEMBER, 'label': 'Participant' },
       { 'id': CONSTANTS.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
       { 'id': CONSTANTS.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
-    ]
+    ];
+
+    this.processing = false;
   }
 
   $onInit() {
@@ -39,27 +42,40 @@ export default class GroupDetailRequestsController {
       this.ready = true;
     });
   }
-    
+
   setView(newView) {
     this.currentView = newView;
   }
 
   beginInvitation() {
+    this.processing = false;
     this.invite = new GroupInvitation();
     this.invite.sourceId = this.groupId;
     this.currentView = 'Invite';
   }
     
   sendInvitation(form, invitation) {
+    this.processing = true;
     if(!form.$valid) {
+      this.processing = false;
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
-    this.invite.requestDate = new Date();
+    invitation.requestDate = new Date();
 
-    // TODO Call API to send invitation, etc
-    this.invite = null;
-    this.$onInit();
-    this.currentView = 'List';
+    this.groupService.sendGroupInvitation(invitation).then(
+      (/*data*/) => {
+        this.invite = null;
+        this.$onInit();
+        this.currentView = 'List';
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+      },
+      (/*err*/) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+      }
+    ).finally(() => {
+      this.processing = false;
+    });
   }
     
   beginApproveRequest(request) {
