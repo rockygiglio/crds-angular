@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Repositories
             var mpInvitations = new List<MpInvitation>();
             try
             {
-                var searchString = string.Format(",,,{0},{1},,false", sourceId, invitationTypeId);
+                var searchString = string.Format(",,,{0},{1},,false", invitationTypeId, sourceId);
                 var mpResults = _ministryPlatformService.GetRecords(_invitationPageId, token, searchString, string.Empty);
                 var invitations = MPFormatConversion.MPFormatToList(mpResults);
 
