@@ -119,7 +119,7 @@ describe('Childcare Group Component Controller', () => {
   });
 
   it('should cancel the rsvp when toggle is set to off', () => {
-    const cg = fakeCG(true);
+    const cg = fakeCG(false);
     controller.communityGroup = fakeCG(true);
     spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
       $promise: {
@@ -129,7 +129,8 @@ describe('Childcare Group Component Controller', () => {
       },
       $resolved: true
     });
-    var result = controller.rsvp(cg.eligibleChildren[0], false);
+
+    var result = controller.rsvp(cg.eligibleChildren[0]);
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
   });
 

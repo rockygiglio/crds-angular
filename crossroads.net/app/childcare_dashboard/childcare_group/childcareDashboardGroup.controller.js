@@ -14,24 +14,6 @@ class ChildcareDashboardGroupController {
     if(!this.hasEligibleChildren()) {
       this.message = $rootScope.MESSAGES.noEligibleChildren.content;
     }
-
-    if (this.communityGroup !== undefined) {
-      this.communityGroup.eligibleChildren.forEach( (child) => {
-        $scope.$watch( () => child.rsvpness, (newval, oldval) => { 
-          if(oldval !== newval) {
-            if (this.shouldAsk(oldval)) {
-              this.showModal().then( () => {
-                this.rsvp(child, newval);
-              }, () => {
-                child.rsvpness = oldval;
-              });
-            } else {
-              this.rsvp(child, newval);
-            }
-          }
-        });
-      });
-    }
   }
 
   getCongregation(congregationId) {
@@ -75,12 +57,12 @@ class ChildcareDashboardGroupController {
     return diff >= -7;
   }
 
-  rsvp(child, status) {
-    var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, status);
-    resp.$promise.then(() => { 
+  rsvp(child) {
+    var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, child.rsvpness);
+    resp.$promise.then(() => {
 
     }, (err) => {
-      child.rsvpness = !status;
+      child.rsvpness = !child.rsvpness;
       // display an error message...
       if (err.statusCode === 412) {
         this.root.$emit('notify', this.root.MESSAGES.childcareRsvpFull);
@@ -90,8 +72,8 @@ class ChildcareDashboardGroupController {
     });
   }
 
-  shouldAsk(oldRsvp) {
-    return oldRsvp && this.isEventClosed();
+  shouldAsk(currentStatus) {
+    return !currentStatus && this.isEventClosed();
   }
 
   showMessage(){
@@ -109,6 +91,18 @@ class ChildcareDashboardGroupController {
     return modalInstance.result;
   }
 
+  validateAndRsvp(child) {
+    if (this.shouldAsk(child.rsvpness)) {
+      this.showModal().then( () => {
+        this.rsvp(child);
+      }, () => {
+        child.rsvpness = !child.rsvpness;
+      });
+    } else { 
+      this.rsvp(child);
+    }
+    return true;
+  }
 
 }
 export default ChildcareDashboardGroupController;
