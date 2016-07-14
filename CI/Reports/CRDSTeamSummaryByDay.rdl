@@ -77,11 +77,14 @@
     <DataSet Name="GroupLookup">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT Group_ID, Group_Name FROM Groups
-WHERE Group_Type_ID = 9 
-AND Group_ID IN (select Add_To_Group from Opportunities)
-AND (End_Date IS NULL OR End_Date &gt; GETDATE())
-ORDER BY Group_Name</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="CongregationID">
+            <Value>=Parameters!CongregationID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_CRDS_GroupsForCongregation</CommandText>
       </Query>
       <Fields>
         <Field Name="Group_ID">
@@ -128,13 +131,14 @@ ORDER BY Group_Name</CommandText>
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="GroupId">
+          <QueryParameter Name="GroupID">
             <Value>=Join(Parameters!GroupID.Value,",")</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_TeamSummaryOpportunities</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
         <Field Name="Opportunity_ID">
@@ -154,15 +158,38 @@ ORDER BY Group_Name</CommandText>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
-      <Filters>
-        <Filter>
-          <FilterExpression>=Fields!Add_To_Group.Value</FilterExpression>
-          <Operator>In</Operator>
-          <FilterValues>
-            <FilterValue>=Parameters!GroupID.Value</FilterValue>
-          </FilterValues>
-        </Filter>
-      </Filters>
+    </DataSet>
+    <DataSet Name="ds_Lookup_Congregations">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_filter_congregations</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+      </Fields>
     </DataSet>
   </DataSets>
   <ReportSections>
@@ -772,6 +799,47 @@ ORDER BY Group_Name</CommandText>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
+    <ReportParameter Name="DomainID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>E1C30910-963E-4D8A-A708-81A9DE6BD0C4</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>DomainID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="UserID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>UserID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="PageID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>PageID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CongregationID">
+      <DataType>Integer</DataType>
+      <Prompt>Congregation</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ds_Lookup_Congregations</DataSetName>
+          <ValueField>Congregation_ID</ValueField>
+          <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
     <ReportParameter Name="GroupID">
       <DataType>Integer</DataType>
       <Prompt>Group</Prompt>
@@ -795,40 +863,11 @@ ORDER BY Group_Name</CommandText>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="Day">
       <DataType>DateTime</DataType>
       <Prompt>Day</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="PageID">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>0</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>PageID</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="DomainID">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>0</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>DomainID</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="UserID">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>0</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>UserID</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
