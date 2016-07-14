@@ -23,7 +23,6 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IAuthenticationRepository> _authenticationService;
-        private const string _tokenValue = "ABC";
 
 
         [SetUp]
@@ -32,15 +31,6 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-
-
-            var authenticateResults =
-                new Dictionary<string, object>()
-                {
-                    {"token", _tokenValue},
-                    {"exp", "123"}
-                };
-            _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
             _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
 
         }
@@ -49,46 +39,49 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldReturnWorkTeamList()
         {
 
-            Prop.ForAll<int, string, string>((config, token, st) =>
-            {
-                var wt = WorkTeams();
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("WorkTeams")).Returns(config);
-                _ministryPlatformService.Setup(m => m.GetLookupRecords(config, token)).Returns(wt);
-                var returnVal = _fixture.GetList<MpWorkTeams>(token);
-                Assert.IsInstanceOf<IEnumerable<MpWorkTeams>>(returnVal);
-                Assert.AreEqual(wt.Count, returnVal.Count());
-            }).QuickCheckThrowOnFailure();
+            var wt = WorkTeams();
+
+            string token = "ABC";
+
+            _ministryPlatformService.Setup(m => m.GetLookupRecords(It.IsAny<int>(), token)).Returns(wt);
+            var returnVal = _fixture.GetList<MpWorkTeams>(token);
+
+            Assert.IsInstanceOf<IEnumerable<MpWorkTeams>>(returnVal);
+            Assert.AreEqual(wt.Count, returnVal.Count());
+
         }
 
         [Test]
         public void ShouldReturnOtherOrgList()
         {
-            Prop.ForAll<int, string, string>((config, token, st) =>
-            {
-                var oo = OtherOrgs();
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("OtherOrgs")).Returns(config);
-                _ministryPlatformService.Setup(m => m.GetLookupRecords(config, token)).Returns(oo);
-                var returnVal = _fixture.GetList<MpOtherOrganization>(token);
-                Assert.IsInstanceOf<IEnumerable<MpOtherOrganization>>(returnVal);
-                Assert.AreEqual(oo.Count, returnVal.Count());
 
-            }).QuickCheckThrowOnFailure();
+            var oo = OtherOrgs();
+
+            _ministryPlatformService.Setup(m => m.GetLookupRecords(It.IsAny<int>(), It.IsAny<string>())).Returns(oo);
+            var returnVal = _fixture.GetList<MpOtherOrganization>(It.IsAny<string>());
+
+            Assert.IsInstanceOf<IEnumerable<MpOtherOrganization>>(returnVal);
+            Assert.AreEqual(oo.Count, returnVal.Count());
 
         }
 
         [Test]
         public void ShouldReturnSites()
         {
-
-            Prop.ForAll<int, string, string>((config, token, st) =>
-            {
-                var sites = CrossroadsSites();
-                _ministryPlatformService.Setup(m => m.GetLookupRecords(It.IsAny<int>(), It.IsAny<String>())).Returns(sites);
-                var returnVal = _fixture.CrossroadsLocations();
-                Assert.IsInstanceOf<List<Dictionary<string, object>>>(returnVal);
-                Assert.AreEqual(sites.Count, returnVal.Count());
-
-            }).QuickCheckThrowOnFailure();
+            string _tokenValue = "ABC";
+            var authenticateResults =
+                new Dictionary<string, object>()
+                {
+                                {"token", _tokenValue},
+                                {"exp", "123"}
+                };
+            _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
+            _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            var sites = CrossroadsSites();
+            _ministryPlatformService.Setup(m => m.GetLookupRecords(It.IsAny<int>(), It.IsAny<String>())).Returns(sites);
+            var returnVal = _fixture.CrossroadsLocations();
+            Assert.IsInstanceOf<List<Dictionary<string, object>>>(returnVal);
+            Assert.AreEqual(sites.Count, returnVal.Count());
 
         }
 
