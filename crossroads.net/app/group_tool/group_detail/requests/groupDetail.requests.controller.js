@@ -3,11 +3,12 @@ import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $rootScope) {
+  constructor(GroupService, ImageService, $state, $rootScope, $log) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.rootScope = $rootScope;
+    this.log = $log;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
