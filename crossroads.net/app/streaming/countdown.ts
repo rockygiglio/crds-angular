@@ -1,6 +1,6 @@
 export class Countdown {
-  days:    number = 0;
-  hours:   number = 0;
-  minutes: number = 0;
-  seconds: number = 0;
+  days:    string = '00';
+  hours:   string = '00';
+  minutes: string = '00';
+  seconds: string = '00';
 }

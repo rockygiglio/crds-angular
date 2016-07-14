@@ -74,6 +74,10 @@ $streaming-blue: #0795E3;
 // ----------------------------------------- ###
 
 streaming {
+  
+  countdown {
+    display: inline-block;
+  }
 
   font-family: $streaming-font-sans;
 
@@ -147,6 +151,7 @@ streaming {
         display: block;
         font-size: 160%;
         font-weight: 400;
+        min-width: 29px;
       }
 
       small {
