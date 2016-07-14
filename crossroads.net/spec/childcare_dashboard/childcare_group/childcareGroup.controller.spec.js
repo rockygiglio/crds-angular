@@ -62,7 +62,7 @@ describe('Childcare Group Component Controller', () => {
   it('event should be closed if it is happening within 7 days of today', () => {
     const today = new Date();
     var nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + 7);
+    nextDate.setDate(nextDate.getDate() + 6);
     controller.eventDate = nextDate.toISOString();
     controller.communityGroup = fakeCG();
 
