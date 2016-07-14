@@ -1,10 +1,11 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $location, $log) {
+    constructor(ParticipantService, $location, $log, LookupService) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.location = $location;
         this.participantService = ParticipantService;
+        this.lookupService = LookupService;
 
         this.ready = false;
         this.approvedLeader = false;
@@ -35,31 +36,9 @@ export default class CreateGroupController {
                 type: 'select',
                 templateOptions: {
                     label: 'At what site do you regularly attend service?',
-                    valueProp: 'congregationId',
-                    labelProp: 'congregationName',
-                    options: [{
-                        congregationId: '1',
-                        congregationName: 'Oakley',
-                    }, {
-                            congregationId: 6,
-                            congregationName: 'Mason',
-                        }, {
-                            congregationId: 7,
-                            congregationName: 'Florence',
-                        }, {
-                            congregationId: 8,
-                            congregationName: 'West Side',
-                        }, {
-                            congregationId: 11,
-                            congregationName: 'Uptown'
-                        }, {
-                            congregationId: 16,
-                            congregationName: 'Oxford'
-                        }, {
-                            congregationId: 15,
-                            congregationName: 'Anywhere'
-                        }
-                    ]
+                    valueProp: 'dp_RecordID',
+                    labelProp: 'dp_RecordName',
+                    options: this.lookupService.Sites.query()
                 }
             }, {
                     key: 'profile.birthDate',
@@ -75,15 +54,9 @@ export default class CreateGroupController {
                     templateOptions: {
                         label: 'Gender',
                         inline: false,
-                        valueProp: 'genderId',
-                        labelProp: 'genderLabel',
-                        options: [{
-                            genderId: 0,
-                            genderLabel: 'Female'
-                        }, {
-                                genderId: 1,
-                                genderLabel: 'Male'
-                            }]
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: this.lookupService.Genders.query()
                     }
                 }]
         };
@@ -152,24 +125,24 @@ export default class CreateGroupController {
                             meetingDayId: 1,
                             dayLabel: 'Sunday'
                         }, {
-                            meetingDayId: 2, 
-                            dayLabel: 'Monday'
-                        }, {
-                            meetingDayId: 3,
-                            dayLabel: 'Tuesday'
-                        }, {
-                            meetingDayId: 4,
-                            dayLabel: 'Wednesday'
-                        }, {
-                            meetingDayId: 5,
-                            dayLabel: 'Thursday'
-                        }, {
-                            meetingDayId: 6,
-                            dayLabel: 'Friday'
-                        }, {
-                            meetingDayId: 7,
-                            dayLabel: 'Saturday'
-                        }]
+                                meetingDayId: 2,
+                                dayLabel: 'Monday'
+                            }, {
+                                meetingDayId: 3,
+                                dayLabel: 'Tuesday'
+                            }, {
+                                meetingDayId: 4,
+                                dayLabel: 'Wednesday'
+                            }, {
+                                meetingDayId: 5,
+                                dayLabel: 'Thursday'
+                            }, {
+                                meetingDayId: 6,
+                                dayLabel: 'Friday'
+                            }, {
+                                meetingDayId: 7,
+                                dayLabel: 'Saturday'
+                            }]
                     }
                 }, {
                     key: 'group.meeting.time',
@@ -187,11 +160,11 @@ export default class CreateGroupController {
                         labelProp: 'meetingFrequencyDesc',
                         options: [{
                             meetingFrequencyId: 1,
-                            meetingFrequencyDesc: 'Every week' 
+                            meetingFrequencyDesc: 'Every week'
                         }, {
-                            meetingFrequencyId: 2,
-                            meetingFrequencyDesc: 'Every other week'
-                        }]
+                                meetingFrequencyId: 2,
+                                meetingFrequencyDesc: 'Every other week'
+                            }]
                     }
                 }]
         };
