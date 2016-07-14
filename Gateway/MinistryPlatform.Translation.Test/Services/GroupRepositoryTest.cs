@@ -358,18 +358,40 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetGroupsByTypeForParticipant()
         {
-            const int pageId = 563;
+            const int pageViewId = 2307;
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
+
+            configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
+
+            ministryPlatformService.Setup(m => m.GetPageViewRecords(pageViewId, It.IsAny<string>(), searchString, It.IsAny<string>(), It.IsAny<int>()))
+               .Returns(MockMyGroups());
+
+            var myGroups = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+
+            Assert.IsNotNull(myGroups);
+            Assert.AreEqual(2, myGroups.Count);
+            Assert.AreEqual("Full Throttle", myGroups[0].Name);
+            Assert.AreEqual("Angels Unite", myGroups[1].Name);
+        }
+
+        [Test]
+        public void GetMyGroupsByType()
+        {
+            const int pageId = 563;
+            const string token = "jenny8675309";
+            const int participantId = 9876;
+            const int groupTypeId = 19;
+            string searchString = ",,,,\"" + groupTypeId + "\"";
 
             configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 
             ministryPlatformService.Setup(m => m.GetRecordsDict(pageId, It.IsAny<string>(), searchString, It.IsAny<string>()))
                 .Returns(MockMyGroups());
 
-            var myGroups = fixture.GetGroupsByTypeForParticipant(token, participantId, groupTypeId);
+            var myGroups = fixture.GetMyGroupParticipationByType(token, groupTypeId);
 
             Assert.IsNotNull(myGroups);
             Assert.AreEqual(2, myGroups.Count);

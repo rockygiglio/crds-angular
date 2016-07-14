@@ -383,7 +383,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(GroupCategoryAttributeTypeId);
+            var mpAttributes = _attributeService.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
@@ -393,7 +393,29 @@ namespace crds_angular.Services
 
             return groupDetail;
         }
-        
+
+        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId)
+        {
+            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeId);
+            if (groupsByType == null)
+            {
+                return null;
+            }
+
+            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeService.GetAttributes(GroupCategoryAttributeTypeId);
+            foreach (var group in groupDetail)
+            {
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                group.AttributeTypes = attributesTypes.MultiSelect;
+                group.SingleAttributes = attributesTypes.SingleSelect;
+            }
+
+            return groupDetail;
+        }
+
         public Participant GetParticipantRecord(string token) 
         {
             var participant = _participantService.GetParticipantRecord(token);            

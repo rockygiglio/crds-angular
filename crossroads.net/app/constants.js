@@ -83,6 +83,7 @@
       }
     },
     GROUP: {
+      ATTRIBUTE_TYPE_ID: 90,
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
@@ -90,8 +91,14 @@
       ROLES: {
         MEMBER: 16,
         LEADER: 22,
-        APPRENTICE: 66,
+        APPRENTICE: 66
       },
     },
+    INVITATION: {
+      TYPES: {
+        GROUP: 1,
+        TRIP: 2
+      }
+    }
   };
 })();
