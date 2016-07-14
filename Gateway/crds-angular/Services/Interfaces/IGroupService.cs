@@ -24,7 +24,9 @@ namespace crds_angular.Services.Interfaces
         List<GroupContactDTO> GetGroupMembersByEvent(int groupId, int eventId, string recipients);
 		
         GroupDTO CreateGroup(GroupDTO group);
-		
+
+        List<GroupDTO> GetGroupsForParticipant(string token, int participantId);
+
         List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
         Participant GetParticipantRecord(string token);
@@ -34,5 +36,7 @@ namespace crds_angular.Services.Interfaces
         List<GroupParticipantDTO> GetGroupParticipants(int groupId, bool active = true);
 
         void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId);
+
+        List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token);
     }
 }

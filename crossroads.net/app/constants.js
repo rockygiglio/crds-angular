@@ -11,6 +11,7 @@
       COMMUNITY_GROUPS: 'crossroads.community',
       CROSSROADS: 'crossroads',
       FORM_BUILDER: 'crossroads.form_builder',
+      FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       //GROUP_FINDER: 'crossroads.group_finder',
@@ -82,13 +83,22 @@
       }
     },
     GROUP: {
+      ATTRIBUTE_TYPE_ID: 90,
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
+        SMALL_GROUPS: 1,
       },
       ROLES: {
         MEMBER: 16,
-        LEADER: 22
+        LEADER: 22,
+        APPRENTICE: 66
       },
     },
+    INVITATION: {
+      TYPES: {
+        GROUP: 1,
+        TRIP: 2
+      }
+    }
   };
 })();

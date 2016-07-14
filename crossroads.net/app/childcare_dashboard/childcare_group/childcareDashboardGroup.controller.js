@@ -35,8 +35,7 @@ class ChildcareDashboardGroupController {
   }
 
   getCongregation(congregationId) {
-    console.log(this.childcareService.congregations);
-    const record = this.childcareService.congregations.filter((con) => {
+      const record = this.childcareService.congregations.filter((con) => {
       return con.dp_RecordID === congregationId;
     });
 
@@ -70,8 +69,8 @@ class ChildcareDashboardGroupController {
   }
 
   isEventClosed() {
-    const today = moment();
-    const otherDate = moment(this.eventDate);
+    const today = moment({ hour:0, minute:0 });
+    const otherDate = moment(this.eventDate).set({ hour: 0, minute: 0});
     var diff = today.diff(otherDate, 'days');
     return diff >= -7;
   }
@@ -83,10 +82,10 @@ class ChildcareDashboardGroupController {
     }, (err) => {
       child.rsvpness = !status;
       // display an error message...
-      if (err.statusCode === 412) {
-        this.root.$emit('notify', 'childcareRsvpFull');
+      if (err.status === 412) {
+        this.root.$emit('notify', this.root.MESSAGES.childcareRsvpFull);
       } else {
-        this.root.$emit('notify', 'childcareRsvpError');
+        this.root.$emit('notify', this.root.MESSAGES.childcareRsvpError);
       }
     });
   }
