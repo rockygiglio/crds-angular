@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -18,15 +20,19 @@ namespace crds_angular.Controllers.API
 
         public InvitationController(Services.Interfaces.IInvitationService invitationService)
         {
-            this._invitationService = invitationService;
+            _invitationService = invitationService;
 
         }
 
-        [AcceptVerbs("POST")]
+        /// <summary>
+        /// Create a private invitation for someone to join a Group or Trip.  Returns a 403/Forbidden if the logged-in user (identified by the access token) is not allowed to create the invitation.
+        /// </summary>
+        /// <param name="invitation">The details of the invitation</param>
+        /// <returns>An <see cref="Invitation"/>, with the GUID and ID populated</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(Invitation))]
-        [Route("api/grouptool/invitation")]
-        public IHttpActionResult CreateInvitation([FromBody] Invitation dto)
+        [Route("api/invitation"), HttpPost]
+        public IHttpActionResult CreateInvitation([FromBody] Invitation invitation)
         {
             if (!ModelState.IsValid)
             {
@@ -39,11 +45,18 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    return Ok(_invitationService.CreateInvitation(dto, token));
+                    _invitationService.ValidateInvitation(invitation, token);
+                    return Ok(_invitationService.CreateInvitation(invitation, token));
                 }
-                catch (Exception exception)
+                catch (ValidationException e)
                 {
-                    var apiError = new ApiErrorDto("CreateInvitation Failed", exception);
+                    var error = new ApiErrorDto("Not authorized to send invitations of this type", e, HttpStatusCode.Forbidden);
+                    throw new HttpResponseException(error.HttpResponseMessage);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(string.Format("Could not create invitation to recipient {0} ({1}) for group {2}", invitation.RecipientName, invitation.EmailAddress, invitation.SourceId), e);
+                    var apiError = new ApiErrorDto("CreateInvitation Failed", e, HttpStatusCode.InternalServerError);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

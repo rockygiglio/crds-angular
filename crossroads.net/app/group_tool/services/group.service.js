@@ -1,4 +1,4 @@
-
+import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
 
@@ -11,8 +11,12 @@ export default class GroupService {
     this.auth = AuthService;
   }
 
+  sendGroupInvitation(invitation) {
+    return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
+  }
+  
   getMyGroups() {
-    let promised = this.resource(`${__API_ENDPOINT__}api/group/groupType/:groupTypeId`).
+    let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
                           query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
 
     return promised.then((data) => {

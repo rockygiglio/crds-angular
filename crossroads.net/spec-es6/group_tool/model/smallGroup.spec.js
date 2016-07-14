@@ -1,7 +1,6 @@
 
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 
-
 describe('Group Tool SmallGroup', () => {
 
   let smallGroup,
@@ -45,7 +44,6 @@ describe('Group Tool SmallGroup', () => {
         'foreignCountry': null,
         'county': null
       },
-      'attributeTypes': {},
       'singleAttributes': {},
       'maximumAge': 0,
       'minimumParticipants': 0,
@@ -75,7 +73,39 @@ describe('Group Tool SmallGroup', () => {
           'attributeTypes': null,
           'singleAttributes': null
         }
-      ]
+      ],
+      'attributeTypes': {
+        '90': {
+          'attributeTypeId': 1,
+          'name': 'Group Attributes',
+          'attributes': [
+            {
+              'attributeId': 1,
+              'name': 'Boxing',
+              'description': null,
+              'selected': true,
+              'startDate': '0001-01-01T00:00:00',
+              'endDate': null,
+              'notes': null,
+              'sortOrder': 0,
+              'category': 'Interest',
+              'categoryDescription': null
+            },
+            {
+              'attributeId': 1,
+              'name': 'Father\'s',
+              'description': null,
+              'selected': true,
+              'startDate': '0001-01-01T00:00:00',
+              'endDate': null,
+              'notes': null,
+              'sortOrder': 0,
+              'category': 'Men\'s',
+              'categoryDescription': null
+            }
+          ]
+        }
+      }
     };
     
     smallGroup = new SmallGroup(mockJson);
@@ -98,6 +128,11 @@ describe('Group Tool SmallGroup', () => {
     it('should have an leaders', () => {
       expect(smallGroup.participants.length).toEqual(2);
       expect(smallGroup.participants[0].constructor.name).toEqual('Participant');
+    });
+
+    it('should have an leaders', () => {
+      expect(smallGroup.categories.length).toEqual(2);
+      expect(smallGroup.categories[0].name).toEqual('Boxing');
     });
   });
 
@@ -143,6 +178,12 @@ describe('Group Tool SmallGroup', () => {
     it('address is undefined', () => {
       smallGroup.address = undefined;
       expect(smallGroup.meetingLocation()).toEqual('Online');
+    });
+  });
+
+  describe('categoriesToString()', () => {
+    it('is Interest\\ Boxing, Men\'s\\ Father\'s', () => {
+      expect(smallGroup.categoriesToString()).toEqual('Interest\\ Boxing, Men\'s\\ Father\'s');
     });
   });
 

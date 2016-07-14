@@ -2,6 +2,7 @@
 import CONSTANTS from '../../constants';
 import Address from './address';
 import Participant from './participant';
+import Category from './category';
 
 export default class SmallGroup {
 
@@ -17,8 +18,23 @@ export default class SmallGroup {
     this.participants = [];
     if(jsonObject.Participants != undefined && jsonObject.Participants != null)
     {
-      jsonObject.Participants.forEach(function(particpant) {
-        this.participants.push(new Participant(particpant));
+      this.participants = 
+        jsonObject.Participants.map((particpant) => {
+          return new Participant(particpant);
+        });
+    }
+
+    this.categories = [];
+    if(jsonObject.attributeTypes != undefined && jsonObject.attributeTypes != null &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != undefined &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != null &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != undefined &&
+        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != null)
+    {
+      jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes.forEach(function(attribute) {
+        if(attribute.selected) {
+          this.categories.push(new Category(attribute));
+        }
       }, this);
     }
   }
@@ -50,8 +66,13 @@ export default class SmallGroup {
     return this.address.toString();
   }
 
-  categories() {
-    this.category = 'Marriage Growth, Listening, Financial';
-    return this.category;
+  categoriesToString() {
+    let categoriesString = this.categories.length > 0 ? `${this.categories[0]}` : '';
+
+    for(let idx=1; idx < this.categories.length; idx++) {
+      categoriesString += `, ${this.categories[idx].toString()}`;
+    }
+
+    return categoriesString;
   }
 }
