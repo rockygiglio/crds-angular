@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
@@ -17,6 +15,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly ICommunicationRepository _communicationService;
         private readonly int _invitationPageId;
+        private readonly int _groupInquiresSubPageId;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 
@@ -32,6 +31,7 @@ namespace MinistryPlatform.Translation.Repositories
             this._configurationWrapper = configurationWrapper;
             this._communicationService = communicationService;
             this._invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
+            this._groupInquiresSubPageId = _configurationWrapper.GetConfigIntValue("GroupInquiresSubPage");
         }
 
         public List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -73,5 +73,43 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitations;
         }
 
+
+        public List<MpInquiry> GetInquiries(int groupId, string token)
+        {
+            var mpInquiries = new List<MpInquiry>();
+            try
+            {
+                var invitations = _ministryPlatformService.GetSubPageRecords(this._groupInquiresSubPageId, groupId, token);
+               
+                // Translate object format from MP to an MpInvitaion object
+                if (invitations != null && invitations.Count > 0)
+                {
+                    foreach (Dictionary<string, object> p in invitations)
+                    {
+                        mpInquiries.Add(new MpInquiry
+                        {
+                            InquiryId = p.ToInt("dp_RecordID"),
+                            GroupId = groupId,
+                            ContactId = p.ToInt("Contact_ID"),
+                            EmailAddress = p.ToString("Email"),
+                            PhoneNumber = p.ToString("Phone"),
+                            FirstName = p.ToString("First_Name"),
+                            LastName = p.ToString("Last_Name"),
+                            RequestDate = p.ToDate("Inquiry_Date")
+                        });
+                    }
+                }
+                else
+                {
+                    logger.Debug(string.Format("No pending inquires found for GroupId = {0} ", groupId));
+                }
+            }
+            catch (Exception exception)
+            {
+                logger.Debug(string.Format("Exception thrown while retrieving inquiries for GroupId = {0}, InvitationTypeId = {1} ", groupId));
+                logger.Debug(string.Format("Exception message:  {0} ", exception.Message));
+            }
+            return mpInquiries;
+        }
     }
 }
