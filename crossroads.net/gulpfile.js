@@ -43,13 +43,9 @@ function htmlReplace(devBuild) {
       give: { js: '/assets/give.js' },
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
-<<<<<<< HEAD
-      boot: { js: '/assets/boot.js' },
-      formbuilder: { js: '/assets/formbuilder.js' }
-=======
       formbuilder: { js: '/assets/formbuilder.js' },
-      formlybuilder: { js: '/assets/formlybuilder.js' }
->>>>>>> development
+      formlybuilder: { js: '/assets/formlybuilder.js' },
+      boot: { js: '/assets/boot.js' }
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -69,13 +65,9 @@ function htmlReplace(devBuild) {
       givejs: {src: assets.give.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-<<<<<<< HEAD
-      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      boot: {src: assets.boot.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
-=======
       formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      boot: {src: assets.boot.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
->>>>>>> development
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')

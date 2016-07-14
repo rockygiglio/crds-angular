@@ -32,13 +32,8 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-<<<<<<< HEAD
-    
-    // added in ng2 downgraded components
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
     boot: ['./dist/boot.js']
-=======
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
->>>>>>> development
   },
   watchPattern: ['app/**/**','core/**/**','dist/**/**'],
   externals: {
