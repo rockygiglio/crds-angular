@@ -43,7 +43,15 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("DefaultAuthorUser")).Returns(99);
 
             //template
-            var templateDictionary = new Dictionary<string, object> {{"Body", mockBody}, {"Subject", mockSubject}};
+            var templateDictionary = new Dictionary<string, object>
+            {
+                { "Body", mockBody },
+                { "Subject", mockSubject },
+                { "From_Contact", fromContactId },
+                { "From_Contact_Text", "Crossroads; " + fromEmailAddress },
+                { "Reply_to_Contact", replyContactId },
+                { "Reply_to_Contact_Text", "Crossroads;\t" + replyEmailAddress }
+            };
             _ministryPlatformService.Setup(m => m.GetRecordDict(341, templateId, It.IsAny<string>(), false)).Returns(templateDictionary);
 
             var communication = _fixture.GetTemplateAsCommunication(templateId, fromContactId, fromEmailAddress, replyContactId, replyEmailAddress, toContactId, toEmailAddress);
@@ -61,6 +69,40 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(replyEmailAddress, communication.ReplyToContact.EmailAddress);
             Assert.AreEqual(toContactId, communication.ToContacts[0].ContactId);
             Assert.AreEqual(toEmailAddress, communication.ToContacts[0].EmailAddress);
+        }
+
+        [Test]
+        public void TestGetTemplate()
+        {
+            const int templateId = 3;
+            const int fromContactId = 6;
+            const string fromEmailAddress = "brady@minon.com";
+            const int replyContactId = 5;
+            const string replyEmailAddress = "bob@minon.com";
+            const string mockBody = "mock email body";
+            const string mockSubject = "mock subject";
+
+            var templateDictionary = new Dictionary<string, object>
+            {
+                { "Body", mockBody },
+                { "Subject", mockSubject },
+                { "From_Contact", fromContactId },
+                { "From_Contact_Text", "Crossroads; " + fromEmailAddress },
+                { "Reply_to_Contact", replyContactId },
+                { "Reply_to_Contact_Text", "Crossroads;\t" + replyEmailAddress }
+            };
+
+            _ministryPlatformService.Setup(m => m.GetRecordDict(341, templateId, It.IsAny<string>(), false)).Returns(templateDictionary);
+            var template = _fixture.GetTemplate(templateId);
+            _ministryPlatformService.VerifyAll();
+            Assert.IsNotNull(template);
+            Assert.AreEqual(fromContactId, template.FromContactId);
+            Assert.AreEqual(fromEmailAddress, template.FromEmailAddress);
+            Assert.AreEqual(replyContactId, template.ReplyToContactId);
+            Assert.AreEqual(replyEmailAddress, template.ReplyToEmailAddress);
+            Assert.AreEqual(mockBody, template.Body);
+            Assert.AreEqual(mockSubject, template.Subject);
+
         }
 
         [Test]

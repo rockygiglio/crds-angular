@@ -54,7 +54,7 @@ class ChildcareDashboardGroupController {
     const today = moment({ hour:0, minute:0 });
     const otherDate = moment(this.eventDate).set({ hour: 0, minute: 0});
     var diff = today.diff(otherDate, 'days');
-    return diff >= -7;
+    return diff >= -6;
   }
 
   rsvp(child) {
@@ -64,7 +64,7 @@ class ChildcareDashboardGroupController {
     }, (err) => {
       child.rsvpness = !child.rsvpness;
       // display an error message...
-      if (err.statusCode === 412) {
+      if (err.status === 412) {
         this.root.$emit('notify', this.root.MESSAGES.childcareRsvpFull);
       } else {
         this.root.$emit('notify', this.root.MESSAGES.childcareRsvpError);
