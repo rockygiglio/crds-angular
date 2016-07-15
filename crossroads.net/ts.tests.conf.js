@@ -1,65 +1,84 @@
-module.exports = function(config) {
-	config.set({
-		// base path, that will be used to resolve files and exclude
-		basePath: './spec-ts',
+var webpack = require('webpack');
+var path = require('path');
 
-		// frameworks to use
-		frameworks: ['jasmine'],
+module.exports = function (config) {
+    config.set({
+        basePath: '',
+        frameworks: ['jasmine'],
+        files: [
+            'spec-ts/spec_index.js'
+        ],
+        exclude: [
+        ],
+        webpack: {
+            resolve: {
+                extensions: ['.ts', '.js', '.tsx', '.jsx', '']
+            },
+            module: {
+                loaders: [
+                    {
+                        test: /\.tsx?$/,
+                        exclude: /node_modules/,
+                        loader: 'awesome-typescript-loader'
+                    }
+                ]
+            }
+        },
 
-		preprocessors: {
-			'*.ts': ['typescript']
-		},
 
-		typescriptPreprocessor: {
-			options: {
-				sourceMap: true
-			}
-		},
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+            'spec-ts/spec_index.js': ['webpack', 'env', 'sourcemap']
+        },
 
-		files: ['**/*.ts'],
+        // test results reporter to use
+        // possible values: 'dots', 'progress'
+        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+        reporters: ['mocha'],
 
-		// list of files to exclude
-		exclude: [],
+        // web server port
+        port: 9876,
 
-		// test results reporter to use
-		// possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-		reporters: ['dots'],
+        webpackServer: {
+            noInfo: true // prevent console spamming when running in Karma!
+        },
 
-		// web server port
-		port: 9876,
+        webpackMiddleware: {
+            stats: {
+                colors: true
+            }
+        },
 
-		// enable / disable colors in the output (reporters and logs)
-		colors: true,
+        // enable / disable colors in the output (reporters and logs)
+        colors: true,
 
-		// level of logging
-		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		logLevel: config.LOG_DEBUG,
+        // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+        logLevel: config.LOG_INFO,
 
-		// enable / disable watching file and executing tests whenever any file changes
-		autoWatch: false,
+        // enable / disable watching file and executing tests whenever any file changes
+        autoWatch: true,
 
-		// Start these browsers, currently available:
-		// - Chrome
-		// - ChromeCanary
-		// - Firefox
-		// - Opera
-		// - Safari (only Mac)
-		// - PhantomJS
-		// - IE (only Windows)
-		browsers: ['Chrome'],
+        // start these browsers
+        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+        browsers: ['PhantomJS'],
 
-		// If browser does not capture in given timeout [ms], kill it
-		captureTimeout: 60000,
+        // Continuous Integration mode
+        // if true, Karma captures browsers, runs the tests and exits
+        singleRun: false,
 
-		// Continuous Integration mode
-		// if true, it capture browsers, run tests and exit
-		singleRun: false,
+        // Plugins
+        plugins: [
+            require('karma-webpack'),
+            require('karma-jasmine'),
+            require('karma-mocha-reporter'),
+            require('karma-phantomjs-launcher'),
+            require('karma-env-preprocessor'),
+            require('karma-sourcemap-loader'),
+            require('karma-es6-shim'),
+        ]
 
-		plugins: [
-			'karma-jasmine',
-			'karma-chrome-launcher',
-			'karma-phantomjs-launcher',
-			require('./spec-ts/spec_index.js')
-		]
-	});
-};
+
+    })
+}

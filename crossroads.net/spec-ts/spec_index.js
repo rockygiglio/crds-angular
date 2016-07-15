@@ -1,36 +1,22 @@
-var path = require('path');
+Error.stackTraceLimit = Infinity;
 
-var createTypeScriptPreprocessor = function(args, config, logger, helper) {
-	config = config || {};
+require('es6-shim');
+require('reflect-metadata');
 
-	var log = logger.create('preprocessor.typescript');
-	var defaultOptions = {};
+require('zone.js/dist/zone');
+require('zone.js/dist/long-stack-trace-zone');
+require('zone.js/dist/jasmine-patch');
+require('zone.js/dist/async-test');
+require('zone.js/dist/fake-async-test');
 
-	var transformPath = args.transformPath || config.transformPath || function(filepath) {
-		return filepath.replace(/\.ts$/, '.js');
-	};
 
-	// compiler options
-	var options = helper.merge(defaultOptions, args.options || {}, config.options || {});
-	var ts = config.typescript || require('typescript');
+// Select BrowserDomAdapter.
+// see https://github.com/AngularClass/angular2-webpack-starter/issues/124
+// Somewhere in the test setup
+var testing = require('@angular/core/testing');
+var browser = require('@angular/platform-browser-dynamic/testing');
 
-	return function(content, file, done) {
-		log.debug('Processing "%s".', file.originalPath);
-		file.path = transformPath(file.originalPath);
+testing.setBaseTestProviders(browser.TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS, browser.TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
 
-		try {
-			var output = ts.transpile(content, options, path.relative(process.cwd(), file.originalPath));
-			done(null, output);
-		} catch(e) {
-			log.error('%s\n at %s\n%s', e.message, file.originalPath, e.stack);
-			return done(e, null);
-		}
-	};
-};
-
-createTypeScriptPreprocessor.$inject = ['args', 'config.typescriptPreprocessor', 'logger', 'helper'];
-
-// PUBLISH DI MODULE
-module.exports = {
-	'preprocessor:typescript': ['factory', createTypeScriptPreprocessor]
-};
+var testsContext = require.context('./', true, /.spec$/);
+testsContext.keys().forEach(testsContext);
