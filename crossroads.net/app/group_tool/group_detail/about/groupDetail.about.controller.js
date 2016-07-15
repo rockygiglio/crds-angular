@@ -14,19 +14,24 @@ export default class GroupDetailAboutController {
   }
 
   $onInit() {
-    this.groupService.getGroup(this.groupId).then((data) => {
-      this.data = data;
-      var primaryContactId = this.data.contactId;
-      this.data.primaryContact = {
-        imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-        contactId: primaryContactId
-      };
-      this.ready = true;
-    },
-    (err) => {
-      this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
-      this.error = true;
-      this.ready = true;
-    });
+    if (this.groupId != null) {
+      this.groupService.getGroup(this.groupId).then((data) => {
+        this.data = data;
+        var primaryContactId = this.data.contactId;
+        this.data.primaryContact = {
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+          contactId: primaryContactId
+        };
+        this.ready = true;
+      },
+      (err) => {
+        this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
+        this.error = true;
+        this.ready = true;
+      });
+    }
+    //else - use data object from binding
+    //may need to do some mapping into object
+    //this.data = stuff from binding
   }
 }

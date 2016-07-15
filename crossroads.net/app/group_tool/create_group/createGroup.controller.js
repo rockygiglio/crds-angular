@@ -1,11 +1,12 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $location, $log) {
+    constructor($state, ParticipantService, $location, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.location = $location;
         this.participantService = ParticipantService;
 
+        this.state = $state;
         this.ready = false;
         this.approvedLeader = false;
     }
@@ -49,7 +50,7 @@ export default class CreateGroupController {
                         }, {
                             congregationId: '4',
                             congregationName: 'site4',
-                        },                                                
+                        },
                     ]
                 }
             }, {
@@ -103,7 +104,7 @@ export default class CreateGroupController {
                 type: 'input',
                 templateOptions: {
                     label: 'Zip'
-                } 
+                }
             }, {
                 key: 'profile.address.country',
                 type: 'input',
@@ -285,7 +286,7 @@ export default class CreateGroupController {
                         }, {
                             groupAgeRangeId: 8,
                             ageRangeName: '60\'s+'
-                        }                                                             
+                        }
                     ]
                 }
             }]};
@@ -331,10 +332,29 @@ export default class CreateGroupController {
                 }
             }]};
         this.model = {};
-        this.fields = [profileAboutFields, profileAddressFields, groupTypeFields, 
-                        groupAgeFields, groupStartFields, groupMeetingDateTimeFields, 
+        this.fields = [profileAboutFields, profileAddressFields, groupTypeFields,
+                        groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
                         groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
 
-    
+
 }
+
+  previewGroup() {
+    //this.state.go('grouptool.mygroups');
+    this.state.go('grouptool.detail');
+  }
+
+  submitGroup() {
+    // map object
+
+    savePersonal();
+    saveGroup();
+  }
+
+  savePersonal() {
+      // set oldName to existing email address to work around password change dialog issue
+      vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
+      return vm.data.profileData.person.$save();
+  }
+
 }
