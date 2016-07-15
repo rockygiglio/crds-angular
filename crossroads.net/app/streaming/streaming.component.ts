@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { ScheduleComponent } from './schedule.component';
 
 var WOW = require('wow.js/dist/wow.min.js');

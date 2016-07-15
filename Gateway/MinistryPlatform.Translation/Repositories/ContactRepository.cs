@@ -182,11 +182,25 @@ namespace MinistryPlatform.Translation.Repositories
                 Nickname = famRec.ToString("Nickname"),
                 LastName = famRec.ToString("Last_Name"),
                 DateOfBirth = famRec.ToDate("Date_of_Birth"),
+                Age = famRec.ToInt("__Age"),
                 HouseholdPosition = famRec.ToString("Household_Position"),
                 StatementTypeId = famRec.ContainsKey("Statement_Type_ID") ? famRec.ToInt("Statement_Type_ID") : (int?) null,
                 DonorId = famRec.ContainsKey("Donor_ID") ? famRec.ToInt("Donor_ID") : (int?) null
             }).ToList();
             return family;
+        }
+
+        public List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId)
+        {
+            var token = ApiLogin();
+            var householdMembers = new List<MpHouseholdMember>();
+            var otherHouseholds = _ministryPlatformService.GetSubpageViewRecords("OtherHouseholds", contactId, token);
+            foreach (var house in otherHouseholds)
+            {
+                var houseId = (int) house["Household_ID"];
+                householdMembers.AddRange(GetHouseholdFamilyMembers(houseId));
+            }
+            return householdMembers;
         }
 
 
