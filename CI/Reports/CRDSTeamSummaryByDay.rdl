@@ -79,7 +79,7 @@
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="CongregationID">
-            <Value>=Parameters!CongregationID.Value</Value>
+            <Value>=Join(Parameters!CongregationID.Value,",")</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
@@ -387,7 +387,7 @@
               <TablixMembers>
                 <TablixMember>
                   <TablixHeader>
-                    <Size>1in</Size>
+                    <Size>2.88542in</Size>
                     <CellContents>
                       <Textbox Name="Textbox34">
                         <CanGrow>true</CanGrow>
@@ -396,7 +396,7 @@
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>Group Name</Value>
+                                <Value>Group Name &amp; Primary Contact</Value>
                                 <Style />
                               </TextRun>
                             </TextRuns>
@@ -538,7 +538,7 @@
                     </SortExpression>
                   </SortExpressions>
                   <TablixHeader>
-                    <Size>1in</Size>
+                    <Size>2.88542in</Size>
                     <CellContents>
                       <Textbox Name="Group_Name">
                         <CanGrow>true</CanGrow>
@@ -548,6 +548,22 @@
                             <TextRuns>
                               <TextRun>
                                 <Value>=Fields!Group_Name.Value</Value>
+                                <Style />
+                              </TextRun>
+                              <TextRun>
+                                <Value> - Contact: </Value>
+                                <Style />
+                              </TextRun>
+                              <TextRun>
+                                <Value>=Fields!Nickname.Value</Value>
+                                <Style />
+                              </TextRun>
+                              <TextRun>
+                                <Value xml:space="preserve"> </Value>
+                                <Style />
+                              </TextRun>
+                              <TextRun>
+                                <Value>=Fields!Last_Name.Value</Value>
                                 <Style />
                               </TextRun>
                             </TextRuns>
@@ -760,7 +776,7 @@
             <Top>0.83208in</Top>
             <Left>0.23833in</Left>
             <Height>0.47917in</Height>
-            <Width>10.15625in</Width>
+            <Width>12.04167in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -776,7 +792,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>11.39458in</Width>
+      <Width>13.06125in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -839,6 +855,7 @@
           <LabelField>Congregation_Name</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="GroupID">
       <DataType>Integer</DataType>
