@@ -183,7 +183,7 @@ streaming {
 
   .intro {
     @include crds-jumbotron();
-    background: #2E2E30 url("#{$streaming-imgix-domain}/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop");
+    background-color: #2E2E30;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -380,7 +380,7 @@ streaming {
   .community {
     @include clearfix();
     @include crds-jumbotron();
-    background: #1D3C50 url("#{$streaming-imgix-domain}/streaming--anywhere-map.jpg?w=1&fit=crop");
+    background: #1D3C50;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
