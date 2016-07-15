@@ -5,11 +5,12 @@ import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService) {
+  constructor($log, $resource, $q, AuthService, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+    this.imgService = ImageService;
   }
 
   sendGroupInvitation(invitation) {
@@ -130,38 +131,22 @@ export default class GroupService {
     return promised.promise;
   }
 
-  getGroupRequests(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'requests': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Chris Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 5, 20)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sally Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 5, 15)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Donny Franks',
-          'requestType': 'invited',
-          'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 4, 15)
-        },
-      ]
+  getInvities(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+                          query({groupId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+
+    return promised.then((data) => {
+      let invitations = data.map((invitation) => {
+        invitation.imageUrl = `${this.imgService.ProfileImageBaseURL}0`;
+        invitation.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
+        return new GroupInvitation(invitation);
+      });
+
+      return invitations;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
   getInquiries(groupId) {
@@ -170,6 +155,8 @@ export default class GroupService {
 
     return promised.then((data) => {
       let inquiries = data.map((inquiry) => {
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${request.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
         return new GroupInquiry(inquiry);
       });
 

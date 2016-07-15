@@ -11,7 +11,8 @@ describe('Group Tool Group Service', () => {
     deferred,
     AuthService,
     authenticated,
-    httpBackend;
+    httpBackend,
+    ImageService;
 
   const endpoint = `${window.__env__['CRDS_API_ENDPOINT']}api`;
 
@@ -23,8 +24,9 @@ describe('Group Tool Group Service', () => {
     deferred = $injector.get('$q');
     AuthService = $injector.get('AuthService');
     httpBackend = $injector.get('$httpBackend');
+    ImageService = $injector.get('ImageService');
 
-    fixture = new GroupService(log, resource, deferred, AuthService);
+    fixture = new GroupService(log, resource, deferred, AuthService, ImageService);
   }));
 
   afterEach(() => {
@@ -115,7 +117,7 @@ describe('Group Tool Group Service', () => {
         let groupsObj = groups.map((group) => {
           return new SmallGroup(group);
         });
-        
+        console.log('hi');
         httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
                     respond(200, groups);
 

@@ -4,7 +4,6 @@ import GroupDetailRequestsController from '../../../../app/group_tool/group_deta
 describe('GroupDetailRequestsController', () => {
     let fixture,
         groupService,
-        imageService,
         state,
         rootScope,
         log,
@@ -14,7 +13,6 @@ describe('GroupDetailRequestsController', () => {
 
     beforeEach(inject(function($injector) {
         groupService = $injector.get('GroupService'); 
-        imageService = $injector.get('ImageService');
         state = $injector.get('$state');
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
@@ -30,12 +28,11 @@ describe('GroupDetailRequestsController', () => {
           groupId: 123
         };
 
-        fixture = new GroupDetailRequestsController(groupService, imageService, state, rootScope, log);
+        fixture = new GroupDetailRequestsController(groupService, state, rootScope, log);
     }));
 
     describe('the constructor', () => {
         it('should initialize properties', () => {
-            expect(fixture.defaultProfileImageUrl).toEqual(imageService.DefaultProfileImage);
             expect(fixture.groupId).toEqual(state.params.groupId);
             expect(fixture.ready).toBeFalsy();
             expect(fixture.error).toBeFalsy();

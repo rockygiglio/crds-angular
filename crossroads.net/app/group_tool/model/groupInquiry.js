@@ -5,6 +5,7 @@ export default class GroupInquiry {
       Object.assign(this, jsonObject);
     } else {
       this.groupId = undefined;
+      this.contactId = undefined;
       this.inquiryId = undefined;
       this.emailAddress = undefined;
       this.phoneNumber = undefined;
@@ -12,10 +13,12 @@ export default class GroupInquiry {
       this.lastName = undefined;
       this.requestDate = undefined;
       this.placed = undefined;
+      this.imageUrl = undefined;
+      this.defaultProfileImageUrl = undefined;
     }
   }
 
-  requestersName() {
+  recipientName() {
     return `${this.firstName} ${this.lastName}`;
   }
 }

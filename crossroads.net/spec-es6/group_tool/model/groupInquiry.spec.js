@@ -15,7 +15,8 @@ describe('Group Inquiry', () => {
       "lastName": "Kocher",
       "requestDate": "2016-07-14T10:00:00",
       "placed": false,
-      "inquiryId": 19
+      "inquiryId": 19,
+      "contactId": 1219
     };
 
     inquiry = new GroupInquiry(mockJson);
@@ -31,6 +32,7 @@ describe('Group Inquiry', () => {
       expect(inquiry.requestDate).toEqual(mockJson.requestDate);
       expect(inquiry.placed).toEqual(mockJson.placed);
       expect(inquiry.inquiryId).toEqual(mockJson.inquiryId);
+      expect(inquiry.contactId).toEqual(mockJson.contactId);
     });
 
     it('should have the following values with no source', () => {
@@ -43,14 +45,14 @@ describe('Group Inquiry', () => {
       expect(inquiry.requestDate).toBeUndefined();
       expect(inquiry.placed).toBeUndefined();
       expect(inquiry.inquiryId).toBeUndefined();
+      expect(inquiry.contactId).toBeUndefined();
     });
     
   });
 
-
-  describe('requestersName', () => {
-    it('should display first then last name') {
-      expect(inquiry.requestersName).toEqual('Dustin Kocher');
-    }
+  describe('recipientName', () => {
+    it('should display first then last name', () => {
+      expect(inquiry.recipientName()).toEqual('Dustin Kocher');
+    });
   });
 });

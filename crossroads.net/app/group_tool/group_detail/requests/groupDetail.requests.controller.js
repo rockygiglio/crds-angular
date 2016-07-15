@@ -3,14 +3,12 @@ import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $rootScope, $log) {
+  constructor(GroupService, $state, $rootScope, $log) {
     this.groupService = GroupService;
-    this.imageService = ImageService;
     this.state = $state;
     this.rootScope = $rootScope;
     this.log = $log;
 
-    this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
@@ -24,12 +22,16 @@ export default class GroupDetailRequestsController {
     ];
 
     this.processing = false;
+    this.invited = [];
+    this.inquired = [];
   }
 
   $onInit() {
     this.ready = false;
     this.error = false;
 
+  this.groupService.getGroupRequests(this.groupId)
+/*
     this.groupService.getGroupRequests(this.groupId).then((data) => {
       this.data = data;
       this.data.requests.forEach(function(request) {
@@ -42,6 +44,7 @@ export default class GroupDetailRequestsController {
       this.error = true;
       this.ready = true;
     });
+    */
   }
 
   setView(newView) {
