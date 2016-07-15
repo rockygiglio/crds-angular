@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -14,7 +13,6 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Translation.Repositories;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
