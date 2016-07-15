@@ -37,6 +37,8 @@ node_modules
 .idea
 
 assets/
+dist/
+typings/
 build/
 styles/main.css*
 styles/modules/*.css*

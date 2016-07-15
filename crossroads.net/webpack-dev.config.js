@@ -32,7 +32,8 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
+    boot: ['./app/boot.ts']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
@@ -44,6 +45,9 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   devtool: 'sourcemap',
   debug: true,
@@ -80,7 +84,12 @@ module.exports = {
             {
               test: /\.html$/,
               loader: 'ng-cache?prefix=[dir]'
-            }
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
     ]
   },
   plugins: [
