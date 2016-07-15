@@ -81,6 +81,10 @@ module.exports = {
             {
               test: /\.html$/,
               loader: 'ng-cache?prefix=[dir]'
+            },
+            {
+              test: /\.json$/, 
+              loaders: ["json-loader"]
             }
     ]
   },

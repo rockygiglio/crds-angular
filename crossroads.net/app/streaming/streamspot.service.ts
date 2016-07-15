@@ -7,7 +7,8 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 import { Event } from './event';
-declare var moment: any;
+// declare var moment: any;
+var moment = require('moment-timezone');
 
 @Injectable()
 export class StreamspotService {
@@ -30,12 +31,14 @@ export class StreamspotService {
         return events
           .filter((event:Event) => {
             // get upcoming or currently broadcasting events
-            return moment().isBefore(moment(event.start)) 
-                  || (moment().isAfter(moment(event.start)) && moment().isBefore(moment(event.end)))
+            let currentTimestamp = moment().tz(moment.tz.guess());
+            let eventTimestamp   = moment.tz(event.start, 'America/New_York');
+            return currentTimestamp.isBefore(eventTimestamp) 
+                  || (currentTimestamp.isAfter(eventTimestamp) && currentTimestamp.isBefore(eventTimestamp))
           })
           .map((event:Event) => {
-            event.start     = moment(event.start);
-            event.end       = moment(event.end);
+            event.start     = moment.tz(event.start, 'America/New_York');
+            event.end       = moment.tz(event.end, 'America/New_York');
             event.dayOfYear = event.start.dayOfYear();
             event.time      = event.start.format('LT [EST]');
             return event;

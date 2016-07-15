@@ -51,7 +51,7 @@ export class CountdownComponent implements OnInit {
   private createCountdown() {
     this.streamspotService.getEvents()
       .map((response: Array<any>) => {
-        return _.head(response)
+        return _.last(response)
       })
       .subscribe(event => {
         this.event = event;
