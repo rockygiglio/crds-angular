@@ -1,9 +1,6 @@
-///<reference path="../typings/index.d.ts"/>
-
-import 'reflect-metadata';
-require('zone.js/dist/zone');
-require('zone.js/dist/long-stack-trace-zone');
 import {upgradeAdapter} from './upgrade-adapter';
+import { HTTP_PROVIDERS } from '@angular/http';
 import './downgrades'
 
+upgradeAdapter.addProvider(HTTP_PROVIDERS);
 upgradeAdapter.bootstrap(document.documentElement, ['crossroads'], {strictDi: false});

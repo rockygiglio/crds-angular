@@ -1,20 +1,63 @@
+<div ng-if="myGroups.error" class="alert alert-danger" role="alert">
+   Error: {{myGroups.errorMsg}}
+</div>
+
 <span dynamic-content="$root.MESSAGES.myGroupsHeader.content | html"></span>
-<div class="row">
-  <div class="col-md-10 my-groups">
-    <group-card ng-repeat="group in myGroups.groups" detail="true" group="group"></group-card>
-    <group-card detail="false"></group-card>
-  </div>
-  <div class="col-md-2 my-groups-links" >
-    <nav>
-      <ul class="nav">
-        <li>
-          <a href="#">Study Resources</a>
-          <a href="#">Being a Leader</a>
-          <a href="#">Contact Support</a>
-          <a href="#">Send Feedback</a>
-        </li>
-      </ul>
-    </nav>
+
+<preloader full-screen='false' ng-if="!myGroups.ready"> </preloader>
+
+<div ng-if="myGroups.ready">
+
+  <div class="row" ng-repeat="group in myGroups.groups track by $index"
+    ng-if="($index % 2) === 0" >
+    <div class="col-md-9 col-sm-12 my-groups">
+      <!-- loop through and if there are two groups to display display them if only one group display that and then the 
+            find or join a group card -->
+      <div class="col-md-6 col-sm-12" ng-if="myGroups.groups.length > ($index)" >
+        <group-card group="group" detail="true"></group-card>
+      </div>
+      <div class="col-md-6 col-sm-12" ng-if="myGroups.groups.length > ($index + 1)" >
+        <group-card group="myGroups.groups[$index + 1]" detail="true"></group-card>
+      </div>
+      <div class="col-md-6 col-sm-12" ng-if="myGroups.groups.length === ($index + 1)" >
+        <group-card detail="false"></group-card>
+      </div>
+    </div>
+
+    <div class="col-md-2 col-md-offset-1 col-sm-12 my-groups-links" ng-if="$index === 0" >
+      <nav>
+        <ul class="nav">
+          <li>
+            <a href="#">Study Resources</a>
+            <a href="#">Being a Leader</a>
+            <a href="#">Contact Support</a>
+            <a href="#">Send Feedback</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 
+  <!-- we need this row only if there are no groups display the find or join group card -->
+  <div class="row" ng-if="(myGroups.groups.length % 2) === 0 || myGroups.groups.length === 0">
+    <div class="col-md-9 col-sm-12">
+      <div class="col-md-6 col-sm-12">
+        <group-card detail="false"></group-card>
+      </div>
+    </div>
+
+    <!-- This is for displaying links if no groups exist -->
+    <div class="col-md-2 col-md-offset-1 col-sm-12 my-groups-links" ng-if="myGroups.groups.length === 0">
+      <nav>
+        <ul class="nav">
+          <li>
+            <a href="#">Study Resources</a>
+            <a href="#">Being a Leader</a>
+            <a href="#">Contact Support</a>
+            <a href="#">Send Feedback</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </div>

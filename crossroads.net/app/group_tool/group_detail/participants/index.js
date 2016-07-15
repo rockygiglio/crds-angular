@@ -6,3 +6,5 @@ export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL).
   component('groupDetailParticipants', groupDetailParticipantsComponent())
   ;
+
+import groupDetailParticipantCard from './participant_card';

@@ -3,11 +3,7 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-
 import { Event } from './event';
-// declare var moment: any;
 var moment = require('moment-timezone');
 
 @Injectable()

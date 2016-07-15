@@ -12,7 +12,7 @@ export default class GroupDetailController {
   $onInit() {
     var foundActive = false;
     var currentState = this.state.current.name;
-    _.forEach(this.tabs, function (tab) {
+    this.tabs.forEach(function (tab) {
       tab.active = currentState === tab.route;
       if (tab.active) {
         foundActive = true;
