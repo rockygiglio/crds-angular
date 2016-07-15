@@ -14,6 +14,7 @@ import { StreamingComponent } from '../../app/streaming/streaming.component';
 
 describe('Component: Streaming', () => {
   it('should create an instance', () => {
+    console.log("hello from test");
     let component = new StreamingComponent();
     expect(component).toBeTruthy();
   });
