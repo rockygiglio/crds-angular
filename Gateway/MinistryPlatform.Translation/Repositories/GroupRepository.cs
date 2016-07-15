@@ -71,20 +71,20 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Description", group.GroupDescription},
                 {"Start_Date", group.StartDate},
                 {"End_Date", endDate},
-                {"Target_Size", group.TargetSize},
-                {"Offsite_Meeting_Address", addressId},
-                {"Group_Is_Full", group.Full},
-                {"Available_Online", group.AvailableOnline},
-                {"Meeting_Time", group.MeetingTime},
-                {"Meeting_Day_Id", group.MeetingDayId},
-                {"Domain_ID", 1},
-                {"Child_Care_Available", group.ChildCareAvailable},
-                {"Remaining_Capacity", group.RemainingCapacity},
-                {"Enable_Waiting_List", group.WaitList},
-                {"Online_RSVP_Minimum_Age", group.MinimumAge},
-                {"Maximum_Age", group.MaximumAge},
-                {"Minimum_Participants", group.MinimumParticipants},
-                {"Maximum_Participants", group.MaximumParticipants}
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants }
+
             };
 
             var groupId =
@@ -566,11 +566,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
-                                                                          token,
-                                                                          String.Format(",,,,\"{0}\"", groupTypeId));
+                                                                      token,
+                                                                      string.Format(",,,{0},\"{1}\"",
+                                                                                    groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
+                                                                                    groupTypeId));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();

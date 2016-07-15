@@ -3,6 +3,8 @@ import CONSTANTS from '../../constants';
 import Address from './address';
 import Participant from './participant';
 import Category from './category';
+import GroupType from './groupType';
+import AgeRange from './ageRange';
 
 export default class SmallGroup {
 
@@ -24,24 +26,56 @@ export default class SmallGroup {
         });
     }
 
-    this.categories = [];
-    if(jsonObject.attributeTypes != undefined && jsonObject.attributeTypes != null &&
-        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != undefined &&
-        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID] != null &&
-        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != undefined &&
-        jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes != null)
+    this.categories = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID, jsonObject.attributeTypes, Category);
+    this.groupType = this.mapSingleAttribute(CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID, jsonObject.singleAttributes, GroupType);
+
+    let ageRanges = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID, jsonObject.attributeTypes, AgeRange);
+    if(ageRanges && ageRanges.length > 0) {
+      this.ageRange = ageRanges[0];
+    } else {
+      this.ageRange = new AgeRange();
+    }
+  }
+
+  mapSelectedMultiAttributes(attributeTypeId, attributeTypes, outputObj) {
+    var selected = [];
+    if(attributeTypes !== undefined && attributeTypes != null &&
+        attributeTypes[attributeTypeId] !== undefined &&
+        attributeTypes[attributeTypeId] != null &&
+        attributeTypes[attributeTypeId].attributes !== undefined &&
+        attributeTypes[attributeTypeId].attributes != null)
     {
-      jsonObject.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes.forEach(function(attribute) {
+      attributeTypes[attributeTypeId].attributes.forEach(function(attribute) {
         if(attribute.selected) {
-          this.categories.push(new Category(attribute));
+          selected.push(new outputObj(attribute));
         }
-      }, this);
+      });
+    }
+    return selected;
+  }
+
+  mapSingleAttribute(attributeTypeId, attributeTypes, outputObj) {
+    if(attributeTypes !== undefined && attributeTypes != null &&
+        attributeTypes[attributeTypeId] !== undefined &&
+        attributeTypes[attributeTypeId] != null &&
+        attributeTypes[attributeTypeId].attribute !== undefined &&
+        attributeTypes[attributeTypeId].attribute != null)
+    {
+      return new outputObj(attributeTypes[attributeTypeId].attribute);
+    } else {
+      return null;
     }
   }
 
   deleteSubObjects(jsonObject) {
     delete jsonObject.address;
     delete jsonObject.Participants;
+  }
+
+  leaders() {
+    return this.participants.filter((value) => {
+      return value.isLeader();
+    });
   }
 
   isLeader() {

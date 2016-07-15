@@ -298,7 +298,7 @@ namespace crds_angular.Services
                         var eligibleChildren = new List<ChildcareRsvp>();
                         foreach (var member in members.AllMembers)
                         {
-                            if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                            if (member.HouseholdPosition != null && member.HouseholdPosition.ToUpper().StartsWith("MINOR CHILD") && eligibleChildren.All(c => c.ContactId != member.ContactId) && member.Age < 18) //TODO: Get rid of magic string. Household Position
                             {
                                 eligibleChildren.Add(new ChildcareRsvp
                                 {
