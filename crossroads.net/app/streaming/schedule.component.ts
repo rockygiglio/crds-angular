@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HTTP_PROVIDERS } from '@angular/http';
+//import { HTTP_PROVIDERS } from '@angular/http';
 
 import { Event } from './event';
 import { StreamspotService } from './streamspot.service';
@@ -10,7 +10,7 @@ declare var moment: any;
 @Component({
   selector: 'schedule',
   templateUrl: './schedule.component.html',
-  providers: [StreamspotService, HTTP_PROVIDERS]
+  providers: [StreamspotService]
 })
 
 export class ScheduleComponent implements OnInit {
