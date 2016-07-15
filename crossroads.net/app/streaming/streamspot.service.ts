@@ -23,8 +23,7 @@ export class StreamspotService {
       'Content-Type': 'application/json',
       'x-API-Key': this.apiKey
     });
-    // let url = `${this.url}/${this.id}/events`;
-    let url = `http://localhost:8080/app/streaming/events.json`;
+    let url = `${this.url}/${this.id}/events`;
     return this.http.get(url, {headers: headers})
       .map(response => response.json().data.events)
       .map((events: Array<Event>) => {

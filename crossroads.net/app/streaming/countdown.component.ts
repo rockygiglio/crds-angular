@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 import { Event } from './event';
 import { Countdown } from './countdown';
@@ -40,39 +40,12 @@ export class CountdownComponent implements OnInit {
   showCountdown:  boolean   = true;
   isBroadcasting: boolean   = false;
   intervalId:     any;
-  intervalIds:    Array<any> = [];
+  subscriber:     any;
 
   constructor(private streamspotService: StreamspotService) { }
 
   ngOnInit() {
-    this.initializeCountdown();
-    setTimeout(() => this.createCountdown(), 2000);
-  }
-
-  private pad(value:number): string {
-    return value < 10 ? `0${value}`: `${value}`;
-  }
-
-  private initializeCountdown() {
-    let timer = 300;
-    this.intervalIds.push(setInterval(() => {
-      this.countdown.days = this.pad(Math.floor(Math.random() * 99) + 0);
-    }, timer))
-    this.intervalIds.push(setInterval(() => {
-      this.countdown.hours = this.pad(Math.floor(Math.random() * 99) + 0);
-    }, timer))
-    this.intervalIds.push(setInterval(() => {
-      this.countdown.minutes = this.pad(Math.floor(Math.random() * 99) + 0);
-    }, timer))
-    this.intervalIds.push(setInterval(() => {
-      this.countdown.seconds = this.pad(Math.floor(Math.random() * 99) + 0);
-    }, timer))
-  }
-
-  private clearInitialCountdown() {
-    this.intervalIds.forEach(id => {
-      window.clearInterval(id);
-    });
+    this.createCountdown();
   }
 
   private createCountdown() {
@@ -81,11 +54,16 @@ export class CountdownComponent implements OnInit {
         return _.head(response)
       })
       .subscribe(event => {
-        this.clearInitialCountdown();
         this.event = event;
-
-        this.intervalId = setInterval(() => this.displayCountdown(), 1000)
+        this.subscriber = Observable
+                            .interval(1000)
+                            .subscribe(() => this.displayCountdown());
       });
+  }
+
+
+  private pad(value:number): string {
+    return value < 10 ? `0${value}`: `${value}`;
   }
 
   private displayCountdown() {
@@ -102,7 +80,7 @@ export class CountdownComponent implements OnInit {
     this.countdown.seconds = this.pad(duration.seconds());
 
     if (!this.showCountdown && !this.isBroadcasting) {
-      clearInterval(this.intervalId);
+      this.subscriber.unsubscribe();
       this.createCountdown();
     }
   }
