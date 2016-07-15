@@ -1,6 +1,7 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
@@ -161,5 +162,21 @@ export default class GroupService {
       ]
     });
     return promised.promise;
+  }
+
+  getInquiries(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+                          query({groupId: groupId}).$promise
+
+    return promised.then((data) => {
+      let inquiries = data.map((inquiry) => {
+        return new GroupInquiry(inquiry);
+      });
+
+      return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
   }
 }

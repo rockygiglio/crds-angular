@@ -2,6 +2,7 @@
 import CONSTANTS from 'crds-constants';
 import GroupService from '../../../app/group_tool/services/group.service'
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
+import GroupInquiry from '../../../app/group_tool/model/groupInquiry';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -126,6 +127,66 @@ describe('Group Tool Group Service', () => {
         	expect(data[0].address.length).toEqual(groupsObj[0].address.length);
         	expect(data[0].participants.length).toEqual(groupsObj[0].groupName.participants.length);
         });
+    });
+  });
+
+  describe('getInquires() inquires', () => {
+    it('should return all inquiries assocated to the group', () => {
+      let mockInquires = [
+        {
+          "groupId": 172286,
+          "emailAddress": "jim.kriz@ingagepartners.com",
+          "phoneNumber": "513-432-1973",
+          "firstName": "Dustin",
+          "lastName": "Kocher",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 19
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "jkerstanoff@callibrity.com",
+          "phoneNumber": "513-987-1983",
+          "firstName": "Joe",
+          "lastName": "Kerstanoff",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 20
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "kim.farrow@thrivecincinnati.com",
+          "phoneNumber": "513-874-6947",
+          "firstName": "Kim",
+          "lastName": "Farrow",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": true,
+          "inquiryId": 21
+        }
+      ];
+
+      let groupId = 172286;
+
+      let inquires = mockInquires.map((inquiry) => {
+        return new GroupInquiry(inquiry);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/inquiries/${groupId}`).
+                  respond(200, mockInquires);
+
+      var promise = fixture.getInquiries(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[0].groupId).toEqual(groupsObj[0].groupId);
+        expect(data[0].emailAddress).toEqual(groupsObj[0].emailAddress);
+        expect(data[0].phoneNumber).toEqual(groupsObj[0].phoneNumber);
+        expect(data[0].firstName).toEqual(groupsObj[0].firstName);
+        expect(data[0].lastName).toEqual(groupsObj[0].lastName);
+        expect(data[0].requestDate).toEqual(groupsObj[0].requestDate);
+        expect(data[0].placed).toEqual(groupsObj[0].placed);
+        expect(data[0].inquiryId).toEqual(groupsObj[0].inquiryId);
+      });
     });
   });
 });
