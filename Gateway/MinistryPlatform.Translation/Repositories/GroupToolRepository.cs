@@ -96,6 +96,7 @@ namespace MinistryPlatform.Translation.Repositories
                             LastName = p.ToString("Last_Name"),
                             RequestDate = p.ToDate("Inquiry_Date"),
                             Placed = p.ToBool("Placed"),
+                            ContactId = p.ToInt("Contact_ID"),
                         });
                     }
                 }

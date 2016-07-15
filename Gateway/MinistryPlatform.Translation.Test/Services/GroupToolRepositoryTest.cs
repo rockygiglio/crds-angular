@@ -46,6 +46,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 LastName = "Smith",
                 RequestDate = new DateTime(2004, 3, 12),
                 Placed = true,
+                ContactId = 1,
             });
 
             const string token = "adamantium";
@@ -62,7 +63,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"First_Name", "Joe"},
                     {"Last_Name", "Smith"},
                     {"Inquiry_Date", "3/12/2004"},
-                    {"Placed", "true"}
+                    {"Placed", "true"},
+                    {"Contact_ID", 1}
                 }
             );
 
@@ -80,6 +82,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(dto[0].LastName, result[0].LastName);
             Assert.AreEqual(dto[0].RequestDate, result[0].RequestDate);
             Assert.AreEqual(dto[0].RequestDate, result[0].RequestDate);
+            Assert.AreEqual(dto[0].ContactId, result[0].ContactId);
         }
     }
 }

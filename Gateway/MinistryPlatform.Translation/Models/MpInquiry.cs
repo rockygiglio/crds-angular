@@ -4,6 +4,8 @@ namespace MinistryPlatform.Translation.Models
 {
     public class MpInquiry
     {
+        public int ContactId { get; set; }
+
         public int InquiryId { get; set; }
 
         public int GroupId { get; set; }
