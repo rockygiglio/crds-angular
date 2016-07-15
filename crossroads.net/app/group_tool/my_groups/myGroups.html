@@ -27,11 +27,7 @@
     <div class="col-md-2 col-md-offset-1 col-sm-12 my-groups-links" ng-if="$index === 0" >
       <nav>
         <ul class="nav">
-          <li>
-            <a href="#">Study Resources</a>
-            <a href="#">Being a Leader</a>
-            <a href="#">Contact Support</a>
-            <a href="#">Send Feedback</a>
+          <li dynamic-content="$root.MESSAGES.groupToolMyGroupsLinks.content | html">
           </li>
         </ul>
       </nav>
@@ -50,11 +46,7 @@
     <div class="col-md-2 col-md-offset-1 col-sm-12 my-groups-links" ng-if="myGroups.groups.length === 0">
       <nav>
         <ul class="nav">
-          <li>
-            <a href="#">Study Resources</a>
-            <a href="#">Being a Leader</a>
-            <a href="#">Contact Support</a>
-            <a href="#">Send Feedback</a>
+          <li dynamic-content="$root.MESSAGES.groupToolMyGroupsLinks.content | html">
           </li>
         </ul>
       </nav>

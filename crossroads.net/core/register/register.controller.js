@@ -96,7 +96,7 @@
             $state.go(url, JSON.parse(params));
           }
         } else {
-          $state.go('content', {link:'/registered-next-steps'});
+          $state.go('content', {link:'/nextstep'});
         }
       }, 500);
     }
