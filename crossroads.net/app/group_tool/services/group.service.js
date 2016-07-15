@@ -4,20 +4,35 @@ import SmallGroup from '../model/smallGroup';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService) {
+  constructor($log, $resource, $q, AuthService, LookupService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+    this.lookupService = LookupService;
   }
 
   getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
                            get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
   }
+
+  getGroupGenderMixType() {
+    return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                          get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
+  }
+
+  getSites() {
+    return this.lookupService.Sites.query().$promise;
+  }
+
+  getGenders() {
+    return this.lookupService.Genders.query().$promise;
+  }
+
   sendGroupInvitation(invitation) {
     return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
   }
-  
+
   getMyGroups() {
     let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
                           query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
@@ -47,7 +62,7 @@ export default class GroupService {
         var err = {'status': 404, 'statusText': 'Group not found'};
         throw err;
       }
-      
+
       return groups[0];
     },
     (err) => {

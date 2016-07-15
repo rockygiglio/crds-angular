@@ -1,11 +1,10 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, GroupService, $location, $log, LookupService) {
+    constructor(ParticipantService, GroupService, $location, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.location = $location;
         this.participantService = ParticipantService;
-        this.lookupService = LookupService;
         this.groupService = GroupService;
 
         this.ready = false;
@@ -13,7 +12,7 @@ export default class CreateGroupController {
     }
 
     $onInit() {
-        
+
         this.log.debug('CreateGroupController onInit');
         this.participantService.get().then((data) => {
             if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
@@ -40,7 +39,13 @@ export default class CreateGroupController {
                     label: 'At what site do you regularly attend service?',
                     valueProp: 'dp_RecordID',
                     labelProp: 'dp_RecordName',
-                    options: this.lookupService.Sites.query()
+                    options: []
+                },
+                controller: /* @ngInject */ function ($scope, GroupService) {
+                    $scope.to.loading = GroupService.getSites().then(function (response) {
+                        $scope.to.options = response;
+                        return response;
+                    });
                 }
             }, {
                     key: 'profile.birthDate',
@@ -58,7 +63,13 @@ export default class CreateGroupController {
                         inline: false,
                         valueProp: 'dp_RecordID',
                         labelProp: 'dp_RecordName',
-                        options: this.lookupService.Genders.query()
+                        options: []
+                    },
+                    controller: /* @ngInject */ function ($scope, GroupService) {
+                        $scope.to.loading = GroupService.getGenders().then(function (response) {
+                            $scope.to.options = response;
+                            return response;
+                        });
                     }
                 }]
         };
@@ -259,21 +270,15 @@ export default class CreateGroupController {
                 key: 'group.typeId',
                 type: 'radio',
                 templateOptions: {
-                    labelProp: 'label',
-                    valueProp: 'typeId',
-                    options: [{
-                        label: 'Men and women together (like God intended).',
-                        typeId: 0
-                    }, {
-                            label: 'Men only (no girls allowed).',
-                            typeId: 1
-                        }, {
-                            label: 'Women only (don\'t be a creeper, dude).',
-                            typeId: 2
-                        }, {
-                            label: 'Married couples (because you put a ring on it).',
-                            typeId: 3
-                        }]
+                    labelProp: 'name',
+                    valueProp: 'attributeId',
+                    options: []
+                },
+                controller: /* @ngInject */ function ($scope, GroupService) {
+                    $scope.to.loading = GroupService.getGroupGenderMixType().then(function (response) {
+                        $scope.to.options = response.attributes;
+                        return response;
+                    });
                 }
             }]
         };
@@ -291,14 +296,14 @@ export default class CreateGroupController {
                     labelProp: 'name',
                     options: []
                 },
-                controller: /* @ngInject */ function($scope, GroupService) {
-                    $scope.to.loading = GroupService.getAgeRanges().then(function(response){
+                controller: /* @ngInject */ function ($scope, GroupService) {
+                    $scope.to.loading = GroupService.getAgeRanges().then(function (response) {
                         $scope.to.options = response.attributes;
                         // note, the line above is shorthand for:
                         // $scope.options.templateOptions.options = data;
                         return response;
                     });
-                }                
+                }
             }]
         };
         var groupAboutFields = {

@@ -27,9 +27,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       parent: 'noSideBar',
       url: '/groups/create',
       template: '<create-group></create-group>',
-      /** resolve: {
-        sites: this.lookupService.Sites.query()
-      },*/
       data: {
         isProtected: true,
         meta: {
