@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <param name="procedureName">The name of the stored procedure to execute</param>
         /// <param name="parameters">Parameters for the stored procedure. Key is paramter name and Value is the value.</param>
         /// <returns></returns>
-        List<T> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters);
+        List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Get a list of records for a given type from MinistryPlatform.

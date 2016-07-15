@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Models\Childcare\ChildcareDashboard.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Models\MpTripFormResponse.cs" />
     <Compile Include="Models\MpTripParticipant.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
+    <Compile Include="Repositories\ChildcareRepository.cs" />
     <Compile Include="Repositories\FormBuilderRepository..cs" />
     <Compile Include="Repositories\BulkEmailRepository.cs" />
     <Compile Include="Enum\NumericDayOfWeek.cs" />

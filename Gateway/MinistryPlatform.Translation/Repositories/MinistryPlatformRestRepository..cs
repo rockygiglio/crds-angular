@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
-        public List<T> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
+        public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
             //https://adminint.crossroads.net/ministryplatformapi/procs/api_crds_getChildcareDashboard?@Domain_ID=1&@Contact_ID=2186211
             var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
@@ -59,17 +59,18 @@ namespace MinistryPlatform.Translation.Repositories
             _authToken.Value = null;
             response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
 
-            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+            var content = JsonConvert.DeserializeObject<List<List<T>>>(response.Content);
             if (content == null || !content.Any())
             {
-                return default(List<T>);
+                return default(List<List<T>>);
             }
             return content;
         }
 
         private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
         {
-            return parameters.Aggregate("?", (current, param) => current + ("&" + (param.Key.StartsWith("@") ? HttpUtility.UrlEncode(param.Key) : "%40" + param.Key) + "=" + param.Value));
+            var result = parameters.Aggregate("?", (current, parameter) => current + ((parameter.Key.StartsWith("@") ? parameter.Key : "@" + parameter.Key) + "=" + parameter.Value + "&"));
+            return result.TrimEnd('&');
         }
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null)

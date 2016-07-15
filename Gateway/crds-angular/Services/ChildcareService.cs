@@ -20,6 +20,7 @@ namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
+        private readonly IChildcareRepository _childcareRepository;
         private readonly IChildcareRequestRepository _childcareRequestService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
@@ -47,7 +48,8 @@ namespace crds_angular.Services
                                 IApiUserRepository apiUserService, 
                                 IEventService crdsEventService, 
                                 IChildcareRequestRepository childcareRequestService,
-                                IGroupService groupService)
+                                IGroupService groupService,
+                                IChildcareRepository childcareRepository)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -61,6 +63,7 @@ namespace crds_angular.Services
             _dateTimeWrapper = dateTimeWrapper;
             _apiUserService = apiUserService;
             _groupService = groupService;
+            _childcareRepository = childcareRepository;
 
             _childcareGroupType = _configurationWrapper.GetConfigIntValue("ChildcareGroupType");
         }
@@ -265,9 +268,51 @@ namespace crds_angular.Services
             var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
             members.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
 
+            var dashboardData = _childcareRepository.GetChildcareDashboard(contactId);
+            foreach (var childcareDashboard in dashboardData)
+            {
+                if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date))
+                {
+                    dashboard.AvailableChildcareDates.Add(new ChildCareDate
+                    {
+                        EventDate = childcareDashboard.EventStartDate.Date,
+                        Cancelled = childcareDashboard.Cancelled
+                    });
+                }
 
-
-            //Find community groups for house heads
+                //Date exists, add group
+                var eventGroup = _eventService.GetEventGroupsForEvent(childcareDashboard.EventID, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
+                var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
+                var eligibleChildren = new List<ChildcareRsvp>();
+                foreach (var member in members.AllMembers)
+                {
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                    {
+                        eligibleChildren.Add(new ChildcareRsvp
+                        {
+                            ContactId = member.ContactId,
+                            DisplayName = member.Nickname + ' ' + member.LastName,
+                            ChildEligible = (member.Age < ccEventGroup.MaximumAge),
+                            ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
+                        });
+                    }
+                }
+                var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
+                ccEvent.Groups.Add(new ChildcareGroup
+                {
+                    GroupName = childcareDashboard.GroupName,
+                    EventStartTime = childcareDashboard.EventStartDate,
+                    EventEndTime = childcareDashboard.EventEndDate,
+                    CongregationId = childcareDashboard.CongregationID,
+                    GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
+                    MaximumAge = ccEventGroup.MaximumAge,
+                    RemainingCapacity = ccEventGroup.RemainingCapacity,
+                    EligibleChildren = eligibleChildren,
+                    ChildcareGroupId = ccEventGroup.GroupId
+                });
+            }
+            
+            /*Find community groups for house heads
             foreach (var head in members.HeadsOfHousehold)
             {
                 var participant = _participantService.GetParticipant(head.ContactId);
@@ -320,7 +365,7 @@ namespace crds_angular.Services
                             CongregationId = eventDetails.CongregationId,
                             GroupMemberName = head.Nickname + ' ' + head.LastName,
                             MaximumAge = ccEventGroup.MaximumAge,
-                            RemainingCapacity = group.RemainingCapacity,
+                            RemainingCapacity = ccEventGroup.RemainingCapacity,
                             EligibleChildren = eligibleChildren,
                             ChildcareGroupId = ccEventGroup.GroupId
                         });
@@ -328,6 +373,7 @@ namespace crds_angular.Services
                     }
                 }
             }
+            */
             dashboard.AvailableChildcareDates = dashboard.AvailableChildcareDates.OrderBy(x => x.EventDate).ToList();
 
             return dashboard;

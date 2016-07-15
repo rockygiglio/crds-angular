@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.Attributes;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using RestSharp;
 
@@ -89,50 +89,6 @@ namespace MinistryPlatform.Translation.Test.Services
             var p = _fixture.UsingAuthenticationToken(_authToken).Get<MyPaymentType>(2);
             Console.WriteLine("Payment_Type\t{0}", p);
         }
-    }
-
-    [MpRestApiTable(Name = "Childcare_Dashboard")]
-    public class ChildcareDashboard
-    {
-        [JsonProperty(PropertyName = "Display_Name")]
-        public string DisplayName;
-
-        [JsonProperty(PropertyName = "Group_ID")]
-        public int GroupId;
-
-        [JsonProperty(PropertyName = "Group_Name")]
-        public string GroupName;
-
-        [JsonProperty(PropertyName = "Group_Type_ID")]
-        public int GroupTypeId;
-
-        [JsonProperty(PropertyName = "Event_ID")]
-        public int EventID;
-
-        [JsonProperty(PropertyName = "Event_Title")]
-        public string EventTitle;
-
-        [JsonProperty(PropertyName = "Cancelled")]
-        public bool Cancelled;
-
-        [JsonProperty(PropertyName = "Event_Start_Date")]
-        public DateTime EventStartDate;
-
-        [JsonProperty(PropertyName = "Event_End_Date")]
-        public DateTime EventEndDate;
-
-        [JsonProperty(PropertyName = "Congregation_ID")]
-        public int CongregationID;
-
-        //"Group_ID": 10000001,
-        //"Group_Name": "(t) Fathers Oakley CG",
-        //"Group_Type_ID": 8,
-        //"Event_ID": 4515705,
-        //"Event_Title": "Childcare - Test",
-        //"Cancelled": false,
-        //"Event_Start_Date": "2016-07-10T18:00:00",
-        //"Event_End_Date": "2016-07-10T19:00:00",
-        //"Congregation_ID": 1
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
