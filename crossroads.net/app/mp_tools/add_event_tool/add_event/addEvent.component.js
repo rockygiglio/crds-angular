@@ -46,6 +46,7 @@
     vm.childcareSelectedFlag = false;
     vm.childcareSelected = childcareSelected;
     vm.eventTypeChanged = eventTypeChanged;
+    vm.checkMinMax = checkMinMax;
     activate();
 
     ///////
@@ -129,6 +130,30 @@
 
     function childcareSelected() {
       return vm.childcareSelectedFlag;
+    }
+
+    function checkMinMax(form) {
+      if (vm.eventData.minimumChildren === undefined || vm.eventData.maximumChildren === undefined) {
+        return false;
+      }
+
+      //set the proper error state
+      if (vm.eventData.minimumChildren > vm.eventData.maximumChildren) {
+        form.maximumChildren.$error.minmax = true;
+        form.maximumChildren.$valid = false;
+        form.maximumChildren.$invalid = true;
+        form.maximumChildren.$dirty = true;
+        form.$valid = false;
+        form.$invalid = true;
+        return true;
+      }
+      else {
+        form.maximumChildren.$error.minmax = false;
+        form.maximumChildren.$error.endDate = false;
+        form.maximumChildren.$valid = true;
+        form.maximumChildren.$invalid = false;
+        return false;
+      }
     }
 
     function eventTypeChanged() {

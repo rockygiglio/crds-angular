@@ -96,10 +96,10 @@
         ministryid: 2,
         congregationid: groupData.congregation.Congregation_ID,
         contactid: groupData.primaryContact.contactId,
-        startdate: moment(groupData.startDateTime).utc().format(),
+        startdate: moment(dateTime(groupData.startDate,groupData.startTime)).utc().format(),
         maximumage: groupData.maximumAge,
         minimumparticipants: groupData.minimumChildren,
-        maximumparticipants: groupData.maximumChildren
+        tartgetsize: groupData.maximumChildren
       }
 
       return groupDto;

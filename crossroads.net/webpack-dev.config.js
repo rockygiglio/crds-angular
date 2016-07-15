@@ -20,6 +20,7 @@ var definePlugin = new webpack.DefinePlugin({
 
 module.exports = {
   entry: {
+    childcare: './app/childcare_dashboard/childcareDashboard.module.js',
     trips: './app/trips/trips.module.js',
     search: './app/search/search.module.js',
     media: './app/media/media.module.js',
@@ -31,11 +32,10 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    
-    // added in ng2 downgraded components
-    boot: ['./dist/boot.js']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
+    boot: ['./app/boot.ts']
   },
-  watchPattern: ['app/**/**','core/**/**','dist/**/**'],
+  watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
@@ -45,6 +45,9 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   devtool: 'sourcemap',
   debug: true,
@@ -81,7 +84,12 @@ module.exports = {
             {
               test: /\.html$/,
               loader: 'ng-cache?prefix=[dir]'
-            }
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
     ]
   },
   plugins: [

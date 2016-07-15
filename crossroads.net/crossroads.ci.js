@@ -125,7 +125,7 @@ module.exports = function(config) {
       require('karma-teamcity-reporter'),
       require('karma-phantomjs-launcher'),
       require('karma-env-preprocessor'),
-      require('karma-sourcemap-loader')
+      require('karma-sourcemap-loader'),
     ]
   });
 };
