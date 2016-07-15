@@ -11,6 +11,9 @@ export default class GroupService {
     this.auth = AuthService;
   }
 
+  getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+  }
   sendGroupInvitation(invitation) {
     return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
   }
@@ -157,4 +160,24 @@ export default class GroupService {
     });
     return promised.promise;
   }
+
+  // getAgeRanges(){
+  //   let promise = this.resource(`${__API_ENDPOINT__}api/attributetype/:attributeTypeId`).
+  //                         get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+
+  //   return promise.then((data) => {
+  //     debugger;
+  //     let ageRanges = data.attributes;
+
+  //     if(!ageRanges || ageRanges.length === 0) {
+  //       var err = {'status': 404, 'statusText': 'Age Ranges not found'};
+  //       throw err;
+  //     }
+      
+  //     return ageRanges;
+  //   },
+  //   (err) => {
+  //     throw err;
+  //   });
+  // }
 }

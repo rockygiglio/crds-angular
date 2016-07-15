@@ -1,17 +1,19 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $location, $log, LookupService) {
+    constructor(ParticipantService, GroupService, $location, $log, LookupService) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.location = $location;
         this.participantService = ParticipantService;
         this.lookupService = LookupService;
+        this.groupService = GroupService;
 
         this.ready = false;
         this.approvedLeader = false;
     }
 
     $onInit() {
+        
         this.log.debug('CreateGroupController onInit');
         this.participantService.get().then((data) => {
             if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
@@ -285,35 +287,18 @@ export default class CreateGroupController {
                 key: 'groupAgeRangeIds',
                 type: 'multiCheckbox',
                 templateOptions: {
-                    valueProp: 'groupAgeRangeId',
-                    labelProp: 'ageRangeName',
-                    options: [{
-                        groupAgeRangeId: 1,
-                        ageRangeName: 'Middle School Students (Grades 6-8)'
-                    }, {
-                            groupAgeRangeId: 2,
-                            ageRangeName: 'High School Students (Grades 9-12)'
-                        }, {
-                            groupAgeRangeId: 3,
-                            ageRangeName: 'College Students'
-                        }, {
-                            groupAgeRangeId: 4,
-                            ageRangeName: '20\'s'
-                        }, {
-                            groupAgeRangeId: 5,
-                            ageRangeName: '30\'s'
-                        }, {
-                            groupAgeRangeId: 6,
-                            ageRangeName: '40\'s'
-                        }, {
-                            groupAgeRangeId: 7,
-                            ageRangeName: '50\'s'
-                        }, {
-                            groupAgeRangeId: 8,
-                            ageRangeName: '60\'s+'
-                        }
-                    ]
-                }
+                    valueProp: 'attributeId',
+                    labelProp: 'name',
+                    options: []
+                },
+                controller: /* @ngInject */ function($scope, GroupService) {
+                    $scope.to.loading = GroupService.getAgeRanges().then(function(response){
+                        $scope.to.options = response.attributes;
+                        // note, the line above is shorthand for:
+                        // $scope.options.templateOptions.options = data;
+                        return response;
+                    });
+                }                
             }]
         };
         var groupAboutFields = {
