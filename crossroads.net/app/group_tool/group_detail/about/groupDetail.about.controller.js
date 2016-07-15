@@ -1,9 +1,11 @@
+
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state) {
+  constructor(GroupService, ImageService, $state, $log) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
+    this.log = $log;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
@@ -14,8 +16,11 @@ export default class GroupDetailAboutController {
   $onInit() {
     this.groupService.getGroup(this.groupId).then((data) => {
       this.data = data;
-      var primaryContactId = _.get(this.data, 'primaryContact.contactId');
-      this.data.primaryContact.imageUrl = `${this.imageService.ProfileImageBaseURL}${primaryContactId}`;
+      var primaryContactId = this.data.contactId;
+      this.data.primaryContact = {
+        imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+        contactId: primaryContactId
+      };
       this.ready = true;
     },
     (err) => {

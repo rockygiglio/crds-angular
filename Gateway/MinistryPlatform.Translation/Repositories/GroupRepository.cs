@@ -27,8 +27,12 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CommunityGroupConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupConfirmationTemplateId"));
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
+        private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
         private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
+        private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
+        private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
+        private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -67,20 +71,20 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Description", group.GroupDescription},
                 {"Start_Date", group.StartDate},
                 {"End_Date", endDate},
-                {"Target_Size", group.TargetSize},
-                {"Offsite_Meeting_Address", addressId},
-                {"Group_Is_Full", group.Full},
-                {"Available_Online", group.AvailableOnline},
-                {"Meeting_Time", group.MeetingTime},
-                {"Meeting_Day_Id", group.MeetingDayId},
-                {"Domain_ID", 1},
-                {"Child_Care_Available", group.ChildCareAvailable},
-                {"Remaining_Capacity", group.RemainingCapacity},
-                {"Enable_Waiting_List", group.WaitList},
-                {"Online_RSVP_Minimum_Age", group.MinimumAge},
-                {"Maximum_Age", group.MaximumAge},
-                {"Minimum_Participants", group.MinimumParticipants},
-                {"Maximum_Participants", group.MaximumParticipants}
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants }
+
             };
 
             var groupId =
@@ -553,43 +557,27 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
-            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView,
-                                                                          token,
-                                                                          String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView, token, String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
             }
-            return groupDetails.Select(details => new MpGroup()
+            return groupDetails.Select(MapRecordToMpGroup).ToList();
+        }
+
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
+        {
+            var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
+                                                                      token,
+                                                                      string.Format(",,,{0},\"{1}\"",
+                                                                                    groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
+                                                                                    groupTypeId));
+            if (groupDetails == null || groupDetails.Count == 0)
             {
-                GroupId = details.ToInt("Group_ID"),
-                CongregationId = details.ToInt("Congregation_ID"),
-                Name = details.ToString("Group_Name"),
-                GroupRoleId = details.ToInt("Group_Role_ID"),
-                GroupDescription = details.ToString("Description"),
-                MinistryId = details.ToInt("Ministry_ID"),
-                ContactId = details.ToInt("Primary_Contact"),
-                PrimaryContactName = details.ToString("Primary_Contact_Name"),
-                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
-                GroupType = details.ToInt("Group_Type_ID"),
-                StartDate = details.ToDate("Start_Date"),
-                EndDate = details.ToNullableDate("End_Date"),
-                MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = details.ToString("Meeting_Time"),
-                AvailableOnline = details.ToBool("Available_Online"),
-                MaximumAge = details.ToInt("Maximum_Age"),
-                RemainingCapacity = details.ToInt("Remaining_Capacity"),
-                Address = new MpAddress()
-                {
-                    Address_ID = details.ToInt("Address_ID"),
-                    Address_Line_1 = details.ToString("Address_Line_1"),
-                    Address_Line_2 = details.ToString("Address_Line_2"),
-                    City = details.ToString("City"),
-                    State = details.ToString("State"),
-                    Postal_Code = details.ToString("Zip_Code"),
-                    Foreign_Country = details.ToString("Foreign_Country")
-                }
-            }).ToList();
+                return new List<MpGroup>();
+            }
+            return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
         public void UpdateGroupRemainingCapacity(MpGroup group)
@@ -616,6 +604,61 @@ namespace MinistryPlatform.Translation.Repositories
             });
 
             logger.Debug("updated group: " + group.GroupId);
+        }
+
+        /// <summary>
+        /// Returns list of small groups from the My groups > My Small Groups view. 
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
+        {
+            var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
+            var mpGroupList = groups.Select(MapRecordToMpGroup).ToList();
+
+            foreach (MpGroup group in mpGroupList)
+            {
+                group.Participants = LoadGroupParticipants(group.GroupId, userToken).Where(p => p.GroupRoleId == GroupLeaderRoleId).ToList();
+            }
+
+            return mpGroupList;
+
+        }
+
+        private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
+        {
+            return new MpGroup
+            {
+                GroupId = record.ToInt("Group_ID"),
+                CongregationId = record.ToInt("Congregation_ID"),
+                Name = record.ToString("Group_Name"),
+                GroupRoleId = record.ToInt("Group_Role_ID"),
+                GroupDescription = record.ToString("Description"),
+                MinistryId = record.ToInt("Ministry_ID"),
+                ContactId = record.ToInt("Primary_Contact"),
+                PrimaryContactName = record.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = record.ToString("Primary_Contact_Email"),
+                GroupType = record.ToInt("Group_Type_ID"),
+                StartDate = record.ToDate("Start_Date"),
+                EndDate = record.ToNullableDate("End_Date"),
+                MeetingDayId = record.ToInt("Meeting_Day_ID"),
+                MeetingDay = record.ToString("Meeting_Day"),
+                MeetingTime = record.ToString("Meeting_Time"),
+                MeetingFrequency = record.ToString("Meeting_Frequency"),
+                AvailableOnline = record.ToBool("Available_Online"),
+                MaximumAge = record.ToInt("Maximum_Age"),
+                RemainingCapacity = record.ToInt("Remaining_Capacity"),
+                Address = new MpAddress()
+                {
+                    Address_ID = record.ToInt("Address_ID"),
+                    Address_Line_1 = record.ToString("Address_Line_1"),
+                    Address_Line_2 = record.ToString("Address_Line_2"),
+                    City = record.ToString("City"),
+                    State = record.ToString("State"),
+                    Postal_Code = record.ToString("Zip_Code"),
+                    Foreign_Country = record.ToString("Foreign_Country")
+                }     
+            };
         }
     }
 }
