@@ -34,6 +34,7 @@
           on-label="✓"
           off-label="✕"
           class="pull-right"
+          ng-click="childcareGroup.validateAndRsvp(child)"
           ng-disabled="childcareGroup.isEventClosed() && !child.rsvpness">
         <toggle-switch>
       </li>
