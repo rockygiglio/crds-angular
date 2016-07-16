@@ -60,8 +60,8 @@ namespace crds_angular.Controllers.API
         [AcceptVerbs("GET")]
         [RequiresAuthorization]
         [ResponseType(typeof(List<Inquiry>))]
-        [Route("api/grouptool/inquires/{groupId}")]
-        public IHttpActionResult GetInquires(int groupId)
+        [Route("api/grouptool/inquiries/{groupId}")]
+        public IHttpActionResult GetInquiries(int groupId)
         {
             return Authorized(token =>
             {
