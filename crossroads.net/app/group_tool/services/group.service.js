@@ -128,12 +128,12 @@ export default class GroupService {
 
   getInvities(groupId) {
     let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
-                          query({groupId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
-
+                          query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+                          
     return promised.then((data) => {
       let invitations = data.map((invitation) => {
         invitation.imageUrl = `${this.imgService.ProfileImageBaseURL}0`;
-        invitation.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
+        invitation.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
         return new GroupInvitation(invitation);
       });
 
@@ -150,8 +150,8 @@ export default class GroupService {
 
     return promised.then((data) => {
       let inquiries = data.map((inquiry) => {
-        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${request.contactId}`;
-        inquiry.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${inquiry.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
         return new GroupInquiry(inquiry);
       });
 

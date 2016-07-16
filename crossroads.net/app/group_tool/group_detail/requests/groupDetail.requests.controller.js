@@ -30,21 +30,13 @@ export default class GroupDetailRequestsController {
     this.ready = false;
     this.error = false;
 
-  this.groupService.getGroupRequests(this.groupId)
-/*
-    this.groupService.getGroupRequests(this.groupId).then((data) => {
-      this.data = data;
-      this.data.requests.forEach(function(request) {
-          request.imageUrl = `${this.imageService.ProfileImageBaseURL}${request.contactId}`;
-      }, this);
-      this.ready = true;
-    },
-    (err) => {
-      this.log.error(`Unable to get group requests: ${err.status} - ${err.statusText}`);
-      this.error = true;
-      this.ready = true;
+    this.groupService.getInvities(this.groupId).then((invitations) => {
+      this.invited = invitations;
     });
-    */
+
+    this.groupService.getInquiries(this.groupId).then((inquiries) => {
+      this.inquired = inquiries;
+    });
   }
 
   setView(newView) {

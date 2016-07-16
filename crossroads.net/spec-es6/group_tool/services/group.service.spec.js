@@ -3,6 +3,7 @@ import CONSTANTS from 'crds-constants';
 import GroupService from '../../../app/group_tool/services/group.service'
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 import GroupInquiry from '../../../app/group_tool/model/groupInquiry';
+import GroupInvitation from '../../../app/group_tool/model/groupInvitation';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -131,6 +132,56 @@ describe('Group Tool Group Service', () => {
         });
     });
   });
+  
+  describe('getInvities() inquires', () => {
+    it('should return all invities assocated to the group', () => {
+      let mockInvities = [
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "for@me.com",
+          "recipientName": "Knowledge Man",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        },
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "really@fast.com",
+          "recipientName": "Buffer Dude",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        }
+      ];
+
+      let groupId = 172286;
+
+      let invities = mockInvities.map((invitation) => {
+        return new GroupInvitation(invitation);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/invitations/${groupId}/1`).
+                  respond(200, mockInvities);
+
+      var promise = fixture.getInvities(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[1].sourceId).toEqual(invities[1].sourceId);
+        expect(data[1].groupRoleId).toEqual(invities[1].groupRoleId);
+        expect(data[1].emailAddress).toEqual(invities[1].emailAddress);
+        expect(data[1].recipientName).toEqual(invities[1].recipientName);
+        expect(data[1].requestDate).toEqual(invities[1].requestDate);
+        expect(data[1].invitationType).toEqual(invities[1].invitationType);
+        expect(data[1].invitationId).toEqual(invities[1].invitationId);
+        expect(data[1].invitationGuid).toEqual(invities[1].invitationGuid);
+      });
+    });
+  });
 
   describe('getInquires() inquires', () => {
     it('should return all inquiries assocated to the group', () => {
@@ -143,7 +194,8 @@ describe('Group Tool Group Service', () => {
           "lastName": "Kocher",
           "requestDate": "2016-07-14T10:00:00",
           "placed": false,
-          "inquiryId": 19
+          "inquiryId": 19,
+          "contactId": 123
         },
         {
           "groupId": 172286,
@@ -153,7 +205,8 @@ describe('Group Tool Group Service', () => {
           "lastName": "Kerstanoff",
           "requestDate": "2016-07-14T10:00:00",
           "placed": false,
-          "inquiryId": 20
+          "inquiryId": 20,
+          "contactId": 124
         },
         {
           "groupId": 172286,
@@ -163,7 +216,8 @@ describe('Group Tool Group Service', () => {
           "lastName": "Farrow",
           "requestDate": "2016-07-14T10:00:00",
           "placed": true,
-          "inquiryId": 21
+          "inquiryId": 21,
+          "contactId": 124
         }
       ];
 
@@ -180,14 +234,14 @@ describe('Group Tool Group Service', () => {
       httpBackend.flush();
       expect(promise.$$state.status).toEqual(1);
       promise.then(function(data) {
-        expect(data[0].groupId).toEqual(groupsObj[0].groupId);
-        expect(data[0].emailAddress).toEqual(groupsObj[0].emailAddress);
+        expect(data[0].groupId).toEqual(inquires[0].groupId);
+        expect(data[0].emailAddress).toEqual(inquires[0].emailAddress);
         expect(data[0].phoneNumber).toEqual(groupsObj[0].phoneNumber);
-        expect(data[0].firstName).toEqual(groupsObj[0].firstName);
-        expect(data[0].lastName).toEqual(groupsObj[0].lastName);
-        expect(data[0].requestDate).toEqual(groupsObj[0].requestDate);
-        expect(data[0].placed).toEqual(groupsObj[0].placed);
-        expect(data[0].inquiryId).toEqual(groupsObj[0].inquiryId);
+        expect(data[0].firstName).toEqual(inquires[0].firstName);
+        expect(data[0].lastName).toEqual(inquires[0].lastName);
+        expect(data[0].requestDate).toEqual(inquires[0].requestDate);
+        expect(data[0].placed).toEqual(inquires[0].placed);
+        expect(data[0].inquiryId).toEqual(inquires[0].inquiryId);
       });
     });
   });
