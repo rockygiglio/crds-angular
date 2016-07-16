@@ -118,7 +118,7 @@ describe('Group Tool Group Service', () => {
         let groupsObj = groups.map((group) => {
           return new SmallGroup(group);
         });
-        console.log('hi');
+
         httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
                     respond(200, groups);
 

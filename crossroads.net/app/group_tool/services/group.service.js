@@ -132,8 +132,7 @@ export default class GroupService {
                           
     return promised.then((data) => {
       let invitations = data.map((invitation) => {
-        invitation.imageUrl = `${this.imgService.ProfileImageBaseURL}0`;
-        invitation.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
+        invitation.imageUrl = this.imgService.DefaultProfileImage;
         return new GroupInvitation(invitation);
       });
 
