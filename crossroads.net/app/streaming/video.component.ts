@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'temporarystream',
+  selector: 'live-stream',
   templateUrl: './video.component.html'
 })
 

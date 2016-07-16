@@ -385,13 +385,13 @@
             }
           }
         })
-        .state('live-video', {
+        .state('live-stream', {
           parent: 'noHeaderOrFooter',
-          url: '/stream',
-          template: '<temporarystream></temporarystream>',
+          url: '/live-v2/stream',
+          templateUrl: 'streaming/video.component.html',
           data: {
             meta: {
-              title: 'Something Else',
+              title: 'Live',
               description: ''
             }
           }
