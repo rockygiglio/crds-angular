@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Models
 
         public DateTime RequestDate { get; set; }
 
-        public bool Placed { get; set; }
+        public bool? Placed { get; set; }
     }
 
 }
