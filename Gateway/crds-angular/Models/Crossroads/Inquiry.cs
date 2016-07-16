@@ -55,8 +55,7 @@ namespace crds_angular.Models.Crossroads
         /// True if they have been placed or denied.
         /// </summary>
         [JsonProperty(PropertyName = "placed")]
-        [Required]
-        public bool Placed { get; set; }
+        public bool? Placed { get; set; }
 
 
         /// <summary>
