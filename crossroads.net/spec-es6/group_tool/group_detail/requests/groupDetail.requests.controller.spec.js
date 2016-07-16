@@ -275,7 +275,7 @@ describe('GroupDetailRequestsController', () => {
               "firstName": "Dustin",
               "lastName": "Kocher",
               "requestDate": "2016-07-14T10:00:00",
-              "placed": false,
+              "placed": null,
               "inquiryId": 19
             },
             {
@@ -306,7 +306,7 @@ describe('GroupDetailRequestsController', () => {
 
           fixture.inquired = inquiries;
           expect(fixture.getInquiring().length).toEqual(1);
-          expect(fixture.getInquiring()[0].placed).toEqual(true);
+          expect(fixture.getInquiring()[0].emailAddress).toEqual('jim.kriz@ingagepartners.com');
         });
     });
 });

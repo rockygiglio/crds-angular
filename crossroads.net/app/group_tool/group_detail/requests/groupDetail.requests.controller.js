@@ -86,7 +86,7 @@ export default class GroupDetailRequestsController {
   }
 
   getInquiring() {
-    return this.inquired.filter(function (inquiry) { return inquiry.placed; });
+    return this.inquired.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
   }
     
   //////TODO////////////////////////////////////
