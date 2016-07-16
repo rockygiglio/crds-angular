@@ -84,7 +84,13 @@ export default class GroupDetailRequestsController {
       this.processing = false;
     });
   }
+
+  getInquiring() {
+    return this.inquired.filter(function (inquiry) { return inquiry.placed; });
+  }
     
+  //////TODO////////////////////////////////////
+  /*
   beginApproveRequest(request) {
     this.currentRequest = request;
     this.currentView = 'Approve';    
@@ -108,4 +114,5 @@ export default class GroupDetailRequestsController {
     this.currentRequest = null;
     this.currentView = 'List';
   }
+  */
 }

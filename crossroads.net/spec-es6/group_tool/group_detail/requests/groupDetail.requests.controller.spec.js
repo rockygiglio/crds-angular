@@ -263,4 +263,50 @@ describe('GroupDetailRequestsController', () => {
           expect(fixture.error).toBeTruthy();
         });
     });
+
+
+    describe('getInquiring() function', () => {
+        it('should get only placed inquired', () => {
+          let mockInquires = [
+            {
+              "groupId": 123,
+              "emailAddress": "jim.kriz@ingagepartners.com",
+              "phoneNumber": "513-432-1973",
+              "firstName": "Dustin",
+              "lastName": "Kocher",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": false,
+              "inquiryId": 19
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "jkerstanoff@callibrity.com",
+              "phoneNumber": "513-987-1983",
+              "firstName": "Joe",
+              "lastName": "Kerstanoff",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": false,
+              "inquiryId": 20
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "kim.farrow@thrivecincinnati.com",
+              "phoneNumber": "513-874-6947",
+              "firstName": "Kim",
+              "lastName": "Farrow",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": true,
+              "inquiryId": 21
+            }
+          ];
+
+          let inquiries = mockInquires.map((inquiry) => {
+            return new GroupInquiry(inquiry);
+          });
+
+          fixture.inquired = inquiries;
+          expect(fixture.getInquiring().length).toEqual(1);
+          expect(fixture.getInquiring()[0].placed).toEqual(true);
+        });
+    });
 });
