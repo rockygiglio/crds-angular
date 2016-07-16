@@ -30,19 +30,18 @@ export default class GroupDetailRequestsController {
     this.ready = false;
     this.error = false;
 
-    this.groupService.getInvities(this.groupId).then((invitations) => {
-      this.invited = invitations;
-      this.ready = true;
-    },
-    (err) => {
-      this.log.error(`Unable to get group invitations: ${err.status} - ${err.statusText}`);
-      this.error = true;
-      this.ready = true;
-    });
-
     this.groupService.getInquiries(this.groupId).then((inquiries) => {
       this.inquired = inquiries;
-      this.ready = true;
+
+      this.groupService.getInvities(this.groupId).then((invitations) => {
+        this.invited = invitations;
+        this.ready = true;
+      },
+      (err) => {
+        this.log.error(`Unable to get group invitations: ${err.status} - ${err.statusText}`);
+        this.error = true;
+        this.ready = true;
+      });
     },
     (err) => {
       this.log.error(`Unable to get group inquiries: ${err.status} - ${err.statusText}`);

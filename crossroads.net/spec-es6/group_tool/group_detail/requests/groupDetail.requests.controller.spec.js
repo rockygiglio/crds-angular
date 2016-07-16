@@ -243,26 +243,6 @@ describe('GroupDetailRequestsController', () => {
           expect(fixture.error).toBeFalsy();
         });
 
-        it('should set error state if trouble getting invities', () => {
-          let deferred = qApi.defer();
-          let error = {
-            status: 500,
-            statusText: 'oops'
-          };
-          deferred.reject(error);
-
-          spyOn(groupService, 'getInvities').and.callFake(function(groupId) {
-            return(deferred.promise);
-          });
-
-          fixture.$onInit();
-          rootScope.$digest();
-
-          expect(groupService.getInvities).toHaveBeenCalledWith(state.params.groupId);
-          expect(fixture.ready).toBeTruthy();
-          expect(fixture.error).toBeTruthy();
-        });
-
         it('should set error state if trouble getting inquiries', () => {
           let deferred = qApi.defer();
           let error = {
