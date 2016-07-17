@@ -38,6 +38,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.detail', {
       parent: 'noSideBar',
       url: '/groups/mygroups/detail/{groupId:int}',
+      params: {
+        groupId: {
+          value: null,
+          squash: true
+        }
+      },
       template: '<group-detail></group-detail>',
       data: {
         isProtected: true,

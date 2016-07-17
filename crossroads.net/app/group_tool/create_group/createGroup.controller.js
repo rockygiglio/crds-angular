@@ -340,21 +340,52 @@ export default class CreateGroupController {
 }
 
   previewGroup() {
-    //this.state.go('grouptool.mygroups');
     this.state.go('grouptool.detail');
   }
 
-  submitGroup() {
-    // map object
+  submit() {
+    this.saving = true;
+    if (this.childcareRequestForm.$invalid) {
+      this.saving = false;
+      return false;
+    } else {
+      //TODO map object(s)
+      const dto = {
+        groupName: 'Hard Coded Name',
+        groupDescription: 'Hard Coded Description',
+        groupTypeId: '1',
+        ministryId: '8',
+        startDate: moment(this.startDate).utc(),
+        congregationId: this.choosenCongregation.dp_RecordID
+      };
 
-    savePersonal();
-    saveGroup();
+      //TODO save objects
+
+      //const save = this.groupService.saveRequest(dto);
+      //save.$promise.then(() => {
+      //  this.log.debug('saved!');
+      //  this.saving = false;
+      //}, () => {
+      //  this.saving = false;
+      //  this.log.error('error!');
+     //   this.saving = false;
+    //  });
+  }
+
   }
 
   savePersonal() {
       // set oldName to existing email address to work around password change dialog issue
-      vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
-      return vm.data.profileData.person.$save();
+      // vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
+      // return vm.data.profileData.person.$save();
+  }
+
+  saveGroup() {
+
+  }
+
+  saveParticipant() {
+
   }
 
 }

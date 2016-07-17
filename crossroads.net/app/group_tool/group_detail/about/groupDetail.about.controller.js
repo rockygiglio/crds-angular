@@ -8,13 +8,13 @@ export default class GroupDetailAboutController {
     this.log = $log;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
-    this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
   }
 
   $onInit() {
-    if (this.groupId != null) {
+    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+      this.groupId = this.state.params.groupId;
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
         var primaryContactId = this.data.contactId;
@@ -30,8 +30,10 @@ export default class GroupDetailAboutController {
         this.ready = true;
       });
     }
-    //else - use data object from binding
-    //may need to do some mapping into object
-    //this.data = stuff from binding
+    else {
+      //TODO map object posted from create into data object
+      this.ready = true;
+    }
+
   }
 }
