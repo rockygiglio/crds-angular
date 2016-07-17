@@ -33,7 +33,7 @@
         </tr>
         <tr ng-repeat='invite in groupDetailRequests.invited track by $index'>
           <td>
-            <img class='img-responsive imgix-fluid requestor-image' ng-src={{invite.defaultProfileImageUrl}}'>
+            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{invite.imageUrl}}'>
           </td>
           <td>
             {{invite.recipientName}}
