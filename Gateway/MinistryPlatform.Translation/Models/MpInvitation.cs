@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace MinistryPlatform.Translation.Models
 {
     public class MpInvitation
     {
+        public int InvitationId { get; set; }
+
         public int SourceId { get; set; }
 
         public int GroupRoleId { get; set; }
@@ -17,6 +18,7 @@ namespace MinistryPlatform.Translation.Models
 
         public int InvitationType { get; set; }
 
+        public string InvitationGuid { get; set; }
     }
 
 }

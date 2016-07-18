@@ -34,7 +34,11 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
+    boot: ['./app/boot.ts']
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
@@ -61,26 +65,31 @@ module.exports = {
               ],
               loader: 'ng-annotate!babel-loader'
             },
-          {
-            test: /\.scss$/,
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
-          },
-          {
-            test: /\.(jpe?g|png|gif|svg)$/i,
-            loaders: ['image?bypassOnDebug&optimizationLevel=7&interlaced=false']
-          },
-          {
-            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff'
-          },
-          {
-            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file-loader'
-          },
-          {
-            test: /\.html$/,
-            loader: 'ng-cache?prefix=[dir]'
-          }
+            {
+              test: /\.scss$/,
+              loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
+            },
+            {
+              test: /\.(jpe?g|png|gif|svg)$/i,
+              loaders: ['image?bypassOnDebug&optimizationLevel=7&interlaced=false']
+            },
+            {
+              test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'url-loader?limit=10000&minetype=application/font-woff'
+            },
+            {
+              test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'file-loader'
+            },
+            {
+              test: /\.html$/,
+              loader: 'ng-cache?prefix=[dir]'
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
     ]
   },
   plugins: [

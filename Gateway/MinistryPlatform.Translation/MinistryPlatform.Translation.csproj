@@ -162,6 +162,7 @@
     <Compile Include="Models\MpGroupSignupRelationships.cs" />
     <Compile Include="Models\MpHousehold.cs" />
     <Compile Include="Models\MpHouseholdMember.cs" />
+    <Compile Include="Models\MpInquiry.cs" />
     <Compile Include="Models\MpLocation.cs" />
     <Compile Include="Models\Lookups\MpOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Repositories\GoCincinnati\GroupConnectorRepository.cs" />
     <Compile Include="Repositories\GoCincinnati\RegistrationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IChildcareRepository.cs" />
+    <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
     <Compile Include="Repositories\InvitationlRepository.cs" />
     <Compile Include="Repositories\GroupToolRepository.cs" />
@@ -244,7 +246,6 @@
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\GetMyRecordsRepository..cs" />
     <Compile Include="Repositories\GroupParticipantRepository.cs" />
-    <Compile Include="Repositories\GroupRepository..cs" />
     <Compile Include="Repositories\Interfaces\IAddressRepository.cs" />
     <Compile Include="Repositories\Interfaces\IBulkEmailRepository.cs" />
     <Compile Include="Repositories\Interfaces\IApiUserRepository.cs" />

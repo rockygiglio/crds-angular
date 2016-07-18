@@ -1,7 +1,6 @@
 GroupToolRouter.$inject = ['$httpProvider', '$stateProvider'];
 
 export default function GroupToolRouter($httpProvider, $stateProvider) {
-
   $httpProvider.defaults.useXDomain = true;
 
   //TODO: I think this is done globally, not needed here, I think the above needs to be done globally
@@ -10,20 +9,14 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
   $stateProvider
     .state('grouptool', {
       parent: 'noSideBar',
-      url: '/groups',
-      template: '<ui-view></ui-view>',
-      data: {
-        meta: {
-          title: 'Groups',
-          description: ''
-        }
-      }
+      abstract: true,
     })
     .state('grouptool.mygroups', {
       parent: 'noSideBar',
-      url: '/groups/mine',
+      url: '/groups/mygroups',
       template: '<my-groups></my-groups>',
       data: {
+        isProtected: true,
         meta: {
           title: 'My Groups',
           description: ''
@@ -32,7 +25,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.create', {
       parent: 'noSideBar',
-      url: '/grouptool/create',
+      url: '/groups/create',
       template: '<create-group></create-group>',
       data: {
         isProtected: true,
@@ -44,7 +37,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail', {
       parent: 'noSideBar',
-      url: '/groups/detail/{groupId:int}',
+      url: '/groups/mygroups/detail/{groupId:int}',
       template: '<group-detail></group-detail>',
       data: {
         isProtected: true,

@@ -298,6 +298,7 @@ namespace crds_angular.Services
                                 ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
                             });
                         }
+
                     }
                     var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
                     ccEvent.Groups.Add(new ChildcareGroup

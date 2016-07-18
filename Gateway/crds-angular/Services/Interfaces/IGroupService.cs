@@ -36,5 +36,9 @@ namespace crds_angular.Services.Interfaces
         List<GroupParticipantDTO> GetGroupParticipants(int groupId, bool active = true);
 
         void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId);
+
+        List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token);
+
+        List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
     }
 }
