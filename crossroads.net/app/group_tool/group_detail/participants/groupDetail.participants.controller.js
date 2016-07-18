@@ -46,13 +46,13 @@ export default class GroupDetailParticipantsController {
     this.currentView = newView;
   }
 
-  beginDeleteParticipant(participant) {
+  beginRemoveParticipant(participant) {
     this.deleteParticipant = participant;
     this.deleteParticipant.deleteMessage = '';
     this.setView('Delete');
   }
 
-  cancelDeleteParticipant(participant) {
+  cancelRemoveParticipant(participant) {
     participant.deleteMessage = undefined;
     this.deleteParticipant = undefined;
     this.setView('Edit');

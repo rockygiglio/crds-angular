@@ -4,7 +4,7 @@
 <div class='container-fluid' ng-show='groupDetailParticipants.ready' ng-if='groupDetailParticipants.currentView === "List" || groupDetailParticipants.currentView === "Edit"'>
   <div class='row'>
     <div class='col-md-12 group-participants'>
-      <group-detail-participant-card ng-repeat='participant in groupDetailParticipants.data' delete-action='groupDetailParticipants.beginDeleteParticipant(participant)' participant='participant' edit='groupDetailParticipants.currentView === "Edit"'></group-detail-participant-card>
+      <group-detail-participant-card ng-repeat='participant in groupDetailParticipants.data' delete-action='groupDetailParticipants.beginRemoveParticipant(participant)' participant='participant' edit='groupDetailParticipants.currentView === "Edit"'></group-detail-participant-card>
     </div>
   </div>
   <div class='row'>&nbsp;</div>
@@ -23,56 +23,10 @@
 
 <!-- Delete a participant -->
 <div class='container-fluid' ng-if='groupDetailParticipants.currentView === "Delete"'>
-  <form ng-submit='groupDetailParticipants.removeParticipant(groupDetailParticipants.deleteParticipant)'>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h4>Remove Participant - {{groupDetailParticipants.deleteParticipant.displayName()}}</h4>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolRemoveParticipantSubheaderText.content | html"></div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolRemoveParticipantPleaseContactText.content | html"></div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolRemoveParticipantEmailTemplateText.content | html"></div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Your Message (Optional)</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupDetailParticipants.deleteParticipant.deleteMessage'></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-        
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-standard' href='#' ng-click='groupDetailParticipants.cancelDeleteParticipant(groupDetailParticipants.deleteParticipant)'>Cancel</a>
-              <loading-button 
-                input-type='submit'
-                normal-text='Remove Participant'
-                loading-text='Removing...'
-                loading='groupDetailParticipants.processing'
-                loading-class='disabled'
-                input-classes='btn btn-primary'/>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+  <remove-participant
+    participant='groupDetailParticipants.deleteParticipant'
+    cancel-action='groupDetailParticipants.cancelRemoveParticipant()'
+    submit-action='groupDetailParticipants.removeParticipant()'/>
 </div>
 
 <!-- Email participants -->
