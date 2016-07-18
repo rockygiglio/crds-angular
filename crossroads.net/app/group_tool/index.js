@@ -17,3 +17,4 @@ export default angular.
 import myGroups from './my_groups';
 import createGroup from './create_group';
 import groupDetail from './group_detail';
+import message from './message';
