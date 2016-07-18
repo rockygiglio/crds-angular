@@ -161,6 +161,7 @@
     <Compile Include="Models\MpGroupSignupRelationships.cs" />
     <Compile Include="Models\MpHousehold.cs" />
     <Compile Include="Models\MpHouseholdMember.cs" />
+    <Compile Include="Models\MpInquiry.cs" />
     <Compile Include="Models\MpLocation.cs" />
     <Compile Include="Models\Lookups\MpOtherOrganization.cs" />
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />

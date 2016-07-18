@@ -182,8 +182,8 @@ describe('Group Tool SmallGroup', () => {
   });
 
   describe('categoriesToString()', () => {
-    it('is Interest\\ Boxing, Men\'s\\ Father\'s', () => {
-      expect(smallGroup.categoriesToString()).toEqual('Interest\\ Boxing, Men\'s\\ Father\'s');
+    it('is Interest / Boxing, Men\'s / Father\'s', () => {
+      expect(smallGroup.categoriesToString()).toEqual('Interest / Boxing, Men\'s / Father\'s');
     });
   });
 
