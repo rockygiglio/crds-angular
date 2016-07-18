@@ -1,3 +1,4 @@
+
 import CONSTANTS from 'crds-constants';
 import ParticipantService from './services/participant.service';
 import GroupService from './services/group.service';
@@ -17,4 +18,4 @@ export default angular.
 import myGroups from './my_groups';
 import createGroup from './create_group';
 import groupDetail from './group_detail';
-import message from './message';
+import groupMessage from './group_message';

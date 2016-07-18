@@ -65,116 +65,25 @@
     </div>
   </div>
 </div>
-<!--
-This will be Done Later not executing these flows as part of this story.
-
-
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Approve"'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h4>Approve Participant - {{groupDetailRequests.currentRequest.name}}</h4>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Message</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupDetailRequests.currentRequest.message'></textarea>
-            </div>
-          </div>
-        </div>
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.approveRequest(groupDetailRequests.currentRequest)'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Deny"'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h4>Deny Participant - {{groupDetailRequests.currentRequest.name}}</h4>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Message</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupDetailRequests.currentRequest.message'></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.denyRequest(groupDetailRequests.currentRequest)'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
--->
-
-    bindings: {
-      person: '<',
-      normalLoadingText: '@',
-      loadingLoadingText: '@',
-      cancel: '&',
-      submit: '&',
-      header: '@',
-      subHeaderText: '<',
-      contactText: '<',
-      emailTemplateText: '<',
-    },
 
 <div class='container-fluid' ng-if='groupDetailRequests.approveView()'>
-  <message></message>
+  <group-message person="groupDetailRequests.selectedInquiry"
+    normalLoading="Approve"
+    loadingLoadingText="Approving..."
+    header="Approve Participant - {{ groupDetailRequests.selectedInquiry.recipientName }}"
+    subHeaderText="$root.MESSAGES.groupToolApproveInquirySubheaderText.content"
+    emailTemplateText="$root.MESSAGES.groupToolApproveInquiryEmailTemplateText.content"
+    cancel="function(){}"
+    submit="function(){}"
+    ></group-message>
 </div>
+
+<!--
 <div class='container-fluid' ng-if='groupDetailRequests.denyView()'>
   <message></message>
 </div>
+-->
+
 <div class='container-fluid' ng-if='groupDetailRequests.inviteView()'>
   <group-detail-invite on-update="groupDetailRequests.setView(newView, refresh)" group-id="groupDetailRequests.groupId"></group-detail-invite>
 </div>

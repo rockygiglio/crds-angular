@@ -60,12 +60,12 @@ export default class GroupDetailRequestsController {
 
   approve(inquiry) {
     this.selectedInquiry = inquiry;
-    this.setView("Approve", false);
+    this.setView('Approve', false);
   }
 
   deny(inquiry) {
     this.selectedInquiry = inquiry;
-    this.setView("Deny", false);
+    this.setView('Deny', false);
   }
 
   setView(newView, refresh) {
