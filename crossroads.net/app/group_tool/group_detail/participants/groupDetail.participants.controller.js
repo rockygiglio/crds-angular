@@ -20,12 +20,16 @@ export default class GroupDetailParticipantsController {
     this.participantService.get().then((myParticipant) => {
       this.myParticipantId = myParticipant.ParticipantId;
       this.loadGroupParticipants();
+    }, (err) => {
+      this.log.error(`Unable to get my participant: ${err.status} - ${err.statusText}`);
+      this.error = true;
+      this.ready = true;
     });
   }
 
   loadGroupParticipants() {
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
-      this.data = data.sort((a, b) => {
+      this.data = data.slice().sort((a, b) => {
         return(a.compareTo(b));
       });
       this.data.forEach(function(participant) {
@@ -60,6 +64,7 @@ export default class GroupDetailParticipantsController {
 
   removeParticipant(participant) {
     this.log.info(`Deleting participant: ${JSON.stringify(participant)}`);
+    console.log(`Deleting participant: ${JSON.stringify(participant)}`);
     this.processing = true;
     this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
       _.remove(this.data, function(p) {
