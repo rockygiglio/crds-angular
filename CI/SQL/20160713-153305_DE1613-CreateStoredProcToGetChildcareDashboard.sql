@@ -35,7 +35,7 @@ BEGIN
 	JOIN dbo.Contacts c on c.Contact_ID = p.Contact_ID AND c.Household_ID = @Household_ID and c.Domain_ID = p.Domain_ID
 	JOIN dbo.Event_Groups eg on eg.Group_ID = g.Group_ID and eg.Domain_ID = g.Domain_ID
 	JOIN dbo.Events e on e.Event_ID = eg.Event_ID AND Event_Type_ID = @ChildcareEventType and eg.Domain_ID = e.Domain_ID
-	WHERE (gp.End_Date IS NULL OR gp.End_Date > GetDate())
+	WHERE (gp.End_Date IS NULL OR gp.End_Date > GetDate()) AND e.Event_End_Date > GetDate()
 	AND c.Household_Position_ID IN (1, 7)
 END
 GO

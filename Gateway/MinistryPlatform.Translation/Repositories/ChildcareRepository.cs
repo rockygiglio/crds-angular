@@ -24,7 +24,8 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = _apiUserRepository.GetToken();
             var parms = new Dictionary<string, object> {{"Contact_ID", contactId}, {"Domain_ID", 1} };
             var dashboardData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<ChildcareDashboard>(_configurationWrapper.GetConfigValue("ChildcareDashboardStoredProc"), parms);
-            return dashboardData.FirstOrDefault();
+            var childcareDashboard = dashboardData.FirstOrDefault() ?? new List<ChildcareDashboard>();
+            return childcareDashboard;
         }
     }
 }
