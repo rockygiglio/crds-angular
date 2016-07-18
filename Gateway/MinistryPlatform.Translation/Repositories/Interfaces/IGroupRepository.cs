@@ -14,7 +14,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
                                   Boolean childCareNeeded,
                                   DateTime startDate,
                                   DateTime? endDate = null,
-                                  Boolean? employeeRole = false);
+                                  Boolean? employeeRole = false,
+                                  int? enrolledBy = null);
 
         IList<MpEvent> getAllEventsForGroup(int groupId);
 

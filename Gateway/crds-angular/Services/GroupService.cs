@@ -125,7 +125,8 @@ namespace crds_angular.Services
                                                                            Convert.ToInt32(groupId),
                                                                            roleId,
                                                                            participant.childCareNeeded,
-                                                                           DateTime.Now);
+                                                                           DateTime.Now,
+                                                                           null, false, participant.EnrolledBy);
 
                 var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
                 _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);

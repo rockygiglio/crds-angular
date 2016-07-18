@@ -101,7 +101,7 @@ namespace crds_angular.Services
                 {
                     particpantId = participant.ParticipantId,
                     groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
-                    capacityNeeded = 1
+                    capacityNeeded = 1,
                 };
 
                 _groupService.addParticipantToGroupNoEvents(saveRsvp.GroupId, participantSignup);
