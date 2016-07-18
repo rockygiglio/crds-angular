@@ -1,3 +1,4 @@
+
 import CONSTANTS from 'crds-constants';
 import GroupInvitation from '../../model/groupInvitation';
 
@@ -13,106 +14,95 @@ export default class GroupDetailRequestsController {
     this.ready = false;
     this.error = false;
     this.currentView = 'List';
-    this.currentRequest = null;
-    this.invite = null;
-    this.groupParticipantRoles = [
-      { 'id': CONSTANTS.GROUP.ROLES.MEMBER, 'label': 'Participant' },
-      { 'id': CONSTANTS.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
-      { 'id': CONSTANTS.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
-    ];
-
-    this.processing = false;
     this.invited = [];
     this.inquired = [];
+
+    /*
+    Possibly TODO on erasing these
+
+    this.currentRequest = null;
+
+    */
   }
 
   $onInit() {
+    this.getRequests();
+  }
+
+  getRequests() {
     this.ready = false;
     this.error = false;
 
     this.groupService.getInquiries(this.groupId).then((inquiries) => {
-      this.inquired = inquiries;
+      this.inquired = inquiries.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
 
       this.groupService.getInvities(this.groupId).then((invitations) => {
         this.invited = invitations;
         this.ready = true;
       },
       (err) => {
+        this.rootScope.$emit('notify', `Unable to get group invitations: ${err.status} - ${err.statusText}`);
         this.log.error(`Unable to get group invitations: ${err.status} - ${err.statusText}`);
         this.error = true;
         this.ready = true;
       });
     },
     (err) => {
+      this.rootScope.$emit('notify', `Unable to get group inquiries: ${err.status} - ${err.statusText}`);
       this.log.error(`Unable to get group inquiries: ${err.status} - ${err.statusText}`);
       this.error = true;
       this.ready = true;
     });
   }
 
-  setView(newView) {
+  setView(newView, refresh) {
     this.currentView = newView;
-  }
 
-  beginInvitation() {
-    this.processing = false;
-    this.invite = new GroupInvitation();
-    this.invite.sourceId = this.groupId;
-    this.currentView = 'Invite';
-  }
-    
-  sendInvitation(form, invitation) {
-    this.processing = true;
-    if(!form.$valid) {
-      this.processing = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      return;
+    if(refresh) {
+      this.getRequests();
     }
-    invitation.requestDate = new Date();
-
-    this.groupService.sendGroupInvitation(invitation).then(
-      (/*data*/) => {
-        this.invite = null;
-        this.$onInit();
-        this.currentView = 'List';
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-      },
-      (/*err*/) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
-      }
-    ).finally(() => {
-      this.processing = false;
-    });
   }
 
-  getInquiring() {
-    return this.inquired.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
+  listView() {
+    return this.currentView === 'List';
   }
-    
+
+  inviteView() {
+    return this.currentView === 'Invite';
+  }
+
+  approveView() {
+    return this.currentView === 'Approve';
+  }
+
+  denyView() {
+    return this.currentView === 'Deny';
+  }
+
   //////TODO////////////////////////////////////
   /*
   beginApproveRequest(request) {
     this.currentRequest = request;
-    this.currentView = 'Approve';    
+    this.setView('Approve', false);    
   }
     
   approveRequest(request) {
     // TODO Call API to approve request, send email, etc
     _.remove(this.data.requests, request);
     this.currentRequest = null;
-    this.currentView = 'List';
+    this.setView('List', true);
   }
 
   beginDenyRequest(request) {
     this.currentRequest = request;
-    this.currentView = 'Deny';    
+    this.setView('Deny', false);    
   }
     
   denyRequest(request) {
     // TODO Call API to deny request, send email, etc
     _.remove(this.data.requests, request);
     this.currentRequest = null;
-    this.currentView = 'List';
+    this.setView('List', true);
   }
   */
 }

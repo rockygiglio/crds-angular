@@ -1,4 +1,6 @@
-<div ng-if='groupDetailRequests.currentView === "List"'>
+<preloader full-screen='false' ng-if="!groupDetailRequests.ready"> </preloader>
+
+<div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
   <div class="table-responsive">
     <table class="table group-requests-list">
       <thead>
@@ -10,7 +12,7 @@
         <th class='col-md-3'></th>
       </thead>
       <tbody>
-        <tr ng-repeat='inquiry in groupDetailRequests.getInquiring() track by $index'>
+        <tr ng-repeat='inquiry in groupDetailRequests.inquired track by $index'>
           <td>
             <img class='img-responsive imgix-fluid requestor-image' ng-src='{{inquiry.imageUrl}}' err-src='{{inquiry.defaultProfileImageUrl}}'>
           </td>
@@ -58,7 +60,7 @@
   <div class='container-fluid'>
     <div class='row'>
       <div class='col-sm-12'>
-        <p class='text-center'><button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginInvitation()'>Invite Someone</button></p>
+        <p class='text-center'><button type='button' class='btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
       </div>
     </div>
   </div>
@@ -154,81 +156,6 @@ This will be Done Later not executing these flows as part of this story.
   </form>
 </div>
 -->
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Invite"'>
-  <form name='invitationForm' ng-submit='groupDetailRequests.sendInvitation(invitationForm, groupDetailRequests.invite)' novalidate>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h3>Invite Someone</h3>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group' ng-class='{"has-error": invitationForm.$submitted && invitationForm.recipientName.$invalid}'>
-              <label for='name' class='control-label required'>Name</label>
-              <input type='text' class='form-control' name='recipientName' ng-model='groupDetailRequests.invite.recipientName' required></input>
-              <ng-messages for="invitationForm.recipientName.$error" ng-show="invitationForm.$submitted && invitationForm.recipientName.$invalid">
-                <ng-messages-include src="on-blur-messages"></ng-messages-include>
-              </ng-messages>
-              <ng-messages for="invitationForm.recipientName.$error" ng-if="invitationForm.$submitted && invitationForm.recipientName.$invalid">
-                <ng-messages-include src="on-submit-messages"></ng-messages-include>
-              </ng-messages>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group' ng-class='{"has-error": (invitationForm.$submitted || invitationForm.emailAddress.$dirty) && invitationForm.emailAddress.$invalid}'>
-              <label for='emailAddress' class='control-label required'>Email Address</label>
-              <input type='email' class='form-control' name='emailAddress' ng-model='groupDetailRequests.invite.emailAddress' ng-model-options='{ updateOn: "default blur", debounce: { "default": 500, "blur": 0 } }' required></input>
-              <ng-messages for="invitationForm.emailAddress.$error" ng-show="(invitationForm.$submitted || invitationForm.emailAddress.$dirty) && invitationForm.emailAddress.$invalid">
-                <ng-messages-include src="on-blur-messages"></ng-messages-include>
-              </ng-messages>
-              <ng-messages for="invitationForm.emailAddress.$error" ng-if="(invitationForm.$submitted || invitationForm.emailAddress.$dirty) && invitationForm.emailAddress.$invalid">
-                <ng-messages-include src="on-submit-messages"></ng-messages-include>
-              </ng-messages>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group' ng-class='{"has-error": invitationForm.$submitted && invitationForm.groupRoleId.$invalid}'>
-              <label for='groupRoleId' class='control-label required'>This person's role will be:</label>
-              <label ng-repeat='role in groupDetailRequests.groupParticipantRoles' class='radio-inline'>
-                <input type="radio" name="groupRoleId" ng-model='groupDetailRequests.invite.groupRoleId' required value='{{role.id}}'/>{{role.label}}
-              </label>
-              <ng-messages for="invitationForm.groupRoleId.$error" ng-show="invitationForm.$submitted && invitationForm.groupRoleId.$invalid">
-                <ng-messages-include src="on-blur-messages"></ng-messages-include>
-              </ng-messages>
-              <ng-messages for="invitationForm.groupRoleId.$error" ng-if="invitationForm.$submitted && invitationForm.groupRoleId.$invalid">
-                <ng-messages-include src="on-submit-messages"></ng-messages-include>
-              </ng-messages>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <button type='button' class='btn btn-standard' ng-click='groupDetailRequests.setView("List")'>Cancel</button>
-              <loading-button 
-                input-type='submit'
-                normal-text='Send'
-                loading-text='Sending...'
-                loading='groupDetailRequests.processing'
-                loading-class='disabled'
-                input-classes='btn btn-primary'/>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+<div class='container-fluid' ng-if='groupDetailRequests.inviteView()'>
+  <group-detail-invite on-update="groupDetailRequests.setView(newView, refresh)" group-id="groupDetailRequests.groupId"></group-detail-invite>
 </div>
