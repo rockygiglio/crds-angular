@@ -12,6 +12,5 @@ export default class GroupDetailParticipantCardController {
 
   invokeDeleteAction(participant) {
     this.deleteAction(participant);
-    // participant.deleted = true;
   }
 }
