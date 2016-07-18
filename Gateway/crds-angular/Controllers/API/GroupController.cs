@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
@@ -30,6 +32,8 @@ namespace crds_angular.Controllers.API
 
         private readonly int GroupRoleDefaultId =
             Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
+        private readonly int GroupRoleLeaderId =
+            Convert.ToInt32(ConfigurationManager.AppSettings["GroupRoleLeader"]);
 
         public GroupController(Services.Interfaces.IGroupService groupService,
                                IAuthenticationRepository authenticationService,
@@ -207,6 +211,31 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
+            });
+        }
+
+        [RequiresAuthorization]
+        [Route("api/group/mine/{groupTypeId:int}/{groupId:int}/participant/{groupParticipantId:int}")]
+        [HttpDelete]
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]int groupParticipantId, [FromUri(Name="removalMessage")]string removalMessage = null)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    groupService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 

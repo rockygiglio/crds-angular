@@ -10,7 +10,8 @@ export default class GroupDetailParticipantCardController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
   }
 
-  markParticipantDeleted(participant) {
-    participant.deleted = true;
+  invokeDeleteAction(participant) {
+    this.deleteAction(participant);
+    // participant.deleted = true;
   }
 }

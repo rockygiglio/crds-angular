@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
@@ -40,6 +41,7 @@ namespace crds_angular.Services
         /// This is retrieved in the constructor from AppSettings
         /// </summary>
         private readonly int _groupRoleDefaultId;
+        private readonly int _groupRoleLeaderId;
         private readonly int _defaultContactEmailId;
         private readonly int _journeyGroupId;
         private readonly int _groupCategoryAttributeTypeId;
@@ -72,7 +74,8 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
             _attributeService = attributeService;
 
-            _groupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
+            _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _groupRoleLeaderId = _configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             _journeyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
@@ -559,6 +562,42 @@ namespace crds_angular.Services
             //}
 
             return groupDetail;
+        }
+
+        public void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null)
+        {
+            try
+            {
+                var groups = GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+
+                if (groups == null || !groups.Any())
+                {
+                    throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
+                }
+
+                var groupParticipants = groups.FirstOrDefault().Participants;
+                var me = _participantService.GetParticipantRecord(token);
+
+                if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
+                    groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+                {
+                    throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
+                }
+
+                endDateGroupParticipant(groupId, groupParticipantId);
+
+                // TODO - send removal email
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not remove group participant {0} from group {1}", groupParticipantId, groupId), e);
+            }
+
         }
     }
 }

@@ -7,10 +7,10 @@
         <div class='row'>
           <div class='col-md-12'>
             <span class='group-participant-name'>
-              {{groupDetailParticipantCard.participant.name}}
+              {{groupDetailParticipantCard.participant.displayName()}}
             </span>
-            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "leader"'> (Leader)</span>
-            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.role === "apprentice"'> (Apprentice)</span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.isLeader()'> (Leader)</span>
+            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.isApprentice()'> (Apprentice)</span>
             <br>
           </div>
         </div>
@@ -24,8 +24,8 @@
       </div>
       <div class='col-md-2'>
         <svg viewBox="0 0 32 32" class="icon icon-close" 
-          ng-if='groupDetailParticipantCard.edit && !groupDetailParticipantCard.participant.deleted'
-          ng-click='groupDetailParticipantCard.markParticipantDeleted(groupDetailParticipantCard.participant)'>
+          ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit && !groupDetailParticipantCard.participant.deleted'
+          ng-click='groupDetailParticipantCard.deleteAction(groupDetailParticipantCard.participant)'>
           <use xlink:href="#close"></use>
         </svg>
       </div>
