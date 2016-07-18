@@ -1,14 +1,16 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService) {
+  constructor($log, $resource, $q, AuthService, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+    this.imgService = ImageService;
   }
 
   sendGroupInvitation(invitation) {
@@ -32,29 +34,24 @@ export default class GroupService {
   }
 
   getGroup(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'groupName': 'John and Betty\'s Married Couples New Testament Study Group',
-      'groupDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      'category': 'Study / 1 John',
-      'type': 'Married couples group',
-      'ageRange': '50s',
-      'location': '9806 S. Springfield, Cincinnati OH, 45243',
-      'when': 'Fridays at 9:30am, Every Other Week',
-      'childcare': false,
-      'pets': true,
-      'leaders': [
-        { 'contactId': 1670863, 'participantId': 456, 'name': 'John Smith' },
-        { 'contactId': 789, 'participantId': 123, 'name': 'Betty Smith' },
-      ],
-      'primaryContact': {
-        'contactId': 1670863,
-        'participantId': 456,
-        'name': 'John Smith'
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
+
+      if(!groups || groups.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group not found'};
+        throw err;
       }
+      
+      return groups[0];
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
   getGroupParticipants(groupId) {
@@ -129,37 +126,38 @@ export default class GroupService {
     return promised.promise;
   }
 
-  getGroupRequests(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'requests': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Chris Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 5, 20)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sally Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 5, 15)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Donny Franks',
-          'requestType': 'invited',
-          'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 4, 15)
-        },
-      ]
+  getInvities(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+                          query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+                          
+    return promised.then((data) => {
+      let invitations = data.map((invitation) => {
+        invitation.imageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInvitation(invitation);
+      });
+
+      return invitations;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
+  }
+
+  getInquiries(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+                          query({groupId: groupId}).$promise
+
+    return promised.then((data) => {
+      let inquiries = data.map((inquiry) => {
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${inquiry.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInquiry(inquiry);
+      });
+
+      return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
   }
 }

@@ -90,7 +90,7 @@ DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
+IF ((SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%')
 	SET @processorID = 'cus_8gGoksUHAuJgQi';
 ELSE
 	SET @processorID = 'cus_8gGm4dhM3ul1Cp';
@@ -187,7 +187,7 @@ DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%'
+IF ((SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%')
 	SET @processorID = 'cus_85UsQReBytr2dn';
 ELSE
 	SET @processorID = 'cus_8gGvY5NF7fPjI8';
