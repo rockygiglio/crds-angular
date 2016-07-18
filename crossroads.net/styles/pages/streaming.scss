@@ -2,7 +2,6 @@
 $streaming-imgix-domain: '//crds-cms-uploads.imgix.net/content/images';
 
 // NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
-$streaming-font-semi_cond: "acumin-pro-semi-condensed", sans-serif;
 $streaming-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
 $streaming-font-sans: "acumin-pro", sans-serif;
 $streaming-font-serif: "lexia", serif;
@@ -104,7 +103,6 @@ streaming {
       margin-top: 0.25em;
       text-transform: uppercase;
       font-size: 90%;
-      font-family: $streaming-font-semi_cond;
       color: #FFF;
       position: absolute;
       right: 0;
@@ -166,7 +164,6 @@ streaming {
       }
 
       small {
-        font-family: $streaming-font-semi_cond;
         text-transform: uppercase;
         font-size: 63%;
         font-weight: 200;
