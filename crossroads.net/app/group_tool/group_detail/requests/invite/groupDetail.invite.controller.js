@@ -29,7 +29,6 @@ export default class GroupDetailInviteController {
   }
     
   sendInvitation(form, invitation) {
-    debugger;
     this.processing = true;
     if(!form.$valid) {
       this.processing = false;
@@ -41,7 +40,7 @@ export default class GroupDetailInviteController {
     this.groupService.sendGroupInvitation(invitation).then(
       (/*data*/) => {
         this.invite = null;
-        this.onUpdate('List', true);
+        this.onUpdate({newView: 'List', refresh: true});
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
       },
       (/*err*/) => {
