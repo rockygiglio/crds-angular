@@ -24,6 +24,7 @@ namespace crds_angular.Services
 
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
+        private readonly int _domainId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
 
@@ -46,6 +47,7 @@ namespace crds_angular.Services
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+            _domainId = configurationWrapper.GetConfigIntValue("DomainId");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -104,8 +106,20 @@ namespace crds_angular.Services
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
-                SendGroupParticipantEmail(groupId, groupParticipantId, groups.FirstOrDefault(), _removeParticipantFromGroupEmailTemplateId, GroupToolRemoveParticipantEmailTemplateTextTitle, message);
-                // TODO - send removal email
+                try
+                {
+                    SendGroupParticipantEmail(groupId,
+                                              groupParticipantId,
+                                              groups.FirstOrDefault(),
+                                              _removeParticipantFromGroupEmailTemplateId,
+                                              GroupToolRemoveParticipantEmailTemplateTextTitle,
+                                              message,
+                                              me);
+                }
+                catch (Exception e)
+                {
+                    _logger.Warn(string.Format("Could not send email to group participant {0} notifying of removal from group {1}", groupParticipantId, groupId), e);
+                }
             }
             catch (GroupParticipantRemovalException e)
             {
@@ -119,7 +133,7 @@ namespace crds_angular.Services
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle, string message = null)
+        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
         {
             var participant = group.Participants.Find(p => p.GroupParticipantId == groupParticipantId);
 
@@ -131,27 +145,31 @@ namespace crds_angular.Services
             };
             var replyTo = new MpContact
             {
-                ContactId = emailTemplate.ReplyToContactId,
-                EmailAddress = emailTemplate.ReplyToEmailAddress
+                ContactId = fromParticipant == null ? emailTemplate.ReplyToContactId : fromParticipant.ContactId,
+                EmailAddress = fromParticipant == null ? emailTemplate.ReplyToEmailAddress : fromParticipant.EmailAddress
             };
 
             var to = new List<MpContact>
                 {
                     new MpContact
                     {
-                        // Just need a contact ID here, doesn't have to be for the recipient
-                        ContactId = emailTemplate.FromContactId,
+                        ContactId = participant.ContactId,
                         EmailAddress = participant.Email
                     }
                 };
 
-            var emailTemplateText = _contentBlockService[emailTemplateContentBlockTitle].Content;
-            var mergeData = new Dictionary<string, object>
+            var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
+            var mergeData = getDictionary(participant);
+            mergeData["Email_Template_Text"] = emailTemplateText;
+            mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
+            mergeData["Group_Name"] = group.GroupName;
+            mergeData["Group_Description"] = group.GroupDescription;
+            if (fromParticipant != null)
             {
-                { "Email_Template_Text", emailTemplateText },
-                { "Email_Custom_Message", string.IsNullOrWhiteSpace(message) ? string.Empty : message }
-            };
-            var confirmation = new MpCommunication
+                mergeData["From_Display_Name"] = fromParticipant.DisplayName;
+                mergeData["From_Preferred_Name"] = fromParticipant.PreferredName;
+            }
+            var email = new MpCommunication
             {
                 EmailBody = emailTemplate.Body,
                 EmailSubject = emailTemplate.Subject,
@@ -163,7 +181,7 @@ namespace crds_angular.Services
                 ToContacts = to,
                 MergeData = mergeData
             };
-            _communicationRepository.SendMessage(confirmation);
+            _communicationRepository.SendMessage(email);
 
         }
 

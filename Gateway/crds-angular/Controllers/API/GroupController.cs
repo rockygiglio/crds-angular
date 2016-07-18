@@ -214,31 +214,6 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [RequiresAuthorization]
-        [Route("api/group/mine/{groupTypeId:int}/{groupId:int}/participant/{groupParticipantId:int}")]
-        [HttpDelete]
-        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]int groupParticipantId, [FromUri(Name="removalMessage")]string removalMessage = null)
-        {
-            return Authorized(token =>
-            {
-                try
-                {
-                    groupService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
-                    return Ok();
-                }
-                catch (GroupParticipantRemovalException e)
-                {
-                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-                catch (Exception ex)
-                {
-                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
-        }
-
         /// <summary>
         /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
         /// If one or more groups are found, then the group detail data is returned.

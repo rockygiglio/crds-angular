@@ -77,7 +77,7 @@ export default class GroupService {
   }
 
   removeGroupParticipant(groupId, participant) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId/participant/:groupParticipantId`).
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
                           delete({
                             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
                             groupId: groupId,

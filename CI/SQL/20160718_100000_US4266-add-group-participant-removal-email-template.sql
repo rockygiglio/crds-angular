@@ -3,7 +3,7 @@ GO
 
 DECLARE @TemplateID int = 262484
 DECLARE @Body VARCHAR(max) = '[Email_Template_Text] <br /> [Email_Custom_Message]'
-DECLARE @Subject VARCHAR(max) = 'Group Participant Removal'
+DECLARE @Subject VARCHAR(max) = 'Removal from Group [Group_Name]'
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)
 BEGIN
