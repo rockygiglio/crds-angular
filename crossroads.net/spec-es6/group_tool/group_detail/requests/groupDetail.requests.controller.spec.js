@@ -1,10 +1,11 @@
 import constants from 'crds-constants';
 import GroupDetailRequestsController from '../../../../app/group_tool/group_detail/requests/groupDetail.requests.controller'
+import GroupInquiry from '../../../../app/group_tool/model/groupInquiry';
+import GroupInvitation from '../../../../app/group_tool/model/groupInvitation';
 
 describe('GroupDetailRequestsController', () => {
     let fixture,
         groupService,
-        imageService,
         state,
         rootScope,
         log,
@@ -14,7 +15,6 @@ describe('GroupDetailRequestsController', () => {
 
     beforeEach(inject(function($injector) {
         groupService = $injector.get('GroupService'); 
-        imageService = $injector.get('ImageService');
         state = $injector.get('$state');
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
@@ -30,24 +30,26 @@ describe('GroupDetailRequestsController', () => {
           groupId: 123
         };
 
-        fixture = new GroupDetailRequestsController(groupService, imageService, state, rootScope, log);
+        fixture = new GroupDetailRequestsController(groupService, state, rootScope, log);
     }));
 
     describe('the constructor', () => {
         it('should initialize properties', () => {
-            expect(fixture.defaultProfileImageUrl).toEqual(imageService.DefaultProfileImage);
             expect(fixture.groupId).toEqual(state.params.groupId);
             expect(fixture.ready).toBeFalsy();
             expect(fixture.error).toBeFalsy();
             expect(fixture.currentView).toEqual('List');
             expect(fixture.currentRequest).toBe(null);
             expect(fixture.invite).toBe(null);
+
             expect(fixture.groupParticipantRoles).toEqual([
               { 'id': constants.GROUP.ROLES.MEMBER, 'label': 'Participant' },
               { 'id': constants.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
               { 'id': constants.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
             ]);
 
+            expect(fixture.invited.length).toEqual(0);
+            expect(fixture.inquired.length).toEqual(0);
             expect(fixture.processing).toBeFalsy();
         });
     });
@@ -138,62 +140,110 @@ describe('GroupDetailRequestsController', () => {
     });
 
     describe('$onInit() function', () => {
-        it('should get requests and set image url', () => {
-          let requests = [
+        it('should get invited and inquiries', () => {
+          let mockInvities = [
             {
-              'contactId': 1670863,
-              'participantId': 456,
-              'name': 'Chris Jackson',
-              'requestType': 'requested',
-              'emailAddress': 'cj101@gmail.com',
-              'dateRequested': new Date(2016, 5, 20)
+              "sourceId": 123,
+              "groupRoleId": 16,
+              "emailAddress": "for@me.com",
+              "recipientName": "Knowledge Man",
+              "requestDate": "2016-07-14T11:00:00",
+              "invitationType": 1,
+              "invitationId": 0,
+              "invitationGuid": null
             },
             {
-              'contactId': 123,
-              'participantId': 456,
-              'name': 'Sally Jackson',
-              'requestType': 'requested',
-              'emailAddress': 'sallyj@yahoo.com',
-              'dateRequested': new Date(2016, 5, 15)
-            },
-            {
-              'contactId': 123,
-              'participantId': 456,
-              'name': 'Donny Franks',
-              'requestType': 'invited',
-              'emailAddress': 'donnyf@gmail.com',
-              'dateRequested': new Date(2016, 4, 15)
-            },
+              "sourceId": 123,
+              "groupRoleId": 16,
+              "emailAddress": "really@fast.com",
+              "recipientName": "Buffer Dude",
+              "requestDate": "2016-07-14T11:00:00",
+              "invitationType": 1,
+              "invitationId": 0,
+              "invitationGuid": null
+            }
           ];
 
-          let deferred = qApi.defer();
-          deferred.resolve({
-            'groupId': state.params.groupId,
-            'requests': requests
+          let mockInquires = [
+            {
+              "groupId": 123,
+              "emailAddress": "jim.kriz@ingagepartners.com",
+              "phoneNumber": "513-432-1973",
+              "firstName": "Dustin",
+              "lastName": "Kocher",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": false,
+              "inquiryId": 19
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "jkerstanoff@callibrity.com",
+              "phoneNumber": "513-987-1983",
+              "firstName": "Joe",
+              "lastName": "Kerstanoff",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": false,
+              "inquiryId": 20
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "kim.farrow@thrivecincinnati.com",
+              "phoneNumber": "513-874-6947",
+              "firstName": "Kim",
+              "lastName": "Farrow",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": true,
+              "inquiryId": 21
+            }
+          ];
+
+          //Invities setup
+          let invities = mockInvities.map((invitation) => {
+            return new GroupInvitation(invitation);
           });
 
-          spyOn(groupService, 'getGroupRequests').and.callFake(function(groupId) {
-            return(deferred.promise);
+          let deferredInvities = qApi.defer();
+          deferredInvities.resolve(mockInvities);
+          deferredInvities.promise.then(() => {
+            return invities;
+          });
+
+          //Inquiries setup
+          let inquires = mockInquires.map((inquiry) => {
+            return new GroupInquiry(inquiry);
+          });
+
+          let deferredInquiries = qApi.defer();
+          deferredInquiries.resolve(mockInquires);
+          deferredInquiries.promise.then(() => {
+            return inquires;
+          });
+
+          spyOn(groupService, 'getInvities').and.callFake(function(groupId) {
+            return(deferredInvities.promise);
+          });
+
+          spyOn(groupService, 'getInquiries').and.callFake(function(groupId) {
+            return(deferredInquiries.promise);
           });
 
           fixture.$onInit();
           rootScope.$digest();
-
-          expect(groupService.getGroupRequests).toHaveBeenCalledWith(state.params.groupId);
-          expect(fixture.data).toBeDefined();
-          expect(fixture.data.groupId).toBeDefined();
-          expect(fixture.data.groupId).toEqual(state.params.groupId);
-          expect(fixture.data.requests).toBeDefined();
-          expect(fixture.data.requests.length).toEqual(requests.length);
-          fixture.data.requests.forEach(function(r) {
-            expect(r.imageUrl).toBeDefined();
-            expect(r.imageUrl).toEqual(`${imageService.ProfileImageBaseURL}${r.contactId}`);
-          }, this);
+          expect(groupService.getInvities).toHaveBeenCalledWith(state.params.groupId);
+          expect(groupService.getInquiries).toHaveBeenCalledWith(state.params.groupId);
+          expect(fixture.invited).toBeDefined();
+          expect(fixture.inquired).toBeDefined()
+          expect(fixture.groupId).toBeDefined();
+          expect(fixture.groupId).toEqual(state.params.groupId);
+          expect(fixture.invited.length).toEqual(invities.length);
+          expect(fixture.invited[0].emailAddress).toEqual(invities[0].emailAddress);
+          expect(fixture.inquired.length).toEqual(inquires.length);
+          expect(fixture.inquired[0].emailAddress).toEqual(inquires[0].emailAddress);
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeFalsy();
         });
 
-        it('should set error state if trouble getting requests', () => {
+        it('should set error state if trouble getting inquiries', () => {
           let deferred = qApi.defer();
           let error = {
             status: 500,
@@ -201,16 +251,62 @@ describe('GroupDetailRequestsController', () => {
           };
           deferred.reject(error);
 
-          spyOn(groupService, 'getGroupRequests').and.callFake(function(groupId) {
+          spyOn(groupService, 'getInquiries').and.callFake(function(groupId) {
             return(deferred.promise);
           });
 
           fixture.$onInit();
           rootScope.$digest();
 
-          expect(groupService.getGroupRequests).toHaveBeenCalledWith(state.params.groupId);
+          expect(groupService.getInquiries).toHaveBeenCalledWith(state.params.groupId);
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeTruthy();
+        });
+    });
+
+
+    describe('getInquiring() function', () => {
+        it('should get only placed inquired', () => {
+          let mockInquires = [
+            {
+              "groupId": 123,
+              "emailAddress": "jim.kriz@ingagepartners.com",
+              "phoneNumber": "513-432-1973",
+              "firstName": "Dustin",
+              "lastName": "Kocher",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": null,
+              "inquiryId": 19
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "jkerstanoff@callibrity.com",
+              "phoneNumber": "513-987-1983",
+              "firstName": "Joe",
+              "lastName": "Kerstanoff",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": false,
+              "inquiryId": 20
+            },
+            {
+              "groupId": 123,
+              "emailAddress": "kim.farrow@thrivecincinnati.com",
+              "phoneNumber": "513-874-6947",
+              "firstName": "Kim",
+              "lastName": "Farrow",
+              "requestDate": "2016-07-14T10:00:00",
+              "placed": true,
+              "inquiryId": 21
+            }
+          ];
+
+          let inquiries = mockInquires.map((inquiry) => {
+            return new GroupInquiry(inquiry);
+          });
+
+          fixture.inquired = inquiries;
+          expect(fixture.getInquiring().length).toEqual(1);
+          expect(fixture.getInquiring()[0].emailAddress).toEqual('jim.kriz@ingagepartners.com');
         });
     });
 });
