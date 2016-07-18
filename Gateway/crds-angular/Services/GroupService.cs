@@ -47,6 +47,7 @@ namespace crds_angular.Services
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
+        private readonly int _removeParticipantFromGroupEmailTemplateId;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -81,6 +82,7 @@ namespace crds_angular.Services
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
+            _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -586,6 +588,7 @@ namespace crds_angular.Services
 
                 endDateGroupParticipant(groupId, groupParticipantId);
 
+                SendGroupParticipantEmail(groupId, groupParticipantId, groups.FirstOrDefault(), _removeParticipantFromGroupEmailTemplateId, message);
                 // TODO - send removal email
             }
             catch (GroupParticipantRemovalException e)
@@ -598,6 +601,11 @@ namespace crds_angular.Services
                 throw new GroupParticipantRemovalException(string.Format("Could not remove group participant {0} from group {1}", groupParticipantId, groupId), e);
             }
 
+        }
+
+        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int templateId, string message = null)
+        {
+            
         }
     }
 }

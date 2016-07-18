@@ -12,7 +12,7 @@ export default function RemoveParticipantController() {
       processing: '<'
     },
     restrict: 'E',
-    templateUrl: 'participant_card/removeParticipant.html',
+    templateUrl: 'remove_participant/removeParticipant.html',
     controller: controller,
     controllerAs: 'removeParticipant',
     bindToController: true

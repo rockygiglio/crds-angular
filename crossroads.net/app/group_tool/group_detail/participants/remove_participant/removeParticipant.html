@@ -1,10 +1,10 @@
-<form ng-submit='removeParticipant.removeParticipant(participant)'>
+<form ng-submit='removeParticipant.submit(removeParticipant.participant)'>
   <div class='row'>
     <div class='col-md-6 col-md-offset-3'>
 
       <div class='row'>
         <div class='col-md-12'>
-          <h4>Remove Participant - {{participant.displayName()}}</h4>
+          <h4>Remove Participant - {{removeParticipant.participant.displayName()}}</h4>
         </div>
       </div>
 
@@ -24,7 +24,7 @@
         <div class='col-md-12'>
           <div class='form-group'>
             <label for='emailMessage' class='wide-label'>Your Message (Optional)</label>
-            <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='participant.deleteMessage'></textarea>
+            <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='removeParticipant.participant.deleteMessage'></textarea>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
       <div class='row'>
         <div class='col-md-12'>
           <p class='text-center'>
-            <a type='button' class='btn btn-standard' href='#' ng-click='removeParticipant.cancelRemoveParticipant(participant)'>Cancel</a>
+            <a type='button' class='btn btn-standard' href='#' ng-click='removeParticipant.cancel(removeParticipant.participant)'>Cancel</a>
             <loading-button 
               input-type='submit'
               normal-text='Remove Participant'

@@ -4,10 +4,10 @@ export default class RemoveParticipantController {
   constructor() {  }
 
   submit(participant) {
-    this.submitAction(participant);
+    this.submitAction({participant: participant});
   }
 
   cancel(participant) {
-    this.cancelAction(participant);
+    this.cancelAction({participant: participant});
   }
 }
