@@ -1,18 +1,15 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor( ParticipantService, Group, ContentPageService, $location, $state, $log) {
+    constructor( ParticipantService, Group, $location, $state, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
 
-        this.contentPageService = ContentPageService;
         this.location = $location;
         this.group = Group;
         this.participantService = ParticipantService;
         this.state = $state;
         this.ready = false;
         this.approvedLeader = false;
-
-        this.data.profileData = {person: contentPageService.resolvedData.profile};
     }
 
     $onInit() {
