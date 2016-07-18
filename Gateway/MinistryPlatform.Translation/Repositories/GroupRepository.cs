@@ -473,7 +473,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Nickname", toContactInfo.Nickname},
                 {"Group_Name", groupInfo.Name},
                 {"Congregation_Name", groupInfo.Congregation},
-                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""}
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
             var domainId = Convert.ToInt32(AppSettings("DomainId"));
