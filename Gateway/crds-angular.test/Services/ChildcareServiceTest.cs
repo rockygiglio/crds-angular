@@ -30,10 +30,11 @@ namespace crds_angular.test.Services
         private Mock<IServeService> _serveService;
         private Mock<IDateTime> _dateTimeWrapper;
         // Interfaces.IEventService crdsEventService, IApiUserService apiUserService
-        private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
+        private Mock<IEventService> _crdsEventService;
         private Mock<IApiUserRepository> _apiUserService;
         private Mock<IChildcareRequestRepository> _childcareRequestService;
         private Mock<IGroupService> _groupService;
+        private Mock<IChildcareRepository> _childcareRepository; 
 
         private ChildcareService _fixture;
 
@@ -48,10 +49,11 @@ namespace crds_angular.test.Services
             _participantService = new Mock<IParticipantRepository>();
             _serveService = new Mock<IServeService>();
             _dateTimeWrapper = new Mock<IDateTime>();
-            _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
+            _crdsEventService = new Mock<IEventService>();
             _apiUserService = new Mock<IApiUserRepository>();
             _childcareRequestService = new Mock<IChildcareRequestRepository>();
             _groupService = new Mock<IGroupService>();
+            _childcareRepository = new Mock<IChildcareRepository>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,
@@ -61,7 +63,7 @@ namespace crds_angular.test.Services
                                             _participantService.Object,
                                             _serveService.Object,
                                             _dateTimeWrapper.Object,
-                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object, _groupService.Object);
+                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object, _groupService.Object, _childcareRepository.Object);
         }
 
         [Test]
