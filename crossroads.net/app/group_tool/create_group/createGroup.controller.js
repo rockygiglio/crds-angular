@@ -1,14 +1,18 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor($state, ParticipantService, $location, $log) {
+    constructor( ParticipantService, Group, ContentPageService, $location, $state, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
-        this.location = $location;
-        this.participantService = ParticipantService;
 
+        this.contentPageService = ContentPageService;
+        this.location = $location;
+        this.group = Group;
+        this.participantService = ParticipantService;
         this.state = $state;
         this.ready = false;
         this.approvedLeader = false;
+
+        this.data.profileData = {person: contentPageService.resolvedData.profile};
     }
 
     $onInit() {
@@ -376,16 +380,21 @@ export default class CreateGroupController {
 
   savePersonal() {
       // set oldName to existing email address to work around password change dialog issue
-      // vm.data.profileData.person.oldEmail = vm.data.profileData.person.emailAddress;
-      // return vm.data.profileData.person.$save();
+      this.data.profileData.person.oldEmail = this.data.profileData.person.emailAddress;
+      return this.data.profileData.person.$save();
   }
 
-  saveGroup() {
+  createGroup() {
 
   }
 
-  saveParticipant() {
+  addParticipant() {
+    var participants = [this.data.groupParticipant];
 
+    return group.Participant.save({
+        groupId: this.data.group.groupId,
+      },
+      participants).$promise;
   }
 
 }
