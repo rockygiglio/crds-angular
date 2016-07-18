@@ -50,7 +50,6 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
-            //https://adminint.crossroads.net/ministryplatformapi/procs/api_crds_getChildcareDashboard?@Domain_ID=1&@Contact_ID=2186211
             var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);

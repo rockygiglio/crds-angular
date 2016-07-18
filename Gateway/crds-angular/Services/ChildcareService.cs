@@ -315,68 +315,6 @@ namespace crds_angular.Services
                 }
             }
             
-            /*Find community groups for house heads
-            foreach (var head in members.HeadsOfHousehold)
-            {
-                var participant = _participantService.GetParticipant(head.ContactId);
-                var groups = _groupService.GetGroupsForParticipant(token, participant.ParticipantId).Where(g => g.GroupTypeId != 0);
-
-                //Find events that my groups are approved for
-                foreach (var group in groups)
-                {
-                    var groupEvents = _eventService.GetEventGroupsForGroup(group.GroupId, token);
-                    foreach (var ev in groupEvents)
-                    {
-                        var eventDetails = _eventService.GetEvent(ev.EventId);
-
-                        if (eventDetails.EventStartDate < DateTime.Today || eventDetails.EventType != "Childcare")
-                        {
-                            continue;
-                        }
-                        if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
-                        {
-                            dashboard.AvailableChildcareDates.Add(new ChildCareDate
-                            {
-                                EventDate = eventDetails.EventStartDate.Date,
-                                Cancelled = eventDetails.Cancelled
-                            });
-                        }
-
-                        //Date exists, add group
-                        var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
-                        var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
-                        var eligibleChildren = new List<ChildcareRsvp>();
-                        foreach (var member in members.AllMembers)
-                        {
-                            if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
-                            {
-                                eligibleChildren.Add(new ChildcareRsvp
-                                {
-                                    ContactId = member.ContactId,
-                                    DisplayName = member.Nickname + ' ' + member.LastName,
-                                    ChildEligible = (member.Age < ccEventGroup.MaximumAge),
-                                    ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
-                                });
-                            }
-                        }
-                        var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
-                        ccEvent.Groups.Add(new ChildcareGroup
-                        {
-                            GroupName = group.GroupName,
-                            EventStartTime = eventDetails.EventStartDate,
-                            EventEndTime = eventDetails.EventEndDate,
-                            CongregationId = eventDetails.CongregationId,
-                            GroupMemberName = head.Nickname + ' ' + head.LastName,
-                            MaximumAge = ccEventGroup.MaximumAge,
-                            RemainingCapacity = ccEventGroup.RemainingCapacity,
-                            EligibleChildren = eligibleChildren,
-                            ChildcareGroupId = ccEventGroup.GroupId
-                        });
-                        
-                    }
-                }
-            }
-            */
             dashboard.AvailableChildcareDates = dashboard.AvailableChildcareDates.OrderBy(x => x.EventDate).ToList();
 
             return dashboard;
