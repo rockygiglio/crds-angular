@@ -1,15 +1,18 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService, LookupService) {
+
+  constructor($log, $resource, $q, AuthService, ImageService, LookupService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
     this.lookupService = LookupService;
+    this.imgService = ImageService;
   }
 
   getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
@@ -142,57 +145,38 @@ export default class GroupService {
     return promised.promise;
   }
 
-  getGroupRequests(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'requests': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Chris Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 5, 20)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sally Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 5, 15)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Donny Franks',
-          'requestType': 'invited',
-          'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 4, 15)
-        },
-      ]
+  getInvities(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+                          query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+                          
+    return promised.then((data) => {
+      let invitations = data.map((invitation) => {
+        invitation.imageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInvitation(invitation);
+      });
+
+      return invitations;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
-  // getAgeRanges(){
-  //   let promise = this.resource(`${__API_ENDPOINT__}api/attributetype/:attributeTypeId`).
-  //                         get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+  getInquiries(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+                          query({groupId: groupId}).$promise
 
-  //   return promise.then((data) => {
-  //     debugger;
-  //     let ageRanges = data.attributes;
+    return promised.then((data) => {
+      let inquiries = data.map((inquiry) => {
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${inquiry.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInquiry(inquiry);
+      });
 
-  //     if(!ageRanges || ageRanges.length === 0) {
-  //       var err = {'status': 404, 'statusText': 'Age Ranges not found'};
-  //       throw err;
-  //     }
-      
-  //     return ageRanges;
-  //   },
-  //   (err) => {
-  //     throw err;
-  //   });
-  // }
+      return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
+  }
 }

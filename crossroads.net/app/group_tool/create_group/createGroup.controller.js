@@ -19,13 +19,13 @@ export default class CreateGroupController {
                 this.approvedLeader = true;
                 this.ready = true;
             } else {
-                this.location.path('/grouptool/leader');
+                this.location.path('/groups/leader');
             }
         },
 
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                this.location.path('/grouptool/leader');
+                this.location.path('/groups/leader');
             });
         var profileAboutFields = {
             wrapper: 'createGroup',
