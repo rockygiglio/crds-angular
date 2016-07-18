@@ -12,6 +12,9 @@ var WOW = require('wow.js/dist/wow.min.js');
 export class StreamingComponent {
   displayStreamCTA: boolean = false;
   constructor() {
-    new WOW().init();
+    new WOW({
+      offset: 100,
+      mobile: false
+    }).init();
   }
 }
