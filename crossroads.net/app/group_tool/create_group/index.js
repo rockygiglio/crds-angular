@@ -6,3 +6,5 @@ export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL).
   component('createGroup', createGroupComponent())
   ;
+
+  import createGroupPreview from './preview';

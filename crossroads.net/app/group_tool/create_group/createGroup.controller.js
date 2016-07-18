@@ -341,7 +341,7 @@ export default class CreateGroupController {
 }
 
   previewGroup() {
-    this.state.go('grouptool.detail');
+    this.state.go('grouptool.create.preview');
   }
 
   submit() {
