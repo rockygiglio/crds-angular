@@ -36,8 +36,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       }
     })
     .state('grouptool.create.preview', {
-      url: '/preview',
-      template: '<create-group-preview></create-group-preview>',
+      url: '/groups/create/preview',
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
       data: {
         isProtected: true,
         meta: {

@@ -1,9 +1,9 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor( ParticipantService, Group, $location, $state, $log) {
+    constructor( ParticipantService, Group, GroupService, $location, $state, $log) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
-
+        this.groupService = GroupService;
         this.location = $location;
         this.group = Group;
         this.participantService = ParticipantService;
@@ -336,11 +336,10 @@ export default class CreateGroupController {
         this.fields = [profileAboutFields, profileAddressFields, groupTypeFields,
                         groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
                         groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
-
-
 }
 
   previewGroup() {
+    this.groupService.createData = this.model;
     this.state.go('grouptool.create.preview');
   }
 

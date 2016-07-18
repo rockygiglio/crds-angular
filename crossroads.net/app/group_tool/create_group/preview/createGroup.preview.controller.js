@@ -10,30 +10,10 @@ export default class CreateGroupPreviewController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+    this.log.debug('groupService: ', this.groupService.createData.group);
   }
 
   $onInit() {
-    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
-      this.groupId = this.state.params.groupId;
-      this.groupService.getGroup(this.groupId).then((data) => {
-        this.data = data;
-        var primaryContactId = this.data.contactId;
-        this.data.primaryContact = {
-          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-          contactId: primaryContactId
-        };
-        this.ready = true;
-      },
-      (err) => {
-        this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
-        this.error = true;
-        this.ready = true;
-      });
-    }
-    else {
-      //TODO map object posted from create into data object
-      this.ready = true;
-    }
-
+    this.groupData = this.groupService.createData.group;
   }
 }
