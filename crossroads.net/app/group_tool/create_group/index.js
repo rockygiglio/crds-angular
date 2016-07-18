@@ -4,5 +4,4 @@ import html from './createGroup.html';
 
 export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL).
-  component('createGroup', createGroupComponent())
-  ;
+  component('createGroup', createGroupComponent());

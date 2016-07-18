@@ -183,23 +183,4 @@ export default class GroupService {
       throw err;
     });
   }
-
-  getAgeRanges(){
-    let promise = this.resource(`${__API_ENDPOINT__}api/attributetype/:attributeTypeId`).
-                          get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
-
-    return promise.then((data) => {
-      let ageRanges = data.attributes;
-
-      if(!ageRanges || ageRanges.length === 0) {
-        var err = {'status': 404, 'statusText': 'Age Ranges not found'};
-        throw err;
-      }
-      
-      return ageRanges;
-    },
-    (err) => {
-      throw err;
-    });
-  }
 }
