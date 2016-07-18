@@ -3,6 +3,7 @@ import CONSTANTS from 'crds-constants';
 import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
+  
   /*@ngInject*/
   constructor(GroupService, $state, $rootScope, $log) {
     this.groupService = GroupService;
@@ -16,6 +17,8 @@ export default class GroupDetailRequestsController {
     this.currentView = 'List';
     this.invited = [];
     this.inquired = [];
+
+    this.selectedInquiry = null;
 
     /*
     Possibly TODO on erasing these
@@ -53,6 +56,16 @@ export default class GroupDetailRequestsController {
       this.error = true;
       this.ready = true;
     });
+  }
+
+  approve(inquiry) {
+    this.selectedInquiry = inquiry;
+    this.setView("Approve", false);
+  }
+
+  deny(inquiry) {
+    this.selectedInquiry = inquiry;
+    this.setView("Deny", false);
   }
 
   setView(newView, refresh) {

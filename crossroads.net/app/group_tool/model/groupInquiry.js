@@ -1,3 +1,4 @@
+
 export default class GroupInquiry {
 
   constructor(jsonObject){
@@ -9,8 +10,9 @@ export default class GroupInquiry {
       this.inquiryId = undefined;
       this.emailAddress = undefined;
       this.phoneNumber = undefined;
-      this.firstName = undefined;
-      this.lastName = undefined;
+      this.firstName = '';
+      this.lastName = '';
+      this.nickName = this.firstName;
       this.requestDate = undefined;
       this.placed = undefined;
       this.imageUrl = undefined;

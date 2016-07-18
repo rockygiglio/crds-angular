@@ -29,8 +29,8 @@
             {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
           </td>
           <td>
-            <button type='button' class='btn btn-primary'>Approve</button>
-            <button type='button' class='btn btn-primary'>Deny</button>
+            <button type='button' class='btn btn-primary' ng-click="groupDetailRequests.approve(inquiry)">Approve</button>
+            <button type='button' class='btn btn-primary' ng-click="groupDetailRequests.deny(inquiry)">Deny</button>
           </td>
         </tr>
         <tr ng-repeat='invite in groupDetailRequests.invited track by $index'>
@@ -156,6 +156,25 @@ This will be Done Later not executing these flows as part of this story.
   </form>
 </div>
 -->
+
+    bindings: {
+      person: '<',
+      normalLoadingText: '@',
+      loadingLoadingText: '@',
+      cancel: '&',
+      submit: '&',
+      header: '@',
+      subHeaderText: '<',
+      contactText: '<',
+      emailTemplateText: '<',
+    },
+
+<div class='container-fluid' ng-if='groupDetailRequests.approveView()'>
+  <message></message>
+</div>
+<div class='container-fluid' ng-if='groupDetailRequests.denyView()'>
+  <message></message>
+</div>
 <div class='container-fluid' ng-if='groupDetailRequests.inviteView()'>
   <group-detail-invite on-update="groupDetailRequests.setView(newView, refresh)" group-id="groupDetailRequests.groupId"></group-detail-invite>
 </div>
