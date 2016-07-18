@@ -2,6 +2,8 @@
 import CONSTANTS from 'crds-constants';
 import GroupService from '../../../app/group_tool/services/group.service'
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
+import GroupInquiry from '../../../app/group_tool/model/groupInquiry';
+import GroupInvitation from '../../../app/group_tool/model/groupInvitation';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -10,7 +12,8 @@ describe('Group Tool Group Service', () => {
     deferred,
     AuthService,
     authenticated,
-    httpBackend;
+    httpBackend,
+    ImageService;
 
   const endpoint = `${window.__env__['CRDS_API_ENDPOINT']}api`;
 
@@ -22,8 +25,9 @@ describe('Group Tool Group Service', () => {
     deferred = $injector.get('$q');
     AuthService = $injector.get('AuthService');
     httpBackend = $injector.get('$httpBackend');
+    ImageService = $injector.get('ImageService');
 
-    fixture = new GroupService(log, resource, deferred, AuthService);
+    fixture = new GroupService(log, resource, deferred, AuthService, ImageService);
   }));
 
   afterEach(() => {
@@ -114,7 +118,7 @@ describe('Group Tool Group Service', () => {
         let groupsObj = groups.map((group) => {
           return new SmallGroup(group);
         });
-        
+
         httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
                     respond(200, groups);
 
@@ -126,6 +130,119 @@ describe('Group Tool Group Service', () => {
         	expect(data[0].address.length).toEqual(groupsObj[0].address.length);
         	expect(data[0].participants.length).toEqual(groupsObj[0].groupName.participants.length);
         });
+    });
+  });
+  
+  describe('getInvities() inquires', () => {
+    it('should return all invities assocated to the group', () => {
+      let mockInvities = [
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "for@me.com",
+          "recipientName": "Knowledge Man",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        },
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "really@fast.com",
+          "recipientName": "Buffer Dude",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        }
+      ];
+
+      let groupId = 172286;
+
+      let invities = mockInvities.map((invitation) => {
+        return new GroupInvitation(invitation);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/invitations/${groupId}/1`).
+                  respond(200, mockInvities);
+
+      var promise = fixture.getInvities(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[1].sourceId).toEqual(invities[1].sourceId);
+        expect(data[1].groupRoleId).toEqual(invities[1].groupRoleId);
+        expect(data[1].emailAddress).toEqual(invities[1].emailAddress);
+        expect(data[1].recipientName).toEqual(invities[1].recipientName);
+        expect(data[1].requestDate).toEqual(invities[1].requestDate);
+        expect(data[1].invitationType).toEqual(invities[1].invitationType);
+        expect(data[1].invitationId).toEqual(invities[1].invitationId);
+        expect(data[1].invitationGuid).toEqual(invities[1].invitationGuid);
+      });
+    });
+  });
+
+  describe('getInquires() inquires', () => {
+    it('should return all inquiries assocated to the group', () => {
+      let mockInquires = [
+        {
+          "groupId": 172286,
+          "emailAddress": "jim.kriz@ingagepartners.com",
+          "phoneNumber": "513-432-1973",
+          "firstName": "Dustin",
+          "lastName": "Kocher",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 19,
+          "contactId": 123
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "jkerstanoff@callibrity.com",
+          "phoneNumber": "513-987-1983",
+          "firstName": "Joe",
+          "lastName": "Kerstanoff",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 20,
+          "contactId": 124
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "kim.farrow@thrivecincinnati.com",
+          "phoneNumber": "513-874-6947",
+          "firstName": "Kim",
+          "lastName": "Farrow",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": true,
+          "inquiryId": 21,
+          "contactId": 124
+        }
+      ];
+
+      let groupId = 172286;
+
+      let inquires = mockInquires.map((inquiry) => {
+        return new GroupInquiry(inquiry);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/inquiries/${groupId}`).
+                  respond(200, mockInquires);
+
+      var promise = fixture.getInquiries(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[0].groupId).toEqual(inquires[0].groupId);
+        expect(data[0].emailAddress).toEqual(inquires[0].emailAddress);
+        expect(data[0].phoneNumber).toEqual(groupsObj[0].phoneNumber);
+        expect(data[0].firstName).toEqual(inquires[0].firstName);
+        expect(data[0].lastName).toEqual(inquires[0].lastName);
+        expect(data[0].requestDate).toEqual(inquires[0].requestDate);
+        expect(data[0].placed).toEqual(inquires[0].placed);
+        expect(data[0].inquiryId).toEqual(inquires[0].inquiryId);
+      });
     });
   });
 });
