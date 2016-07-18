@@ -182,7 +182,6 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationRepository.SendMessage(email);
-
         }
 
     }
