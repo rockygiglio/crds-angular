@@ -20,7 +20,9 @@ export class StreamspotService {
       'Content-Type': 'application/json',
       'x-API-Key': this.apiKey
     });
+    //let url = 'http://localhost:3000/app/streaming/events.json';
     let url = `${this.url}/${this.id}/events`;
+
     return this.http.get(url, {headers: headers})
       .map(response => response.json().data.events)
       .map((events: Array<Event>) => {
@@ -30,7 +32,7 @@ export class StreamspotService {
             let currentTimestamp = moment().tz(moment.tz.guess());
             let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
             let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
-            return currentTimestamp.isBefore(eventStartTimestamp) 
+            return currentTimestamp.isBefore(eventStartTimestamp)
                   || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
           })
           .map((event:Event) => {

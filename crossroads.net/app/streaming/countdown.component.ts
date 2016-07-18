@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
-
 import { Observable } from 'rxjs/Rx';
-
 import { Event } from './event';
 import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
@@ -14,7 +12,7 @@ declare var _: any;
   selector: 'countdown',
   template: `
     <div class="upcoming">
-      <div *ngIf="showCountdown">
+      <div *ngIf="isCountdown" class="countdown">
         <i>Join the live stream in...</i>
         <ul class="list-inline">
           <li><strong>{{ countdown.days }}</strong> <small>days</small></li>
@@ -26,8 +24,8 @@ declare var _: any;
           <li><strong>{{ countdown.seconds }}</strong> <small>sec</small></li>
         </ul>
       </div>
-      <div *ngIf="isBroadcasting">
-        <a class="btn btn-primary" href="#">Watch Now</a>
+      <div *ngIf="isBroadcasting" class="in-progress">
+        <i>Live stream in progress...</i> <a href="#" class="btn btn-sm">Watch Now</a>
       </div>
     </div>
   `,
@@ -35,12 +33,13 @@ declare var _: any;
 })
 
 export class CountdownComponent implements OnInit {
-  event:          Event     = null;
-  countdown:      Countdown = new Countdown;
-  showCountdown:  boolean   = true;
-  isBroadcasting: boolean   = false;
-  intervalId:     any;
-  subscriber:     any;
+  event:            Event     = null;
+  countdown:        Countdown = new Countdown;
+  isCountdown:      boolean   = false;
+  isBroadcasting:   boolean   = false;
+  displayCountdown: boolean   = false
+  intervalId:       any;
+  subscriber:       any;
 
   constructor(private streamspotService: StreamspotService) { }
 
@@ -57,7 +56,7 @@ export class CountdownComponent implements OnInit {
         this.event = event;
         this.subscriber = Observable
                             .interval(1000)
-                            .subscribe(() => this.displayCountdown());
+                            .subscribe(() => this.parseEvent());
       });
   }
 
@@ -66,9 +65,9 @@ export class CountdownComponent implements OnInit {
     return value < 10 ? `0${value}`: `${value}`;
   }
 
-  private displayCountdown() {
-    this.showCountdown = moment().tz(moment.tz.guess()).isBefore(this.event.start);
-    this.isBroadcasting = !this.showCountdown && moment().tz(moment.tz.guess()).isBefore(this.event.end);
+  private parseEvent() {
+    this.isCountdown = moment().tz(moment.tz.guess()).isBefore(this.event.start);
+    this.isBroadcasting = !this.isCountdown && moment().tz(moment.tz.guess()).isBefore(this.event.end);
 
     let duration = moment.duration(
       +this.event.start - +moment(),
@@ -78,8 +77,9 @@ export class CountdownComponent implements OnInit {
     this.countdown.hours   = this.pad(duration.hours());
     this.countdown.minutes = this.pad(duration.minutes());
     this.countdown.seconds = this.pad(duration.seconds());
+    this.displayCountdown  = true;
 
-    if (!this.showCountdown && !this.isBroadcasting) {
+    if (!this.isCountdown && !this.isBroadcasting) {
       this.subscriber.unsubscribe();
       this.createCountdown();
     }
