@@ -28,9 +28,10 @@ export class StreamspotService {
           .filter((event:Event) => {
             // get upcoming or currently broadcasting events
             let currentTimestamp = moment().tz(moment.tz.guess());
-            let eventTimestamp   = moment.tz(event.start, 'America/New_York');
-            return currentTimestamp.isBefore(eventTimestamp) 
-                  || (currentTimestamp.isAfter(eventTimestamp) && currentTimestamp.isBefore(eventTimestamp))
+            let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
+            let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
+            return currentTimestamp.isBefore(eventStartTimestamp) 
+                  || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
           })
           .map((event:Event) => {
             event.start     = moment.tz(event.start, 'America/New_York');

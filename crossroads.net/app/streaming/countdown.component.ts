@@ -67,8 +67,8 @@ export class CountdownComponent implements OnInit {
   }
 
   private displayCountdown() {
-    this.showCountdown = moment().isBefore(this.event.start);
-    this.isBroadcasting = !this.showCountdown && moment().isBefore(this.event.end);
+    this.showCountdown = moment().tz(moment.tz.guess()).isBefore(this.event.start);
+    this.isBroadcasting = !this.showCountdown && moment().tz(moment.tz.guess()).isBefore(this.event.end);
 
     let duration = moment.duration(
       +this.event.start - +moment(),
