@@ -15,4 +15,13 @@ export default class Address {
     
     return `${this.addressLine1}, ${this.addressLine2}, ${this.city} ${this.state}, ${this.zip}`;
   }
+
+  getZip() {
+    if (null === this.zip){
+      return 'Online';
+    }
+    else {
+      return `${this.zip}`;
+    }
+  }
 }

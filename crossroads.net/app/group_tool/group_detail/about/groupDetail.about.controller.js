@@ -34,6 +34,14 @@ export default class GroupDetailAboutController {
       //TODO map object posted from create into data object
       this.ready = true;
     }
+  }
 
+  isGroupMember() {
+    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

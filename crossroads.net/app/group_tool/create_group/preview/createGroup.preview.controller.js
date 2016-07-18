@@ -16,4 +16,32 @@ export default class CreateGroupPreviewController {
   $onInit() {
     this.groupData = this.groupService.createData.group;
   }
+
+    editGroup() {
+   // this.groupService.createData = this.model;
+    this.state.go('grouptool.create');
+  }
+
+    submitGroup() {
+       this.state.go('grouptool.mygroups');
+ }
+
+  savePersonal() {
+      // set oldName to existing email address to work around password change dialog issue
+      this.data.profileData.person.oldEmail = this.data.profileData.person.emailAddress;
+      return this.data.profileData.person.$save();
+  }
+
+  createGroup() {
+
+  }
+
+  addParticipant() {
+    var participants = [this.data.groupParticipant];
+
+    return group.Participant.save({
+        groupId: this.data.group.groupId,
+      },
+      participants).$promise;
+  }
 }

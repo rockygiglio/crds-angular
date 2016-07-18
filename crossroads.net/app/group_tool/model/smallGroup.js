@@ -100,6 +100,10 @@ export default class SmallGroup {
     return this.address.toString();
   }
 
+  meetingZip() {
+    return this.address.getZip();
+  }
+
   categoriesToString() {
     let categoriesString = this.categories.length > 0 ? `${this.categories[0]}` : '';
 

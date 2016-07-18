@@ -17,8 +17,10 @@
       <div class='row'>
         <div class='col-md-2'><strong>Category</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.categoriesToString()}}</div>
-        <div class='col-md-2'><strong>Where</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.meetingLocation()}}</div>
+         <div ng-if='groupDetailAbout.isGroupMember()'>
+            <div class='col-md-2'><strong>Where</strong></div>
+            <div  class='col-md-4'>{{groupDetailAbout.data.meetingZip()}}</div>
+        </div>
       </div>
       <div class='row'>
         <div class='col-md-2'><strong>Group Type</strong></div>
