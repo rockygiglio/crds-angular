@@ -9,6 +9,8 @@ export default class CreateGroupController {
 
         this.ready = false;
         this.approvedLeader = false;
+        this.model = {};
+        this.fields = [];
     }
 
     $onInit() {
@@ -27,6 +29,21 @@ export default class CreateGroupController {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
                 this.location.path('/groups/leader');
             });
+
+        this.groupService.getProfileData().then((data) => {
+            this.model.profile = {
+                birthDate: data.dateOfBirth,
+                genderId: data.genderId,
+                address: {
+                    street: data.addressLine1,
+                    city: data.city,
+                    state: data.state,
+                    zip: data.postalCode,
+                    country: data.foreignCountry
+                }
+            }
+        });
+            
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {

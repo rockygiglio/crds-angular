@@ -5,10 +5,10 @@ import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-
-  constructor($log, $resource, $q, AuthService, ImageService, LookupService) {
+  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
+    this.profile = Profile;
     this.deferred = $q;
     this.auth = AuthService;
     this.lookupService = LookupService;
@@ -17,6 +17,10 @@ export default class GroupService {
 
   getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
                            get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+  }
+
+  getProfileData() {
+    return this.profile.Personal.get().$promise;
   }
 
   getGroupGenderMixType() {
@@ -174,6 +178,25 @@ export default class GroupService {
       });
 
       return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
+  getAgeRanges(){
+    let promise = this.resource(`${__API_ENDPOINT__}api/attributetype/:attributeTypeId`).
+                          get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+
+    return promise.then((data) => {
+      let ageRanges = data.attributes;
+
+      if(!ageRanges || ageRanges.length === 0) {
+        var err = {'status': 404, 'statusText': 'Age Ranges not found'};
+        throw err;
+      }
+      
+      return ageRanges;
     },
     (err) => {
       throw err;
