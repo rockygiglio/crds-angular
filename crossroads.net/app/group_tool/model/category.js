@@ -6,6 +6,6 @@ export default class Category {
   }
 
   toString() {
-    return `${this.category}\\ ${this.name}`
+    return `${this.category} / ${this.name}`
   }
 }

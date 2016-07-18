@@ -3,14 +3,12 @@ import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $rootScope, $log) {
+  constructor(GroupService, $state, $rootScope, $log) {
     this.groupService = GroupService;
-    this.imageService = ImageService;
     this.state = $state;
     this.rootScope = $rootScope;
     this.log = $log;
 
-    this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
@@ -24,21 +22,29 @@ export default class GroupDetailRequestsController {
     ];
 
     this.processing = false;
+    this.invited = [];
+    this.inquired = [];
   }
 
   $onInit() {
     this.ready = false;
     this.error = false;
 
-    this.groupService.getGroupRequests(this.groupId).then((data) => {
-      this.data = data;
-      this.data.requests.forEach(function(request) {
-          request.imageUrl = `${this.imageService.ProfileImageBaseURL}${request.contactId}`;
-      }, this);
-      this.ready = true;
+    this.groupService.getInquiries(this.groupId).then((inquiries) => {
+      this.inquired = inquiries;
+
+      this.groupService.getInvities(this.groupId).then((invitations) => {
+        this.invited = invitations;
+        this.ready = true;
+      },
+      (err) => {
+        this.log.error(`Unable to get group invitations: ${err.status} - ${err.statusText}`);
+        this.error = true;
+        this.ready = true;
+      });
     },
     (err) => {
-      this.log.error(`Unable to get group requests: ${err.status} - ${err.statusText}`);
+      this.log.error(`Unable to get group inquiries: ${err.status} - ${err.statusText}`);
       this.error = true;
       this.ready = true;
     });
@@ -78,7 +84,13 @@ export default class GroupDetailRequestsController {
       this.processing = false;
     });
   }
+
+  getInquiring() {
+    return this.inquired.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
+  }
     
+  //////TODO////////////////////////////////////
+  /*
   beginApproveRequest(request) {
     this.currentRequest = request;
     this.currentView = 'Approve';    
@@ -102,4 +114,5 @@ export default class GroupDetailRequestsController {
     this.currentRequest = null;
     this.currentView = 'List';
   }
+  */
 }

@@ -10,28 +10,45 @@
         <th class='col-md-3'></th>
       </thead>
       <tbody>
-        <tr ng-repeat='request in groupDetailRequests.data.requests track by $index'>
+        <tr ng-repeat='inquiry in groupDetailRequests.getInquiring() track by $index'>
           <td>
-            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{request.imageUrl}}' err-src='{{groupDetailRequests.defaultProfileImageUrl}}'>
+            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{inquiry.imageUrl}}' err-src='{{inquiry.defaultProfileImageUrl}}'>
           </td>
           <td>
-            {{request.name}}
+            {{inquiry.recipientName()}}
           </td>
           <td>
-            {{request.requestType === 'invited' ? 'Invite Sent' : 'Requested to Join'}}
+            Requested to Join
           </td>
           <td>
-            {{request.emailAddress}}
+            {{inquiry.emailAddress}}
           </td>
           <td>
-            {{request.dateRequested | date: 'MM/dd/yyyy'}}
+            {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
           </td>
-          <td ng-if='request.requestType === "invited"'>
+          <td>
+            <button type='button' class='btn btn-primary'>Approve</button>
+            <button type='button' class='btn btn-primary'>Deny</button>
+          </td>
+        </tr>
+        <tr ng-repeat='invite in groupDetailRequests.invited track by $index'>
+          <td>
+            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{invite.imageUrl}}'>
+          </td>
+          <td>
+            {{invite.recipientName}}
+          </td>
+          <td>
+            Invite Sent
+          </td>
+          <td>
+            {{invite.emailAddress}}
+          </td>
+          <td>
+            {{invite.requestDate | date: 'MM/dd/yyyy'}}
+          </td>
+          <td>
             &nbsp;
-          </td>
-          <td ng-if='request.requestType !== "invited"'>
-            <button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginApproveRequest(request)'>Approve</button>
-            <button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginDenyRequest(request)'>Deny</button>
           </td>
         </tr>
       </tbody>
@@ -46,6 +63,9 @@
     </div>
   </div>
 </div>
+<!--
+This will be Done Later not executing these flows as part of this story.
+
 
 <div class='container-fluid' ng-if='groupDetailRequests.currentView === "Approve"'>
   <form>
@@ -133,7 +153,7 @@
     </div>
   </form>
 </div>
-
+-->
 <div class='container-fluid' ng-if='groupDetailRequests.currentView === "Invite"'>
   <form name='invitationForm' ng-submit='groupDetailRequests.sendInvitation(invitationForm, groupDetailRequests.invite)' novalidate>
     <div class='row'>

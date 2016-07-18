@@ -62,7 +62,7 @@ describe('Childcare Group Component Controller', () => {
   it('event should be closed if it is happening within 7 days of today', () => {
     const today = new Date();
     var nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + 7);
+    nextDate.setDate(nextDate.getDate() + 6);
     controller.eventDate = nextDate.toISOString();
     controller.communityGroup = fakeCG();
 
@@ -119,7 +119,7 @@ describe('Childcare Group Component Controller', () => {
   });
 
   it('should cancel the rsvp when toggle is set to off', () => {
-    const cg = fakeCG(true);
+    const cg = fakeCG(false);
     controller.communityGroup = fakeCG(true);
     spyOn(childcareDashboardService, 'saveRSVP').and.returnValue({
       $promise: {
@@ -129,7 +129,8 @@ describe('Childcare Group Component Controller', () => {
       },
       $resolved: true
     });
-    var result = controller.rsvp(cg.eligibleChildren[0], false);
+
+    var result = controller.rsvp(cg.eligibleChildren[0]);
     expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
   });
 

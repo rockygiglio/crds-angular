@@ -33,8 +33,8 @@ describe('Group Tool Category', () => {
   });
 
   describe('toString()', () => {
-    it('should be Interest\\ Boxing', () => {
-      expect(category.toString()).toEqual('Interest\\ Boxing');
+    it('should be Interest / Boxing', () => {
+      expect(category.toString()).toEqual('Interest / Boxing');
     });
   });
 
