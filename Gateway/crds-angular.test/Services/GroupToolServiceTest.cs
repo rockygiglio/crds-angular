@@ -1,27 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Attribute;
-using crds_angular.Models.Crossroads.Events;
-using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
-using crds_angular.Services.Interfaces;
-using crds_angular.test.Models.Crossroads.Events;
-using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
-using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
-using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
-using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
-using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
-using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.test.Services
 {
@@ -112,6 +97,57 @@ namespace crds_angular.test.Services
 
 
             return invitations;
+        }
+
+        [Test]
+        public void CanGetInquiriesForGroups()
+        {
+            var mpResults = new List<MpInquiry>();
+
+            mpResults.Add(new MpInquiry
+            {
+                InquiryId = 178,
+                GroupId = 199846,
+                EmailAddress = "test@jk.com",
+                PhoneNumber = "444-111-2111",
+                FirstName = "Joe",
+                LastName = "Smith",
+                RequestDate = new DateTime(2004, 3, 12),
+                Placed = true,
+            });
+
+            var dto = new List<Inquiry>();
+
+            dto.Add(new Inquiry
+                {
+                    InquiryId = 178,
+                    GroupId = 199846,
+                    EmailAddress = "test@jk.com",
+                    PhoneNumber = "444-111-2111",
+                    FirstName = "Joe",
+                    LastName = "Smith",
+                    RequestDate = new DateTime(2004, 3, 12),
+                    Placed = true,
+                });
+
+            var groupId = 1;
+            var token = "dude";
+
+            groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>(), It.IsAny<string>())).Returns(mpResults);
+
+            var inquiries = groupToolService.GetInquiries(groupId, token);
+            
+            Assert.AreEqual(1, inquiries.Count);
+            Assert.AreEqual(dto[0].InquiryId, inquiries[0].InquiryId);
+            Assert.AreEqual(dto[0].GroupId, inquiries[0].GroupId);
+            Assert.AreEqual(dto[0].EmailAddress, inquiries[0].EmailAddress);
+            Assert.AreEqual(dto[0].PhoneNumber, inquiries[0].PhoneNumber);
+            Assert.AreEqual(dto[0].FirstName, inquiries[0].FirstName);
+            Assert.AreEqual(dto[0].LastName, inquiries[0].LastName);
+            Assert.AreEqual(dto[0].RequestDate, inquiries[0].RequestDate);
+            Assert.AreEqual(dto[0].Placed, inquiries[0].Placed);
+
+
         }
     }
 }

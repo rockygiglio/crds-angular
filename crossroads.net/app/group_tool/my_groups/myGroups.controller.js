@@ -12,10 +12,7 @@ export default class MyGroupsController {
 
   $onInit() {
     this.groupService.getMyGroups().then((smGroups) => {
-      smGroups.forEach(function(group) {
-        this.groups.push(group);
-      }, this);
-
+      this.groups = smGroups;
       this.ready = true;
     },
     (err) => {

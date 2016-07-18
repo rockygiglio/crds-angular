@@ -284,7 +284,7 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
 
-
+            Mapper.CreateMap<MpInquiry, Inquiry>();
         }
     }
 }
