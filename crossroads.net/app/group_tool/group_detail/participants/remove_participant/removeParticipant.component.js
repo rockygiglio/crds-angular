@@ -1,10 +1,10 @@
 import controller from './removeParticipant.controller';
 
-RemoveParticipantController.$inject = [];
+RemoveParticipantComponent.$inject = [];
 
-export default function RemoveParticipantController() {
+export default function RemoveParticipantComponent() {
 
-  let removeParticipantController = {
+  let removeParticipantComponent = {
     bindings: {
       participant: '<',
       cancelAction: '&',
@@ -18,6 +18,6 @@ export default function RemoveParticipantController() {
     bindToController: true
   };
 
-  return removeParticipantController;
+  return removeParticipantComponent;
 
 }
