@@ -446,12 +446,6 @@ streaming {
       h3 {
         @include crds-make-condensed();
         font-size: 200%;
-        text-transform: uppercase;
-        font-family: $streaming-font-extra_cond;
-        text-align: center;
-        @media (min-width: $screen-sm-min) {
-          text-align: left;
-        }
       }
     }
     .btns > a {
