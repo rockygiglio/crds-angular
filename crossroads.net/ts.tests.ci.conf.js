@@ -77,6 +77,7 @@ module.exports = function (config) {
             require('karma-env-preprocessor'),
             require('karma-sourcemap-loader'),
             require('karma-es6-shim'),
+            require('karma-teamcity-reporter')
         ]
 
 
