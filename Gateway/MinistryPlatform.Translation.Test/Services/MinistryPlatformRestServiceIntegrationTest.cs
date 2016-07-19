@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<ChildcareDashboard>("api_crds_getChildcareDashboard", parms);
             foreach (var p in results)
             {               
-                Console.WriteLine("Result\t{0}", p);
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault());
             }
         }
 
