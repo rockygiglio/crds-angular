@@ -18,10 +18,10 @@ export class VideoJSComponent implements AfterViewInit {
   //stream: string = "https://limelight1.streamspot.com/dvr/smil:crossr30e3.smil/playlist.m3u8";
 
   // production
-  stream: string = "https://limelight1.streamspot.com/url/smil:crossr4915.smil/playlist.m3u8";
+  //stream: string = "https://limelight1.streamspot.com/url/smil:crossr4915.smil/playlist.m3u8";
 
   // test link
-  //stream: string = "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
+  stream: string = "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
 
   id: string = "videojs-player";
   width: number = 640;
