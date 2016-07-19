@@ -77,4 +77,58 @@ describe('Participant', () => {
       expect(participant.displayName()).toEqual('');
     });
   });
+
+  describe('compareTo() function', () => {
+    it('same name, should compare a leader above an apprentice', () => {
+      let p1 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.APPRENTICE});
+      let p2 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.LEADER});
+      expect(p2.compareTo(p1)).toBe(-1);
+      expect(p1.compareTo(p2)).toBe(1);
+    });
+
+    it('same name, should compare a leader above a member', () => {
+      let p1 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.MEMBER});
+      let p2 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.LEADER});
+      expect(p2.compareTo(p1)).toBe(-1);
+      expect(p1.compareTo(p2)).toBe(1);
+    });
+
+    it('same name, should compare an apprentice above a member', () => {
+      let p1 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.MEMBER});
+      let p2 = new Participant({nickName: 'first', lastName: 'last', groupRoleId: constants.GROUP.ROLES.APPRENTICE});
+      expect(p2.compareTo(p1)).toBe(-1);
+      expect(p1.compareTo(p2)).toBe(1);
+    });
+
+    it('same name, same role, should compare properly', () => {
+      let p1 = new Participant({nickName: 'first', lastName: 'last'});
+      let p2 = new Participant({nickName: 'first', lastName: 'last'});
+      _.forEach(constants.GROUP.ROLES, (key, role) => {
+        p1.groupRoleId = p2.groupRoleId = role;
+        expect(p2.compareTo(p1)).toBe(0);
+        expect(p1.compareTo(p2)).toBe(0);
+      });
+    });
+    
+    it('different last name, same role, should compare properly', () => {
+      let p1 = new Participant({nickName: 'first', lastName: 'zlast'});
+      let p2 = new Participant({nickName: 'first', lastName: 'alast'});
+      _.forEach(constants.GROUP.ROLES, (key, role) => {
+        p1.groupRoleId = p2.groupRoleId = role;
+        expect(p2.compareTo(p1)).toBe(-1);
+        expect(p1.compareTo(p2)).toBe(1);
+      });
+    });
+
+    it('different first name, same role, should compare properly', () => {
+      let p1 = new Participant({nickName: 'zfirst', lastName: 'last'});
+      let p2 = new Participant({nickName: 'afirst', lastName: 'last'});
+      _.forEach(constants.GROUP.ROLES, (key, role) => {
+        p1.groupRoleId = p2.groupRoleId = role;
+        expect(p2.compareTo(p1)).toBe(-1);
+        expect(p1.compareTo(p2)).toBe(1);
+      });
+    });
+
+  });
 });
