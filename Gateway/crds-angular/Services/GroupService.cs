@@ -232,6 +232,32 @@ namespace crds_angular.Services
             _mpGroupService.UpdateGroupRemainingCapacity(group);
         }
 
+        public void addContactToGroup(int groupId, int contactId)
+        {
+            Participant participant;
+
+            try
+            {
+                participant = _participantService.GetParticipant(contactId);
+            }
+            catch (Exception e)
+            {
+                var message = string.Format("Could not retrieve particpant for contact {0}: {1}", contactId, e.Message);
+                _logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            try
+            {
+                _mpGroupService.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Could not add contact to group", e);
+                throw;
+            }
+        }
+
         public List<Event> GetGroupEvents(int groupId, string token)
         {
             var eventTypes = _mpGroupService.GetEventTypesForGroup(groupId, token);
