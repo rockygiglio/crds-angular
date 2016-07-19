@@ -33,6 +33,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
+        private readonly int GroupInquiresSubPage = Convert.ToInt32(AppSettings("GroupInquiresSubPage"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -140,6 +141,16 @@ namespace MinistryPlatform.Translation.Repositories
             dictionary.Add("End_Date", DateTime.Now);
             dictionary.Add("Group_ID", groupId);
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
+        }
+
+        public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)
+        {
+            var apiToken = ApiLogin();
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("Group_Inquiry_ID", inquiryId);
+            dictionary.Add("Placed", approved);
+            dictionary.Add("Group_ID", groupId);
+            ministryPlatformService.UpdateSubRecord(GroupInquiresSubPage, dictionary, apiToken);
         }
 
         public MpGroup getGroupDetails(int groupId)
