@@ -102,7 +102,7 @@ namespace crds_angular.Services
                     particpantId = participant.ParticipantId,
                     groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
                     capacityNeeded = 1,
-                    EnrolledBy = 1 //TODO: make this real
+                    EnrolledBy = saveRsvp.EnrolledBy
                 };
 
                 _groupService.addParticipantToGroupNoEvents(saveRsvp.GroupId, participantSignup);
@@ -603,5 +603,16 @@ namespace crds_angular.Services
             };
         }
 
+        public void SendChildcareCancellationNotification()
+        {
+            //Find cancelled events
+            //_childcareRepository
+
+            //find participants of childcare groups associated with said cancelled events
+
+            //Send email to enroller of childcare participants
+
+            //End date participants
+        }
     } 
 }

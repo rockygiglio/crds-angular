@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using crds_angular.Models;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
-using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 
 namespace crds_angular.Services.Interfaces
@@ -21,5 +20,6 @@ namespace crds_angular.Services.Interfaces
         ChildcareDashboardDto GetChildcareDashboard(int contactId);
         void CancelRsvp(ChildcareRsvpDto cancelRsvp);
         HouseHoldData GetHeadsOfHousehold(int contactId, int householdId);
+        void SendChildcareCancellationNotification();
     }
 }
