@@ -1,16 +1,14 @@
 export default class GroupDetailParticipantCardController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state) {
-    this.groupService = GroupService;
+  constructor(ImageService) {
     this.imageService = ImageService;
-    this.state = $state;
   }
 
   $onInit() {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
   }
 
-  markParticipantDeleted(participant) {
-    participant.deleted = true;
+  invokeDeleteAction(participant) {
+    this.deleteAction({participant: participant});
   }
 }

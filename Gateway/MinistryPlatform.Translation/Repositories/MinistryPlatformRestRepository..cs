@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
+using System.Web;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -44,6 +46,30 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return content.FirstOrDefault();
+        }
+
+        public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
+        {
+            var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.ExecuteAsGet(request, "GET");
+            _authToken.Value = null;
+            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+
+            var content = JsonConvert.DeserializeObject<List<List<T>>>(response.Content);
+            if (content == null || !content.Any())
+            {
+                return default(List<List<T>>);
+            }
+            return content;
+        }
+
+        private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
+        {
+            var result = parameters.Aggregate("?", (current, parameter) => current + ((parameter.Key.StartsWith("@") ? parameter.Key : "@" + parameter.Key) + "=" + parameter.Value + "&"));
+            return result.TrimEnd('&');
         }
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null)

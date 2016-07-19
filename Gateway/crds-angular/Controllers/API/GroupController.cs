@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -14,7 +12,6 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Translation.Repositories;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 
 namespace crds_angular.Controllers.API
@@ -22,24 +19,21 @@ namespace crds_angular.Controllers.API
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupService groupService;        
-        private readonly IAuthenticationRepository authenticationService;
-        private readonly IParticipantRepository participantService;
-        private readonly Services.Interfaces.IAddressService _addressService;
+        private readonly IGroupService _groupService;        
+        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IParticipantRepository _participantService;
+        private readonly IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
 
-        private readonly int GroupRoleDefaultId =
-            Convert.ToInt32(ConfigurationManager.AppSettings["Group_Role_Default_ID"]);
-
-        public GroupController(Services.Interfaces.IGroupService groupService,
+        public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
                                IParticipantRepository participantService,
-                               Services.Interfaces.IAddressService addressService,
-                               Services.Interfaces.IGroupSearchService groupSearchService)
+                               IAddressService addressService,
+                               IGroupSearchService groupSearchService)
         {
-            this.groupService = groupService;
-            this.authenticationService = authenticationService;
-            this.participantService = participantService;
+            _groupService = groupService;
+            _authenticationService = authenticationService;
+            _participantService = participantService;
             _addressService = addressService;
             _groupSearchService = groupSearchService;
         }
@@ -61,7 +55,7 @@ namespace crds_angular.Controllers.API
                         _addressService.FindOrCreateAddress(group.Address);
                     }
 
-                    group = groupService.CreateGroup(group);
+                    group = _groupService.CreateGroup(group);
                     _logger.DebugFormat("Successfully created group {0} ", group.GroupId);
                     return (Created(string.Format("api/group/{0}", group.GroupId), group));
                 }
@@ -87,9 +81,9 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    groupService.LookupParticipantIfEmpty(token, partId);
+                    _groupService.LookupParticipantIfEmpty(token, partId);
 
-                    groupService.addParticipantsToGroup(groupId, partId);
+                    _groupService.addParticipantsToGroup(groupId, partId);
                     _logger.Debug(String.Format("Successfully added participants {0} to group {1}", partId, groupId));
                     return (Ok());
                 }
@@ -119,10 +113,10 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var participant = participantService.GetParticipantRecord(token);
-                    var contactId = authenticationService.GetContactId(token);
+                    var participant = _participantService.GetParticipantRecord(token);
+                    var contactId = _authenticationService.GetContactId(token);
 
-                    var detail = groupService.getGroupDetails(groupId, contactId, participant, token);
+                    var detail = _groupService.getGroupDetails(groupId, contactId, participant, token);
 
                     return Ok(detail);
                 }
@@ -144,7 +138,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var eventList = groupService.GetGroupEvents(groupId, token);
+                    var eventList = _groupService.GetGroupEvents(groupId, token);
                     return Ok(eventList);
                 }
                 catch (Exception e)
@@ -169,7 +163,7 @@ namespace crds_angular.Controllers.API
                     {
                         throw new ApplicationException("Recipients should be 'current' or 'potential'");
                     }
-                    var memberList = groupService.GetGroupMembersByEvent(groupId, eventId, recipients);
+                    var memberList = _groupService.GetGroupMembersByEvent(groupId, eventId, recipients);
                     return Ok(memberList);
                 }
                 catch (Exception e)
@@ -197,8 +191,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var participant = groupService.GetParticipantRecord(token);
-                    var groups = groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
+                    var participant = _groupService.GetParticipantRecord(token);
+                    var groups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, groupTypeId);
                     return Ok(groups);
                 }
                 catch (Exception ex)
@@ -225,7 +219,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groups = groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                    var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
                     return Ok(groups);
                 }
                 catch (Exception ex)
@@ -266,6 +260,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
         /// Takes in a Group ID and retrieves all active participants for the group id.
         /// </summary>
         /// <param name="groupId">GroupId of the group.</param>
@@ -279,7 +274,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var participants = groupService.GetGroupParticipants(groupId);
+                    var participants = _groupService.GetGroupParticipants(groupId);
                     return participants == null ? (IHttpActionResult) NotFound() : Ok(participants);
                 }
                 catch (Exception ex)
@@ -304,12 +299,12 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    groupService.SendJourneyEmailInvite(communication, token);
+                    _groupService.SendJourneyEmailInvite(communication, token);
                     return Ok();
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException)
                 {
-                    return (IHttpActionResult) NotFound();
+                    return NotFound();
                 }
                 catch (Exception ex)
                 {

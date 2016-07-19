@@ -4,6 +4,7 @@ import GroupService from '../../../app/group_tool/services/group.service'
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 import GroupInquiry from '../../../app/group_tool/model/groupInquiry';
 import GroupInvitation from '../../../app/group_tool/model/groupInvitation';
+import Participant from '../../../app/group_tool/model/participant';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -245,4 +246,142 @@ describe('Group Tool Group Service', () => {
       });
     });
   });
+
+  describe('getGroupParticipants() function', () => {
+    it('should throw error in case of failure', () => {
+      let groupId = 172286;
+
+      let errObj = { status: 500, statusText: 'nonononononono' };
+
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(500, errObj);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+
+      let callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onFailure']);
+
+      promise.then((data) => {
+        callbacks.onSuccess(data);
+      },
+      (err) => {
+        callbacks.onFailure(err.data);
+      }).finally(() => {
+        expect(callbacks.onSuccess).not.toHaveBeenCalled();
+        expect(callbacks.onFailure).toHaveBeenCalledWith(errObj);
+      });
+    });
+
+    it('should throw error in case group not found in returned data', () => {
+      let groupId = 172286;
+
+      let responseData = [];
+
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(200, responseData);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+
+      let callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onFailure']);
+
+      promise.then((data) => {
+        callbacks.onSuccess(data);
+      },
+      (err) => {
+        callbacks.onFailure(err);
+      }).finally(() => {
+        expect(callbacks.onSuccess).not.toHaveBeenCalled();
+        expect(callbacks.onFailure).toHaveBeenCalled();
+      });
+
+    });
+
+    it('should get all participants when successful', () => {
+      let mockParticipants = [{
+        Participants: [
+          {
+            "participantId": 4188863,
+            "contactId": 1670863,
+            "groupParticipantId": 14581967,
+            "nickName": "Jim",
+            "lastName": "Kriz",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "jim.kriz@ingagepartners.com"
+          },
+          {
+            "participantId": 7537153,
+            "contactId": 2562378,
+            "groupParticipantId": 14581917,
+            "nickName": "Joe",
+            "lastName": "Kerstanoff",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "jkerstanoff@callibrity.com"
+          },
+          {
+            "participantId": 5102871,
+            "contactId": 5224083,
+            "groupParticipantId": 14581913,
+            "nickName": "Sara",
+            "lastName": "Seissiger",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "sara.seissiger@ingagepartners.com"
+          },
+          {
+            "participantId": 7433010,
+            "contactId": 7539207,
+            "groupParticipantId": 14582025,
+            "nickName": "Dave",
+            "lastName": "Miyamasu",
+            "groupRoleId": 16,
+            "groupRoleTitle": "Member",
+            "email": "dmiyamasu@gmail.com"
+          },
+          {
+            "participantId": 7534950,
+            "contactId": 7641599,
+            "groupParticipantId": 14581914,
+            "nickName": "Markku",
+            "lastName": "Koistila",
+            "groupRoleId": 16,
+            "groupRoleTitle": "Member",
+            "email": "markku.koistila@ingagepartners.com"
+          }
+        ]
+      }];
+
+      let groupId = 172286;
+
+      let participants = mockParticipants[0].Participants.map((p) => {
+        return new Participant(p);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(200, mockParticipants);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data).toBeDefined();
+        expect(data.length).toEqual(participants.length);
+        for(let i = 0; i < data.length; i++) {
+          expect(data[i].participantId).toEqual(participants[i].participantId);
+          expect(data[i].contactId).toEqual(participants[i].contactId);
+          expect(data[i].groupParticipantId).toEqual(participants[i].groupParticipantId);
+          expect(data[i].nickName).toEqual(participants[i].nickName);
+          expect(data[i].lastName).toEqual(participants[i].lastName);
+          expect(data[i].groupRoleId).toEqual(participants[i].groupRoleId);
+          expect(data[i].groupRoleTitle).toEqual(participants[i].groupRoleTitle);
+          expect(data[i].email).toEqual(participants[i].email);
+        }
+      });
+    });
+  });
+
 });
