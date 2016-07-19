@@ -82,7 +82,7 @@ export default class GroupService {
                             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
                             groupId: groupId,
                             groupParticipantId: participant.groupParticipantId,
-                            removalMessage: participant.deleteMessage
+                            removalMessage: participant.message
                           }).$promise;
     
     return promise.then((data) => {

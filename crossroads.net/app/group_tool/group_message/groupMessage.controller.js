@@ -1,12 +1,10 @@
 
 export default class GroupMessageController {
   /*@ngInject*/
-  constructor() {  
-    this.person;
-  }
+  constructor() { }
 
   submit() {
-    this.submitAction({person: this.person, message: this.message});
+    this.submitAction({person: this.person});
   }
 
   cancel() {

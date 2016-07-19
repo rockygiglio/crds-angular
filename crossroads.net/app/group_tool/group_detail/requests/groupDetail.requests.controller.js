@@ -19,6 +19,7 @@ export default class GroupDetailRequestsController {
     this.inquired = [];
 
     this.selectedInquiry = null;
+    this.processing = false;
   }
 
   $onInit() {
@@ -53,12 +54,68 @@ export default class GroupDetailRequestsController {
 
   approve(inquiry) {
     this.selectedInquiry = inquiry;
+    this.selectedInquiry.message = '';
     this.setView('Approve', false);
+  }
+
+  submitApprove(inquiry) {
+    this.log.info(`Approving inquiry: ${JSON.stringify(inquiry)}`);
+    this.processing = true;
+    /*
+    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
+      _.remove(this.data, function(p) {
+          return p.groupParticipantId === participant.groupParticipantId;
+      });
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
+      this.setListView();
+      this.deleteParticipant = undefined;
+      this.ready = true;
+    },
+    (err) => {
+      this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
+      this.error = true;
+      this.ready = true;
+    }).finally(() => {
+      this.processing = false;
+    });
+    */
   }
 
   deny(inquiry) {
     this.selectedInquiry = inquiry;
+    this.selectedInquiry.message = '';
     this.setView('Deny', false);
+  }
+
+  submitDeny(inquiry) {
+    this.log.info(`Denying inquiry: ${JSON.stringify(inquiry)}`);
+    this.processing = true;
+    /*
+    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
+      _.remove(this.data, function(p) {
+          return p.groupParticipantId === participant.groupParticipantId;
+      });
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
+      this.setListView();
+      this.deleteParticipant = undefined;
+      this.ready = true;
+    },
+    (err) => {
+      this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
+      this.error = true;
+      this.ready = true;
+    }).finally(() => {
+      this.processing = false;
+    });
+    */
+  }
+
+  cancel(inquiry) {
+    inquiry.message = undefined;
+    this.selectedInquiry = undefined;
+    this.setView('List', false);
   }
 
   setView(newView, refresh) {
