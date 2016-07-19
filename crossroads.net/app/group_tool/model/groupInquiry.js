@@ -12,12 +12,13 @@ export default class GroupInquiry {
       this.phoneNumber = undefined;
       this.firstName = '';
       this.lastName = '';
-      this.nickName = this.firstName;
       this.requestDate = undefined;
       this.placed = undefined;
       this.imageUrl = undefined;
       this.defaultProfileImageUrl = undefined;
     }
+
+    this.nickName = this.firstName;
   }
 
   recipientName() {

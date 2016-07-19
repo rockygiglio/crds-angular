@@ -7,17 +7,17 @@ export default function GroupMessageComponent() {
 
   let GroupMessageComponent = {
     restrict: 'E',
-   /* bindings: {
+    bindings: {
       person: '<',
       normalLoadingText: '@',
       loadingLoadingText: '@',
       cancel: '&',
       submit: '&',
       header: '@',
-      subHeaderText: '<',
-      contactText: '<',
-      emailTemplateText: '<',
-    },*/
+      subHeaderText: '@',
+      contactText: '@',
+      emailTemplateText: '@',
+    },
     templateUrl: 'group_message/groupMessage.html', 
     controller: controller,
     controllerAs: 'groupMessage',

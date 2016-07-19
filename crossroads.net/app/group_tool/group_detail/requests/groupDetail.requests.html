@@ -68,21 +68,27 @@
 
 <div class='container-fluid' ng-if='groupDetailRequests.approveView()'>
   <group-message person="groupDetailRequests.selectedInquiry"
-    normalLoading="Approve"
-    loadingLoadingText="Approving..."
-    header="Approve Participant - {{ groupDetailRequests.selectedInquiry.recipientName }}"
-    subHeaderText="$root.MESSAGES.groupToolApproveInquirySubheaderText.content"
-    emailTemplateText="$root.MESSAGES.groupToolApproveInquiryEmailTemplateText.content"
-    cancel="function(){}"
-    submit="function(){}"
+    normal-loading-text="Approve"
+    loading-loading-text="Approving..."
+    header="Approve Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
+    sub-header-text="groupToolApproveInquirySubheaderText"
+    email-template-text="groupToolApproveInquiryEmailTemplateText"
+    cancel=""
+    submit=""
     ></group-message>
 </div>
 
-<!--
 <div class='container-fluid' ng-if='groupDetailRequests.denyView()'>
-  <message></message>
+  <group-message person="groupDetailRequests.selectedInquiry"
+    normal-loading-text="Deny"
+    loading-loading-text="Denying..."
+    header="Deny Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
+    sub-header-text="groupToolDenyInquirySubheaderText"
+    email-template-text="groupToolDenyInquiryEmailTemplateText"
+    cancel=""
+    submit=""
+    ></group-message>
 </div>
--->
 
 <div class='container-fluid' ng-if='groupDetailRequests.inviteView()'>
   <group-detail-invite on-update="groupDetailRequests.setView(newView, refresh)" group-id="groupDetailRequests.groupId"></group-detail-invite>

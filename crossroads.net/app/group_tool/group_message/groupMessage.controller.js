@@ -2,10 +2,9 @@
 export default class GroupMessageController {
   /*@ngInject*/
   constructor() {  
-    debugger;
     this.person;
   }
-/*
+
   submit() {
     this.submitAction({person: this.person, message: this.message});
   }
@@ -25,5 +24,4 @@ export default class GroupMessageController {
   hasEmailTemplateText() {
     return !(this.emailTemplateText === null || this.emailTemplateText === undefined)
   }
-  */
 }

@@ -9,15 +9,15 @@
       </div>
 
       <div class='row' ng-if='groupMessage.hasSubHeaderText()'>
-        <div class='col-md-12' dynamic-content="groupMessage.subHeaderText | html"></div>
+        <div class='col-md-12' dynamic-content="$root.MESSAGES[groupMessage.subHeaderText].content | html"></div>
       </div>
 
       <div class='row' ng-if='groupMessage.hasContactText()'>
-        <div class='col-md-12' dynamic-content="groupMessage.contactText | html"></div>
+        <div class='col-md-12' dynamic-content="$root.MESSAGES[groupMessage.contactText].content | html"></div>
       </div>
 
       <div class='row' ng-if='groupMessage.hasEmailTemplateText()'>
-        <div class='col-md-12' dynamic-content="groupMessage.emailTemplateText | html"></div>
+        <div class='col-md-12' dynamic-content="$root.MESSAGES[groupMessage.emailTemplateText].content | html"></div>
       </div>
 
       <div class='row'>

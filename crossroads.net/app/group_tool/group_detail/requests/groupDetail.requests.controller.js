@@ -19,13 +19,6 @@ export default class GroupDetailRequestsController {
     this.inquired = [];
 
     this.selectedInquiry = null;
-
-    /*
-    Possibly TODO on erasing these
-
-    this.currentRequest = null;
-
-    */
   }
 
   $onInit() {
@@ -91,31 +84,4 @@ export default class GroupDetailRequestsController {
   denyView() {
     return this.currentView === 'Deny';
   }
-
-  //////TODO////////////////////////////////////
-  /*
-  beginApproveRequest(request) {
-    this.currentRequest = request;
-    this.setView('Approve', false);    
-  }
-    
-  approveRequest(request) {
-    // TODO Call API to approve request, send email, etc
-    _.remove(this.data.requests, request);
-    this.currentRequest = null;
-    this.setView('List', true);
-  }
-
-  beginDenyRequest(request) {
-    this.currentRequest = request;
-    this.setView('Deny', false);    
-  }
-    
-  denyRequest(request) {
-    // TODO Call API to deny request, send email, etc
-    _.remove(this.data.requests, request);
-    this.currentRequest = null;
-    this.setView('List', true);
-  }
-  */
 }
