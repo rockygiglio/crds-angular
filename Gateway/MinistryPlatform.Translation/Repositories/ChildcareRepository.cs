@@ -27,5 +27,21 @@ namespace MinistryPlatform.Translation.Repositories
             var childcareDashboard = dashboardData.FirstOrDefault() ?? new List<ChildcareDashboard>();
             return childcareDashboard;
         }
+
+        public bool IsChildRsvpd(int contactId, int groupId, string token)
+        {
+            var parms = new Dictionary<string,object>()
+            {
+                {"@ContactID", contactId },
+                {"@EventGroupID", groupId }
+            };
+            var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
+            var rsvpList = storedProcReturn.FirstOrDefault();
+            if (rsvpList.Count > 0)
+            {
+                return rsvpList.FirstOrDefault().Rsvpd;
+            }
+            return false;            
+        }
     }
 }

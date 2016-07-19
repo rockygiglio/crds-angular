@@ -21,11 +21,13 @@ namespace crds_angular.Controllers.API
     {
         private readonly IChildcareService _childcareService;
         private readonly IEventService _eventService;
+        private readonly IPersonService _personService;
 
-        public ChildcareController(IChildcareService childcareService, IEventService eventService)
+        public ChildcareController(IChildcareService childcareService, IEventService eventService, IPersonService personService)
         {
             _childcareService = childcareService;
             _eventService = eventService;
+            _personService = personService;
         }
 
         [Route("api/childcare/rsvp")]
@@ -228,9 +230,12 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(token =>
             {
+                // Get contactId of token
+                var person = _personService.GetLoggedInUserProfile(token);
                 try
                 {
-                    return Ok(_childcareService.GetChildcareDashboard(contactId));
+                    var householdInfo = _childcareService.GetHeadsOfHousehold(person.ContactId, person.HouseholdId);
+                    return Ok(_childcareService.GetChildcareDashboard(person, householdInfo));
                 }
                 catch (NotHeadOfHouseholdException notHead)
                 {
