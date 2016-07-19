@@ -28,6 +28,8 @@ namespace crds_angular.Services
         private readonly int _domainId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
+        private const string GroupToolApproveInquiryEmailTemplateText = "groupToolApproveInquiryEmailTemplateText";
+        private const string GroupToolDenyInquiryEmailTemplateText = "groupToolDenyInquiryEmailTemplateText";
 
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
@@ -211,11 +213,11 @@ namespace crds_angular.Services
 
                 if (approve)
                 {
-                    ApproveInquiry(groupId, inquiry);
+                    ApproveInquiry(groupId, group, inquiry, me, message);
                 }
                 else
                 {
-                    DenyInquiry(groupId, inquiry);
+                    DenyInquiry(groupId, group, inquiry, me, message);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -229,22 +231,23 @@ namespace crds_angular.Services
             }
         }
 
-        private void ApproveInquiry(int groupId, Inquiry inquiry)
+        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
+            //TODO:: Update template id
+            SendApproveDenyInquiryEmail(
+                groupId,
+                group,
+                inquiry,
+                me,
+                _removeParticipantFromGroupEmailTemplateId,
+                GroupToolApproveInquiryEmailTemplateText,
+                message);
+
             try
             {
-                /* TODO:: send email to inquiry they are approved
-                SendGroupParticipantEmail(groupId,
-                                          groupParticipantId,
-                                          groups.FirstOrDefault(),
-                                          _removeParticipantFromGroupEmailTemplateId,
-                                          GroupToolRemoveParticipantEmailTemplateTextTitle,
-                                          message,
-                                          me);
-                                          */
             }
             catch (Exception e)
             {
@@ -253,27 +256,39 @@ namespace crds_angular.Services
         }
 
 
-        private void DenyInquiry(int groupId, Inquiry inquiry)
+        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
+            //TODO:: Update template id
+            SendApproveDenyInquiryEmail(
+                groupId,
+                group, 
+                inquiry, 
+                me,
+                _removeParticipantFromGroupEmailTemplateId,
+                GroupToolDenyInquiryEmailTemplateText,
+                message);
+        }
+
+        private void SendApproveDenyInquiryEmail(int groupId, GroupDTO group, Inquiry inquiry, Participant me, int emailTemplateId, string emailTemplateContentBlockTitle, string message)
+        {
             try
             {
-                /* TODO:: send email to inquiry they are denied
+                var participant = _participantRepository.GetParticipant(inquiry.ContactId);
+
                 SendGroupParticipantEmail(groupId,
-                                          groupParticipantId,
-                                          groups.FirstOrDefault(),
-                                          _removeParticipantFromGroupEmailTemplateId,
-                                          GroupToolRemoveParticipantEmailTemplateTextTitle,
+                                          participant.ParticipantId,
+                                          group,
+                                          emailTemplateId,
+                                          emailTemplateContentBlockTitle,
                                           message,
                                           me);
-                                          */
             }
             catch (Exception e)
             {
-                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being denied from group {1}", inquiry.InquiryId, groupId), e);
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
             }
         }
-
     }
 }
