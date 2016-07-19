@@ -51,7 +51,7 @@ describe('CreateGroupController', () => {
 
             expect(fixture.ready).toBeFalsy();
             expect(fixture.approvedLeader).toBeFalsy();
-            expect(location.path).toHaveBeenCalledWith('/grouptool/leader');
+            expect(location.path).toHaveBeenCalledWith('/groups/leader');
         });
 
         it('should redirect to leader application if error getting leader participant', () => {
@@ -65,7 +65,7 @@ describe('CreateGroupController', () => {
 
             expect(fixture.ready).toBeFalsy();
             expect(fixture.approvedLeader).toBeFalsy();
-            expect(location.path).toHaveBeenCalledWith('/grouptool/leader');
+            expect(location.path).toHaveBeenCalledWith('/groups/leader');
         });
     });
 });

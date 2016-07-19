@@ -1,4 +1,2 @@
 <preloader full-screen='false' ng-show='!createGroup.ready'> </preloader>
-<div ng-show='createGroup.ready'>
-  Hi. This is where you will create a group if you are an approved group leader.
-</div>
+<div dynamic-content="$root.MESSAGES.groupToolCreateGroupInterimPlaceholder.content | html"></div>
