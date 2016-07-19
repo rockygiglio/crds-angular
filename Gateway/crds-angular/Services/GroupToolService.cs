@@ -17,6 +17,7 @@ namespace crds_angular.Services
     {
 
         private readonly IGroupToolRepository _groupToolRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IGroupService _groupService;
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
@@ -32,6 +33,7 @@ namespace crds_angular.Services
 
         public GroupToolService(
                            IGroupToolRepository groupToolRepository,
+                           IGroupRepository groupRepository,
                            IGroupService groupService,
                            IParticipantRepository participantRepository,
                            ICommunicationRepository communicationRepository,
@@ -40,6 +42,7 @@ namespace crds_angular.Services
         {
 
             _groupToolRepository = groupToolRepository;
+            _groupRepository = groupRepository;
             _groupService = groupService;
             _participantRepository = participantRepository;
             _communicationRepository = communicationRepository;
@@ -89,13 +92,14 @@ namespace crds_angular.Services
             try
             {
                 var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                var group = (groups == null || !groups.Any()) ? null : groups.FirstOrDefault();
 
-                if (groups == null || !groups.Any())
+                if (group == null)
                 {
                     throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
                 }
 
-                var groupParticipants = groups.FirstOrDefault().Participants;
+                var groupParticipants = group.Participants;
                 var me = _participantRepository.GetParticipantRecord(token);
 
                 if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
@@ -182,6 +186,93 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationRepository.SendMessage(email);
+        }
+
+        public void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null)
+        {
+            try
+            {
+                var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                var group = (groups == null || !groups.Any()) ? null : groups.FirstOrDefault();
+
+                if (group == null)
+                {
+                    throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for user", groupId));
+                }
+
+                var groupParticipants = group.Participants;
+                var me = _participantRepository.GetParticipantRecord(token);
+
+                if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
+                    groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+                {
+                    throw new NotGroupLeaderException(string.Format("User is not a leader of group {0}", groupId));
+                }
+
+                if (approve)
+                {
+                    ApproveInquiry(groupId, inquiry);
+                }
+                else
+                {
+                    DenyInquiry(groupId, inquiry);
+                }
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not add Inquirier {0} from group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
+
+        private void ApproveInquiry(int groupId, Inquiry inquiry)
+        {
+            _groupService.addContactToGroup(groupId, inquiry.ContactId);
+            _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
+
+            try
+            {
+                /* TODO:: send email to inquiry they are approved
+                SendGroupParticipantEmail(groupId,
+                                          groupParticipantId,
+                                          groups.FirstOrDefault(),
+                                          _removeParticipantFromGroupEmailTemplateId,
+                                          GroupToolRemoveParticipantEmailTemplateTextTitle,
+                                          message,
+                                          me);
+                                          */
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
+
+
+        private void DenyInquiry(int groupId, Inquiry inquiry)
+        {
+            _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
+
+            try
+            {
+                /* TODO:: send email to inquiry they are denied
+                SendGroupParticipantEmail(groupId,
+                                          groupParticipantId,
+                                          groups.FirstOrDefault(),
+                                          _removeParticipantFromGroupEmailTemplateId,
+                                          GroupToolRemoveParticipantEmailTemplateTextTitle,
+                                          message,
+                                          me);
+                                          */
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being denied from group {1}", inquiry.InquiryId, groupId), e);
+            }
         }
 
     }
