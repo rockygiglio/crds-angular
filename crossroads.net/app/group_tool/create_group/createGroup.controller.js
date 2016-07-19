@@ -1,9 +1,9 @@
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $location, $log, CreateGroupService) {
+    constructor(ParticipantService, $state, $log, CreateGroupService) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
-        this.location = $location;
+        this.state = $state;
         this.participantService = ParticipantService;
         this.createGroupService = CreateGroupService;
         this.ready = false;
@@ -19,13 +19,13 @@ export default class CreateGroupController {
                 this.approvedLeader = true;
                 this.ready = true;
             } else {
-                this.location.path('/groups/leader');
+                this.state.go("content", {"link":"/groups/leader"});
             }
         },
 
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                this.location.path('/groups/leader');
+                this.state.go("content", {"link":"/groups/leader"});
             });
 
         this.fields = this.createGroupService.getFields();
