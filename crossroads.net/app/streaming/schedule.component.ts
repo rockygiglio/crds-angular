@@ -9,7 +9,7 @@ declare var moment: any;
 // TODO - placeholder for schedule if StreamspotService fails
 @Component({
   selector: 'schedule',
-  templateUrl: './schedule.component.html',
+  templateUrl: './schedule.ng2component.html',
   providers: [StreamspotService]
 })
 

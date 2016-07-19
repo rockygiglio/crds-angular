@@ -3,7 +3,7 @@ import { VideoJSComponent } from './videojs.component';
 
 @Component({
   selector: 'live-stream',
-  templateUrl: './video.component.html',
+  templateUrl: './video.ng2component.html',
   directives: [VideoJSComponent]
 })
 
