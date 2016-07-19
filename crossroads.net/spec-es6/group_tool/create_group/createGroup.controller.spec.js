@@ -6,66 +6,38 @@ describe('CreateGroupController', () => {
         participantService,
         location,
         log,
-        deferred,
-        scope;
+        createGroupService,
+        mockProfile;
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-    beforeEach(inject(function($injector) {
-        participantService = $injector.get('ParticipantService'); 
-        location = $injector.get('$location');
-        log = $injector.get('$log');
-        deferred = $injector.get('$q');
-        scope = $injector.get('$rootScope');
-
-        fixture = new CreateGroupController(participantService, location, log);
+    beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
     }));
 
-    describe('the constructor', () => {
-        it('should initialize properties', () => {
-            expect(fixture.ready).toBeFalsy();
-            expect(fixture.approvedLeader).toBeFalsy();
-        });
-    });
+    beforeEach(inject(($injector)=> {
+      participantService = $injector.get('ParticipantService');
+      location = $injector.get('$location');
+      log = $injector.get('$log');
+      createGroupService = $injector.get('CreateGroupService');
+      spyOn(particpantService, 'get').and.returnValue(
+      {
+          $promise: {
+            then: (success, error) => {
+                success({});
+            }
+        },
+        $resolved:true
+      });
+      fixture = new CreateGroupController(participantService, localStorage, log, createGroupService);
 
-    describe('$onInit() function', () => {
-        it('should set properties if leader is approved', () => {
-            var promised = deferred.defer();
-            promised.resolve({'ApprovedSmallGroupLeader': true});
-            spyOn(participantService, 'get').and.returnValue(promised.promise);
+    }));
 
-            fixture.$onInit();
-            scope.$digest();
-            expect(fixture.ready).toBeTruthy();
-            expect(fixture.approvedLeader).toBeTruthy();
-        });
+    // it('should call participant service', () => {
+    //   fixture.$onInit();
+    //   expect(participantService.get).toHaveBennCalled();
+    // });
 
-        it('should redirect to leader application if leader is not approved', () => {
-            var promised = deferred.defer();
-            promised.resolve({'ApprovedSmallGroupLeader': false});
-            spyOn(participantService, 'get').and.returnValue(promised.promise);
-            spyOn(location, 'path').and.callFake(function() { });
 
-            fixture.$onInit();
-            scope.$digest();
-
-            expect(fixture.ready).toBeFalsy();
-            expect(fixture.approvedLeader).toBeFalsy();
-            expect(location.path).toHaveBeenCalledWith('/groups/leader');
-        });
-
-        it('should redirect to leader application if error getting leader participant', () => {
-            var promised = deferred.defer();
-            promised.reject({'status': 500, 'statusText': 'abandon hope all ye who enter here'});
-            spyOn(participantService, 'get').and.returnValue(promised.promise);
-            spyOn(location, 'path').and.callFake(function() { });
-
-            fixture.$onInit();
-            scope.$digest();
-
-            expect(fixture.ready).toBeFalsy();
-            expect(fixture.approvedLeader).toBeFalsy();
-            expect(location.path).toHaveBeenCalledWith('/groups/leader');
-        });
-    });
 });
