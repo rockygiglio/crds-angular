@@ -10,6 +10,7 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Newtonsoft.Json;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
@@ -34,6 +35,8 @@ namespace crds_angular.Services
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IAttributeRepository _attributeService;
+        private readonly IEmailCommunication _emailCommunicationService;
+        private readonly IUserRepository _userRepository;
 
 
         /// <summary>
@@ -57,7 +60,9 @@ namespace crds_angular.Services
                             IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
                             IApiUserRepository apiUserService, 
-                            IAttributeRepository attributeService)
+                            IAttributeRepository attributeService,
+                            IEmailCommunication emailCommunicationService,
+                            IUserRepository userRepository)
 
         {
             _mpGroupService = mpGroupService;
@@ -71,6 +76,8 @@ namespace crds_angular.Services
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
             _attributeService = attributeService;
+            _emailCommunicationService = emailCommunicationService;
+            _userRepository = userRepository; 
 
             _groupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -559,6 +566,32 @@ namespace crds_angular.Services
             //}
 
             return groupDetail;
+        }
+
+        public void SendAllGroupParticipantsEmail(string token, int groupId, int groupLeaderUserId, string subject, string message)
+        {
+            var groupParticipants = GetGroupParticipants(groupId);
+            var groupLeaderContactId = _userRepository.GetContactIdByUserId(groupLeaderUserId);
+
+            foreach (var groupParticipant in groupParticipants)
+            {
+                EmailCommunicationDTO emailDto = new EmailCommunicationDTO
+                {
+                    FromContactId = groupLeaderContactId, 
+                    FromUserId = groupLeaderUserId,
+                    ToContactId = groupParticipant.ContactId,
+                    TemplateId = 13356
+                };
+
+                try
+                {
+                    _emailCommunicationService.SendEmail(emailDto);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(string.Format("Could not send email for Group ", JsonConvert.SerializeObject(username, Formatting.Indented)), ex);
+                }
+            }
         }
     }
 }
