@@ -12,8 +12,9 @@ export default class GroupDetailParticipantsController {
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
-    this.currentView = 'List';
     this.processing = false;
+
+    this.setListView();
   }
 
   $onInit() {
@@ -46,32 +47,59 @@ export default class GroupDetailParticipantsController {
     });
   }
 
-  setView(newView) {
-    this.currentView = newView;
+  setDeleteView() {
+    this.currentView = 'Delete';
+  }
+
+  isDeleteView() {
+    return this.currentView === 'Delete';
+  }
+
+  setEditView() {
+    this.currentView = 'Edit';
+  }
+
+  isEditView() {
+    return this.currentView === 'Edit';
+  }
+
+  setListView() {
+    this.currentView = 'List';
+  }
+
+  isListView() {
+    return this.currentView === 'List';
+  }
+
+  setEmailView() {
+    this.currentView = 'Email';
+  }
+
+  isEmailView() {
+    return this.currentView === 'Email';
   }
 
   beginRemoveParticipant(participant) {
     this.deleteParticipant = participant;
     this.deleteParticipant.deleteMessage = '';
-    this.setView('Delete');
+    this.setDeleteView();
   }
 
   cancelRemoveParticipant(participant) {
     participant.deleteMessage = undefined;
     this.deleteParticipant = undefined;
-    this.setView('Edit');
+    this.setEditView();
   }
 
   removeParticipant(participant) {
     this.log.info(`Deleting participant: ${JSON.stringify(participant)}`);
-    console.log(`Deleting participant: ${JSON.stringify(participant)}`);
     this.processing = true;
     this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
       _.remove(this.data, function(p) {
           return p.groupParticipantId === participant.groupParticipantId;
       });
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
-      this.setView('List');  
+      this.setListView();
       this.deleteParticipant = undefined;
       this.ready = true;
     },

@@ -1,9 +1,7 @@
 export default class GroupDetailParticipantCardController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state) {
-    this.groupService = GroupService;
+  constructor(ImageService) {
     this.imageService = ImageService;
-    this.state = $state;
   }
 
   $onInit() {
@@ -11,6 +9,6 @@ export default class GroupDetailParticipantCardController {
   }
 
   invokeDeleteAction(participant) {
-    this.deleteAction(participant);
+    this.deleteAction({participant: participant});
   }
 }

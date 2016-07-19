@@ -36,16 +36,44 @@ describe('GroupDetailParticipantsController', () => {
             expect(fixture.groupId).toEqual(state.params.groupId);
             expect(fixture.ready).toBeFalsy();
             expect(fixture.error).toBeFalsy();
-            expect(fixture.currentView).toEqual('List');
+            expect(fixture.isListView()).toBeTruthy();
             expect(fixture.processing).toBeFalsy();
         });
     });
 
-    describe('setView() function', () => {
-      it('should set correct view', () => {
-        fixture.setView('Remove');
-        expect(fixture.currentView).toEqual('Remove');
+    describe('set/get view functions', () => {
+      it('should set and get List view', () => {
+        fixture.setListView();
+        expect(fixture.isListView()).toBeTruthy();
+        expect(fixture.isDeleteView()).toBeFalsy();
+        expect(fixture.isEditView()).toBeFalsy();
+        expect(fixture.isEmailView()).toBeFalsy();
       });
+
+      it('should set and get Email view', () => {
+        fixture.setEmailView();
+        expect(fixture.isEmailView()).toBeTruthy();
+        expect(fixture.isListView()).toBeFalsy();
+        expect(fixture.isDeleteView()).toBeFalsy();
+        expect(fixture.isEditView()).toBeFalsy();
+      });
+
+      it('should set and get Delete view', () => {
+        fixture.setDeleteView();
+        expect(fixture.isDeleteView()).toBeTruthy();
+        expect(fixture.isListView()).toBeFalsy();
+        expect(fixture.isEditView()).toBeFalsy();
+        expect(fixture.isEmailView()).toBeFalsy();
+      });
+
+      it('should set and get Edit view', () => {
+        fixture.setEditView();
+        expect(fixture.isEditView()).toBeTruthy();
+        expect(fixture.isListView()).toBeFalsy();
+        expect(fixture.isDeleteView()).toBeFalsy();
+        expect(fixture.isEmailView()).toBeFalsy();
+      });
+      
     });
 
     describe('beginRemoveParticipant() function', () => {
@@ -54,7 +82,7 @@ describe('GroupDetailParticipantsController', () => {
         fixture.beginRemoveParticipant(participant);
         expect(fixture.deleteParticipant).toBe(participant);
         expect(fixture.deleteParticipant.deleteMessage).toEqual('');
-        expect(fixture.currentView).toEqual('Delete');
+        expect(fixture.isDeleteView()).toBeTruthy();
       });
     });
 
@@ -65,7 +93,7 @@ describe('GroupDetailParticipantsController', () => {
         fixture.cancelRemoveParticipant(participant);
         expect(fixture.deleteParticipant).not.toBeDefined();
         expect(participant.deleteMessage).not.toBeDefined();
-        expect(fixture.currentView).toEqual('Edit');
+        expect(fixture.isEditView()).toBeTruthy();
       });
     });
 
@@ -89,6 +117,7 @@ describe('GroupDetailParticipantsController', () => {
 
         spyOn(rootScope, '$emit').and.callFake(() => { });
 
+        fixture.setDeleteView();
         fixture.removeParticipant(participant);
         rootScope.$digest();
 
@@ -97,7 +126,7 @@ describe('GroupDetailParticipantsController', () => {
         expect(fixture.data.find((p) => { return p.groupParticipantId === participant.groupParticipantId; })).not.toBeDefined();
         expect(fixture.processing).toBeFalsy();
         expect(fixture.ready).toBeTruthy();
-        expect(fixture.currentView).toEqual('List');
+        expect(fixture.isListView()).toBeTruthy();
         expect(fixture.deleteParticipant).not.toBeDefined();
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
       });
@@ -114,7 +143,7 @@ describe('GroupDetailParticipantsController', () => {
 
         let participant = new Participant({groupParticipantId: 999});
 
-        fixture.setView('Remove');
+        fixture.setDeleteView();
         fixture.removeParticipant(participant);
         rootScope.$digest();
 
@@ -122,7 +151,7 @@ describe('GroupDetailParticipantsController', () => {
         expect(fixture.processing).toBeFalsy();
         expect(fixture.ready).toBeTruthy();
         expect(fixture.error).toBeTruthy();
-        expect(fixture.currentView).toEqual('Remove');
+        expect(fixture.isDeleteView()).toBeTruthy();
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolRemoveParticipantFailure);
       });
     });

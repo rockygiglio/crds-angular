@@ -1,4 +1,4 @@
-<div class='group-participant' ng-class='{ "pending-delete": groupDetailParticipantCard.participant.deleted }'>
+<div class='group-participant'>
   <div class='row'>
       <div class='col-md-3'>
         <img class='img-responsive imgix-fluid group-participant-image' ng-src='{{groupDetailParticipantCard.participant.imageUrl}}' err-src='{{groupDetailParticipantCard.defaultProfileImageUrl}}'>
@@ -23,11 +23,9 @@
         </div>
       </div>
       <div class='col-md-2'>
-        <svg viewBox="0 0 32 32" class="icon icon-close" 
-          ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit && !groupDetailParticipantCard.participant.deleted'
-          ng-click='groupDetailParticipantCard.deleteAction(groupDetailParticipantCard.participant)'>
-          <use xlink:href="#close"></use>
-        </svg>
+        <svg-icon icon='close'
+          ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit'
+          ng-click='groupDetailParticipantCard.invokeDeleteAction(groupDetailParticipantCard.participant)'/>
       </div>
   </div>
 </div>
