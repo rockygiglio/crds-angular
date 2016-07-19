@@ -9,5 +9,7 @@ angular.module('crossroads')
     .directive('ng2Test', upgradeAdapter.downgradeNg2Component(Ng2TestComponent));
 
 angular.module('crossroads')
-    .directive('streaming', upgradeAdapter.downgradeNg2Component(StreamingComponent))
-    .directive('temporarystream', upgradeAdapter.downgradeNg2Component(VideoComponent));
+    .directive('streaming', upgradeAdapter.downgradeNg2Component(StreamingComponent));
+
+angular.module('crossroads')
+    .directive('streamingVideo', upgradeAdapter.downgradeNg2Component(VideoComponent));

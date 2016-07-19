@@ -385,10 +385,10 @@
             }
           }
         })
-        .state('live-stream', {
+        .state('livestream', {
           parent: 'noHeaderOrFooter',
           url: '/live-v2/stream',
-          templateUrl: 'streaming/video.component.html',
+          template: '<streaming-video></streaming-video>',
           data: {
             meta: {
               title: 'Live',
