@@ -1,4 +1,11 @@
-import CONSTANTS from '../../constants';
+
+import CONSTANTS from 'crds-constants';
+import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
+import AgeRange from '../model/ageRange';
+import Address from '../model/address';
+import Category from '../model/category';
+import GroupType from '../model/groupType';
 
 export default class CreateGroupService {
     /*@ngInject*/
@@ -342,5 +349,27 @@ export default class CreateGroupService {
         return [profileAboutFields, profileAddressFields, groupTypeFields,
             groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
             groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
+    }
+
+    mapSmallGroup()
+    {
+      let smallGroup = new SmallGroup();
+      smallGroup.groupName = this.model.group.groupName;
+      smallGroup.participants = [new Participant({
+          groupRoleId: CONSTANTS.GROUP.ROLES.LEADER, firstName: 'firstname', lastName: 'last'
+      })];
+      smallGroup.groupDescription = this.model.group.groupDescription;
+      //smallGroup.groupAgeRange
+
+//goru
+      smallGroup.groupType = new GroupType({name: this.model.group.typeId});
+      smallGroup.ageRange = new AgeRange({name: this.model.groupAgeRangeIds[0]});
+      smallGroup.address = new Address();
+      smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+      smallGroup.address.state = this.model.group.meeting.address.state;
+      smallGroup.address.zip = this.model.group.meeting.address.zip;
+      smallGroup.kidsWelcome = this.model.group.meeting.childCare;
+
+      return smallGroup;
     }
 }

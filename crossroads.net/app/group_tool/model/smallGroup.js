@@ -9,18 +9,20 @@ import AgeRange from './ageRange';
 export default class SmallGroup {
 
   constructor(jsonObject){
-    this.createSubObjects(jsonObject);
-    this.deleteSubObjects(jsonObject);
-    Object.assign(this, jsonObject);
+    if(jsonObject) {
+      this.createSubObjects(jsonObject);
+      this.deleteSubObjects(jsonObject);
+      Object.assign(this, jsonObject);
+    }
   }
 
   createSubObjects(jsonObject) {
     this.address = (jsonObject.address === undefined || jsonObject.address === null) ? null : new Address(jsonObject.address);
-    
+
     this.participants = [];
     if(jsonObject.Participants != undefined && jsonObject.Participants != null)
     {
-      this.participants = 
+      this.participants =
         jsonObject.Participants.map((particpant) => {
           return new Participant(particpant);
         });
@@ -73,13 +75,17 @@ export default class SmallGroup {
   }
 
   leaders() {
+    if (!this.participants)
+    {
+      return [];
+    }
     return this.participants.filter((value) => {
       return value.isLeader();
     });
   }
 
   isLeader() {
-   return this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER; 
+   return this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
   }
 
   role() {
