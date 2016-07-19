@@ -5,10 +5,17 @@ namespace crds_angular.Exceptions
 {
     public class GroupParticipantRemovalException : Exception
     {
-        public HttpStatusCode StatusCode { get; protected set; } = HttpStatusCode.InternalServerError;
+        public HttpStatusCode StatusCode { get; protected set; }
 
-        public GroupParticipantRemovalException(string message) : base(message) { }
-        public GroupParticipantRemovalException(string message, Exception innerException) : base(message, innerException) { }
+        public GroupParticipantRemovalException(string message) : base(message)
+        {
+            StatusCode = HttpStatusCode.InternalServerError;
+        }
+
+        public GroupParticipantRemovalException(string message, Exception innerException) : base(message, innerException)
+        {
+            StatusCode = HttpStatusCode.InternalServerError;
+        }
     }
 
     public class GroupNotFoundForParticipantException : GroupParticipantRemovalException
