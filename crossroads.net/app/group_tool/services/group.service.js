@@ -1,22 +1,50 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
 import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService, ImageService) {
+  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
+    this.profile = Profile;
     this.deferred = $q;
     this.auth = AuthService;
+    this.lookupService = LookupService;
     this.imgService = ImageService;
+  }
+
+  getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+  }
+
+  getProfileData() {
+    return this.profile.Personal.get().$promise;
+  }
+
+  getGroupGenderMixType() {
+    return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                          get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
+  }
+
+  getSites() {
+    return this.lookupService.Sites.query().$promise;
+  }
+
+  getDaysOfTheWeek() {
+    return this.lookupService.DaysOfTheWeek.query().$promise;
+  }
+
+  getGenders() {
+    return this.lookupService.Genders.query().$promise;
   }
 
   sendGroupInvitation(invitation) {
     return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
   }
-  
+
   getMyGroups() {
     let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
                           query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
@@ -46,7 +74,7 @@ export default class GroupService {
         var err = {'status': 404, 'statusText': 'Group not found'};
         throw err;
       }
-      
+
       return groups[0];
     },
     (err) => {
@@ -55,75 +83,40 @@ export default class GroupService {
   }
 
   getGroupParticipants(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId, 'participants': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Betty Smith',
-          'role': 'leader',
-          'email': 'bettyjj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Ted Baldwin',
-          'role': 'leader',
-          'email': 'tedb@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sam Hanks',
-          'role': 'apprentice',
-          'email': 'samguy@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jennie Jones',
-          'role': 'member',
-          'email': 'jenniejj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sara Baldwin',
-          'role': 'member',
-          'email': 'sarab@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jimmy Hatfield',
-          'role': 'member',
-          'email': 'jhat@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Freddie Jones',
-          'role': 'member',
-          'email': 'FreddieJ@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jamie Hanks',
-          'role': 'member',
-          'email': 'jaha95@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Kerrir Hatfield',
-          'role': 'member',
-          'email': 'hatk@gmail.com'
-        },
-      ]
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      if(!data || data.length === 0 || !data[0].Participants || data[0].Participants.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group participants not found'};
+        throw err;
+      }
+
+      let participants = data[0].Participants.map((participant) => {
+        return new Participant(participant);
+      });
+
+      return participants;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
+  }
+
+  removeGroupParticipant(groupId, participant) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
+                          delete({
+                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
+                            groupId: groupId,
+                            groupParticipantId: participant.groupParticipantId,
+                            removalMessage: participant.deleteMessage
+                          }).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
   }
 
   getInvities(groupId) {

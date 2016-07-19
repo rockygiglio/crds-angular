@@ -21,6 +21,15 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         T Get<T>(int recordId, string selectColumns = null);
 
         /// <summary>
+        /// Get results from a stored procedure in Ministry Platform
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="procedureName">The name of the stored procedure to execute</param>
+        /// <param name="parameters">Parameters for the stored procedure. Key is paramter name and Value is the value.</param>
+        /// <returns></returns>
+        List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters);
+
+        /// <summary>
         /// Get a list of records for a given type from MinistryPlatform.
         /// </summary>
         /// <typeparam name="T">The type of record to get.  This should correspond to an appropriately annotated model class, so that MP columns can be properly mapped (using NewtonSoft.Json) from MP to the model object.  The model class must also be annotated with the RestApiTable attribute, specifying the actual MP table name.</typeparam>
