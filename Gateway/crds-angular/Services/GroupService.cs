@@ -72,7 +72,7 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
             _attributeService = attributeService;
 
-            _groupRoleDefaultId = Convert.ToInt32(_configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"));
+            _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             _journeyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");

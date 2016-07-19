@@ -1,25 +1,44 @@
-<div class='container-fluid' ng-if='groupDetailParticipants.currentView === "List" || groupDetailParticipants.currentView === "Edit"'>
+<preloader full-screen='false' ng-show='!groupDetailParticipants.ready'> </preloader>
+
+<!-- List or Edit participants -->
+<div class='container-fluid' 
+  ng-show='groupDetailParticipants.ready'
+  ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
   <div class='row'>
     <div class='col-md-12 group-participants'>
-      <group-detail-participant-card ng-repeat='participant in groupDetailParticipants.data.participants' participant='participant' edit='groupDetailParticipants.currentView === "Edit"'></group-detail-participant-card>
+      <group-detail-participant-card 
+        ng-repeat='participant in groupDetailParticipants.data'
+        delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+        participant='participant'
+        edit='groupDetailParticipants.isEditView()'>
+      </group-detail-participant-card>
     </div>
   </div>
   <div class='row'>&nbsp;</div>
   <div class='row'>
     <div class='col-md-12'>
-      <p class='text-center' ng-if='groupDetailParticipants.currentView === "List"'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("Email")'>Email Group</a>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("Edit")'>Edit</a>
+      <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEmailView()'>Email Group</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()'>Edit</a>
       </p>
-      <p class='text-center' ng-if='groupDetailParticipants.currentView === "Edit"'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.undeleteParticipants()'>Cancel</a>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.deleteParticipants()'>Save</a>
+      <p class='text-center' ng-if='groupDetailParticipants.isEditView()'>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Cancel</a>
       </p>
     </div>
   </div>
 </div>
 
-<div class='container-fluid' ng-if='groupDetailParticipants.currentView === "Email"'>
+<!-- Delete a participant -->
+<div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView()'>
+  <remove-participant
+    participant='groupDetailParticipants.deleteParticipant'
+    cancel-action='groupDetailParticipants.cancelRemoveParticipant(participant)'
+    submit-action='groupDetailParticipants.removeParticipant(participant)'
+    processing='groupDetailParticipants.processing'/>
+</div>
+
+<!-- Email participants -->
+<div class='container-fluid' ng-if='groupDetailParticipants.isEmailView()'>
   <form>
     <div class='row'>
       <div class='col-md-6 col-md-offset-3'>
@@ -53,8 +72,8 @@
         <div class='row'>
           <div class='col-md-12'>
             <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setView("List")'>Send</a>
+              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Cancel</a>
+              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Send</a>
             </p>
           </div>
         </div>

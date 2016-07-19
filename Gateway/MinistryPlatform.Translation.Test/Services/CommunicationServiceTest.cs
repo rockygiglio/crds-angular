@@ -122,7 +122,6 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        [ExpectedException(typeof(TemplateParseException))]
         public void TestParseTemplateBodyWithNullValueInMergeData()
         {
             var mergeData = new Dictionary<string, object>
@@ -131,7 +130,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Key2", null}
             };
 
-            _fixture.ParseTemplateBody("This is [Key1] and [Key2]", mergeData);
+            var parsed = _fixture.ParseTemplateBody("This is [Key1] and [Key2]", mergeData);
+            Assert.AreEqual("This is Value1 and ", parsed);
         }
     }
 }
