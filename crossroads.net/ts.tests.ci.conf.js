@@ -66,7 +66,7 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
+        singleRun: true,
 
         // Plugins
         plugins: [
@@ -77,6 +77,7 @@ module.exports = function (config) {
             require('karma-env-preprocessor'),
             require('karma-sourcemap-loader'),
             require('karma-es6-shim'),
+            require('karma-teamcity-reporter')
         ]
 
 
