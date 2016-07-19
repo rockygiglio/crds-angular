@@ -1,6 +1,7 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
 import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
@@ -82,75 +83,40 @@ export default class GroupService {
   }
 
   getGroupParticipants(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId, 'participants': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Betty Smith',
-          'role': 'leader',
-          'email': 'bettyjj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Ted Baldwin',
-          'role': 'leader',
-          'email': 'tedb@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sam Hanks',
-          'role': 'apprentice',
-          'email': 'samguy@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jennie Jones',
-          'role': 'member',
-          'email': 'jenniejj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sara Baldwin',
-          'role': 'member',
-          'email': 'sarab@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jimmy Hatfield',
-          'role': 'member',
-          'email': 'jhat@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Freddie Jones',
-          'role': 'member',
-          'email': 'FreddieJ@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jamie Hanks',
-          'role': 'member',
-          'email': 'jaha95@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Kerrir Hatfield',
-          'role': 'member',
-          'email': 'hatk@gmail.com'
-        },
-      ]
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      if(!data || data.length === 0 || !data[0].Participants || data[0].Participants.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group participants not found'};
+        throw err;
+      }
+
+      let participants = data[0].Participants.map((participant) => {
+        return new Participant(participant);
+      });
+
+      return participants;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
+  }
+
+  removeGroupParticipant(groupId, participant) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
+                          delete({
+                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
+                            groupId: groupId,
+                            groupParticipantId: participant.groupParticipantId,
+                            removalMessage: participant.deleteMessage
+                          }).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
   }
 
   getInvities(groupId) {
