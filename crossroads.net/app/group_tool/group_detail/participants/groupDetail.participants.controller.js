@@ -1,3 +1,4 @@
+import GroupMessage from '../../model/groupMessage';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
@@ -111,5 +112,25 @@ export default class GroupDetailParticipantsController {
     }).finally(() => {
       this.processing = false;
     });
+  }
+
+  beginMessageParticipants() {
+    // TODO: Fill in implementation
+    this.groupMessage = new GroupMessage();
+    this.groupMessage.subject = '';
+    this.groupMessage.body = '';
+    this.setEmailView();
+  }
+
+  cancelMessageParticipants(message) {
+    debugger;
+    this.groupMessage = undefined;
+    this.setListView();
+    // TODO: Fill in implementation
+  }
+
+  messageParticipants(message) {
+    debugger;
+    // TODO: Fill in implementation
   }
 }

@@ -40,6 +40,6 @@ namespace crds_angular.Services.Interfaces
         List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token);
 
         List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
-        void SendAllGroupParticipantsEmail(string token, int groupId, string subject, string message);
+        void SendAllGroupParticipantsEmail(string token, int groupId, int groupLeaderUserId, string subject, string message);
     }
 }

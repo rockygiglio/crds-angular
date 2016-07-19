@@ -589,7 +589,7 @@ namespace crds_angular.Services
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(string.Format("Could not send email for Group ", JsonConvert.SerializeObject(username, Formatting.Indented)), ex);
+                    //logger.Error(string.Format("Could not send email for Group ", JsonConvert.SerializeObject(username, Formatting.Indented)), ex);
                 }
             }
         }

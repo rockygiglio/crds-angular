@@ -321,13 +321,13 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [Route("api/group/{groupId}")]
-        public IHttpActionResult PostGroupMessage(int groupId, [FromBody] string subject, [FromBody] string body)
+        public IHttpActionResult PostGroupMessage(int groupId, [FromBody] int groupLeaderUserId, [FromBody] string subject, [FromBody] string body)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    groupService.SendAllGroupParticipantsEmail(token, groupId, subject, body);
+                    _groupService.SendAllGroupParticipantsEmail(token, groupId, groupLeaderUserId, subject, body);
                     return Ok();
                 }
                 catch (InvalidOperationException)
