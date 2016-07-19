@@ -496,7 +496,7 @@ streaming {
   background-size: cover;
   width: 100%;
   min-height: 100vh;
-  padding: 0;
+  padding: 0 0 5em;
   color: #FFF;
 
   header {
@@ -511,7 +511,7 @@ streaming {
     letter-spacing: -0.05em;
   }
 
-  .video {
+  .dark-bg {
     padding-top: 1em;
     padding-bottom: 1em;
     background: #000;
@@ -596,6 +596,36 @@ streaming {
     figure {
       margin-bottom: 1em;
       padding-left: 0;
+    }
+  }
+
+  .how-many-people {
+    background: #000;
+    margin-bottom: 1em;
+    color: $gray-light;
+    .btn-step {
+      @include button-variant($gray-light, #000, $gray-light);
+      padding: 0.8em;
+      font-weight: 300;
+    }
+    .btn-group {
+      margin: 0 0.75em 0 0.5em;
+    }
+    .btn {
+      padding-top: 0.15em;
+      padding-bottom: 0.15em;
+    }
+    .vr {
+      display: inline-block;
+      position: relative;
+      top: 0.4em;
+      &:before {
+        @include rotate(-90deg);
+        display: inline-block;
+        content: '\2014';
+        font-size: 190%;
+        font-weight: 100;
+      }
     }
   }
 } // .live-stream

@@ -10,10 +10,25 @@ var WOW = require('wow.js/dist/wow.min.js');
 })
 
 export class VideoComponent {
+  number_of_people: number = 2;
+  displayCounter: boolean = true;
+  countSubmit: boolean = false;
+
   constructor() {
     new WOW({
-      offset: 100,
       mobile: false
     }).init();
+  }
+
+  increaseCount() {
+    this.number_of_people++;
+  }
+  decreaseCount() {
+    if(this.number_of_people > 1) {
+      this.number_of_people--;
+    }
+  }
+  submitCount() {
+    this.countSubmit = true;
   }
 }
