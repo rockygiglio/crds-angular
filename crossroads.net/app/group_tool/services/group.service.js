@@ -1,14 +1,17 @@
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
+import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService) {
+  constructor($log, $resource, $q, AuthService, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.deferred = $q;
     this.auth = AuthService;
+    this.imgService = ImageService;
   }
 
   sendGroupInvitation(invitation) {
@@ -53,108 +56,74 @@ export default class GroupService {
   }
 
   getGroupParticipants(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId, 'participants': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Betty Smith',
-          'role': 'leader',
-          'email': 'bettyjj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Ted Baldwin',
-          'role': 'leader',
-          'email': 'tedb@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sam Hanks',
-          'role': 'apprentice',
-          'email': 'samguy@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jennie Jones',
-          'role': 'member',
-          'email': 'jenniejj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sara Baldwin',
-          'role': 'member',
-          'email': 'sarab@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jimmy Hatfield',
-          'role': 'member',
-          'email': 'jhat@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Freddie Jones',
-          'role': 'member',
-          'email': 'FreddieJ@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jamie Hanks',
-          'role': 'member',
-          'email': 'jaha95@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Kerrir Hatfield',
-          'role': 'member',
-          'email': 'hatk@gmail.com'
-        },
-      ]
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      if(!data || data.length === 0 || !data[0].Participants || data[0].Participants.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group participants not found'};
+        throw err;
+      }
+
+      let participants = data[0].Participants.map((participant) => {
+        return new Participant(participant);
+      });
+
+      return participants;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
-  getGroupRequests(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'requests': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Chris Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 5, 20)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sally Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 5, 15)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Donny Franks',
-          'requestType': 'invited',
-          'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 4, 15)
-        },
-      ]
+  removeGroupParticipant(groupId, participant) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
+                          delete({
+                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
+                            groupId: groupId,
+                            groupParticipantId: participant.groupParticipantId,
+                            removalMessage: participant.deleteMessage
+                          }).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  getInvities(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+                          query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+                          
+    return promised.then((data) => {
+      let invitations = data.map((invitation) => {
+        invitation.imageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInvitation(invitation);
+      });
+
+      return invitations;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
+  }
+
+  getInquiries(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+                          query({groupId: groupId}).$promise
+
+    return promised.then((data) => {
+      let inquiries = data.map((inquiry) => {
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${inquiry.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInquiry(inquiry);
+      });
+
+      return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
   }
 }

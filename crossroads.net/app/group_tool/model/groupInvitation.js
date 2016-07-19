@@ -11,6 +11,7 @@ export default class GroupInvitation {
       this.emailAddress = undefined;
       this.recipientName = undefined;
       this.requestDate = undefined;
+      this.imageUrl = undefined;
     }
 
     // Always set to a Group invitation type    

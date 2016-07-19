@@ -2,6 +2,9 @@
 import CONSTANTS from 'crds-constants';
 import GroupService from '../../../app/group_tool/services/group.service'
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
+import GroupInquiry from '../../../app/group_tool/model/groupInquiry';
+import GroupInvitation from '../../../app/group_tool/model/groupInvitation';
+import Participant from '../../../app/group_tool/model/participant';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -10,7 +13,8 @@ describe('Group Tool Group Service', () => {
     deferred,
     AuthService,
     authenticated,
-    httpBackend;
+    httpBackend,
+    ImageService;
 
   const endpoint = `${window.__env__['CRDS_API_ENDPOINT']}api`;
 
@@ -22,8 +26,9 @@ describe('Group Tool Group Service', () => {
     deferred = $injector.get('$q');
     AuthService = $injector.get('AuthService');
     httpBackend = $injector.get('$httpBackend');
+    ImageService = $injector.get('ImageService');
 
-    fixture = new GroupService(log, resource, deferred, AuthService);
+    fixture = new GroupService(log, resource, deferred, AuthService, ImageService);
   }));
 
   afterEach(() => {
@@ -114,7 +119,7 @@ describe('Group Tool Group Service', () => {
         let groupsObj = groups.map((group) => {
           return new SmallGroup(group);
         });
-        
+
         httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
                     respond(200, groups);
 
@@ -128,4 +133,255 @@ describe('Group Tool Group Service', () => {
         });
     });
   });
+  
+  describe('getInvities() inquires', () => {
+    it('should return all invities assocated to the group', () => {
+      let mockInvities = [
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "for@me.com",
+          "recipientName": "Knowledge Man",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        },
+        {
+          "sourceId": 172286,
+          "groupRoleId": 16,
+          "emailAddress": "really@fast.com",
+          "recipientName": "Buffer Dude",
+          "requestDate": "2016-07-14T11:00:00",
+          "invitationType": 1,
+          "invitationId": 0,
+          "invitationGuid": null
+        }
+      ];
+
+      let groupId = 172286;
+
+      let invities = mockInvities.map((invitation) => {
+        return new GroupInvitation(invitation);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/invitations/${groupId}/1`).
+                  respond(200, mockInvities);
+
+      var promise = fixture.getInvities(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[1].sourceId).toEqual(invities[1].sourceId);
+        expect(data[1].groupRoleId).toEqual(invities[1].groupRoleId);
+        expect(data[1].emailAddress).toEqual(invities[1].emailAddress);
+        expect(data[1].recipientName).toEqual(invities[1].recipientName);
+        expect(data[1].requestDate).toEqual(invities[1].requestDate);
+        expect(data[1].invitationType).toEqual(invities[1].invitationType);
+        expect(data[1].invitationId).toEqual(invities[1].invitationId);
+        expect(data[1].invitationGuid).toEqual(invities[1].invitationGuid);
+      });
+    });
+  });
+
+  describe('getInquires() inquires', () => {
+    it('should return all inquiries assocated to the group', () => {
+      let mockInquires = [
+        {
+          "groupId": 172286,
+          "emailAddress": "jim.kriz@ingagepartners.com",
+          "phoneNumber": "513-432-1973",
+          "firstName": "Dustin",
+          "lastName": "Kocher",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 19,
+          "contactId": 123
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "jkerstanoff@callibrity.com",
+          "phoneNumber": "513-987-1983",
+          "firstName": "Joe",
+          "lastName": "Kerstanoff",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 20,
+          "contactId": 124
+        },
+        {
+          "groupId": 172286,
+          "emailAddress": "kim.farrow@thrivecincinnati.com",
+          "phoneNumber": "513-874-6947",
+          "firstName": "Kim",
+          "lastName": "Farrow",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": true,
+          "inquiryId": 21,
+          "contactId": 124
+        }
+      ];
+
+      let groupId = 172286;
+
+      let inquires = mockInquires.map((inquiry) => {
+        return new GroupInquiry(inquiry);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/grouptool/inquiries/${groupId}`).
+                  respond(200, mockInquires);
+
+      var promise = fixture.getInquiries(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data[0].groupId).toEqual(inquires[0].groupId);
+        expect(data[0].emailAddress).toEqual(inquires[0].emailAddress);
+        expect(data[0].phoneNumber).toEqual(groupsObj[0].phoneNumber);
+        expect(data[0].firstName).toEqual(inquires[0].firstName);
+        expect(data[0].lastName).toEqual(inquires[0].lastName);
+        expect(data[0].requestDate).toEqual(inquires[0].requestDate);
+        expect(data[0].placed).toEqual(inquires[0].placed);
+        expect(data[0].inquiryId).toEqual(inquires[0].inquiryId);
+      });
+    });
+  });
+
+  describe('getGroupParticipants() function', () => {
+    it('should throw error in case of failure', () => {
+      let groupId = 172286;
+
+      let errObj = { status: 500, statusText: 'nonononononono' };
+
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(500, errObj);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+
+      let callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onFailure']);
+
+      promise.then((data) => {
+        callbacks.onSuccess(data);
+      },
+      (err) => {
+        callbacks.onFailure(err.data);
+      }).finally(() => {
+        expect(callbacks.onSuccess).not.toHaveBeenCalled();
+        expect(callbacks.onFailure).toHaveBeenCalledWith(errObj);
+      });
+    });
+
+    it('should throw error in case group not found in returned data', () => {
+      let groupId = 172286;
+
+      let responseData = [];
+
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(200, responseData);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+
+      let callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onFailure']);
+
+      promise.then((data) => {
+        callbacks.onSuccess(data);
+      },
+      (err) => {
+        callbacks.onFailure(err);
+      }).finally(() => {
+        expect(callbacks.onSuccess).not.toHaveBeenCalled();
+        expect(callbacks.onFailure).toHaveBeenCalled();
+      });
+
+    });
+
+    it('should get all participants when successful', () => {
+      let mockParticipants = [{
+        Participants: [
+          {
+            "participantId": 4188863,
+            "contactId": 1670863,
+            "groupParticipantId": 14581967,
+            "nickName": "Jim",
+            "lastName": "Kriz",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "jim.kriz@ingagepartners.com"
+          },
+          {
+            "participantId": 7537153,
+            "contactId": 2562378,
+            "groupParticipantId": 14581917,
+            "nickName": "Joe",
+            "lastName": "Kerstanoff",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "jkerstanoff@callibrity.com"
+          },
+          {
+            "participantId": 5102871,
+            "contactId": 5224083,
+            "groupParticipantId": 14581913,
+            "nickName": "Sara",
+            "lastName": "Seissiger",
+            "groupRoleId": 22,
+            "groupRoleTitle": "Leader",
+            "email": "sara.seissiger@ingagepartners.com"
+          },
+          {
+            "participantId": 7433010,
+            "contactId": 7539207,
+            "groupParticipantId": 14582025,
+            "nickName": "Dave",
+            "lastName": "Miyamasu",
+            "groupRoleId": 16,
+            "groupRoleTitle": "Member",
+            "email": "dmiyamasu@gmail.com"
+          },
+          {
+            "participantId": 7534950,
+            "contactId": 7641599,
+            "groupParticipantId": 14581914,
+            "nickName": "Markku",
+            "lastName": "Koistila",
+            "groupRoleId": 16,
+            "groupRoleTitle": "Member",
+            "email": "markku.koistila@ingagepartners.com"
+          }
+        ]
+      }];
+
+      let groupId = 172286;
+
+      let participants = mockParticipants[0].Participants.map((p) => {
+        return new Participant(p);
+      });
+      
+      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+                  respond(200, mockParticipants);
+
+      var promise = fixture.getGroupParticipants(groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data).toBeDefined();
+        expect(data.length).toEqual(participants.length);
+        for(let i = 0; i < data.length; i++) {
+          expect(data[i].participantId).toEqual(participants[i].participantId);
+          expect(data[i].contactId).toEqual(participants[i].contactId);
+          expect(data[i].groupParticipantId).toEqual(participants[i].groupParticipantId);
+          expect(data[i].nickName).toEqual(participants[i].nickName);
+          expect(data[i].lastName).toEqual(participants[i].lastName);
+          expect(data[i].groupRoleId).toEqual(participants[i].groupRoleId);
+          expect(data[i].groupRoleTitle).toEqual(participants[i].groupRoleTitle);
+          expect(data[i].email).toEqual(participants[i].email);
+        }
+      });
+    });
+  });
+
 });

@@ -2,7 +2,6 @@
 $streaming-imgix-domain: '//crds-cms-uploads.imgix.net/content/images';
 
 // NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
-$streaming-font-semi_cond: "acumin-pro-semi-condensed", sans-serif;
 $streaming-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
 $streaming-font-sans: "acumin-pro", sans-serif;
 $streaming-font-serif: "lexia", serif;
@@ -104,7 +103,6 @@ streaming {
       margin-top: 0.25em;
       text-transform: uppercase;
       font-size: 90%;
-      font-family: $streaming-font-semi_cond;
       color: #FFF;
       position: absolute;
       right: 0;
@@ -166,7 +164,6 @@ streaming {
       }
 
       small {
-        font-family: $streaming-font-semi_cond;
         text-transform: uppercase;
         font-size: 63%;
         font-weight: 200;
@@ -183,7 +180,7 @@ streaming {
 
   .intro {
     @include crds-jumbotron();
-    background: #2E2E30 url("#{$streaming-imgix-domain}/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop");
+    background-color: #2E2E30;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -199,6 +196,7 @@ streaming {
 
     h1 {
       font-size: 338%;
+      line-height: 100%;
       margin-bottom: 0.5em;
     }
 
@@ -234,8 +232,10 @@ streaming {
       }
     }
     article {
-      @include make-md-column(5);
-      @include make-md-column-offset(1);
+      @media (min-width: $screen-md-min) {
+        @include make-md-column(5);
+        @include make-md-column-offset(1);
+      }
 
       h2 {
         font-size: 270%;
@@ -260,8 +260,11 @@ streaming {
       }
     }
     aside {
-      @include make-md-column(4);
-      @include make-md-column-offset(1);
+      @media (min-width: $screen-md-min) {
+        @include make-md-column(4);
+        @include make-md-column-offset(1);
+      }
+
       margin-top: 2em;
 
       h3 {
@@ -292,6 +295,9 @@ streaming {
         padding-top: 1em;
         &, li {
           font-family: $streaming-font-sans;
+        }
+        li {
+          white-space: nowrap;
         }
         a {
           font-weight: 600;
@@ -333,16 +339,33 @@ streaming {
         font-size: 200%;
         margin: 0.75em 0;
       }
-      .view-all {
+      .view-all-desktop {
         font-size: 80%;
-        display: block;
         margin-top: 3em;
+        display: none;
+        @media only screen and (min-width:  $screen-sm-min){
+          display: block;
+        }
       }
     }
 
     figure > a {
       display: block;
       width: 100%;
+    }
+
+    .view-all-mobile {
+      @media only screen and (min-width:  $screen-sm-min){
+        display: none;
+      }
+    }
+
+    .container {
+      padding: 0;
+      @media (min-width: $screen-sm-min) {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
     }
   }
 
@@ -358,12 +381,28 @@ streaming {
     }
 
     figure {
-      @include make-md-column(2);
-      &:first-child {
-          @include make-md-column-offset(1);
+      text-align: center;
+      margin-bottom: 1em;
+      img {
+        margin: 0 auto;
+        max-width: 60%;
       }
-      display: table-cell;
-      vertical-align: bottom;
+
+      @media only screen and (min-width:  $screen-sm-min){
+        @include make-sm-column(2);
+        &:first-child {
+            @include make-sm-column-offset(1);
+        }
+        display: table-cell;
+        vertical-align: bottom;
+        text-align: left;
+        margin-bottom: 1em;
+
+        img {
+          margin: 0;
+          max-width: 100%;
+        }
+      }
 
       figcaption {
         font-size: 70%;
@@ -380,7 +419,7 @@ streaming {
   .community {
     @include clearfix();
     @include crds-jumbotron();
-    background: #1D3C50 url("#{$streaming-imgix-domain}/streaming--anywhere-map.jpg?w=1&fit=crop");
+    background: #1D3C50;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -403,6 +442,10 @@ streaming {
         font-size: 200%;
         text-transform: uppercase;
         font-family: $streaming-font-extra_cond;
+        text-align: center;
+        @media (min-width: $screen-sm-min) {
+          text-align: left;
+        }
       }
     }
     .btns > a {
