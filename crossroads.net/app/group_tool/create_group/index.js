@@ -7,7 +7,8 @@ import previewGroupHtml from './preview/createGroup.preview.html';
 /*import createGroupPreview from './preview/createGroup.preview.component';*/
 
 export default angular.
-  module(CONSTANTS.MODULES.GROUP_TOOL).
-  component('createGroup', createGroupComponent()).
-  component('createGroupPreview', createGroupPreviewComponent())
+  module(CONSTANTS.MODULES.GROUP_TOOL)
+  .component('createGroup', createGroupComponent())
+  .component('createGroupPreview', createGroupPreviewComponent())
   ;
+

@@ -8,3 +8,4 @@ export default angular.
   ;
 
 import groupDetailParticipantCard from './participant_card';
+import removeParticipant from './remove_participant';
