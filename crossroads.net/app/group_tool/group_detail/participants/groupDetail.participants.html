@@ -1,10 +1,17 @@
 <preloader full-screen='false' ng-show='!groupDetailParticipants.ready'> </preloader>
 
 <!-- List or Edit participants -->
-<div class='container-fluid' ng-show='groupDetailParticipants.ready' ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
+<div class='container-fluid' 
+  ng-show='groupDetailParticipants.ready'
+  ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
   <div class='row'>
     <div class='col-md-12 group-participants'>
-      <group-detail-participant-card ng-repeat='participant in groupDetailParticipants.data' delete-action='groupDetailParticipants.beginRemoveParticipant(participant)' participant='participant' edit='groupDetailParticipants.currentView === "Edit"'></group-detail-participant-card>
+      <group-detail-participant-card 
+        ng-repeat='participant in groupDetailParticipants.data'
+        delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+        participant='participant'
+        edit='groupDetailParticipants.isEditView()'>
+      </group-detail-participant-card>
     </div>
   </div>
   <div class='row'>&nbsp;</div>
@@ -26,7 +33,8 @@
   <remove-participant
     participant='groupDetailParticipants.deleteParticipant'
     cancel-action='groupDetailParticipants.cancelRemoveParticipant(participant)'
-    submit-action='groupDetailParticipants.removeParticipant(participant)'/>
+    submit-action='groupDetailParticipants.removeParticipant(participant)'
+    processing='groupDetailParticipants.processing'/>
 </div>
 
 <!-- Email participants -->
