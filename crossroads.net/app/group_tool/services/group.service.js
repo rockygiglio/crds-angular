@@ -32,6 +32,10 @@ export default class GroupService {
     return this.lookupService.Sites.query().$promise;
   }
 
+  getDaysOfTheWeek() {
+    return this.lookupService.DaysOfTheWeek.query().$promise;
+  }
+
   getGenders() {
     return this.lookupService.Genders.query().$promise;
   }

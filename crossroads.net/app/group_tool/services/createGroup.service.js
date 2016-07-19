@@ -128,38 +128,23 @@ export default class CreateGroupService {
                     options: [{
                         label: 'Specific Day and Time',
                     }, {
-                            label: 'Flexible Meeting Times/Not Sure Yet',
-                        }]
+                        label: 'Flexible Meeting Times/Not Sure Yet',
+                    }]
                 }
             }, {
                     key: 'group.meeting.day',
                     type: 'select',
                     templateOptions: {
                         label: 'Day',
-                        valueProp: 'meetingDayId',
-                        labelProp: 'dayLabel',
-                        options: [{
-                            meetingDayId: 1,
-                            dayLabel: 'Sunday'
-                        }, {
-                                meetingDayId: 2,
-                                dayLabel: 'Monday'
-                            }, {
-                                meetingDayId: 3,
-                                dayLabel: 'Tuesday'
-                            }, {
-                                meetingDayId: 4,
-                                dayLabel: 'Wednesday'
-                            }, {
-                                meetingDayId: 5,
-                                dayLabel: 'Thursday'
-                            }, {
-                                meetingDayId: 6,
-                                dayLabel: 'Friday'
-                            }, {
-                                meetingDayId: 7,
-                                dayLabel: 'Saturday'
-                            }]
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: []
+                    },
+                    controller: /* @ngInject */ function ($scope, GroupService) {
+                        $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
+                            $scope.to.options = response;
+                            return response;
+                        });
                     }
                 }, {
                     key: 'group.meeting.time',
