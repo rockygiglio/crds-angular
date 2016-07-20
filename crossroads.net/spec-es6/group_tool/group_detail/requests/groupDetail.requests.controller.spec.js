@@ -11,7 +11,14 @@ describe('GroupDetailRequestsController', () => {
       log,
       qApi;
 
+  var mockProfile;
+
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
+
+  beforeEach(angular.mock.module(($provide)=> {
+    mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+    $provide.value('Profile', mockProfile);
+  }));
 
   beforeEach(inject(function($injector) {
     groupService = $injector.get('GroupService'); 
@@ -53,7 +60,6 @@ describe('GroupDetailRequestsController', () => {
       expect(fixture.currentView).toEqual('List');
     });
   });
-  
 
   describe('$onInit() function', () => {
     it('should get invited and inquiries', () => {

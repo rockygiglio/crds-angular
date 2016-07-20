@@ -33,7 +33,6 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
-        private readonly int GroupInquiresSubPage = Convert.ToInt32(AppSettings("GroupInquiresSubPage"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -150,7 +149,7 @@ namespace MinistryPlatform.Translation.Repositories
             dictionary.Add("Group_Inquiry_ID", inquiryId);
             dictionary.Add("Placed", approved);
             dictionary.Add("Group_ID", groupId);
-            ministryPlatformService.UpdateSubRecord(GroupInquiresSubPage, dictionary, apiToken);
+            ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupInquiresSubPage"), dictionary, apiToken);
         }
 
         public MpGroup getGroupDetails(int groupId)
@@ -389,7 +388,8 @@ namespace MinistryPlatform.Translation.Repositories
                 Congregation = tmpEvent.ToString("Congregation_Name"),
                 EventStartDate = tmpEvent.ToDate("Event_Start_Date"),
                 EventEndDate = tmpEvent.ToDate("Event_End_Date"),
-                EventTitle = tmpEvent.ToString("Event_Title")
+                EventTitle = tmpEvent.ToString("Event_Title"),
+                EventType = tmpEvent.ToString("Event_Type")
             }).ToList();
         }
 
@@ -483,7 +483,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Nickname", toContactInfo.Nickname},
                 {"Group_Name", groupInfo.Name},
                 {"Congregation_Name", groupInfo.Congregation},
-                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""}
+                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""},
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
             var domainId = Convert.ToInt32(AppSettings("DomainId"));

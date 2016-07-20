@@ -6,6 +6,7 @@ using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
@@ -256,69 +257,78 @@ namespace crds_angular.Services
         }
 
         //TODO: SPLIT OUT INTO SMALLER METHODS AND WRITE TESTS!!!!!!!!!!!!!
-        public ChildcareDashboardDto GetChildcareDashboard(int contactId)
+        public ChildcareDashboardDto GetChildcareDashboard(Person person, HouseHoldData householdData)
         {
+
             var dashboard = new ChildcareDashboardDto();
             var token = _apiUserService.GetToken();
-            
-            var contact = _contactService.GetContactById(contactId);
 
-            //Figure out who is a head in my household
+            // Add members of other household(s)
+            // Doesn't this really belong in the getHouseholds method?
+            householdData.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(person.ContactId));
 
-            var members = GetHeadsOfHousehold(contactId, contact.Household_ID);
-            members.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(contactId));
-
-            var dashboardData = _childcareRepository.GetChildcareDashboard(contactId);
+            var dashboardData = _childcareRepository.GetChildcareDashboard(person.ContactId);
             foreach (var childcareDashboard in dashboardData)
             {
-                if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date))
-                {
-                    dashboard.AvailableChildcareDates.Add(new ChildCareDate
-                    {
-                        EventDate = childcareDashboard.EventStartDate.Date,
-                        Cancelled = childcareDashboard.Cancelled
-                    });
-                }
+                // Add the Date if it doesn't already exist in the dashboard
+                dashboard.AvailableChildcareDates = UpdateAvailableChildCareDates(dashboard.AvailableChildcareDates,
+                                                                                  childcareDashboard.EventStartDate.Date,
+                                                                                  childcareDashboard.Cancelled);
+             
+                var eligibleChildren = new List<ChildcareRsvp>();
 
-                //Date exists, add group
-                var eventGroup = _eventService.GetEventGroupsForEvent(childcareDashboard.EventID, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
-                if (eventGroup == null) continue;
+                foreach (var member in householdData.AllMembers)
                 {
-                    var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
-                    var eligibleChildren = new List<ChildcareRsvp>();
-                    foreach (var member in members.AllMembers)
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
                     {
-                        if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                        var echild = new ChildcareRsvp
                         {
-                            eligibleChildren.Add(new ChildcareRsvp
-                            {
-                                ContactId = member.ContactId,
-                                DisplayName = member.Nickname + ' ' + member.LastName,
-                                ChildEligible = (member.Age < ccEventGroup.MaximumAge),
-                                ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
-                            });
-                        }
-
+                            ContactId = member.ContactId,
+                            DisplayName = member.Nickname + ' ' + member.LastName,
+                            ChildEligible = (member.Age < childcareDashboard.ChildcareMaxAge),
+                            ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
+                        };
+                        eligibleChildren.Add(echild);
                     }
-                    var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
-                    ccEvent.Groups.Add(new ChildcareGroup
-                    {
-                        GroupName = childcareDashboard.GroupName,
-                        EventStartTime = childcareDashboard.EventStartDate,
-                        EventEndTime = childcareDashboard.EventEndDate,
-                        CongregationId = childcareDashboard.CongregationID,
-                        GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
-                        MaximumAge = ccEventGroup.MaximumAge,
-                        RemainingCapacity = ccEventGroup.RemainingCapacity,
-                        EligibleChildren = eligibleChildren,
-                        ChildcareGroupId = ccEventGroup.GroupId
-                    });
                 }
-            }
-            
-            dashboard.AvailableChildcareDates = dashboard.AvailableChildcareDates.OrderBy(x => x.EventDate).ToList();
 
+                var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
+                ccEvent.Groups.Add(new ChildcareGroup
+                {
+                    GroupName = childcareDashboard.GroupName,
+                    EventStartTime = childcareDashboard.EventStartDate,
+                    EventEndTime = childcareDashboard.EventEndDate,
+                    CongregationId = childcareDashboard.CongregationID,
+                    GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
+                    MaximumAge = childcareDashboard.ChildcareMaxAge,                        
+                    EligibleChildren = eligibleChildren,
+                    ChildcareGroupId = childcareDashboard.ChildcareMaxAge,
+                    GroupParticipantId = childcareDashboard.GroupParticipantID
+                });
+            }                       
             return dashboard;
+        }
+
+        /// <summary>
+        /// Add a new childcare date to the list of current childcare dates only if the list doesn't contain 
+        /// an entry with the same date as is being requested. It also orders the list of dates ascending. 
+        /// </summary>
+        /// <param name="currentDates"> The current list of ChildCareDates </param>
+        /// <param name="dateToAdd"> The date to add to the list </param>
+        /// <param name="hasBeenCancelled"> whether or not the childcare event being requested is cancelled. </param>
+        /// <returns> a new list that is ordered by date ascending. </returns>
+        public List<ChildCareDate> UpdateAvailableChildCareDates(List<ChildCareDate> currentDates,  DateTime dateToAdd, bool hasBeenCancelled )
+        {
+            if (currentDates.Any(d => d.EventDate.Date == dateToAdd)) return currentDates.OrderBy(x => x.EventDate).ToList();
+
+            var childcareDate = new ChildCareDate
+            {
+                EventDate = dateToAdd,
+                Cancelled = hasBeenCancelled
+            };
+            var newDates = currentDates.Select(ch => ch).ToList();
+            newDates.Add(childcareDate);
+            return newDates.OrderBy(x => x.EventDate).ToList();
         }
 
         /// <summary>
