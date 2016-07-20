@@ -299,7 +299,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
+                _logger.Warn(string.Format("Could not send email to Inquirer {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
             }
         }
     }
