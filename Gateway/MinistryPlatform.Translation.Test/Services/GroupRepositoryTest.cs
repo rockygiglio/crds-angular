@@ -56,6 +56,26 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestUpdateGroupInquiry()
+        {
+            const int groupId = 123;
+            const int inquiryId = 456;
+            const bool approved = true;
+            const int groupInquiriesSubPage = 789;
+
+            _configWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupInquiresSubPage")).Returns(groupInquiriesSubPage);
+            _ministryPlatformService.Setup(
+                mocked =>
+                    mocked.UpdateSubRecord(groupInquiriesSubPage,
+                                           It.Is<Dictionary<string, object>>(
+                                               d => d["Group_Inquiry_ID"].Equals(inquiryId) && d["Placed"].Equals(approved) && d["Group_ID"].Equals(groupId)),
+                                           AuthenticateResponse()["token"].ToString())).Verifiable();
+            _fixture.UpdateGroupInquiry(groupId, inquiryId, approved);
+            _configWrapper.VerifyAll();
+            _ministryPlatformService.VerifyAll();
+        }
+
+        [Test]
         public void TestAddParticipantToGroup()
         {
             var getGroupPageResponse = new Dictionary<string, object>
