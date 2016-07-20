@@ -21,6 +21,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IGroupToolRepository> _groupToolRepository;
         private Mock<MPServices.ICommunicationRepository> _communicationRepository;
         private Mock<IGroupService> _groupService;
+        private Mock<MPServices.IGroupRepository> _groupRepository;
         private Mock<MPServices.IParticipantRepository> _participantRepository;
         private Mock<IContentBlockService> _contentBlockService;
 
@@ -36,6 +37,7 @@ namespace crds_angular.test.Services
             _communicationRepository = new Mock<MPServices.ICommunicationRepository>(MockBehavior.Strict);
             _groupToolRepository = new Mock<MPServices.IGroupToolRepository>(MockBehavior.Strict);
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
+            _groupRepository = new Mock<MPServices.IGroupRepository>(MockBehavior.Strict);
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
 
@@ -46,6 +48,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
 
             _fixture = new GroupToolService(_groupToolRepository.Object,
+                                            _groupRepository.Object,
                                             _groupService.Object,
                                             _participantRepository.Object,
                                             _communicationRepository.Object,
@@ -315,7 +318,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId, contentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
