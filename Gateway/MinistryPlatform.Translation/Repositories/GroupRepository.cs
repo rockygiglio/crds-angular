@@ -565,34 +565,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return new List<MpGroup>();
             }
-            return groupDetails.Select(details => new MpGroup()
-            {
-                GroupId = details.ToInt("Group_ID"),
-                CongregationId = details.ToInt("Congregation_ID"),
-                Name = details.ToString("Group_Name"),
-                GroupRoleId = details.ToInt("Group_Role_ID"),
-                GroupDescription = details.ToString("Description"),
-                MinistryId = details.ToInt("Ministry_ID"),
-                ContactId = details.ToInt("Primary_Contact"),
-                PrimaryContactName = details.ToString("Primary_Contact_Name"),
-                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
-                GroupType = details.ToInt("Group_Type_ID"),
-                StartDate = details.ToDate("Start_Date"),
-                EndDate = details.ToNullableDate("End_Date"),
-                MeetingDayId = details.ToInt("Meeting_Day_ID"),
-                MeetingTime = details.ToString("Meeting_Time"),
-                AvailableOnline = details.ToBool("Available_Online"),
-                Address = new MpAddress()
-                {
-                    Address_ID = details.ToInt("Address_ID"),
-                    Address_Line_1 = details.ToString("Address_Line_1"),
-                    Address_Line_2 = details.ToString("Address_Line_2"),
-                    City = details.ToString("City"),
-                    State = details.ToString("State"),
-                    Postal_Code = details.ToString("Zip_Code"),
-                    Foreign_Country = details.ToString("Foreign_Country")
-                }
-            }).ToList();
+            return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
         public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
@@ -671,12 +644,12 @@ namespace MinistryPlatform.Translation.Repositories
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
-                MeetingDay = (record["Meeting_Day"] as string ?? string.Empty).Trim(),
+                MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : string.Empty),
                 MeetingTime = record.ToString("Meeting_Time"),
-                MeetingFrequency = record.ToString("Meeting_Frequency"),
+                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : string.Empty),
                 AvailableOnline = record.ToBool("Available_Online"),
-                MaximumAge = record.ToInt("Maximum_Age"),
-                RemainingCapacity = record.ToInt("Remaining_Capacity"),
+                MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
+                RemainingCapacity = (record.ContainsKey("Remaining_Capacity") ? record["Remaining_Capacity"] as int? : null),
                 Address = new MpAddress()
                 {
                     Address_ID = record.ToInt("Address_ID"),
