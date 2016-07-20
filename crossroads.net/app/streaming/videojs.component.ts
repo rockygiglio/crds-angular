@@ -27,72 +27,69 @@ export class VideoJSComponent implements AfterViewInit {
   height: number = 380;
   poster: string = "//d2i0qcc2ysg3s9.cloudfront.net/crossr4915_0333c740_spark_titlepng_resized.png";
   visible: boolean = true;
-  autoplay: boolean = true;
 
   constructor(private streamspot: StreamspotService) {}
 
   ngAfterViewInit() {
     this.url = this.productionUrl;
 
+    // set up video
+    this.player = window.videojs(this.id, {
+      "techOrder": ["flash", "html5"],
+      "fluid": true
+    });
+
     this.streamspot.getBroadcasting((data: any) => {
       var isBroadcasting: boolean = data.isBroadcasting;
       if ( !isBroadcasting ) {
         this.url = this.nonPublicUrl;
-        this.autoplay = false;
       }
-
-      // set up video
-      this.player = window.videojs(this.id, {
-        "autoplay": this.autoplay,
-        "techOrder": ["flash", "html5"],
-        "fluid": true
-      });
 
       // set player source
       this.player.src({
         "type": "application/x-mpegURL", 
         "src": this.url
       });
+
+      this.player.play();
       
     });
 
   }
 
-    /*
+  /*
 
-    All videojs callbacks:
+  All videojs callbacks:
 
-    loadstart
-    waiting
-    canplay
-    canplaythrough
-    playing
-    ended
-    seeking
-    seeked
-    play
-    firstplay
-    pause
-    progress
-    durationchange
-    fullscreenchange
-    error
-    suspend
-    abort
-    emptied
-    stalled
-    loadedmetadata
-    loadeddata
-    timeupdate
-    ratechange
-    volumechange
-    texttrackchange
-    loadedmetadata
-    posterchange
-    textdata
+  loadstart
+  waiting
+  canplay
+  canplaythrough
+  playing
+  ended
+  seeking
+  seeked
+  play
+  firstplay
+  pause
+  progress
+  durationchange
+  fullscreenchange
+  error
+  suspend
+  abort
+  emptied
+  stalled
+  loadedmetadata
+  loadeddata
+  timeupdate
+  ratechange
+  volumechange
+  texttrackchange
+  loadedmetadata
+  posterchange
+  textdata
 
-    */
-
+  */
   
-
 }
