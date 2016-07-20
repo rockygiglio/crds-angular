@@ -597,7 +597,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
-            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView, token, String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+            var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
 
             if (groupDetails == null || groupDetails.Count == 0)
             {
@@ -683,12 +683,12 @@ namespace MinistryPlatform.Translation.Repositories
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
-                MeetingDay = record.ToString("Meeting_Day"),
+                MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : string.Empty),
                 MeetingTime = record.ToString("Meeting_Time"),
-                MeetingFrequency = record.ToString("Meeting_Frequency"),
+                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : string.Empty),
                 AvailableOnline = record.ToBool("Available_Online"),
-                MaximumAge = record.ToInt("Maximum_Age"),
-                RemainingCapacity = record.ToInt("Remaining_Capacity"),
+                MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
+                RemainingCapacity = (record.ContainsKey("Remaining_Capacity") ? record["Remaining_Capacity"] as int? : null),
                 Address = new MpAddress()
                 {
                     Address_ID = record.ToInt("Address_ID"),

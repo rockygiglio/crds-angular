@@ -378,11 +378,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetGroupsByTypeForParticipant()
         {
-            const int pageViewId = 2307;
+            const int pageViewId = 2206;
             const string token = "jenny8675309";
             const int participantId = 9876;
             const int groupTypeId = 19;
-            string searchString = ",\"" + participantId + "\",,,\"" + groupTypeId + "\"";
+            string searchString = ",," + groupTypeId;
 
             _configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageViewId);
 
