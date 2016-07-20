@@ -170,8 +170,10 @@ export default class CreateGroupService {
                     },
                     controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            $scope.to.options = response;
+                            let sortedResponse = _.sortBy(response, function (day) {return day.dp_RecordID;});
+                            $scope.to.options = sortedResponse;
                             CreateGroupService.meetingDaysLookup = response;
+                            debugger;
                             return response;
                         });
                     }
