@@ -345,59 +345,7 @@ export default class CreateGroupService {
                 }
             }]
         };
-        // var groupCategoryFields = {
-        //     wrapper: 'createGroup',
-        //     templateOptions: {
-        //         sectionLabel: 'What kind of group would you like to lead?',
-        //         sectionHelp: 'Not much to say when you\'re high above the helpy help'
-        //     },
-        //     fieldGroup: [{
-        //         key: 'groupCategories',
-        //         type: 'multiCheckboxDesc',
-        //         templateOptions: {
-        //             valueProp: 'categoryId',
-        //             labelProp: 'category',
-        //             descProp: 'categoryDesc',
-        //             options: [{
-        //                 categoryId: 17,
-        //                 category: 'Life Stages',
-        //                 categoryDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
-        //             }, {
-        //                     categoryId: 18,
-        //                     category: 'Neighborhoods',
-        //                     categoryDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
-        //                 }, {
-        //                     categoryId: 19,
-        //                     category: 'Spirtual Growth',
-        //                     categoryDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
-        //                 }, {
-        //                     categoryId: 20,
-        //                     category: 'Interest',
-        //                     categoryDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
-        //                 }, {
-        //                     categoryId: 21,
-        //                     category: 'Healing',
-        //                     categoryDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
-        //                 }]
-        //         }
-        //     }, {
-        //             key: 'groupCategories.lifeStagesDetail',
-        //             type: 'input',
-        //             hideExpression: '!model.groupCategories.includes(17)',
-        //             className: 'push-right',
-        //             templateOptions: {
-        //                 placeholder: 'life stage detail...'
-        //             }
-        //         }, {
-        //             key: 'groupCategories.interestDetail',
-        //             type: 'input',
-        //             hideExpression: '!model.groupCategories.includes(20)',
-        //             templateOptions: {
-        //                 placeholder: 'interest detail...'
-        //             }
-        //         }]
-        // }
-
+        
         var groupCategoryFields = {
             wrapper: 'createGroup',
             templateOptions: {
