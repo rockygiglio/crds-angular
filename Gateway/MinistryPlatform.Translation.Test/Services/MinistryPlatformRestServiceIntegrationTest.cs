@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
@@ -41,8 +42,24 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<ChildcareDashboard>("api_crds_getChildcareDashboard", parms);
             foreach (var p in results)
+            {               
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault());
+            }
+        }
+
+        [Test]
+        public void TestChildRsvpdProcedure()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
             {
-                Console.WriteLine("Result\t{0}", p);
+                {"@ContactID", 100030266},
+                {"@EventGroupID", 172309}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault().Rsvpd);
             }
         }
 

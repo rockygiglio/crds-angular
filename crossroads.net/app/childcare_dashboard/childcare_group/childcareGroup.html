@@ -20,12 +20,12 @@
     </div>
   </div>
     <ul class="list-group">
-      <li 
+      <li
         class="list-group-item list-group-item-warning" 
-        ng-if="childcareGroup.showMessage()">
+        ng-show="childcareGroup.showMessage()">
         <div dynamic-content="childcareGroup.message | html"></div>
       </li>
-      <li ng-if="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
+      <li ng-show="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
           ng-repeat="child in childcareGroup.communityGroup.eligibleChildren"
           class="list-group-item">
         {{child.childName}} 
@@ -34,8 +34,7 @@
           on-label="✓"
           off-label="✕"
           class="pull-right"
-          ng-click="childcareGroup.validateAndRsvp(child)"
-          ng-disabled="childcareGroup.isEventClosed() && !child.rsvpness">
+          ng-click="childcareGroup.validateAndRsvp(child, child.rsvpness)" >
         <toggle-switch>
       </li>
     </ul> 

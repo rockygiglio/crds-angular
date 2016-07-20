@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
     <Compile Include="Helpers\Conversions.cs" />
+    <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />

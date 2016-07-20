@@ -5,4 +5,8 @@ export default function groupToolFormlyBuilderConfig(formlyConfigProvider) {
       name: 'createGroup',
       templateUrl: 'formlyWrappers/createGroupWrapper.html'
   });
+  formlyConfigProvider.setWrapper({
+      name: 'checkboxdescription',
+      templateUrl: 'formlyWrappers/checkboxdescription.html'
+  });
 };
