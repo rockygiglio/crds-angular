@@ -146,14 +146,138 @@ namespace crds_angular.test.Services
                         {
                             ParticipantId = myParticipantId,
                             GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            GroupParticipantId = 9090,
+                            GroupRoleId = GroupRoleLeader
                         }
                     }
+
                 }
             };
             _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
 
-            var inquiry = new Inquiry();
+            var inquiry = new Inquiry
+            {
+                ContactId = 123,
+                InquiryId = 456
+            };
+            const string message = "message";
+
+            var approveParticipant = new Participant
+            {
+                ParticipantId = 9090
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
+
+            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123)).Verifiable();
+            _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, true)).Verifiable();
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 99,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.IsAny<MpCommunication>(),
+                        false)).Returns(5);
+
+            _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquirySubjectTemplateText"]).Returns(new ContentBlock());
+            _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
+
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
+
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _communicationRepository.VerifyAll();
+
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupDeny()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            GroupParticipantId = 9090,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+
+            var inquiry = new Inquiry
+            {
+                ContactId = 123,
+                InquiryId = 456
+            };
+            const string message = "message";
+
+            var approveParticipant = new Participant
+            {
+                ParticipantId = 9090
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
+
+            _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, false)).Verifiable();
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 99,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.IsAny<MpCommunication>(),
+                        false)).Returns(5);
+
+            _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
+            _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
+
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, false, inquiry, message);
+
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _communicationRepository.VerifyAll();
 
         }
 
