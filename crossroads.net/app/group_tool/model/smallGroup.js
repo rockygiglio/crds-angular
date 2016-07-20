@@ -33,7 +33,7 @@ export default class SmallGroup {
 
     let ageRanges = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID, jsonObject.attributeTypes, AgeRange);
     if(ageRanges && ageRanges.length > 0) {
-      this.ageRange = ageRanges[0];
+      this.ageRange = ageRanges;
     } else {
       this.ageRange = new AgeRange();
     }

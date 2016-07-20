@@ -14,7 +14,13 @@ export default class CreateGroupService {
         this.profile = Profile;
         this.groupService = GroupService;
         this.model = {};
-
+        this.meetingFrequencyLookup = [{
+            meetingFrequencyId: 1,
+            meetingFrequencyDesc: 'Every week'
+        }, {
+            meetingFrequencyId: 2,
+            meetingFrequencyDesc: 'Every other week'
+        }];
         this.groupService.getProfileData().then((data) => {
             this.model = {
                 profile: {
@@ -54,9 +60,10 @@ export default class CreateGroupService {
                     labelProp: 'dp_RecordName',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getSites().then(function (response) {
                         $scope.to.options = response;
+                        CreateGroupService.sitesLookup = response;
                         return response;
                     });
                 }
@@ -81,6 +88,7 @@ export default class CreateGroupService {
                     controller: /* @ngInject */ function ($scope, GroupService) {
                         $scope.to.loading = GroupService.getGenders().then(function (response) {
                             $scope.to.options = response;
+                            CreateGroupService.genderLookup = response;
                             return response;
                         });
                     }
@@ -137,8 +145,8 @@ export default class CreateGroupService {
                     options: [{
                         label: 'Specific Day and Time',
                     }, {
-                        label: 'Flexible Meeting Times/Not Sure Yet',
-                    }]
+                            label: 'Flexible Meeting Times/Not Sure Yet',
+                        }]
                 }
             }, {
                     key: 'group.meeting.day',
@@ -149,9 +157,10 @@ export default class CreateGroupService {
                         labelProp: 'dp_RecordName',
                         options: []
                     },
-                    controller: /* @ngInject */ function ($scope, GroupService) {
+                    controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
                             $scope.to.options = response;
+                            CreateGroupService.meetingDaysLookup = response;
                             return response;
                         });
                     }
@@ -169,13 +178,7 @@ export default class CreateGroupService {
                         label: 'Frequency',
                         valueProp: 'meetingFrequencyId',
                         labelProp: 'meetingFrequencyDesc',
-                        options: [{
-                            meetingFrequencyId: 1,
-                            meetingFrequencyDesc: 'Every week'
-                        }, {
-                                meetingFrequencyId: 2,
-                                meetingFrequencyDesc: 'Every other week'
-                            }]
+                        options: this.meetingFrequencyLookup
                     }
                 }]
         };
@@ -272,9 +275,11 @@ export default class CreateGroupService {
                     valueProp: 'attributeId',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, $log, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getGroupGenderMixType().then(function (response) {
                         $scope.to.options = response.attributes;
+                        CreateGroupService.typeIdLookup = response.attributes;
+                        $log.debug(CreateGroupService.model)
                         return response;
                     });
                 }
@@ -294,11 +299,12 @@ export default class CreateGroupService {
                     labelProp: 'name',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getAgeRanges().then(function (response) {
                         $scope.to.options = response.attributes;
                         // note, the line above is shorthand for:
-                        // $scope.options.templateOptions.options = data;
+                        // $scope.options.templateOptions.options = data; 
+                        CreateGroupService.ageRangeLookup = response.attributes;
                         return response;
                     });
                 }
@@ -354,36 +360,52 @@ export default class CreateGroupService {
     }
 
     getMeetingLocation() {
-      // Friday\'s at 12:30 PM, Every Week
-      return this.model.group.meeting.day + '\'s at ' + this.model.group.meeting.time + ' , ' + this.model.group.meeting.frequency;
-   }
+        debugger;
+        let meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
+        // Friday\'s at 12:30 PM, Every Week
+        return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+
+    }
 
 
-    mapSmallGroup()
-    {
-// TODO map entire object from create form - because this will go to the save - need all IDs, etc.
-      let smallGroup = new SmallGroup();
-      smallGroup.groupName = this.model.group.groupName;
-      smallGroup.participants = [new Participant( {
-          groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-          ,nickName: this.model.profile.nickName
-          ,lastName: this.model.profile.lastName
-          }
-      )];
-      smallGroup.groupDescription = this.model.group.groupDescription;
-      smallGroup.groupType = new GroupType({name: this.model.group.typeId});
-      if(this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
-        smallGroup.ageRange = new AgeRange({name: this.model.groupAgeRangeIds[0]});
-      }
-      if(this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
-        smallGroup.address = new Address();
-        smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-        smallGroup.address.state = this.model.group.meeting.address.state;
-        smallGroup.address.zip = this.model.group.meeting.address.zip;
-      }
-      smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-      smallGroup.kidsWelcome = this.model.group.meeting.childcare;
+    mapSmallGroup() {
+        let groupType = _.find(this.typeIdLookup, (groupType) => { return groupType.attributeId == this.model.group.typeId });
+        let ageRangeNames = [];
+        _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
+            ageRangeNames.push(new AgeRange({
+                name: _.find(this.ageRangeLookup, (range) => { 
+                    return range.attributeId == selectedRange
+                }).name})
+            )
+        });
+        debugger;
+        if (typeof groupType == 'undefined') {
+            groupType = { name: '' };
+        }
+        // TODO map entire object from create form - because this will go to the save - need all IDs, etc.
+        let smallGroup = new SmallGroup();
+        smallGroup.groupName = this.model.group.groupName;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+        }
+        )];
+        smallGroup.groupDescription = this.model.group.groupDescription;
+        smallGroup.groupType = new GroupType({ name: groupType.name });
+        if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+            smallGroup.ageRange = ageRangeNames;
+        }
+        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
+            smallGroup.address = new Address();
+            smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+            smallGroup.address.state = this.model.group.meeting.address.state;
+            smallGroup.address.zip = this.model.group.meeting.address.zip;
+        }
+        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
+        smallGroup.kidsWelcome = this.model.group.meeting.childcare;
 
-      return smallGroup;
+        return smallGroup;
     }
 }
