@@ -1,7 +1,8 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
 
 import { Event } from './event';
 var moment = require('moment-timezone');
@@ -16,32 +17,42 @@ export class StreamspotService {
   constructor(private http: Http) { }
 
   getEvents() {
+    let url = this.getUrl();
     let headers = new Headers({
       'Content-Type': 'application/json',
       'x-API-Key': this.apiKey
     });
-    //let url = 'http://localhost:3000/app/streaming/events.json';
-    let url = `${this.url}/${this.id}/events`;
 
-    return this.http.get(url, {headers: headers})
-      .map(response => response.json().data.events)
-      .map((events: Array<Event>) => {
-        return events
-          .filter((event:Event) => {
-            // get upcoming or currently broadcasting events
-            let currentTimestamp = moment().tz(moment.tz.guess());
-            let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
-            let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
-            return currentTimestamp.isBefore(eventStartTimestamp)
-                  || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
-          })
-          .map((event:Event) => {
-            event.start     = moment.tz(event.start, 'America/New_York');
-            event.end       = moment.tz(event.end, 'America/New_York');
-            event.dayOfYear = event.start.dayOfYear();
-            event.time      = event.start.format('LT [EST]');
-            return event;
-          })
-      })
+    return this.http
+            .get(url, { headers: headers })
+            .map((response: Response) => Event.asEvents(response.json().data.events))
+            .map((events: Array<Event>) => {
+              return events;
+            });
+  }
+
+  getUrl() {
+    return `${this.url}/${this.id}/events`; //'http://localhost:3000/app/streaming/events.json'
+  }
+
+  getUpcoming() {
+    return this.getEvents().map((events: Array<Event>) => {
+      return events
+        .filter((event:Event) => {
+          // get upcoming or currently broadcasting events
+          let currentTimestamp = moment().tz(moment.tz.guess());
+          let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
+          let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
+          return currentTimestamp.isBefore(eventStartTimestamp)
+                || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
+        })
+        .map((event:Event) => {
+          event.start     = moment.tz(event.start, 'America/New_York');
+          event.end       = moment.tz(event.end, 'America/New_York');
+          event.dayOfYear = event.start.dayOfYear();
+          event.time      = event.start.format('LT [EST]');
+          return event;
+        })
+    });
   }
 }
