@@ -1,8 +1,9 @@
 
 export default class CreateGroupPreviewController {
   /*@ngInject*/
-  constructor(GroupService, CreateGroupService, ImageService, $state, $log) {
+  constructor(GroupService, CreateGroupService, Group, ImageService, $state, $log) {
     this.groupService = GroupService;
+    this.group = Group;
     this.createGroupService = CreateGroupService;
     this.imageService = ImageService;
     this.state = $state;
@@ -11,22 +12,47 @@ export default class CreateGroupPreviewController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
-    //this.log.debug('groupService: ', this.groupService.createData.group);
   }
 
   $onInit() {
     this.groupData = this.createGroupService.mapSmallGroup();
+    this.groupId = '';
   }
 
-  editGroup() {
-    // this.groupService.createData = this.model;
-    this.state.go('grouptool.create');
+  save() {
+    this.saving = true;
+    this.successfulSave = false;
+    try {
+// TODO validate form
+      // var promise = savePersonal();
+      // promise = promise.then(saveGroup);
+      // promise = promise.then(saveParticipantLeader);
+
+      this.state.go('grouptool.mygroups');
+    }
+    catch (error) {
+      vm.saving = false;
+      vm.successfulSave = false;
+      throw (error);
+    }
+
   }
 
-  submitGroup() {
-    this.state.go('grouptool.mygroups');
+  savePersonal() {
+    // set oldName to existing email address to work around password change dialog issue
+    // this.groupData.profile.person.oldEmail = this.groupData.profile.person.emailAddress;
+    // return this.groupData.person.$save();
   }
 
-  //ui-sref='grouptool.mygroups'
+  saveGroup() {
+    this.groupId = '';
+  }
+
+  saveParticipantLeader() {
+    return this.group.Participant.save({
+        groupId: this.groupId,
+        },
+        this.participants).$promise;
+  }
 
 }

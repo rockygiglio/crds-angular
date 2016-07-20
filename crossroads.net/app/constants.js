@@ -103,6 +103,9 @@
         GROUP: 1,
         TRIP: 2
       }
-    }
+    },
+    MINISTRY: {
+      SPIRITUAL_GROWTH: '8'
+    },
   };
 })();

@@ -361,9 +361,9 @@ export default class CreateGroupService {
 
     mapSmallGroup()
     {
-// TODO map entire object from create form - because this will go to the save - need all IDs, etc.
       let smallGroup = new SmallGroup();
       smallGroup.groupName = this.model.group.groupName;
+// TODO more data on participant??
       smallGroup.participants = [new Participant( {
           groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
           ,nickName: this.model.profile.nickName
@@ -372,6 +372,7 @@ export default class CreateGroupService {
       )];
       smallGroup.groupDescription = this.model.group.groupDescription;
       smallGroup.groupType = new GroupType({name: this.model.group.typeId});
+// TODO entire list of groupAgeRangeIds
       if(this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
         smallGroup.ageRange = new AgeRange({name: this.model.groupAgeRangeIds[0]});
       }
@@ -384,6 +385,31 @@ export default class CreateGroupService {
       smallGroup.meetingTimeFrequency = this.getMeetingLocation();
       smallGroup.kidsWelcome = this.model.group.meeting.childcare;
 
+// TODO name as end user preview value
+      smallGroup.groupType = new GroupType({
+          name: this.model.group.typeId
+          ,id: this.model.group.typeId
+        }
+      );
+      smallGroup.meetingDay = this.model.group.meeting.day;
+      smallGroup.meetingTime = this.model.group.meeting.time;
+      smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
+      smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+      smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+// TODO also set congregationId on the profile
+      smallGroup.congregationId = this.model.profile.congregationId;
+// TODO userid is on $root
+      smallGroup.contactId = '';
+      smallGroup.startDate = this.model.group.startDate;
+      smallGroup.availableOnline = this.model.group.availableOnline;
+
+// TODO singleAttributes and multiAttributes
+
       return smallGroup;
     }
+
+// TODO map profile object
+    //mapProfile() {
+
+    //}
 }
