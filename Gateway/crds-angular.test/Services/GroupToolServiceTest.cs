@@ -56,6 +56,107 @@ namespace crds_angular.test.Services
                                             configuration.Object);
         }
 
+        [ExpectedException(typeof(GroupNotFoundForParticipantException))]
+        public void TestVerifyCurrentUserIsGroupLeaderGroupNotFound()
+        {
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotGroupLeaderException))]
+        public void TestVerifyCurrentUserIsGroupLeaderNotGroupLeader()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader + 1
+                        }
+                    }
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+        }
+
+        [Test]
+        public void TestVerifyCurrentUserIsGroupLeader()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            var result = _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreSame(myParticipant, result.Me);
+            Assert.AreSame(groups[0], result.Group);
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupApprove()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+
+            var inquiry = new Inquiry();
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
+
+        }
+
         [Test]
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestRemoveParticipantFromMyGroupGroupNotFound()

@@ -21,5 +21,7 @@ namespace crds_angular.Services.Interfaces
                                        string emailTemplateContentBlockTitle = null,
                                        string message = null,
                                        Participant fromParticipant = null);
+
+        MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId);
     }
 }

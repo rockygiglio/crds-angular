@@ -97,22 +97,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
-                var group = (groups == null || !groups.Any()) ? null : groups.FirstOrDefault();
-
-                if (group == null)
-                {
-                    throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
-                }
-
-                var groupParticipants = group.Participants;
-                var me = _participantRepository.GetParticipantRecord(token);
-
-                if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                    groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
-                {
-                    throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
-                }
+                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -120,12 +105,12 @@ namespace crds_angular.Services
                 {
                     SendGroupParticipantEmail(groupId,
                                               groupParticipantId,
-                                              groups.FirstOrDefault(),
+                                              myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
                                               GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
-                                              me);
+                                              myGroup.Me);
                 }
                 catch (Exception e)
                 {
@@ -197,34 +182,45 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
 
+        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
+        {
+            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
+
+            if (group == null)
+            {
+                throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for user", groupId));
+            }
+
+            var groupParticipants = group.Participants;
+            var me = _participantRepository.GetParticipantRecord(token);
+
+            if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
+                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+            {
+                throw new NotGroupLeaderException(string.Format("User is not a leader of group {0}", groupId));
+            }
+
+            return new MyGroup
+            {
+                Group = group,
+                Me = me
+            };
+        }
+
         public void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null)
         {
             try
             {
-                var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
-                var group = (groups == null || !groups.Any()) ? null : groups.FirstOrDefault();
-
-                if (group == null)
-                {
-                    throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for user", groupId));
-                }
-
-                var groupParticipants = group.Participants;
-                var me = _participantRepository.GetParticipantRecord(token);
-
-                if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                    groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
-                {
-                    throw new NotGroupLeaderException(string.Format("User is not a leader of group {0}", groupId));
-                }
+                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
 
                 if (approve)
                 {
-                    ApproveInquiry(groupId, group, inquiry, me, message);
+                    ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
                 }
                 else
                 {
-                    DenyInquiry(groupId, group, inquiry, me, message);
+                    DenyInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -243,19 +239,18 @@ namespace crds_angular.Services
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
-            //TODO:: Update template id
-            SendApproveDenyInquiryEmail(
-                true,
-                groupId,
-                group,
-                inquiry,
-                me,
-                _removeParticipantFromGroupEmailTemplateId,
-                GroupToolApproveInquiryEmailTemplateText,
-                message);
-
             try
             {
+                //TODO:: Update template id
+                SendApproveDenyInquiryEmail(
+                    true,
+                    groupId,
+                    group,
+                    inquiry,
+                    me,
+                    _removeParticipantFromGroupEmailTemplateId,
+                    GroupToolApproveInquiryEmailTemplateText,
+                    message);
             }
             catch (Exception e)
             {
@@ -268,16 +263,23 @@ namespace crds_angular.Services
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
-            //TODO:: Update template id
-            SendApproveDenyInquiryEmail(
-                false,
-                groupId,
-                group, 
-                inquiry, 
-                me,
-                _removeParticipantFromGroupEmailTemplateId,
-                GroupToolDenyInquiryEmailTemplateText,
-                message);
+            try
+            {
+                //TODO:: Update template id
+                SendApproveDenyInquiryEmail(
+                    false,
+                    groupId,
+                    group,
+                    inquiry,
+                    me,
+                    _removeParticipantFromGroupEmailTemplateId,
+                    GroupToolDenyInquiryEmailTemplateText,
+                    message);
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+            }
         }
 
         private void SendApproveDenyInquiryEmail(bool approve, int groupId, GroupDTO group, Inquiry inquiry, Participant me, int emailTemplateId, string emailTemplateContentBlockTitle, string message)
