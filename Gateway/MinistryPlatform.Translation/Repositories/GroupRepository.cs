@@ -559,13 +559,40 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroup> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId)
         {
-            var groupDetails = ministryPlatformService.GetPageViewRecords(CurrentGroupParticipantsByGroupTypePageView, token, String.Format(",\"{0}\",,,\"{1}\"", participantId, groupTypeId));
+            var groupDetails = ministryPlatformService.GetPageViewRecords(MyCurrentGroupsPageView, token, String.Format(",,{0}", groupTypeId));
 
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
             }
-            return groupDetails.Select(MapRecordToMpGroup).ToList();
+            return groupDetails.Select(details => new MpGroup()
+            {
+                GroupId = details.ToInt("Group_ID"),
+                CongregationId = details.ToInt("Congregation_ID"),
+                Name = details.ToString("Group_Name"),
+                GroupRoleId = details.ToInt("Group_Role_ID"),
+                GroupDescription = details.ToString("Description"),
+                MinistryId = details.ToInt("Ministry_ID"),
+                ContactId = details.ToInt("Primary_Contact"),
+                PrimaryContactName = details.ToString("Primary_Contact_Name"),
+                PrimaryContactEmail = details.ToString("Primary_Contact_Email"),
+                GroupType = details.ToInt("Group_Type_ID"),
+                StartDate = details.ToDate("Start_Date"),
+                EndDate = details.ToNullableDate("End_Date"),
+                MeetingDayId = details.ToInt("Meeting_Day_ID"),
+                MeetingTime = details.ToString("Meeting_Time"),
+                AvailableOnline = details.ToBool("Available_Online"),
+                Address = new MpAddress()
+                {
+                    Address_ID = details.ToInt("Address_ID"),
+                    Address_Line_1 = details.ToString("Address_Line_1"),
+                    Address_Line_2 = details.ToString("Address_Line_2"),
+                    City = details.ToString("City"),
+                    State = details.ToString("State"),
+                    Postal_Code = details.ToString("Zip_Code"),
+                    Foreign_Country = details.ToString("Foreign_Country")
+                }
+            }).ToList();
         }
 
         public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
@@ -644,7 +671,7 @@ namespace MinistryPlatform.Translation.Repositories
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
-                MeetingDay = record.ToString("Meeting_Day"),
+                MeetingDay = (record["Meeting_Day"] as string ?? string.Empty).Trim(),
                 MeetingTime = record.ToString("Meeting_Time"),
                 MeetingFrequency = record.ToString("Meeting_Frequency"),
                 AvailableOnline = record.ToBool("Available_Online"),
