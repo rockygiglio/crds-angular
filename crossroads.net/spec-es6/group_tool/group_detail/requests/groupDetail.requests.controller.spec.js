@@ -185,4 +185,160 @@ describe('GroupDetailRequestsController', () => {
       expect(fixture.error).toBeTruthy();
     });
   });
+
+  describe('methods', () => {
+    let mockInquires,
+      inquires;
+    
+    beforeEach(()=> {
+      mockInquires = [
+        {
+          "groupId": 123,
+          "emailAddress": "jim.kriz@ingagepartners.com",
+          "phoneNumber": "513-432-1973",
+          "firstName": "Dustin",
+          "lastName": "Kocher",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": null,
+          "inquiryId": 19
+        },
+        {
+          "groupId": 123,
+          "emailAddress": "jkerstanoff@callibrity.com",
+          "phoneNumber": "513-987-1983",
+          "firstName": "Joe",
+          "lastName": "Kerstanoff",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": false,
+          "inquiryId": 20
+        },
+        {
+          "groupId": 123,
+          "emailAddress": "kim.farrow@thrivecincinnati.com",
+          "phoneNumber": "513-874-6947",
+          "firstName": "Kim",
+          "lastName": "Farrow",
+          "requestDate": "2016-07-14T10:00:00",
+          "placed": true,
+          "inquiryId": 21
+        }
+      ];
+
+      //Inquiries setup
+      inquires = mockInquires.map((inquiry) => {
+        return new GroupInquiry(inquiry);
+      });
+    });
+
+
+    describe('approve(inquiry)', () => {
+      it('should do the following', () => {
+        fixture.approve(inquires[0]);
+
+        expect(fixture.selectedInquiry).toEqual(inquires[0]);
+	      expect(fixture.selectedInquiry.message).toEqual('');
+        expect(fixture.currentView).toEqual('Approve');
+      });
+    });
+
+    describe('deny(inquiry)', () => {
+      it('should do the following', () => {
+        fixture.deny(inquires[0]);
+
+        expect(fixture.selectedInquiry).toEqual(inquires[0]);
+	      expect(fixture.selectedInquiry.message).toEqual('');
+        expect(fixture.currentView).toEqual('Deny');
+      });
+    });
+
+    describe('cancel(inquiry)', () => {
+      it('should do the following', () => {
+        fixture.cancel(inquires[0]);
+
+        expect(fixture.selectedInquiry).not.toBeDefined();
+	      expect(inquires[0].message).not.toBeDefined();
+        expect(fixture.currentView).toEqual('List');
+      });
+    });
+
+    describe('submitApprove(person)', () => {
+      it('should succeed', () => {
+        let deferred = qApi.defer();
+        deferred.resolve({});
+
+        spyOn(groupService, 'approveDenyInquiry').and.callFake(function() {
+          return(deferred.promise);
+        });
+
+        spyOn(fixture, 'setView').and.callFake(function() {});
+
+        spyOn(rootScope, '$emit').and.callFake(() => { });
+
+        fixture.submitApprove(inquires[0]);
+        rootScope.$digest();
+
+        expect(groupService.approveDenyInquiry).toHaveBeenCalledWith(fixture.groupId, true, inquires[0]);
+        expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolApproveInquirySuccessGrowler);
+      });
+
+      it('should fail', () => {
+        let deferred = qApi.defer();
+        deferred.reject({status: 500, statusText: 'Oh no!'});
+
+        spyOn(groupService, 'approveDenyInquiry').and.callFake(function() {
+          return(deferred.promise);
+        });
+
+        spyOn(fixture, 'setView').and.callFake(function() {});
+
+        spyOn(rootScope, '$emit').and.callFake(() => { });
+
+        fixture.submitApprove(inquires[0]);
+        rootScope.$digest();
+
+        expect(groupService.approveDenyInquiry).toHaveBeenCalledWith(fixture.groupId, true, inquires[0]);
+        expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolApproveInquiryFailureGrowler);
+      });
+    });
+
+    describe('submitDeny(person)', () => {
+      it('should succeed', () => {
+        let deferred = qApi.defer();
+        deferred.resolve({});
+
+        spyOn(groupService, 'approveDenyInquiry').and.callFake(function() {
+          return(deferred.promise);
+        });
+
+        spyOn(fixture, 'setView').and.callFake(function() {});
+
+        spyOn(rootScope, '$emit').and.callFake(() => { });
+
+        fixture.submitDeny(inquires[0]);
+        rootScope.$digest();
+
+        expect(groupService.approveDenyInquiry).toHaveBeenCalledWith(fixture.groupId, false, inquires[0]);
+        expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolDenyInquirySuccessGrowler);
+      });
+
+      it('should fail', () => {
+        let deferred = qApi.defer();
+        deferred.reject({status: 500, statusText: 'Oh no!'});
+
+        spyOn(groupService, 'approveDenyInquiry').and.callFake(function() {
+          return(deferred.promise);
+        });
+
+        spyOn(fixture, 'setView').and.callFake(function() {});
+
+        spyOn(rootScope, '$emit').and.callFake(() => { });
+
+        fixture.submitDeny(inquires[0]);
+        rootScope.$digest();
+
+        expect(groupService.approveDenyInquiry).toHaveBeenCalledWith(fixture.groupId, false, inquires[0]);
+        expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolDenyInquiryFailureGrowler);
+      });
+    });
+  });
 });
