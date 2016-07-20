@@ -109,7 +109,7 @@ namespace crds_angular.Models.Crossroads.Groups
         public List<GroupParticipantDTO> Participants { get; set; }
 
         [JsonProperty(PropertyName = "kidsWelcome")]
-        public bool KidsWelcome { get; set; }
+        public bool? KidsWelcome { get; set; }
 
         public GroupDTO()
         {
