@@ -35,8 +35,13 @@ export default class CreateGroupController {
         this.fields = this.createGroupService.getFields();
   }
 
+<<<<<<< HEAD
   previewGroup() {
     this.state.go('grouptool.create.preview');
   }
 
 }
+=======
+    }
+}
+>>>>>>> development
