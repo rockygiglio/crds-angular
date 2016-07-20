@@ -39,5 +39,19 @@ namespace MinistryPlatform.Translation.Models.Childcare
 
         [JsonProperty(PropertyName = "Congregation_ID")]
         public int CongregationID { get; set; }
+
+        [JsonProperty(PropertyName = "Group_Participant_ID")]
+        public int GroupParticipantID { get; set; }
+
+        [JsonProperty(PropertyName = "Childcare_Group_ID")]
+        public int ChildcareGroupID { get; set; }
+
+        [JsonProperty(PropertyName = "Childcare_Group_Max_Age")]
+        public int ChildcareMaxAge { get; set; }
+
+        public override string ToString()
+        {
+            return $"ChildcareGroupId: {ChildcareGroupID}, Nickname: {Nickname}, LastName: {LastName}, GroupId: {GroupId}, GroupName: {GroupName}, ChildCareMaxAge: {ChildcareMaxAge}";
+        }
     }
 }

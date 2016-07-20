@@ -1,0 +1,116 @@
+<div class="live-stream">
+
+  <div class="dark-bg">
+
+    <div class="container" *ngIf="displayCounter">
+      <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
+      <div class="how-many-people text-center" *ngIf="countSubmit">
+        Thanks!
+      </div>
+      <div class="how-many-people text-center" *ngIf="countSubmit == false">
+        How many people are watching?<span class="vr"></span>
+        {{number_of_people}}
+        <span *ngIf="number_of_people == 1">person</span>
+        <span *ngIf="number_of_people > 1">people</span>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-step" (click)="decreaseCount()">
+            <span class="glyphicon glyphicon-minus"></span>
+          </button>
+          <button type="button" class="btn btn-step" (click)="increaseCount()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
+        <a href="#" class="btn btn-standard-dark" (click)="submitCount()">Submit</a>
+      </div>
+    </div>
+
+    <section class="wow fadeIn">
+      <div class="container">
+        <videojs></videojs>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="container">
+
+      <section class="related">
+        <header>
+          <h2>don't miss</h2>
+        </header>
+
+        <div class="row">
+          <figure class="wow fadeInUp" data-wow-delay="100ms">
+            <a href="#" class="gradient"><img src="http://crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive" /></a>
+            <figcaption><a href="#">Meals to Go</a></figcaption>
+          </figure>
+
+          <figure class="wow fadeInUp" data-wow-delay="200ms">
+            <a href="#" class="gradient"><img src="http://crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive" /></a>
+            <figcaption><a href="#">Prison Ministry</a></figcaption>
+          </figure>
+
+          <figure class="wow fadeInUp" data-wow-delay="300ms">
+            <a href="#" class="gradient"><img src="http://crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive" /></a>
+            <figcaption><a href="#">The Super Bowl of Preaching</a></figcaption>
+          </figure>
+
+          <figure class="wow fadeInUp" data-wow-delay="400ms">
+            <a href="#" class="gradient"><img src="http://crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive" /></a>
+            <figcaption><a href="#">Audition for Awaited</a></figcaption>
+          </figure>
+        </div>
+
+      </section>
+
+      <section class="participate">
+        <header>
+          <h2>be the church</h2>
+        </header>
+
+        <div class="wow fadeInUp" data-wow-delay="500ms">
+          <hr>
+
+          <figure class="wow fadeIn" data-wow-delay="">
+            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
+          </figure>
+
+          <article>
+            <h3>Give</h3>
+            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+            <p><a href="#" class="btn btn-sm btn-primary">Give</a></p>
+          </article>
+        </div>
+
+        <div class="wow fadeInUp" data-wow-delay="500ms">
+          &nbsp;<hr>
+
+          <figure>
+            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
+          </figure>
+
+          <article>
+            <h3>Group Up</h3>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
+            <p><a href="#" class="btn btn-sm btn-primary">Join a Group</a></p>
+          </article>
+        </div>
+
+        <div class="wow fadeInUp" data-wow-delay="500ms">
+          &nbsp;<hr>
+
+          <figure>
+            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
+          </figure>
+
+          <article>
+            <h3>Go Trips</h3>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <p><a href="#" class="btn btn-sm btn-primary">Learn More</a></p>
+          </article>
+        </div>
+
+      </section>
+  </div>
+</div>

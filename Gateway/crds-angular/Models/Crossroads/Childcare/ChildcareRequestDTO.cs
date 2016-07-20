@@ -41,6 +41,9 @@ namespace crds_angular.Models.Crossroads.Childcare
         [JsonProperty(PropertyName="decisionNotes")]
         public string DecisionNotes { get; set; }
 
+        [JsonProperty(PropertyName = "childcareRequestId")]
+        public int ChildcareRequestId { get; set; }
+
         public MpChildcareRequest ToMPChildcareRequest()
         {
             var mpReq = new MpChildcareRequest
@@ -55,7 +58,8 @@ namespace crds_angular.Models.Crossroads.Childcare
                 PreferredTime = this.PreferredTime,
                 DatesList = this.DatesList,
                 Notes = this.Notes,
-                DecisionNotes = this.DecisionNotes
+                DecisionNotes = this.DecisionNotes,
+                ChildcareRequestId = this.ChildcareRequestId
             };
 
             return mpReq;

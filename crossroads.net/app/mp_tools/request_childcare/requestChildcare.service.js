@@ -7,13 +7,18 @@ class RequestChildcareService {
     this.resource = $resource;
   }
 
+  getChildcareRequest(requestId, success, error) {
+    this.requestData = this.resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
+    return this.requestData.get({ requestId }, success, error);
+  }
+
   getCongregations() {
     return this.lookupService.ChildcareLocations.query((data) => {
       return data;
     },
 
     (err) => {
-      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);  
+      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);
       return [];
     });
   }
@@ -24,16 +29,16 @@ class RequestChildcareService {
     },
     
     (err) => {
-      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);  
+      this.log.error(`Unable to get the list of Congregations: ${err.status} - ${err.statusText}`);
       return [];
     });
   }
 
   getGroups(congregationId, ministryId) {
     return this.lookupService.GroupsByCongregationAndMinistry
-      .query({congregationId, ministryId}, (data) => {
+      .query({ congregationId, ministryId }, (data) => {
         return data;
-      }, 
+      },
 
       (err) => {
         this.log.error('Unable to get groups');
@@ -55,8 +60,13 @@ class RequestChildcareService {
   }
 
   saveRequest(dto) {
-    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request'); 
-    return this.saveRequest.save(dto);    
+    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request');
+    return this.saveRequest.save(dto);
+  }
+
+  updateRequest(dto) {
+    this.updateRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/updaterequest');
+    return this.updateRequest.save(dto);
   }
 }
 

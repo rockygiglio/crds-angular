@@ -62,6 +62,28 @@ namespace MinistryPlatform.Translation.Repositories
             return childcareRequestId;
         }
 
+        public void UpdateChildcareRequest(MpChildcareRequest request)
+        {
+            var apiToken = _apiUserService.GetToken();
+
+            var requestDict = new Dictionary<string, object>
+            {
+                {"Childcare_Request_ID", request.ChildcareRequestId },
+                {"Requester_ID", request.RequesterId},
+                {"Congregation_ID", request.LocationId },
+                {"Ministry_ID", request.MinistryId },
+                {"Group_ID", request.GroupId },
+                {"Start_Date", request.StartDate },
+                {"End_Date", request.EndDate },
+                {"Frequency", request.Frequency },
+                {"Childcare_Session", request.PreferredTime },
+                {"Notes", request.Notes },
+                {"Request_Status_ID", _childcareRequestStatusPending }
+            };
+            
+            _ministryPlatformService.UpdateRecord(_childcareRequestPageId, requestDict, apiToken);
+        }
+
         public MpChildcareRequestEmail GetChildcareRequest(int childcareRequestId, string token)
         {
             var searchString = string.Format("{0},", childcareRequestId);
@@ -100,7 +122,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public void CreateChildcareRequestDates(int childcareRequestId, MpChildcareRequest request, string token)
         {
-          var datesList = request.DatesList;
+          var datesList = request.DatesList ?? new List<DateTime>();
           foreach (var date in datesList)
           {
             var requestDate = new DateTime(date.Year,date.Month,date.Day,0,0,0);
@@ -112,6 +134,15 @@ namespace MinistryPlatform.Translation.Repositories
             };
             _ministryPlatformService.CreateSubRecord(_childcareRequestDatesId, childcareRequestId, requestDatesDict, token, false);
           }
+        }
+
+        public void DeleteAllChildcareRequestDates(int childcareRequestId,  string token)
+        {
+            var datesList = GetChildcareRequestDates(childcareRequestId);
+            foreach (var date in datesList)
+            {
+                _ministryPlatformService.DeleteRecord(_childcareRequestDatesPageId, date.ChildcareRequestDateId, null, token);
+            }
         }
 
         public List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
