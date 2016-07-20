@@ -67,9 +67,48 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Request_Status_ID", _childcareRequestPending}
             };
 
-            _ministryPlatformService.Setup(m => m.CreateRecord(_childcareRequestPage, requestDict, It.IsAny<string>(),false));
+            _ministryPlatformService.Setup(m => m.CreateRecord(_childcareRequestPage, requestDict, It.IsAny<string>(), false));
             _fixture.CreateChildcareRequest(request);
             _ministryPlatformService.VerifyAll();
         }
+
+        [Test]
+        public void UpdateRequest()
+        {
+            var request = new MpChildcareRequest
+            {
+                ChildcareRequestId = 999,
+                RequesterId = 1,
+                LocationId = 2,
+                MinistryId = 3,
+                GroupId = 4,
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today.AddDays(7),
+                Frequency = "Weekly",
+                PreferredTime = "8:00AM to 9:00AM",
+                Notes = "This is a test request"
+            };
+
+            var requestDict = new Dictionary<string, object>
+            {
+                {"Childcare_Request_ID", request.ChildcareRequestId },
+                {"Requester_ID", request.RequesterId},
+                {"Congregation_ID", request.LocationId},
+                {"Ministry_ID", request.MinistryId},
+                {"Group_ID", request.GroupId},
+                {"Start_Date", request.StartDate},
+                {"End_Date", request.EndDate},
+                {"Frequency", request.Frequency},
+                {"Childcare_Session", request.PreferredTime},
+                {"Notes", request.Notes},
+                {"Request_Status_ID", _childcareRequestPending}
+            };
+
+            _ministryPlatformService.Setup(m => m.UpdateRecord(_childcareRequestPage, requestDict, It.IsAny<string>()));
+            _fixture.UpdateChildcareRequest(request);
+            _ministryPlatformService.VerifyAll();
+        }
     }
+
+
 }
