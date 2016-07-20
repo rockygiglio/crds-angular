@@ -1,6 +1,7 @@
 import {upgradeAdapter} from './upgrade-adapter';
 import { Ng2TestComponent } from './ng2test/ng2test.component';
 import { StreamingComponent } from './streaming/streaming.component';
+import { VideoComponent } from './streaming/video.component';
 
 declare let angular:any;
 
@@ -9,3 +10,6 @@ angular.module('crossroads')
 
 angular.module('crossroads')
     .directive('streaming', upgradeAdapter.downgradeNg2Component(StreamingComponent));
+
+angular.module('crossroads')
+    .directive('streamingVideo', upgradeAdapter.downgradeNg2Component(VideoComponent));
