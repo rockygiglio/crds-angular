@@ -58,28 +58,20 @@ export default class GroupDetailRequestsController {
     this.setView('Approve', false);
   }
 
-  submitApprove(inquiry) {
-    this.log.info(`Approving inquiry: ${JSON.stringify(inquiry)}`);
+  submitApprove(person) {
+    this.log.info(`Approving inquiry: ${JSON.stringify(person)}`);
     this.processing = true;
-    /*
-    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
-      _.remove(this.data, function(p) {
-          return p.groupParticipantId === participant.groupParticipantId;
-      });
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
-      this.setListView();
-      this.deleteParticipant = undefined;
-      this.ready = true;
+
+    this.groupService.approveDenyInquiry(this.groupId, true, person).then(() => {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolApproveInquirySuccessGrowler);
+      this.setView('List', true);
     },
     (err) => {
-      this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
-      this.error = true;
-      this.ready = true;
+      this.log.error(`Unable to deny group Inquiry: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolApproveInquiryFailureGrowler);
     }).finally(() => {
       this.processing = false;
     });
-    */
   }
 
   deny(inquiry) {
@@ -88,28 +80,20 @@ export default class GroupDetailRequestsController {
     this.setView('Deny', false);
   }
 
-  submitDeny(inquiry) {
-    this.log.info(`Denying inquiry: ${JSON.stringify(inquiry)}`);
+  submitDeny(person) {
+    this.log.info(`Denying inquiry: ${JSON.stringify(person)}`);
     this.processing = true;
-    /*
-    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
-      _.remove(this.data, function(p) {
-          return p.groupParticipantId === participant.groupParticipantId;
-      });
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
-      this.setListView();
-      this.deleteParticipant = undefined;
-      this.ready = true;
+
+    this.groupService.approveDenyInquiry(this.groupId, false, person).then(() => {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInquirySuccessGrowler);
+      this.setView('List', true);
     },
     (err) => {
-      this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
-      this.error = true;
-      this.ready = true;
+      this.log.error(`Unable to deny group Inquiry: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInquiryFailureGrowler);
     }).finally(() => {
       this.processing = false;
     });
-    */
   }
 
   cancel(inquiry) {

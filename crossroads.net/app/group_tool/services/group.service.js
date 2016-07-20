@@ -119,6 +119,17 @@ export default class GroupService {
       });
   }
 
+  approveDenyInquiry(groupId, approve, inquiry) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
+                           save({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve}, inquiry).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
   getInvities(groupId) {
     let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
                           query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
