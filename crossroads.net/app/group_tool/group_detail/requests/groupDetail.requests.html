@@ -73,8 +73,8 @@
     header="Approve Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
     sub-header-text="groupToolApproveInquirySubheaderText"
     email-template-text="groupToolApproveInquiryEmailTemplateText"
-    cancel-action="groupDetailRequests.cancel(participant)"
-    submit-action="groupDetailRequests.submitApprove(participant)"
+    cancel-action="groupDetailRequests.cancel(person)"
+    submit-action="groupDetailRequests.submitApprove(person)"
     processing="groupDetailRequests.processing"
     ></group-message>
 </div>
@@ -86,8 +86,8 @@
     header="Deny Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
     sub-header-text="groupToolDenyInquirySubheaderText"
     email-template-text="groupToolDenyInquiryEmailTemplateText"
-    cancel-action="groupDetailRequests.cancel(participant)"
-    submit-action="groupDetailRequests.submitDeny(participant)"
+    cancel-action="groupDetailRequests.cancel(person)"
+    submit-action="groupDetailRequests.submitDeny(person)"
     processing="groupDetailRequests.processing"
     ></group-message>
 </div>

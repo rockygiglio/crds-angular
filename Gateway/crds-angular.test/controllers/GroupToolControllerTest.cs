@@ -82,11 +82,11 @@ namespace crds_angular.test.controllers
             const int groupId = 2;
             const bool approve = true;
             var inquiry = new Inquiry();
-            const string message = "message";
+            inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, message)).Verifiable();
-
-            var result = _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry, message);
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Verifiable();
+            
+            var result = _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
             _groupToolService.VerifyAll();
 
             Assert.IsNotNull(result);
@@ -101,12 +101,12 @@ namespace crds_angular.test.controllers
             const int groupId = 2;
             const bool approve = true;
             var inquiry = new Inquiry();
-            const string message = "message";
+            inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, message)).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
             try
             {
-                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry, message);
+                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -125,12 +125,12 @@ namespace crds_angular.test.controllers
             const int groupId = 2;
             const bool approve = true;
             var inquiry = new Inquiry();
-            const string message = "message";
+            inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, message)).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
             try
             {
-                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry, message);
+                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
