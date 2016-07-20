@@ -303,7 +303,7 @@ namespace crds_angular.Services
                     GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
                     MaximumAge = childcareDashboard.ChildcareMaxAge,                        
                     EligibleChildren = eligibleChildren,
-                    ChildcareGroupId = childcareDashboard.ChildcareMaxAge,
+                    ChildcareGroupId = childcareDashboard.ChildcareGroupID,
                     GroupParticipantId = childcareDashboard.GroupParticipantID
                 });
             }                       
