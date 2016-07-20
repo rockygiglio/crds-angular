@@ -258,7 +258,6 @@ namespace crds_angular.Services
             }
         }
 
-
         private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
