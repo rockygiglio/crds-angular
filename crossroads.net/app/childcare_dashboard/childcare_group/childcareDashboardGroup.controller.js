@@ -58,10 +58,11 @@ class ChildcareDashboardGroupController {
   }
 
   rsvp(child) {
-    var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, child.rsvpness);
-    resp.$promise.then(() => {
-
-    }, (err) => {
+    var resp = this.childcareService.saveRSVP(child.contactId,
+                                              this.communityGroup.childcareGroupId,
+                                              this.communityGroup.groupParticipantId,
+                                              child.rsvpness);
+    resp.$promise.then(() => { }, (err) => {
       child.rsvpness = !child.rsvpness;
       // display an error message...
       if (err.status === 412) {
