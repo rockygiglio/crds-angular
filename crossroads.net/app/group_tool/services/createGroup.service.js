@@ -18,6 +18,8 @@ export default class CreateGroupService {
         this.groupService.getProfileData().then((data) => {
             this.model = {
                 profile: {
+                    nickName: data.nickName,
+                    lastName: data.lastName,
                     birthDate: data.dateOfBirth,
                     genderId: data.genderId,
                     address: {
@@ -351,24 +353,36 @@ export default class CreateGroupService {
             groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
     }
 
+    getMeetingLocation() {
+      // Friday\'s at 12:30 PM, Every Week
+      return this.model.group.meeting.day + '\'s at ' + this.model.group.meeting.time + ' , ' + this.model.group.meeting.frequency;
+   }
+
+
     mapSmallGroup()
     {
+// TODO map entire object from create form - because this will go to the save - need all IDs, etc.
       let smallGroup = new SmallGroup();
       smallGroup.groupName = this.model.group.groupName;
-      smallGroup.participants = [new Participant({
-          groupRoleId: CONSTANTS.GROUP.ROLES.LEADER, firstName: 'firstname', lastName: 'last'
-      })];
+      smallGroup.participants = [new Participant( {
+          groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+          ,nickName: this.model.profile.nickName
+          ,lastName: this.model.profile.lastName
+          }
+      )];
       smallGroup.groupDescription = this.model.group.groupDescription;
-      //smallGroup.groupAgeRange
-
-//goru
       smallGroup.groupType = new GroupType({name: this.model.group.typeId});
-      smallGroup.ageRange = new AgeRange({name: this.model.groupAgeRangeIds[0]});
-      smallGroup.address = new Address();
-      smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-      smallGroup.address.state = this.model.group.meeting.address.state;
-      smallGroup.address.zip = this.model.group.meeting.address.zip;
-      smallGroup.kidsWelcome = this.model.group.meeting.childCare;
+      if(this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+        smallGroup.ageRange = new AgeRange({name: this.model.groupAgeRangeIds[0]});
+      }
+      if(this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
+        smallGroup.address = new Address();
+        smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+        smallGroup.address.state = this.model.group.meeting.address.state;
+        smallGroup.address.zip = this.model.group.meeting.address.zip;
+      }
+      smallGroup.meetingTimeFrequency = this.getMeetingLocation();
+      smallGroup.kidsWelcome = this.model.group.meeting.childcare;
 
       return smallGroup;
     }
