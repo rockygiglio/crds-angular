@@ -452,7 +452,6 @@ export default class CreateGroupService {
     }
 
     getMeetingLocation() {
-        debugger;
         let meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
         // Friday\'s at 12:30 PM, Every Week
@@ -462,7 +461,11 @@ export default class CreateGroupService {
 
 
     mapSmallGroup() {
+        //This stuff below will need to be refactored when we merge in the save branch.
+
+        //Find the name of the selected group type id
         let groupType = _.find(this.typeIdLookup, (groupType) => { return groupType.attributeId == this.model.group.typeId });
+        //loop through all selected age ranges, find the name for each one.
         let ageRangeNames = [];
         _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
             ageRangeNames.push(new AgeRange({
@@ -471,7 +474,6 @@ export default class CreateGroupService {
                 }).name})
             )
         });
-        debugger;
         if (typeof groupType == 'undefined') {
             groupType = { name: '' };
         }
