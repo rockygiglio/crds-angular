@@ -26,11 +26,11 @@ export default class CreateGroupService {
                         time: '1983-01-16T22:00:00.007Z'
                     },
                     categories: {
-                        lifeStageId: 17,
-                        neighborhoodId: 18,
-                        spiritualGrowthId: 19,
-                        interestId: 20,
-                        healingId: 21
+                        lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        neighborhoodId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+                        spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+                        interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+                        healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
                     }
                 }
             }
