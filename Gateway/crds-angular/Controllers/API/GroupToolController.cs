@@ -111,18 +111,17 @@ namespace crds_angular.Controllers.API
         /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
         /// <param name="approve">A boolean showing if the inquiry is being approved or denied. It defaults to approved</param>
         /// <param name="inquiry">An Inquiry JSON Object.</param>
-        /// <param name="message">A custom message to send to the inquiry.</param>
         [AcceptVerbs("POST")]
         [RequiresAuthorization]
-        [Route("api/grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/inquiry/approve/:approve")]
+        [Route("api/grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/inquiry/approve/{approve:bool}")]
         [HttpPost]
-        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]bool approve, [FromUri(Name = "inquiry")]Inquiry inquiry, [FromUri(Name = "message")]string message = null)
+        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]bool approve, [FromBody]Inquiry inquiry)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupTypeId, groupId, approve,inquiry, message);
+                    _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupTypeId, groupId, approve, inquiry, inquiry.Message);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)
