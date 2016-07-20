@@ -53,6 +53,7 @@ VALUES
 , Group_ID_Table_Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code]
 , Group_ID_Table_Offsite_Meeting_Address_Table.[Foreign_Country]
 , Group_ID_Table.[Maximum_Age]
+, Group_ID_Table.[Kids_Welcome]
 , Group_ID_Table.[Remaining_Capacity]'
 ,'Group_Participant_ID'    
 ,'Group_Participants.[Participant_ID] = (select participant_record from contacts where User_account = dp_UserID) AND

@@ -3,15 +3,21 @@
   <h1>
     Start a Group
   </h1>
-  <p>Hi leader! This is the place to create your group. We’ve come up with a list of questions to help you define your group’s style and will (in the end) connect you with people looking for the same thing you are.</p>
+  <p>Hi leader! This is the place to create your group. We’ve come up with a list of questions to help you define your group’s
+    style and will (in the end) connect you with people looking for the same thing you are.</p>
   <p>If you already have some friends who want to join your group, hang tight—you’ll have a chance to invite them later.</p>
-  
+
   <formly-form model="createGroup.createGroupService.model" fields="createGroup.fields" ng-cloak>
     <div class="col-md-12 push-top text-center">
-      <button type="submit" class="btn btn-primary" ng-click="createGroup.submit(createGroup.user)">Preview Group</button>
-      </div>
+      <button type="submit" class="btn btn-primary" ng-click="createGroup.previewGroup()">Preview Group</button>
+    </div>
   </formly-form>
-  <!--<pre>{{createGroup.createGroupService.model | json}}</pre>
-  <pre>{{createGroup.profile | json}}</pre>
-  <pre>{{createGroup.fields | json}}</pre>-->
+  <!--<div>
+    <pre>{{createGroup.createGroupService.model.ageRangeLookup | json}}</pre>
+    <pre>{{createGroup.createGroupService.model.typeIDLookup | json}}</pre>
+    <pre>{{createGroup.createGroupService.model.sitesIDLookup | json}}</pre>
+    <pre>{{createGroup.createGroupService.model.meetingDaysIDLookup | json}}</pre>
+    <pre>{{createGroup.profile | json}}</pre>
+    <pre>{{createGroup.fields | json}}</pre>
+  </div>-->
 </div>

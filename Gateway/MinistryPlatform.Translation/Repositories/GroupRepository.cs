@@ -165,11 +165,39 @@ namespace MinistryPlatform.Translation.Repositories
                 }
                 var g = new MpGroup();
 
+                object con = null;
+                groupDetails.TryGetValue("Congregation_ID", out con);
+                if (con != null)
+                {
+                    g.CongregationId = (int)con;
+                }
+
+                object kw = null;
+                groupDetails.TryGetValue("Kids_Welcome", out kw);
+                if (kw != null)
+                {
+                    g.KidsWelcome = (Boolean)kw;
+                }
+
+                object c = null;
+                groupDetails.TryGetValue("Primary_Contact", out c);
+                if (c != null)
+                {
+                    g.ContactId = (int)c;
+                }
+
                 object gid = null;
                 groupDetails.TryGetValue("Group_ID", out gid);
                 if (gid != null)
                 {
                     g.GroupId = (int) gid;
+                }
+
+                object gg = null;
+                groupDetails.TryGetValue("Description", out gg);
+                if (gg != null)
+                {
+                    g.GroupDescription = (string)gg;
                 }
 
                 object gn = null;
@@ -643,6 +671,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 GroupId = record.ToInt("Group_ID"),
                 CongregationId = record.ToInt("Congregation_ID"),
+                KidsWelcome = (record.ContainsKey("Kids_Welcome") ? record["KidsWelcome"] as bool? : null),
                 Name = record.ToString("Group_Name"),
                 GroupRoleId = record.ToInt("Group_Role_ID"),
                 GroupDescription = record.ToString("Description"),

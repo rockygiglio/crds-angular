@@ -35,9 +35,27 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.create.preview', {
+      url: '/groups/create/preview',
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Preview a Group',
+          description: ''
+        }
+      }
+    })
     .state('grouptool.detail', {
       parent: 'noSideBar',
       url: '/groups/mygroups/detail/{groupId:int}',
+      params: {
+        groupId: {
+          value: null,
+          squash: true
+        }
+      },
       template: '<group-detail></group-detail>',
       data: {
         isProtected: true,
@@ -49,7 +67,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail.about', {
       url: '/about',
-      template: '<group-detail-about></group-detail-about>'      
+      template: '<group-detail-about></group-detail-about>'
     })
     .state('grouptool.detail.participants', {
       url: '/participants',

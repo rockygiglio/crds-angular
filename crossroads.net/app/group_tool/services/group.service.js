@@ -47,7 +47,7 @@ export default class GroupService {
 
   getMyGroups() {
     let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
-                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
 
     return promised.then((data) => {
       let groups = data.map((group) => {
@@ -149,7 +149,7 @@ export default class GroupService {
 
   getInquiries(groupId) {
     let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
-                          query({groupId: groupId}).$promise
+                          query({groupId: groupId}).$promise;
 
     return promised.then((data) => {
       let inquiries = data.map((inquiry) => {
