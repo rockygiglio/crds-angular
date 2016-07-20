@@ -9,10 +9,11 @@ import GroupType from '../model/groupType';
 
 export default class CreateGroupService {
     /*@ngInject*/
-    constructor($log, Profile, GroupService) {
+    constructor($log, Profile, GroupService, Session) {
         this.log = $log;
         this.profile = Profile;
         this.groupService = GroupService;
+        this.session = Session;
         this.model = {};
 
         this.groupService.getProfileData().then((data) => {
@@ -354,7 +355,7 @@ export default class CreateGroupService {
                 }
             }]
         };
-        
+
         var groupCategoryFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -455,11 +456,11 @@ export default class CreateGroupService {
     {
       let smallGroup = new SmallGroup();
       smallGroup.groupName = this.model.group.groupName;
-// TODO more data on participant??
       smallGroup.participants = [new Participant( {
           groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
           ,nickName: this.model.profile.nickName
           ,lastName: this.model.profile.lastName
+          ,contactId: parseInt(this.session.exists('userId'))
           }
       )];
       smallGroup.groupDescription = this.model.group.groupDescription;
@@ -488,18 +489,17 @@ export default class CreateGroupService {
       smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
       smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
       smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-// TODO also set congregationId on the profile
       smallGroup.congregationId = this.model.profile.congregationId;
-// TODO userid is on $root
       smallGroup.contactId = '';
       smallGroup.startDate = this.model.group.startDate;
       smallGroup.availableOnline = this.model.group.availableOnline;
+      smallGroup.contactId = parseInt(this.session.exists('userId'));
 
 // TODO singleAttributes and multiAttributes
 
       return smallGroup;
     }
-
+// TODO also set congregationId on the profile
 // TODO map profile object
     //mapProfile() {
 

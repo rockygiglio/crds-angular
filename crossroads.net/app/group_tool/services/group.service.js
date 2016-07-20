@@ -106,12 +106,12 @@ export default class GroupService {
   removeGroupParticipant(groupId, participant) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
                           delete({
-                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
+                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS,
                             groupId: groupId,
                             groupParticipantId: participant.groupParticipantId,
                             removalMessage: participant.deleteMessage
                           }).$promise;
-    
+
     return promise.then((data) => {
         return data;
       }, (err) => {
@@ -122,7 +122,7 @@ export default class GroupService {
   getInvities(groupId) {
     let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
                           query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
-                          
+
     return promised.then((data) => {
       let invitations = data.map((invitation) => {
         invitation.imageUrl = this.imgService.DefaultProfileImage;
@@ -153,4 +153,27 @@ export default class GroupService {
       throw err;
     });
   }
+
+  saveCreateGroupForm(smallGroup) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group`)
+                          .save({}, smallGroup).$promise;
+debugger;
+    return promise.then((data) => {
+        this.saveParticipant(smallGroup.particpants, data.groupId);
+      }, (err) => {
+        throw err;
+      });
+  }
+
+    saveParticipant(participants, groupId) {
+debugger;
+      let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
+                          .save({groupId: groupId}, participants).$promise;
+
+      return promise.then((data) => {
+      }, (err) => {
+        throw err;
+      });
+  }
+
 }
