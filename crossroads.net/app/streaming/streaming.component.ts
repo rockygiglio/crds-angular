@@ -6,7 +6,7 @@ var WOW = require('wow.js/dist/wow.min.js');
 @Component({
   selector: 'streaming',
   directives: [ScheduleComponent],
-  templateUrl: './streaming.component.html'
+  templateUrl: './streaming.ng2component.html'
 })
 
 export class StreamingComponent {

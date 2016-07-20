@@ -89,6 +89,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
+
+
         [ResponseType(typeof(List<FamilyMember>))]
         [Route("api/childcare/eligible-children")]
         [AcceptVerbs("GET")]
@@ -132,6 +134,33 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
                 
+            });
+        }
+
+        [Route("api/childcare/updaterequest")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult UpdateChildcareRequest([FromBody] ChildcareRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Update Request Data Invalid", new InvalidOperationException("Invalid Save request Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _childcareService.UpdateChildcareRequest(request, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Update Childcare Request Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
             });
         }
 
@@ -217,7 +246,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
+                    var apiError = new ApiErrorDto("Get Childcare Request Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
