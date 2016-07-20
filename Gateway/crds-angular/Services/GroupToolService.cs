@@ -28,8 +28,11 @@ namespace crds_angular.Services
         private readonly int _domainId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
+        private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
         private const string GroupToolApproveInquiryEmailTemplateText = "groupToolApproveInquiryEmailTemplateText";
+        private const string GroupToolApproveInquirySubjectTemplateText = "groupToolApproveInquirySubjectTemplateText";
         private const string GroupToolDenyInquiryEmailTemplateText = "groupToolDenyInquiryEmailTemplateText";
+        private const string GroupToolDenyInquirySubjectTemplateText = "groupToolDenyInquirySubjectTemplateText";
 
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
@@ -52,6 +55,7 @@ namespace crds_angular.Services
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
         }
 
@@ -118,6 +122,7 @@ namespace crds_angular.Services
                                               groupParticipantId,
                                               groups.FirstOrDefault(),
                                               _removeParticipantFromGroupEmailTemplateId,
+                                              GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
                                               me);
@@ -139,7 +144,7 @@ namespace crds_angular.Services
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
+        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
         {
             var participant = group.Participants.Find(p => p.GroupParticipantId == groupParticipantId);
 
@@ -164,10 +169,12 @@ namespace crds_angular.Services
                     }
                 };
 
+            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content;
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
             mergeData["Email_Template_Text"] = emailTemplateText;
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
+            mergeData["Subject_Template_Text"] = subjectTemplateText;
             mergeData["Group_Name"] = group.GroupName;
             mergeData["Group_Description"] = group.GroupDescription;
             if (fromParticipant != null)
@@ -238,6 +245,7 @@ namespace crds_angular.Services
 
             //TODO:: Update template id
             SendApproveDenyInquiryEmail(
+                true,
                 groupId,
                 group,
                 inquiry,
@@ -262,6 +270,7 @@ namespace crds_angular.Services
 
             //TODO:: Update template id
             SendApproveDenyInquiryEmail(
+                false,
                 groupId,
                 group, 
                 inquiry, 
@@ -271,16 +280,18 @@ namespace crds_angular.Services
                 message);
         }
 
-        private void SendApproveDenyInquiryEmail(int groupId, GroupDTO group, Inquiry inquiry, Participant me, int emailTemplateId, string emailTemplateContentBlockTitle, string message)
+        private void SendApproveDenyInquiryEmail(bool approve, int groupId, GroupDTO group, Inquiry inquiry, Participant me, int emailTemplateId, string emailTemplateContentBlockTitle, string message)
         {
             try
             {
+                var subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
                 var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
                 SendGroupParticipantEmail(groupId,
                                           participant.ParticipantId,
                                           group,
                                           emailTemplateId,
+                                          subject,
                                           emailTemplateContentBlockTitle,
                                           message,
                                           me);
