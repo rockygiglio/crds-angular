@@ -173,7 +173,6 @@ export default class CreateGroupService {
                             let sortedResponse = _.sortBy(response, function (day) {return day.dp_RecordID;});
                             $scope.to.options = sortedResponse;
                             CreateGroupService.meetingDaysLookup = response;
-                            debugger;
                             return response;
                         });
                     }
