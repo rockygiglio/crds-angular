@@ -19,7 +19,7 @@ export class ScheduleComponent implements OnInit {
   constructor(private streamspotService: StreamspotService) { }
 
   ngOnInit() {
-    this.streamspotService.byDate()
+    this.streamspotService.getEventsByDate()
       .then(events => {
         this.events = events
       })
