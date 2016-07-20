@@ -40,8 +40,8 @@ describe('Group Inquiry', () => {
       expect(inquiry.groupId).toBeUndefined();
       expect(inquiry.emailAddress).toBeUndefined();
       expect(inquiry.phoneNumber).toBeUndefined();
-      expect(inquiry.firstName).toBeUndefined();
-      expect(inquiry.lastName).toBeUndefined();
+      expect(inquiry.firstName).toEqual('');
+      expect(inquiry.lastName).toEqual('');
       expect(inquiry.requestDate).toBeUndefined();
       expect(inquiry.placed).toBeUndefined();
       expect(inquiry.inquiryId).toBeUndefined();

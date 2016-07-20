@@ -70,6 +70,12 @@ namespace crds_angular.Models.Crossroads
         /// </summary>
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
+
+        /// <summary>
+        /// The contact ID of the inquirier's record.
+        /// </summary>
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
     }
 
 }

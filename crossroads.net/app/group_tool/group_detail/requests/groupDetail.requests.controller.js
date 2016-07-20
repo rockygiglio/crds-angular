@@ -1,7 +1,9 @@
+
 import CONSTANTS from 'crds-constants';
 import GroupInvitation from '../../model/groupInvitation';
 
 export default class GroupDetailRequestsController {
+  
   /*@ngInject*/
   constructor(GroupService, $state, $rootScope, $log) {
     this.groupService = GroupService;
@@ -13,106 +15,114 @@ export default class GroupDetailRequestsController {
     this.ready = false;
     this.error = false;
     this.currentView = 'List';
-    this.currentRequest = null;
-    this.invite = null;
-    this.groupParticipantRoles = [
-      { 'id': CONSTANTS.GROUP.ROLES.MEMBER, 'label': 'Participant' },
-      { 'id': CONSTANTS.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
-      { 'id': CONSTANTS.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
-    ];
-
-    this.processing = false;
     this.invited = [];
     this.inquired = [];
+
+    this.selectedInquiry = null;
+    this.processing = false;
   }
 
   $onInit() {
+    this.getRequests();
+  }
+
+  getRequests() {
     this.ready = false;
     this.error = false;
 
     this.groupService.getInquiries(this.groupId).then((inquiries) => {
-      this.inquired = inquiries;
+      this.inquired = inquiries.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
 
       this.groupService.getInvities(this.groupId).then((invitations) => {
         this.invited = invitations;
         this.ready = true;
       },
       (err) => {
+        this.rootScope.$emit('notify', `Unable to get group invitations: ${err.status} - ${err.statusText}`);
         this.log.error(`Unable to get group invitations: ${err.status} - ${err.statusText}`);
         this.error = true;
         this.ready = true;
       });
     },
     (err) => {
+      this.rootScope.$emit('notify', `Unable to get group inquiries: ${err.status} - ${err.statusText}`);
       this.log.error(`Unable to get group inquiries: ${err.status} - ${err.statusText}`);
       this.error = true;
       this.ready = true;
     });
   }
 
-  setView(newView) {
-    this.currentView = newView;
+  approve(inquiry) {
+    this.selectedInquiry = inquiry;
+    this.selectedInquiry.message = '';
+    this.setView('Approve', false);
   }
 
-  beginInvitation() {
-    this.processing = false;
-    this.invite = new GroupInvitation();
-    this.invite.sourceId = this.groupId;
-    this.currentView = 'Invite';
-  }
-    
-  sendInvitation(form, invitation) {
+  submitApprove(person) {
+    this.log.info(`Approving inquiry: ${JSON.stringify(person)}`);
     this.processing = true;
-    if(!form.$valid) {
-      this.processing = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      return;
-    }
-    invitation.requestDate = new Date();
 
-    this.groupService.sendGroupInvitation(invitation).then(
-      (/*data*/) => {
-        this.invite = null;
-        this.$onInit();
-        this.currentView = 'List';
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-      },
-      (/*err*/) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
-      }
-    ).finally(() => {
+    this.groupService.approveDenyInquiry(this.groupId, true, person).then(() => {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolApproveInquirySuccessGrowler);
+      this.setView('List', true);
+    },
+    (err) => {
+      this.log.error(`Unable to deny group Inquiry: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolApproveInquiryFailureGrowler);
+    }).finally(() => {
       this.processing = false;
     });
   }
 
-  getInquiring() {
-    return this.inquired.filter(function (inquiry) { return inquiry.placed === null || inquiry.placed === undefined; });
-  }
-    
-  //////TODO////////////////////////////////////
-  /*
-  beginApproveRequest(request) {
-    this.currentRequest = request;
-    this.currentView = 'Approve';    
-  }
-    
-  approveRequest(request) {
-    // TODO Call API to approve request, send email, etc
-    _.remove(this.data.requests, request);
-    this.currentRequest = null;
-    this.currentView = 'List';
+  deny(inquiry) {
+    this.selectedInquiry = inquiry;
+    this.selectedInquiry.message = '';
+    this.setView('Deny', false);
   }
 
-  beginDenyRequest(request) {
-    this.currentRequest = request;
-    this.currentView = 'Deny';    
+  submitDeny(person) {
+    this.log.info(`Denying inquiry: ${JSON.stringify(person)}`);
+    this.processing = true;
+
+    this.groupService.approveDenyInquiry(this.groupId, false, person).then(() => {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInquirySuccessGrowler);
+      this.setView('List', true);
+    },
+    (err) => {
+      this.log.error(`Unable to deny group Inquiry: ${err.status} - ${err.statusText}`);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInquiryFailureGrowler);
+    }).finally(() => {
+      this.processing = false;
+    });
   }
-    
-  denyRequest(request) {
-    // TODO Call API to deny request, send email, etc
-    _.remove(this.data.requests, request);
-    this.currentRequest = null;
-    this.currentView = 'List';
+
+  cancel(inquiry) {
+    inquiry.message = undefined;
+    this.selectedInquiry = undefined;
+    this.setView('List', false);
   }
-  */
+
+  setView(newView, refresh) {
+    this.currentView = newView;
+
+    if(refresh) {
+      this.getRequests();
+    }
+  }
+
+  listView() {
+    return this.currentView === 'List';
+  }
+
+  inviteView() {
+    return this.currentView === 'Invite';
+  }
+
+  approveView() {
+    return this.currentView === 'Approve';
+  }
+
+  denyView() {
+    return this.currentView === 'Deny';
+  }
 }

@@ -17,6 +17,7 @@ namespace crds_angular.Services
     {
 
         private readonly IGroupToolRepository _groupToolRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IGroupService _groupService;
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
@@ -27,11 +28,17 @@ namespace crds_angular.Services
         private readonly int _domainId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
+        private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
+        private const string GroupToolApproveInquiryEmailTemplateText = "groupToolApproveInquiryEmailTemplateText";
+        private const string GroupToolApproveInquirySubjectTemplateText = "groupToolApproveInquirySubjectTemplateText";
+        private const string GroupToolDenyInquiryEmailTemplateText = "groupToolDenyInquiryEmailTemplateText";
+        private const string GroupToolDenyInquirySubjectTemplateText = "groupToolDenyInquirySubjectTemplateText";
 
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupToolService));
 
         public GroupToolService(
                            IGroupToolRepository groupToolRepository,
+                           IGroupRepository groupRepository,
                            IGroupService groupService,
                            IParticipantRepository participantRepository,
                            ICommunicationRepository communicationRepository,
@@ -40,6 +47,7 @@ namespace crds_angular.Services
         {
 
             _groupToolRepository = groupToolRepository;
+            _groupRepository = groupRepository;
             _groupService = groupService;
             _participantRepository = participantRepository;
             _communicationRepository = communicationRepository;
@@ -47,6 +55,7 @@ namespace crds_angular.Services
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
         }
 
@@ -88,21 +97,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
-
-                if (groups == null || !groups.Any())
-                {
-                    throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
-                }
-
-                var groupParticipants = groups.FirstOrDefault().Participants;
-                var me = _participantRepository.GetParticipantRecord(token);
-
-                if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                    groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
-                {
-                    throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
-                }
+                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -110,11 +105,12 @@ namespace crds_angular.Services
                 {
                     SendGroupParticipantEmail(groupId,
                                               groupParticipantId,
-                                              groups.FirstOrDefault(),
+                                              myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
+                                              GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
-                                              me);
+                                              myGroup.Me);
                 }
                 catch (Exception e)
                 {
@@ -133,7 +129,7 @@ namespace crds_angular.Services
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
+        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
         {
             var participant = group.Participants.Find(p => p.GroupParticipantId == groupParticipantId);
 
@@ -158,10 +154,12 @@ namespace crds_angular.Services
                     }
                 };
 
+            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content;
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
             mergeData["Email_Template_Text"] = emailTemplateText;
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
+            mergeData["Subject_Template_Text"] = subjectTemplateText;
             mergeData["Group_Name"] = group.GroupName;
             mergeData["Group_Description"] = group.GroupDescription;
             if (fromParticipant != null)
@@ -184,5 +182,125 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
 
+        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
+        {
+            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
+
+            if (group == null)
+            {
+                throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for user", groupId));
+            }
+
+            var groupParticipants = group.Participants;
+            var me = _participantRepository.GetParticipantRecord(token);
+
+            if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
+                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+            {
+                throw new NotGroupLeaderException(string.Format("User is not a leader of group {0}", groupId));
+            }
+
+            return new MyGroup
+            {
+                Group = group,
+                Me = me
+            };
+        }
+
+        public void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null)
+        {
+            try
+            {
+                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+
+                if (approve)
+                {
+                    ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
+                }
+                else
+                {
+                    DenyInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
+                }
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not add Inquirier {0} from group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
+
+        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
+        {
+            _groupService.addContactToGroup(groupId, inquiry.ContactId);
+            _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
+
+            try
+            {
+                //TODO:: Update template id
+                SendApproveDenyInquiryEmail(
+                    true,
+                    groupId,
+                    group,
+                    inquiry,
+                    me,
+                    _removeParticipantFromGroupEmailTemplateId,
+                    GroupToolApproveInquiryEmailTemplateText,
+                    message);
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
+
+        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
+        {
+            _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
+
+            try
+            {
+                //TODO:: Update template id
+                SendApproveDenyInquiryEmail(
+                    false,
+                    groupId,
+                    group,
+                    inquiry,
+                    me,
+                    _removeParticipantFromGroupEmailTemplateId,
+                    GroupToolDenyInquiryEmailTemplateText,
+                    message);
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
+
+        private void SendApproveDenyInquiryEmail(bool approve, int groupId, GroupDTO group, Inquiry inquiry, Participant me, int emailTemplateId, string emailTemplateContentBlockTitle, string message)
+        {
+            try
+            {
+                var subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
+                var participant = _participantRepository.GetParticipant(inquiry.ContactId);
+
+                SendGroupParticipantEmail(groupId,
+                                          participant.ParticipantId,
+                                          group,
+                                          emailTemplateId,
+                                          subject,
+                                          emailTemplateContentBlockTitle,
+                                          message,
+                                          me);
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(string.Format("Could not send email to Inquirer {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
+            }
+        }
     }
 }

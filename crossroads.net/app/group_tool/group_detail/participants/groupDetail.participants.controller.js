@@ -81,22 +81,23 @@ export default class GroupDetailParticipantsController {
 
   beginRemoveParticipant(participant) {
     this.deleteParticipant = participant;
-    this.deleteParticipant.deleteMessage = '';
+    this.deleteParticipant.message = '';
     this.setDeleteView();
   }
 
   cancelRemoveParticipant(participant) {
-    participant.deleteMessage = undefined;
+    participant.message = undefined;
     this.deleteParticipant = undefined;
     this.setEditView();
   }
 
-  removeParticipant(participant) {
-    this.log.info(`Deleting participant: ${JSON.stringify(participant)}`);
+  removeParticipant(person) {
+    this.log.info(`Deleting participant: ${JSON.stringify(person)}`);
     this.processing = true;
-    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
+
+    this.groupService.removeGroupParticipant(this.groupId, person).then(() => {
       _.remove(this.data, function(p) {
-          return p.groupParticipantId === participant.groupParticipantId;
+          return p.groupParticipantId === person.groupParticipantId;
       });
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
       this.setListView();
