@@ -94,7 +94,7 @@ export default class GroupDetailParticipantsController {
   removeParticipant(person) {
     this.log.info(`Deleting participant: ${JSON.stringify(person)}`);
     this.processing = true;
-    debugger;
+
     this.groupService.removeGroupParticipant(this.groupId, person).then(() => {
       _.remove(this.data, function(p) {
           return p.groupParticipantId === person.groupParticipantId;
