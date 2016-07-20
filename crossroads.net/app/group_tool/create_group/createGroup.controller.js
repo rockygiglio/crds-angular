@@ -30,6 +30,5 @@ export default class CreateGroupController {
 
         this.fields = this.createGroupService.getFields();
 
-
     }
 }
