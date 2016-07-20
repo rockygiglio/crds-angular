@@ -568,30 +568,5 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
-        public void SendAllGroupParticipantsEmail(string token, int groupId, int groupLeaderUserId, string subject, string message)
-        {
-            var groupParticipants = GetGroupParticipants(groupId);
-            var groupLeaderContactId = _userRepository.GetContactIdByUserId(groupLeaderUserId);
-
-            foreach (var groupParticipant in groupParticipants)
-            {
-                EmailCommunicationDTO emailDto = new EmailCommunicationDTO
-                {
-                    FromContactId = groupLeaderContactId, 
-                    FromUserId = groupLeaderUserId,
-                    ToContactId = groupParticipant.ContactId,
-                    TemplateId = 13356
-                };
-
-                try
-                {
-                    _emailCommunicationService.SendEmail(emailDto);
-                }
-                catch (Exception ex)
-                {
-                    //logger.Error(string.Format("Could not send email for Group ", JsonConvert.SerializeObject(username, Formatting.Indented)), ex);
-                }
-            }
-        }
     }
 }

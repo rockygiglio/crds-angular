@@ -1,9 +1,19 @@
 
 export default class MessageParticipantsController {
   /*@ngInject*/
-  constructor() {  }
+  constructor($rootScope) {
+    this.rootScope = $rootScope
+  }
 
-  submit(message) {
+  submit(form, message) {
+
+    if(!form.$valid) {
+      debugger;
+      this.processing = false;
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      return;
+    }
+
     this.submitAction({message: message});
   }
 

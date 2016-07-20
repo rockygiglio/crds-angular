@@ -13,5 +13,6 @@ namespace crds_angular.Services.Interfaces
         void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null);
 
         void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle = null, string customMessage = null, Participant fromParticipant = null);
+        void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
     }
 }

@@ -314,32 +314,6 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        /// <summary>
-        /// Send an email message to all members of a Group
-        /// Requires the user to be a leader of the Group
-        /// Will return a 404 if the user is not a Leader of the group
-        /// </summary>
-        [RequiresAuthorization]
-        [Route("api/group/{groupId}")]
-        public IHttpActionResult PostGroupMessage(int groupId, [FromBody] int groupLeaderUserId, [FromBody] string subject, [FromBody] string body)
-        {
-            return Authorized(token =>
-            {
-                try
-                {
-                    _groupService.SendAllGroupParticipantsEmail(token, groupId, groupLeaderUserId, subject, body);
-                    return Ok();
-                }
-                catch (InvalidOperationException)
-                {
-                    return (IHttpActionResult)NotFound();
-                }
-                catch (Exception ex)
-                {
-                    var apiError = new ApiErrorDto("Error sending a Group email for groupID " + groupId, ex);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
-        }
+        
     }
 }
