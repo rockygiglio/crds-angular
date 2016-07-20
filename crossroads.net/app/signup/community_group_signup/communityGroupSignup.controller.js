@@ -32,6 +32,7 @@
     vm.allSignedUp = allSignedUp;
     vm.alreadySignedUp = false;
     vm.atLeastOneParticipant = false;
+    vm.childCareEvents = undefined;
     vm.childCareAvailable = false;
     vm.childCareChange = childCareChange;
     vm.contactId = Session.exists('userId') !== undefined ? Session.exists('userId') : 0;
@@ -66,7 +67,15 @@
             groupId: vm.groupId
           }).$promise.then(function(response) {
             vm.response = response.SignUpFamilyMembers;
-            vm.childCareAvailable = response.childCareInd;
+            vm.groupEvents = response.events;
+            vm.childCareEvents = _.find(vm.groupEvents, function(i) {
+                    return i.eventType === "Childcare"                       
+            });
+
+            if(vm.childCareEvents != undefined){
+              vm.childCareAvailable = true;
+            }
+
             if (!response.waitListInd) {
               vm.viewReady = true;
             }
@@ -135,6 +144,7 @@
               vm.showContent = false;
               vm.showWaitList = false;
               vm.viewReady = true;
+
             }
           });
         } else {

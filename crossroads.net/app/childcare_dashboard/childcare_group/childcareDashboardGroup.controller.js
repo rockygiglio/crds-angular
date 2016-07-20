@@ -91,7 +91,11 @@ class ChildcareDashboardGroupController {
     return modalInstance.result;
   }
 
-  validateAndRsvp(child) {
+  validateAndRsvp(child, currentValue) {
+    if (this.isEventClosed() && currentValue === true) {
+      child.rsvpness = false;
+      return false;
+    }
     if (this.shouldAsk(child.rsvpness)) {
       this.showModal().then( () => {
         this.rsvp(child);

@@ -9,7 +9,14 @@ describe('GroupDetailInviteController', () => {
       rootScope,
       qApi;
 
+  var mockProfile;
+
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
+
+  beforeEach(angular.mock.module(($provide)=> {
+    mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+    $provide.value('Profile', mockProfile);
+  }));
 
   beforeEach(inject(function($injector) {
     groupService = $injector.get('GroupService'); 
