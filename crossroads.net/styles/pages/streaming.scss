@@ -1,6 +1,3 @@
-// TODO Replace w/ CRDS endpoint once we have images in production S3 bucket.
-$streaming-imgix-domain: '//crds-cms-uploads.imgix.net/content/images';
-
 // NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
 $streaming-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
 $streaming-font-sans: "acumin-pro", sans-serif;
@@ -12,64 +9,14 @@ $streaming-blue: #0795E3;
 
 // ----------------------------------------- ###
 
-@mixin crds-jumbotron {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  h1, h2 {
-    margin-bottom: 1em;
-  }
-  > div {
-    padding: 1em;
-    @media (min-width: $screen-md-min) {
-      width: 50%;
-    }
-  }
-  .btn {
-    margin-top: 1em;
-  }
+@mixin crds-make-condensed {
+  font-family: $streaming-font-extra_cond;
+  font-size: 170%;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  line-height: 100%;
 }
-
-@mixin crds-card {
-  section, figcaption {
-    position: relative;
-    top: -1.25em;
-  }
-  section {
-    margin-top: -0.5em;
-    padding: 0 1.7em;
-    &:before {
-      content: "\2014";
-      color: lighten($gray, 20%);
-    }
-  }
-  figcaption {
-    font-family: $streaming-font-extra_cond;
-    display: inline-block;
-    text-transform: uppercase;
-    margin: 0 1em 0 0.5em;
-    padding: 0.15em 0.45em;
-    max-width: 80%;
-    font-weight: 600;
-    font-size: 210%;
-    line-height: 100%;
-    letter-spacing: -0.032em;
-    background: #FFF;
-  }
-  a {
-    color: $gray;
-  }
-  h3 {
-    font-size: 110%;
-    margin: 0.3em 0 0.3em;
-  }
-  p {
-    font-size: 90%;
-  }
-}
-
-// ----------------------------------------- ###
 
 streaming {
 
@@ -207,7 +154,6 @@ streaming {
   }
 
   .intro {
-    @include crds-jumbotron();
     background-color: #2E2E30;
     background-repeat: no-repeat;
     background-position: center center;
@@ -296,11 +242,7 @@ streaming {
       margin-top: 2em;
 
       h3 {
-        font-family: $streaming-font-extra_cond;
-        font-size: 170%;
-        font-weight: 600;
-        letter-spacing: -0.025em;
-        text-transform: uppercase;
+        @include crds-make-condensed();
         margin: 0 0 0.45em;
       }
 
@@ -347,7 +289,6 @@ streaming {
       color: $gray;
     }
     article {
-      @include crds-card();
       @media only screen and (max-width:  $screen-md-min - 1){
         @include make-sm-column(6);
         &:nth-child(2n+1) {
@@ -375,6 +316,11 @@ streaming {
           display: block;
         }
       }
+    }
+
+    figcaption {
+      font-family: $streaming-font-extra_cond;
+      font-size: 210%;
     }
 
     figure > a {
@@ -446,7 +392,6 @@ streaming {
 
   .community {
     @include clearfix();
-    @include crds-jumbotron();
     background: #1D3C50;
     background-repeat: no-repeat;
     background-position: center center;
@@ -460,20 +405,18 @@ streaming {
   }
 
   .group-host {
-    header {
-      @include crds-jumbotron();
+    .crds-hero {
+      &, p, h1, h2 {
+        color: $gray;
+      }
     }
+
     article {
       margin-bottom: 3em;
       font-size: 90%;
       h3 {
+        @include crds-make-condensed();
         font-size: 200%;
-        text-transform: uppercase;
-        font-family: $streaming-font-extra_cond;
-        text-align: center;
-        @media (min-width: $screen-sm-min) {
-          text-align: left;
-        }
       }
     }
     .btns > a {
@@ -516,3 +459,144 @@ streaming {
   }
 
 } // streaming
+
+
+.live-stream {
+  display: block;
+  background: #101010;
+  background-size: cover;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 0 5em;
+  color: #FFF;
+
+  header {
+    margin-bottom: 2em;
+  }
+
+  h2 {
+    color: darken(#FFF, 70%);
+    font-family: $streaming-font-sans;
+    font-weight: 300;
+    font-size: 170%;
+    letter-spacing: -0.05em;
+  }
+
+  .dark-bg {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: #000;
+    .video-player {
+      margin: 0 auto;
+    }
+  }
+
+  @media (min-width: $screen-sm) {
+    .related {
+      @include make-sm-column(7);
+    }
+    .participate {
+      @include make-sm-column(4);
+      @include make-sm-column-offset(1);
+    }
+  }
+
+  .related {
+    a {
+      color: #FFF;
+      &:hover {
+        color: darken(#FFF, 20%);
+      }
+    }
+    figure {
+      @include make-xs-column(6);
+      margin-bottom: 2em;
+      position: relative;
+      figcaption {
+        @include crds-make-condensed();
+        @media (min-width: $screen-sm-min) {
+          position: absolute;
+          bottom: 0.75em;
+          left: 1em;
+        }
+      }
+    }
+
+    .gradient {
+      position: relative;
+      display:inline-block;
+      &:after {
+        @include gradient-vertical(rgba(0,0,0,0.2), rgba(0,0,0,0.8), 40%, 100%);
+        content:'';
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        display:inline-block;
+      }
+      img {
+        display: block;
+      }
+    }
+  }
+
+  .participate {
+    @media (min-width: $screen-md-min) {
+      figure {
+        @include make-md-column(4);
+      }
+      article {
+        @include make-md-column(8);
+      }
+    }
+
+    margin-bottom: 3em;
+    font-family: $streaming-font-sans;
+    font-size: 88%;
+
+    h3 {
+      @include crds-make-condensed();
+      margin: 0 0 0.3em;
+      color: #FFF;
+    }
+    hr {
+      margin-top: 0;
+      border-color: darken($gray, 10%);
+    }
+    figure {
+      margin-bottom: 1em;
+      padding-left: 0;
+    }
+  }
+
+  .how-many-people {
+    background: #000;
+    margin-bottom: 1em;
+    color: $gray-light;
+    .btn-step {
+      @include button-variant($gray-light, #000, $gray-light);
+      padding: 0.8em;
+      font-weight: 300;
+    }
+    .btn-group {
+      margin: 0 0.75em 0 0.5em;
+    }
+    .btn {
+      padding-top: 0.15em;
+      padding-bottom: 0.15em;
+    }
+    .vr {
+      display: inline-block;
+      position: relative;
+      top: 0.4em;
+      &:before {
+        @include rotate(-90deg);
+        display: inline-block;
+        content: '\2014';
+        font-size: 190%;
+        font-weight: 100;
+      }
+    }
+  }
+} // .live-stream

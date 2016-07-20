@@ -5,7 +5,10 @@ import { Event } from './event';
 import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
 
-declare var moment: any;
+var moment = require('moment-timezone');
+//var moment = require('moment/min/moment.min.js');
+//declare var moment: any;
+
 declare var _: any;
 
 @Component({
@@ -65,7 +68,7 @@ export class CountdownComponent implements OnInit {
     return value < 10 ? `0${value}`: `${value}`;
   }
 
-  private parseEvent() {
+  parseEvent() {
     this.isCountdown = moment().tz(moment.tz.guess()).isBefore(this.event.start);
     this.isBroadcasting = !this.isCountdown && moment().tz(moment.tz.guess()).isBefore(this.event.end);
 

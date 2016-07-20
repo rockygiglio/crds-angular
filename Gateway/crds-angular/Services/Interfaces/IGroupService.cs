@@ -17,6 +17,8 @@ namespace crds_angular.Services.Interfaces
 
         void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants);
 
+        void addContactToGroup(int groupId, int contactId);
+
         void endDateGroupParticipant(int groupId, int groupParticipantId);
 
         List<Event> GetGroupEvents(int groupId, string token = null);

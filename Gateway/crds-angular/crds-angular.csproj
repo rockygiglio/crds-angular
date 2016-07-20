@@ -320,6 +320,7 @@
     <Compile Include="Models\Crossroads\Events\EventRsvpDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupDTO.cs" />
     <Compile Include="Models\Crossroads\Groups\GroupParticipantDTO.cs" />
+    <Compile Include="Models\Crossroads\Groups\MyGroup.cs" />
     <Compile Include="Models\Crossroads\Groups\SignUpFamilyMembers.cs" />
     <Compile Include="Models\Crossroads\Inquiry.cs" />
     <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />

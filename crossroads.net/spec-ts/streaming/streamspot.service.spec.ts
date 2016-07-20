@@ -6,7 +6,6 @@ import { StreamspotService } from '../../app/streaming/streamspot.service';
 import { Event } from '../../app/streaming/event';
 
 var moment = require('moment/min/moment.min.js');
-//declare var moment: any;
 
 describe('Service: StreamspotService', () => {
   let service: StreamspotService;
