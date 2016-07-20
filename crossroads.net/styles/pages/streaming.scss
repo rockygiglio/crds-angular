@@ -9,6 +9,15 @@ $streaming-blue: #0795E3;
 
 // ----------------------------------------- ###
 
+@mixin crds-make-condensed {
+  font-family: $streaming-font-extra_cond;
+  font-size: 170%;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  line-height: 100%;
+}
+
 streaming {
 
   font-family: $streaming-font-sans;
