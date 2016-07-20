@@ -243,17 +243,17 @@ export default class CreateGroupService {
                     key: 'group.meeting.childcare',
                     type: 'radio',
                     templateOptions: {
-                        label: 'Are you interested in leading a group with chilcare options?',
+                        label: 'Will your group have childcare?',
                         labelProp: 'label',
                         valueProp: 'childcare',
                         inline: false,
                         options: [{
-                            label: 'Kids welcome at the group.',
+                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
                             childcare: true
                         }, {
-                                label: 'No. (Parents are welcome, but make your own kid plans.)',
-                                childcare: false
-                            }]
+                            label: 'No. Adults only please.',
+                            childcare: false
+                        }]
                     }
                 }]
         };
