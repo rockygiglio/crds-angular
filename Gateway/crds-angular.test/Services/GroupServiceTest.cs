@@ -150,7 +150,6 @@ namespace crds_angular.test.Services
             {
                 ParticipantId = 789
             };
-            const int groupParticipantId = 987;
 
             var ex = new ApplicationException("DOH!!!!!");
 
