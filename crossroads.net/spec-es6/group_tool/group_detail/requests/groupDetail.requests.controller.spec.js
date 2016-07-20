@@ -11,10 +11,17 @@ describe('GroupDetailRequestsController', () => {
         log,
         qApi;
 
+    var mockProfile;
+
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
+    beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
+    }));
+
     beforeEach(inject(function($injector) {
-        groupService = $injector.get('GroupService'); 
+        groupService = $injector.get('GroupService');
         state = $injector.get('$state');
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
@@ -136,7 +143,7 @@ describe('GroupDetailRequestsController', () => {
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.emailSent);
         expect(fixture.$onInit).toHaveBeenCalled();
       });
-      
+
     });
 
     describe('$onInit() function', () => {
