@@ -88,7 +88,7 @@ describe('GroupDetailParticipantsController', () => {
         let participant = new Participant();
         fixture.beginRemoveParticipant(participant);
         expect(fixture.deleteParticipant).toBe(participant);
-        expect(fixture.deleteParticipant.deleteMessage).toEqual('');
+        expect(fixture.deleteParticipant.message).toEqual('');
         expect(fixture.isDeleteView()).toBeTruthy();
       });
     });
@@ -96,10 +96,10 @@ describe('GroupDetailParticipantsController', () => {
     describe('cancelRemoveParticipant() function', () => {
       it('should unset properties', () => {
         let participant = new Participant();
-        participant.deleteMessage = 'delete';
+        participant.message = 'delete';
         fixture.cancelRemoveParticipant(participant);
         expect(fixture.deleteParticipant).not.toBeDefined();
-        expect(participant.deleteMessage).not.toBeDefined();
+        expect(participant.message).not.toBeDefined();
         expect(fixture.isEditView()).toBeTruthy();
       });
     });

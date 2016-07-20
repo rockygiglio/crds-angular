@@ -30,11 +30,17 @@
 
 <!-- Delete a participant -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView()'>
-  <remove-participant
-    participant='groupDetailParticipants.deleteParticipant'
-    cancel-action='groupDetailParticipants.cancelRemoveParticipant(participant)'
-    submit-action='groupDetailParticipants.removeParticipant(participant)'
-    processing='groupDetailParticipants.processing'/>
+  <group-message person="groupDetailParticipants.deleteParticipant"
+    normal-loading-text="Remove Participant"
+    loading-loading-text="Removing..."
+    header="Remove Participant - {{groupDetailParticipants.deleteParticipant.displayName()}}"
+    sub-header-text="groupToolRemoveParticipantSubheaderText"
+    contact-text="groupToolRemoveParticipantPleaseContactText"
+    email-template-text="groupToolRemoveParticipantEmailTemplateText"
+    cancel-action="groupDetailParticipants.cancelRemoveParticipant(person)"
+    submit-action="groupDetailParticipants.removeParticipant(person)"
+    processing="groupDetailParticipants.processing"
+    ></group-message>
 </div>
 
 <!-- Email participants -->

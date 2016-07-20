@@ -21,7 +21,7 @@ namespace crds_angular.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly ILog logger = LogManager.GetLogger(typeof (GroupService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof (GroupService));
 
         private readonly IGroupRepository _mpGroupService;
         private readonly IConfigurationWrapper _configurationWrapper;
@@ -92,8 +92,8 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = String.Format("Could not create group {0}", group.GroupName, e.Message);
-                logger.Error(message, e);
+                var message = String.Format("Could not create group {0}", group.GroupName);
+                _logger.Error(message, e);
                 throw (new ApplicationException(message, e));
             }
 
@@ -110,7 +110,7 @@ namespace crds_angular.Services
             catch (Exception e)
             {
                 var message = String.Format("Could not retrieve group details for group {0}: {1}", groupId, e.Message);
-                logger.Error(message, e);
+                _logger.Error(message, e);
                 throw (new ApplicationException(message, e));
             }
 
@@ -132,12 +132,12 @@ namespace crds_angular.Services
 
                 if (participant.capacityNeeded > 0)
                 {
-                    decrementCapacity(participant.capacityNeeded, group);
+                    DecrementCapacity(participant.capacityNeeded, group);
                 }
             }
             catch (Exception e)
             {
-                logger.Error("Could not add user to group", e);
+                _logger.Error("Could not add user to group", e);
                 throw;
             }
         }
@@ -158,7 +158,7 @@ namespace crds_angular.Services
             catch (Exception e)
             {
                 var message = String.Format("Could not retrieve group details for group {0}: {1}", groupId, e.Message);
-                logger.Error(message, e);
+                _logger.Error(message, e);
                 throw (new ApplicationException(message, e));
             }
 
@@ -184,20 +184,20 @@ namespace crds_angular.Services
 
                     if (participant.capacityNeeded > 0)
                     {
-                        decrementCapacity(participant.capacityNeeded, group);
+                        DecrementCapacity(participant.capacityNeeded, group);
                     }
 
-                    logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                    _logger.Debug("Added user - group/participant id = " + groupParticipantId);
 
                     // Now see what future events are scheduled for this group, and register the user for those
                     var events = _mpGroupService.getAllEventsForGroup(Convert.ToInt32(groupId));
-                    logger.Debug("Scheduled events for this group: " + events);
+                    _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {
                         foreach (var e in events)
                         {
                             _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
-                            logger.Debug("Added participant " + participant + " to group event " + e.EventId);
+                            _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
 
@@ -207,12 +207,10 @@ namespace crds_angular.Services
                         _mpGroupService.SendCommunityGroupConfirmationEmail(participantId, groupId, waitlist, participant.childCareNeeded);
                     }
                 }
-
-                return;
             }
             catch (Exception e)
             {
-                logger.Error("Could not add user to group", e);
+                _logger.Error("Could not add user to group", e);
                 throw;
             }
         }
@@ -227,17 +225,43 @@ namespace crds_angular.Services
             }
         }
 
-        private void decrementCapacity(int capacityNeeded, MpGroup group)
+        private void DecrementCapacity(int capacityNeeded, MpGroup group)
         {
             group.RemainingCapacity = group.RemainingCapacity - capacityNeeded;
-            logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
+            _logger.Debug("Remaining Capacity After decrement: " + capacityNeeded + " : " + group.RemainingCapacity);
             _mpGroupService.UpdateGroupRemainingCapacity(group);
+        }
+
+        public void addContactToGroup(int groupId, int contactId)
+        {
+            Participant participant;
+
+            try
+            {
+                participant = _participantService.GetParticipant(contactId);
+            }
+            catch (Exception e)
+            {
+                var message = string.Format("Could not retrieve particpant for contact {0}: {1}", contactId, e.Message);
+                _logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            try
+            {
+                _mpGroupService.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Could not add contact to group", e);
+                throw;
+            }
         }
 
         public List<Event> GetGroupEvents(int groupId, string token)
         {
             var eventTypes = _mpGroupService.GetEventTypesForGroup(groupId, token);
-            var events = new List<MinistryPlatform.Translation.Models.MpEvent>();
+            var events = new List<MpEvent>();
             foreach (var eventType in eventTypes.Where(eventType => !string.IsNullOrEmpty(eventType)))
             {
                 events.AddRange(_eventService.GetEvents(eventType, token));
@@ -275,7 +299,7 @@ namespace crds_angular.Services
                                                                                                         ParticipantId = p.ParticipantId
                                                                                                     }
                     ).ToList();
-                var evt = Mapper.Map<crds_angular.Models.Crossroads.Events.Event>(_eventService.GetEvent(eventId));
+                var evt = Mapper.Map<Event>(_eventService.GetEvent(eventId));
                 return _serveService.PotentialVolunteers(groupId, evt, groupMembers);
             }
             catch (Exception e)
@@ -327,7 +351,7 @@ namespace crds_angular.Services
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
                 if (events != null)
                 {
-                    detail.Events = events.Select(Mapper.Map<MinistryPlatform.Translation.Models.MpEvent, crds_angular.Models.Crossroads.Events.Event>).ToList();
+                    detail.Events = events.Select(Mapper.Map<MpEvent, Event>).ToList();
                 }
                 //the first instance of family must always be the logged in user
                 var fam = new SignUpFamilyMembers

@@ -11,7 +11,17 @@ namespace crds_angular.Services.Interfaces
         List<Inquiry> GetInquiries(int groupId, string token);
 
         void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null);
+        void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null);
 
-        void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string emailTemplateContentBlockTitle = null, string customMessage = null, Participant fromParticipant = null);
+        void SendGroupParticipantEmail(int groupId,
+                                       int groupParticipantId,
+                                       GroupDTO group,
+                                       int emailTemplateId,
+                                       string subjectTemplateContentBlockTitle = null,
+                                       string emailTemplateContentBlockTitle = null,
+                                       string message = null,
+                                       Participant fromParticipant = null);
+
+        MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId);
     }
 }
