@@ -109,8 +109,19 @@ export default class GroupService {
                             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
                             groupId: groupId,
                             groupParticipantId: participant.groupParticipantId,
-                            removalMessage: participant.deleteMessage
+                            removalMessage: participant.message
                           }).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  approveDenyInquiry(groupId, approve, inquiry) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
+                           save({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve}, inquiry).$promise;
     
     return promise.then((data) => {
         return data;

@@ -98,6 +98,79 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestAddContactToGroup()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+            var participant = new Participant
+            {
+                ParticipantId = 789
+            };
+            const int groupParticipantId = 987;
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+                .Returns(groupParticipantId);
+
+            fixture.addContactToGroup(groupId, contactId);
+            participantService.VerifyAll();
+            groupService.VerifyAll();
+        }
+
+        [Test]
+        public void TestAddContactToGroupCantGetParticipant()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+
+            var ex = new Exception("DOH!!!!!");
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Throws(ex);
+
+            try
+            {
+                fixture.addContactToGroup(groupId, contactId);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.AreSame(ex, e.InnerException);
+            }
+
+            participantService.VerifyAll();
+            groupService.VerifyAll();
+        }
+
+        [Test]
+        public void TestAddContactToGroupCantAddContact()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+            var participant = new Participant
+            {
+                ParticipantId = 789
+            };
+
+            var ex = new ApplicationException("DOH!!!!!");
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+                .Throws(ex);
+
+            try
+            {
+                fixture.addContactToGroup(groupId, contactId);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.AreSame(ex, e);
+            }
+            participantService.VerifyAll();
+            groupService.VerifyAll();
+        }
+
+        [Test]
         public void shouldThrowExceptionWhenAddingToCommunityGroupIfGetGroupDetailsFails()
         {
             Exception exception = new Exception("Oh no, Mr. Bill!");

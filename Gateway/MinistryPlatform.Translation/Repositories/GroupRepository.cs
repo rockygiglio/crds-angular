@@ -142,6 +142,16 @@ namespace MinistryPlatform.Translation.Repositories
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
         }
 
+        public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)
+        {
+            var apiToken = ApiLogin();
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("Group_Inquiry_ID", inquiryId);
+            dictionary.Add("Placed", approved);
+            dictionary.Add("Group_ID", groupId);
+            ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupInquiresSubPage"), dictionary, apiToken);
+        }
+
         public MpGroup getGroupDetails(int groupId)
         {
             return (WithApiLogin<MpGroup>(apiToken =>
