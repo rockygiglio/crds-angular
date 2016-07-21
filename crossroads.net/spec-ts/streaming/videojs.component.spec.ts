@@ -8,10 +8,10 @@ import { describe, it, expect, inject, beforeEach, addProviders, beforeEachProvi
 describe('Component: VideoJS', () => {
 
   beforeEachProviders(() => {
-	  return [
+    return [
       HTTP_PROVIDERS,
       StreamspotService
-	  ];
+    ];
   });
 
   it('should create the component with service successfully.',
