@@ -22,6 +22,7 @@ export default class CreateGroupService {
             meetingFrequencyDesc: 'Every other week'
         }];
         //this.statesLookup is added by the route resolve of the createGroupController.
+		//this.profileData is added by the route resolve of the createGroupController.
     }
 
     preloadModel() {
