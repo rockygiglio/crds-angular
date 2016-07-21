@@ -8,25 +8,40 @@ export default class GroupDetailAboutController {
     this.log = $log;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
-    this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
   }
 
   $onInit() {
-    this.groupService.getGroup(this.groupId).then((data) => {
-      this.data = data;
-      var primaryContactId = this.data.contactId;
-      this.data.primaryContact = {
-        imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-        contactId: primaryContactId
-      };
+    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+      this.groupId = this.state.params.groupId;
+      this.groupService.getGroup(this.groupId).then((data) => {
+        this.data = data;
+        var primaryContactId = this.data.contactId;
+        this.data.primaryContact = {
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+          contactId: primaryContactId
+        };
+        this.ready = true;
+      },
+      (err) => {
+        this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
+        this.error = true;
+        this.ready = true;
+      });
+    }
+    else {
+      //TODO map object posted from create into data object
       this.ready = true;
-    },
-    (err) => {
-      this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
-      this.error = true;
-      this.ready = true;
-    });
+    }
+  }
+
+  isGroupMember() {
+    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

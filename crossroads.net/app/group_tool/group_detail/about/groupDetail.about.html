@@ -12,13 +12,18 @@
         <div class='col-md-2'><strong>Group Name</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.groupName}}</div>
         <div class='col-md-2'><strong>Age Range</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.ageRange.name}}</div>
+        <div class='col-md-4'><span ng-repeat='range in groupDetailAbout.data.ageRange'>{{range.name}}<span ng-if='!$last'>,&nbsp;</span></span></div>
       </div>
       <div class='row'>
         <div class='col-md-2'><strong>Category</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.categoriesToString()}}</div>
+        <div class='col-md-4'>{{groupDetailAbout.data.categories.toString()}}</div>
         <div class='col-md-2'><strong>Where</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.meetingLocation()}}</div>
+         <div ng-if='groupDetailAbout.isGroupMember()'>
+           <div  class='col-md-4'>{{groupDetailAbout.data.address.toString()}}</div>
+        </div>
+        <div ng-if='!groupDetailAbout.isGroupMember()'>
+          <div  class='col-md-4'>{{groupDetailAbout.data.address.getZip()}}</div>
+        </div>
       </div>
       <div class='row'>
         <div class='col-md-2'><strong>Group Type</strong></div>
@@ -32,7 +37,7 @@
           <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='!$last'>,&nbsp;</span></span>
         </div>
         <div class='col-md-2'><strong>Childcare</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.childCareInd | yesNo}}</div>
+        <div class='col-md-4'>{{groupDetailAbout.data.kidsWelcome | yesNo}}</div>
       </div>
       <div class='row'>&nbsp;</div>
       <div class='row'>

@@ -1,3 +1,4 @@
+
 import CONSTANTS from '../../constants';
 
 export default class GroupInvitation {

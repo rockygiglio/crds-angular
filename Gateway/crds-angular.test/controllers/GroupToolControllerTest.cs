@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Moq;
@@ -76,6 +77,72 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
+        public void TestApproveDenyInquiryFromMyGroup()
+        {
+            const int groupTypeId = 1;
+            const int groupId = 2;
+            const bool approve = true;
+            var inquiry = new Inquiry();
+            inquiry.Message = "message";
+
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Verifiable();
+            
+            var result = _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
+            _groupToolService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkResult>(result);
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupWithGroupParticipantRemovalException()
+        {
+            var ex = new GroupParticipantRemovalException("message");
+            const int groupTypeId = 1;
+            const int groupId = 2;
+            const bool approve = true;
+            var inquiry = new Inquiry();
+            inquiry.Message = "message";
+
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
+            try
+            {
+                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
+                Assert.Fail("Expected exception was not thrown");
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(ex.StatusCode, e.Response.StatusCode);
+            }
+
+            _groupToolService.VerifyAll();
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupWithOtherException()
+        {
+            var ex = new Exception();
+            const int groupTypeId = 1;
+            const int groupId = 2;
+            const bool approve = true;
+            var inquiry = new Inquiry();
+            inquiry.Message = "message";
+
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
+            try
+            {
+                _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
+                Assert.Fail("Expected exception was not thrown");
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+            }
+
+            _groupToolService.VerifyAll();
+        }
+
+	[Test]
         public void TestPostGroupMessage()
         {
             _groupToolService.Setup(mocked => mocked.SendAllGroupParticipantsEmail(_auth, 123, 1, "subject", "message"));
@@ -89,5 +156,6 @@ namespace crds_angular.test.controllers
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
         }
+
     }
 }

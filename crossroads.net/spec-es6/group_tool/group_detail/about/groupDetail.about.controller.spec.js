@@ -9,12 +9,19 @@ describe('GroupDetailAboutController', () => {
         state,
         rootScope,
         log,
-        qApi;
+        qApi,
+        mockProfile;
+
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
+        beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
+    }));
+
     beforeEach(inject(function($injector) {
-        groupService = $injector.get('GroupService'); 
+        groupService = $injector.get('GroupService');
         imageService = $injector.get('ImageService');
         state = $injector.get('$state');
         rootScope = $injector.get('$rootScope');
@@ -31,7 +38,6 @@ describe('GroupDetailAboutController', () => {
     describe('the constructor', () => {
         it('should initialize properties', () => {
             expect(fixture.defaultProfileImageUrl).toEqual(imageService.DefaultProfileImage);
-            expect(fixture.groupId).toEqual(state.params.groupId);
             expect(fixture.ready).toBeFalsy();
             expect(fixture.error).toBeFalsy();
         });
@@ -53,6 +59,8 @@ describe('GroupDetailAboutController', () => {
           fixture.$onInit();
           rootScope.$digest();
 
+
+          expect(fixture.groupId).toEqual(state.params.groupId);
           expect(groupService.getGroup).toHaveBeenCalledWith(state.params.groupId);
           expect(fixture.data).toBeDefined();
           expect(fixture.data.primaryContact).toBeDefined();

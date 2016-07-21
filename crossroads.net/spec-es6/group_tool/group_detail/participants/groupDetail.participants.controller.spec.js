@@ -15,10 +15,17 @@ describe('GroupDetailParticipantsController', () => {
         qApi,
         messageService;
 
+    var mockProfile;
+
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
+      beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
+    }));
+
     beforeEach(inject(function($injector) {
-        groupService = $injector.get('GroupService'); 
+        groupService = $injector.get('GroupService');
         imageService = $injector.get('ImageService');
         state = $injector.get('$state');
         rootScope = $injector.get('$rootScope');
@@ -76,7 +83,7 @@ describe('GroupDetailParticipantsController', () => {
         expect(fixture.isDeleteView()).toBeFalsy();
         expect(fixture.isEmailView()).toBeFalsy();
       });
-      
+
     });
 
     describe('beginRemoveParticipant() function', () => {
@@ -84,7 +91,7 @@ describe('GroupDetailParticipantsController', () => {
         let participant = new Participant();
         fixture.beginRemoveParticipant(participant);
         expect(fixture.deleteParticipant).toBe(participant);
-        expect(fixture.deleteParticipant.deleteMessage).toEqual('');
+        expect(fixture.deleteParticipant.message).toEqual('');
         expect(fixture.isDeleteView()).toBeTruthy();
       });
     });
@@ -92,10 +99,10 @@ describe('GroupDetailParticipantsController', () => {
     describe('cancelRemoveParticipant() function', () => {
       it('should unset properties', () => {
         let participant = new Participant();
-        participant.deleteMessage = 'delete';
+        participant.message = 'delete';
         fixture.cancelRemoveParticipant(participant);
         expect(fixture.deleteParticipant).not.toBeDefined();
-        expect(participant.deleteMessage).not.toBeDefined();
+        expect(participant.message).not.toBeDefined();
         expect(fixture.isEditView()).toBeTruthy();
       });
     });
@@ -141,7 +148,7 @@ describe('GroupDetailParticipantsController', () => {
         spyOn(groupService, 'removeGroupParticipant').and.callFake(function() {
           return(deferred.promise);
         });
-        
+
         spyOn(rootScope, '$emit').and.callFake(() => { });
 
         let participant = new Participant({groupParticipantId: 999});
@@ -158,7 +165,7 @@ describe('GroupDetailParticipantsController', () => {
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolRemoveParticipantFailure);
       });
     });
-    
+
     describe('$onInit() function', () => {
         it('should get group participants and set image url', () => {
           let myParticipant = {

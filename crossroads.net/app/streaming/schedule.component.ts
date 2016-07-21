@@ -9,7 +9,7 @@ declare var moment: any;
 // TODO - placeholder for schedule if StreamspotService fails
 @Component({
   selector: 'schedule',
-  templateUrl: './schedule.component.html',
+  templateUrl: './schedule.ng2component.html',
   providers: [StreamspotService]
 })
 
@@ -19,7 +19,7 @@ export class ScheduleComponent implements OnInit {
   constructor(private streamspotService: StreamspotService) { }
 
   ngOnInit() {
-    this.streamspotService.byDate()
+    this.streamspotService.getEventsByDate()
       .then(events => {
         this.events = events
       })
