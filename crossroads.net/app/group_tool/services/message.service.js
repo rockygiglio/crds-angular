@@ -1,8 +1,4 @@
-//import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
-//import SmallGroup from '../model/smallGroup';
-//import Participant from '../model/participant';
-//import GroupInquiry from '../model/groupInquiry';
 
 export default class MessageService {
     /*@ngInject*/
