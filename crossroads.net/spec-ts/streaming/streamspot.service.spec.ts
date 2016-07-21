@@ -71,13 +71,13 @@ describe('Service: StreamspotService', () => {
 
   it('should return upcoming events, grouped by DOY', () => {
     service.getEventsByDate().then((events: Event[]) => {
-        let idx = Object.keys(events)[0];
+        let idx: string = Object.keys(events)[0];
 
         expect(events instanceof Object).toBeTruthy();
         // test for numeric keys
         expect(parseInt(idx)).toEqual(jasmine.any(Number));
         // test for order
-        expect(_.first(events[idx]).title).toBe('Next event');
+        expect(_.first(events[parseInt(idx)]).title).toBe('Next event');
       })
   });
   
