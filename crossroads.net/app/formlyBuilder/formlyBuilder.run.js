@@ -107,7 +107,7 @@
 
         formlyConfig.setType({
             name: 'boldcheckbox',
-            template: require('./templates/boldcheckbox.html'),
+            template: require('./templates/boldCheckbox.html'),
             wrapper: ['bootstrapHasError'],
             apiCheck: check => ({
                 templateOptions: {
