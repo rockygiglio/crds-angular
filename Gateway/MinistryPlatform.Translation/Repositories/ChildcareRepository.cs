@@ -43,5 +43,17 @@ namespace MinistryPlatform.Translation.Repositories
             }
             return false;            
         }
+
+        public List<MpChildcareCancelledNotification> GetChildcareCancellations()
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var parms = new Dictionary<string, object>
+            {
+                {"@ChildcareGroupType", _configurationWrapper.GetConfigIntValue("ChildcareGroupType") }
+            };
+            var notificationData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpChildcareCancelledNotification>("api_crds_CancelledChildcareNotification", parms);
+
+            return notificationData.FirstOrDefault() ?? new List<MpChildcareCancelledNotification>();
+        }
     }
 }

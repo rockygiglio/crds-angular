@@ -6,6 +6,7 @@ using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -13,6 +14,7 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -605,14 +607,37 @@ namespace crds_angular.Services
 
         public void SendChildcareCancellationNotification()
         {
-            //Find cancelled events
-            //_childcareRepository
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareCancelledTemplate"); //TODO: make this config entry
+            var template = _communicationService.GetTemplate(templateId);
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
 
-            //find participants of childcare groups associated with said cancelled events
+            var notificationData = _childcareRepository.GetChildcareCancellations();
+            foreach (var participant in notificationData.DistinctBy(p => p.EnrollerContactId))
+            {
+                var kiddos = notificationData.Where(k => k.EnrollerContactId == participant.EnrollerContactId).Aggregate("", (current, kid) => current + (kid.ChildNickname + " " + kid.ChildLastname + "<br>"));
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"Group_Name", participant.EnrollerGroupName },
+                    {"Childcare_Date", participant.ChildcareEventDate },
+                    {"Group_Member_Nickname", participant.EnrollerNickname },
+                    {"Childcare_Day", participant.ChildcareEventDate },
+                    {"Child_List", kiddos}
+                };
+                var comm = new MpCommunication
+                {
+                    AuthorUserId = authorUserId,
+                    DomainId = 1,
+                    EmailBody = template.Body,
+                    EmailSubject = template.Subject,
+                    FromContact = new MpContact { ContactId = participant.ChildcareContactId, EmailAddress = participant.ChildcareContactEmail },
+                    ReplyToContact = new MpContact { ContactId = participant.ChildcareContactId, EmailAddress = participant.ChildcareContactEmail },
+                    ToContacts = new List<MpContact> { new MpContact { ContactId = participant.EnrollerContactId, EmailAddress = participant.EnrollerEmail } },
+                    MergeData = mergeData
+                };
+                _communicationService.SendMessage(comm);
+            }
 
-            //Send email to enroller of childcare participants
-
-            //End date participants
+            //TODO: End date participants
         }
     } 
 }
