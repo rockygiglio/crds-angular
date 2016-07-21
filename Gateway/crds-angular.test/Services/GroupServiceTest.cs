@@ -115,7 +115,7 @@ namespace crds_angular.test.Services
             const int groupParticipantId = 987;
 
             participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
-            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null))
                 .Returns(groupParticipantId);
 
             fixture.addContactToGroup(groupId, contactId);
@@ -160,7 +160,7 @@ namespace crds_angular.test.Services
             var ex = new ApplicationException("DOH!!!!!");
 
             participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
-            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null))
                 .Throws(ex);
 
             try
