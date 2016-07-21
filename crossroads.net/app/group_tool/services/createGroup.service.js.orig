@@ -492,7 +492,9 @@ export default class CreateGroupService {
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.kidsWelcome = this.model.group.kidFriendly;       
+<<<<<<< HEAD
+        smallGroup.kidsWelcome = this.model.group.meeting.childcare;
+        smallGroup.meetingDay = this.model.group.meeting.day;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -522,7 +524,9 @@ export default class CreateGroupService {
             ,state : this.model.profile.address.state
             }
         );
-
+=======
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
+>>>>>>> development
 
 // TODO singleAttributes and multiAttributes
         return smallGroup;
