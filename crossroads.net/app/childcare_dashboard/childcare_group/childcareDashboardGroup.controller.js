@@ -34,13 +34,6 @@ class ChildcareDashboardGroupController {
     return this.communityGroup.eligibleChildren.length > 0;
   }
 
-  hasSignedUpChild() {
-    const rsvpd = this.communityGroup.eligibleChildren.filter( (child) => {
-      return child.rsvpness;
-    });
-    return rsvpd.length > 0;
-  }
-
   isEventCancelled() {
     if (this.cancelled !== undefined && this.cancelled) {
       this.message = this.root.MESSAGES.childcareEventCancelled.content;
@@ -77,8 +70,8 @@ class ChildcareDashboardGroupController {
     return !currentStatus && this.isEventClosed();
   }
 
-  showMessage(){
-    return this.message.length >0;
+  showMessage() {
+    return this.message != null && this.message.length > 0;
   }
 
   showModal() {

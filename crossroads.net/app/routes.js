@@ -69,6 +69,11 @@
           abstract: true,
           templateUrl: 'templates/screenWidth.html'
         })
+        .state('centeredContentPage', {
+          parent: 'root',
+          abstract: true,
+          templateUrl: 'templates/centeredContentPage.html'
+        })
         .state('noHeaderOrFooter', {
           parent: 'root',
           abstract: true,
@@ -376,8 +381,19 @@
         })
         .state('live', {
           parent: 'screenWidth',
-          url: '/live-v2',
+          url: '/live',
           template: '<streaming></streaming>',
+          data: {
+            meta: {
+              title: 'Live',
+              description: ''
+            }
+          }
+        })
+        .state('livestream', {
+          parent: 'noHeaderOrFooter',
+          url: '/live/stream',
+          template: '<streaming-video></streaming-video>',
           data: {
             meta: {
               title: 'Live',

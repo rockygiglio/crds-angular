@@ -6,7 +6,6 @@ using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -154,6 +153,27 @@ namespace crds_angular.Services
 
         }
 
+        public void UpdateChildcareRequest(ChildcareRequestDto request, string token)
+        {
+            var mpRequest = request.ToMPChildcareRequest();
+            _childcareRequestService.UpdateChildcareRequest(mpRequest);
+            //delete the current childcare request dates
+            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId,token);
+
+            //add the new dates
+            _childcareRequestService.CreateChildcareRequestDates(request.ChildcareRequestId, mpRequest, token);
+            try
+            {
+                var childcareRequest = _childcareRequestService.GetChildcareRequest(request.ChildcareRequestId, token);
+                SendChildcareRequestNotification(childcareRequest);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Update Request failed", ex);
+            }
+
+        }
+
         // TODO: Should we merge childcareRequestId into the childcareRequestDto?
         public void ApproveChildcareRequest(int childcareRequestId, ChildcareRequestDto childcareRequest, string token)
         {
@@ -208,6 +228,11 @@ namespace crds_angular.Services
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Approve Childcare failed", ex);
             }
+        }
+
+        private List<MpChildcareRequestDate> GetChildcareRequestDatesForRequest(int childcareRequestId)
+        {
+            return new List<MpChildcareRequestDate>();
         }
 
         private int GetApprovalEmailTemplate(int requestStatusId)

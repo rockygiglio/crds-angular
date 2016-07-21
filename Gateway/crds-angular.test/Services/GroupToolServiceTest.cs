@@ -21,6 +21,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IGroupToolRepository> _groupToolRepository;
         private Mock<MPServices.ICommunicationRepository> _communicationRepository;
         private Mock<IGroupService> _groupService;
+        private Mock<MPServices.IGroupRepository> _groupRepository;
         private Mock<MPServices.IParticipantRepository> _participantRepository;
         private Mock<IContentBlockService> _contentBlockService;
 
@@ -36,6 +37,7 @@ namespace crds_angular.test.Services
             _communicationRepository = new Mock<MPServices.ICommunicationRepository>(MockBehavior.Strict);
             _groupToolRepository = new Mock<MPServices.IGroupToolRepository>(MockBehavior.Strict);
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
+            _groupRepository = new Mock<MPServices.IGroupRepository>(MockBehavior.Strict);
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
 
@@ -46,11 +48,237 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
 
             _fixture = new GroupToolService(_groupToolRepository.Object,
+                                            _groupRepository.Object,
                                             _groupService.Object,
                                             _participantRepository.Object,
                                             _communicationRepository.Object,
                                             _contentBlockService.Object,
                                             configuration.Object);
+        }
+
+        [ExpectedException(typeof(GroupNotFoundForParticipantException))]
+        public void TestVerifyCurrentUserIsGroupLeaderGroupNotFound()
+        {
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotGroupLeaderException))]
+        public void TestVerifyCurrentUserIsGroupLeaderNotGroupLeader()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader + 1
+                        }
+                    }
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+        }
+
+        [Test]
+        public void TestVerifyCurrentUserIsGroupLeader()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            var result = _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreSame(myParticipant, result.Me);
+            Assert.AreSame(groups[0], result.Group);
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupApprove()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            GroupParticipantId = 9090,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+
+            var inquiry = new Inquiry
+            {
+                ContactId = 123,
+                InquiryId = 456
+            };
+            const string message = "message";
+
+            var approveParticipant = new Participant
+            {
+                ParticipantId = 9090
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
+
+            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123)).Verifiable();
+            _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, true)).Verifiable();
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 99,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.IsAny<MpCommunication>(),
+                        false)).Returns(5);
+
+            _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquirySubjectTemplateText"]).Returns(new ContentBlock());
+            _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
+
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
+
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _communicationRepository.VerifyAll();
+
+        }
+
+        [Test]
+        public void TestApproveDenyInquiryFromMyGroupDeny()
+        {
+            const int myParticipantId = 952;
+            var myParticipant = new Participant
+            {
+                ParticipantId = myParticipantId
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
+
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO
+                {
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = myParticipantId,
+                            GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            GroupParticipantId = 9090,
+                            GroupRoleId = GroupRoleLeader
+                        }
+                    }
+
+                }
+            };
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+
+            var inquiry = new Inquiry
+            {
+                ContactId = 123,
+                InquiryId = 456
+            };
+            const string message = "message";
+
+            var approveParticipant = new Participant
+            {
+                ParticipantId = 9090
+            };
+            _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
+
+            _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, false)).Verifiable();
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 99,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.IsAny<MpCommunication>(),
+                        false)).Returns(5);
+
+            _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
+            _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
+
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, false, inquiry, message);
+
+            _participantRepository.VerifyAll();
+            _groupService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _communicationRepository.VerifyAll();
+
         }
 
         [Test]
@@ -315,7 +543,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId, contentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
@@ -437,8 +665,41 @@ namespace crds_angular.test.Services
             Assert.AreEqual(dto[0].LastName, inquiries[0].LastName);
             Assert.AreEqual(dto[0].RequestDate, inquiries[0].RequestDate);
             Assert.AreEqual(dto[0].Placed, inquiries[0].Placed);
+        }
 
+        [Test]
+        public void TestSendAllGroupParticipantsEmail()
+        {
+            string token = "123ABC";
 
+            var groupParticipantDTO = new Participant
+            {
+                ContactId = 123,
+                EmailAddress = "test@test.com",
+                ParticipantId = 456
+            };
+
+            var groups = new List<GroupDTO>();
+
+            var group1 = new GroupDTO();
+            group1.Participants = new List<GroupParticipantDTO>();
+
+            GroupParticipantDTO groupParticipant = new GroupParticipantDTO
+            {
+                ContactId = 123,
+                GroupRoleId = 987,
+                ParticipantId = 456
+            };
+
+            group1.Participants.Add(groupParticipant);
+            groups.Add(group1);
+
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
+            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+
+            _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
+            _communicationRepository.VerifyAll();
         }
     }
 }

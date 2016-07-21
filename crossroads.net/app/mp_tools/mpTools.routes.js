@@ -118,7 +118,13 @@
     })
     .state('tools.requestChildcare', {
       url: '/requestchildcare',
-      template: '<request-childcare> </request-childcare>'
+      template: '<request-childcare> </request-childcare>',
+	    resolve: { 
+        LookupService: 'LookupService', 
+        Congregations: fetchCongregations,  
+        Ministries: fetchMinistries,
+        MPTools: 'MPTools'
+      }
     })
 	.state('tools.childcareDecision', {
       url: '/childcaredecision',
@@ -258,5 +264,32 @@
           }
         }
       });
+
+	   function fetchCongregations(LookupService, MPTools, $q) {
+        var deferred = $q.defer();
+        var lkups = LookupService.Congregations.query();
+        lkups.$promise.then( (data) => {
+          MPTools.congregations = data;
+          deferred.resolve();
+        }, (err) => {
+          console.log(err);
+          deferred.reject();
+        });
+        return deferred.promise;
+      };
+
+      function fetchMinistries(LookupService, MPTools, $q) {
+        var deferred = $q.defer();
+        var lkups = LookupService.Ministries.query();
+        lkups.$promise.then( (data) => {
+          MPTools.ministries = data;
+          deferred.resolve();
+        }, (err) => {
+          console.log(err);
+          deferred.reject();
+        });
+        return deferred.promise;
+      };
+
   }
 })();

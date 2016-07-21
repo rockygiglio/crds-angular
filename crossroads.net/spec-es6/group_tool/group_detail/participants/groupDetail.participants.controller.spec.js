@@ -2,6 +2,7 @@
 import constants from 'crds-constants';
 import GroupDetailParticipantsController from '../../../../app/group_tool/group_detail/participants/groupDetail.participants.controller';
 import Participant from '../../../../app/group_tool/model/participant';
+import GroupMessage from '../../../../app/group_tool/model/groupMessage';
 
 describe('GroupDetailParticipantsController', () => {
     let fixture,
@@ -11,7 +12,8 @@ describe('GroupDetailParticipantsController', () => {
         rootScope,
         log,
         participantService,
-        qApi;
+        qApi,
+        messageService;
 
     var mockProfile;
 
@@ -30,12 +32,13 @@ describe('GroupDetailParticipantsController', () => {
         log = $injector.get('$log');
         participantService = $injector.get('ParticipantService');
         qApi = $injector.get('$q');
+        messageService = $injector.get('MessageService');
 
         state.params = {
           groupId: 123
         };
 
-        fixture = new GroupDetailParticipantsController(groupService, imageService, state, log, participantService, rootScope);
+        fixture = new GroupDetailParticipantsController(groupService, imageService, state, log, participantService, rootScope, messageService);
     }));
 
     describe('the constructor', () => {
@@ -88,7 +91,7 @@ describe('GroupDetailParticipantsController', () => {
         let participant = new Participant();
         fixture.beginRemoveParticipant(participant);
         expect(fixture.deleteParticipant).toBe(participant);
-        expect(fixture.deleteParticipant.deleteMessage).toEqual('');
+        expect(fixture.deleteParticipant.message).toEqual('');
         expect(fixture.isDeleteView()).toBeTruthy();
       });
     });
@@ -96,10 +99,10 @@ describe('GroupDetailParticipantsController', () => {
     describe('cancelRemoveParticipant() function', () => {
       it('should unset properties', () => {
         let participant = new Participant();
-        participant.deleteMessage = 'delete';
+        participant.message = 'delete';
         fixture.cancelRemoveParticipant(participant);
         expect(fixture.deleteParticipant).not.toBeDefined();
-        expect(participant.deleteMessage).not.toBeDefined();
+        expect(participant.message).not.toBeDefined();
         expect(fixture.isEditView()).toBeTruthy();
       });
     });
@@ -270,6 +273,59 @@ describe('GroupDetailParticipantsController', () => {
           expect(groupService.getGroupParticipants).toHaveBeenCalledWith(state.params.groupId);
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeTruthy();
+        });
+    });
+
+    describe('beginMessageParticipants() function', () => {
+        it('should set properties', () => {
+            let groupMessage = new GroupMessage();
+            fixture.beginMessageParticipants(groupMessage);
+            expect(fixture.groupMessage).toEqual(groupMessage);
+            expect(fixture.groupMessage.groupId).toEqual('');
+            expect(fixture.groupMessage.subject).toEqual('');
+            expect(fixture.groupMessage.body).toEqual('');
+            expect(fixture.isEmailView()).toBeTruthy();
+        });
+    });
+
+    describe('cancelMessageParticipants() function', () => {
+        it('should unset properties', () => {
+            let groupMessage = new GroupMessage();
+            fixture.cancelMessageParticipants(groupMessage);
+            expect(fixture.groupMessage).not.toBeDefined();
+            expect(fixture.isListView()).toBeTruthy();
+        });
+    });
+
+    describe('messageParticipants() function', () => {
+        it('should message participants', () => {
+
+            let groupMessage = new GroupMessage();
+            fixture.groupMessage = groupMessage;
+            let groupId = 123;
+            fixture.groupId = groupId;
+
+            let deferred = qApi.defer();
+            deferred.resolve({});
+
+            spyOn(messageService, 'sendGroupMessage').and.callFake(function() {
+                return(deferred.promise);
+            });
+
+            spyOn(rootScope, '$emit').and.callFake(() => { });
+
+            fixture.setEmailView();
+            fixture.messageParticipants(groupMessage);
+            rootScope.$digest();
+
+            expect(messageService.sendGroupMessage).toHaveBeenCalledWith(123, groupMessage);
+
+            expect(fixture.processing).toBeFalsy();
+            expect(fixture.ready).toBeTruthy();
+            expect(fixture.isListView()).toBeTruthy();
+
+            expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.emailSent);
+
         });
     });
 });

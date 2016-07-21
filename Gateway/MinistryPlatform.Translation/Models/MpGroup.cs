@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Models
         public bool ChildCareAvailable { get; set; }
         public string Congregation { get; set; }
         public int MinimumAge { get; set; }
-        public int MaximumAge { get; set; }
+        public int? MaximumAge { get; set; }
         public string GroupDescription { get; set; }
         public int MinistryId { get; set; }
         public string MeetingTime { get; set; }
@@ -32,12 +32,13 @@ namespace MinistryPlatform.Translation.Models
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool AvailableOnline { get; set; }
-        public int RemainingCapacity { get; set; }
+        public int? RemainingCapacity { get; set; }
         public int ContactId { get; set; }
         public int GroupRoleId { get; set; }
         public MpAddress Address { get; set; }
         public int MinimumParticipants { get; set; }
         public int MaximumParticipants { get; set; }
+        public bool? KidsWelcome { get; set; }
 
         public MpGroup()
         {

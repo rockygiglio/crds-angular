@@ -1,4 +1,11 @@
-import CONSTANTS from '../../constants';
+
+import CONSTANTS from 'crds-constants';
+import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
+import AgeRange from '../model/ageRange';
+import Address from '../model/address';
+import Category from '../model/category';
+import GroupType from '../model/groupType';
 
 export default class CreateGroupService {
     /*@ngInject*/
@@ -7,10 +14,18 @@ export default class CreateGroupService {
         this.profile = Profile;
         this.groupService = GroupService;
         this.model = {};
-
+        this.meetingFrequencyLookup = [{
+            meetingFrequencyId: 1,
+            meetingFrequencyDesc: 'Every week'
+        }, {
+            meetingFrequencyId: 2,
+            meetingFrequencyDesc: 'Every other week'
+        }];
         this.groupService.getProfileData().then((data) => {
             this.model = {
                 profile: {
+                    nickName: data.nickName,
+                    lastName: data.lastName,
                     birthDate: data.dateOfBirth,
                     genderId: data.genderId,
                     address: {
@@ -24,8 +39,16 @@ export default class CreateGroupService {
                 group: {
                     meeting: {
                         time: '1983-01-16T22:00:00.007Z'
+                    },
+                    categories: {
+                        lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        neighborhoodId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+                        spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+                        interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+                        healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
                     }
-                }
+                },
+                specificDay: true
             }
         });
     }
@@ -45,9 +68,10 @@ export default class CreateGroupService {
                     labelProp: 'dp_RecordName',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getSites().then(function (response) {
                         $scope.to.options = response;
+                        CreateGroupService.sitesLookup = response;
                         return response;
                     });
                 }
@@ -72,6 +96,7 @@ export default class CreateGroupService {
                     controller: /* @ngInject */ function ($scope, GroupService) {
                         $scope.to.loading = GroupService.getGenders().then(function (response) {
                             $scope.to.options = response;
+                            CreateGroupService.genderLookup = response;
                             return response;
                         });
                     }
@@ -121,14 +146,17 @@ export default class CreateGroupService {
                 sectionHelp: 'To get the most out of your group, you’ll want to meet on a regular basis. We recommend weekly, but we want you to choose what’s best for your group.'
             },
             fieldGroup: [{
+                key: 'specificDay',
                 type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
                     inline: false,
                     options: [{
                         label: 'Specific Day and Time',
+                        value: true
                     }, {
                         label: 'Flexible Meeting Times/Not Sure Yet',
+                        value: false
                     }]
                 }
             }, {
@@ -140,9 +168,11 @@ export default class CreateGroupService {
                         labelProp: 'dp_RecordName',
                         options: []
                     },
-                    controller: /* @ngInject */ function ($scope, GroupService) {
+                    controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            $scope.to.options = response;
+                            let sortedResponse = _.sortBy(response, function (day) {return day.dp_RecordID;});
+                            $scope.to.options = sortedResponse;
+                            CreateGroupService.meetingDaysLookup = response;
                             return response;
                         });
                     }
@@ -160,13 +190,7 @@ export default class CreateGroupService {
                         label: 'Frequency',
                         valueProp: 'meetingFrequencyId',
                         labelProp: 'meetingFrequencyDesc',
-                        options: [{
-                            meetingFrequencyId: 1,
-                            meetingFrequencyDesc: 'Every week'
-                        }, {
-                                meetingFrequencyId: 2,
-                                meetingFrequencyDesc: 'Every other week'
-                            }]
+                        options: this.meetingFrequencyLookup
                     }
                 }]
         };
@@ -217,20 +241,20 @@ export default class CreateGroupService {
                         label: 'Zip'
                     }
                 }, {
-                    key: 'group.meeting.childcare',
+                    key: 'group.kidFriendly',
                     type: 'radio',
                     templateOptions: {
-                        label: 'Are you interested in leading a group with chilcare options?',
+                        label: 'Will your group have childcare?',
                         labelProp: 'label',
-                        valueProp: 'childcare',
+                        valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Kids welcome at the group.',
-                            childcare: true
+                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            kidFriendly: true
                         }, {
-                                label: 'No. (Parents are welcome, but make your own kid plans.)',
-                                childcare: false
-                            }]
+                            label: 'No. Adults only please.',
+                            kidFriendly: false
+                        }]
                     }
                 }]
         };
@@ -263,9 +287,11 @@ export default class CreateGroupService {
                     valueProp: 'attributeId',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, $log, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getGroupGenderMixType().then(function (response) {
                         $scope.to.options = response.attributes;
+                        CreateGroupService.typeIdLookup = response.attributes;
+                        $log.debug(CreateGroupService.model)
                         return response;
                     });
                 }
@@ -285,11 +311,12 @@ export default class CreateGroupService {
                     labelProp: 'name',
                     options: []
                 },
-                controller: /* @ngInject */ function ($scope, GroupService) {
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getAgeRanges().then(function (response) {
                         $scope.to.options = response.attributes;
                         // note, the line above is shorthand for:
-                        // $scope.options.templateOptions.options = data;
+                        // $scope.options.templateOptions.options = data; 
+                        CreateGroupService.ageRangeLookup = response.attributes;
                         return response;
                     });
                 }
@@ -338,9 +365,145 @@ export default class CreateGroupService {
                 }
             }]
         };
+        
+        var groupCategoryFields = {
+            wrapper: 'createGroup',
+            templateOptions: {
+                sectionLabel: 'What kind of group would you like to lead?',
+                sectionHelp: 'Not much to say when you\'re high abouve the helpy help'
+            },
+            fieldGroup: [{
+                key: 'group.categories.lifestages',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Life Stage',
+                    labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
+                }
+            },{
+                key: 'group.categories.lifeStageDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.lifestages',
+                templateOptions: {
+                    placeholder: 'Life Stage detail...'
+                }
+            },{
+                key: 'group.categories.healing',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Healing',
+                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
+                }
+            },{
+                key: 'group.categories.healingDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.healing',
+                templateOptions: {
+                    placeholder: 'Healing detail...'
+                }
+            },{
+                key:'group.categories.neighborhood',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Neighborhoods',
+                    labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
+                }
+            }, {
+                key: 'group.categories.neighborhoodDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.neighborhood',
+                templateOptions: {
+                    placeholder: 'Neighborhood detail...'
+                }
+            },{
+                key: 'group.categories.spiritualgrowth',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Spirtual Growth',
+                    labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
+                }
+            },{
+                key: 'group.categories.spiritualgrowthDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.spiritualgrowth',
+                templateOptions: {
+                    placeholder: 'Spritual Growth detail...'
+                }
+            },{
+                key: 'group.categories.interest',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Interest',
+                    labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
+                }
+            },{
+                key: 'group.categories.interestDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.interest',
+                templateOptions: {
+                    placeholder: 'Interest detail...'
+                }
+            }]
+        }
 
         return [profileAboutFields, profileAddressFields, groupTypeFields,
             groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
-            groupMeetingLocationFields, groupAboutFields, groupVisibilityFields];
+            groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
+    }
+
+    getMeetingLocation() {
+        let meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
+        // Friday\'s at 12:30 PM, Every Week
+        return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+
+    }
+
+
+    mapSmallGroup() {
+        //This stuff below will need to be refactored when we merge in the save branch.
+
+        //Find the name of the selected group type id
+        let groupType = _.find(this.typeIdLookup, (groupType) => { return groupType.attributeId == this.model.group.typeId });
+        //loop through all selected age ranges, find the name for each one.
+        let ageRangeNames = [];
+        _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
+            ageRangeNames.push(new AgeRange({
+                name: _.find(this.ageRangeLookup, (range) => { 
+                    return range.attributeId == selectedRange
+                }).name})
+            )
+        });
+        if (typeof groupType == 'undefined') {
+            groupType = { name: '' };
+        }
+        // TODO map entire object from create form - because this will go to the save - need all IDs, etc.
+        let smallGroup = new SmallGroup();
+        smallGroup.groupName = this.model.group.groupName;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+        }
+        )];
+        smallGroup.groupDescription = this.model.group.groupDescription;
+        smallGroup.groupType = new GroupType({ name: groupType.name });
+        if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+            smallGroup.ageRange = ageRangeNames;
+        }
+        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
+            smallGroup.address = new Address();
+            smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+            smallGroup.address.state = this.model.group.meeting.address.state;
+            smallGroup.address.zip = this.model.group.meeting.address.zip;
+        }
+        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
+
+        return smallGroup;
     }
 }

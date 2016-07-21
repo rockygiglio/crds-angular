@@ -22,6 +22,7 @@ namespace crds_angular.Services.Interfaces
         void CancelRsvp(ChildcareRsvpDto cancelRsvp);
         HouseHoldData GetHeadsOfHousehold(int contactId, int householdId);
         void SendChildcareCancellationNotification();
+        void UpdateChildcareRequest(ChildcareRequestDto request, string token);
         List<ChildCareDate> UpdateAvailableChildCareDates(List<ChildCareDate> currentDates, DateTime dateToAdd, bool hasBeenCancelled);
     }
 }

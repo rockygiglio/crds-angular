@@ -79,16 +79,6 @@ describe('Childcare Group Component Controller', () => {
     expect(controller.isEventClosed()).toBe(false);
   });
 
-  it('should indicate if any children are currently rsvpd', () => {
-    controller.communityGroup = fakeCG();
-    expect(controller.hasSignedUpChild()).toBe(true);
-  });
-
-  it('should indicate if there are no children signed up', () => {
-    controller.communityGroup = fakeCG(false);
-    expect(controller.hasSignedUpChild()).toBe(false);
-  });
-
   it('should indicate that the event has been cancelled', () => {
     controller.cancelled = true;
     expect(controller.isEventCancelled()).toBe(true);

@@ -1,11 +1,15 @@
+
+import SmallGroup from '../model/smallGroup';
+
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $log, CreateGroupService) {
+    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService) {
         this.log = $log;
         this.log.debug("CreateGroupController constructor");
         this.state = $state;
         this.participantService = ParticipantService;
         this.createGroupService = CreateGroupService;
+        this.groupService = GroupService;
         this.ready = false;
         this.approvedLeader = false;
         this.fields = [];
@@ -29,7 +33,9 @@ export default class CreateGroupController {
             });
 
         this.fields = this.createGroupService.getFields();
+  }
 
-
-    }
+  previewGroup() {
+    this.state.go('grouptool.create.preview');
+  }
 }

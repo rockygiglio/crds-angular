@@ -38,7 +38,6 @@ describe('GroupDetailAboutController', () => {
     describe('the constructor', () => {
         it('should initialize properties', () => {
             expect(fixture.defaultProfileImageUrl).toEqual(imageService.DefaultProfileImage);
-            expect(fixture.groupId).toEqual(state.params.groupId);
             expect(fixture.ready).toBeFalsy();
             expect(fixture.error).toBeFalsy();
         });
@@ -60,6 +59,8 @@ describe('GroupDetailAboutController', () => {
           fixture.$onInit();
           rootScope.$digest();
 
+
+          expect(fixture.groupId).toEqual(state.params.groupId);
           expect(groupService.getGroup).toHaveBeenCalledWith(state.params.groupId);
           expect(fixture.data).toBeDefined();
           expect(fixture.data.primaryContact).toBeDefined();

@@ -30,54 +30,25 @@
 
 <!-- Delete a participant -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView()'>
-  <remove-participant
-    participant='groupDetailParticipants.deleteParticipant'
-    cancel-action='groupDetailParticipants.cancelRemoveParticipant(participant)'
-    submit-action='groupDetailParticipants.removeParticipant(participant)'
-    processing='groupDetailParticipants.processing'/>
+  <group-message person="groupDetailParticipants.deleteParticipant"
+    normal-loading-text="Remove Participant"
+    loading-loading-text="Removing..."
+    header="Remove Participant - {{groupDetailParticipants.deleteParticipant.displayName()}}"
+    sub-header-text="groupToolRemoveParticipantSubheaderText"
+    contact-text="groupToolRemoveParticipantPleaseContactText"
+    email-template-text="groupToolRemoveParticipantEmailTemplateText"
+    cancel-action="groupDetailParticipants.cancelRemoveParticipant(person)"
+    submit-action="groupDetailParticipants.removeParticipant(person)"
+    processing="groupDetailParticipants.processing"
+    ></group-message>
 </div>
 
 <!-- Email participants -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isEmailView()'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h3>Email Group</h3>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailSubject' class='wide-label'>Subject</label>
-              <input type='text' class='form-control' name='emailSubject'></input>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Message</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage'></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-        
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+  <message-participants
+    message='groupDetailParticipants.groupMessage'
+    cancel-action='groupDetailParticipants.cancelMessageParticipants(message)'
+    submit-action='groupDetailParticipants.messageParticipants(message)'
+    processing='groupDetailParticipants.processing'/>
+  />
 </div>

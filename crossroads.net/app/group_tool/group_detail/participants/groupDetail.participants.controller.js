@@ -1,13 +1,15 @@
+import GroupMessage from '../../model/groupMessage';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope) {
+  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.log = $log;
     this.participantService = ParticipantService;
     this.rootScope = $rootScope;
+    this.messageService = MessageService;
 
     this.groupId = this.state.params.groupId;
     this.ready = false;
@@ -81,22 +83,23 @@ export default class GroupDetailParticipantsController {
 
   beginRemoveParticipant(participant) {
     this.deleteParticipant = participant;
-    this.deleteParticipant.deleteMessage = '';
+    this.deleteParticipant.message = '';
     this.setDeleteView();
   }
 
   cancelRemoveParticipant(participant) {
-    participant.deleteMessage = undefined;
+    participant.message = undefined;
     this.deleteParticipant = undefined;
     this.setEditView();
   }
 
-  removeParticipant(participant) {
-    this.log.info(`Deleting participant: ${JSON.stringify(participant)}`);
+  removeParticipant(person) {
+    this.log.info(`Deleting participant: ${JSON.stringify(person)}`);
     this.processing = true;
-    this.groupService.removeGroupParticipant(this.groupId, participant).then(() => {
+
+    this.groupService.removeGroupParticipant(this.groupId, person).then(() => {
       _.remove(this.data, function(p) {
-          return p.groupParticipantId === participant.groupParticipantId;
+          return p.groupParticipantId === person.groupParticipantId;
       });
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
       this.setListView();
@@ -109,6 +112,39 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     }).finally(() => {
+      this.processing = false;
+    });
+  }
+
+  beginMessageParticipants() {
+    this.groupMessage = new GroupMessage();
+    this.groupMessage.groupId = '';
+    this.groupMessage.subject = '';
+    this.groupMessage.body = '';
+    this.setEmailView();
+  }
+
+  cancelMessageParticipants(message) {
+    this.groupMessage = undefined;
+    this.setListView();
+  }
+
+  messageParticipants(message) {
+
+    // TODO: Fill in implementation
+    this.processing = true;
+
+    this.messageService.sendGroupMessage(this.groupId, message).then(
+        () => {
+          this.groupMessage = undefined;
+          this.$onInit();
+          this.currentView = 'List';
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+        },
+        (error) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+        }
+    ).finally(() => {
       this.processing = false;
     });
   }

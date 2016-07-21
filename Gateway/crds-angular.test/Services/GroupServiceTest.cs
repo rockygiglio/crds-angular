@@ -39,6 +39,8 @@ namespace crds_angular.test.Services
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPServices.IApiUserRepository> _apiUserService;
         private Mock<MPServices.IAttributeRepository> _attributeService;
+        private Mock<IEmailCommunication> _emailCommunicationService;
+        private Mock<MPServices.IUserRepository> _userRespository;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -74,6 +76,8 @@ namespace crds_angular.test.Services
             _groupService = new Mock<IGroupRepository>();
             _communicationService = new Mock<MPServices.ICommunicationRepository>();
             _contactService = new Mock<MPServices.IContactRepository>();
+            _emailCommunicationService = new Mock<IEmailCommunication>();
+            _userRespository = new Mock<MPServices.IUserRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
@@ -94,7 +98,82 @@ namespace crds_angular.test.Services
                                        _contactService.Object,
                                        _objectAttributeService.Object,
                                        _apiUserService.Object,
-                                       _attributeService.Object);
+                                       _attributeService.Object,
+                                       _emailCommunicationService.Object,
+                                       _userRespository.Object);
+        }
+
+        [Test]
+        public void TestAddContactToGroup()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+            var participant = new Participant
+            {
+                ParticipantId = 789
+            };
+            const int groupParticipantId = 987;
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+                .Returns(groupParticipantId);
+
+            fixture.addContactToGroup(groupId, contactId);
+            participantService.VerifyAll();
+            groupService.VerifyAll();
+        }
+
+        [Test]
+        public void TestAddContactToGroupCantGetParticipant()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+
+            var ex = new Exception("DOH!!!!!");
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Throws(ex);
+
+            try
+            {
+                fixture.addContactToGroup(groupId, contactId);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.AreSame(ex, e.InnerException);
+            }
+
+            participantService.VerifyAll();
+            groupService.VerifyAll();
+        }
+
+        [Test]
+        public void TestAddContactToGroupCantAddContact()
+        {
+            const int groupId = 123;
+            const int contactId = 456;
+            var participant = new Participant
+            {
+                ParticipantId = 789
+            };
+
+            var ex = new ApplicationException("DOH!!!!!");
+
+            participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+                .Throws(ex);
+
+            try
+            {
+                fixture.addContactToGroup(groupId, contactId);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.AreSame(ex, e);
+            }
+            participantService.VerifyAll();
+            groupService.VerifyAll();
         }
 
         [Test]

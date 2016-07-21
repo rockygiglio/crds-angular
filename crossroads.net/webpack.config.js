@@ -83,13 +83,22 @@ module.exports = {
             },
             {
               test: /\.html$/,
-              loader: 'ng-cache?prefix=[dir]'
+              loader: 'ng-cache?prefix=[dir]',
+              exclude: [/\.ng2component\.html$/]
             },
             {
               test: /\.ts$/,
               loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
               exclude: [/\.(spec|e2e)\.ts$/]
             },
+            {
+              test: /\.json$/,
+              loaders: ["json-loader"]
+            },
+            {
+              test: /\.ng2component\.html$/,
+              loader: 'raw-loader'
+            }
     ]
   },
   plugins: [
