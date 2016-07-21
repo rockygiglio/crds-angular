@@ -361,7 +361,7 @@ export default class CreateGroupService {
                 type: 'boldcheckbox',
                 wrapper: 'checkboxdescription',
                 templateOptions: {
-                    label: 'Life Stages',
+                    label: 'Life Stage',
                     labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
                 }
             },{
@@ -371,8 +371,22 @@ export default class CreateGroupService {
                 templateOptions: {
                     placeholder: 'Life Stage detail...'
                 }
-            },
-                {
+            },{
+                key: 'group.categories.healing',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Healing',
+                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
+                }
+            },{
+                key: 'group.categories.healingDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.healing',
+                templateOptions: {
+                    placeholder: 'Healing detail...'
+                }
+            },{
                 key:'group.categories.neighborhood',
                 type: 'boldcheckbox',
                 wrapper: 'checkboxdescription',
@@ -416,21 +430,6 @@ export default class CreateGroupService {
                 hideExpression: '!model.group.categories.interest',
                 templateOptions: {
                     placeholder: 'Interest detail...'
-                }
-            },{
-                key: 'group.categories.healing',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Healing',
-                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
-                }
-            },{
-                key: 'group.categories.healingDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.healing',
-                templateOptions: {
-                    placeholder: 'Healing detail...'
                 }
             }]
         }
