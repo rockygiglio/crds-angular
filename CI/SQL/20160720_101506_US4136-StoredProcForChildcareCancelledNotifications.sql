@@ -25,7 +25,7 @@ BEGIN
 	WHERE e.Cancelled = 1 AND Event_Type_ID = 243 AND g.Group_Type_ID = 27 AND e.Event_Start_Date > GETDATE()
 	AND g.Group_ID IN (SELECT Group_ID FROM dbo.Group_Participants WHERE End_Date IS NULL GROUP BY Group_ID  HAVING Count(*) > 0)
 
-	SELECT c.Nickname, c.Last_Name, e.Event_Start_Date, e.Congregation_ID, l.Congregation_Name, l.Childcare_Contact, cc.Email_Address AS [Childcare_Email], ec.Contact_ID, ec.Email_Address, ec.Nickname AS [Enroller_Nickname], ebg.Group_Name FROM dbo.Group_Participants gp
+	SELECT gp.Group_Participant_ID, gp.Group_ID, c.Contact_ID, c.Nickname, c.Last_Name, e.Event_Start_Date, e.Congregation_ID, l.Congregation_Name, l.Childcare_Contact, cc.Email_Address AS [Childcare_Email], ec.Contact_ID, ec.Email_Address, ec.Nickname AS [Enroller_Nickname], ebg.Group_Name FROM dbo.Group_Participants gp
 	JOIN dbo.Event_Groups eg ON gp.Group_ID = eg.Group_ID
 	JOIN dbo.Events e on e.Event_ID = eg.Event_ID
 	JOIN dbo.Congregations l on l.Congregation_ID = e.Congregation_ID

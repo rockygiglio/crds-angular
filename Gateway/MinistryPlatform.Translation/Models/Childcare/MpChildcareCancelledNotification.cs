@@ -26,6 +26,12 @@ namespace MinistryPlatform.Translation.Models.Childcare
         [JsonProperty(PropertyName = "Childcare_Contact")]
         public int ChildcareContactId { get; set; }
 
+        [JsonProperty(PropertyName = "Group_Participant_ID")]
+        public int ChildGroupParticipantId { get; set; }
+
+        [JsonProperty(PropertyName = "Group_ID")]
+        public int ChildGroupId { get; set; }
+
         [JsonProperty(PropertyName = "Childcare_Email")]
         public string ChildcareContactEmail { get; set; }
 

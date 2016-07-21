@@ -607,7 +607,7 @@ namespace crds_angular.Services
 
         public void SendChildcareCancellationNotification()
         {
-            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareCancelledTemplate"); //TODO: make this config entry
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareCancelledTemplate");
             var template = _communicationService.GetTemplate(templateId);
             var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
 
@@ -637,7 +637,10 @@ namespace crds_angular.Services
                 _communicationService.SendMessage(comm);
             }
 
-            //TODO: End date participants
+            foreach (var participant in notificationData)
+            {
+                _groupService.endDateGroupParticipant(participant.ChildGroupId, participant.ChildGroupParticipantId);
+            }
         }
     } 
 }
