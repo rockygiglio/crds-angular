@@ -40,14 +40,24 @@ streaming {
     background: $streaming-blue;
     color: #FFF;
     text-align: center;
-    padding: 0.75em 0 0.65em;
+    padding: 1em 0;
     font-size: 90%;
+    min-height: 52px;
+
+    @media (min-width: $screen-sm-min) {
+      min-height: 66px;
+    }
+
+    countdown {
+      display: inline;
+    }
+
     .container {
+      @include clearfix();
       position: relative;
     }
 
-    .btn {
-      margin-top: 0.25em;
+    .see-schedule {
       text-transform: uppercase;
       font-size: 90%;
       color: #FFF;
@@ -63,7 +73,8 @@ streaming {
       display: table;
       text-align: center;
       font-size: 80%;
-      @media (min-width: $screen-xs-min) {
+
+      @media (min-width: $screen-sm-min) {
         font-size: 100%;
       }
 
@@ -78,7 +89,6 @@ streaming {
 
       i {
         font-family: $streaming-font-serif;
-
         font-style: italic;
         font-size: 123%;
         letter-spacing: -0.015em;
@@ -86,7 +96,7 @@ streaming {
       }
 
       li {
-        line-height: 140%;
+        line-height: 120%;
         padding: 0;
 
         &.vr:before {
@@ -108,6 +118,7 @@ streaming {
         display: block;
         font-size: 160%;
         font-weight: 400;
+        min-width: 29px;
       }
 
       small {
@@ -121,6 +132,23 @@ streaming {
         i {
           text-align: right;
         }
+      }
+
+      .countdown {
+        position: relative;
+        top: 1px;
+      }
+
+      .in-progress {
+        i, a {
+          padding-right: 1em;
+          display: inline-block;
+        }
+      }
+      a.btn-sm {
+        @include button-variant(#FFF, lighten($streaming-blue, 12.5%), $streaming-blue);
+        font-weight: 400;
+        font-size: 110%;
       }
     }
   }

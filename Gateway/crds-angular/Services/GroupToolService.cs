@@ -302,5 +302,60 @@ namespace crds_angular.Services
                 _logger.Warn(string.Format("Could not send email to Inquirer {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
             }
         }
+
+	public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
+        {
+            var leaderRecord = _participantRepository.GetParticipantRecord(token);
+            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+
+            ValidateUserAsLeader(token, groupId, groupTypeId, leaderRecord.ParticipantId, groups);
+
+            var fromContact = new MpContact
+            {
+                ContactId = 1519180,
+                EmailAddress = "updates@crossroads.net"
+            };
+
+            var replyToContact = new MpContact
+            {
+                ContactId = leaderRecord.ContactId,
+                EmailAddress = leaderRecord.EmailAddress
+            };
+
+            List<MpContact> toContacts = groups.First().Participants.Select(groupParticipant => new MpContact
+            {
+                ContactId = groupParticipant.ContactId, EmailAddress = groupParticipant.Email
+            }).ToList();
+
+            var email = new MpCommunication
+                {
+                    EmailBody = body,
+                    EmailSubject = subject,
+                    AuthorUserId = 5,
+                    DomainId = _domainId,
+                    FromContact = fromContact,
+                    ReplyToContact = replyToContact,
+                    ToContacts = toContacts
+                };
+
+            _communicationRepository.SendMessage(email);
+        }
+
+        public void ValidateUserAsLeader(string token, int groupTypeId, int groupId, int groupParticipantId, List<GroupDTO> groups)
+        {
+            if (groups == null || !groups.Any())
+            {
+                throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
+            }
+
+            var groupParticipants = groups.FirstOrDefault().Participants;
+            var me = _participantRepository.GetParticipantRecord(token);
+
+            if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
+                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+            {
+                throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
+            }
+        }
     }
 }

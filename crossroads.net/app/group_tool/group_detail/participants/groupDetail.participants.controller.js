@@ -1,13 +1,15 @@
+import GroupMessage from '../../model/groupMessage';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope) {
+  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.log = $log;
     this.participantService = ParticipantService;
     this.rootScope = $rootScope;
+    this.messageService = MessageService;
 
     this.groupId = this.state.params.groupId;
     this.ready = false;
@@ -110,6 +112,39 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     }).finally(() => {
+      this.processing = false;
+    });
+  }
+
+  beginMessageParticipants() {
+    this.groupMessage = new GroupMessage();
+    this.groupMessage.groupId = '';
+    this.groupMessage.subject = '';
+    this.groupMessage.body = '';
+    this.setEmailView();
+  }
+
+  cancelMessageParticipants(message) {
+    this.groupMessage = undefined;
+    this.setListView();
+  }
+
+  messageParticipants(message) {
+
+    // TODO: Fill in implementation
+    this.processing = true;
+
+    this.messageService.sendGroupMessage(this.groupId, message).then(
+        () => {
+          this.groupMessage = undefined;
+          this.$onInit();
+          this.currentView = 'List';
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+        },
+        (error) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+        }
+    ).finally(() => {
       this.processing = false;
     });
   }
