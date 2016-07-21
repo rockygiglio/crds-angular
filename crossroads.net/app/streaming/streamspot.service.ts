@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { Event } from './event';
 var moment = require('moment-timezone');
-declare var _: any;
+var _ = require('lodash');
 
 @Injectable()
 export class StreamspotService {
@@ -32,12 +32,14 @@ export class StreamspotService {
 
     return this.http.get(url, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data.events
+      .then(response => _.chain(response.json().data.events)
+        .sortBy('start')
         .filter((event:Event) => {
           // get upcoming or currently broadcasting events
           let currentTimestamp = moment().tz(moment.tz.guess());
           let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
           let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
+          
           return currentTimestamp.isBefore(eventStartTimestamp)
                 || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
         })
@@ -48,6 +50,7 @@ export class StreamspotService {
           event.time      = event.start.format('LT [EST]');
           return event;
         })
+        .value()
       )
       .catch(this.handleError);
   }
@@ -55,7 +58,6 @@ export class StreamspotService {
   getEventsByDate(): Promise<Object[]> {
     return this.getEvents().then(response => {
       return _.chain(response)
-        .sortBy('date')
         .groupBy('dayOfYear')
         .value();
     })
@@ -71,7 +73,6 @@ export class StreamspotService {
       },
       err => this.handleError(err.json().message)
     );
-
   }
 
   getBroadcaster(cb: Function) {

@@ -21,7 +21,7 @@ export class ScheduleComponent implements OnInit {
     this.streamspotService.getEventsByDate()
       .then(events => {
         this.events = events
-      })
+      });
   }
 
   dayOfYear(): Array<string> {
