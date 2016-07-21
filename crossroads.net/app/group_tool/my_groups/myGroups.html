@@ -11,7 +11,9 @@
   <div class="row">
     <div class="col-md-9 col-sm-12">
       <div class="row">
-        <group-card ng-repeat="group in myGroups.groups" group="group" detail="true" class="col-md-6 col-sm-12"></group-card>
+        <div ng-repeat="group in myGroups.groups" class="col-md-6 col-sm-12">
+          <group-card group="group"></group-card>
+        </div>
 
         <div class="col-md-6 col-sm-12">
           <div class="panel panel-default text-center">
