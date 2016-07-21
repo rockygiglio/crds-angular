@@ -12,7 +12,17 @@ export default class MyGroupsController {
 
   $onInit() {
     this.groupService.getMyGroups().then((smGroups) => {
+      // this.groups = smGroups;
+      // this.groups = smGroups.slice(0,1);
+
+      let testId = 1;
       this.groups = smGroups;
+      angular.forEach(this.groups, function(group) {
+        let fake = angular.copy(group);
+        fake.groupId = testId++;
+        smGroups.push(fake);
+      });
+
       this.ready = true;
     },
     (err) => {
