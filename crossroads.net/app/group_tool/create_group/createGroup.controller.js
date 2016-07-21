@@ -28,7 +28,7 @@ export default class CreateGroupController {
         },
 
             (err) => {
-                this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
+                this.log.error(`Unable to geft Participant for logged-in user: ${err.status} - ${err.statusText}`);
                 this.state.go("content", {"link":"/groups/leader"});
             });
 

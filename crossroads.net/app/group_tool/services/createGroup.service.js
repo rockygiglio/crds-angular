@@ -10,11 +10,12 @@ import Profile from '../model/profile';
 
 export default class CreateGroupService {
     /*@ngInject*/
-    constructor($log, Profile, GroupService, Session) {
+    constructor($log, Profile, GroupService, Session, $rootScope) {
         this.log = $log;
         this.profile = Profile;
         this.groupService = GroupService;
         this.session = Session;
+        this.rootScope = $rootScope;
         this.model = {};
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
@@ -23,6 +24,7 @@ export default class CreateGroupService {
             meetingFrequencyId: 2,
             meetingFrequencyDesc: 'Every other week'
         }];
+debugger;
         this.groupService.getProfileData().then((data) => {
             this.model = {
                 profile: {
@@ -30,6 +32,8 @@ export default class CreateGroupService {
                     lastName: data.lastName,
                     birthDate: data.dateOfBirth,
                     genderId: data.genderId,
+                    householdId: data.householdId,
+                    addressId: data.addressId,
                     address: {
                         street: data.addressLine1,
                         city: data.city,
@@ -509,20 +513,24 @@ export default class CreateGroupService {
             }
         )];
         smallGroup.profile = new Profile({
-            address1: this.model.profile.address
-            ,city: this.model.profile.address.street
+            addressId: this.model.addressId
+            ,addressLine1: this.model.profile.address.street
+            ,city: this.model.profile.address.city
             ,congregationId: this.model.profile.congregationId
             ,contactId : parseInt(this.session.exists('userId'))
             ,country : this.model.profile.address.country
             ,dateOfBirth : this.model.profile.birthDate
-            ,emailAddress : this.session.exists('email')
+            ,emailAddress : this.rootScope.email
+            ,foreignCountry: this.model.address.country
             ,genderId : this.model.profile.genderId
-            ,oldEmailAddress : this.session.exists('email')
+            ,householdId: this.model.householdId
+            ,oldEmail : this.rootScope.email
             ,postalCode : this.model.profile.address.zip
             ,state : this.model.profile.address.state
             }
         );
 
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
 // TODO singleAttributes and multiAttributes
         return smallGroup;
