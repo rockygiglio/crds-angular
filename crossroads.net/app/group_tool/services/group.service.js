@@ -171,7 +171,6 @@ export default class GroupService {
     return promise.then((data) => {
         this.saveParticipant(smallGroup.participants, data.groupId);
         this.saveProfile(smallGroup.profile);
-debugger;
       }, (err) => {
         throw err;
       });
