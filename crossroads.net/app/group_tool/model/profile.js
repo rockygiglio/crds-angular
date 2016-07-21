@@ -1,6 +1,4 @@
 
-import constants from 'crds-constants';
-
 export default class Profile {
 
   constructor(jsonObject) {
@@ -9,16 +7,15 @@ export default class Profile {
     } else {
       this.address1 = '';
       this.city = '';
-      this.state = '';
-      this.postalCode = '';
-      this.country = '';
       this.congregationId = '';
       this.contactId = '';
+      this.country = '';
       this.dateOfBirth = '';
       this.emailAddress = '';
-      this.oldEmailAddress = '';
       this.genderId = '';
+      this.oldEmailAddress = '';
+      this.postalCode = '';
+      this.state = '';
     }
   }
-
 }

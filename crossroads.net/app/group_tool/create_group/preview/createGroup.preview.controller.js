@@ -30,10 +30,11 @@ export default class CreateGroupPreviewController {
       //   this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
       //   this.saving = false;
       //   this.successfulSave = true;
-      //   //$anchorScroll();
+      //   $anchorScroll();
       // },
       //   function (data) {
       //     if (data && data.contentBlockMessage) {
+      //       this.state.go('grouptool.mygroups');
       //       this.rootScope.$emit('notify', data.contentBlockMessage);
       //     } else {
       //       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
@@ -43,7 +44,8 @@ export default class CreateGroupPreviewController {
       //   }
       // );
 
-      this.state.go('grouptool.mygroups');
+     this.state.go('grouptool.mygroups');
+
     }
     catch (error) {
       this.saving = false;
@@ -52,12 +54,4 @@ export default class CreateGroupPreviewController {
     }
 
   }
-
-  savePersonal() {
-    // set oldName to existing email address to work around password change dialog issue
-    // this.groupData.profile.person.oldEmail = this.groupData.profile.person.emailAddress;
-    // return this.groupData.person.$save();
-  }
-
-
 }

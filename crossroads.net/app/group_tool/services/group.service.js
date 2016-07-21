@@ -170,6 +170,8 @@ export default class GroupService {
                           .save({}, smallGroup).$promise;
     return promise.then((data) => {
         this.saveParticipant(smallGroup.participants, data.groupId);
+        this.saveProfile(smallGroup.profile);
+debugger;
       }, (err) => {
         throw err;
       });
@@ -178,6 +180,17 @@ export default class GroupService {
     saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
+
+      return promise.then((data) => {
+      }, (err) => {
+        throw err;
+      });
+  }
+
+    saveProfile(profile) {
+debugger;
+      let promise = this.resource(`${__API_ENDPOINT__}api/profile`)
+                          .save({}, profile).$promise;
 
       return promise.then((data) => {
       }, (err) => {

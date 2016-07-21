@@ -6,6 +6,7 @@ import AgeRange from '../model/ageRange';
 import Address from '../model/address';
 import Category from '../model/category';
 import GroupType from '../model/groupType';
+import Profile from '../model/profile';
 
 export default class CreateGroupService {
     /*@ngInject*/
@@ -459,15 +460,13 @@ export default class CreateGroupService {
     getMeetingLocation() {
         let meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        // Friday\'s at 12:30 PM, Every Week
         return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
 
     }
 
     mapSmallGroup() {
-// TODO This stuff below will need to be refactored when we merge in the save branch.
-
-        let groupType = _.find(this.typeIdLookup, (groupType) => { return groupType.attributeId == this.model.group.typeId });
+        let groupType = _.find(this.typeIdLookup, (groupType) => {
+             return groupType.attributeId == this.model.group.typeId });
 
         let ageRangeNames = [];
         _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
@@ -478,19 +477,9 @@ export default class CreateGroupService {
             )
         });
 
-        // if (typeof groupType == 'undefined') {
-        //     groupType = { name: '' };
-        // }
-
         let smallGroup = new SmallGroup();
+
         smallGroup.groupName = this.model.group.groupName;
-        smallGroup.participants = [new Participant({
-            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            ,nickName: this.model.profile.nickName
-            ,lastName: this.model.profile.lastName
-            ,contactId: parseInt(this.session.exists('userId'))
-        }
-        )];
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupType = new GroupType({ name: groupType.name });
         if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
@@ -513,16 +502,30 @@ export default class CreateGroupService {
         smallGroup.startDate = this.model.group.startDate;
         smallGroup.availableOnline = this.model.group.availableOnline;
         smallGroup.contactId = parseInt(this.session.exists('userId'));
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            ,nickName: this.model.profile.nickName
+            ,lastName: this.model.profile.lastName
+            ,contactId: parseInt(this.session.exists('userId'))
+            }
+        )];
+        smallGroup.profile = new Profile({
+            address1: this.model.profile.address
+            ,city: this.model.profile.address.street
+            ,congregationId: this.model.profile.congregationId
+            ,contactId : parseInt(this.session.exists('userId'))
+            ,country : this.model.profile.address.country
+            ,dateOfBirth : this.model.profile.birthDate
+            ,emailAddress : this.session.exists('email')
+            ,genderId : this.model.profile.genderId
+            ,oldEmailAddress : this.session.exists('email')
+            ,postalCode : this.model.profile.address.zip
+            ,state : this.model.profile.address.state
+            }
+        );
 
 // TODO singleAttributes and multiAttributes
-
         return smallGroup;
 
     }
-
-// TODO also set congregationId on the profile
-// TODO map profile object
-    //mapProfile() {
-
-    //}
 }
