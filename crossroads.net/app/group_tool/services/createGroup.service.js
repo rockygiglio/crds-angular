@@ -21,10 +21,10 @@ export default class CreateGroupService {
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
         }, {
-            meetingFrequencyId: 2,
-            meetingFrequencyDesc: 'Every other week'
-        }];
-debugger;
+                meetingFrequencyId: 2,
+                meetingFrequencyDesc: 'Every other week'
+            }];
+
         this.groupService.getProfileData().then((data) => {
             this.model = {
                 profile: {
@@ -161,9 +161,9 @@ debugger;
                         label: 'Specific Day and Time',
                         value: true
                     }, {
-                        label: 'Flexible Meeting Times/Not Sure Yet',
-                        value: false
-                    }]
+                            label: 'Flexible Meeting Times/Not Sure Yet',
+                            value: false
+                        }]
                 }
             }, {
                     key: 'group.meeting.day',
@@ -176,7 +176,7 @@ debugger;
                     },
                     controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            let sortedResponse = _.sortBy(response, function (day) {return day.dp_RecordID;});
+                            let sortedResponse = _.sortBy(response, function (day) { return day.dp_RecordID; });
                             $scope.to.options = sortedResponse;
                             CreateGroupService.meetingDaysLookup = response;
                             return response;
@@ -258,9 +258,9 @@ debugger;
                             label: 'Yep. Kids are welcome and as a group we’ll make plans.',
                             kidFriendly: true
                         }, {
-                            label: 'No. Adults only please.',
-                            kidFriendly: false
-                        }]
+                                label: 'No. Adults only please.',
+                                kidFriendly: false
+                            }]
                     }
                 }]
         };
@@ -386,74 +386,74 @@ debugger;
                     label: 'Life Stage',
                     labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
                 }
-            },{
-                key: 'group.categories.lifeStageDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.lifestages',
-                templateOptions: {
-                    placeholder: 'Life Stage detail...'
-                }
-            },{
-                key: 'group.categories.healing',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Healing',
-                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
-                }
-            },{
-                key: 'group.categories.healingDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.healing',
-                templateOptions: {
-                    placeholder: 'Healing detail...'
-                }
-            },{
-                key:'group.categories.neighborhood',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Neighborhoods',
-                    labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
-                }
             }, {
-                key: 'group.categories.neighborhoodDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.neighborhood',
-                templateOptions: {
-                    placeholder: 'Neighborhood detail...'
-                }
-            },{
-                key: 'group.categories.spiritualgrowth',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Spirtual Growth',
-                    labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
-                }
-            },{
-                key: 'group.categories.spiritualgrowthDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.spiritualgrowth',
-                templateOptions: {
-                    placeholder: 'Spritual Growth detail...'
-                }
-            },{
-                key: 'group.categories.interest',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Interest',
-                    labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
-                }
-            },{
-                key: 'group.categories.interestDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.interest',
-                templateOptions: {
-                    placeholder: 'Interest detail...'
-                }
-            }]
+                    key: 'group.categories.lifeStageDetail',
+                    type: 'input',
+                    hideExpression: '!model.group.categories.lifestages',
+                    templateOptions: {
+                        placeholder: 'Life Stage detail...'
+                    }
+                }, {
+                    key: 'group.categories.healing',
+                    type: 'boldcheckbox',
+                    wrapper: 'checkboxdescription',
+                    templateOptions: {
+                        label: 'Healing',
+                        labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
+                    }
+                }, {
+                    key: 'group.categories.healingDetail',
+                    type: 'input',
+                    hideExpression: '!model.group.categories.healing',
+                    templateOptions: {
+                        placeholder: 'Healing detail...'
+                    }
+                }, {
+                    key: 'group.categories.neighborhood',
+                    type: 'boldcheckbox',
+                    wrapper: 'checkboxdescription',
+                    templateOptions: {
+                        label: 'Neighborhoods',
+                        labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
+                    }
+                }, {
+                    key: 'group.categories.neighborhoodDetail',
+                    type: 'input',
+                    hideExpression: '!model.group.categories.neighborhood',
+                    templateOptions: {
+                        placeholder: 'Neighborhood detail...'
+                    }
+                }, {
+                    key: 'group.categories.spiritualgrowth',
+                    type: 'boldcheckbox',
+                    wrapper: 'checkboxdescription',
+                    templateOptions: {
+                        label: 'Spirtual Growth',
+                        labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
+                    }
+                }, {
+                    key: 'group.categories.spiritualgrowthDetail',
+                    type: 'input',
+                    hideExpression: '!model.group.categories.spiritualgrowth',
+                    templateOptions: {
+                        placeholder: 'Spritual Growth detail...'
+                    }
+                }, {
+                    key: 'group.categories.interest',
+                    type: 'boldcheckbox',
+                    wrapper: 'checkboxdescription',
+                    templateOptions: {
+                        label: 'Interest',
+                        labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
+                    }
+                }, {
+                    key: 'group.categories.interestDetail',
+                    type: 'input',
+                    hideExpression: '!model.group.categories.interest',
+                    templateOptions: {
+                        placeholder: 'Interest detail...'
+                    }
+                }]
         }
 
         return [profileAboutFields, profileAddressFields, groupTypeFields,
@@ -470,20 +470,20 @@ debugger;
 
     mapSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
-             return groupType.attributeId == this.model.group.typeId });
+            return groupType.attributeId == this.model.group.typeId
+        });
 
         let ageRangeNames = [];
         _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
             ageRangeNames.push(new AgeRange({
                 name: _.find(this.ageRangeLookup, (range) => {
                     return range.attributeId == selectedRange
-                }).name})
+                }).name
+            })
             )
         });
 
         let smallGroup = new SmallGroup();
-
-        debugger;
 
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupDescription = this.model.group.groupDescription;
@@ -497,11 +497,11 @@ debugger;
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
-        smallGroup.kidsWelcome = this.model.group.kidFriendly; 
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.meetingDay = this.model.group.meetingDay;      
+        smallGroup.meetingDay = this.model.group.meetingDay;
         smallGroup.meetingTime = this.model.group.meeting.time;
-        smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
+        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
@@ -510,32 +510,60 @@ debugger;
         smallGroup.contactId = parseInt(this.session.exists('userId'));
         smallGroup.participants = [new Participant({
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            ,nickName: this.model.profile.nickName
-            ,lastName: this.model.profile.lastName
-            ,contactId: parseInt(this.session.exists('userId'))
-            }
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+            , contactId: parseInt(this.session.exists('userId'))
+        }
         )];
         smallGroup.profile = new Profile({
-            addressId: this.model.addressId
-            ,addressLine1: this.model.profile.address.street
-            ,city: this.model.profile.address.city
-            ,congregationId: this.model.profile.congregationId
-            ,contactId : parseInt(this.session.exists('userId'))
-            ,dateOfBirth : this.model.profile.birthDate
-            ,emailAddress : this.rootScope.email
-            ,foreignCountry: this.model.address.country
-            ,genderId : this.model.profile.genderId
-            ,householdId: this.model.householdId
-            ,oldEmail : this.rootScope.email
-            ,postalCode : this.model.profile.address.zip
-            ,state : this.model.profile.address.state
-            }
+            addressId: this.model.profile.addressId
+            , addressLine1: this.model.profile.address.street
+            , city: this.model.profile.address.city
+            , congregationId: this.model.profile.congregationId
+            , contactId: parseInt(this.session.exists('userId'))
+            , dateOfBirth: this.model.profile.birthDate
+            , emailAddress: this.rootScope.email
+            , foreignCountry: this.model.profile.address.country
+            , genderId: this.model.profile.genderId
+            , householdId: this.model.profile.householdId
+            , oldEmail: this.rootScope.email
+            , postalCode: this.model.profile.address.zip
+            , state: this.model.profile.address.state
+        }
+
         );
 
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
-// TODO singleAttributes and multiAttributes
+        var groupTypeId = 0;
+        switch (smallGroup.groupType.name) {
+            case 'Anyone is welcome':
+                groupTypeId = 7007;
+                break;
+            case 'Men only':
+                groupTypeId = 7008;
+                break;
+            case 'Women only':
+                groupTypeId = 7009;
+                break;
+            case 'Married couples':
+                groupTypeId = 7010;
+                break;
+            default:
+                groupTypeId = 7007;
+        }
+
+        smallGroup.singleAttributes = {
+            "73": {
+                "attribute": {
+                    "attributeId": groupTypeId,
+                },
+            }
+        }
+
+        // TODO singleAttributes and multiAttributes
         return smallGroup;
 
     }
+
 }
