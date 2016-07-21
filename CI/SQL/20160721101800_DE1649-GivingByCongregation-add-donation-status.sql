@@ -35,7 +35,7 @@ SET nocount ON;
 --Per Finance - change is needed to capture millisecond data on donations
 SET DATEFIRST 1;
 SET @startdate = DATEADD(dd, DATEDIFF(dd, 0, @startdate),0);
-SET @enddate   =  DATEADD(ms,8639998, (DATEADD(dd, DATEDIFF(dd, 0, @enddate),0)))
+SET @enddate   =  DATEADD(ms,86399998, (DATEADD(dd, DATEDIFF(dd, 0, @enddate),0)))
 
 
 IF OBJECT_ID('tempdb..#GIVING') IS NOT NULL   
