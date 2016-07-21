@@ -9,7 +9,7 @@ export default class Profile {
       this.city = '';
       this.congregationId = '';
       this.contactId = '';
-      this.country = '';
+      this.foreignCountry = '';
       this.dateOfBirth = '';
       this.emailAddress = '';
       this.genderId = '';

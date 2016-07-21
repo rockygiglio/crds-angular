@@ -483,6 +483,8 @@ debugger;
 
         let smallGroup = new SmallGroup();
 
+        debugger;
+
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupType = new GroupType({ name: groupType.name });
@@ -495,8 +497,9 @@ debugger;
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
+        smallGroup.kidsWelcome = this.model.group.kidFriendly; 
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.kidsWelcome = this.model.group.kidFriendly;       
+        smallGroup.meetingDay = this.model.group.meetingDay;      
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -518,7 +521,6 @@ debugger;
             ,city: this.model.profile.address.city
             ,congregationId: this.model.profile.congregationId
             ,contactId : parseInt(this.session.exists('userId'))
-            ,country : this.model.profile.address.country
             ,dateOfBirth : this.model.profile.birthDate
             ,emailAddress : this.rootScope.email
             ,foreignCountry: this.model.address.country
