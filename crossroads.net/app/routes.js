@@ -381,7 +381,7 @@
         })
         .state('live', {
           parent: 'screenWidth',
-          url: '/live-v2',
+          url: '/live',
           template: '<streaming></streaming>',
           data: {
             meta: {
@@ -392,7 +392,7 @@
         })
         .state('livestream', {
           parent: 'noHeaderOrFooter',
-          url: '/live-v2/stream',
+          url: '/live/stream',
           template: '<streaming-video></streaming-video>',
           data: {
             meta: {
