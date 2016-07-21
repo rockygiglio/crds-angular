@@ -122,7 +122,7 @@ export default class GroupService {
   approveDenyInquiry(groupId, approve, inquiry) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
                            save({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve}, inquiry).$promise;
-    
+
     return promise.then((data) => {
         return data;
       }, (err) => {
@@ -168,16 +168,14 @@ export default class GroupService {
   saveCreateGroupForm(smallGroup) {
     let promise = this.resource(`${__API_ENDPOINT__}api/group`)
                           .save({}, smallGroup).$promise;
-debugger;
     return promise.then((data) => {
-        this.saveParticipant(smallGroup.particpants, data.groupId);
+        this.saveParticipant(smallGroup.participants, data.groupId);
       }, (err) => {
         throw err;
       });
   }
 
     saveParticipant(participants, groupId) {
-debugger;
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
 

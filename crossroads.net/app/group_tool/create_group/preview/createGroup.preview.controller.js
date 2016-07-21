@@ -26,22 +26,22 @@ export default class CreateGroupPreviewController {
     try {
       var promise = this.groupService.saveCreateGroupForm(this.groupData);
 
-      promise.then(function () {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-        this.saving = false;
-        this.successfulSave = true;
-        //$anchorScroll();
-      },
-        function (data) {
-          if (data && data.contentBlockMessage) {
-            this.rootScope.$emit('notify', data.contentBlockMessage);
-          } else {
-            this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-          }
-          this.saving = false;
-          this.successfulSave = false;
-        }
-      );
+      // promise.then(function () {
+      //   this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+      //   this.saving = false;
+      //   this.successfulSave = true;
+      //   //$anchorScroll();
+      // },
+      //   function (data) {
+      //     if (data && data.contentBlockMessage) {
+      //       this.rootScope.$emit('notify', data.contentBlockMessage);
+      //     } else {
+      //       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      //     }
+      //     this.saving = false;
+      //     this.successfulSave = false;
+      //   }
+      // );
 
       this.state.go('grouptool.mygroups');
     }
