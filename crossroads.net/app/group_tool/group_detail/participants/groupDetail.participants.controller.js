@@ -117,6 +117,7 @@ export default class GroupDetailParticipantsController {
 
   beginMessageParticipants() {
     this.groupMessage = new GroupMessage();
+    this.groupMessage.groupId = '';
     this.groupMessage.subject = '';
     this.groupMessage.body = '';
     this.setEmailView();
@@ -132,16 +133,14 @@ export default class GroupDetailParticipantsController {
     // TODO: Fill in implementation
     this.processing = true;
 
-    //invitation.requestDate = new Date();
-
     this.messageService.sendGroupMessage(this.groupId, message).then(
-        (/*data*/) => {
+        () => {
           this.groupMessage = undefined;
           this.$onInit();
           this.currentView = 'List';
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
         },
-        (/*err*/) => {
+        (error) => {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
         }
     ).finally(() => {
