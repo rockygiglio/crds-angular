@@ -35,10 +35,8 @@ export default class CreateGroupController {
         this.fields = this.createGroupService.getFields();
   }
 
-
   previewGroup() {
     this.state.go('grouptool.create.preview');
   }
 
 }
-

@@ -671,7 +671,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 GroupId = record.ToInt("Group_ID"),
                 CongregationId = record.ToInt("Congregation_ID"),
-                KidsWelcome = record.ToBool("Kids_Welcome"),
+                KidsWelcome = (record.ContainsKey("Kids_Welcome") ? record["KidsWelcome"] as bool? : null),
                 Name = record.ToString("Group_Name"),
                 GroupRoleId = record.ToInt("Group_Role_ID"),
                 GroupDescription = record.ToString("Description"),
