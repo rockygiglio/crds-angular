@@ -503,6 +503,8 @@ streaming {
 
   .related {
     a {
+      display: block;
+      width: 100%;
       color: #FFF;
       &:hover {
         color: darken(#FFF, 20%);
@@ -514,6 +516,9 @@ streaming {
       position: relative;
       figcaption {
         @include crds-make-condensed();
+        font-size: 200%;
+        letter-spacing: normal;
+
         @media (min-width: $screen-sm-min) {
           position: absolute;
           bottom: 0.75em;
@@ -545,6 +550,10 @@ streaming {
     @media (min-width: $screen-md-min) {
       figure {
         @include make-md-column(4);
+        a {
+          display: block;
+          width: 100%;
+        }
       }
       article {
         @include make-md-column(8);
@@ -557,6 +566,7 @@ streaming {
 
     h3 {
       @include crds-make-condensed();
+      letter-spacing: normal;
       margin: 0 0 0.3em;
       color: #FFF;
     }
