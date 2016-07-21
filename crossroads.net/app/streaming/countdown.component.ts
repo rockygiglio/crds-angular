@@ -51,18 +51,13 @@ export class CountdownComponent implements OnInit {
   }
 
   private createCountdown() {
-    this.streamspotService.getUpcoming()
-      .map((response: Array<any>) => {
-        return _.last(response)
-      })
-      .subscribe(event => {
-        this.event = event;
-        this.subscriber = Observable
-                            .interval(1000)
-                            .subscribe(() => this.parseEvent());
-      });
+    this.streamspotService.getEvents().then(response => {
+      this.event = _.last(response);
+      this.subscriber = Observable
+                    .interval(1000)
+                    .subscribe(() => this.parseEvent());
+    })
   }
-
 
   private pad(value:number): string {
     return value < 10 ? `0${value}`: `${value}`;

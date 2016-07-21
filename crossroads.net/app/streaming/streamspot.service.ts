@@ -6,38 +6,33 @@ import 'rxjs/add/operator/map';
 
 import { Event } from './event';
 var moment = require('moment-timezone');
+declare var _: any;
 
 @Injectable()
 export class StreamspotService {
 
-  private url    = 'https://api.streamspot.com/broadcaster';
+  //
+  // #TODO - move to ENV file?
+  //
+  private url    = 'https://api.streamspot.com/';  // URL to web api
   private apiKey = '82437b4d-4e38-42e2-83b6-148fcfaf36fb';
-  private id     = 'crossr4915';
+  private id     = 'crossr4915'
+  private headers = new Headers({
+    'Content-Type': 'application/json',
+    'x-API-Key': this.apiKey
+  });
+
+  public isBroadcasting: boolean = false;
 
   constructor(private http: Http) { }
 
-  getEvents() {
-    let url = this.getUrl();
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      'x-API-Key': this.apiKey
-    });
+  getEvents(): Promise<Event[]> {
+    let url = `${this.url}broadcaster/${this.id}/events`;
+    // let url = 'http://localhost:3000/app/streaming/events.json'
 
-    return this.http
-            .get(url, { headers: headers })
-            .map((response: Response) => Event.asEvents(response.json().data.events))
-            .map((events: Array<Event>) => {
-              return events;
-            });
-  }
-
-  getUrl() {
-    return `${this.url}/${this.id}/events`; //'http://localhost:3000/app/streaming/events.json'
-  }
-
-  getUpcoming() {
-    return this.getEvents().map((events: Array<Event>) => {
-      return events
+    return this.http.get(url, {headers: this.headers})
+      .toPromise()
+      .then(response => response.json().data.events
         .filter((event:Event) => {
           // get upcoming or currently broadcasting events
           let currentTimestamp = moment().tz(moment.tz.guess());
@@ -53,6 +48,45 @@ export class StreamspotService {
           event.time      = event.start.format('LT [EST]');
           return event;
         })
-    });
+      )
+      .catch(this.handleError);
   }
+
+  getEventsByDate(): Promise<Object[]> {
+    return this.getEvents().then(response => {
+      return _.chain(response)
+        .sortBy('date')
+        .groupBy('dayOfYear')
+        .value();
+    })
+  }
+
+  get(url: string, cb: Function = (data: any) => {}) {
+    this.http.get(url, { headers: this.headers })
+    .subscribe(
+      data => {
+        if ( cb !== undefined ) {
+          cb(data.json().data);
+        }
+      },
+      err => this.handleError(err.json().message)
+    );
+
+  }
+
+  getBroadcaster(cb: Function) {
+    let url = `${this.url}broadcaster/${this.id}`;
+    this.get(url, cb);
+  }
+
+  getBroadcasting(cb: Function) {
+    let url = `${this.url}broadcaster/${this.id}/broadcasting`;
+    this.get(url, cb);
+  }
+
+  private handleError(error: any) {
+    console.error('An error occurred', error);
+    return Promise.reject(error.message || error);
+  }
+
 }

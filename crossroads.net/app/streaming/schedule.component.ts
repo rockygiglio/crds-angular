@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-//import { HTTP_PROVIDERS } from '@angular/http';
-
 import { Event } from './event';
 import { StreamspotService } from './streamspot.service';
 
 declare var moment: any;
 declare var _: any;
-
 
 // TODO - placeholder for schedule if StreamspotService fails
 @Component({
@@ -21,17 +18,10 @@ export class ScheduleComponent implements OnInit {
   constructor(private streamspotService: StreamspotService) { }
 
   ngOnInit() {
-    this.streamspotService.getEvents()
-      .map((events: Array<any>) => {
-        let results: Object[] = [];
-        if (events) {
-          return _.chain(events)
-            .sortBy('date')
-            .groupBy('dayOfYear')
-            .value();
-
-        }
-      }).subscribe(res => this.events = res);
+    this.streamspotService.getEventsByDate()
+      .then(events => {
+        this.events = events
+      })
   }
 
   dayOfYear(): Array<string> {

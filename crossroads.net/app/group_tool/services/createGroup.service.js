@@ -32,7 +32,8 @@ export default class CreateGroupService {
                         interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                         healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
                     }
-                }
+                },
+                specificDay: true
             }
         });
     }
@@ -128,14 +129,17 @@ export default class CreateGroupService {
                 sectionHelp: 'To get the most out of your group, you’ll want to meet on a regular basis. We recommend weekly, but we want you to choose what’s best for your group.'
             },
             fieldGroup: [{
+                key: 'specificDay',
                 type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
                     inline: false,
                     options: [{
                         label: 'Specific Day and Time',
+                        value: true
                     }, {
                         label: 'Flexible Meeting Times/Not Sure Yet',
+                        value: false
                     }]
                 }
             }, {
