@@ -241,20 +241,20 @@ export default class CreateGroupService {
                         label: 'Zip'
                     }
                 }, {
-                    key: 'group.meeting.childcare',
+                    key: 'group.kidFriendly',
                     type: 'radio',
                     templateOptions: {
-                        label: 'Are you interested in leading a group with chilcare options?',
+                        label: 'Will your group have childcare?',
                         labelProp: 'label',
-                        valueProp: 'childcare',
+                        valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Kids welcome at the group.',
-                            childcare: true
+                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            kidFriendly: true
                         }, {
-                                label: 'No. (Parents are welcome, but make your own kid plans.)',
-                                childcare: false
-                            }]
+                            label: 'No. Adults only please.',
+                            kidFriendly: false
+                        }]
                     }
                 }]
         };
@@ -503,7 +503,7 @@ export default class CreateGroupService {
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.kidsWelcome = this.model.group.meeting.childcare;
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
         return smallGroup;
     }
