@@ -35,6 +35,7 @@ export default class CreateGroupService {
                     householdId: this.profileData.householdId,
                     addressid: this.profileData.addressId,
                     contactId: this.profileData.contactId,
+					congregationId: this.profileData.congregationId,
                     address: {
                         street: this.profileData.addressLine1,
                         city: this.profileData.city,
