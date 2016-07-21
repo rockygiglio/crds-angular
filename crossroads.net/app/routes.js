@@ -69,6 +69,11 @@
           abstract: true,
           templateUrl: 'templates/screenWidth.html'
         })
+        .state('centeredContentPage', {
+          parent: 'root',
+          abstract: true,
+          templateUrl: 'templates/centeredContentPage.html'
+        })
         .state('noHeaderOrFooter', {
           parent: 'root',
           abstract: true,
