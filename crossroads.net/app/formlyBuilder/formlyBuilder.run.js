@@ -116,6 +116,28 @@
             })
         });
 
+        ngModelAttrs = {};
+
+        // bindings
+        angular.forEach([
+            'contact-id',
+            'wrapper-class',
+            'image-class'
+        ], function(binding) {
+            ngModelAttrs[camelize(binding)] = { bound: binding };
+        });
+
+        formlyConfig.setType({
+            name: 'profilePicture',
+            template: require('./templates/profilePicture.html'),
+            wrapper: ['bootstrapHasError'],
+            defaultOptions: {
+                ngModelAttrs: ngModelAttrs,
+                templateOptions: {}
+            }
+        });
+        
+
         function camelize(string) {
             string = string.replace(/[\-_\s]+(.)?/g, function(match, chr) {
                 return chr ? chr.toUpperCase() : '';

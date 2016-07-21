@@ -29,6 +29,10 @@ export default class GroupService {
                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
   }
 
+  getStates() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
+  }
+
   getSites() {
     return this.lookupService.Sites.query().$promise;
   }
