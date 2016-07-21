@@ -23,5 +23,6 @@ namespace crds_angular.Services.Interfaces
                                        Participant fromParticipant = null);
 
         MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId);
+	void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
     }
 }

@@ -39,6 +39,8 @@ namespace crds_angular.test.Services
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPServices.IApiUserRepository> _apiUserService;
         private Mock<MPServices.IAttributeRepository> _attributeService;
+        private Mock<IEmailCommunication> _emailCommunicationService;
+        private Mock<MPServices.IUserRepository> _userRespository;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -74,6 +76,8 @@ namespace crds_angular.test.Services
             _groupService = new Mock<IGroupRepository>();
             _communicationService = new Mock<MPServices.ICommunicationRepository>();
             _contactService = new Mock<MPServices.IContactRepository>();
+            _emailCommunicationService = new Mock<IEmailCommunication>();
+            _userRespository = new Mock<MPServices.IUserRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
@@ -94,7 +98,9 @@ namespace crds_angular.test.Services
                                        _contactService.Object,
                                        _objectAttributeService.Object,
                                        _apiUserService.Object,
-                                       _attributeService.Object);
+                                       _attributeService.Object,
+                                       _emailCommunicationService.Object,
+                                       _userRespository.Object);
         }
 
         [Test]

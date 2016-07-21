@@ -176,7 +176,8 @@ debugger;
                     },
                     controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            $scope.to.options = response;
+                            let sortedResponse = _.sortBy(response, function (day) {return day.dp_RecordID;});
+                            $scope.to.options = sortedResponse;
                             CreateGroupService.meetingDaysLookup = response;
                             return response;
                         });
@@ -246,20 +247,20 @@ debugger;
                         label: 'Zip'
                     }
                 }, {
-                    key: 'group.meeting.childcare',
+                    key: 'group.kidFriendly',
                     type: 'radio',
                     templateOptions: {
-                        label: 'Are you interested in leading a group with chilcare options?',
+                        label: 'Will your group have childcare?',
                         labelProp: 'label',
-                        valueProp: 'childcare',
+                        valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Kids welcome at the group.',
-                            childcare: true
+                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            kidFriendly: true
                         }, {
-                                label: 'No. (Parents are welcome, but make your own kid plans.)',
-                                childcare: false
-                            }]
+                            label: 'No. Adults only please.',
+                            kidFriendly: false
+                        }]
                     }
                 }]
         };
@@ -382,7 +383,7 @@ debugger;
                 type: 'boldcheckbox',
                 wrapper: 'checkboxdescription',
                 templateOptions: {
-                    label: 'Life Stages',
+                    label: 'Life Stage',
                     labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
                 }
             },{
@@ -392,8 +393,22 @@ debugger;
                 templateOptions: {
                     placeholder: 'Life Stage detail...'
                 }
-            },
-                {
+            },{
+                key: 'group.categories.healing',
+                type: 'boldcheckbox',
+                wrapper: 'checkboxdescription',
+                templateOptions: {
+                    label: 'Healing',
+                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
+                }
+            },{
+                key: 'group.categories.healingDetail',
+                type: 'input',
+                hideExpression: '!model.group.categories.healing',
+                templateOptions: {
+                    placeholder: 'Healing detail...'
+                }
+            },{
                 key:'group.categories.neighborhood',
                 type: 'boldcheckbox',
                 wrapper: 'checkboxdescription',
@@ -438,21 +453,6 @@ debugger;
                 templateOptions: {
                     placeholder: 'Interest detail...'
                 }
-            },{
-                key: 'group.categories.healing',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Healing',
-                    labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
-                }
-            },{
-                key: 'group.categories.healingDetail',
-                type: 'input',
-                hideExpression: '!model.group.categories.healing',
-                templateOptions: {
-                    placeholder: 'Healing detail...'
-                }
             }]
         }
 
@@ -496,7 +496,7 @@ debugger;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.kidsWelcome = this.model.group.meeting.childcare;
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingDay = this.model.group.meeting.day;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency =  this.model.group.meeting.frequency;
@@ -530,7 +530,9 @@ debugger;
             ,state : this.model.profile.address.state
             }
         );
+
 this.log.debug(smallGroup.profile);
+
 // TODO singleAttributes and multiAttributes
         return smallGroup;
 

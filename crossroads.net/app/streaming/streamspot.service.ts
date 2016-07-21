@@ -1,11 +1,12 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
 
 import { Event } from './event';
-declare var moment: any;
-declare var _: any;
+var moment = require('moment-timezone');
+var _ = require('lodash');
 
 @Injectable()
 export class StreamspotService {
@@ -27,18 +28,29 @@ export class StreamspotService {
 
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
+    // let url = 'http://localhost:3000/app/streaming/events.json'
+
     return this.http.get(url, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data.events
+      .then(response => _.chain(response.json().data.events)
+        .sortBy('start')
         .filter((event:Event) => {
-          return moment() <= moment(event.start) && event.deleted === null;
+          // get upcoming or currently broadcasting events
+          let currentTimestamp = moment().tz(moment.tz.guess());
+          let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
+          let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
+          
+          return currentTimestamp.isBefore(eventStartTimestamp)
+                || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
         })
         .map((event:Event) => {
-          event.date = moment(event.start);
-          event.dayOfYear = event.date.dayOfYear();
-          event.time = event.date.format('LT [EST]');
+          event.start     = moment.tz(event.start, 'America/New_York');
+          event.end       = moment.tz(event.end, 'America/New_York');
+          event.dayOfYear = event.start.dayOfYear();
+          event.time      = event.start.format('LT [EST]');
           return event;
         })
+        .value()
       )
       .catch(this.handleError);
   }
@@ -46,14 +58,12 @@ export class StreamspotService {
   getEventsByDate(): Promise<Object[]> {
     return this.getEvents().then(response => {
       return _.chain(response)
-        .sortBy('date')
         .groupBy('dayOfYear')
         .value();
     })
   }
 
   get(url: string, cb: Function = (data: any) => {}) {
-
     this.http.get(url, { headers: this.headers })
     .subscribe(
       data => {
@@ -63,12 +73,11 @@ export class StreamspotService {
       },
       err => this.handleError(err.json().message)
     );
-
   }
 
   getBroadcaster(cb: Function) {
     let url = `${this.url}broadcaster/${this.id}`;
-    this.get(url, cb); 
+    this.get(url, cb);
   }
 
   getBroadcasting(cb: Function) {

@@ -57,7 +57,6 @@ module.exports = {
               test: /\.css$/,
               loader: 'style-loader!css-loader'
             },
-            
             {
               test: /\.js$/,
               include: [
@@ -93,9 +92,13 @@ module.exports = {
               exclude: [/\.(spec|e2e)\.ts$/]
             },
             {
+              test: /\.json$/,
+              loaders: ["json-loader"]
+            },
+            {
               test: /\.ng2component\.html$/,
               loader: 'raw-loader'
-            },
+            }
     ]
   },
   plugins: [

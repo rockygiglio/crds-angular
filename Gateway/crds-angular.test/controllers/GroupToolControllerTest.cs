@@ -5,6 +5,7 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -139,6 +140,21 @@ namespace crds_angular.test.controllers
             }
 
             _groupToolService.VerifyAll();
+        }
+
+	[Test]
+        public void TestPostGroupMessage()
+        {
+            _groupToolService.Setup(mocked => mocked.SendAllGroupParticipantsEmail(_auth, 123, 1, "subject", "message"));
+            var result = _fixture.PostGroupMessage(123, 1, new GroupMessageDTO
+            {
+                Subject = "subject",
+                Body = "message"
+            });
+            _groupToolService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkResult>(result);
         }
 
     }
