@@ -15,13 +15,10 @@ require('videojs-contrib-hls/dist/videojs-contrib-hls');
 export class VideoJSComponent implements AfterViewInit {
 
   player: any;
-
   nonPublicUrl: string = "//limelight1.streamspot.com/dvr/smil:crossr30e3.smil/playlist.m3u8";
   productionUrl: string = "//limelight1.streamspot.com/url/smil:crossr4915.smil/playlist.m3u8";
   testUrl: string = "//qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
-
   url: string = "";
-
   id: string = "videojs-player";
   width: number = 640;
   height: number = 380;
@@ -47,12 +44,12 @@ export class VideoJSComponent implements AfterViewInit {
 
       // set player source
       this.player.src({
-        "type": "application/x-mpegURL", 
+        "type": "application/x-mpegURL",
         "src": this.url
       });
 
       this.player.play();
-      
+
     });
 
   }
@@ -91,5 +88,4 @@ export class VideoJSComponent implements AfterViewInit {
   textdata
 
   */
-  
 }
