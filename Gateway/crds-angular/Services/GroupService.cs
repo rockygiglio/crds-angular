@@ -10,6 +10,7 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Newtonsoft.Json;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
@@ -34,6 +35,8 @@ namespace crds_angular.Services
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IAttributeRepository _attributeService;
+        private readonly IEmailCommunication _emailCommunicationService;
+        private readonly IUserRepository _userRepository;
 
 
         /// <summary>
@@ -57,7 +60,9 @@ namespace crds_angular.Services
                             IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
                             IApiUserRepository apiUserService, 
-                            IAttributeRepository attributeService)
+                            IAttributeRepository attributeService,
+                            IEmailCommunication emailCommunicationService,
+                            IUserRepository userRepository)
 
         {
             _mpGroupService = mpGroupService;
@@ -71,6 +76,8 @@ namespace crds_angular.Services
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
             _attributeService = attributeService;
+            _emailCommunicationService = emailCommunicationService;
+            _userRepository = userRepository; 
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -588,5 +595,6 @@ namespace crds_angular.Services
 
             return groupDetail;
         }
+
     }
 }
