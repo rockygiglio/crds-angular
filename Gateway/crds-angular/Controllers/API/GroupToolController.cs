@@ -5,6 +5,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
 
 namespace crds_angular.Controllers.API
@@ -140,6 +141,34 @@ namespace crds_angular.Controllers.API
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto(string.Format("Error {0} group inquiry {1} from group {2}", approve, inquiry.InquiryId, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+	/// <summary>
+        /// Send an email message to all members of a Group
+        /// Requires the user to be a leader of the Group
+        /// Will return a 404 if the user is not a Leader of the group
+        /// </summary>
+        [RequiresAuthorization]
+        [Route("api/grouptool/{groupId}/{groupTypeId}/groupmessage")]
+        public IHttpActionResult PostGroupMessage([FromUri()] int groupId, [FromUri()] int groupTypeId, GroupMessageDTO message)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SendAllGroupParticipantsEmail(token, groupId, groupTypeId, message.Subject, message.Body);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return (IHttpActionResult)NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending a Group email for groupID " + groupId, ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
