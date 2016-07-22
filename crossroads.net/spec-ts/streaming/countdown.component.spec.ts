@@ -1,4 +1,5 @@
 import { provide } from '@angular/core';
+import { HTTP_PROVIDERS } from '@angular/http';
 import { describe, it, expect, inject, beforeEach, addProviders } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
@@ -9,11 +10,21 @@ import { CountdownComponent } from '../../app/streaming/countdown.component';
 
 var moment = require('moment-timezone');
 
+class MockStreamspotService extends StreamspotService {
+  constructor() {
+    super(null)
+  }
+  getEvents(): any {
+    return [];
+  }
+}
+
 describe('Component: Countdown', () => {
 
   beforeEach(() =>
     addProviders([
-      { provide: StreamspotService, useClass: StreamspotService }
+      HTTP_PROVIDERS,
+      { provide: StreamspotService, useClass: MockStreamspotService }
     ])
   );
 
@@ -36,13 +47,12 @@ describe('Component: Countdown', () => {
       let start = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
       let end = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
 
-      component.event = new Event('title', moment.tz(start,'America/New_York'), moment.tz(end,'America/New_York'));
+      component.event = new Event('title', start, end);
       component.parseEvent();
 
       expect(component.countdown.days).toBe('01');
       expect(component.countdown.hours).toBe('23');
       expect(component.countdown.minutes).toBe('59');
-      expect(component.countdown.seconds).toBe('59');
     });
   }));
 
