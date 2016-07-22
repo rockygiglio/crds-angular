@@ -8,6 +8,10 @@ my-groups {
       flex-wrap: wrap;
     }
 
+    .flex-row {
+      flex-direction: row;
+    }
+
     .flex-col {
       flex-direction: column;
     }
@@ -18,7 +22,7 @@ my-groups {
   }
 
   .my-groups-static {
-    height: 125px;
+    height: 140px;
   }
 
   .my-groups-static-vert {

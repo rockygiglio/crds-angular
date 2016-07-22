@@ -15,27 +15,32 @@
           <group-card group="group" class="is-flex flex-grow"></group-card>
         </div>
 
-        <div class="col-md-6 col-sm-12">
-          <div class="my-groups-static panel panel-default text-center">
-            <div class="my-groups-static-vert">
-              <div>Find a Group</div>
-              <svg viewBox="0 0 32 32" class="icon search3 text-primary">
-                <use xlink:href="#search3"></use>
-              </svg>
+        <div ng-class="{ 'col-md-12 col-sm-12': myGroups.groupsEven(), 'col-md-6 col-sm-12': myGroups.groupsOdd() }">
+          <div ng-class="{ 'row': myGroups.groupsEven() }">
+            <div ng-class="{ 'col-md-6 col-sm-12': myGroups.groupsEven() }">
+              <div class="my-groups-static panel panel-default text-center">
+                <div class="my-groups-static-vert">
+                  <div>Find a Group</div>
+                  <svg viewBox="0 0 32 32" class="icon search3 text-primary">
+                    <use xlink:href="#search3"></use>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div ng-class="{ 'col-md-6 col-sm-12': myGroups.groupsEven() }">
+              <div class="my-groups-static panel panel-default text-center">
+                <div class="my-groups-static-vert">
+                  <div>Lead a Group</div>
+                  <svg viewBox="0 0 32 32" class="icon plus4 text-primary">
+                    <use xlink:href="#plus4"></use>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-sm-12">
-          <div class="my-groups-static panel panel-default text-center">
-            <div class="my-groups-static-vert">
-              <div>Lead a Group</div>
-              <svg viewBox="0 0 32 32" class="icon plus4 text-primary">
-                <use xlink:href="#plus4"></use>
-              </svg>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
