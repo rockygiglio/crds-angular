@@ -131,7 +131,7 @@ namespace crds_angular.Services
 
         public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
         {
-            var participant = group.Participants.Find(p => p.GroupParticipantId == groupParticipantId);
+            var participant = group.Participants.Find(p => p.ParticipantId == groupParticipantId);
 
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
             var fromContact = new MpContact
