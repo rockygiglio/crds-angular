@@ -17,12 +17,13 @@ my-groups {
     }
 
     .flex-grow {
-      flex-grow: 1;
+      //flex-grow: 1;
+      flex: 1 1 auto;
     }
   }
 
   .my-groups-static {
-    height: 140px;
+    height: 150px;
   }
 
   .my-groups-static-vert {
@@ -40,8 +41,14 @@ my-groups {
 
 group-card {
   // Constrain max width of group cards for IE 11 Flexbox issue
-  @media (min-width: $screen-lg) {
-    max-width: 408px;
+  .panel-heading, .panel-body {
+    @media (min-width: $screen-md) {
+      max-width: 331px;
+    }
+
+    @media (min-width: $screen-lg) {
+      max-width: 408px;
+    }
   }
 }
 
