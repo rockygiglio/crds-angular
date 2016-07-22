@@ -29,6 +29,8 @@ export default class CreateGroupService {
     }
 
     preloadModel() {
+        debugger;
+        if (this.model.profile == undefined) {
             this.model = {
                 profile: {
                     nickName: this.profileData.nickName,
@@ -38,19 +40,17 @@ export default class CreateGroupService {
                     householdId: this.profileData.householdId,
                     addressId: this.profileData.addressId,
                     contactId: this.profileData.contactId,
-					congregationId: this.profileData.congregationId,
                     address: {
                         street: this.profileData.addressLine1,
                         city: this.profileData.city,
-                        state: () => { 
+                        state: () => {
                             _.find(this.statesLookup, (state) => {
                                 return state.dp_RecordName == this.profileData.state
                             }).then(function (data) {
-                                if(data === undefined) {
+                                if (data === undefined) {
                                     return '';
                                 }
-                                else
-                                {
+                                else {
                                     return datap.dp_RecordID;
                                 }
                             })
@@ -65,8 +65,9 @@ export default class CreateGroupService {
                     spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
                     interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                     healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
-            },
-            specificDay: true
+                },
+                specificDay: true
+            }
         }
     }
 
@@ -223,7 +224,7 @@ export default class CreateGroupService {
                     key: 'group.meeting.time',
                     type: 'timepicker',
                     hideExpression: '!model.specificDay',
-                     expressionProperties: {
+                    expressionProperties: {
                         'templateOptions.required': 'model.specificDay'
                     },
                     templateOptions: {
@@ -418,15 +419,15 @@ export default class CreateGroupService {
                     maxlength: 75
                 }
             }, {
-                key: 'group.groupDescription',
-                type: 'textarea',
-                templateOptions: {
-                    label: 'Group Description',
-                    required: true,
-                    rows: 6,
-                    maxlength: 2000
-                }
-            }]
+                    key: 'group.groupDescription',
+                    type: 'textarea',
+                    templateOptions: {
+                        label: 'Group Description',
+                        required: true,
+                        rows: 6,
+                        maxlength: 2000
+                    }
+                }]
         };
         var groupVisibilityFields = {
             wrapper: 'createGroup',
@@ -464,23 +465,23 @@ export default class CreateGroupService {
                 templateOptions: {
                     required: true,
                     options: [{
-                            id: 1, 
-                            label: 'Life Stages',
-                            labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
-                        }, {
-                            id: 2, 
+                        id: 1,
+                        label: 'Life Stages',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
+                    }, {
+                            id: 2,
                             label: 'Neighborhoods',
                             labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
                         }, {
-                            id: 3, 
+                            id: 3,
                             label: 'Spirtual Growth',
                             labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
                         }, {
-                            id: 4, 
+                            id: 4,
                             label: 'Interest',
                             labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
                         }, {
-                            id: 5, 
+                            id: 5,
                             label: 'Healing',
                             labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
                         }
@@ -489,14 +490,14 @@ export default class CreateGroupService {
                     labelProp: 'label'
                 }
             }, {
-                key: 'group.categories.lifestages',
-                type: 'boldcheckbox',
-                wrapper: 'checkboxdescription',
-                templateOptions: {
-                    label: 'Life Stage',
-                    labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
-                }
-            }, {
+                    key: 'group.categories.lifestages',
+                    type: 'boldcheckbox',
+                    wrapper: 'checkboxdescription',
+                    templateOptions: {
+                        label: 'Life Stage',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
+                    }
+                }, {
                     key: 'group.categories.lifeStageDetail',
                     type: 'input',
                     hideExpression: '!model.group.categories.lifestages',
@@ -576,13 +577,11 @@ export default class CreateGroupService {
         debugger;
         let meetingDay = 'Flexible Meeting Time';
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        if(this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null)
-        {
+        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
             meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
             return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
         }
-        else
-        {
+        else {
             return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
         }
     }
@@ -618,7 +617,7 @@ export default class CreateGroupService {
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.meetingDay = this.model.group.meeting.day ;
+        smallGroup.meetingDay = this.model.group.meeting.day;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -791,7 +790,7 @@ export default class CreateGroupService {
         //       }
         //     ]
         //   },
-        
+
         // TODO singleAttributes and multiAttributes
         return smallGroup;
 
