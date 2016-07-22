@@ -44,7 +44,6 @@ describe('Component: Countdown', () => {
       expect(component.countdown.days).toBe('01');
       expect(component.countdown.hours).toBe('23');
       expect(component.countdown.minutes).toBe('59');
-      expect(component.countdown.seconds).toBe('59');
     });
   }));
 
