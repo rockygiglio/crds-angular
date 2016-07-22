@@ -1,3 +1,23 @@
+my-groups {
+  @media (min-width: $screen-md) {
+    .is-flex {
+      display: flex;
+    }
+
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .flex-col {
+      flex-direction: column;
+    }
+
+    .flex-grow {
+      flex-grow: 1;
+    }
+  }
+}
+
 group-card {
   //width: 100%;
 
