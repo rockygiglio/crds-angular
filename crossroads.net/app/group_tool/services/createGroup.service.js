@@ -428,7 +428,7 @@ export default class CreateGroupService {
                 sectionHelp: 'Not much to say when you\'re high abouve the helpy help'
             },
             fieldGroup: [{
-                key: 'testCombo',
+                key: 'categories',
                 type: 'multiCheckBoxCombo',
                 templateOptions: {
                     required: true,
