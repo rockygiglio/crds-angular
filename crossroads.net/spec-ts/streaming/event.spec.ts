@@ -11,7 +11,7 @@ describe('Object: Event', () => {
   };
 
   it('should return json', () => {
-    let e = new Event('title', 'start', 'end');
+    let e = new Event('title', '2016-07-13 05:01:29', '2016-07-13 07:01:29');
     expect(e.json()).toBeTruthy();
   });
 

@@ -38,7 +38,7 @@ describe('Component: Countdown', () => {
       let start = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
       let end = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
 
-      component.event = new Event('title', moment.tz(start,'America/New_York'), moment.tz(end,'America/New_York'));
+      component.event = new Event('title', start, end);
       component.parseEvent();
 
       expect(component.countdown.days).toBe('01');

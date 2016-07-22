@@ -1,7 +1,7 @@
 var moment = require('moment-timezone');
 
 export class Event {
-  eventId:   number;
+  eventId:   any;
   dayOfYear: number;
   date:      any;
   deleted:   any;
@@ -9,12 +9,13 @@ export class Event {
   start:     any;
   end:       any;
   title:     string;
+  [key: string]: any;
 
   static asEvents(jsonArray: Array<Object>) {
     return jsonArray.map((jsonEvent: any) => Event.build(jsonEvent));
   }
 
-  static build(object: Object) {
+  static build(object: any) {
     var title: string = object['title'];
     var start: string = object['start'];
     var end: string = object['end'];
