@@ -7,6 +7,7 @@ import groupToolRouter from './groupTool.routes';
 import groupToolFormlyBuilderConfig from './groupTool.formlyConfig';
 import './formlyWrappers/createGroupWrapper.html';
 import './formlyWrappers/checkboxdescription.html';
+import './formlyWrappers/createGroupProfilePicture.html';
 import MessageService from './services/message.service';
 
 export default angular.
