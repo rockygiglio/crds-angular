@@ -29,10 +29,10 @@ export default class CreateGroupService {
     }
 
     preloadModel() {
-        debugger;
         if (this.model.profile == undefined) {
             this.model = {
                 profile: {
+                    firstName: this.profileData.firstName,
                     nickName: this.profileData.nickName,
                     lastName: this.profileData.lastName,
                     birthDate: this.profileData.dateOfBirth,
@@ -574,7 +574,6 @@ export default class CreateGroupService {
     }
 
     getMeetingLocation() {
-        debugger;
         let meetingDay = 'Flexible Meeting Time';
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
         if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
@@ -612,7 +611,20 @@ export default class CreateGroupService {
         if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
             smallGroup.address = new Address();
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-            smallGroup.address.state = this.model.group.meeting.address.state;
+            smallGroup.address.state = () => {
+                 _.find(this.statesLookup, (states) => {
+                return states.dp_RecordId == this.model.group.meeting.address.state
+            }).then(function(data) {
+                if(data == undefined)
+                {
+                    return '';
+                }
+                else
+                {
+                    data.dp_RecordName;
+                }
+            })
+            }
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
@@ -633,8 +645,12 @@ export default class CreateGroupService {
             , contactId: parseInt(this.session.exists('userId'))
         }
         )];
+
         smallGroup.profile = new Profile({
             addressId: this.model.profile.addressId
+            ,firstName: this.model.profile.firstName
+            ,lastName: this.model.profile.lastName
+            ,nickName: this.model.profile.nickName
             , addressLine1: this.model.profile.address.street
             , city: this.model.profile.address.city
             , congregationId: this.model.profile.congregationId
@@ -646,7 +662,9 @@ export default class CreateGroupService {
             , householdId: this.model.profile.householdId
             , oldEmail: this.rootScope.email
             , postalCode: this.model.profile.address.zip
-            , state: this.model.profile.address.state
+            , state: _.find(this.statesLookup, (states) => {
+                return states.dp_RecordID == this.model.profile.address.state
+            }).dp_RecordName
         }
 
         );
@@ -689,109 +707,6 @@ export default class CreateGroupService {
         }
 
         smallGroup.attributeTypes = ageRangeJson;
-
-        // this.model.groupAgeRangeIds
-
-        // _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
-        //     ageRangeNames.push(new AgeRange({
-        //         name: _.find(this.ageRangeLookup, (range) => {
-        //             return range.attributeId == selectedRange
-        //         }).name
-        //     })
-        //     )
-        // });
-        //           "91": {
-        //     "attributeTypeId": 91,
-        //     "name": "Age Range",
-        //     "attributes": [
-        //       {
-        //         "attributeId": 7089,
-        //         "name": "Middle School Students",
-        //         "description": null,
-        //         "selected": true,
-        //         "startDate": "0001-01-01T00:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": null,
-        //         "categoryDescription": null
-        //       },
-        //   }            
-
-        //           "91": {
-        //     "attributeTypeId": 91,
-        //     "name": "Age Range",
-        //     "attributes": [
-        //       {
-        //         "attributeId": 7089,
-        //         "name": "Middle School Students",
-        //         "description": null,
-        //         "selected": true,
-        //         "startDate": "0001-01-01T00:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": null,
-        //         "categoryDescription": null
-        //       },
-        //   }
-
-        //       "90": {
-        //     "attributeTypeId": 90,
-        //     "name": "Group Category",
-        //     "attributes": [
-        //       {
-        //         "attributeId": 7099,
-        //         "name": "Boxing",
-        //         "description": null,
-        //         "selected": true,
-        //         "startDate": "2016-07-08T00:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": "Interest",
-        //         "categoryDescription": null
-        //       },
-        //       {
-        //         "attributeId": 7097,
-        //         "name": "Landen, Ohio",
-        //         "description": null,
-        //         "selected": true,
-        //         "startDate": "2016-07-07T13:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": "Neighborhoods",
-        //         "categoryDescription": null
-        //       },
-        //       {
-        //         "attributeId": 7098,
-        //         "name": "Oakley, Ohio",
-        //         "description": null,
-        //         "selected": false,
-        //         "startDate": "0001-01-01T00:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": "Neighborhoods",
-        //         "categoryDescription": null
-        //       },
-        //       {
-        //         "attributeId": 7100,
-        //         "name": "Pokèmon GO",
-        //         "description": "Gotta catch 'em all",
-        //         "selected": true,
-        //         "startDate": "2016-07-14T11:00:00",
-        //         "endDate": null,
-        //         "notes": null,
-        //         "sortOrder": 0,
-        //         "category": "Interest",
-        //         "categoryDescription": null
-        //       }
-        //     ]
-        //   },
-
-        // TODO singleAttributes and multiAttributes
         return smallGroup;
 
     }
