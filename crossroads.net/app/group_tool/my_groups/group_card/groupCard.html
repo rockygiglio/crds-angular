@@ -1,22 +1,28 @@
 <div class="group-card-panel panel panel-default is-flex flex-col flex-grow" ng-class="{ 'group-leader': groupCard.group.isLeader() }">
   <div class="panel-heading">
-      <h3 class="panel-title">
-        {{ groupCard.group.groupName }}
-        <span class="label label-primary pull-right">{{ groupCard.group.role() }}</span>
-      </h3>
+    <div class="row">
+      <div class="col-xs-8">
+        <h3 class="panel-title tight-line-height">
+          {{ groupCard.group.groupName }}
+        </h3>
+      </div>
+      <div class="col-xs-4 text-right">
+        <span class="badge">{{ groupCard.group.role() }}</span>
+      </div>
+    </div>
   </div>
   <div class="group-card-body panel-body flex-grow">
-    <div>Category</div>
-    <div>{{ groupCard.group.categoriesToString() }}</div>
+    <label class="flush-bottom">Category</label>
+    <div class="tight-line-height">{{ groupCard.group.categoriesToString() }}</div>
 
-    <label>Meeting Time</label>
+    <label class="flush-bottom push-half-top">Meeting Time</label>
     <div>{{ groupCard.group.meetingTimeFrequency }}</div>
 
-    <label>Meeting Location</label>
+    <label class="flush-bottom push-half-top">Meeting Location</label>
     <div>{{ groupCard.group.meetingLocation() }}</div>
 
     <div class="group-card-buttons push-half-top">
-      <div class="row text-center">
+      <div class="row">
 
         <div class="col-md-6 col-sm-12">
           <button type='button' class="btn btn-primary btn-block push-half-top" ui-sref='grouptool.detail({groupId: groupCard.group.groupId})'>
