@@ -1,91 +1,73 @@
-.my-groups-links {
-  a {
-    border-radius: 3px;
-  }
-}
-
-.my-groups {
-  padding-right: 0px;
-  display: flex;
-  flex-wrap: wrap;
-
-  group-card {
-    margin: 1%;
-
-    .group-detail {
-      height: 425px;
-      background-color: #d9d9d9;
-      border-color: #3b6e8f;
-      border-style: solid;
-      border-width: thin;
-      padding-left: 5%;
-      padding-right: 12%;
-
-      .group-title {
-        font-weight: 500;
-        color: #222222;
-        line-height: 1.22222222;
-        font-size: 19px;
-        margin-top: 16px;
-
-        span {
-          font-weight: 300;
-        }
-      }
-
-      .group-details {
-        height: 73%;
-      }
-
-      .group-buttons {
-        margin-top: 3px;
-
-        button {
-          width: 175px;
-          border-width: thin;
-          border-color: #3b6e8f;
-          color: #3b6e8f;
-          background-color: #fff;
-
-          svg {
-            color: #b05c30
-          }
-        }
-      }
+my-groups {
+  @media (min-width: $screen-md) {
+    .is-flex {
+      display: flex;
     }
 
-    .group-action {
-      height: 425px;
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
 
-      div.group-pad {
-        background-color: #fff;
-        height: 5%;
-      }
+    .flex-row {
+      flex-direction: row;
+    }
 
-      div.group-panel {
-        height: 47.5%;
-        text-align: center;
-        border-style: solid;
-        border-width: thin;
-        border-color: #3b6e8f;
-        background-color: #d9d9d9;
-        cursor: pointer;
+    .flex-col {
+      flex-direction: column;
+    }
 
-        svg {
-          margin-top: 13px;
-          width: 66px;
-          height: 66px;
-          color: #3b6e8f;
-        }
+    .flex-grow {
+      //flex-grow: 1;
+      flex: 1 1 auto;
+    }
+  }
 
-        .group-title {
-          font-weight: 500;
-          color: #222222;
-          line-height: 1.22222222;
-          font-size: 19px;
-          margin-top: 10%;
-        }
-      }
+  .my-groups-static {
+    height: 150px;
+  }
+
+  .my-groups-static-vert {
+    @include vertical-align();
+
+    font-size: 90%;
+    font-weight: bold;
+
+    svg {
+      width: 65px;
+      height: 65px;
+    }
+  }
+
+  .my-groups-links {
+    a {
+      display: table;
     }
   }
 }
+
+group-card {
+  // Constrain max width of group cards for IE 11 Flexbox issue
+  .panel-heading, .panel-body {
+    @media (min-width: $screen-md) {
+      max-width: 331px;
+    }
+
+    @media (min-width: $screen-lg) {
+      max-width: 408px;
+    }
+  }
+
+  .group-card-buttons {
+    .row {
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+
+    [class*='col-'] {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+
+}
+
