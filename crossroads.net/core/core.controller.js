@@ -19,6 +19,7 @@
     '$window',
     '$location',
     'STATE_CHANGE_EVENTS',
+    'contentMessageService'
   ];
 
   function CoreController(
@@ -36,7 +37,8 @@
     $anchorScroll,
     $window,
     $location,
-    STATE_CHANGE_EVENTS
+    STATE_CHANGE_EVENTS,
+    contentMessageService
   ) {
 
     var vm = this;
@@ -130,6 +132,7 @@
         messages[cb.title] = cb;
         return (messages);
       }, MESSAGES);
+      contentMessageService.set(MESSAGES);
     }
 
     function openAside(position, backdrop) {

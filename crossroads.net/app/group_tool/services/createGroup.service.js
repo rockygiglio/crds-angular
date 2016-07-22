@@ -21,25 +21,32 @@ export default class CreateGroupService {
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
         }, {
-                meetingFrequencyId: 2,
-                meetingFrequencyDesc: 'Every other week'
-            }];
+            meetingFrequencyId: 2,
+            meetingFrequencyDesc: 'Every other week'
+        }];
+        //this.statesLookup is added by the route resolve of the createGroupController.
+		//this.profileData is added by the route resolve of the createGroupController.
+    }
 
-        this.groupService.getProfileData().then((data) => {
+    preloadModel() {
             this.model = {
                 profile: {
-                    nickName: data.nickName,
-                    lastName: data.lastName,
-                    birthDate: data.dateOfBirth,
-                    genderId: data.genderId,
-                    householdId: data.householdId,
-                    addressId: data.addressId,
+                    nickName: this.profileData.nickName,
+                    lastName: this.profileData.lastName,
+                    birthDate: this.profileData.dateOfBirth,
+                    genderId: this.profileData.genderId,
+                    householdId: this.profileData.householdId,
+                    addressid: this.profileData.addressId,
+                    contactId: this.profileData.contactId,
+					congregationId: this.profileData.congregationId,
                     address: {
-                        street: data.addressLine1,
-                        city: data.city,
-                        state: data.state,
-                        zip: data.postalCode,
-                        country: data.foreignCountry
+                        street: this.profileData.addressLine1,
+                        city: this.profileData.city,
+                        state: _.find(this.statesLookup, (state) => {
+                            return state.dp_RecordName == this.profileData.state 
+                        }).dp_RecordID,
+                        zip: this.profileData.postalCode,
+                        country: this.profileData.foreignCountry
                     }
                 },
                 group: {
@@ -56,10 +63,10 @@ export default class CreateGroupService {
                 },
                 specificDay: true
             }
-        });
     }
 
     getFields() {
+        this.preloadModel();
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -106,6 +113,14 @@ export default class CreateGroupService {
                             return response;
                         });
                     }
+                }, {
+                    type: 'profilePicture',
+                    wrapper: 'createGroupProfilePicture',
+                    templateOptions: {
+                        contactId: this.model.profile.contactId,
+                        title: 'Update/Add Profile Picture',
+                        desc: 'This will display on your group page. (Optional)'
+                    }
                 }]
         };
         var profileAddressFields = {
@@ -127,9 +142,12 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.address.state',
-                    type: 'input',
+                    type: 'select',
                     templateOptions: {
-                        label: 'State'
+                        label: 'State',
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: this.statesLookup
                     }
                 }, {
                     key: 'profile.address.zip',
@@ -236,9 +254,12 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.state',
-                    type: 'input',
+                    type: 'select',
                     templateOptions: {
-                        label: 'State'
+                        label: 'State',
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: this.statesLookup
                     }
                 }, {
                     key: 'group.meeting.address.zip',

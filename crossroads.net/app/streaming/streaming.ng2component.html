@@ -15,7 +15,7 @@
   <div class="wow fadeInUp">
     <h1>crossroads anywhere</h1>
     <p>Et possimus voluptas atque eos. Commodi eligendi nostrum cumque. Fugiat quae reprehenderit molestias et nihil facere.</p>
-    <p template="ngIf displayStreamCTA"><a href="#" class="btn btn-primary">Watch Now</a></p>
+    <p *ngIf="inProgress" class="wow fadeIn"><a href="#" class="btn btn-primary">Watch Now</a></p>
   </div>
 </section>
 

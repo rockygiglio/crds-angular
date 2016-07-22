@@ -27,6 +27,18 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       parent: 'noSideBar',
       url: '/groups/create',
       template: '<create-group></create-group>',
+      resolve:{
+        stateList: (CreateGroupService, GroupService) =>{
+          return GroupService.getStates().then((data) => {
+            CreateGroupService.statesLookup = data;
+          })
+        },
+        profile: (CreateGroupService, GroupService) => {
+          return GroupService.getProfileData().then((data) => {
+            CreateGroupService.profileData = data;   
+          })
+        }
+      },
       data: {
         isProtected: true,
         meta: {
