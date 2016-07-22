@@ -1,0 +1,16 @@
+<div class="radio-group">
+  <div ng-repeat="(key, option) in to.options" class="checkbox">
+    <label>
+      <input type="checkbox"
+             id="{{id + '_'+ $index}}"
+             ng-model="multiCheckboxCombo.checked[$index]"
+             ng-change="multiCheckboxCombo.change()">
+      {{option[to.labelProp || 'name']}}
+    </label>
+    <input type="input"
+             id="{{id + '_'+ $index + '_detail'}}"
+             ng-model="multiCheckboxCombo.detail[$index]"
+             ng-change="multiCheckboxCombo.change()"
+             ng-if="multiCheckboxCombo.checked[$index]">
+  </div>
+</div>

@@ -13,6 +13,8 @@ export default class CreateGroupController {
         this.ready = false;
         this.approvedLeader = false;
         this.fields = [];
+        this.createGroupForm = {};
+        this.options = {};
     }
 
     $onInit() {
@@ -23,20 +25,22 @@ export default class CreateGroupController {
                 this.approvedLeader = true;
                 this.ready = true;
             } else {
-                this.state.go("content", {"link":"/groups/leader"});
+                this.state.go("content", { "link": "/groups/leader" });
             }
         },
 
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                this.state.go("content", {"link":"/groups/leader"});
+                this.state.go("content", { "link": "/groups/leader" });
             });
 
         this.fields = this.createGroupService.getFields();
-  }
+    }
 
-  previewGroup() {
-    this.state.go('grouptool.create.preview');
-  }
+    previewGroup() {
+        if (this.createGroupForm.$valid) {
+            this.state.go('grouptool.create.preview');
+        }
+    }
 
 }
