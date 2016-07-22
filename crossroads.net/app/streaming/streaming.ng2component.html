@@ -1,24 +1,13 @@
 <section class="navbar-section">
   <div class="container wow fadeIn">
-    <a href="#" class="btn">
+    <a href="#" class="btn see-schedule">
       See Schedule
       <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
 	      <use xlink:href="#arrow-down9"></use>
       </svg>
     </a>
 
-    <div class="upcoming">
-      <i>Join the live stream in...</i>
-      <ul class="list-inline">
-        <li><strong>3</strong> <small>days</small></li>
-        <li class="vr"></li>
-        <li><strong>10</strong> <small>hours</small></li>
-        <li class="vr"></li>
-        <li><strong>58</strong> <small>min</small></li>
-        <li class="vr"></li>
-        <li><strong>19</strong> <small>sec</small></li>
-      </ul>
-    </div>
+    <countdown></countdown>
   </div>
 </section>
 
@@ -26,7 +15,7 @@
   <div class="wow fadeInUp">
     <h1>crossroads anywhere</h1>
     <p>Et possimus voluptas atque eos. Commodi eligendi nostrum cumque. Fugiat quae reprehenderit molestias et nihil facere.</p>
-    <p template="ngIf displayStreamCTA"><a href="#" class="btn btn-primary">Watch Now</a></p>
+    <p *ngIf="inProgress" class="wow fadeIn"><a href="#" class="btn btn-primary">Watch Now</a></p>
   </div>
 </section>
 

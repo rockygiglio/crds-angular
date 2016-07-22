@@ -1,21 +1,35 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
+import { HTTP_PROVIDERS } from '@angular/http';
+import { beforeEach, describe, it, addProviders } from '@angular/core/testing';
 
 import { StreamingComponent } from '../../app/streaming/streaming.component';
+import { StreamspotService } from '../../app/streaming/streamspot.service';
+
+
+class MockStreamspotService extends StreamspotService {
+  constructor() {
+    super(null)
+  }
+  getEvents(): any {
+    return [];
+  }
+}
 
 describe('Component: Streaming', () => {
+
+  beforeEach(() => {
+    addProviders([
+      HTTP_PROVIDERS,
+      { provide: StreamspotService, useClass: MockStreamspotService }
+    ])
+  });
+
   it('should create an instance', () => {
-    console.log("hello from test");
-    let component = new StreamingComponent();
+    let service = new MockStreamspotService();
+    let component = new StreamingComponent(service);
     expect(component).toBeTruthy();
   });
 });

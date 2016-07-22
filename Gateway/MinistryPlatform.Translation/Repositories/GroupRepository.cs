@@ -698,7 +698,7 @@ namespace MinistryPlatform.Translation.Repositories
                     State = record.ToString("State"),
                     Postal_Code = record.ToString("Zip_Code"),
                     Foreign_Country = record.ToString("Foreign_Country")
-                }     
+                }
             };
         }
     }

@@ -5,15 +5,15 @@ export default class Profile {
     if(jsonObject) {
       Object.assign(this, jsonObject);
     } else {
-      this.address1 = '';
+      this.addressLine1 = '';
       this.city = '';
       this.congregationId = '';
       this.contactId = '';
-      this.country = '';
+      this.foreignCountry = '';
       this.dateOfBirth = '';
       this.emailAddress = '';
       this.genderId = '';
-      this.oldEmailAddress = '';
+      this.oldEmail = '';
       this.postalCode = '';
       this.state = '';
     }

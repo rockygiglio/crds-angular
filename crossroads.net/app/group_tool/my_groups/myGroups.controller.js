@@ -8,6 +8,14 @@ export default class MyGroupsController {
     this.ready = false;
     this.error = false;
     this.errorMsg = '';
+
+    this.groupsEven = function() {
+      return this.groups.length % 2 == 0;
+    };
+
+    this.groupsOdd = function() {
+      return this.groups.length % 2 == 1;
+    };
   }
 
   $onInit() {

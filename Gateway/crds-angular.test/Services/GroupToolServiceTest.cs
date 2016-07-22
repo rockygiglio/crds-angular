@@ -149,7 +149,8 @@ namespace crds_angular.test.Services
                         },
                         new GroupParticipantDTO
                         {
-                            GroupParticipantId = 9090,
+                            ParticipantId = 9090,
+                            GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
                     }
@@ -227,7 +228,8 @@ namespace crds_angular.test.Services
                         },
                         new GroupParticipantDTO
                         {
-                            GroupParticipantId = 9090,
+                            ParticipantId = 9090,
+                            GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
                     }
@@ -422,6 +424,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
             const int myParticipantId = 952;
             const int removeParticipantId = 3;
+            const int removeGroupParticipantId = 13;
             const int templateId = 765;
 
             var group = new GroupDTO
@@ -437,7 +440,8 @@ namespace crds_angular.test.Services
                     },
                     new GroupParticipantDTO
                     {
-                        GroupParticipantId = removeParticipantId,
+                        ParticipantId = removeParticipantId,
+                        GroupParticipantId = removeGroupParticipantId,
                         NickName = "nickname",
                         ContactId = 90,
                         Email = "80"
@@ -480,6 +484,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
             const int myParticipantId = 952;
             const int removeParticipantId = 3;
+            const int removeGroupParticipantId = 13;
             const int templateId = 765;
 
             var group = new GroupDTO
@@ -495,7 +500,8 @@ namespace crds_angular.test.Services
                     },
                     new GroupParticipantDTO
                     {
-                        GroupParticipantId = removeParticipantId,
+                        ParticipantId = removeParticipantId,
+                        GroupParticipantId = removeGroupParticipantId,
                         NickName = "nickname",
                         ContactId = 90,
                         Email = "80"
@@ -665,8 +671,41 @@ namespace crds_angular.test.Services
             Assert.AreEqual(dto[0].LastName, inquiries[0].LastName);
             Assert.AreEqual(dto[0].RequestDate, inquiries[0].RequestDate);
             Assert.AreEqual(dto[0].Placed, inquiries[0].Placed);
+        }
 
+        [Test]
+        public void TestSendAllGroupParticipantsEmail()
+        {
+            string token = "123ABC";
 
+            var groupParticipantDTO = new Participant
+            {
+                ContactId = 123,
+                EmailAddress = "test@test.com",
+                ParticipantId = 456
+            };
+
+            var groups = new List<GroupDTO>();
+
+            var group1 = new GroupDTO();
+            group1.Participants = new List<GroupParticipantDTO>();
+
+            GroupParticipantDTO groupParticipant = new GroupParticipantDTO
+            {
+                ContactId = 123,
+                GroupRoleId = 987,
+                ParticipantId = 456
+            };
+
+            group1.Participants.Add(groupParticipant);
+            groups.Add(group1);
+
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
+            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+
+            _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
+            _communicationRepository.VerifyAll();
         }
     }
 }

@@ -23,6 +23,7 @@ class RequestChildcareController {
     this.ministries = RequestChildcareService.getMinistries();
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 7);
+    this.mpTools = MPTools;
     this.name = 'request-childcare';
     this.requestChildcareService = RequestChildcareService;
     this.rootScope = $rootScope;
@@ -35,7 +36,7 @@ class RequestChildcareController {
     this.endTime.setMinutes(30);
     this.uid = $cookies.get('userId');
     this.validation = Validation;
-    this.viewReady = true;
+    this.viewReady = false;
     this.window = $window;
     this.datesSelected = true;
     this.recordId = -1;
@@ -44,81 +45,38 @@ class RequestChildcareController {
 
     if (this.allowAccess) {
       this.recordId = Number(MPTools.getParams().recordId);
-      if (!this.recordId || this.recordId === -1) {
-        this.viewReady = true;
-        this.error = true;
-        this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
+      if (this.recordId !== -1) {
+        this.isRequestPending(this.populatePendingRequest, this.showError);
       } else {
-        this.request = this.requestChildcareService.getChildcareRequest(this.recordId, (d) => {
-          if (d.Status === 'Pending') {
-            this.updating = true;
-
-            this.startDate = new Date(moment(d.StartDate));
-            this.endDate = new Date(moment(d.EndDate));
-
-            this.choosenCongregation = _.find(MPTools.congregations, (c) => {
-                  return c.dp_RecordID === d.LocationId;
-                });
-
-            this.choosenMinistry = _.find(MPTools.ministries, (c) => {
-                  return c.dp_RecordID === d.MinistryId;
-                });
-            this.choosenGroup = _.find(this.getGroups(), (c) => {
-                  return c.dp_RecordID === d.GroupId;
-                });
-            this.choosenGroup = { dp_RecordID: d.GroupId,  dp_RecordName: d.GroupName };
-            this.choosenFrequency = d.Frequency;
-            this.notes = d.DecisionNotes;
-
-            this.preferredTimes.$promise.then(() => {
-              this.choosenPreferredTime = _.find(this.filteredTimes, (c) => {
-                  return this.formatPreferredTime(c) === d.PreferredTime;
-              });
-
-              if (this.choosenPreferredTime === undefined) {
-                this.choosenPreferredTime = _.find(this.filteredTimes, (c) => {
-                  return this.formatPreferredTime(c) === this.customSessionTime;
-                });
-                this.customSessionSelected = true;
-                var customDay = d.PreferredTime.substr(0, d.PreferredTime.indexOf(','));
-                this.dayOfWeek = customDay;
-
-                var times = d.PreferredTime.split(' ');
-                this.startTime.setHours(this.getTimeHours(times[1]));
-                this.startTime.setMinutes(this.getTimeMinutes(times[1]));
-
-                this.endTime.setHours(this.getTimeHours(times[3]));
-                this.endTime.setMinutes(this.getTimeMinutes(times[3]));
-              }
-            });
-
-            this.runDateGenerator = false;
-            this.datesList = d.DatesList.map((date) => {
-              return { selected: true, date: moment(date), unix: moment(date).unix(), };
-            });
-
-          } else {
-            this.viewReady = true;
-            this.error = true;
-            this.errorMessage = $rootScope.MESSAGES.mptool_access_error;
-          }
-        });
-        this.request.$promise.then(() => {
-          this.viewReady = true;
-        });
+        this.viewReady = true;
       }
     }
-
   }
 
-  getTimeHours(timeString) {
-    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
-    return militaryTime.split(':')[0];
+  filterTimes(time) {
+    let t = time;
+    if (time.Childcare_Start_Time === undefined && Number(this.choosenPreferredTime) !== -1) {
+      t = _.find(this.filteredTimes, (tm) => {
+        return tm.dp_RecordID === Number(time);
+      });
+    }
+    return t;
   }
 
-  getTimeMinutes(timeString) {
-    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
-    return militaryTime.split(':')[1];
+  formatPreferredTime(time) {
+    if (time.dp_RecordID === -1) {
+            return this.customSessionTime;
+    } else {
+      time = this.filterTimes(time);
+      const startTimeArr = time['Childcare_Start_Time'].split(':');
+      const endTimeArr = time['Childcare_End_Time'].split(':');
+      const startTime = moment().set(
+        {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
+      const endTime = moment().set(
+        {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
+      const day = time['Meeting_Day'];
+      return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
+    }
   }
 
   generateDateList(defaultSelection = true) {
@@ -164,6 +122,16 @@ class RequestChildcareController {
     }
   }
 
+  getTimeHours(timeString) {
+    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
+    return militaryTime.split(':')[0];
+  }
+
+  getTimeMinutes(timeString) {
+    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
+    return militaryTime.split(':')[1];
+  }
+
   getGroups() {
     if (this.choosenCongregation && this.choosenMinistry) {
       this.loadingGroups = true;
@@ -186,6 +154,16 @@ class RequestChildcareController {
 
   getWeekOfMonth(startDate) {
     return Math.ceil(startDate.date() / 7);
+  }
+
+  isRequestPending(success, error) {
+    this.request = this.requestChildcareService.getChildcareRequest(this.recordId, (d) => {
+      if (d.Status === 'Pending') {
+        success(d, this);
+      } else {
+        error(this);
+      }
+    });
   }
 
   onEndDateChange(endDate) {
@@ -217,6 +195,68 @@ class RequestChildcareController {
     });
   }
 
+  populatePendingRequest(d, context = this) { 
+    context.updating = true;
+    context.startDate = new Date(moment(d.StartDate));
+    context.endDate = new Date(moment(d.EndDate));
+    context.choosenCongregation = _.find(context.mpTools.congregations, (c) => {
+      return c.dp_RecordID === d.LocationId;
+    });
+
+    context.choosenMinistry = _.find(context.mpTools.ministries, (c) => {
+      return c.dp_RecordID === d.MinistryId;
+    });
+    context.choosenGroup = _.find(context.getGroups(), (c) => {
+      return c.dp_RecordID === d.GroupId;
+    });
+    context.choosenGroup = { dp_RecordID: d.GroupId,  dp_RecordName: d.GroupName };
+    context.choosenFrequency = d.Frequency;
+    context.notes = d.DecisionNotes;
+
+    context.preferredTimes.$promise.then(() => {
+      context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {
+        return context.formatPreferredTime(c) === d.PreferredTime;
+      });
+
+      if (context.choosenPreferredTime === undefined) {
+        context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {
+          return context.formatPreferredTime(c) === context.customSessionTime;
+        });
+        context.customSessionSelected = true;
+        var customDay = d.PreferredTime.substr(0, d.PreferredTime.indexOf(','));
+        context.dayOfWeek = customDay;
+
+        var times = d.PreferredTime.split(' ');
+        context.startTime.setHours(context.getTimeHours(times[1]));
+        context.startTime.setMinutes(context.getTimeMinutes(times[1]));
+
+        context.endTime.setHours(context.getTimeHours(times[3]));
+        context.endTime.setMinutes(context.getTimeMinutes(times[3]));
+      }
+    });
+
+    context.runDateGenerator = false;
+    context.datesList = d.DatesList.map((date) => {
+      return { selected: true, date: moment(date), unix: moment(date).unix(), };
+    });
+    context.viewReady = true;
+  }
+
+  preferredTimeChanged() {
+    if (this.choosenPreferredTime.dp_RecordID === -1) {
+      this.customSessionSelected = true;
+    } else {
+      this.customSessionSelected = false;
+    }
+    this.runDateGenerator = true;
+  }
+
+  showError(context = this) {
+    context.viewReady = true;
+    context.error = true;
+    context.errorMessage = context.rootScope.MESSAGES.mptool_access_error;
+  }
+
   showGaps() {
     if (this.choosenPreferredTime &&
         (this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek) &&
@@ -242,41 +282,6 @@ class RequestChildcareController {
 
   showGroups() {
     return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0;
-  }
-
-  preferredTimeChanged() {
-    if (this.choosenPreferredTime.dp_RecordID === -1) {
-      this.customSessionSelected = true;
-    } else {
-      this.customSessionSelected = false;
-    }
-    this.runDateGenerator = true;
-  }
-
-  filterTimes(time) {
-    let t = time;
-    if (time.Childcare_Start_Time === undefined && Number(this.choosenPreferredTime) !== -1) {
-      t = _.find(this.filteredTimes, (tm) => {
-        return tm.dp_RecordID === Number(time);
-      });
-    }
-    return t;
-  }
-
-  formatPreferredTime(time) {
-    if (time.dp_RecordID === -1) {
-            return this.customSessionTime;
-    } else {
-      time = this.filterTimes(time);
-      const startTimeArr = time['Childcare_Start_Time'].split(':');
-      const endTimeArr = time['Childcare_End_Time'].split(':');
-      const startTime = moment().set(
-        {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
-      const endTime = moment().set(
-        {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
-      const day = time['Meeting_Day'];
-      return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
-    }
   }
 
   submit() {
@@ -307,7 +312,7 @@ class RequestChildcareController {
         notes: this.notes,
         dates: this.datesList.filter( (d) => { return d.selected === true;}).map( (d) => { return d.date; })
       };
-      if (this.updating == true) {
+      if (this.updating) {
         const save = this.requestChildcareService.updateRequest(dto);
         save.$promise.then(() => {
           this.log.debug('updated!');
@@ -338,7 +343,7 @@ class RequestChildcareController {
   validateField(fieldName) {
     return this.validation.showErrors(this.childcareRequestForm, fieldName);
   }
-    
+
   validateDateSelection() {
       return !this.datesSelected;
   }

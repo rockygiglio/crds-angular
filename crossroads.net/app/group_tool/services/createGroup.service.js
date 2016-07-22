@@ -10,32 +10,43 @@ import Profile from '../model/profile';
 
 export default class CreateGroupService {
     /*@ngInject*/
-    constructor($log, Profile, GroupService, Session) {
+    constructor($log, Profile, GroupService, Session, $rootScope) {
         this.log = $log;
         this.profile = Profile;
         this.groupService = GroupService;
         this.session = Session;
+        this.rootScope = $rootScope;
         this.model = {};
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
         }, {
-                meetingFrequencyId: 2,
-                meetingFrequencyDesc: 'Every other week'
-            }];
-        this.groupService.getProfileData().then((data) => {
+            meetingFrequencyId: 2,
+            meetingFrequencyDesc: 'Every other week'
+        }];
+        //this.statesLookup is added by the route resolve of the createGroupController.
+		//this.profileData is added by the route resolve of the createGroupController.
+    }
+
+    preloadModel() {
             this.model = {
                 profile: {
-                    nickName: data.nickName,
-                    lastName: data.lastName,
-                    birthDate: data.dateOfBirth,
-                    genderId: data.genderId,
+                    nickName: this.profileData.nickName,
+                    lastName: this.profileData.lastName,
+                    birthDate: this.profileData.dateOfBirth,
+                    genderId: this.profileData.genderId,
+                    householdId: this.profileData.householdId,
+                    addressid: this.profileData.addressId,
+                    contactId: this.profileData.contactId,
+					congregationId: this.profileData.congregationId,
                     address: {
-                        street: data.addressLine1,
-                        city: data.city,
-                        state: data.state,
-                        zip: data.postalCode,
-                        country: data.foreignCountry
+                        street: this.profileData.addressLine1,
+                        city: this.profileData.city,
+                        state: _.find(this.statesLookup, (state) => {
+                            return state.dp_RecordName == this.profileData.state 
+                        }).dp_RecordID,
+                        zip: this.profileData.postalCode,
+                        country: this.profileData.foreignCountry
                     }
                 },
                 group: {
@@ -52,10 +63,10 @@ export default class CreateGroupService {
                 },
                 specificDay: true
             }
-        });
     }
 
     getFields() {
+        this.preloadModel();
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -105,6 +116,14 @@ export default class CreateGroupService {
                             return response;
                         });
                     }
+                }, {
+                    type: 'profilePicture',
+                    wrapper: 'createGroupProfilePicture',
+                    templateOptions: {
+                        contactId: this.model.profile.contactId,
+                        title: 'Update/Add Profile Picture',
+                        desc: 'This will display on your group page. (Optional)'
+                    }
                 }]
         };
         var profileAddressFields = {
@@ -128,10 +147,13 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.address.state',
-                    type: 'input',
+                    type: 'select',
                     templateOptions: {
                         label: 'State',
                         required: true,
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: this.statesLookup
                     }
                 }, {
                     key: 'profile.address.zip',
@@ -182,7 +204,8 @@ export default class CreateGroupService {
                     },
                     controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            $scope.to.options = response;
+                            let sortedResponse = _.sortBy(response, function (day) { return day.dp_RecordID; });
+                            $scope.to.options = sortedResponse;
                             CreateGroupService.meetingDaysLookup = response;
                             return response;
                         });
@@ -247,10 +270,13 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.state',
-                    type: 'input',
+                    type: 'select',
                     templateOptions: {
                         label: 'State',
                         required: true,
+                        valueProp: 'dp_RecordID',
+                        labelProp: 'dp_RecordName',
+                        options: this.statesLookup
                     }
                 }, {
                     key: 'group.meeting.address.zip',
@@ -261,20 +287,20 @@ export default class CreateGroupService {
                         required: true,
                     }
                 }, {
-                    key: 'group.meeting.childcare',
+                    key: 'group.kidFriendly',
                     type: 'radio',
                     templateOptions: {
-                        label: 'Are you interested in leading a group with chilcare options?',
                         required: true,
+                        label: 'Will your group have childcare?',
                         labelProp: 'label',
-                        valueProp: 'childcare',
+                        valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Kids welcome at the group.',
-                            childcare: true
+                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            kidFriendly: true
                         }, {
-                                label: 'No. (Parents are welcome, but make your own kid plans.)',
-                                childcare: false
+                                label: 'No. Adults only please.',
+                                kidFriendly: false
                             }]
                     }
                 }]
@@ -436,7 +462,7 @@ export default class CreateGroupService {
                 type: 'boldcheckbox',
                 wrapper: 'checkboxdescription',
                 templateOptions: {
-                    label: 'Life Stages',
+                    label: 'Life Stage',
                     labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
                 }
             }, {
@@ -446,8 +472,8 @@ export default class CreateGroupService {
                     templateOptions: {
                         placeholder: 'Life Stage detail...'
                     }
-                },
-                {
+                }, {
+
                     key: 'group.categories.neighborhood',
                     type: 'boldcheckbox',
                     wrapper: 'checkboxdescription',
@@ -551,9 +577,9 @@ export default class CreateGroupService {
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.kidsWelcome = this.model.group.meeting.childcare;
-        smallGroup.meetingDay = this.model.group.meeting.day;
+        smallGroup.meetingDay = this.model.group.meeting.day ;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -570,22 +596,186 @@ export default class CreateGroupService {
         }
         )];
         smallGroup.profile = new Profile({
-            address1: this.model.profile.address
-            , city: this.model.profile.address.street
+            addressId: this.model.profile.addressId
+            , addressLine1: this.model.profile.address.street
+            , city: this.model.profile.address.city
             , congregationId: this.model.profile.congregationId
             , contactId: parseInt(this.session.exists('userId'))
-            , country: this.model.profile.address.country
             , dateOfBirth: this.model.profile.birthDate
-            , emailAddress: this.session.exists('email')
+            , emailAddress: this.rootScope.email
+            , foreignCountry: this.model.profile.address.country
             , genderId: this.model.profile.genderId
-            , oldEmailAddress: this.session.exists('email')
+            , householdId: this.model.profile.householdId
+            , oldEmail: this.rootScope.email
             , postalCode: this.model.profile.address.zip
             , state: this.model.profile.address.state
         }
+
         );
 
+        smallGroup.kidsWelcome = this.model.group.kidFriendly;
+
+        smallGroup.singleAttributes = {
+            "73": {
+                "attribute": {
+                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
+                },
+            }
+        }
+
+        var ids = [];
+        _.forEach(this.model.groupAgeRangeIds, (id) => {
+            ids.push(
+                {
+                    "attributeId": id,
+                    "name": "Middle School Students",
+                    "description": null,
+                    "selected": true,
+                    "startDate": "0001-01-01T00:00:00",
+                    "endDate": null,
+                    "notes": null,
+                    "sortOrder": 0,
+                    "category": null,
+                    "categoryDescription": null
+                })
+
+        });
+
+
+        var ageRangeJson = {
+            "91": {
+                "attributeTypeId": 91,
+                "name": "Age Range",
+                "attributes": ids
+            }
+        }
+
+        smallGroup.attributeTypes = ageRangeJson;
+
+        // this.model.groupAgeRangeIds
+
+        // _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
+        //     ageRangeNames.push(new AgeRange({
+        //         name: _.find(this.ageRangeLookup, (range) => {
+        //             return range.attributeId == selectedRange
+        //         }).name
+        //     })
+        //     )
+        // });
+        //           "91": {
+        //     "attributeTypeId": 91,
+        //     "name": "Age Range",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7089,
+        //         "name": "Middle School Students",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": null,
+        //         "categoryDescription": null
+        //       },
+        //   }            
+
+        //           "91": {
+        //     "attributeTypeId": 91,
+        //     "name": "Age Range",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7089,
+        //         "name": "Middle School Students",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": null,
+        //         "categoryDescription": null
+        //       },
+        //   }
+
+        //       "90": {
+        //     "attributeTypeId": 90,
+        //     "name": "Group Category",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7099,
+        //         "name": "Boxing",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "2016-07-08T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Interest",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7097,
+        //         "name": "Landen, Ohio",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "2016-07-07T13:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Neighborhoods",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7098,
+        //         "name": "Oakley, Ohio",
+        //         "description": null,
+        //         "selected": false,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Neighborhoods",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7100,
+        //         "name": "Pokèmon GO",
+        //         "description": "Gotta catch 'em all",
+        //         "selected": true,
+        //         "startDate": "2016-07-14T11:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Interest",
+        //         "categoryDescription": null
+        //       }
+        //     ]
+        //   },
+        
         // TODO singleAttributes and multiAttributes
         return smallGroup;
 
+    }
+
+    getGroupTypeAttributeIdFromName(name) {
+        var groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+        switch (name) {
+            case 'Anyone is welcome':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+                break;
+            case 'Men only':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_MENONLY;
+                break;
+            case 'Women only':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_WOMENONLY;
+                break;
+            case 'Married couples':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_COUPLES;
+                break;
+            default:
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+        }
+        return groupTypeId;
     }
 }

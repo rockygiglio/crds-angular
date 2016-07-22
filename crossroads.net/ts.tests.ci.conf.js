@@ -20,6 +20,10 @@ module.exports = function (config) {
                         test: /\.tsx?$/,
                         exclude: /node_modules/,
                         loader: 'awesome-typescript-loader'
+                    },
+                    {
+                      test: /\.json$/,
+                      loaders: ["json-loader"]
                     }
                 ]
             }

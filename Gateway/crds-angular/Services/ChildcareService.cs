@@ -121,7 +121,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
+                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId, false).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
                 if (groupParticipant != null)
                 {
                     _groupService.endDateGroupParticipant(cancelRsvp.GroupId, groupParticipant.GroupParticipantId);
@@ -328,7 +328,7 @@ namespace crds_angular.Services
                     GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
                     MaximumAge = childcareDashboard.ChildcareMaxAge,                        
                     EligibleChildren = eligibleChildren,
-                    ChildcareGroupId = childcareDashboard.ChildcareMaxAge,
+                    ChildcareGroupId = childcareDashboard.ChildcareGroupID,
                     GroupParticipantId = childcareDashboard.GroupParticipantID
                 });
             }                       

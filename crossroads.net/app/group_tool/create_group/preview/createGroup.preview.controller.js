@@ -24,7 +24,10 @@ export default class CreateGroupPreviewController {
     this.saving = true;
     this.successfulSave = false;
     try {
-      var promise = this.groupService.saveCreateGroupForm(this.groupData);
+      var promise = this.groupService.saveCreateGroupForm(this.groupData)
+        .then( (data) => {
+          this.state.go('grouptool.mygroups')
+        })
 
       // promise.then(function () {
       //   this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
@@ -44,7 +47,7 @@ export default class CreateGroupPreviewController {
       //   }
       // );
 
-     this.state.go('grouptool.mygroups');
+     
 
     }
     catch (error) {

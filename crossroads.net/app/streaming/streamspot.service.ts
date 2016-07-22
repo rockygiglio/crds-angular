@@ -1,11 +1,12 @@
-import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
 
 import { Event } from './event';
-declare var moment: any;
-declare var _: any;
+var moment = require('moment-timezone');
+var _ = require('lodash');
 
 @Injectable()
 export class StreamspotService {
@@ -21,39 +22,57 @@ export class StreamspotService {
     'x-API-Key': this.apiKey
   });
 
-  public isBroadcasting: boolean = false;
+  public isBroadcasting: EventEmitter<any> = new EventEmitter();
+  public nextEvent: EventEmitter<any> = new EventEmitter();
+  public events: Promise<Event[]>;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.events = this.getEvents();
+  }
 
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
-    return this.http.get(url, {headers: this.headers})
+    // let url = 'http://localhost:3000/app/streaming/events.json'
+
+    return this.http
+      .get(url, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data.events
-        .filter((event:Event) => {
-          return moment() <= moment(event.start) && event.deleted === null;
-        })
-        .map((event:Event) => {
-          event.date = moment(event.start);
-          event.dayOfYear = event.date.dayOfYear();
-          event.time = event.date.format('LT [EST]');
-          return event;
-        })
-      )
-      .catch(this.handleError);
+      .catch(this.handleError)
+      .then((response) => {
+        let events = response.json().data.events;
+        return _
+          .chain(events)
+          .sortBy('start')
+          .map((object:Event) => {
+            // create event objects
+            return Event.build(object);
+          })
+          .filter((event:Event) => {
+            // return only current or upcoming events
+            return event.isBroadcasting() || event.isUpcoming();
+          })
+          .value();
+      })
+      .then((events) => {
+        if(events.length == 0) return events;
+        let event = _(events).first();
+        // dispatch updates
+        this.isBroadcasting.emit(event.isBroadcasting());
+        this.nextEvent.emit(event);
+        return events;
+      })
+      ;
   }
 
   getEventsByDate(): Promise<Object[]> {
     return this.getEvents().then(response => {
       return _.chain(response)
-        .sortBy('date')
         .groupBy('dayOfYear')
         .value();
     })
   }
 
   get(url: string, cb: Function = (data: any) => {}) {
-
     this.http.get(url, { headers: this.headers })
     .subscribe(
       data => {
@@ -63,12 +82,11 @@ export class StreamspotService {
       },
       err => this.handleError(err.json().message)
     );
-
   }
 
   getBroadcaster(cb: Function) {
     let url = `${this.url}broadcaster/${this.id}`;
-    this.get(url, cb); 
+    this.get(url, cb);
   }
 
   getBroadcasting(cb: Function) {

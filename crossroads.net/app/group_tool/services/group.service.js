@@ -29,6 +29,10 @@ export default class GroupService {
                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
   }
 
+  getStates() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
+  }
+
   getSites() {
     return this.lookupService.Sites.query().$promise;
   }
@@ -171,7 +175,6 @@ export default class GroupService {
     return promise.then((data) => {
         this.saveParticipant(smallGroup.participants, data.groupId);
         this.saveProfile(smallGroup.profile);
-debugger;
       }, (err) => {
         throw err;
       });

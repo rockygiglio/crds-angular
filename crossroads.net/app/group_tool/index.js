@@ -7,6 +7,8 @@ import groupToolRouter from './groupTool.routes';
 import groupToolFormlyBuilderConfig from './groupTool.formlyConfig';
 import './formlyWrappers/createGroupWrapper.html';
 import './formlyWrappers/checkboxdescription.html';
+import './formlyWrappers/createGroupProfilePicture.html';
+import MessageService from './services/message.service';
 
 export default angular.
   module(CONSTANTS.MODULES.GROUP_TOOL, [ CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON,
@@ -15,7 +17,8 @@ export default angular.
   config(groupToolFormlyBuilderConfig).
   service('ParticipantService', ParticipantService).
   service('GroupService', GroupService).
-  service('CreateGroupService', CreateGroupService)
+  service('CreateGroupService', CreateGroupService).
+  service('MessageService', MessageService)
   ;
 
 import myGroups from './my_groups';
