@@ -31,7 +31,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>report_CRDS_Giving_By_Congregation</CommandText>
+        <CommandText>report_CRDS_Giving_By_Site</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>

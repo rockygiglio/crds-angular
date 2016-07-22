@@ -1,7 +1,15 @@
 USE [MinistryPlatform]
 GO
 
-/****** Object:  StoredProcedure [dbo].[report_CRDS_Giving_By_Congregation]    Script Date: 7/21/2016 8:55:27 AM ******/
+IF EXISTS
+ (SELECT *
+  FROM sys.objects
+  WHERE object_id = object_id(N'[dbo].[report_CRDS_Giving_By_Congregation]'))
+BEGIN
+	DROP PROCEDURE dbo.report_CRDS_Giving_By_Congregation;
+END
+GO
+
 SET ANSI_NULLS ON
 GO
 
@@ -11,13 +19,13 @@ GO
 IF NOT EXISTS
  (SELECT *
   FROM sys.objects
-  WHERE object_id = object_id(N'[dbo].[report_CRDS_Giving_By_Congregation]')
+  WHERE object_id = object_id(N'[dbo].[report_CRDS_Giving_By_Site]')
     AND TYPE IN (N'P',
-                  N'PC')) BEGIN EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Giving_By_Congregation] AS';
+                  N'PC')) BEGIN EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Giving_By_Site] AS';
 
 END 
 GO
-ALTER PROCEDURE [dbo].[report_CRDS_Giving_By_Congregation] 
+ALTER PROCEDURE [dbo].[report_CRDS_Giving_By_Site] 
      @startdate DATETIME ,
      @enddate DATETIME,
 	 @programid AS VARCHAR(MAX) ,
