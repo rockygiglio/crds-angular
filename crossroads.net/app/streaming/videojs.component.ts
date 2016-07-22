@@ -39,7 +39,9 @@ export class VideoJSComponent implements AfterViewInit {
     this.streamspot.getBroadcasting((data: any) => {
       var isBroadcasting: boolean = data.isBroadcasting;
       if ( !isBroadcasting ) {
-        this.url = this.nonPublicUrl;
+        
+        window.location.href = '/live';
+
       }
 
       // set player source
