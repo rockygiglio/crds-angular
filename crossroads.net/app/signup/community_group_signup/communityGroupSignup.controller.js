@@ -69,10 +69,10 @@
             vm.response = response.SignUpFamilyMembers;
             vm.groupEvents = response.events;
             vm.childCareEvents = _.find(vm.groupEvents, function(i) {
-                    return i.eventType === "Childcare"                       
+              return i.eventType === 'Childcare';
             });
 
-            if(vm.childCareEvents != undefined){
+            if(vm.childCareEvents !== undefined){
               vm.childCareAvailable = true;
             }
 
@@ -226,7 +226,7 @@
       return result;
     }
 
-    function signup(form) {
+    function signup() {
       vm.saving = true;
       var participantArray = hasParticipantID(vm.response);
       var flag = false;
@@ -253,7 +253,7 @@
       //Add Person to group
       Group.Participant.save({
         groupId: vm.groupId
-      }, participantArray.partId).$promise.then(function(response) {
+      }, participantArray.partId).$promise.then(function() {
         if (vm.waitListCase) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.successfullWaitlistSignup);
         } else {
