@@ -47,7 +47,7 @@ namespace MinistryPlatform.Translation.Models.Childcare
         public int ChildcareGroupID { get; set; }
 
         [JsonProperty(PropertyName = "Childcare_Group_Max_Age")]
-        public int ChildcareMaxAge { get; set; }
+        public int? ChildcareMaxAge { get; set; }
 
         public override string ToString()
         {

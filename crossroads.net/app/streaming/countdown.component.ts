@@ -6,9 +6,6 @@ import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
 
 var moment = require('moment-timezone');
-//var moment = require('moment/min/moment.min.js');
-//declare var moment: any;
-
 declare var _: any;
 
 @Component({
@@ -32,7 +29,7 @@ declare var _: any;
       </div>
     </div>
   `,
-  providers: [StreamspotService, HTTP_PROVIDERS]
+  providers: [HTTP_PROVIDERS]
 })
 
 export class CountdownComponent implements OnInit {
@@ -51,12 +48,10 @@ export class CountdownComponent implements OnInit {
   }
 
   private createCountdown() {
-    this.streamspotService.getEvents().then(response => {
-      this.event = _.last(response);
-      this.subscriber = Observable
-                    .interval(1000)
-                    .subscribe(() => this.parseEvent());
-    })
+    this.streamspotService.nextEvent.subscribe((event: Event) => {
+      this.event = event;
+      this.subscriber = Observable.interval(1000).subscribe(() => this.parseEvent());
+    });
   }
 
   private pad(value:number): string {

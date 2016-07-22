@@ -9,4 +9,8 @@ export default function groupToolFormlyBuilderConfig(formlyConfigProvider) {
       name: 'checkboxdescription',
       templateUrl: 'formlyWrappers/checkboxdescription.html'
   });
+  formlyConfigProvider.setWrapper({
+      name: 'createGroupProfilePicture',
+      templateUrl: 'formlyWrappers/createGroupProfilePicture.html'
+  });
 };

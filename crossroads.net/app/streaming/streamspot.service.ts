@@ -1,4 +1,4 @@
-import { Injectable }    from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
@@ -22,37 +22,46 @@ export class StreamspotService {
     'x-API-Key': this.apiKey
   });
 
-  public isBroadcasting: boolean = false;
+  public isBroadcasting: EventEmitter<any> = new EventEmitter();
+  public nextEvent: EventEmitter<any> = new EventEmitter();
+  public events: Promise<Event[]>;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.events = this.getEvents();
+  }
 
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
     // let url = 'http://localhost:3000/app/streaming/events.json'
 
-    return this.http.get(url, {headers: this.headers})
+    return this.http
+      .get(url, {headers: this.headers})
       .toPromise()
-      .then(response => _.chain(response.json().data.events)
-        .sortBy('start')
-        .filter((event:Event) => {
-          // get upcoming or currently broadcasting events
-          let currentTimestamp = moment().tz(moment.tz.guess());
-          let eventStartTimestamp   = moment.tz(event.start, 'America/New_York');
-          let eventEndTimestamp   = moment.tz(event.end, 'America/New_York');
-          
-          return currentTimestamp.isBefore(eventStartTimestamp)
-                || (currentTimestamp.isAfter(eventStartTimestamp) && currentTimestamp.isBefore(eventEndTimestamp))
-        })
-        .map((event:Event) => {
-          event.start     = moment.tz(event.start, 'America/New_York');
-          event.end       = moment.tz(event.end, 'America/New_York');
-          event.dayOfYear = event.start.dayOfYear();
-          event.time      = event.start.format('LT [EST]');
-          return event;
-        })
-        .value()
-      )
-      .catch(this.handleError);
+      .catch(this.handleError)
+      .then((response) => {
+        let events = response.json().data.events;
+        return _
+          .chain(events)
+          .sortBy('start')
+          .map((object:Event) => {
+            // create event objects
+            return Event.build(object);
+          })
+          .filter((event:Event) => {
+            // return only current or upcoming events
+            return event.isBroadcasting() || event.isUpcoming();
+          })
+          .value();
+      })
+      .then((events) => {
+        if(events.length == 0) return events;
+        let event = _(events).first();
+        // dispatch updates
+        this.isBroadcasting.emit(event.isBroadcasting());
+        this.nextEvent.emit(event);
+        return events;
+      })
+      ;
   }
 
   getEventsByDate(): Promise<Object[]> {

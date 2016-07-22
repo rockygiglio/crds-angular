@@ -149,7 +149,8 @@ namespace crds_angular.test.Services
                         },
                         new GroupParticipantDTO
                         {
-                            GroupParticipantId = 9090,
+                            ParticipantId = 9090,
+                            GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
                     }
@@ -227,7 +228,8 @@ namespace crds_angular.test.Services
                         },
                         new GroupParticipantDTO
                         {
-                            GroupParticipantId = 9090,
+                            ParticipantId = 9090,
+                            GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
                     }
@@ -422,6 +424,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
             const int myParticipantId = 952;
             const int removeParticipantId = 3;
+            const int removeGroupParticipantId = 13;
             const int templateId = 765;
 
             var group = new GroupDTO
@@ -437,7 +440,8 @@ namespace crds_angular.test.Services
                     },
                     new GroupParticipantDTO
                     {
-                        GroupParticipantId = removeParticipantId,
+                        ParticipantId = removeParticipantId,
+                        GroupParticipantId = removeGroupParticipantId,
                         NickName = "nickname",
                         ContactId = 90,
                         Email = "80"
@@ -480,6 +484,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
             const int myParticipantId = 952;
             const int removeParticipantId = 3;
+            const int removeGroupParticipantId = 13;
             const int templateId = 765;
 
             var group = new GroupDTO
@@ -495,7 +500,8 @@ namespace crds_angular.test.Services
                     },
                     new GroupParticipantDTO
                     {
-                        GroupParticipantId = removeParticipantId,
+                        ParticipantId = removeParticipantId,
+                        GroupParticipantId = removeGroupParticipantId,
                         NickName = "nickname",
                         ContactId = 90,
                         Email = "80"
