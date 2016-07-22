@@ -10,12 +10,21 @@ import { CountdownComponent } from '../../app/streaming/countdown.component';
 
 var moment = require('moment-timezone');
 
+class MockStreamspotService extends StreamspotService {
+  constructor() {
+    super(null)
+  }
+  getEvents(): any {
+    return [];
+  }
+}
+
 describe('Component: Countdown', () => {
 
   beforeEach(() =>
     addProviders([
       HTTP_PROVIDERS,
-      { provide: StreamspotService, useClass: StreamspotService }
+      { provide: StreamspotService, useClass: MockStreamspotService }
     ])
   );
 

@@ -39,8 +39,9 @@ export class StreamspotService {
       .toPromise()
       .catch(this.handleError)
       .then((response) => {
+        let events = response.json().data.events;
         return _
-          .chain(response.json().data.events)
+          .chain(events)
           .sortBy('start')
           .map((object:Event) => {
             // create event objects
@@ -53,6 +54,7 @@ export class StreamspotService {
           .value();
       })
       .then((events) => {
+        if(events.length == 0) return events;
         let event = _(events).first();
         // dispatch updates
         this.isBroadcasting.emit(event.isBroadcasting());
