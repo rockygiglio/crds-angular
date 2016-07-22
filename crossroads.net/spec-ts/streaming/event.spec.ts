@@ -16,7 +16,7 @@ describe('Object: Event', () => {
   });
 
   it('should consume json and return an event object', () => {
-    let event = Event.asEvent(eventJson);
+    let event = Event.build(eventJson);
     expect(event instanceof Event).toBeTruthy();
     expect(event.title).toBe('Testing');
   });

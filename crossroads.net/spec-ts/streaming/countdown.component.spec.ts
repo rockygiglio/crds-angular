@@ -1,4 +1,5 @@
 import { provide } from '@angular/core';
+import { HTTP_PROVIDERS } from '@angular/http';
 import { describe, it, expect, inject, beforeEach, addProviders } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
@@ -13,6 +14,7 @@ describe('Component: Countdown', () => {
 
   beforeEach(() =>
     addProviders([
+      HTTP_PROVIDERS,
       { provide: StreamspotService, useClass: StreamspotService }
     ])
   );
