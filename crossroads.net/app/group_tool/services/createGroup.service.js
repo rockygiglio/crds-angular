@@ -43,18 +43,7 @@ export default class CreateGroupService {
                     address: {
                         street: this.profileData.addressLine1,
                         city: this.profileData.city,
-                        state: () => {
-                            _.find(this.statesLookup, (state) => {
-                                return state.dp_RecordName == this.profileData.state
-                            }).then(function (data) {
-                                if (data === undefined) {
-                                    return '';
-                                }
-                                else {
-                                    return datap.dp_RecordID;
-                                }
-                            })
-                        },
+                        state: this.profileData.state,
                         zip: this.profileData.postalCode,
                         country: this.profileData.foreignCountry
                     }
@@ -157,7 +146,7 @@ export default class CreateGroupService {
                     templateOptions: {
                         label: 'State',
                         required: true,
-                        valueProp: 'dp_RecordID',
+                        valueProp: 'dp_RecordName',
                         labelProp: 'dp_RecordName',
                         options: this.statesLookup
                     }
@@ -296,7 +285,7 @@ export default class CreateGroupService {
                     templateOptions: {
                         label: 'State',
                         required: true,
-                        valueProp: 'dp_RecordID',
+                        valueProp: 'dp_RecordName',
                         labelProp: 'dp_RecordName',
                         options: this.statesLookup
                     },
@@ -611,20 +600,7 @@ export default class CreateGroupService {
         if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
             smallGroup.address = new Address();
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-            smallGroup.address.state = () => {
-                 _.find(this.statesLookup, (states) => {
-                return states.dp_RecordId == this.model.group.meeting.address.state
-            }).then(function(data) {
-                if(data == undefined)
-                {
-                    return '';
-                }
-                else
-                {
-                    data.dp_RecordName;
-                }
-            })
-            }
+            smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
@@ -662,9 +638,7 @@ export default class CreateGroupService {
             , householdId: this.model.profile.householdId
             , oldEmail: this.rootScope.email
             , postalCode: this.model.profile.address.zip
-            , state: _.find(this.statesLookup, (states) => {
-                return states.dp_RecordID == this.model.profile.address.state
-            }).dp_RecordName
+            , state: this.model.profile.address.state
         }
 
         );
