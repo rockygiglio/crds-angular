@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from './event';
 import { StreamspotService } from './streamspot.service';
+import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
 
 declare var moment: any;
 declare var _: any;
@@ -9,6 +10,7 @@ declare var _: any;
 @Component({
   selector: 'schedule',
   templateUrl: './schedule.ng2component.html',
+  directives: [DynamicContentNg2Component],
   providers: [StreamspotService]
 })
 
