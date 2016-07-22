@@ -21,11 +21,11 @@ export default class CreateGroupService {
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
         }, {
-            meetingFrequencyId: 2,
-            meetingFrequencyDesc: 'Every other week'
-        }];
+                meetingFrequencyId: 2,
+                meetingFrequencyDesc: 'Every other week'
+            }];
         //this.statesLookup is added by the route resolve of the createGroupController.
-		//this.profileData is added by the route resolve of the createGroupController.
+        //this.profileData is added by the route resolve of the createGroupController.
     }
 
     preloadModel() {
@@ -36,33 +36,38 @@ export default class CreateGroupService {
                     birthDate: this.profileData.dateOfBirth,
                     genderId: this.profileData.genderId,
                     householdId: this.profileData.householdId,
-                    addressid: this.profileData.addressId,
+                    addressId: this.profileData.addressId,
                     contactId: this.profileData.contactId,
 					congregationId: this.profileData.congregationId,
                     address: {
                         street: this.profileData.addressLine1,
                         city: this.profileData.city,
-                        state: _.find(this.statesLookup, (state) => {
-                            return state.dp_RecordName == this.profileData.state 
-                        }).dp_RecordID,
+                        state: () => { 
+                            _.find(this.statesLookup, (state) => {
+                                return state.dp_RecordName == this.profileData.state
+                            }).then(function (data) {
+                                if(data === undefined) {
+                                    return '';
+                                }
+                                else
+                                {
+                                    return datap.dp_RecordID;
+                                }
+                            })
+                        },
                         zip: this.profileData.postalCode,
                         country: this.profileData.foreignCountry
                     }
                 },
-                group: {
-                    meeting: {
-                        time: '1983-01-16T22:00:00.007Z'
-                    },
-                    categories: {
-                        lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                        neighborhoodId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-                        spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                        interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
-                        healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
-                    }
-                },
-                specificDay: true
-            }
+                categories: {
+                    lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                    neighborhoodId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+                    spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+                    interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+                    healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
+            },
+            specificDay: true
+        }
     }
 
     getFields() {
@@ -195,12 +200,16 @@ export default class CreateGroupService {
             }, {
                     key: 'group.meeting.day',
                     type: 'select',
+                    hideExpression: '!model.specificDay',
                     templateOptions: {
                         label: 'Day',
                         required: true,
                         valueProp: 'dp_RecordID',
                         labelProp: 'dp_RecordName',
                         options: []
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.specificDay'
                     },
                     controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                         $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
@@ -213,6 +222,10 @@ export default class CreateGroupService {
                 }, {
                     key: 'group.meeting.time',
                     type: 'timepicker',
+                    hideExpression: '!model.specificDay',
+                     expressionProperties: {
+                        'templateOptions.required': 'model.specificDay'
+                    },
                     templateOptions: {
                         label: 'Time',
                         required: true,
@@ -256,39 +269,54 @@ export default class CreateGroupService {
             }, {
                     key: 'group.meeting.address.street',
                     type: 'input',
-                    className: 'form-group',
+                    hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'Street',
                         required: true,
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.city',
                     type: 'input',
+                    hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'City',
                         required: true,
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.state',
                     type: 'select',
+                    hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'State',
                         required: true,
                         valueProp: 'dp_RecordID',
                         labelProp: 'dp_RecordName',
                         options: this.statesLookup
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.zip',
                     type: 'input',
                     optionsTypes: ['zipcode'],
+                    hideExpression: 'model.group.meeting.online',
                     templateOptions: {
-                        label: 'Zip',
                         required: true,
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.group.meeting.online'
                     }
                 }, {
                     key: 'group.kidFriendly',
                     type: 'radio',
+                    hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         required: true,
                         label: 'Will your group have childcare?',
@@ -302,6 +330,9 @@ export default class CreateGroupService {
                                 label: 'No. Adults only please.',
                                 kidFriendly: false
                             }]
+                    },
+                    expressionProperties: {
+                        'templateOptions.required': 'model.group.meeting.online'
                     }
                 }]
         };
@@ -542,10 +573,18 @@ export default class CreateGroupService {
     }
 
     getMeetingLocation() {
-        let meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+        debugger;
+        let meetingDay = 'Flexible Meeting Time';
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
-
+        if(this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null)
+        {
+            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+        }
+        else
+        {
+            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
+        }
     }
 
     mapSmallGroup() {
