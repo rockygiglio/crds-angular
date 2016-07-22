@@ -275,8 +275,8 @@ streaming {
         strong {
           display: block;
         }
-        .date, .time, .cta {
-          @include make-xs-column(4);
+        .date, .time {
+          @include make-xs-column(5);
         }
       }
     }
