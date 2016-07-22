@@ -643,9 +643,9 @@ namespace crds_angular.Services
                 var mergeData = new Dictionary<string, object>
                 {
                     {"Group_Name", participant.EnrollerGroupName },
-                    {"Childcare_Date", participant.ChildcareEventDate },
+                    {"Childcare_Date", participant.ChildcareEventDate.ToString("d") },
                     {"Group_Member_Nickname", participant.EnrollerNickname },
-                    {"Childcare_Day", participant.ChildcareEventDate },
+                    {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
                     {"Child_List", kiddos}
                 };
                 var comm = new MpCommunication
