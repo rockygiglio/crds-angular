@@ -32,7 +32,7 @@ export class StreamspotService {
 
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
-    // let url = 'http://localhost:3000/app/streaming/events.json'
+    // let url = 'http://localhost:3000/app/streaming/data/events.json'
 
     return this.http
       .get(url, {headers: this.headers})
