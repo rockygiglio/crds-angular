@@ -499,7 +499,7 @@ export default class CreateGroupService {
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.meetingDay = this.model.group.meetingDay;
+        smallGroup.meetingDay = this.model.group.meeting.day ;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -535,35 +535,167 @@ export default class CreateGroupService {
 
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
-        var groupTypeId = 0;
-        switch (smallGroup.groupType.name) {
-            case 'Anyone is welcome':
-                groupTypeId = 7007;
-                break;
-            case 'Men only':
-                groupTypeId = 7008;
-                break;
-            case 'Women only':
-                groupTypeId = 7009;
-                break;
-            case 'Married couples':
-                groupTypeId = 7010;
-                break;
-            default:
-                groupTypeId = 7007;
-        }
-
         smallGroup.singleAttributes = {
             "73": {
                 "attribute": {
-                    "attributeId": groupTypeId,
+                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
                 },
             }
         }
+
+        var ids = [];
+        _.forEach(this.model.groupAgeRangeIds, (id) => {
+            ids.push(
+                {
+                    "attributeId": id,
+                    "name": "Middle School Students",
+                    "description": null,
+                    "selected": true,
+                    "startDate": "0001-01-01T00:00:00",
+                    "endDate": null,
+                    "notes": null,
+                    "sortOrder": 0,
+                    "category": null,
+                    "categoryDescription": null
+                })
+
+        });
+
+
+        var ageRangeJson = {
+            "91": {
+                "attributeTypeId": 91,
+                "name": "Age Range",
+                "attributes": ids
+            }
+        }
+
+        smallGroup.attributeTypes = ageRangeJson;
+
+        // this.model.groupAgeRangeIds
+
+        // _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
+        //     ageRangeNames.push(new AgeRange({
+        //         name: _.find(this.ageRangeLookup, (range) => {
+        //             return range.attributeId == selectedRange
+        //         }).name
+        //     })
+        //     )
+        // });
+        //           "91": {
+        //     "attributeTypeId": 91,
+        //     "name": "Age Range",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7089,
+        //         "name": "Middle School Students",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": null,
+        //         "categoryDescription": null
+        //       },
+        //   }            
+
+        //           "91": {
+        //     "attributeTypeId": 91,
+        //     "name": "Age Range",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7089,
+        //         "name": "Middle School Students",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": null,
+        //         "categoryDescription": null
+        //       },
+        //   }
+
+        //       "90": {
+        //     "attributeTypeId": 90,
+        //     "name": "Group Category",
+        //     "attributes": [
+        //       {
+        //         "attributeId": 7099,
+        //         "name": "Boxing",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "2016-07-08T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Interest",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7097,
+        //         "name": "Landen, Ohio",
+        //         "description": null,
+        //         "selected": true,
+        //         "startDate": "2016-07-07T13:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Neighborhoods",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7098,
+        //         "name": "Oakley, Ohio",
+        //         "description": null,
+        //         "selected": false,
+        //         "startDate": "0001-01-01T00:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Neighborhoods",
+        //         "categoryDescription": null
+        //       },
+        //       {
+        //         "attributeId": 7100,
+        //         "name": "Pokèmon GO",
+        //         "description": "Gotta catch 'em all",
+        //         "selected": true,
+        //         "startDate": "2016-07-14T11:00:00",
+        //         "endDate": null,
+        //         "notes": null,
+        //         "sortOrder": 0,
+        //         "category": "Interest",
+        //         "categoryDescription": null
+        //       }
+        //     ]
+        //   },
 
         // TODO singleAttributes and multiAttributes
         return smallGroup;
 
     }
 
+    getGroupTypeAttributeIdFromName(name) {
+        var groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+        switch (name) {
+            case 'Anyone is welcome':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+                break;
+            case 'Men only':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_MENONLY;
+                break;
+            case 'Women only':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_WOMENONLY;
+                break;
+            case 'Married couples':
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_COUPLES;
+                break;
+            default:
+                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
+        }
+        return groupTypeId;
+    }
 }
