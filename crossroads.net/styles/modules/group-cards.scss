@@ -16,6 +16,22 @@ my-groups {
       flex-grow: 1;
     }
   }
+
+  .my-groups-static {
+    height: 125px;
+  }
+
+  .my-groups-static-vert {
+    @include vertical-align();
+
+    font-size: 90%;
+    font-weight: bold;
+
+    svg {
+      width: 65px;
+      height: 65px;
+    }
+  }
 }
 
 group-card {
