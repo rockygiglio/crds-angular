@@ -473,7 +473,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["Group_Description"].Equals(group.GroupDescription)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId);
+            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, false, group, templateId);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
@@ -549,7 +549,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, group, templateId, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, false, group, templateId, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
