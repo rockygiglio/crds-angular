@@ -33,20 +33,36 @@ export default class CreateGroupService {
             this.model = {
                 profile: {
                     firstName: this.profileData.firstName,
+                    middleName: this.profileData.middleName,
                     nickName: this.profileData.nickName,
                     lastName: this.profileData.lastName,
-                    birthDate: this.profileData.dateOfBirth,
+                    maidenName: this.profileData.maidenName,
+                    dateOfBirth: this.profileData.dateOfBirth,
                     genderId: this.profileData.genderId,
+                    maritalStatusId: this.profileData.maritalStatusId,
                     householdId: this.profileData.householdId,
                     addressId: this.profileData.addressId,
                     contactId: this.profileData.contactId,
-                    address: {
-                        street: this.profileData.addressLine1,
-                        city: this.profileData.city,
-                        state: this.profileData.state,
-                        zip: this.profileData.postalCode,
-                        country: this.profileData.foreignCountry
-                    }
+                    addressLine1: this.profileData.addressLine1,
+                    city: this.profileData.city,
+                    state: this.profileData.state,
+                    postalCode: this.profileData.postalCode,
+                    foreignCountry: this.profileData.foreignCountry,
+                    employerName: this.profileData.employerName,
+                    mobilePhone: this.profileData.mobilePhone,
+                    homePhone: this.profileData.homePhone,
+                    attendanceStartDate: this.profileData.attendanceStartDate,
+                    emailAddress: this.profileData.emailAddress,
+                    oldEmail: this.profileData.emailAddress,
+                    oldPassword: '',
+                    currentPassword: '',
+                    passportNumber: this.profileData.passportNumber,
+                    passportFirstname: this.profileData.passportFirstname,
+                    passportLastname: this.profileData.passportLastname,
+                    passportMiddlename: this.profileData.passportMiddlename,
+                    passportExpiration: this.profileData.passportExpiration,
+                    passportCountry: this.profileData.passportCountry
+
                 },
                 categories: {
                     lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
@@ -85,7 +101,7 @@ export default class CreateGroupService {
                     });
                 }
             }, {
-                    key: 'profile.birthDate',
+                    key: 'profile.dateOfBirth',
                     type: 'datepicker',
                     templateOptions: {
                         label: 'Birth Date',
@@ -127,21 +143,21 @@ export default class CreateGroupService {
                 sectionLabel: 'What’s your address?'
             },
             fieldGroup: [{
-                key: 'profile.address.street',
+                key: 'profile.addressLine1',
                 type: 'input',
                 templateOptions: {
                     label: 'Street',
                     required: true,
                 }
             }, {
-                    key: 'profile.address.city',
+                    key: 'profile.city',
                     type: 'input',
                     templateOptions: {
                         label: 'City',
                         required: true,
                     }
                 }, {
-                    key: 'profile.address.state',
+                    key: 'profile.state',
                     type: 'select',
                     templateOptions: {
                         label: 'State',
@@ -151,14 +167,14 @@ export default class CreateGroupService {
                         options: this.statesLookup
                     }
                 }, {
-                    key: 'profile.address.zip',
+                    key: 'profile.postalCode',
                     type: 'input',
                     templateOptions: {
                         label: 'Zip',
                         required: true,
                     }
                 }, {
-                    key: 'profile.address.country',
+                    key: 'profile.foreignCountry',
                     type: 'input',
                     templateOptions: {
                         label: 'Country',
@@ -622,26 +638,7 @@ export default class CreateGroupService {
         }
         )];
 
-        smallGroup.profile = new Profile({
-            addressId: this.model.profile.addressId
-            ,firstName: this.model.profile.firstName
-            ,lastName: this.model.profile.lastName
-            ,nickName: this.model.profile.nickName
-            , addressLine1: this.model.profile.address.street
-            , city: this.model.profile.address.city
-            , congregationId: this.model.profile.congregationId
-            , contactId: parseInt(this.session.exists('userId'))
-            , dateOfBirth: this.model.profile.birthDate
-            , emailAddress: this.rootScope.email
-            , foreignCountry: this.model.profile.address.country
-            , genderId: this.model.profile.genderId
-            , householdId: this.model.profile.householdId
-            , oldEmail: this.rootScope.email
-            , postalCode: this.model.profile.address.zip
-            , state: this.model.profile.address.state
-        }
-
-        );
+        smallGroup.profile = new Profile(this.model.profile);
 
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
