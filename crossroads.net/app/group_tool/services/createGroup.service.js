@@ -44,6 +44,7 @@ export default class CreateGroupService {
                     addressId: this.profileData.addressId,
                     contactId: this.profileData.contactId,
                     addressLine1: this.profileData.addressLine1,
+                    addressLine2: this.profileData.addressLine2,
                     city: this.profileData.city,
                     state: this.profileData.state,
                     postalCode: this.profileData.postalCode,
@@ -61,8 +62,15 @@ export default class CreateGroupService {
                     passportLastname: this.profileData.passportLastname,
                     passportMiddlename: this.profileData.passportMiddlename,
                     passportExpiration: this.profileData.passportExpiration,
-                    passportCountry: this.profileData.passportCountry
+                    passportCountry: this.profileData.passportCountry,
+                    mobileCarrierId: this.profileData.mobileCarrierId,
+                    county: this.profileData.county
 
+                },
+                group: {
+                    meeting: {
+                        time: "1983-07-16T21:00:00.000Z"
+                    }
                 },
                 categories: {
                     lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
@@ -314,7 +322,8 @@ export default class CreateGroupService {
                     optionsTypes: ['zipcode'],
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
-                        required: true,
+                        label: 'Zip',
+                        required: true
                     },
                     expressionProperties: {
                         'templateOptions.required': 'model.group.meeting.online'
@@ -448,10 +457,10 @@ export default class CreateGroupService {
                     labelProp: 'accessLabel',
                     required: true,
                     options: [{
-                        accessId: 0,
+                        accessId: true,
                         accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
                     }, {
-                            accessId: 1,
+                            accessId: false,
                             accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
                         }]
                 }
@@ -610,18 +619,23 @@ export default class CreateGroupService {
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupType = new GroupType({ name: groupType.name });
+        smallGroup.contactId = this.model.profile.contactId;
         if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
             smallGroup.ageRange = ageRangeNames;
         }
-        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
-            smallGroup.address = new Address();
+        smallGroup.address = new Address();
+        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {           
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
+        else
+        {
+            smallGroup.address.zip = null;
+        }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.meetingDay = this.model.group.meeting.day;
+        smallGroup.meetingDayId = this.model.group.meeting.day;
         smallGroup.meetingTime = this.model.group.meeting.time;
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
@@ -629,7 +643,6 @@ export default class CreateGroupService {
         smallGroup.congregationId = this.model.profile.congregationId;
         smallGroup.startDate = this.model.group.startDate;
         smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.contactId = parseInt(this.session.exists('userId'));
         smallGroup.participants = [new Participant({
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
             , nickName: this.model.profile.nickName
