@@ -637,6 +637,10 @@ export default class CreateGroupService {
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
         smallGroup.meetingDayId = this.model.group.meeting.day;
         smallGroup.meetingTime = this.model.group.meeting.time;
+        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
+        {
+            delete smallGroup.meetingTime;
+        }      
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;

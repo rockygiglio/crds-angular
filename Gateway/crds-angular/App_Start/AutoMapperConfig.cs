@@ -258,6 +258,11 @@ namespace crds_angular.App_Start
                         var time = DateTime.Today.Add(timeSpan);                      
                         dest.MeetingTimeFrequency = string.Format("{0}'s at {1}, {2}", src.MeetingDay, time.ToString("h:mm tt"), src.MeetingFrequency);
                     }
+                    else
+                    {
+                        dest.MeetingTimeFrequency = string.Format("Flexible Meeting Time, {0}", src.MeetingFrequency);
+                    }
+                    
                 }); 
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
