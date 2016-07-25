@@ -24,5 +24,5 @@ Quick_Add) VALUES
 0,
 0,
 0,
-0,)
+0)
 END
