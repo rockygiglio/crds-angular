@@ -17,6 +17,7 @@ export default class CreateGroupService {
         this.session = Session;
         this.rootScope = $rootScope;
         this.model = {};
+        this.resolved = false;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -29,15 +30,18 @@ export default class CreateGroupService {
     }
 
     preloadModel() {
-        this.model.profile.oldEmail = this.profile.emailAddress;
-        delete this.model.profile.householdMembers;
-        delete this.model.profile.congregationId;
-        this.model.group = {
-            meeting: {
-                time: "1983-07-16T21:00:00.000Z"
-            }
-        };
-        this.model.specificDay = true;
+        if (!this.resolved) {
+            this.model.profile.oldEmail = this.model.profile.emailAddress;
+            delete this.model.profile.householdMembers;
+            delete this.model.profile.congregationId;
+            this.model.group = {
+                meeting: {
+                    time: "1983-07-16T21:00:00.000Z"
+                }
+            };
+            this.model.specificDay = true;
+            this.resolved = true;
+        }
     }
 
     getFields() {
@@ -521,7 +525,7 @@ export default class CreateGroupService {
             smallGroup.address.zip = null;
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
-        smallGroup.meetingTimeFrequency = this.getMeetingLocation();        
+        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = this.model.group.meeting.time;
