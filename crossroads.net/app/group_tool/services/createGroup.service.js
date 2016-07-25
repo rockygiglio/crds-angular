@@ -486,7 +486,8 @@ export default class CreateGroupService {
                         }
                     ],
                     valueProp: 'id',
-                    labelProp: 'label'
+                    labelProp: 'label',
+                    descProp: 'labelDesc'
                 }
             }, {
                 key: 'group.categories.lifestages',

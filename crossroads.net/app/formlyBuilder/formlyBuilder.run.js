@@ -176,6 +176,7 @@
                     options: check.arrayOf(check.object),
                     labelProp: check.string.optional,
                     valueProp: check.string.optional,
+                    descProp: check.string.optional,
                     placeholder: check.string.optional
                 }
             }),
@@ -198,7 +199,7 @@
                     change: setModel
                 };
 
-                // initialize the checkboxes check property
+                // initialrize the checkboxes check property
                 $scope.$watch('model', function modelWatcher(newModelValue) {
                     var modelValue, valueProp;
                     if (Object.keys(newModelValue).length) {
