@@ -479,107 +479,38 @@ export default class CreateGroupService {
                 templateOptions: {
                     required: true,
                     options: [{
-                        id: 1,
-                        label: 'Life Stages',
-                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
+                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        label: 'Life Stage',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
+                        placeholder: 'Life Stages detail...'
                     }, {
-                            id: 2,
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
-                            labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
+                            labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
+                            placeholder: 'Neighborhood detail...'
                         }, {
-                            id: 3,
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
                             label: 'Spirtual Growth',
-                            labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
+                            labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.',
+                            placeholder: 'Spritual Growth detail...'
                         }, {
-                            id: 4,
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
-                            labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
+                            labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.',
+                            placeholder: 'interest detail...'
                         }, {
-                            id: 5,
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
-                            labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
+                            labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
+                            placeholder: 'healing detail'
                         }
                     ],
-                    valueProp: 'id',
-                    labelProp: 'label'
+                    valueProp: 'categoryId',
+                    labelProp: 'label',
+                    descProp: 'labelDesc',
+                    placeholder: 'placeholder'
                 }
-            }, {
-                    key: 'group.categories.lifestages',
-                    type: 'boldcheckbox',
-                    wrapper: 'checkboxdescription',
-                    templateOptions: {
-                        label: 'Life Stage',
-                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.'
-                    }
-                }, {
-                    key: 'group.categories.lifeStageDetail',
-                    type: 'input',
-                    hideExpression: '!model.group.categories.lifestages',
-                    templateOptions: {
-                        placeholder: 'Life Stage detail...'
-                    }
-                }, {
-
-                    key: 'group.categories.neighborhood',
-                    type: 'boldcheckbox',
-                    wrapper: 'checkboxdescription',
-                    templateOptions: {
-                        label: 'Neighborhoods',
-                        labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.'
-                    }
-                }, {
-                    key: 'group.categories.neighborhoodDetail',
-                    type: 'input',
-                    hideExpression: '!model.group.categories.neighborhood',
-                    templateOptions: {
-                        placeholder: 'Neighborhood detail...'
-                    }
-                }, {
-                    key: 'group.categories.spiritualgrowth',
-                    type: 'boldcheckbox',
-                    wrapper: 'checkboxdescription',
-                    templateOptions: {
-                        label: 'Spirtual Growth',
-                        labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.'
-                    }
-                }, {
-                    key: 'group.categories.spiritualgrowthDetail',
-                    type: 'input',
-                    hideExpression: '!model.group.categories.spiritualgrowth',
-                    templateOptions: {
-                        placeholder: 'Spritual Growth detail...'
-                    }
-                }, {
-                    key: 'group.categories.interest',
-                    type: 'boldcheckbox',
-                    wrapper: 'checkboxdescription',
-                    templateOptions: {
-                        label: 'Interest',
-                        labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.'
-                    }
-                }, {
-                    key: 'group.categories.interestDetail',
-                    type: 'input',
-                    hideExpression: '!model.group.categories.interest',
-                    templateOptions: {
-                        placeholder: 'Interest detail...'
-                    }
-                }, {
-                    key: 'group.categories.healing',
-                    type: 'boldcheckbox',
-                    wrapper: 'checkboxdescription',
-                    templateOptions: {
-                        label: 'Healing',
-                        labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.'
-                    }
-                }, {
-                    key: 'group.categories.healingDetail',
-                    type: 'input',
-                    hideExpression: '!model.group.categories.healing',
-                    templateOptions: {
-                        placeholder: 'Healing detail...'
-                    }
-                }]
+            }]
         }
 
         return [profileAboutFields, profileAddressFields, groupTypeFields,
