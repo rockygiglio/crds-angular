@@ -190,6 +190,19 @@ namespace MinistryPlatform.Translation.Repositories
             return family;
         }
 
+        public List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId)
+        {
+            var token = ApiLogin();
+            var householdMembers = new List<MpHouseholdMember>();
+            var otherHouseholds = _ministryPlatformService.GetSubpageViewRecords("OtherHouseholds", contactId, token);
+            foreach (var house in otherHouseholds)
+            {
+                var houseId = (int) house["Household_ID"];
+                householdMembers.AddRange(GetHouseholdFamilyMembers(houseId));
+            }
+            return householdMembers;
+        }
+
 
         public MpMyContact GetMyProfile(string token)
         {

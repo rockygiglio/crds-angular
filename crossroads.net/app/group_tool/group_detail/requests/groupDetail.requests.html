@@ -1,4 +1,6 @@
-<div ng-if='groupDetailRequests.currentView === "List"'>
+<preloader full-screen='false' ng-if="!groupDetailRequests.ready"> </preloader>
+
+<div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
   <div class="table-responsive">
     <table class="table group-requests-list">
       <thead>
@@ -10,28 +12,45 @@
         <th class='col-md-3'></th>
       </thead>
       <tbody>
-        <tr ng-repeat='request in groupDetailRequests.data.requests track by $index'>
+        <tr ng-repeat='inquiry in groupDetailRequests.inquired track by $index'>
           <td>
-            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{request.imageUrl}}' err-src='{{groupDetailRequests.defaultProfileImageUrl}}'>
+            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{inquiry.imageUrl}}' err-src='{{inquiry.defaultProfileImageUrl}}'>
           </td>
           <td>
-            {{request.name}}
+            {{inquiry.recipientName()}}
           </td>
           <td>
-            {{request.requestType === 'invited' ? 'Invite Sent' : 'Requested to Join'}}
+            Requested to Join
           </td>
           <td>
-            {{request.emailAddress}}
+            {{inquiry.emailAddress}}
           </td>
           <td>
-            {{request.dateRequested | date: 'MM/dd/yyyy'}}
+            {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
           </td>
-          <td ng-if='request.requestType === "invited"'>
+          <td>
+            <button type='button' class='btn btn-primary' ng-click="groupDetailRequests.approve(inquiry)">Approve</button>
+            <button type='button' class='btn btn-primary' ng-click="groupDetailRequests.deny(inquiry)">Deny</button>
+          </td>
+        </tr>
+        <tr ng-repeat='invite in groupDetailRequests.invited track by $index'>
+          <td>
+            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{invite.imageUrl}}'>
+          </td>
+          <td>
+            {{invite.recipientName}}
+          </td>
+          <td>
+            Invite Sent
+          </td>
+          <td>
+            {{invite.emailAddress}}
+          </td>
+          <td>
+            {{invite.requestDate | date: 'MM/dd/yyyy'}}
+          </td>
+          <td>
             &nbsp;
-          </td>
-          <td ng-if='request.requestType !== "invited"'>
-            <button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginApproveRequest(request)'>Approve</button>
-            <button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginDenyRequest(request)'>Deny</button>
           </td>
         </tr>
       </tbody>
@@ -41,150 +60,38 @@
   <div class='container-fluid'>
     <div class='row'>
       <div class='col-sm-12'>
-        <p class='text-center'><button type='button' class='btn btn-primary' ng-click='groupDetailRequests.beginInvitation()'>Invite Someone</button></p>
+        <p class='text-center'><button type='button' class='btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
       </div>
     </div>
   </div>
 </div>
 
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Approve"'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h4>Approve Participant - {{groupDetailRequests.currentRequest.name}}</h4>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Message</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupDetailRequests.currentRequest.message'></textarea>
-            </div>
-          </div>
-        </div>
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.approveRequest(groupDetailRequests.currentRequest)'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+<div class='container-fluid' ng-if='groupDetailRequests.approveView()'>
+  <group-message person="groupDetailRequests.selectedInquiry"
+    normal-loading-text="Approve"
+    loading-loading-text="Approving..."
+    header="Approve Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
+    sub-header-text="groupToolApproveInquirySubheaderText"
+    email-template-text="groupToolApproveInquiryEmailTemplateText"
+    cancel-action="groupDetailRequests.cancel(person)"
+    submit-action="groupDetailRequests.submitApprove(person)"
+    processing="groupDetailRequests.processing"
+    ></group-message>
 </div>
 
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Deny"'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h4>Deny Participant - {{groupDetailRequests.currentRequest.name}}</h4>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailMessage' class='wide-label'>Message</label>
-              <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupDetailRequests.currentRequest.message'></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.denyRequest(groupDetailRequests.currentRequest)'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+<div class='container-fluid' ng-if='groupDetailRequests.denyView()'>
+  <group-message person="groupDetailRequests.selectedInquiry"
+    normal-loading-text="Deny"
+    loading-loading-text="Denying..."
+    header="Deny Participant - {{ groupDetailRequests.selectedInquiry.recipientName() }}"
+    sub-header-text="groupToolDenyInquirySubheaderText"
+    email-template-text="groupToolDenyInquiryEmailTemplateText"
+    cancel-action="groupDetailRequests.cancel(person)"
+    submit-action="groupDetailRequests.submitDeny(person)"
+    processing="groupDetailRequests.processing"
+    ></group-message>
 </div>
 
-<div class='container-fluid' ng-if='groupDetailRequests.currentView === "Invite"'>
-  <form>
-    <div class='row'>
-      <div class='col-md-6 col-md-offset-3'>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <h3>Invite Someone</h3>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='name' class='wide-label'>Name</label>
-              <input type='text' class='form-control' name='name' ng-model='groupDetailRequests.invite.name'></input>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='emailAddress' class='wide-label'>Email Address</label>
-              <input type='text' class='form-control' name='emailAddress' ng-model='groupDetailRequests.invite.emailAddress'></input>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group'>
-              <label for='role' class='wide-label'>This person's role will be:</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='participant'>Participant</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='coleader'>Co-Leader</label>
-              <label class="radio-inline"><input type="radio" name="role" ng-model='groupDetailRequests.invite.role' value='apprentice'>Apprentice</label>
-            </div>
-          </div>
-        </div>
-
-        <div class='row'>&nbsp;</div>
-
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.setView("List")'>Cancel</a>
-              <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailRequests.sendInvitation(groupDetailRequests.invite)'>Send</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+<div class='container-fluid' ng-if='groupDetailRequests.inviteView()'>
+  <group-detail-invite on-update="groupDetailRequests.setView(newView, refresh)" group-id="groupDetailRequests.groupId"></group-detail-invite>
 </div>

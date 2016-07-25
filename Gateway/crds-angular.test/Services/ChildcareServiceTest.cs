@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
+using crds_angular.Exceptions;
+using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -28,10 +31,11 @@ namespace crds_angular.test.Services
         private Mock<IServeService> _serveService;
         private Mock<IDateTime> _dateTimeWrapper;
         // Interfaces.IEventService crdsEventService, IApiUserService apiUserService
-        private Mock<crds_angular.Services.Interfaces.IEventService> _crdsEventService;
+        private Mock<IEventService> _crdsEventService;
         private Mock<IApiUserRepository> _apiUserService;
         private Mock<IChildcareRequestRepository> _childcareRequestService;
         private Mock<IGroupService> _groupService;
+        private Mock<IChildcareRepository> _childcareRepository;
 
         private ChildcareService _fixture;
 
@@ -46,10 +50,11 @@ namespace crds_angular.test.Services
             _participantService = new Mock<IParticipantRepository>();
             _serveService = new Mock<IServeService>();
             _dateTimeWrapper = new Mock<IDateTime>();
-            _crdsEventService = new Mock<crds_angular.Services.Interfaces.IEventService>();
+            _crdsEventService = new Mock<IEventService>();
             _apiUserService = new Mock<IApiUserRepository>();
             _childcareRequestService = new Mock<IChildcareRequestRepository>();
             _groupService = new Mock<IGroupService>();
+            _childcareRepository = new Mock<IChildcareRepository>();
 
             _fixture = new ChildcareService(_eventParticipantService.Object,
                                             _communicationService.Object,
@@ -59,7 +64,11 @@ namespace crds_angular.test.Services
                                             _participantService.Object,
                                             _serveService.Object,
                                             _dateTimeWrapper.Object,
-                                            _apiUserService.Object, _crdsEventService.Object, _childcareRequestService.Object, _groupService.Object);
+                                            _apiUserService.Object,
+                                            _crdsEventService.Object,
+                                            _childcareRequestService.Object,
+                                            _groupService.Object,
+                                            _childcareRepository.Object);
         }
 
         [Test]
@@ -227,9 +236,9 @@ namespace crds_angular.test.Services
                 AuthorUserId = defaultAuthorId,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ReplyToContact = new MpContact { ContactId = request.RequesterId, EmailAddress = request.RequesterEmail },
-                ToContacts = new List<MpContact> { new MpContact { ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail } },
+                FromContact = new MpContact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ReplyToContact = new MpContact {ContactId = request.RequesterId, EmailAddress = request.RequesterEmail},
+                ToContacts = new List<MpContact> {new MpContact {ContactId = request.ChildcareContactId, EmailAddress = request.ChildcareContactEmail}},
                 MergeData = mergeData
             };
 
@@ -241,7 +250,7 @@ namespace crds_angular.test.Services
 
             _fixture.SendChildcareRequestNotification(request);
 
-            
+
             _communicationService.VerifyAll();
 
         }
@@ -285,11 +294,11 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("NumberOfDaysBeforeEventToSend")).Returns(daysBefore);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareRequestTemplate")).Returns(emailTemplateId);
-            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MpMessageTemplate());            
+            _communicationService.Setup(m => m.GetTemplate(emailTemplateId)).Returns(new MpMessageTemplate());
             _eventParticipantService.Setup(m => m.GetChildCareParticipants(daysBefore)).Returns(participants);
             _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
 
-            var kids = new List<Participant> { new Participant { ContactId = 456321987 } };
+            var kids = new List<Participant> {new Participant {ContactId = 456321987}};
             _crdsEventService.Setup(m => m.EventParticpants(987654321, It.IsAny<string>())).Returns(kids);
             var mockChildcareEvent = new MpEvent {EventId = 987654321};
             var mockContact = new MpContact
@@ -301,7 +310,7 @@ namespace crds_angular.test.Services
             _crdsEventService.Setup(m => m.GetChildcareEvent(participants[0].EventId)).Returns(mockChildcareEvent);
             _crdsEventService.Setup(m => m.GetChildcareEvent(participants[1].EventId)).Returns(mockChildcareEvent);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(1234);
-            _contactService.Setup(mocked => mocked.GetContactById(1234)).Returns(defaultContact); 
+            _contactService.Setup(mocked => mocked.GetContactById(1234)).Returns(defaultContact);
             var myKids = new List<Participant>();
             _crdsEventService.Setup(m => m.MyChildrenParticipants(987654, kids, It.IsAny<string>())).Returns(myKids);
 
@@ -314,6 +323,153 @@ namespace crds_angular.test.Services
             _communicationService.VerifyAll();
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
             _eventService.VerifyAll();
+        }
+
+        [Test]
+        public void GetHeadsOfHousehold()
+        {
+            const int householdId = 1234;
+            const int contactId = 4321;
+
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(householdId))
+                .Returns(
+                    new List<MpHouseholdMember>()
+                    {
+                        new MpHouseholdMember()
+                        {
+                            Age = 36,
+                            ContactId = contactId,
+                            DateOfBirth = new DateTime(1980, 2, 21),
+                            FirstName = "Matt",
+                            LastName = "Silberangel",
+                            HouseholdPosition = "Head Of Household",
+                            Nickname = "Matt"
+                        },
+                        new MpHouseholdMember()
+                        {
+                            Age = 29,
+                            ContactId = 54879,
+                            DateOfBirth = new DateTime(1987, 11, 5),
+                            FirstName = "Leslie",
+                            LastName = "Silbernagel",
+                            HouseholdPosition = "Head of Household Spouse",
+                            Nickname = "Les"
+                        }
+                    }
+                );
+            var heads = _fixture.GetHeadsOfHousehold(contactId, householdId);
+            _contactService.VerifyAll();
+
+            Assert.AreEqual(2, heads.HeadsOfHousehold.Count());
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfNotHeadOfHousehold()
+        {
+            const int householdId = 1234;
+            const int contactId = 9087;
+
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(householdId))
+                .Returns(
+                    new List<MpHouseholdMember>()
+                    {
+                        new MpHouseholdMember()
+                        {
+                            Age = 36,
+                            ContactId = 123456,
+                            DateOfBirth = new DateTime(1980, 2, 21),
+                            FirstName = "Matt",
+                            LastName = "Silberangel",
+                            HouseholdPosition = "Head Of Household",
+                            Nickname = "Matt"
+                        },
+                        new MpHouseholdMember()
+                        {
+                            Age = 29,
+                            ContactId = 54879,
+                            DateOfBirth = new DateTime(1987, 11, 5),
+                            FirstName = "Leslie",
+                            LastName = "Silbernagel",
+                            HouseholdPosition = "Head of Household Spouse",
+                            Nickname = "Les"
+                        },
+                        new MpHouseholdMember()
+                        {
+                            Age = 8,
+                            ContactId = contactId,
+                            DateOfBirth = new DateTime(2008, 4, 3),
+                            FirstName = "Miles",
+                            LastName = "Silbernagel",
+                            HouseholdPosition = "Minor Child",
+                            Nickname = "Miles"
+                        }
+                    }
+                );
+
+            Assert.Throws<NotHeadOfHouseholdException>(() => _fixture.GetHeadsOfHousehold(contactId, householdId));
+            _contactService.VerifyAll();
+
+        }
+
+        [Test]
+        public void ShouldUpdateTheAvailableDates()
+        {
+            var date1 = new DateTime(2016, 08, 12);
+            var date2 = new DateTime(2016, 08, 13);
+            var date3 = new DateTime(2016, 08, 14);
+
+            var currentList = new List<ChildCareDate>()
+            {
+                new ChildCareDate() {Cancelled = false, EventDate = date3},
+                new ChildCareDate() {Cancelled = false, EventDate = date2},
+                new ChildCareDate() {Cancelled = false, EventDate = date1}
+            };
+
+            var dateTimeToAdd = new DateTime(2016, 08, 29);
+            const bool cancelledToAdd = false;
+
+            var retVal = _fixture.UpdateAvailableChildCareDates(currentList, dateTimeToAdd, cancelledToAdd);
+
+            // the returned value should be the currentList plus the new addition...
+            Assert.AreEqual(retVal.Count, 4);
+
+            // the current list should not have been modified...
+            Assert.AreEqual(currentList.Count, 3);
+
+            // make sure they are ordered correctly
+            Assert.AreEqual(retVal.First().EventDate, date1);
+        }
+
+        [Test]
+        public void UpdateAvailableDatesDuplicates()
+        {
+            var date1 = new DateTime(2016, 08, 12);
+            var date2 = new DateTime(2016, 08, 13);
+            var date3 = new DateTime(2016, 08, 14);
+
+            var currentList = new List<ChildCareDate>()
+            {
+                new ChildCareDate() {Cancelled = false, EventDate = date3},
+                new ChildCareDate() {Cancelled = false, EventDate = date2},
+                new ChildCareDate() {Cancelled = false, EventDate = date1}
+            };
+
+            var dateTimeToAdd = new DateTime(2016, 08, 12);
+            const bool cancelledToAdd = false;
+
+            var retVal = _fixture.UpdateAvailableChildCareDates(currentList, dateTimeToAdd, cancelledToAdd);
+
+            // the returned value should be the currentList plus the new addition...
+            Assert.AreEqual(retVal.Count, 3);
+
+            // the current list should not have been modified...
+            Assert.AreEqual(currentList.Count, 3);
+
+            // make sure they are ordered correctly
+            Assert.AreEqual(retVal.First().EventDate, date1);
+
+            // make sure the current list is left unmodified.
+            Assert.AreEqual(currentList.First().EventDate, date3);
         }
     }
 }

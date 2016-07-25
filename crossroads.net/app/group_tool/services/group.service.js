@@ -1,141 +1,171 @@
-export default class ParticipantService {
+import GroupInvitation from '../model/groupInvitation';
+import CONSTANTS from '../../constants';
+import SmallGroup from '../model/smallGroup';
+import Participant from '../model/participant';
+import GroupInquiry from '../model/groupInquiry';
+
+export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService) {
+  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
+    this.profile = Profile;
     this.deferred = $q;
     this.auth = AuthService;
+    this.lookupService = LookupService;
+    this.imgService = ImageService;
+  }
+
+  getAgeRanges() { return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE}).$promise;
+  }
+
+  getProfileData() {
+    return this.profile.Personal.get().$promise;
+  }
+
+  getGroupGenderMixType() {
+    return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+                          get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
+  }
+
+  getStates() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
+  }
+
+  getSites() {
+    return this.lookupService.Sites.query().$promise;
+  }
+
+  getDaysOfTheWeek() {
+    return this.lookupService.DaysOfTheWeek.query().$promise;
+  }
+
+  getGenders() {
+    return this.lookupService.Genders.query().$promise;
+  }
+
+  sendGroupInvitation(invitation) {
+    return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
+  }
+
+  getMyGroups() {
+    let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promised.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
+
+      return groups;
+    },
+    (err) => {
+      throw err;
+    });
   }
 
   getGroup(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'groupName': 'John and Betty\'s Married Couples New Testament Study Group',
-      'groupDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      'category': 'Study / 1 John',
-      'type': 'Married couples group',
-      'ageRange': '50s',
-      'location': '9806 S. Springfield, Cincinnati OH, 45243',
-      'when': 'Fridays at 9:30am, Every Other Week',
-      'childcare': false,
-      'pets': true,
-      'leaders': [
-        { 'contactId': 1670863, 'participantId': 456, 'name': 'John Smith' },
-        { 'contactId': 789, 'participantId': 123, 'name': 'Betty Smith' },
-      ],
-      'primaryContact': {
-        'contactId': 1670863,
-        'participantId': 456,
-        'name': 'John Smith'
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      let groups = data.map((group) => {
+        return new SmallGroup(group);
+      });
+
+      if(!groups || groups.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group not found'};
+        throw err;
       }
+
+      return groups[0];
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
   getGroupParticipants(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId, 'participants': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Betty Smith',
-          'role': 'leader',
-          'email': 'bettyjj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Ted Baldwin',
-          'role': 'leader',
-          'email': 'tedb@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sam Hanks',
-          'role': 'apprentice',
-          'email': 'samguy@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jennie Jones',
-          'role': 'member',
-          'email': 'jenniejj2000@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sara Baldwin',
-          'role': 'member',
-          'email': 'sarab@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jimmy Hatfield',
-          'role': 'member',
-          'email': 'jhat@hotmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Freddie Jones',
-          'role': 'member',
-          'email': 'FreddieJ@yahoo.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Jamie Hanks',
-          'role': 'member',
-          'email': 'jaha95@gmail.com'
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Kerrir Hatfield',
-          'role': 'member',
-          'email': 'hatk@gmail.com'
-        },
-      ]
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
+                          query({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId}).$promise;
+
+    return promise.then((data) => {
+      if(!data || data.length === 0 || !data[0].Participants || data[0].Participants.length === 0) {
+        var err = {'status': 404, 'statusText': 'Group participants not found'};
+        throw err;
+      }
+
+      let participants = data[0].Participants.map((participant) => {
+        return new Participant(participant);
+      });
+
+      return participants;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
   }
 
-  getGroupRequests(groupId) {
-    var promised = this.deferred.defer();
-    promised.resolve({
-      'groupId': groupId,
-      'requests': [
-        {
-          'contactId': 1670863,
-          'participantId': 456,
-          'name': 'Chris Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'cj101@gmail.com',
-          'dateRequested': new Date(2016, 5, 20)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Sally Jackson',
-          'requestType': 'requested',
-          'emailAddress': 'sallyj@yahoo.com',
-          'dateRequested': new Date(2016, 5, 15)
-        },
-        {
-          'contactId': 123,
-          'participantId': 456,
-          'name': 'Donny Franks',
-          'requestType': 'invited',
-          'emailAddress': 'donnyf@gmail.com',
-          'dateRequested': new Date(2016, 4, 15)
-        },
-      ]
+  removeGroupParticipant(groupId, participant) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/participant/:groupParticipantId`).
+                          delete({
+                            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, 
+                            groupId: groupId,
+                            groupParticipantId: participant.groupParticipantId,
+                            removalMessage: participant.message
+                          }).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  approveDenyInquiry(groupId, approve, inquiry) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
+                           save({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve}, inquiry).$promise;
+    
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  getInvities(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+                          query({sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP}).$promise;
+                          
+    return promised.then((data) => {
+      let invitations = data.map((invitation) => {
+        invitation.imageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInvitation(invitation);
+      });
+
+      return invitations;
+    },
+    (err) => {
+      throw err;
     });
-    return promised.promise;
+  }
+
+  getInquiries(groupId) {
+    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+                          query({groupId: groupId}).$promise;
+
+    return promised.then((data) => {
+      let inquiries = data.map((inquiry) => {
+        inquiry.imageUrl = `${this.imgService.ProfileImageBaseURL}${inquiry.contactId}`;
+        inquiry.defaultProfileImageUrl = this.imgService.DefaultProfileImage;
+        return new GroupInquiry(inquiry);
+      });
+
+      return inquiries;
+    },
+    (err) => {
+      throw err;
+    });
   }
 }

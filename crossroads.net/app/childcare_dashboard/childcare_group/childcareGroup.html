@@ -1,42 +1,31 @@
 <div class="panel panel-default childcare-dashboard">
   <div class="panel-heading">
     <h3 class="panel-title">
-      {{childcareGroup.communityGroup.groupName}} • 
+      {{childcareGroup.communityGroup.groupName}} •
       {{childcareGroup.communityGroup.groupMemberName}}</h3>
-    <span> 
+    <div>
       {{childcareGroup.communityGroup.eventStartTime | date: 'h:mm'}}-{{childcareGroup.communityGroup.eventEndTime | date: 'shortTime'}}
       at {{childcareGroup.getCongregation(childcareGroup.communityGroup.congregationId)}}
-    </span>
-    <div class="pull-right">
-      <span class="badge" ng-if="childcareGroup.isEventClosed()">
-        Event Closed
-      </span>
-      <span class="badge" ng-if="childcareGroup.hasSignedUpChild()">
-        Signed Up
-      </span>
-      <span class="badge" ng-if="childcareGroup.isEventCancelled()">
-        Cancelled
-      </span>
     </div>
   </div>
-    <ul class="list-group">
-      <li 
-        class="list-group-item list-group-item-warning" 
-        ng-if="childcareGroup.showMessage()">
-        <div dynamic-content="childcareGroup.message | html"></div>
-      </li>
-      <li ng-if="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
-          ng-repeat="child in childcareGroup.communityGroup.eligibleChildren"
-          class="list-group-item">
-        {{child.childName}} 
-        <toggle-switch 
-          ng-model="child.rsvpness"
-          on-label="✓"
-          off-label="✕"
-          class="pull-right"
-          ng-disabled="childcareGroup.isEventClosed() && !child.rsvpness">
-        <toggle-switch>
-      </li>
-    </ul> 
+  <ul class="list-group">
+    <li
+      class="list-group-item list-group-item-warning"
+      ng-show="childcareGroup.showMessage()">
+      <div dynamic-content="childcareGroup.message | html"></div>
+    </li>
+    <li ng-show="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
+        ng-repeat="child in childcareGroup.communityGroup.eligibleChildren"
+        class="list-group-item form-group">
+      {{child.childName}}
+      <toggle-switch
+        ng-model="child.rsvpness"
+        on-label="Yes"
+        off-label="No"
+        class="pull-right"
+        ng-click="childcareGroup.validateAndRsvp(child, child.rsvpness)" >
+      <toggle-switch>
+    </li>
+  </ul>
 </div>
 

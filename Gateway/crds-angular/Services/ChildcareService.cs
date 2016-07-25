@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Exceptions;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
@@ -19,6 +21,7 @@ namespace crds_angular.Services
 {
     public class ChildcareService : IChildcareService
     {
+        private readonly IChildcareRepository _childcareRepository;
         private readonly IChildcareRequestRepository _childcareRequestService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IConfigurationWrapper _configurationWrapper;
@@ -46,7 +49,8 @@ namespace crds_angular.Services
                                 IApiUserRepository apiUserService, 
                                 IEventService crdsEventService, 
                                 IChildcareRequestRepository childcareRequestService,
-                                IGroupService groupService)
+                                IGroupService groupService,
+                                IChildcareRepository childcareRepository)
         {
             _childcareRequestService = childcareRequestService;
             _eventParticipantService = eventParticipantService;
@@ -60,6 +64,7 @@ namespace crds_angular.Services
             _dateTimeWrapper = dateTimeWrapper;
             _apiUserService = apiUserService;
             _groupService = groupService;
+            _childcareRepository = childcareRepository;
 
             _childcareGroupType = _configurationWrapper.GetConfigIntValue("ChildcareGroupType");
         }
@@ -116,7 +121,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
+                var groupParticipant = _groupService.GetGroupParticipants(cancelRsvp.GroupId, false).FirstOrDefault(p => p.ContactId == cancelRsvp.ChildContactId);
                 if (groupParticipant != null)
                 {
                     _groupService.endDateGroupParticipant(cancelRsvp.GroupId, groupParticipant.GroupParticipantId);
@@ -142,6 +147,27 @@ namespace crds_angular.Services
            catch (Exception ex)
             {
                 _logger.Error(string.Format("Save Request failed"), ex);
+            }
+
+        }
+
+        public void UpdateChildcareRequest(ChildcareRequestDto request, string token)
+        {
+            var mpRequest = request.ToMPChildcareRequest();
+            _childcareRequestService.UpdateChildcareRequest(mpRequest);
+            //delete the current childcare request dates
+            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId,token);
+
+            //add the new dates
+            _childcareRequestService.CreateChildcareRequestDates(request.ChildcareRequestId, mpRequest, token);
+            try
+            {
+                var childcareRequest = _childcareRequestService.GetChildcareRequest(request.ChildcareRequestId, token);
+                SendChildcareRequestNotification(childcareRequest);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Update Request failed", ex);
             }
 
         }
@@ -202,6 +228,11 @@ namespace crds_angular.Services
             }
         }
 
+        private List<MpChildcareRequestDate> GetChildcareRequestDatesForRequest(int childcareRequestId)
+        {
+            return new List<MpChildcareRequestDate>();
+        }
+
         private int GetApprovalEmailTemplate(int requestStatusId)
         {
             if (requestStatusId == 1)
@@ -251,77 +282,99 @@ namespace crds_angular.Services
             }
         }
 
-        public ChildcareDashboardDto GetChildcareDashboard(int contactId)
+        //TODO: SPLIT OUT INTO SMALLER METHODS AND WRITE TESTS!!!!!!!!!!!!!
+        public ChildcareDashboardDto GetChildcareDashboard(Person person, HouseHoldData householdData)
         {
+
             var dashboard = new ChildcareDashboardDto();
             var token = _apiUserService.GetToken();
 
-            //Figure out who is a head in my household
-            var contact = _contactService.GetContactById(contactId);
-            var household = _contactService.GetHouseholdFamilyMembers(contact.Household_ID);
-            var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")); //TODO: Get rid of magic string. Household Position
-            if (!houseHeads.Any(h => h.ContactId == contactId))
+            // Add members of other household(s)
+            // Doesn't this really belong in the getHouseholds method?
+            householdData.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(person.ContactId));
+
+            var dashboardData = _childcareRepository.GetChildcareDashboard(person.ContactId);
+            foreach (var childcareDashboard in dashboardData)
+            {
+                // Add the Date if it doesn't already exist in the dashboard
+                dashboard.AvailableChildcareDates = UpdateAvailableChildCareDates(dashboard.AvailableChildcareDates,
+                                                                                  childcareDashboard.EventStartDate.Date,
+                                                                                  childcareDashboard.Cancelled);
+             
+                var eligibleChildren = new List<ChildcareRsvp>();
+
+                foreach (var member in householdData.AllMembers)
+                {
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                    {
+                        var echild = new ChildcareRsvp
+                        {
+                            ContactId = member.ContactId,
+                            DisplayName = member.Nickname + ' ' + member.LastName,
+                            ChildEligible = (member.Age < childcareDashboard.ChildcareMaxAge),
+                            ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
+                        };
+                        eligibleChildren.Add(echild);
+                    }
+                }
+
+                var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
+                ccEvent.Groups.Add(new ChildcareGroup
+                {
+                    GroupName = childcareDashboard.GroupName,
+                    EventStartTime = childcareDashboard.EventStartDate,
+                    EventEndTime = childcareDashboard.EventEndDate,
+                    CongregationId = childcareDashboard.CongregationID,
+                    GroupMemberName = childcareDashboard.Nickname + ' ' + childcareDashboard.LastName,
+                    MaximumAge = childcareDashboard.ChildcareMaxAge,                        
+                    EligibleChildren = eligibleChildren,
+                    ChildcareGroupId = childcareDashboard.ChildcareGroupID,
+                    GroupParticipantId = childcareDashboard.GroupParticipantID
+                });
+            }                       
+            return dashboard;
+        }
+
+        /// <summary>
+        /// Add a new childcare date to the list of current childcare dates only if the list doesn't contain 
+        /// an entry with the same date as is being requested. It also orders the list of dates ascending. 
+        /// </summary>
+        /// <param name="currentDates"> The current list of ChildCareDates </param>
+        /// <param name="dateToAdd"> The date to add to the list </param>
+        /// <param name="hasBeenCancelled"> whether or not the childcare event being requested is cancelled. </param>
+        /// <returns> a new list that is ordered by date ascending. </returns>
+        public List<ChildCareDate> UpdateAvailableChildCareDates(List<ChildCareDate> currentDates,  DateTime dateToAdd, bool hasBeenCancelled )
+        {
+            if (currentDates.Any(d => d.EventDate.Date == dateToAdd)) return currentDates.OrderBy(x => x.EventDate).ToList();
+
+            var childcareDate = new ChildCareDate
+            {
+                EventDate = dateToAdd,
+                Cancelled = hasBeenCancelled
+            };
+            var newDates = currentDates.Select(ch => ch).ToList();
+            newDates.Add(childcareDate);
+            return newDates.OrderBy(x => x.EventDate).ToList();
+        }
+
+        /// <summary>
+        /// Determine who is the head of household in a household.
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <param name="householdId"></param>
+        /// <returns> 
+        ///     A HouseholdData object 
+        ///     Throws a NotHeadOfHouseholdException if the contactId passed in is not a head of household
+        /// </returns>
+        public HouseHoldData GetHeadsOfHousehold(int contactId, int householdId)
+        {
+            var household = _contactService.GetHouseholdFamilyMembers(householdId);
+            var houseHeads = household.Where(h => h.HouseholdPosition != null && h.HouseholdPosition.ToUpper().StartsWith("HEAD")).ToList(); //TODO: Get rid of magic string. Household Position
+            if (houseHeads.All(h => h.ContactId != contactId))
             {
                 throw new NotHeadOfHouseholdException(contactId);
             }
-
-            //Find community groups for house heads
-            foreach (var head in houseHeads)
-            {
-                var participant = _participantService.GetParticipant(head.ContactId);
-                var groups = _groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, _configurationWrapper.GetConfigIntValue("GroupTypeForCommunityGroup"));
-                //Find events that my groups are approved for
-                foreach (var group in groups)
-                {
-                    var groupEvents = _eventService.GetEventGroupsForGroup(group.GroupId, token);
-                    foreach (var ev in groupEvents)
-                    {
-                        var eventDetails = _eventService.GetEvent(ev.EventId);
-                        if (!dashboard.AvailableChildcareDates.Any(d => d.EventDate.Date == eventDetails.EventStartDate.Date))
-                        {
-                            dashboard.AvailableChildcareDates.Add(new ChildCareDate
-                            {
-                                EventDate = eventDetails.EventStartDate.Date,
-                                Cancelled = eventDetails.Cancelled
-                            });
-                        }
-
-                        //Date exists, add group
-                        var eventGroup = _eventService.GetEventGroupsForEvent(eventDetails.EventId, token).FirstOrDefault(g => g.GroupTypeId == _childcareGroupType);
-                        var ccEventGroup = _groupService.GetGroupDetails(eventGroup.GroupId);
-                        var eligibleChildren = new List<ChildcareRsvp>();
-                        foreach (var member in household)
-                        {
-                            if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD")) //TODO: Get rid of magic string. Household Position
-                            {
-                                eligibleChildren.Add(new ChildcareRsvp
-                                {
-                                    ContactId = member.ContactId,
-                                    DisplayName = member.Nickname + ' ' + member.LastName,
-                                    ChildEligible = (member.Age < ccEventGroup.MaximumAge),
-                                    ChildHasRsvp = IsChildRsvpd(member.ContactId, ccEventGroup, token)
-                                });
-                            }
-                        }
-                        var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == eventDetails.EventStartDate.Date);
-                        ccEvent.Groups.Add(new ChildcareGroup
-                        {
-                            GroupName = group.GroupName,
-                            EventStartTime = eventDetails.EventStartDate,
-                            EventEndTime = eventDetails.EventEndDate,
-                            CongregationId = eventDetails.CongregationId,
-                            GroupMemberName = head.Nickname + ' ' + head.LastName,
-                            MaximumAge = ccEventGroup.MaximumAge,
-                            RemainingCapacity = group.RemainingCapacity,
-                            EligibleChildren = eligibleChildren,
-                            ChildcareGroupId = ccEventGroup.GroupId
-                        });
-                        
-                    }
-                }
-            }
-
-            return dashboard;
+            return new HouseHoldData() {AllMembers = household, HeadsOfHousehold = houseHeads};
         }
 
         private bool IsChildRsvpd(int contactId, GroupDTO ccEventGroup, string token)

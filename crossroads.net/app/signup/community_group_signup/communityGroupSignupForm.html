@@ -16,8 +16,9 @@
           <p id="fullGroupMessage" dynamic-content="groupsignup.signupPage.full | html" ng-show="groupsignup.showFull"></p>
           <p id="waitListMessage" dynamic-content="groupsignup.signupPage.waitList | html" ng-show="groupsignup.showWaitList && groupsignup.waitListCase && !groupsignup.alreadySignedUp"></p>
           <p id="waitSuccessMessage" dynamic-content="groupsignup.signupPage.waitSuccess | html" ng-show="groupsignup.showWaitSuccess && groupsignup.waitListCase"></p>
+          <p ng-show="groupsignup.showSuccess && !groupsignup.waitListCase && groupsignup.childCareAvailable">If you need childcare, sign up
+            <a ui-sref="childcare-dashboard" href="/childcare-dashboard">here</a> so we can plan!</p> 
         </div>
-
         <div class="row" ng-show="groupsignup.showContent">
           <div class="col-sm-12">
           <label ng-show="groupsignup.response.length > 1 && !groupsignup.alreadySignedUp">Select participants:</label>
@@ -48,12 +49,6 @@
                     </a>
                   </span>
                 </label>
-                <div ng-show="groupsignup.childCareAvailable && !person.userInGroup">
-                  <child-care-need
-                      participant-id='person.participantId'
-                      on-change='groupsignup.childCareChange'>
-                  </child-care-need>
-                </div>
               </div>
             <p class="push-top" ng-show="!groupsignup.alreadySignedUp && !groupsignup.showFull">
               <loading-button
