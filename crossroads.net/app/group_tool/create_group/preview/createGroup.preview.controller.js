@@ -27,6 +27,7 @@ export default class CreateGroupPreviewController {
       var promise = this.groupService.saveCreateGroupForm(this.groupData)
         .then( (data) => {
           this.state.go('grouptool.mygroups')
+          CreateGroupService.resolved = false;
         })
 
       // promise.then(function () {
