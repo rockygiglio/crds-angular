@@ -64,6 +64,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestChildcareEmailProcedure()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {                
+                {"@DaysOut", 4}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPChildcareEmail>("api_crds_ChildcareReminderEmails", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault().EmailAddress);
+            }
+        }
+
+        [Test]
         public void TestSearchAllPaymentTypes()
         {
             Console.WriteLine("TestSearchAllPaymentTypes");

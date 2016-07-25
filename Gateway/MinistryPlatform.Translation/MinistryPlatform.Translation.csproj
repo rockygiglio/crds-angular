@@ -116,6 +116,7 @@
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
     <Compile Include="Models\Childcare\ChildcareDashboard.cs" />
+    <Compile Include="Models\Childcare\MPChildcareEmail.cs" />
     <Compile Include="Models\Childcare\MPRspvd.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
