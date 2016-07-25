@@ -7,5 +7,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         List<ChildcareDashboard> GetChildcareDashboard(int contactId);
         bool IsChildRsvpd(int contactId, int groupId, string token);
+        List<MPChildcareEmail> GetChildcareReminderEmails(string token);
     }
 }

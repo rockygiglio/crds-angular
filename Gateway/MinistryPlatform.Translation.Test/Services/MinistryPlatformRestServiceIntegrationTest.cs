@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
         [Test]
         public void TestChildcareEmailProcedure()
-        {
+        { 
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {                

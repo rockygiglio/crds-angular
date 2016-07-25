@@ -43,5 +43,10 @@ namespace MinistryPlatform.Translation.Repositories
             }
             return false;            
         }
+
+        public List<MPChildcareEmail> GetChildcareReminderEmails(string token)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
