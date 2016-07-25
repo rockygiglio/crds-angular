@@ -72,13 +72,6 @@ export default class CreateGroupService {
                         time: "1983-07-16T21:00:00.000Z"
                     }
                 },
-                categories: {
-                    lifeStageId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                    neighborhoodId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-                    spiritualGrowthId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                    interestId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
-                    healingId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING
-                },
                 specificDay: true
             }
         }
