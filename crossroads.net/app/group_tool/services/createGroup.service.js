@@ -29,52 +29,15 @@ export default class CreateGroupService {
     }
 
     preloadModel() {
-        if (this.model.profile == undefined) {
-            this.model = {
-                profile: {
-                    firstName: this.profileData.firstName,
-                    middleName: this.profileData.middleName,
-                    nickName: this.profileData.nickName,
-                    lastName: this.profileData.lastName,
-                    maidenName: this.profileData.maidenName,
-                    dateOfBirth: this.profileData.dateOfBirth,
-                    genderId: this.profileData.genderId,
-                    maritalStatusId: this.profileData.maritalStatusId,
-                    householdId: this.profileData.householdId,
-                    addressId: this.profileData.addressId,
-                    contactId: this.profileData.contactId,
-                    addressLine1: this.profileData.addressLine1,
-                    addressLine2: this.profileData.addressLine2,
-                    city: this.profileData.city,
-                    state: this.profileData.state,
-                    postalCode: this.profileData.postalCode,
-                    foreignCountry: this.profileData.foreignCountry,
-                    employerName: this.profileData.employerName,
-                    mobilePhone: this.profileData.mobilePhone,
-                    homePhone: this.profileData.homePhone,
-                    attendanceStartDate: this.profileData.attendanceStartDate,
-                    emailAddress: this.profileData.emailAddress,
-                    oldEmail: this.profileData.emailAddress,
-                    oldPassword: '',
-                    currentPassword: '',
-                    passportNumber: this.profileData.passportNumber,
-                    passportFirstname: this.profileData.passportFirstname,
-                    passportLastname: this.profileData.passportLastname,
-                    passportMiddlename: this.profileData.passportMiddlename,
-                    passportExpiration: this.profileData.passportExpiration,
-                    passportCountry: this.profileData.passportCountry,
-                    mobileCarrierId: this.profileData.mobileCarrierId,
-                    county: this.profileData.county
-
-                },
-                group: {
-                    meeting: {
-                        time: "1983-07-16T21:00:00.000Z"
-                    }
-                },
-                specificDay: true
+        this.model.profile.oldEmail = this.profile.emailAddress;
+        delete this.model.profile.householdMembers;
+        delete this.model.profile.congregationId;
+        this.model.group = {
+            meeting: {
+                time: "1983-07-16T21:00:00.000Z"
             }
-        }
+        };
+        this.model.specificDay = true;
     }
 
     getFields() {
@@ -548,24 +511,22 @@ export default class CreateGroupService {
             smallGroup.ageRange = ageRangeNames;
         }
         smallGroup.address = new Address();
-        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {           
+        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+            smallGroup.address.addressLine2 = '';
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
-        else
-        {
+        else {
             smallGroup.address.zip = null;
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
-        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-        smallGroup.meetingDayId = this.model.group.meeting.day;
-        smallGroup.meetingTime = this.model.group.meeting.time;
-        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
-        {
-            delete smallGroup.meetingTime;
-        }      
-        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+        smallGroup.meetingTimeFrequency = this.getMeetingLocation();        
+        if (this.model.specificDay) {
+            smallGroup.meetingDayId = this.model.group.meeting.day;
+            smallGroup.meetingTime = this.model.group.meeting.time;
+        }
+        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
@@ -580,8 +541,6 @@ export default class CreateGroupService {
         )];
 
         smallGroup.profile = new Profile(this.model.profile);
-
-        smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
         smallGroup.singleAttributes = {
             "73": {
@@ -608,7 +567,6 @@ export default class CreateGroupService {
                 })
 
         });
-
 
         var ageRangeJson = {
             "91": {
