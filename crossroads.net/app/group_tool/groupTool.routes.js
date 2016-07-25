@@ -34,9 +34,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           })
         },
         profile: (CreateGroupService, GroupService) => {
+          if(!CreateGroupService.resolved)
+          {
           return GroupService.getProfileData().then((data) => {
             CreateGroupService.model.profile = data;
           })
+          }
         }
       },
       data: {
