@@ -1,15 +1,18 @@
+USE MinistryPlatform
+GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- ===============================================================
--- Author: Andrew Canterbury<andy.canterbury@ingagepartners.com>	
+-- Author: Andrew Canterbury<andy.canterbury@ingagepartners.com>
 -- Create date: 7/13/2016
 -- Description:	Gets data for childcare dashboard
 -- ===============================================================
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[api_crds_GetChildcareDashboard]') AND type in (N'P', N'PC'))
 BEGIN
-	EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[api_crds_GetChildcareDashboard] AS' 
+	EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[api_crds_GetChildcareDashboard] AS'
 END
 GO
 
@@ -25,7 +28,7 @@ BEGIN
 
 	DECLARE @Household_ID int;
 	DECLARE @ChildcareEventType int = 243;
-	
+
 	SELECT @Household_ID = Household_ID FROM dbo.Contacts
 	WHERE Contact_ID = @Contact_ID
 
