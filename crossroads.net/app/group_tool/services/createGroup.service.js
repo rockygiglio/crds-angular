@@ -560,7 +560,7 @@ export default class CreateGroupService {
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
         smallGroup.meetingDayId = this.model.group.meeting.day;
-        smallGroup.meetingTime = this.model.group.meeting.time;
+        smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
         if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
         {
             delete smallGroup.meetingTime;
