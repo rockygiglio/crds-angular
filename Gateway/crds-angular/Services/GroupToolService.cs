@@ -105,6 +105,7 @@ namespace crds_angular.Services
                 {
                     SendGroupParticipantEmail(groupId,
                                               groupParticipantId,
+                                              true,
                                               myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
                                               GroupToolRemoveParticipantSubjectTemplateText,
@@ -129,9 +130,9 @@ namespace crds_angular.Services
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int groupParticipantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
+        public void SendGroupParticipantEmail(int groupId, int participantId, bool groupParticpantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
         {
-            var participant = group.Participants.Find(p => p.ParticipantId == groupParticipantId);
+            var participant = groupParticpantId ? group.Participants.Find(p => p.GroupParticipantId == participantId) : group.Participants.Find(p => p.ParticipantId == participantId);
 
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
             var fromContact = new MpContact
@@ -290,6 +291,7 @@ namespace crds_angular.Services
 
                 SendGroupParticipantEmail(groupId,
                                           participant.ParticipantId,
+                                          false,
                                           group,
                                           emailTemplateId,
                                           subject,

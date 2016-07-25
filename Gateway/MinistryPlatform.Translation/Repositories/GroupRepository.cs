@@ -83,8 +83,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Enable_Waiting_List", group.WaitList },
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
                 {"Maximum_Age", group.MaximumAge },
-                {"Minimum_Participants", group.MinimumParticipants }
-
+                {"Minimum_Participants", group.MinimumParticipants },
+                {"Kids_Welcome", group.KidsWelcome }
+                
             };
 
             var groupId =
@@ -512,7 +513,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Group_Name", groupInfo.Name},
                 {"Congregation_Name", groupInfo.Congregation},
                 {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""},
-                {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl")}
             };
 
             var domainId = Convert.ToInt32(AppSettings("DomainId"));

@@ -1,18 +1,7 @@
 <aside>
-    <div class="well">
+  <div class="well">
     <h3>Live Stream Schedule</h3>
     <hr>
-    <div class="row" template="ngFor let key of dayOfYear()">
-        <div class="date">
-        <strong>{{ displayDate(key, 'day') }}</strong>{{ displayDate(key) }}
-        </div>
-        <div class="time">
-        <ul class="list-unstyled">
-            <li template="ngFor let event of events[key]">
-            {{ event.time }}
-            </li>
-        </ul>
-        </div>
-    </div>
-    </div>
+    <dynamic-content-ng2 title="streamingLandingSchedule"></dynamic-content-ng2>
+  </div>
 </aside>

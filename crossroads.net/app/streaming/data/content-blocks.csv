@@ -1,0 +1,51 @@
+"ID","Title","Content","Type","Category"
+"320","streamingLandingIntro","<h1>Hi. Welcome to Crossroads Anywhere.</h1><p>This isn't your average ""church TV."" We're groups of people meeting in person every week to explore who God is in a language we can understand. Whether you're exploring whether or not God exists or a you’re committed Christ-follower, we're glad you’re here.</p><p>On this page, you can attend a Crossroads service, find friends nearby and learn more about hosting in your own home.</p>","info","main"
+"321","streamingLandingCurrentSeries","<h2>Death to Religion <small>RUNS: april 1st - May 2nd</small></h2><p class=""lead"">Religion means judgement. It means rules and check-the-boxes. We want relationship. And Jesus came to give that to us. Relationship means love, personality, invitation and challenge within the context of someone who knows you intimately. Sure, relationship is sloppy, but it’s worth it.</p><p><small>Topics covered:<br> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inci didunt ut labore et dolore magna aliqua.</small></p><p><a href=""#"" class=""btn btn-primary btn-block-mobile"">Watch Trailer</a></p>","info","main"
+"322","streamingLandingCommunity","<h2>We Are Where You Are</h2><p>Crossroads Anywhere is more than ""church TV."" It's friends and neighbors meeting across the country in living rooms to hear a relevant, biblical message we can apply to our everyday lives.</p>","info","main"
+"323","streamingLandingHostIntro","<h2>Create a Community Where You Are</h2><p>We believe growth happens in community. It's kinda our thing.</p><p>Take the next step and open up your home for the weekend service. You can do this by becoming a host. This is the place start your community and get the resources to make it awesome.</p>","info","main"
+"324","streamingLandingHostTips","<h3>Tips for Hosting</h3><p>You gather the people, we'll bring the awesome. Here are the basics of hosting a killer weekend service.</p><ul><li>Don't sweat the details. People want to hang out with you and the service will be great.</li>
+<li>Pick a space. Like your living room. Somewhere people can gather, talk, and hang out.</li>
+<li>Crank up the volume. It's way easier to sing along when your friends can't hear you.</li>
+<li>Oh, and brew some coffee. It's Crossroads, after all.</li>
+</ul>","info","main"
+"325","streamingLandingHostBecome","<h3>Become a Host</h3><p>Let's make it official. Sign up to be a Host and we'll get you everything you need to have awesome weekend services. You'll get weekly updates, tips to prepare for service, and a connection to a community of hosts all over the country.</p><p><a href=""https://www.crossroads.net/sign-up/anywherehost"" class=""btn btn-primary btn-block-mobile"">Become a Host</a></p>","info","main"
+"326","streamingLandingHostKids","<h3>Just for Kids</h3><p>Not quite sure what to do with your kids during service? Want them to have a meaningful experience with God? We've got you covered.</p><p>Our Just for Kids tool has lesson ideas, videos, hosting tips and activities–everything you need to give your kids a great weekend experience, no matter their age.</p><p><a href=""http://49gwb73j4zuj2z3clp19vafg.wpengine.netdna-cdn.com/wp-content/uploads/2016/07/CR_AnywhereBook_Digital-1.pdf"" class=""btn btn-primary btn-block-mobile"">Download the PDF</a></p>","info","main"
+"327","streamingLandingWaysToWatch","<figure class=""desktops wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-desktop.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
+<figcaption>Laptops &amp; Desktop Computers</figcaption></figure><figure class=""tvs wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-smart-tv.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
+<figcaption>Smart TVs <span>(Web Capable)</span></figcaption></figure><figure class=""tablets wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-mobile.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
+<figcaption>Phones &amp; Tablets</figcaption></figure><figure class=""roku wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-roku.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
+<figcaption>Roku</figcaption></figure><figure class=""apple-tv wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-apple-tv.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
+<figcaption>Apple TV <span>(Version 4)<br>Download app in App Store, search ""Crossroads Anywhere""</span></figcaption></figure>","info","main"
+"328","streamingLandingSchedule","<div class=""row"">
+<div class=""date""><strong>Friday </strong>7/29</div>
+<div class=""time"">
+<ul class=""list-unstyled""><li>6:00 PM EST</li>
+<li>8:00 PM EST</li>
+<li>10:00 PM EST</li>
+</ul></div>
+</div><div class=""row"">
+<div class=""date""><strong>Saturday</strong>7/30</div>
+<div class=""time"">
+<ul class=""list-unstyled""><li>4:15 PM EST</li>
+<li>6:00 PM EST</li>
+</ul></div>
+</div><div class=""row"">
+<div class=""date""><strong>Sunday</strong>7/31</div>
+<div class=""time"">
+<ul class=""list-unstyled""><li>8:15 AM EST</li>
+<li>9:50 AM EST</li>
+<li>11:30 AM EST</li>
+</ul></div>
+</div>","info","main"
+"329","streamingLandingCurrentSeriesImage","<p><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-death-to-religion.jpg?h=600"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></p>","info","main"
+"330","streamingLandingPastWeekend1","<figure><a href=""#""> <img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week1.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">Spark #2</a></figcaption></figure><section><h3>Two words that can save any marriage.</h3>
+<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>","info","main"
+"331","streamingLandingPastWeekend2","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">The Super bowl of preaching</a></figcaption></figure><section><p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>","info","main"
+"332","streamingLandingPastWeekend3","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week3.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">Life Hacks (4)</a></figcaption></figure><section><h3>Time Hacks</h3>
+<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>","info","main"
+"333","streamingLandingPastWeekend4","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week4.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">James: Putting your faith to work #1</a></figcaption></figure><section><h3>Confession</h3>
+<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>","info","main"
