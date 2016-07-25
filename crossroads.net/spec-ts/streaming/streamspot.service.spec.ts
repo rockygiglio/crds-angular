@@ -5,7 +5,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { StreamspotService } from '../../app/streaming/streamspot.service';
 import { Event } from '../../app/streaming/event';
 
-var moment = require('moment/min/moment.min');
+var moment = require('moment/moment');
 var _ = require('lodash');
 
 describe('Service: StreamspotService', () => {

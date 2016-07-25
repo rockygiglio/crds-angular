@@ -1,6 +1,6 @@
 import { Event } from '../../app/streaming/event';
 var _ = require('lodash');
-var moment = require('moment/min/moment.min');
+var moment = require('moment/moment');
 
 describe('Object: Event', () => {
 
