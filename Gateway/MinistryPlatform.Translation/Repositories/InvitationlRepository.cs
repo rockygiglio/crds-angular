@@ -27,6 +27,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpInvitation CreateInvitation(MpInvitation dto, string token)
         {
+            // override the user login to avoid granting rights to all users
+            var _token = ApiLogin();
+
             var invitationType = dto.InvitationType;
 
             var values = new Dictionary<string, object>
@@ -41,8 +44,8 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var invitationId = _ministryPlatformService.CreateRecord(_invitationPageId, values, token, true);
-                var invitation = _ministryPlatformService.GetRecordDict(_invitationPageId, invitationId, token);
+                var invitationId = _ministryPlatformService.CreateRecord(_invitationPageId, values, _token, true);
+                var invitation = _ministryPlatformService.GetRecordDict(_invitationPageId, invitationId, _token);
 
                 dto.InvitationId = invitationId;
                 dto.InvitationGuid = invitation["Invitation_GUID"].ToString();
