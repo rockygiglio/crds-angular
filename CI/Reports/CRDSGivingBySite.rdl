@@ -26,9 +26,12 @@
             <Value>=join(Parameters!congregationid.Value,",")</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
+          <QueryParameter Name="donationstatusid">
+            <Value>=join(Parameters!donationstatusid.Value,",")</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>report_CRDS_Giving_By_Congregation</CommandText>
+        <CommandText>report_CRDS_Giving_By_Site</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -90,6 +93,22 @@ order by congregation_name</CommandText>
         </Field>
         <Field Name="congregation_name">
           <DataField>congregation_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Donation_Status">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>select donation_status_id, donation_status from dbo.Donation_Statuses</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="donation_status_id">
+          <DataField>donation_status_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="donation_status">
+          <DataField>donation_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -517,8 +536,7 @@ order by congregation_name</CommandText>
                 <TablixMember>
                   <Group Name="MonthLabel2">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!MonthNumber.Value</GroupExpression>
-                      <GroupExpression>=Fields!YearNumber.Value</GroupExpression>
+                      <GroupExpression>=Fields!MonthLabel.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
@@ -880,6 +898,30 @@ order by congregation_name</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="congregationid">
+      <DataType>Integer</DataType>
+      <Prompt>Congregation</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Congregations</DataSetName>
+          <ValueField>congregation_id</ValueField>
+          <LabelField>congregation_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="donationstatusid">
+      <DataType>String</DataType>
+      <Prompt>Donation Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Donation_Status</DataSetName>
+          <ValueField>donation_status_id</ValueField>
+          <LabelField>donation_status</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
     <ReportParameter Name="PageID">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -921,18 +963,6 @@ order by congregation_name</CommandText>
       </DefaultValue>
       <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="congregationid">
-      <DataType>Integer</DataType>
-      <Prompt>Congregation</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Congregations</DataSetName>
-          <ValueField>congregation_id</ValueField>
-          <LabelField>congregation_name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
