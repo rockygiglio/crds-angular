@@ -23,9 +23,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _childcareEmailPageViewId;
         private readonly int _childcareEventType;
         private readonly IGroupRepository _groupService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
 
-        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventRepository eventService, IGroupRepository groupService)
+        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventRepository eventService, IGroupRepository groupService, IMinistryPlatformRestRepository ministryPlatformRest)
         {
+            _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
             _eventService = eventService;
@@ -136,13 +138,17 @@ namespace MinistryPlatform.Translation.Repositories
           }
         }
 
-        public void DeleteAllChildcareRequestDates(int childcareRequestId,  string token)
+        public void DeleteAllChildcareRequestDates(int childcareRequestId)
         {
-            var datesList = GetChildcareRequestDates(childcareRequestId);
-            foreach (var date in datesList)
+            // using new api
+            var apiToken = _apiUserService.GetToken();
+
+            var parms = new Dictionary<string, object>()
             {
-                _ministryPlatformService.DeleteRecord(_childcareRequestDatesPageId, date.ChildcareRequestDateId, null, token);
-            }
+                {"@ChildcareRequestID", childcareRequestId}
+            };
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).PostStoredProc("api_crds_DeleteDatesForChildcareRequest", parms);
+
         }
 
         public List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)

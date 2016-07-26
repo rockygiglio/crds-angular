@@ -158,7 +158,7 @@ namespace crds_angular.Services
             var mpRequest = request.ToMPChildcareRequest();
             _childcareRequestService.UpdateChildcareRequest(mpRequest);
             //delete the current childcare request dates
-            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId,token);
+            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId);
 
             //add the new dates
             _childcareRequestService.CreateChildcareRequestDates(request.ChildcareRequestId, mpRequest, token);

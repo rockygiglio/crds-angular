@@ -20,6 +20,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision);
         MpChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token);
         void UpdateChildcareRequest(MpChildcareRequest request);
-        void DeleteAllChildcareRequestDates(int childcareRequestId, string token);
+        void DeleteAllChildcareRequestDates(int childcareRequestId);
     }
 }

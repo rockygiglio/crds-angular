@@ -64,6 +64,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestChildcareRequestDatesProcedure()
+        {
+            Console.WriteLine("TestChildcareRequestDatesProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@ChildcareRequestID", 179}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).PostStoredProc("api_crds_DeleteDatesForChildcareRequest", parms);
+
+            Console.WriteLine("Results\t" + results.ToString());
+
+        }
+
+       
+        [Test]
         public void TestSearchAllPaymentTypes()
         {
             Console.WriteLine("TestSearchAllPaymentTypes");
