@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"@Domain_ID", 1},
                 {"@Contact_ID", 2186211}
             };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<ChildcareDashboard>("api_crds_getChildcareDashboard", parms);
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpChildcareDashboard>("api_crds_getChildcareDashboard", parms);
             foreach (var p in results)
             {               
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault());

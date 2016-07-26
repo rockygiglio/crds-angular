@@ -19,12 +19,12 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public List<ChildcareDashboard> GetChildcareDashboard(int contactId)
+        public List<MpChildcareDashboard> GetChildcareDashboard(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
             var parms = new Dictionary<string, object> {{"Contact_ID", contactId}, {"Domain_ID", 1} };
-            var dashboardData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<ChildcareDashboard>(_configurationWrapper.GetConfigValue("ChildcareDashboardStoredProc"), parms);
-            var childcareDashboard = dashboardData.FirstOrDefault() ?? new List<ChildcareDashboard>();
+            var dashboardData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpChildcareDashboard>(_configurationWrapper.GetConfigValue("ChildcareDashboardStoredProc"), parms);
+            var childcareDashboard = dashboardData.FirstOrDefault() ?? new List<MpChildcareDashboard>();
             return childcareDashboard;
         }
 
@@ -42,6 +42,18 @@ namespace MinistryPlatform.Translation.Repositories
                 return rsvpList.FirstOrDefault().Rsvpd;
             }
             return false;            
+        }
+
+        public List<MpChildcareCancelledNotification> GetChildcareCancellations()
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var parms = new Dictionary<string, object>
+            {
+                {"@ChildcareGroupType", _configurationWrapper.GetConfigIntValue("ChildcareGroupType") }
+            };
+            var notificationData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpChildcareCancelledNotification>("api_crds_CancelledChildcareNotification", parms);
+
+            return notificationData.FirstOrDefault() ?? new List<MpChildcareCancelledNotification>();
         }
     }
 }

@@ -23,11 +23,22 @@ namespace Crossroads.ChildcareRsvp
 
             TlsHelper.AllowTls12();
 
+            var childcareService = container.Resolve<ChildcareService>();
+            try
+            {
+                Log.Info("Sending notifications for cancellations");
+                childcareService.SendChildcareCancellationNotification();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Childcare Cancellation Notifcation Failed", ex);
+                Environment.Exit(9999);
+            }
+
 
             try
             {
                 Log.Info("starting childcare rsvp");
-                var childcareService = container.Resolve<ChildcareService>();
                 childcareService.SendRequestForRsvp();
                 Log.Info("all done");
             }
