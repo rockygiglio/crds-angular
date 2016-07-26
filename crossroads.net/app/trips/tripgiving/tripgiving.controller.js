@@ -49,9 +49,7 @@
       GiveTransferService.processing = true;
 
       if (!vm.dto.initialized || toState.name === 'tripgiving') {
-        //event.preventDefault();
-       // initDefaultState();
-        return;
+         return;
       }
 
       vm.donationService.transitionForLoggedInUserBasedOnExistingDonor(event, toState);
