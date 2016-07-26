@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
@@ -15,8 +16,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void DecisionChildcareRequest(int childcareRequestId, int requestStatusId, MpChildcareRequest childcareRequest);
         void CreateChildcareRequestDates(int childcareRequestId, MpChildcareRequest mpRequest, string token);       
         List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId);
-        List<MpChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);        
-        Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates);        
+        List<MpChildcareRequestDate> GetChildcareRequestDatesForReview(int childcareRequestId);
+        List<MpEvent> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request);
         void DecisionChildcareRequestDate(int childcareRequestDateId, bool decision);
         MpChildcareRequestDate GetChildcareRequestDates(int childcareRequestId, DateTime date, string token);
         void UpdateChildcareRequest(MpChildcareRequest request);

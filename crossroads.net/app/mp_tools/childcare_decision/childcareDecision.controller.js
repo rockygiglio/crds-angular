@@ -67,6 +67,12 @@ class ChildcareDecisionController {
       dateListUL + '</p>';
     return content;
   }
+  duplicateEventContent(date) {
+   let requestDate = `<li> ${moment(date).format('L')} </li>`;  
+   let content = '<p><strong>There are duplicate Childcare Events for the Requested Date</strong>' +
+      requestDate + '</p>';
+   return content;
+ }
 
   rejectingText() {
     if (this.rejecting) {
@@ -159,6 +165,11 @@ class ChildcareDecisionController {
       } else if (err.status === 406) {
         this.rootScope.$emit('notify', {
           content: this.missingChildcareDates(),
+          type: 'error'
+        });
+      } else if(err.status === 300) {
+        this.rootScope.$emit('notify', {
+          content: this.duplicateEventContent(err.data.Error),
           type: 'error'
         });
       } else {
