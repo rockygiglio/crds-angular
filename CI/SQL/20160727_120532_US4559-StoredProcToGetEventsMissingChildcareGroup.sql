@@ -30,7 +30,7 @@ BEGIN
 	WHERE e.Event_Type_ID = @Event_Type AND g.Group_Type_ID = @Group_Type
 	AND e.Event_Start_Date >= GETDATE()
 
-	SELECT e.Event_ID, e.Event_Title, sr.Sequence_ID, ge.Event_ID, ge.Group_ID  FROM dbo.Events e
+	SELECT e.Event_ID, ge.Group_ID  FROM dbo.Events e
 	JOIN dbo.dp_Sequence_Records sr ON sr.Record_ID = e.Event_ID AND sr.Table_Name = 'Events'
 	JOIN @GoodEvents ge ON ge.Sequence_ID = sr.Sequence_ID
 	WHERE e.Event_Type_ID = @Event_Type AND e.Event_ID NOT IN (SELECT Event_ID FROM @GoodEvents)
