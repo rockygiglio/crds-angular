@@ -191,7 +191,6 @@ export default class GroupService {
   }
 
     saveProfile(profile) {
-debugger;
       let promise = this.resource(`${__API_ENDPOINT__}api/profile`)
                           .save({}, profile).$promise;
 
