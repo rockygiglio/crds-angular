@@ -46,8 +46,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 SourceId = 44
             };
 
-            const string token = "adamantium";
-
             const int invitationId = 987;
             const string invitationGuid = "1020304050";
 
@@ -90,10 +88,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 RecipientName = "Test User",
                 RequestDate = new DateTime(2004, 1, 13)
             };
-
-            const string token = "adamantium";
+            
             const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
-            var searchString = string.Format(",,,,,{0},{1}", invitationGuid, false);
             
             var returned = new List<Dictionary<string, object>>();
             returned.Add(
