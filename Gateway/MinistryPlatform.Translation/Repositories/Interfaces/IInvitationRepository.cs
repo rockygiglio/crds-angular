@@ -6,7 +6,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IInvitationRepository
     {
-        MpInvitation CreateInvitation(MpInvitation dto, string token);
+        MpInvitation CreateInvitation(MpInvitation dto);
 
     }
 }

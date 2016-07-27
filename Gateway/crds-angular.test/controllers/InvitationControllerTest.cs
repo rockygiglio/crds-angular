@@ -49,7 +49,7 @@ namespace crds_angular.test.controllers
             };
 
             _invitationService.Setup(mocked => mocked.ValidateInvitation(dto, _token)).Verifiable();
-            _invitationService.Setup(mocked => mocked.CreateInvitation(dto, _token)).Returns(created);
+            _invitationService.Setup(mocked => mocked.CreateInvitation(dto)).Returns(created);
 
             var result = _fixture.CreateInvitation(dto);
             _invitationService.VerifyAll();
@@ -106,7 +106,7 @@ namespace crds_angular.test.controllers
 
             var exception = new Exception("doh!");
             _invitationService.Setup(mocked => mocked.ValidateInvitation(dto, _token)).Verifiable();
-            _invitationService.Setup(mocked => mocked.CreateInvitation(dto, _token)).Throws(exception);
+            _invitationService.Setup(mocked => mocked.CreateInvitation(dto)).Throws(exception);
 
             try
             {

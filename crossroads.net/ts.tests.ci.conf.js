@@ -25,6 +25,10 @@ module.exports = function (config) {
                       test: /\.json$/,
                       loaders: ["json-loader"]
                     }
+                ],
+                noParse: [
+                    /video\.js/,
+                    /videojs-contrib-hls/
                 ]
             }
         },

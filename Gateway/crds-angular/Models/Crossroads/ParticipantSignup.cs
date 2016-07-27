@@ -27,6 +27,9 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "singleAttributes")]
         public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
+
+        [JsonProperty(PropertyName = "enrolledBy")]
+        public int? EnrolledBy { get; set; }
     }
 
 }

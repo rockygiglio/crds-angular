@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { VideoJSComponent } from './videojs.component';
+import { StreamspotIframeComponent } from './streamspot-iframe.component';
 
 var WOW = require('wow.js/dist/wow.min.js');
 
 @Component({
   selector: 'live-stream',
   templateUrl: './video.ng2component.html',
-  directives: [VideoJSComponent]
+  directives: [StreamspotIframeComponent]
 })
 
 export class VideoComponent {

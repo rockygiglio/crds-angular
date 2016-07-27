@@ -12,5 +12,8 @@ namespace crds_angular.Models.Crossroads.Childcare
 
         [JsonProperty(PropertyName = "registered")]
         public bool Registered { get; set; }
+
+        [JsonProperty(PropertyName = "enrolledBy")]
+        public int EnrolledBy { get; set; }
     }
 }

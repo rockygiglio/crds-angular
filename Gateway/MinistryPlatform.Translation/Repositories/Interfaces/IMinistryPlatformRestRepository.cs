@@ -37,5 +37,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <param name="selectColumns">Optionally specify which columns to retrieve from MP.  This is a comma-separated list of column names.  If not specified, all columns will be retrieved.</param>
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
         List<T> Search<T>(string searchString = null, string selectColumns = null);
+
+        int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
     }
 }

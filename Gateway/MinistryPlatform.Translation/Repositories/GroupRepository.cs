@@ -103,7 +103,8 @@ namespace MinistryPlatform.Translation.Repositories
                                          Boolean childCareNeeded,
                                          DateTime startDate,
                                          DateTime? endDate = null,
-                                         Boolean? employeeRole = false)
+                                         Boolean? employeeRole = false,
+                                         int? enrolledBy = null)
         {
             logger.Debug("Adding participant " + participantId + " to group " + groupId);
 
@@ -114,7 +115,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Start_Date", startDate},
                 {"End_Date", endDate},
                 {"Employee_Role", employeeRole},
-                {"Child_Care_Requested", childCareNeeded}
+                {"Child_Care_Requested", childCareNeeded},
+                {"Enrolled_By", enrolledBy }
             };
 
             var groupParticipantId =

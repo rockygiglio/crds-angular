@@ -111,7 +111,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Start_Date", startDate},
                 {"End_Date", endDate},
                 {"Employee_Role", true},
-                {"Child_Care_Requested", true}
+                {"Child_Care_Requested", true},
+                {"Enrolled_By", null }
             };
 
             int groupParticipantId = _fixture.addParticipantToGroup(123, 456, 789, true, startDate, endDate, true);
