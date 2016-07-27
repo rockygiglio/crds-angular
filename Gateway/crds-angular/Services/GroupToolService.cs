@@ -305,7 +305,24 @@ namespace crds_angular.Services
             }
         }
 
-	public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
+        public void AcceptDenyGroupInvitation(string token, int groupId, bool accept)
+        {
+            try
+            {
+                
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not accept = {0} from group {1}", accept, groupId), e);
+            }
+        }
+
+        public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);

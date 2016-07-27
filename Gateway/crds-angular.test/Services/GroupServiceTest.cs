@@ -404,7 +404,6 @@ namespace crds_angular.test.Services
 
             groupService.VerifyAll();
             Assert.IsNotNull(grps);
-
         }
 
         [Test]

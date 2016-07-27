@@ -12,6 +12,7 @@ namespace crds_angular.Services.Interfaces
 
         void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null);
         void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null);
+        void AcceptDenyGroupInvitation(string token, int groupId, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
                                        int participantId,
