@@ -537,5 +537,73 @@ namespace crds_angular.test.Services
             _childcareRepository.VerifyAll();
             _groupService.Verify(g => g.endDateGroupParticipant(1234, It.IsIn(5678, 5679, 5680)), Times.Exactly(3));
         }
+
+        [Test]
+        public void ShouldSendChildcareReminders()
+        {
+            const string token = "apiToken";
+            const int childcareTemplateId = 56345;
+
+            var emailList = new List<MpContact>()
+            {
+                new MpContact() {EmailAddress = "matt.silbernagel@ingagepartners.com", ContactId = 2186211},
+                new MpContact() {EmailAddress = "lakshmi.nair@ingagepartners.com", ContactId = 2562428}
+            };
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultContactEmailId")).Returns(12);
+            _contactService.Setup(m => m.GetContactEmail(12)).Returns("updates@crossroads.net");
+            _contactService.Setup(m => m.GetContactById(2186211)).Returns(personObj);
+            _contactService.Setup(m => m.GetContactById(2562428)).Returns(personObj2);
+
+            var template = new MpMessageTemplate()
+            {
+                Body = "<html> whatever </html>",
+                FromContactId = 12,
+                FromEmailAddress = "updates@crossroads.net",
+                ReplyToContactId = 12,
+                ReplyToEmailAddress = "updates@crossroads.net",
+                Subject = "subject"
+            };
+
+            _communicationService.Setup(m => m.GetTemplate(childcareTemplateId)).Returns(template);
+
+            var communication = new MpCommunication()
+            {
+                EmailBody = "<html> whatever </html>",
+                AuthorUserId = 5,
+                DomainId = 1,
+                EmailSubject = "subject",
+                FromContact = new MpContact() {ContactId = 12, EmailAddress = "updates@crossroads.net" },
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = new MpContact() {ContactId = 12, EmailAddress = "updates@crossroads.net" },
+                TemplateId = childcareTemplateId,
+                ToContacts = emailList
+            };
+
+            _apiUserService.Setup(m => m.GetToken()).Returns(token);
+            _childcareRepository.Setup(m => m.GetChildcareReminderEmails(token)).Returns(emailList);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareReminderTemplateId")).Returns(childcareTemplateId);
+
+            var templateToSend = new MpCommunication()
+            {
+                EmailBody = "<html> whatever </html>",
+                AuthorUserId = 5,
+                DomainId = 1,
+                EmailSubject = "subject",
+                FromContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
+                TemplateId = childcareTemplateId,
+                ToContacts = emailList
+            };
+
+
+            _communicationService.Setup(m => m.SendMessage(templateToSend, false)).Returns(1);
+
+            _configurationWrapper.VerifyAll();
+            _contactService.VerifyAll();
+            _communicationService.VerifyAll();
+
+        }
     }
 }

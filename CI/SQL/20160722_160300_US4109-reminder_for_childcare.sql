@@ -30,7 +30,7 @@ BEGIN
 
 	SELECT @today_plus = CONVERT(date, DATEADD(day, @DaysOut, getDate()));
 
-	SELECT Distinct(c.Email_Address) FROM dbo.[Events] e
+	SELECT Distinct(c.Email_Address), c.Contact_ID FROM dbo.[Events] e
 	JOIN dbo.[Event_Groups] eg on eg.Event_ID = e.Event_ID
 	JOIN dbo.[Groups] g on g.Group_ID = eg.Group_ID
 	JOIN dbo.[Group_Participants] gp1 on gp1.Group_ID = g.Group_ID

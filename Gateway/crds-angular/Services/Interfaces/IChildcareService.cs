@@ -24,5 +24,6 @@ namespace crds_angular.Services.Interfaces
         void SendChildcareCancellationNotification();
         void UpdateChildcareRequest(ChildcareRequestDto request, string token);
         List<ChildCareDate> UpdateAvailableChildCareDates(List<ChildCareDate> currentDates, DateTime dateToAdd, bool hasBeenCancelled);
+        void SendChildcareReminders();
     }
 }

@@ -236,6 +236,53 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendChildcareReminders()
+        {
+            var token = _apiUserService.GetToken();
+
+            var fromId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
+            var from = _contactService.GetContactEmail(fromId);
+            var fromContact = new MpContact {ContactId = fromId, EmailAddress = from};
+
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareReminderTemplateId");
+            var template = _communicationService.GetTemplate(templateId);
+
+            var toEmails = _childcareRepository.GetChildcareReminderEmails(token);
+
+            foreach (var toContact in toEmails)
+            {
+                var communictation = new MpCommunication()
+                {
+                    AuthorUserId = 5,
+                    DomainId = 1,
+                    EmailBody = template.Body,
+                    EmailSubject = template.Subject,
+                    FromContact = fromContact,
+                    ReplyToContact = fromContact,
+                    TemplateId = templateId,
+                    ToContacts = new List<MpContact> {toContact},
+                    MergeData = SetMergeDataForChildcareReminder(toContact)
+                };
+            };                       
+
+            //_communicationService.GetTemplateAsCommunication(template, fromId, from, fromId, from, toContactId, toEmailAddress, mergeData);
+        }
+
+        private object SetMergeDataForChildcareReminder(MpContact toContact)
+        {
+            var person = _contactService.GetContactById(toContact.ContactId);
+            var threeDaysOut = DateTime.Now.AddDays(3);
+
+            return new Dictionary<string, object>()
+            {
+                {"Nickname", person.Nickname},
+                {"Childcare_Date", threeDaysOut.ToString("d")},
+                {"Childcare_Day", threeDaysOut.ToString("dddd M")}
+            };
+            throw new NotImplementedException();
+        }
+
+
         private Dictionary<int, int> GetChildcareEventsfortheDates(List<MpEvent> events, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
         {
             var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
