@@ -137,7 +137,7 @@
             'contact-id',
             'wrapper-class',
             'image-class'
-        ], function(binding) {
+        ], function (binding) {
             ngModelAttrs[camelize(binding)] = { bound: binding };
         });
 
@@ -150,7 +150,7 @@
                 templateOptions: {}
             }
         });
-        
+
 
         function camelize(string) {
             string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
@@ -210,7 +210,7 @@
                                 valueProp = to.valueProp || 'value';
                                 for (var index = 0; index < newOptionsValues.length; index++) {
                                     //$scope.multiCheckboxCombo.checked[index] = modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
-                                    $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => {return item.value == newOptionsValues[index][valueProp]} ) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
+                                    $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { return item.value == newOptionsValues[index][valueProp] }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
                                 }
                             }
                         });
@@ -233,7 +233,7 @@
                         checkValid = angular.isArray($scope.model[opts.key]) &&
                             $scope.model[opts.key].length > 0 &&
                             expressionValue;
-                        
+
                         //if checkbox is checked, detail is required
                         detailValid = areRequiredDetailsFilledOut();
 
@@ -245,7 +245,7 @@
                     $scope.model[opts.key] = [];
                     angular.forEach($scope.multiCheckboxCombo.checked, (checkbox, index) => {
                         if (checkbox) {
-                            $scope.model[opts.key].push({ detail: $scope.multiCheckboxCombo.detail[index], value: to.options[index][to.valueProp || 'value']});
+                            $scope.model[opts.key].push({ detail: $scope.multiCheckboxCombo.detail[index], value: to.options[index][to.valueProp || 'value'] });
                         } else {
                             $scope.multiCheckboxCombo.detail[index] = '';
                         }

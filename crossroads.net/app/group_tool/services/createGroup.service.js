@@ -431,7 +431,7 @@ export default class CreateGroupService {
             wrapper: 'createGroup',
             templateOptions: {
                 sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: 'Not much to say when you\'re high abouve the helpy help'
+                sectionHelp: ''
             },
             fieldGroup: [{
                 key: 'categories',
@@ -461,12 +461,12 @@ export default class CreateGroupService {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
                             labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.',
-                            placeholder: 'interest detail...'
+                            placeholder: 'Interest detail...'
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
                             labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
-                            placeholder: 'healing detail'
+                            placeholder: 'Healing detail...'
                     }],
                 }
             }]
@@ -489,6 +489,8 @@ export default class CreateGroupService {
         }
     }
 
+
+    //This is ugly and needs to be refactored
     mapSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
