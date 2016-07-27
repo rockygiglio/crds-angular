@@ -64,7 +64,7 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
-                var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId, token);
+                var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
             }
             catch (Exception e)
@@ -81,7 +81,7 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
-                var mpRequests = _groupToolRepository.GetInquiries(groupId, token);
+                var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
             }
             catch (Exception e)
