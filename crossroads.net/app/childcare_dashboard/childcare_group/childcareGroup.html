@@ -17,14 +17,16 @@
     <li ng-show="childcareGroup.hasEligibleChildren() && !childcareGroup.isEventCancelled()"
         ng-repeat="child in childcareGroup.communityGroup.eligibleChildren"
         class="list-group-item form-group">
-      {{child.childName}}
+      {{child.childName}} 
+      <span ng-if = "!child.eligible" class= "pull-right" dynamic-content='$root.MESSAGES.childexceedsMaxAge.content | html'></span> 
       <toggle-switch
+        ng-if = "child.eligible"
         ng-model="child.rsvpness"
         on-label="Yes"
         off-label="No"
         class="pull-right"
         ng-click="childcareGroup.validateAndRsvp(child, child.rsvpness)" >
-      <toggle-switch>
+      <toggle-switch>  
     </li>
   </ul>
 </div>
