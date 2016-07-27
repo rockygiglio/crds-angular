@@ -51,5 +51,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void endDateGroupParticipant(int participantId, int groupId, DateTime? endDate = null);
         void UpdateGroupInquiry(int groupId, int inquiryId, bool approved);
         List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null);
+        int UpdateGroup(MpGroup mpGroup);
     }
 }

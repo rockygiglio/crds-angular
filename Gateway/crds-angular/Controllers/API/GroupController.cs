@@ -68,6 +68,39 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Edit a group for the authenticated user.
+        /// </summary>
+        /// <param name="group">The data required to edit the group, GroupDTO</param>
+        /// <returns>The input GroupDTO</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [HttpPut]
+        [Route("api/group")]
+        public IHttpActionResult EditGroup([FromBody] GroupDTO group)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
+                    {
+                        _addressService.FindOrCreateAddress(group.Address);
+                    }
+
+                    group = _groupService.UpdateGroup(group);
+                    _logger.DebugFormat("Successfully updated group {0} ", group.GroupId);
+                    return (Created(string.Format("api/group/{0}", group.GroupId), group));
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not update group", e);
+                    return BadRequest();
+                }
+            });
+        }
+
+        /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
         /// Also send email confirmation to user if joining a CG
         /// Or Add Journey/Small Group Participant to a Group 

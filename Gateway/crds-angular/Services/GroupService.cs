@@ -597,5 +597,25 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
+        public GroupDTO UpdateGroup(GroupDTO group)
+        {
+            try
+            {
+                var mpGroup = Mapper.Map<MpGroup>(group);
+                group.GroupId = _mpGroupService.UpdateGroup(mpGroup);
+
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
+                _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not update group {0}", group.GroupName);
+                _logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            return group;
+        }
+
     }
 }

@@ -705,5 +705,58 @@ namespace MinistryPlatform.Translation.Repositories
                 }
             };
         }
+
+        public int UpdateGroup(MpGroup group)
+        {
+            logger.Debug("Updating group");
+
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+            var endDate = group.EndDate.HasValue ? (object)group.EndDate.Value : null;
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_Name", group.Name},
+                {"Group_ID", group.GroupId},
+                {"Group_Type_ID", group.GroupType},
+                {"Ministry_ID", group.MinistryId},
+                {"Congregation_ID", group.CongregationId},
+                {"Primary_Contact", group.ContactId},
+                {"Description", group.GroupDescription},
+                {"Start_Date", group.StartDate},
+                {"End_Date", endDate},
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants },
+                {"Kids_Welcome", group.KidsWelcome },
+                {"Meeting_Frequency_ID", group.MeetingFrequencyID }
+
+            };
+
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.UpdateRecord(GroupsPageId, values, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error updating group: " + e.Message);
+                }
+            });
+
+            logger.Debug("Updated group " + retValue);
+            return (retValue);
+        }
     }
 }
