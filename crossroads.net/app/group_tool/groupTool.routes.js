@@ -77,6 +77,18 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.accept.invitation', {
+      url: '/invitation/accept/{invitationGUID}',
+      parent: 'noSideBar',
+      template: '<group-invitation></group-invitation>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Join Group',
+          description: ''
+        }
+      }
+    })
     .state('grouptool.detail.about', {
       url: '/about',
       template: '<group-detail-about></group-detail-about>'
