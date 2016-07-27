@@ -556,6 +556,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 MinimumParticipants = 8,
                 MaximumAge = 99,
                 KidsWelcome = false,
+                MeetingFrequencyID = null,
                 Address = new MpAddress()
                 {
                     Address_ID = 43567
@@ -585,7 +586,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Online_RSVP_Minimum_Age", 0 },
                 {"Maximum_Age", 99 },
                 {"Minimum_Participants", 8 },
-                {"Kids_Welcome", false }
+                {"Kids_Welcome", false },
+                {"Meeting_Frequency_ID", null }
 
             };
            

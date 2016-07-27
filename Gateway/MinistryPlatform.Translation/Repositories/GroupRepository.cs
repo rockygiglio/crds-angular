@@ -84,7 +84,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
                 {"Maximum_Age", group.MaximumAge },
                 {"Minimum_Participants", group.MinimumParticipants },
-                {"Kids_Welcome", group.KidsWelcome }
+                {"Kids_Welcome", group.KidsWelcome },
+                {"Meeting_Frequency_ID", group.MeetingFrequencyID }
                 
             };
 
