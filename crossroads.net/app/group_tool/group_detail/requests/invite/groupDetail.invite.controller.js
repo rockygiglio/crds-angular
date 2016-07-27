@@ -27,6 +27,10 @@ export default class GroupDetailInviteController {
     this.invite = new GroupInvitation();
     this.invite.sourceId = this.groupId;
   }
+
+  cancel() {
+    this.onUpdate({newView: 'List', refresh: true});
+  }
     
   sendInvitation(form, invitation) {
     this.processing = true;
