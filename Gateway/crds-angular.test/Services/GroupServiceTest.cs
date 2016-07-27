@@ -41,6 +41,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IAttributeRepository> _attributeService;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<MPServices.IUserRepository> _userRespository;
+        private Mock<MPServices.IInvitationRepository> _invitationRepository;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -78,6 +79,7 @@ namespace crds_angular.test.Services
             _contactService = new Mock<MPServices.IContactRepository>();
             _emailCommunicationService = new Mock<IEmailCommunication>();
             _userRespository = new Mock<MPServices.IUserRepository>();
+            _invitationRepository = new Mock<MPServices.IInvitationRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
@@ -100,7 +102,8 @@ namespace crds_angular.test.Services
                                        _apiUserService.Object,
                                        _attributeService.Object,
                                        _emailCommunicationService.Object,
-                                       _userRespository.Object);
+                                       _userRespository.Object,
+                                       _invitationRepository.Object);
         }
 
         [Test]
@@ -348,6 +351,42 @@ namespace crds_angular.test.Services
             Assert.AreEqual(2, response.SignUpFamilyMembers.Count);
             Assert.AreEqual(g.WaitListGroupId, response.WaitListGroupId);
             Assert.AreEqual(g.WaitList, response.WaitListInd);
+        }
+
+        [Test]
+        public void GetGroupDetailsByInvitationGuidTest()
+        {
+            var mpInvitationDto = new MpInvitation
+            {
+                SourceId = 123123,
+                EmailAddress = "test@userdomain.com",
+                GroupRoleId = 66,
+                InvitationType = 1,
+                RecipientName = "Test User",
+                RequestDate = new DateTime(2004, 1, 13)
+            };
+
+            var g = new MpGroup
+            {
+                TargetSize = 0,
+                Full = true,
+                Participants = new List<MpGroupParticipant>(),
+                GroupType = 90210,
+                WaitList = true,
+                WaitListGroupId = 10101,
+                GroupId = 98765
+            };
+
+            _invitationRepository.Setup(mocked => mocked.GetOpenInvitation(It.IsAny<string>())).Returns(mpInvitationDto);
+            groupService.Setup(mocked => mocked.getGroupDetails(123123)).Returns(g);
+
+            var response = fixture.GetGroupDetailsByInvitationGuid("crazy long guid");
+
+            groupService.VerifyAll();
+            contactRelationshipService.VerifyAll();
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(g.GroupId, response.GroupId);
         }
 
         [Test]

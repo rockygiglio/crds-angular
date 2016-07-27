@@ -129,6 +129,34 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Return the group dto for the invitation guid (Private Invitation)
+        /// </summary>
+        /// <param name="invitationGuid">An string representing the unique private invite key</param>
+        /// <returns>A list of Group DTO</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [AcceptVerbs("GET")]
+        [Route("api/group/{invitationGUID:string}")]
+        public IHttpActionResult GetGroupByInvitationGuid(string invitationGuid)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupService.GetGroupDetailsByInvitationGuid(invitationGuid);
+
+                    return Ok(group);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Get Group", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
         [RequiresAuthorization]
         [ResponseType(typeof (List<Event>))]
         [Route("api/group/{groupId}/events")]

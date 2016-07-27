@@ -90,9 +90,9 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             
             const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
-            
-            var returned = new List<Dictionary<string, object>>();
-            returned.Add(
+
+            var returned = new List<Dictionary<string, object>>
+            {
                 new Dictionary<string, object>
                 {
                     {"dp_RecordID", 178},
@@ -103,7 +103,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Recipient_Name", "Test User"},
                     {"Invitation_Date", "1/13/2004"},
                 }
-            );
+            };
 
             _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(InvitationPageId, It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(returned);
 

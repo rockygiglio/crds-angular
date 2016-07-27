@@ -37,6 +37,7 @@ namespace crds_angular.Services
         private readonly IAttributeRepository _attributeService;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IUserRepository _userRepository;
+        private readonly IInvitationRepository _invitationRepository;
 
 
         /// <summary>
@@ -62,7 +63,8 @@ namespace crds_angular.Services
                             IApiUserRepository apiUserService, 
                             IAttributeRepository attributeService,
                             IEmailCommunication emailCommunicationService,
-                            IUserRepository userRepository)
+                            IUserRepository userRepository,
+                            IInvitationRepository invitationRepository)
 
         {
             _mpGroupService = mpGroupService;
@@ -77,7 +79,8 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
             _attributeService = attributeService;
             _emailCommunicationService = emailCommunicationService;
-            _userRepository = userRepository; 
+            _userRepository = userRepository;
+            _invitationRepository = invitationRepository;
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -319,6 +322,12 @@ namespace crds_angular.Services
         public GroupDTO GetGroupDetails(int groupId)
         {
             return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(groupId));
+        }
+
+        public GroupDTO GetGroupDetailsByInvitationGuid(string invitationGuid)
+        {
+            var invitation = _invitationRepository.GetOpenInvitation(invitationGuid);
+            return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(invitation.SourceId));
         }
 
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
