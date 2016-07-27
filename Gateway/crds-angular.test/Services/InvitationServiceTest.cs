@@ -55,6 +55,7 @@ namespace crds_angular.test.Services
         public void CanCreateInvitationsForGroups()
         {
             const string token = "dude";
+
             var invitation = new Invitation()
             {
                 EmailAddress = "dudley@doright.com",
@@ -84,6 +85,21 @@ namespace crds_angular.test.Services
                                 i.InvitationType == invitation.InvitationType && i.EmailAddress.Equals(invitation.EmailAddress) && i.GroupRoleId == invitation.GroupRoleId &&
                                 i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId))).Returns(mpInvitation);
 
+            var testGroup = new MpGroup
+            {
+                GroupId = 33,
+                Name = "TestGroup"
+            };
+
+            _groupRepository.Setup(mocked => mocked.getGroupDetails(invitation.SourceId)).Returns(testGroup);
+
+            var testLeaderParticipant = new Participant
+            {
+                DisplayName = "TestLeaderName"
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(testLeaderParticipant);
+
             var template = new MpMessageTemplate
             {
                 Body = "body",
@@ -105,10 +121,12 @@ namespace crds_angular.test.Services
                                 c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
                                 c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(invitation.EmailAddress) &&
                                 c.MergeData["Invitation_GUID"].ToString().Equals(mpInvitation.InvitationGuid) &&
-                                c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName)),
+                                c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName) &&
+                                c.MergeData["Leader_Name"].ToString().Equals(testLeaderParticipant.DisplayName) &&
+                                c.MergeData["Group_Name"].ToString().Equals(testGroup.Name)),
                         false)).Returns(77);
 
-            var created = _fixture.CreateInvitation(invitation);
+            var created = _fixture.CreateInvitation(invitation, token);
             _invitationRepository.VerifyAll();
             _communicationService.VerifyAll();
             Assert.AreSame(invitation, created);
