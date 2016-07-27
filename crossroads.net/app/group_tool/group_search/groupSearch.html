@@ -6,7 +6,7 @@
       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     </p>
-    <form role="form" name="groupSearchForm">
+    <form role="form" name="groupSearchForm" ng-submit="groupSearch.submit()">
       <div class="form-group">
         <label for="query">Search</label>
         <input id="query" ng-model="search.query" type="text" class="form-control" placeholder="Ex: Boxing, Joe Smith, Crossroads Site">

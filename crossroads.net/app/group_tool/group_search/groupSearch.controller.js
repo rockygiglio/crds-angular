@@ -5,4 +5,6 @@ export default class GroupSearchController {
     this.processing = false;
   }
 
+  submit() {
+  }
 }
