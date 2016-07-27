@@ -23,7 +23,7 @@
                            $log,
                            $q,
                            $anchorScroll) {
-    var vm = this;   
+    var vm = this;
     vm.hasForm = hasForm;
     vm.availableForm = availableForm;
 
@@ -51,7 +51,7 @@
 
       vm.saving = false;
       vm.successfulSave = false;
-      vm.save = save;   
+      vm.save = save;
       vm.group = {};
       vm.group.groupId = null;
 
@@ -59,17 +59,18 @@
       vm.data = {};
       vm.data.onComplete = ContentPageService.page.onCompleteMessage;
       vm.data.displayLocation = displayLocation;
-    
+
+debugger;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
       vm.data.header = ContentPageService.page.fields[0].header;
-      vm.data.footer = ContentPageService.page.fields[0].footer;  
+      vm.data.footer = ContentPageService.page.fields[0].footer;
 
       vm.data.genders = ContentPageService.resolvedData.genders;
       vm.data.locations = ContentPageService.resolvedData.locations;
       vm.data.availableGroups = ContentPageService.resolvedData.availableGroups;
       vm.data.attributeTypes = convertAttributeTypes(ContentPageService.resolvedData.attributeTypes);
-      vm.data.groupParticipant = participant;           
- 
+      vm.data.groupParticipant = participant;
+
     }
 
     function availableForm() {
