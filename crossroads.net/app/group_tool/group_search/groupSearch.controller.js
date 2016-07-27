@@ -1,5 +1,8 @@
 export default class GroupSearchController {
   /*@ngInject*/
-  constructor() { }
+  constructor() {
+    this.search = null;
+    this.processing = false;
+  }
 
 }
