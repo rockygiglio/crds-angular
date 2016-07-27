@@ -23,6 +23,7 @@ export default class CreateGroupService {
             }];
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
+        //this.countryLookup is added by the route resolve of the createGroupController.
     }
 
     preloadModel() {
@@ -154,9 +155,12 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.address.country',
-                    type: 'input',
+                    type: 'select',
                     templateOptions: {
-                        label: 'Country'
+                        label: 'Country',
+                        valueProp: 'dp_RecordName',
+                        labelProp: 'dp_RecordName',
+                        options: this.countryLookup
                     }
                 }]
         };
