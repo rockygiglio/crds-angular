@@ -35,7 +35,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         },
         profile: (CreateGroupService, GroupService) => {
           return GroupService.getProfileData().then((data) => {
-            CreateGroupService.profileData = data;   
+            CreateGroupService.profileData = data;
+          })
+        },
+        countryList: (CreateGroupService, Lookup) => {
+          return Lookup.query({table: 'countries'}, (data) => {
+            CreateGroupService.countryLookup = data;
           })
         }
       },

@@ -39,29 +39,12 @@
           </div>
         </div>
 
-        <div class='row'>
-          <div class='col-md-12'>
-            <div class='form-group' ng-class='{"has-error": invitationForm.$submitted && invitationForm.groupRoleId.$invalid}'>
-              <label for='groupRoleId' class='control-label required'>This person's role will be:</label>
-              <label ng-repeat='role in groupDetailInvite.groupParticipantRoles' class='radio-inline'>
-                <input type="radio" name="groupRoleId" ng-model='groupDetailInvite.invite.groupRoleId' required value='{{role.id}}'/>{{role.label}}
-              </label>
-              <ng-messages for="invitationForm.groupRoleId.$error" ng-show="invitationForm.$submitted && invitationForm.groupRoleId.$invalid">
-                <ng-messages-include src="on-blur-messages"></ng-messages-include>
-              </ng-messages>
-              <ng-messages for="invitationForm.groupRoleId.$error" ng-if="invitationForm.$submitted && invitationForm.groupRoleId.$invalid">
-                <ng-messages-include src="on-submit-messages"></ng-messages-include>
-              </ng-messages>
-            </div>
-          </div>
-        </div>
-
         <div class='row'>&nbsp;</div>
 
         <div class='row'>
           <div class='col-md-12'>
             <p class='text-center'>
-              <button type='button' class='btn btn-standard' ng-click='groupDetailInvite.setView("List")'>Cancel</button>
+              <button type='button' class='btn btn-standard' ng-click='groupDetailInvite.cancel()'>Cancel</button>
               <loading-button 
                 input-type='submit'
                 normal-text='Send'
