@@ -76,5 +76,51 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(invitationId, result.InvitationId);
             Assert.AreEqual(invitationGuid, result.InvitationGuid);
         }
+
+
+        [Test]
+        public void GetOpenInvitationTest()
+        {
+            var dto = new MpInvitation
+            {
+                SourceId = 123123,
+                EmailAddress = "test@userdomain.com",
+                GroupRoleId = 66,
+                InvitationType = 1,
+                RecipientName = "Test User",
+                RequestDate = new DateTime(2004, 1, 13)
+            };
+
+            const string token = "adamantium";
+            const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
+            var searchString = string.Format(",,,,,{0},{1}", invitationGuid, false);
+            
+            var returned = new List<Dictionary<string, object>>();
+            returned.Add(
+                new Dictionary<string, object>
+                {
+                    {"dp_RecordID", 178},
+                    {"Source_ID", 123123},
+                    {"Email_address", "test@userdomain.com"},
+                    {"Group_Role_ID", "66"},
+                    {"Invitation_Type_ID", 1},
+                    {"Recipient_Name", "Test User"},
+                    {"Invitation_Date", "1/13/2004"},
+                }
+            );
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(InvitationPageId, It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(returned);
+
+            var result = _fixture.GetOpenInvitation(invitationGuid);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dto.SourceId, result.SourceId);
+            Assert.AreEqual(dto.EmailAddress, result.EmailAddress);
+            Assert.AreEqual(dto.GroupRoleId, result.GroupRoleId);
+            Assert.AreEqual(dto.InvitationType, result.InvitationType);
+            Assert.AreEqual(dto.RecipientName, result.RecipientName);
+            Assert.AreEqual(dto.RequestDate, result.RequestDate);
+        }
     }
 }

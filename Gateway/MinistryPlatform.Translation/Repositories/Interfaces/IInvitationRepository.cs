@@ -7,6 +7,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IInvitationRepository
     {
         MpInvitation CreateInvitation(MpInvitation dto);
-
+        MpInvitation GetOpenInvitation(string invitationGuid);
     }
 }

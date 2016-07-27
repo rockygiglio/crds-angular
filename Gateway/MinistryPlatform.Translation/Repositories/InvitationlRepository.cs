@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -57,6 +60,38 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public MpInvitation GetOpenInvitation(string invitationGuid)
+        {
+            // override the user login to avoid granting rights to all users
+            string token = ApiLogin();
+            var mpInvitation = new MpInvitation();
+
+            try
+            {
+                var searchString = string.Format(",,,,,{0},{1}", invitationGuid, false);
+                var mpResults = _ministryPlatformService.GetRecordsDict(_invitationPageId, token, searchString, string.Empty);
+                var invitation = (mpResults != null && mpResults.Count > 0) ? mpResults.FirstOrDefault() : null;
+
+                if (invitation != null)
+                {
+                    mpInvitation = new MpInvitation
+                    {
+                        SourceId = invitation.ToInt("Source_ID"),
+                        EmailAddress = invitation.ToString("Email_address"),
+                        GroupRoleId = invitation.ToInt("Group_Role_ID"),
+                        InvitationType = invitation.ToInt("Invitation_Type_ID"),
+                        RecipientName = invitation.ToString("Recipient_Name"),
+                        RequestDate = invitation.ToDate("Invitation_Date")
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(string.Format("Get Invitation failed.  Invitation GUID: {0}, Invitation Used: {1}", invitationGuid, false), e);
+            }
+
+            return mpInvitation;
+        }
 
     }
 }
