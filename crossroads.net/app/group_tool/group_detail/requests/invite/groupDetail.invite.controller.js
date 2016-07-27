@@ -9,12 +9,6 @@ export default class GroupDetailInviteController {
     this.rootScope = $rootScope;
 
     this.invite = null;
-    this.groupParticipantRoles = [
-      { 'id': CONSTANTS.GROUP.ROLES.MEMBER, 'label': 'Participant' },
-      { 'id': CONSTANTS.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
-      { 'id': CONSTANTS.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
-    ];
-
     this.processing = false;
   }
 
@@ -25,6 +19,7 @@ export default class GroupDetailInviteController {
   beginInvitation() {
     this.processing = false;
     this.invite = new GroupInvitation();
+    this.invite.groupRoleId = CONSTANTS.GROUP.ROLES.MEMBER;
     this.invite.sourceId = this.groupId;
   }
     
