@@ -66,6 +66,32 @@ namespace MinistryPlatform.Translation.Repositories
             return content;
         }
 
+        public int PostStoredProc(string procedureName, Dictionary<string, object> parameters)
+        {
+            var url = string.Format("/procs/{0}", procedureName );
+            var request = new RestRequest(url, Method.POST);
+            AddAuthorization(request);
+          
+            request.AddParameter("application/json", FormatStoredProcBody(parameters), ParameterType.RequestBody);
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+
+            return (int)response.ResponseStatus;
+        }
+
+        private static string FormatStoredProcBody(Dictionary<string, object> parameters)
+        {
+            var parmlist = new List<string>();
+            foreach (var item in parameters)
+            {
+                var parm = "\"" + item.Key + "\":\"" + item.Value + "\"";
+                parmlist.Add(parm);
+            }
+             
+            return "{" + string.Join(",", parmlist) + "}";
+        }
+
         private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
         {
             var result = parameters.Aggregate("?", (current, parameter) => current + ((parameter.Key.StartsWith("@") ? parameter.Key : "@" + parameter.Key) + "=" + parameter.Value + "&"));

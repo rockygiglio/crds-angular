@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models;
@@ -13,6 +14,7 @@ using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -105,7 +107,8 @@ namespace crds_angular.Services
                 {
                     particpantId = participant.ParticipantId,
                     groupRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
-                    capacityNeeded = 1
+                    capacityNeeded = 1,
+                    EnrolledBy = saveRsvp.EnrolledBy
                 };
 
                 _groupService.addParticipantToGroupNoEvents(saveRsvp.GroupId, participantSignup);
@@ -156,7 +159,7 @@ namespace crds_angular.Services
             var mpRequest = request.ToMPChildcareRequest();
             _childcareRequestService.UpdateChildcareRequest(mpRequest);
             //delete the current childcare request dates
-            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId,token);
+            _childcareRequestService.DeleteAllChildcareRequestDates(request.ChildcareRequestId);
 
             //add the new dates
             _childcareRequestService.CreateChildcareRequestDates(request.ChildcareRequestId, mpRequest, token);
@@ -184,8 +187,9 @@ namespace crds_angular.Services
                 {
                     throw new ChildcareDatesMissingException(childcareRequestId);
                 }
+                var events = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates, request);
 
-                var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
+                var childcareEvents = GetChildcareEventsfortheDates(events, requestedDates, request);
                 var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
                 if (missingDates.Count > 0)
                 {
@@ -221,12 +225,44 @@ namespace crds_angular.Services
             {
                 throw;
             }
+            catch (DuplicateChildcareEventsException ex)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
+
+        private Dictionary<int, int> GetChildcareEventsfortheDates(List<MpEvent> events, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
+        {
+            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
+            var requestStartTime = DateTime.ParseExact(prefTime[0].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
+            var requestEndTime = DateTime.ParseExact(prefTime[1].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
+            var childcareEvents = new Dictionary<int, int>();
+                foreach (var date in requestedDates)
+                {
+                    var foundEvent = events.FindAll(
+                        e => (e.EventStartDate == date.RequestDate.Date.Add(requestStartTime.TimeOfDay) &&
+                        (e.EventEndDate == date.RequestDate.Date.Add(requestEndTime.TimeOfDay)) &&
+                        (e.CongregationId == request.LocationId)));
+                    if (foundEvent.Count > 1)
+                    {
+                        throw new DuplicateChildcareEventsException(date.RequestDate);
+                    }                    
+                    if (foundEvent != null)
+                    {
+                        foreach (var eachEvent in foundEvent)
+                         {
+                            childcareEvents.Add(date.ChildcareRequestDateId, eachEvent.EventId);
+                         }                   
+                    }
+                }
+           return childcareEvents;
+        }
+
 
         private List<MpChildcareRequestDate> GetChildcareRequestDatesForRequest(int childcareRequestId)
         {
@@ -628,5 +664,42 @@ namespace crds_angular.Services
             };
         }
 
+        public void SendChildcareCancellationNotification()
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareCancelledTemplate");
+            var template = _communicationService.GetTemplate(templateId);
+            var authorUserId = _configurationWrapper.GetConfigIntValue("DefaultUserAuthorId");
+
+            var notificationData = _childcareRepository.GetChildcareCancellations();
+            foreach (var participant in notificationData.DistinctBy(p => p.EnrollerContactId))
+            {
+                var kiddos = notificationData.Where(k => k.EnrollerContactId == participant.EnrollerContactId).Aggregate("", (current, kid) => current + (kid.ChildNickname + " " + kid.ChildLastname + "<br>"));
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"Group_Name", participant.EnrollerGroupName },
+                    {"Childcare_Date", participant.ChildcareEventDate.ToString("d") },
+                    {"Group_Member_Nickname", participant.EnrollerNickname },
+                    {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
+                    {"Child_List", kiddos}
+                };
+                var comm = new MpCommunication
+                {
+                    AuthorUserId = authorUserId,
+                    DomainId = 1,
+                    EmailBody = template.Body,
+                    EmailSubject = template.Subject,
+                    FromContact = new MpContact { ContactId = participant.ChildcareContactId, EmailAddress = participant.ChildcareContactEmail },
+                    ReplyToContact = new MpContact { ContactId = participant.ChildcareContactId, EmailAddress = participant.ChildcareContactEmail },
+                    ToContacts = new List<MpContact> { new MpContact { ContactId = participant.EnrollerContactId, EmailAddress = participant.EnrollerEmail } },
+                    MergeData = mergeData
+                };
+                _communicationService.SendMessage(comm);
+            }
+
+            foreach (var participant in notificationData)
+            {
+                _groupService.endDateGroupParticipant(participant.ChildGroupId, participant.ChildGroupParticipantId);
+            }
+        }
     } 
 }

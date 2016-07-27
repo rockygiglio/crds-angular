@@ -82,8 +82,7 @@ namespace crds_angular.test.Services
                         It.Is<MpInvitation>(
                             i =>
                                 i.InvitationType == invitation.InvitationType && i.EmailAddress.Equals(invitation.EmailAddress) && i.GroupRoleId == invitation.GroupRoleId &&
-                                i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId),
-                        token)).Returns(mpInvitation);
+                                i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId))).Returns(mpInvitation);
 
             var template = new MpMessageTemplate
             {
@@ -109,7 +108,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName)),
                         false)).Returns(77);
 
-            var created = _fixture.CreateInvitation(invitation, token);
+            var created = _fixture.CreateInvitation(invitation);
             _invitationRepository.VerifyAll();
             _communicationService.VerifyAll();
             Assert.AreSame(invitation, created);

@@ -1,39 +1,22 @@
 <div class="live-stream">
 
+  <div class="pushdown-container" *ngIf="displayCounter">
+    <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
+    <div class="container"><div class="iframe-wrapper">
+      <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
+    </div></div>
+  </div>
+
   <div class="dark-bg">
-
-    <div class="container" *ngIf="displayCounter">
-      <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
-      <div class="how-many-people text-center" *ngIf="countSubmit">
-        Thanks!
-      </div>
-      <div class="how-many-people text-center" *ngIf="countSubmit == false">
-        How many people are watching?<span class="vr"></span>
-        {{number_of_people}}
-        <span *ngIf="number_of_people == 1">person</span>
-        <span *ngIf="number_of_people > 1">people</span>
-
-        <div class="btn-group">
-          <button type="button" class="btn btn-step" (click)="decreaseCount()">
-            <span class="glyphicon glyphicon-minus"></span>
-          </button>
-          <button type="button" class="btn btn-step" (click)="increaseCount()">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </div>
-        <a href="#" class="btn btn-standard-dark" (click)="submitCount()">Submit</a>
-      </div>
-    </div>
-
     <section class="wow fadeIn">
       <div class="container">
-        <videojs></videojs>
+        <streamspot-iframe></streamspot-iframe>
       </div>
     </section>
   </div>
 
 
-  <div class="container">
+  <!--div class="container">
 
       <section class="related">
         <header>
@@ -112,5 +95,5 @@
         </div>
 
       </section>
-  </div>
+  </div-->
 </div>

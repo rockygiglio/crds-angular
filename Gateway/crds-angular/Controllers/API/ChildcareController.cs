@@ -197,6 +197,14 @@ namespace crds_angular.Controllers.API
                     message.Content = new StringContent(json);
                     throw new HttpResponseException(message);
                 }
+                catch (DuplicateChildcareEventsException e)
+                {
+                    var error = new DateError() { Error = e.RequestedDate, Message = e.Message };
+                    var json = JsonConvert.SerializeObject(error, Formatting.Indented);
+                    var message = new HttpResponseMessage(HttpStatusCode.MultipleChoices);
+                    message.Content = new StringContent(json);
+                                        throw new HttpResponseException(message);
+                }
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Approve Childcare Request Failed", e);
@@ -286,6 +294,7 @@ namespace crds_angular.Controllers.API
         {
             public List<DateTime> Errors { get; set;}
             public string Message { get; set;}
+            public DateTime Error { get; set; } 
         }
     }
 }

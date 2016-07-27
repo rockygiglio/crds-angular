@@ -18,11 +18,12 @@ class ChildcareDashboardService {
     return this.childcareDates;
   }
 
-  saveRSVP(childId, groupId, registered) {
+  saveRSVP(childId, groupId, enrolledBy, registered) {
     const dto = {
       groupId,
       childId,
-      registered
+      registered,
+      enrolledBy
     };
     return this.saveRsvp.save(dto);
   }

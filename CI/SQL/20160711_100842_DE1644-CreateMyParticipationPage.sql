@@ -10,7 +10,8 @@ INSERT INTO [dbo].[dp_pages]
 ,Display_Name            
 ,Singular_Name           
 ,Description                       
-,View_Order,Table_Name          
+,View_Order
+,Table_Name          
 ,Primary_Key           
 ,Display_Search
 ,Default_Field_List                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

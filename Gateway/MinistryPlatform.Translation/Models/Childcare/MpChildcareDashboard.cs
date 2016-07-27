@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace MinistryPlatform.Translation.Models.Childcare
 {
     [MpRestApiTable(Name = "Childcare_Dashboard")]
-    public class ChildcareDashboard
+    public class MpChildcareDashboard
     {
         [JsonProperty(PropertyName = "Nickname")]
         public string Nickname { get; set; }

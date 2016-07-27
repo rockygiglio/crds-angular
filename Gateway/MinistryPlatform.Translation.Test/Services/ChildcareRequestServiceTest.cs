@@ -18,6 +18,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _configuration;
         private Mock<IGroupRepository> _groupService;
         private ChildcareRequestRepository _fixture;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
 
         private int _childcareRequestPage = 36;
         private int _childcareRequestPending = 3;
@@ -25,6 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void Setup()
         {
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _eventService = new Mock<IEventRepository>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _apiUserService = new Mock<IApiUserRepository>();
@@ -34,7 +36,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration = new Mock<IConfigurationWrapper>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPageId")).Returns(_childcareRequestPage);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("ChildcareRequestPending")).Returns(_childcareRequestPending);
-            _fixture = new ChildcareRequestRepository(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object, _groupService.Object);
+            _fixture = new ChildcareRequestRepository(_configuration.Object, _ministryPlatformService.Object, _apiUserService.Object, _eventService.Object, _groupService.Object, _ministryPlatformRestService.Object);
         }
 
         [Test]

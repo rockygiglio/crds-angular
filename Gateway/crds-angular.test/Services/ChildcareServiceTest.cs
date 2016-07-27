@@ -471,5 +471,71 @@ namespace crds_angular.test.Services
             // make sure the current list is left unmodified.
             Assert.AreEqual(currentList.First().EventDate, date3);
         }
+
+        [Test]
+        public void ShouldSendCancellationEmails()
+        {
+            var cancellationData = new List<MpChildcareCancelledNotification>
+            {
+                new MpChildcareCancelledNotification
+                {
+                    ChildcareContactEmail = "childcareoakley@crossroads.net",
+                    ChildcareContactId = 1,
+                    ChildcareEventDate = DateTime.Now,
+                    ChildGroupId = 1234,
+                    ChildGroupParticipantId = 5678,
+                    ChildLastname = "Woodcomb",
+                    ChildNickname = "Grunka",
+                    EnrollerContactId = 14,
+                    EnrollerNickname = "Ellie",
+                    EnrollerEmail = "EllieWoodcomb@buymore.gov",
+                    EnrollerGroupName = "Mom's Oakley",
+                    EnrollerGroupLocationId = 1,
+                    EnrollerGroupLocationName = "Oakley"
+                },
+                new MpChildcareCancelledNotification
+                {
+                    ChildcareContactEmail = "childcareoakley@crossroads.net",
+                    ChildcareContactId = 1,
+                    ChildcareEventDate = DateTime.Now,
+                    ChildGroupId = 1234,
+                    ChildGroupParticipantId = 5679,
+                    ChildLastname = "Grimes",
+                    ChildNickname = "Morgan",
+                    EnrollerContactId = 15,
+                    EnrollerNickname = "Chuck",
+                    EnrollerEmail = "ChuckBartowski@buymore.gov",
+                    EnrollerGroupName = "Father's Oakley",
+                    EnrollerGroupLocationId = 1,
+                    EnrollerGroupLocationName = "Oakley"
+                },
+                new MpChildcareCancelledNotification
+                {
+                    ChildcareContactEmail = "childcareoakley@crossroads.net",
+                    ChildcareContactId = 1,
+                    ChildcareEventDate = DateTime.Now,
+                    ChildGroupId = 1234,
+                    ChildGroupParticipantId = 5680,
+                    ChildLastname = "Woodcomb",
+                    ChildNickname = "Devin",
+                    EnrollerContactId = 14,
+                    EnrollerNickname = "Ellie",
+                    EnrollerEmail = "EllieWoodcomb@buymore.gov",
+                    EnrollerGroupName = "Mom's Oakley",
+                    EnrollerGroupLocationId = 1,
+                    EnrollerGroupLocationName = "Oakley"
+                }
+            };
+            _communicationService.Setup(c => c.GetTemplate(It.IsAny<int>())).Returns(new MpMessageTemplate());
+            _communicationService.Setup(c => c.SendMessage(It.IsAny<MpCommunication>(), false));
+            _childcareRepository.Setup(r => r.GetChildcareCancellations()).Returns(cancellationData);
+            _groupService.Setup(g => g.endDateGroupParticipant(1234, It.IsIn(5678, 5679, 5680)));
+
+            _fixture.SendChildcareCancellationNotification();
+
+            _communicationService.Verify(c => c.SendMessage(It.IsAny<MpCommunication>(), false), Times.Exactly(2));
+            _childcareRepository.VerifyAll();
+            _groupService.Verify(g => g.endDateGroupParticipant(1234, It.IsIn(5678, 5679, 5680)), Times.Exactly(3));
+        }
     }
 }

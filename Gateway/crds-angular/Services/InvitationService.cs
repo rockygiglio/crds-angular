@@ -58,13 +58,13 @@ namespace crds_angular.Services
             _groupRoleLeader = configuration.GetConfigIntValue("GroupRoleLeader");
         }
 
-        public Invitation CreateInvitation(Invitation dto, string token)
+        public Invitation CreateInvitation(Invitation dto)
         {
             try
             {
                 var mpInvitation = Mapper.Map<MpInvitation>(dto);
 
-                var invitation = _invitationRepository.CreateInvitation(mpInvitation, token);
+                var invitation = _invitationRepository.CreateInvitation(mpInvitation);
 
                 try
                 {
