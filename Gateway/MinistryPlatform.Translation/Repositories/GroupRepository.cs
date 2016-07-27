@@ -33,6 +33,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
+        private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -546,6 +547,49 @@ namespace MinistryPlatform.Translation.Repositories
                 ToContacts = to
             };
             _communicationService.SendMessage(confirmation);
+        }
+
+        public void SendNewStudentMinistryGroupAlertEmail(String nickName, String lastName, String email)
+        {
+            var emailTemplate = _communicationService.GetTemplate(NewStudentMinistryGroupAlertEmailTemplate);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Nickname", nickName},
+                {"Last_Name", lastName},
+                {"Last_Name", lastName}
+            };
+
+            var domainId = Convert.ToInt32(AppSettings("DomainId"));
+            var from = new MpContact()
+            {
+                ContactId = DefaultEmailContactId,
+                EmailAddress = _communicationService.GetEmailFromContactId(DefaultEmailContactId)
+            };
+
+            var to = new List<MpContact>
+            {
+                new MpContact
+                {
+                    //  TODO 
+                    //ContactId = toContact,
+                    //EmailAddress = toContactInfo.Email_Address
+                }
+            };
+
+            var newStudentMinistryGroup = new MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = 5,
+                DomainId = domainId,
+                FromContact = from,
+                MergeData = mergeData,
+                ReplyToContact = from,
+                TemplateId = NewStudentMinistryGroupAlertEmailTemplate,
+                ToContacts = to
+            };
+            _communicationService.SendMessage(newStudentMinistryGroup);
         }
 
         public List<MpGroupParticipant> getEventParticipantsForGroup(int groupId, int eventId)
