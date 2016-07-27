@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _invitationService.ValidateInvitation(invitation, token);
-                    return Ok(_invitationService.CreateInvitation(invitation, token));
+                    return Ok(_invitationService.CreateInvitation(invitation));
                 }
                 catch (ValidationException e)
                 {
