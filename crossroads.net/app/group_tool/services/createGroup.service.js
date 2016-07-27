@@ -32,7 +32,6 @@ export default class CreateGroupService {
 
     preloadModel() {
         if (!this.resolved) {
-            debugger;
             this.model.profile.oldEmail = this.model.profile.emailAddress;
             delete this.model.profile.householdMembers;
             delete this.model.profile.congregationId;
