@@ -25,10 +25,10 @@ namespace MinistryPlatform.Translation.Repositories
             _invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
         }
 
-        public MpInvitation CreateInvitation(MpInvitation dto, string token)
+        public MpInvitation CreateInvitation(MpInvitation dto)
         {
             // override the user login to avoid granting rights to all users
-            token = ApiLogin();
+            string token = ApiLogin();
 
             var invitationType = dto.InvitationType;
 
