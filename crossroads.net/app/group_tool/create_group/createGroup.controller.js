@@ -19,8 +19,6 @@ export default class CreateGroupController {
     }
 
     $onInit() {
-
-        this.log.debug('CreateGroupController onInit');
         this.participantService.get().then((data) => {
             if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
                 this.approvedLeader = true;
