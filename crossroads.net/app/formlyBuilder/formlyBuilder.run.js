@@ -51,7 +51,7 @@
         formlyConfig.setType({
             name: 'datepicker',
             templateUrl: 'templates/datepicker.html',
-            wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+            wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
             defaultOptions: {
                 ngModelAttrs: ngModelAttrs,
                 templateOptions: {
@@ -96,7 +96,7 @@
         formlyConfig.setType({
             name: 'timepicker',
             template: '<timepicker ng-model="model[options.key]"></timepicker>',
-            wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+            wrapper: ['formlyBuilderLabel', 'formlyBuilderHasError'],
             defaultOptions: {
                 ngModelAttrs: ngModelAttrs,
                 templateOptions: {
@@ -108,7 +108,7 @@
         formlyConfig.setType({
             name: 'boldcheckbox',
             template: require('./templates/boldCheckbox.html'),
-            wrapper: ['bootstrapHasError'],
+            wrapper: ['formlyBuilderHasError'],
             apiCheck: check => ({
                 templateOptions: {
                     label: check.string
@@ -144,7 +144,7 @@
         formlyConfig.setType({
             name: 'profilePicture',
             template: require('./templates/profilePicture.html'),
-            wrapper: ['bootstrapHasError'],
+            wrapper: ['formlyBuilderHasError'],
             defaultOptions: {
                 ngModelAttrs: ngModelAttrs,
                 templateOptions: {}
@@ -170,7 +170,7 @@
         formlyConfig.setType({
             name: 'multiCheckBoxCombo',
             template: require('./templates/multiCheckBoxCombo.html'),
-            wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+            wrapper: ['formlyBuilderLabel', 'formlyBuilderHasError'],
             apiCheck: check => ({
                 templateOptions: {
                     options: check.arrayOf(check.object),
@@ -228,7 +228,7 @@
                 }
 
                 function checkValidity(expressionValue) {
-                    var checkValid, detailValid;
+                    var valid, checkValid, detailValid;
                     if ($scope.to.required) {
                         checkValid = angular.isArray($scope.model[opts.key]) &&
                             $scope.model[opts.key].length > 0 &&
@@ -236,8 +236,14 @@
 
                         //if checkbox is checked, detail is required
                         detailValid = areRequiredDetailsFilledOut();
-
-                        $scope.fc[0].$setValidity('required', checkValid && detailValid);
+                        valid = detailValid && checkValid;
+                        if (angular.isArray($scope.fc)){
+                            angular.forEach($scope.fc, function(item, key) {
+                                item.$setValidity('required', valid)
+                            }, this);
+                        }else {
+                            $scope.fc.$setValidity('required', valid);
+                        }
                     }
                 }
 
@@ -251,8 +257,15 @@
                         }
                     });
                     // Must make sure we mark as touched because only the last checkbox due to a bug in angular.
-                    $scope.fc[0].$setTouched();
-                    $scope.fc[1].$setTouched();
+
+                    //for each
+                    if (angular.isArray($scope.fc)){
+                        angular.forEach($scope.fc, function(item, key) {
+                            item.$setTouched()
+                        }, this);
+                    }else {
+                        $scope.fc.$setTouched('required', valid);
+                    }
                     checkValidity(true);
 
                     if ($scope.to.onChange) {

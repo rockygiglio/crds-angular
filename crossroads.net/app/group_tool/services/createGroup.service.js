@@ -54,7 +54,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'profile.congregationId',
-                type: 'select',
+                type: 'formlyBuilderSelect',
                 templateOptions: {
                     label: 'At what site do you regularly attend service?',
                     required: true,
@@ -80,7 +80,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.genderId',
-                    type: 'radio',
+                    type: 'formlyBuilderRadio',
                     templateOptions: {
                         label: 'Gender',
                         required: true,
@@ -113,21 +113,21 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'profile.addressLine1',
-                type: 'input',
+                type: 'formlyBuilderInput',
                 templateOptions: {
                     label: 'Street',
                     required: true,
                 }
             }, {
                     key: 'profile.city',
-                    type: 'input',
+                    type: 'formlyBuilderInput',
                     templateOptions: {
                         label: 'City',
                         required: true,
                     }
                 }, {
                     key: 'profile.state',
-                    type: 'select',
+                    type: 'formlyBuilderSelect',
                     templateOptions: {
                         label: 'State',
                         required: true,
@@ -137,14 +137,14 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.postalCode',
-                    type: 'input',
+                    type: 'formlyBuilderInput',
                     templateOptions: {
                         label: 'Zip',
                         required: true,
                     }
                 }, {
                     key: 'profile.address.country',
-                    type: 'select',
+                    type: 'formlyBuilderSelect',
                     templateOptions: {
                         label: 'Country',
                         valueProp: 'dp_RecordName',
@@ -161,7 +161,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'specificDay',
-                type: 'radio',
+                type: 'formlyBuilderRadio',
                 templateOptions: {
                     labelProp: 'label',
                     required: true,
@@ -176,7 +176,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.meeting.day',
-                    type: 'select',
+                    type: 'formlyBuilderSelect',
                     hideExpression: '!model.specificDay',
                     templateOptions: {
                         label: 'Day',
@@ -210,7 +210,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.frequency',
-                    type: 'select',
+                    type: 'formlyBuilderSelect',
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
@@ -228,7 +228,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.meeting.online',
-                type: 'radio',
+                type: 'formlyBuilderRadio',
                 templateOptions: {
                     label: 'Where will your group meet?',
                     required: true,
@@ -245,7 +245,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.meeting.address.street',
-                    type: 'input',
+                    type: 'formlyBuilderInput',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'Street',
@@ -256,7 +256,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.city',
-                    type: 'input',
+                    type: 'formlyBuilderInput',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'City',
@@ -267,7 +267,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.state',
-                    type: 'select',
+                    type: 'formlyBuilderSelect',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'State',
@@ -281,7 +281,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.zip',
-                    type: 'input',
+                    type: 'formlyBuilderInput',
                     optionsTypes: ['zipcode'],
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
@@ -293,7 +293,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.kidFriendly',
-                    type: 'radio',
+                    type: 'formlyBuilderRadio',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         required: true,
@@ -338,7 +338,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.typeId',
-                type: 'radio',
+                type: 'formlyBuilderRadio',
                 templateOptions: {
                     labelProp: 'name',
                     required: true,
@@ -363,7 +363,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
-                type: 'multiCheckbox',
+                type: 'formlyBuilderMultiCheckbox',
                 templateOptions: {
                     valueProp: 'attributeId',
                     required: true,
@@ -389,7 +389,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.groupName',
-                type: 'input',
+                type: 'formlyBuilderInput',
                 templateOptions: {
                     label: 'Group Name',
                     required: true,
@@ -397,7 +397,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.groupDescription',
-                    type: 'textarea',
+                    type: 'formlyBuilderTextarea',
                     templateOptions: {
                         label: 'Group Description',
                         required: true,
@@ -414,7 +414,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.availableOnline',
-                type: 'radio',
+                type: 'formlyBuilderRadio',
                 templateOptions: {
                     valueProp: 'accessId',
                     labelProp: 'accessLabel',

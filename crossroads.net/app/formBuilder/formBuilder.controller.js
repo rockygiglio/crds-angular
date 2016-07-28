@@ -60,7 +60,6 @@
       vm.data.onComplete = ContentPageService.page.onCompleteMessage;
       vm.data.displayLocation = displayLocation;
 
-debugger;
       vm.data.profileData = {person: ContentPageService.resolvedData.profile};
       vm.data.header = ContentPageService.page.fields[0].header;
       vm.data.footer = ContentPageService.page.fields[0].footer;
