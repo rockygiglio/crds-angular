@@ -154,7 +154,7 @@ namespace crds_angular.Controllers.API
         /// <param name="accept">A boolean showing if the invitation is being approved or denied.</param>
         [AcceptVerbs("POST")]
         [RequiresAuthorization]
-        [Route("api/grouptool/group/{groupId:int}/invitation/{invitationGuid:string}")]
+        [Route("api/grouptool/group/{groupId:int}/invitation/{invitationGuid}")]
         [HttpPost]
         public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationGuid, [FromBody]bool accept)
         {

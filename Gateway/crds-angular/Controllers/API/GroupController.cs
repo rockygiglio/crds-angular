@@ -137,7 +137,7 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
         [AcceptVerbs("GET")]
-        [Route("api/group/{invitationGUID:string}")]
+        [Route("api/group/{invitationGUID}")]
         public IHttpActionResult GetGroupByInvitationGuid(string invitationGuid)
         {
             return Authorized(token =>
