@@ -737,5 +737,57 @@ namespace crds_angular.test.Services
             return groups;
 
         }
+
+        [Test]
+        public void shouldUpdateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var newGroup = new MpGroup()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupType = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupId = 145,
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+
+            groupService.Setup(mocked => mocked.UpdateGroup(newGroup)).Returns(14);
+            var groupResp = fixture.UpdateGroup(group);
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
     }
 }
