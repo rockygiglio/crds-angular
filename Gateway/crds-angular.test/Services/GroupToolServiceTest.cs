@@ -596,7 +596,7 @@ namespace crds_angular.test.Services
         [Test]
         public void CanGetInvitationsForGroups()
         {
-            _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(getMpInvations());
+            _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>())).Returns(getMpInvations());
             var sourceId = 1;
             var invitationTypeId = 1;
             var token = "dude";
@@ -697,7 +697,7 @@ namespace crds_angular.test.Services
             var groupId = 1;
             var token = "dude";
 
-            _groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>(), It.IsAny<string>())).Returns(mpResults);
+            _groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>())).Returns(mpResults);
 
             var inquiries = _fixture.GetInquiries(groupId, token);
             

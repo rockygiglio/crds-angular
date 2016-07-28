@@ -6,10 +6,8 @@
       <div dynamic-content="$root.MESSAGES.notHeadofHousehold.content | html"></div>
     </div>
   </div>
-
   <div ng-if='!childcare.isError()'>
-    <childcare-intro> </childcare-intro>
-
+    <div dynamic-content="$root.MESSAGES.childcareIntro.content | html"></div>
     <div ng-if='childcare.isGroupsEmpty()'>
       <div class="alert alert-warning" role="alert">
         <div dynamic-content="$root.MESSAGES.childcareNoEvents.content | html"></div>
