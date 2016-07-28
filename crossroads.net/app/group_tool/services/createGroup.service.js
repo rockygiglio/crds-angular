@@ -36,7 +36,7 @@ export default class CreateGroupService {
             delete this.model.profile.householdMembers;
             delete this.model.profile.congregationId;
 debugger;
-// TODO: If/else not working
+// TODO: If/else not working as expected, don't want to over-write the model.group object populated from database on an edit
 // TODO: need to map, them model.group here is in smallGroup object format, needs to be mapped to form's object structure
             if(this.model.group !== undefined || this.model.group !== null) {
               this.model.group = {
