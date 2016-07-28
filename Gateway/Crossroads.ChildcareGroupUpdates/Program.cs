@@ -31,7 +31,6 @@ namespace Crossroads.ChildcareGroupUpdates
             var groupService = container.Resolve<GroupService>();
             var userApiService = container.Resolve<ApiUserRepository>();
             var mpRestRepository = container.Resolve<MinistryPlatformRestRepository>();
-            //var autoMapperConfig = container.Resolve<AutoMapperConfig>();
 
             // use childcare grouptype and eventtype
             var groupTypeId = 27;
