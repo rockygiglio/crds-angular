@@ -389,7 +389,7 @@ namespace crds_angular.Services
 
                 foreach (var member in householdData.AllMembers)
                 {
-                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && member.HouseholdPosition.StartsWith("Minor") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
                     {
                         var echild = new ChildcareRsvp
                         {
@@ -399,7 +399,7 @@ namespace crds_angular.Services
                             ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
                         };
                         eligibleChildren.Add(echild);
-                    }
+                    }                       
                 }
 
                 var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);

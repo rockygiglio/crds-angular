@@ -83,8 +83,10 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Enable_Waiting_List", group.WaitList },
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
                 {"Maximum_Age", group.MaximumAge },
-                {"Minimum_Participants", group.MinimumParticipants }
-
+                {"Minimum_Participants", group.MinimumParticipants },
+                {"Kids_Welcome", group.KidsWelcome },
+                {"Meeting_Frequency_ID", group.MeetingFrequencyID }
+                
             };
 
             var groupId =
@@ -270,6 +272,27 @@ namespace MinistryPlatform.Translation.Repositories
                 if (mx != null)
                 {
                     g.MaximumAge = (int) mx;
+                }
+
+                object mp = null;
+                groupDetails.TryGetValue("Minimum_Participants", out mp);
+                if (mp != null)
+                {
+                    g.MinimumParticipants = (int)mp;
+                }
+
+                object sd = null;
+                groupDetails.TryGetValue("Start_Date", out sd);
+                if (sd != null)
+                {
+                    g.StartDate = (DateTime)sd;
+                }
+
+                object mid = null;
+                groupDetails.TryGetValue("Ministry_ID", out mid);
+                if (mid != null)
+                {
+                    g.MinistryId = (int)mid;
                 }
 
                 if (g.WaitList)

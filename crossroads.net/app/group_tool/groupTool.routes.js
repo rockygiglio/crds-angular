@@ -34,9 +34,11 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           })
         },
         profile: (CreateGroupService, GroupService) => {
-          return GroupService.getProfileData().then((data) => {
-            CreateGroupService.profileData = data;
-          })
+          if(!CreateGroupService.resolved) {
+            return GroupService.getProfileData().then((data) => {
+              CreateGroupService.model.profile = data;
+            })
+          }
         },
         countryList: (CreateGroupService, Lookup) => {
           return Lookup.query({table: 'countries'}, (data) => {
@@ -93,5 +95,18 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.detail.requests', {
       url: '/requests',
       template: '<group-detail-requests></group-detail-requests>'
-    });
+    })
+    .state('grouptool.search', {
+      parent: 'noSideBar',
+      url: '/groups/search',
+      template: '<group-search></group-search>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Find a Group',
+          description: ''
+        }
+      }
+    })
+  ;
 }

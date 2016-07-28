@@ -1,12 +1,12 @@
 export default function ChildcareRoutes($stateProvider) {
   $stateProvider.state('childcare-dashboard', {
     parent: 'centeredContentPage',
-    url: '/childcare-dashboard',
+    url: '/childcare',
     template: '<childcare-dashboard></childcare-dashboard>',
     data: {
       isProtected: true,
       meta: {
-        title: 'Childcare Dashboard',
+        title: 'Childcare',
         description: ''
       }
     },
