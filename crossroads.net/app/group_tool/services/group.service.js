@@ -201,7 +201,7 @@ export default class GroupService {
   }
 
   getGroupByInvitationGUID(invitationGUID) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/:invitationGUID`).
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/invitation/:invitationGUID`).
                           get({invitationGUID: invitationGUID}).$promise;
 
     return promise.then((data) => {
