@@ -35,11 +35,22 @@ export default class CreateGroupService {
             this.model.profile.oldEmail = this.model.profile.emailAddress;
             delete this.model.profile.householdMembers;
             delete this.model.profile.congregationId;
-            this.model.group = {
-                meeting: {
-                    time: "1983-07-16T21:00:00.000Z"
-                }
-            };
+debugger;
+// TODO: If/else not working
+// TODO: need to map, them model.group here is in smallGroup object format, needs to be mapped to form's object structure
+            if(this.model.group !== undefined || this.model.group !== null) {
+              this.model.group = {
+                  meeting: {
+                      time: "1983-07-16T21:00:00.000Z"
+                  }
+              };
+            }
+            else {
+                this.model.group.meeting = {
+                   time: "1983-07-16T21:00:00.000Z"
+              };
+            }
+
             this.model.specificDay = true;
             this.resolved = true;
         }
@@ -535,7 +546,7 @@ export default class CreateGroupService {
         if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
         {
             delete smallGroup.meetingTime;
-        }      
+        }
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
 
         if (this.model.specificDay) {

@@ -5,7 +5,6 @@ export default class CreateGroupController {
     /*@ngInject*/
     constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope) {
         this.log = $log;
-        this.log.debug("CreateGroupController constructor");
         this.state = $state;
         this.participantService = ParticipantService;
         this.createGroupService = CreateGroupService;

@@ -54,10 +54,22 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.create.preview', {
+      url: '/groups/create/preview',
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Preview a Group',
+          description: ''
+        }
+      }
+    })
     .state('grouptool.edit', {
       parent: 'noSideBar',
-      url: '/groups/edit',
-      template: '<edit-group></edit-group>',
+      url: '/groups/edit/{groupId:int}',
+      template: '<edit-group> </edit-group>',
       resolve:{
         stateList: (CreateGroupService, GroupService) =>{
           return GroupService.getStates().then((data) => {
@@ -75,24 +87,19 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           return Lookup.query({table: 'countries'}, (data) => {
             CreateGroupService.countryLookup = data;
           })
-        }
+        },
+        group: (CreateGroupService, GroupService) => {
+          if(!CreateGroupService.resolved) {
+            return GroupService.getGroupData().then((data) => {
+              CreateGroupService.model.group = data;
+            })
+          }
+        },
       },
       data: {
         isProtected: true,
         meta: {
           title: 'Edit Your Group',
-          description: ''
-        }
-      }
-    })
-    .state('grouptool.create.preview', {
-      url: '/groups/create/preview',
-      parent: 'noSideBar',
-      template: '<create-group-preview> </create-group-preview>',
-      data: {
-        isProtected: true,
-        meta: {
-          title: 'Preview a Group',
           description: ''
         }
       }

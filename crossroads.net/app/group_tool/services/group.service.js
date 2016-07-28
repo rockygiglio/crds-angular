@@ -1,3 +1,4 @@
+
 import GroupInvitation from '../model/groupInvitation';
 import CONSTANTS from '../../constants';
 import SmallGroup from '../model/smallGroup';
@@ -22,6 +23,11 @@ export default class GroupService {
 
   getProfileData() {
     return this.profile.Personal.get().$promise;
+  }
+
+  getGroupData() {
+    return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
+                           get({groupId: 172482}).$promise;
   }
 
   getGroupGenderMixType() {
@@ -174,6 +180,16 @@ export default class GroupService {
                           .save({}, smallGroup).$promise;
     return promise.then((data) => {
         this.saveParticipant(smallGroup.participants, data.groupId);
+        this.saveProfile(smallGroup.profile);
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  saveEditGroupForm(smallGroup) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group`)
+                          .put({}, smallGroup).$promise;
+    return promise.then((data) => {
         this.saveProfile(smallGroup.profile);
       }, (err) => {
         throw err;

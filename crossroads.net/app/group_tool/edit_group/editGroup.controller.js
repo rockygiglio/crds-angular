@@ -25,19 +25,19 @@ export default class EditGroupController {
                 this.state.go("content", { "link": "/groups/leader" });
             }
         },
-
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
                 this.state.go("content", { "link": "/groups/leader" });
             });
 
-        this.fields = this.editGroupService.getFields();
+        this.fields = this.createGroupService.getFields();
     }
 
     previewGroup() {
         if (this.editGroupForm.$valid) {
             this.state.go('grouptool.create.preview');
+        } else {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
         }
     }
-
 }
