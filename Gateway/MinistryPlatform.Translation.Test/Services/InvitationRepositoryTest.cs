@@ -129,7 +129,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new Dictionary<string, object>
                 {
-                    {"Invitation_Id", 178},
+                    {"dp_RecordID", 178},
                     {"Source_ID", 123123},
                     {"Email_address", "test@userdomain.com"},
                     {"Group_Role_ID", "66"},

@@ -76,6 +76,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {
                     mpInvitation = new MpInvitation
                     {
+                        InvitationId = invitation.ToInt("dp_RecordID"),
                         SourceId = invitation.ToInt("Source_ID"),
                         EmailAddress = invitation.ToString("Email_address"),
                         GroupRoleId = invitation.ToInt("Group_Role_ID"),
