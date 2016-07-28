@@ -32,7 +32,7 @@ namespace Crossroads.ChildcareRsvp
             catch (Exception ex)
             {
                 Log.Error("Childcare Cancellation Notifcation Failed", ex);
-                exitCode = 1;
+                exitCode += 1;
             }
 
             try
@@ -43,19 +43,9 @@ namespace Crossroads.ChildcareRsvp
             catch (Exception ex)
             {                
                 Log.Error("Sending Childcare Reminders failed", ex);
-                exitCode = 2;
+                exitCode += 2;
             }
-            //try
-            //{
-            //    Log.Info("starting childcare rsvp");
-            //    childcareService.SendRequestForRsvp();
-            //    Log.Info("all done");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error("Childcare RSVP Email Process failed.", ex);
-            //    Environment.Exit(9999);
-            //}
+
             Environment.Exit(exitCode);
         }
     }
