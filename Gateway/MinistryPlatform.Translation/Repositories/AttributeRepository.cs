@@ -59,6 +59,7 @@ namespace MinistryPlatform.Translation.Repositories
                     {"PreventMultipleSelection", attribute.PreventMultipleSelection},
                     {"Sort_Order", attribute.SortOrder}
                 };
+
                 _ministryPlatformService.CreateRecord(attributesPageId, values, token, true);
             }
         }
@@ -66,11 +67,21 @@ namespace MinistryPlatform.Translation.Repositories
         private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes)
         {
             var token = base.ApiLogin();
-            var filter = "," + String.Join(" OR ", attributes.Select(attribute => attribute.Name.ToLower()).ToList())+",,90";
+            var attributeCategories = attributes.Select(attribute => attribute.CategoryId).ToList();
+            List<MpAttribute> missingAttributes = new List<MpAttribute>();
 
-            var foundNames = _ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter).Select(records => records.ToString("Attribute_Name").ToLower()).ToList();
+            foreach (var category in attributeCategories)
+            {
+                var filter = "," + String.Join(" OR ", attributes
+                    .Where(attCategory => attCategory.CategoryId == category)
+                    .Select(attribute => attribute.Name.ToLower()).ToList()) + ",,90,,,"+category;
 
-            var missingAttributes = attributes.Where(attribute => foundNames.All(o => attribute.Name.ToLower().Contains((string) o)) == false).ToList();
+                var foundNames = _ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter)
+                    .Select(records => records.ToString("Attribute_Name").ToLower()).ToList();
+
+                missingAttributes.AddRange(attributes.Where(attCategory => attCategory.CategoryId == category)
+                    .Where(attribute => foundNames.All(o => attribute.Name.ToLower().Contains((string)o) == false)).ToList());
+            }           
             return missingAttributes;
         }
     }
