@@ -24,7 +24,7 @@ describe('Group Tool SmallGroup', () => {
       'groupFullInd': false,
       'waitListInd': false,
       'waitListGroupId': 0,
-      'childCareInd': false,
+      'kidsWelcome': false,
       'minAge': 0,
       'SignUpFamilyMembers': null,
       'events': null,
@@ -107,7 +107,7 @@ describe('Group Tool SmallGroup', () => {
         }
       }
     };
-    
+
     smallGroup = new SmallGroup(mockJson);
   });
 

@@ -40,6 +40,11 @@ module.exports = {
     stripe: 'Stripe',
     moment: 'moment'
   },
+  noParse: [
+      /node_modules[\/]video\.js[\/]/,
+      /node_modules[\/]videojs-contrib-hls[\/]/,
+      /node_modules[\/]moment[\/]/
+  ],
   context: __dirname,
   output: {
     path: './assets',

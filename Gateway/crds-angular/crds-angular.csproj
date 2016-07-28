@@ -282,6 +282,7 @@
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Exceptions\ChildcareDatesMissingException.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
+    <Compile Include="Exceptions\DuplicateChildcareEventsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Exceptions\EventMissingException.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalException.cs" />

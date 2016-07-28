@@ -20,11 +20,15 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             var config = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             var auth = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
 
             config.Setup(mocked => mocked.GetConfigIntValue("InvitationPageID")).Returns(InvitationPageId);
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
+
+            auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
             _fixture = new InvitationRepository(_ministryPlatformService.Object, config.Object, auth.Object);
         }
@@ -60,11 +64,11 @@ namespace MinistryPlatform.Translation.Test.Services
                                                 d.ToInt("Source_ID", false) == dto.SourceId && d.ToString("Email_Address").Equals(dto.EmailAddress) &&
                                                 d.ToString("Recipient_Name").Equals(dto.RecipientName) && d.ToInt("Group_Role_ID", false) == dto.GroupRoleId &&
                                                 d.ToInt("Invitation_Type_ID", false) == dto.InvitationType /*&& d["Invitation_Date"].Equals(dto.RequestDate)*/),
-                                        token,
+                                        It.IsAny<string>(),
                                         true)).Returns(invitationId);
-            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(InvitationPageId, invitationId, token, false)).Returns(created);
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(InvitationPageId, invitationId, It.IsAny<string>(), false)).Returns(created);
 
-            var result = _fixture.CreateInvitation(dto, token);
+            var result = _fixture.CreateInvitation(dto);
             _ministryPlatformService.VerifyAll();
 
             Assert.IsNotNull(result);

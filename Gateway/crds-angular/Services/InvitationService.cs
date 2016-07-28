@@ -64,11 +64,15 @@ namespace crds_angular.Services
             {
                 var mpInvitation = Mapper.Map<MpInvitation>(dto);
 
-                var invitation = _invitationRepository.CreateInvitation(mpInvitation, token);
+                var invitation = _invitationRepository.CreateInvitation(mpInvitation);
+
+                var group = _groupRepository.getGroupDetails(dto.SourceId);
+
+                var leaderParticipantRecord = _participantRepository.GetParticipantRecord(token);
 
                 try
                 {
-                    SendEmail(invitation);
+                    SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
                 }
                 catch (Exception e)
                 {
@@ -126,12 +130,21 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation)
+        private void SendEmail(MpInvitation invitation, string leaderName, string groupName)
         {
+            // basic merge data here
+            var mergeData = new Dictionary<string, object>
+            {
+                { "Invitation_GUID", invitation.InvitationGuid },
+                { "Recipient_Name", invitation.RecipientName },
+            };
+
             int emailTemplateId;
             if (invitation.InvitationType == _groupInvitationType)
             {
                 emailTemplateId = _groupInvitationEmailTemplate;
+                mergeData.Add("Leader_Name", leaderName);
+                mergeData.Add("Group_Name", groupName);
             } else if (invitation.InvitationType == _tripInvitationType)
             {
                 emailTemplateId = _tripInvitationEmailTemplate;
@@ -163,11 +176,7 @@ namespace crds_angular.Services
                 };
 
 
-            var mergeData = new Dictionary<string, object>
-            {
-                { "Invitation_GUID", invitation.InvitationGuid },
-                { "Recipient_Name", invitation.RecipientName },
-            };
+
             var confirmation = new MpCommunication
             {
                 EmailBody = emailTemplate.Body,

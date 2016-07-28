@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models;
@@ -186,8 +187,9 @@ namespace crds_angular.Services
                 {
                     throw new ChildcareDatesMissingException(childcareRequestId);
                 }
+                var events = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates, request);
 
-                var childcareEvents = _childcareRequestService.FindChildcareEvents(childcareRequestId, requestedDates);
+                var childcareEvents = GetChildcareEventsfortheDates(events, requestedDates, request);
                 var missingDates = requestedDates.Where(childcareRequestDate => !childcareEvents.ContainsKey(childcareRequestDate.ChildcareRequestDateId)).ToList();
                 if (missingDates.Count > 0)
                 {
@@ -223,12 +225,44 @@ namespace crds_angular.Services
             {
                 throw;
             }
+            catch (DuplicateChildcareEventsException ex)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.Error(string.Format("Update Request failed"), ex);
                 throw new Exception("Approve Childcare failed", ex);
             }
         }
+
+        private Dictionary<int, int> GetChildcareEventsfortheDates(List<MpEvent> events, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
+        {
+            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
+            var requestStartTime = DateTime.ParseExact(prefTime[0].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
+            var requestEndTime = DateTime.ParseExact(prefTime[1].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
+            var childcareEvents = new Dictionary<int, int>();
+                foreach (var date in requestedDates)
+                {
+                    var foundEvent = events.FindAll(
+                        e => (e.EventStartDate == date.RequestDate.Date.Add(requestStartTime.TimeOfDay) &&
+                        (e.EventEndDate == date.RequestDate.Date.Add(requestEndTime.TimeOfDay)) &&
+                        (e.CongregationId == request.LocationId)));
+                    if (foundEvent.Count > 1)
+                    {
+                        throw new DuplicateChildcareEventsException(date.RequestDate);
+                    }                    
+                    if (foundEvent != null)
+                    {
+                        foreach (var eachEvent in foundEvent)
+                         {
+                            childcareEvents.Add(date.ChildcareRequestDateId, eachEvent.EventId);
+                         }                   
+                    }
+                }
+           return childcareEvents;
+        }
+
 
         private List<MpChildcareRequestDate> GetChildcareRequestDatesForRequest(int childcareRequestId)
         {
@@ -307,7 +341,7 @@ namespace crds_angular.Services
 
                 foreach (var member in householdData.AllMembers)
                 {
-                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && member.HouseholdPosition.StartsWith("Minor") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
                     {
                         var echild = new ChildcareRsvp
                         {
@@ -317,7 +351,7 @@ namespace crds_angular.Services
                             ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
                         };
                         eligibleChildren.Add(echild);
-                    }
+                    }                       
                 }
 
                 var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
