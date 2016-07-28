@@ -5,7 +5,7 @@ GroupInvitationComponent.$inject = [];
 
 export default function GroupInvitationComponent() {
 
-  let groupDetailComponent = {
+  let groupInvitationComponent = {
     restrict: 'E',
     templateUrl: 'group_invitation/groupInvitation.html',
     controller: controller,
@@ -13,6 +13,6 @@ export default function GroupInvitationComponent() {
     bindToController: true
   };
 
-  return GroupInvitationComponent;
+  return groupInvitationComponent;
 
 }

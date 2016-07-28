@@ -17,4 +17,15 @@ export default class ParticipantService {
       return promised.promise;
     };
   }
+
+  acceptDenyInvitation(groupId, invitationGUID, accept) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/invitation/:invitationGUID`).
+                           save({groupId: groupId, invitationGUID: invitationGUID}, accept).$promise;
+
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
 }
