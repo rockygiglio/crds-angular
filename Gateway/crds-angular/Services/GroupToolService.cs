@@ -22,7 +22,9 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IContentBlockService _contentBlockService;
+        private readonly IInvitationRepository _invitationRepository;
 
+        private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -43,7 +45,8 @@ namespace crds_angular.Services
                            IParticipantRepository participantRepository,
                            ICommunicationRepository communicationRepository,
                            IContentBlockService contentBlockService,
-                           IConfigurationWrapper configurationWrapper)
+                           IConfigurationWrapper configurationWrapper, 
+                           IInvitationRepository invitationRepository)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -52,8 +55,11 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
             _communicationRepository = communicationRepository;
             _contentBlockService = contentBlockService;
+            _invitationRepository = invitationRepository;
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
@@ -305,11 +311,18 @@ namespace crds_angular.Services
             }
         }
 
-        public void AcceptDenyGroupInvitation(string token, int groupId, bool accept)
+        public void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept)
         {
             try
             {
-                
+                //If they accept the invite get their participant record and them to the group as a member.
+                if (accept)
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    _groupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _defaultGroupRoleId, false, DateTime.Now);
+                }
+
+                _invitationRepository.MarkInvitationAsUsed(invitationGuid);
             }
             catch (GroupParticipantRemovalException e)
             {
@@ -378,3 +391,4 @@ namespace crds_angular.Services
         }
     }
 }
+
