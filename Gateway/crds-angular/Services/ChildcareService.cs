@@ -279,7 +279,7 @@ namespace crds_angular.Services
                 {"Nickname", person.Nickname},
                 {"Childcare_Date", threeDaysOut.ToString("d")},
                 {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
-                {"BaseUrl", url }
+                {"Base_URL", url }
             };
         }
 
