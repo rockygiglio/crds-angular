@@ -1,13 +1,13 @@
 
 export default class GroupInvitationController {
   /*@ngInject*/
-  constructor(GroupService, ParticipantService, $state, $rootScope, $log, $window) {
+  constructor(GroupService, ParticipantService, $state, $rootScope, $log, $location) {
     this.groupService = GroupService;
     this.participantService = ParticipantService;
     this.state = $state;
     this.log = $log;
     this.rootScope = $rootScope;
-    this.window = $window;
+    this.location = $location;
 
     this.ready = false;
     this.error = false;
@@ -58,7 +58,7 @@ export default class GroupInvitationController {
 
     this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, false).then(() => {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationSuccessGrowler);
-      this.window.location.href = '/groups'
+      this.location.path('/groups');
     },
     (err) => {
       this.log.error(`Unable to revoke group Invitation: ${err.status} - ${err.statusText}`);
