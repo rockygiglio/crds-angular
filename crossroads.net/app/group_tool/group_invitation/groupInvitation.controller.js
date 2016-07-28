@@ -1,17 +1,23 @@
 
 export default class GroupInvitationController {
   /*@ngInject*/
-  constructor(GroupService, $state, $log) {
+  constructor(GroupService, ParticipantService, $state, $rootScope, $log) {
     this.groupService = GroupService;
+    this.participantService = ParticipantService;
     this.state = $state;
     this.log = $log;
+    this.rootScope = $rootScope;
 
-    this.invitationGUID = null;
+    this.invitationGUID = this.state.params.invitationGUID;
     this.ready = false;
     this.error = false;
+    this.processing = false;
+    this.groupId = 0;
   }
 
   $onInit() {
+    this.ready = true;
+    /*
     if (this.state.params.invitationGUID !== undefined && this.state.params.invitationGUID !== null) {
       this.invitationGUID = this.state.params.invitationGUID;
       this.groupService.getGroup(this.groupId).then((data) => {
