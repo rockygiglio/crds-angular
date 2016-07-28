@@ -27,5 +27,6 @@ namespace crds_angular.Services.Interfaces
         bool CopyEventSetup(int eventTemplateId, int eventId, string token);
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
+        int AddEventGroup(int eventId, int groupId, string token);
     }
 }
