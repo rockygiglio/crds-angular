@@ -8,5 +8,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         MpInvitation CreateInvitation(MpInvitation dto);
         MpInvitation GetOpenInvitation(string invitationGuid);
+        void MarkInvitationAsUsed(string invitationGuid);
     }
 }

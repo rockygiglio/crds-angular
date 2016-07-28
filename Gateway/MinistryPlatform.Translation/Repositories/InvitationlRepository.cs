@@ -93,5 +93,25 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitation;
         }
 
+        public void MarkInvitationAsUsed(string invitationGuid)
+        {
+            try
+            {
+                string token = ApiLogin();
+                var invitation = GetOpenInvitation(invitationGuid);
+            
+                var dictionary = new Dictionary<string, object>();
+                dictionary.Add("Invitation_ID", invitation.InvitationId);
+                dictionary.Add("Invitation_GUID", invitationGuid);
+                dictionary.Add("Invitation_Used", true);
+
+                _ministryPlatformService.UpdateRecord(_invitationPageId, dictionary, token);
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(string.Format("Update Invitation failed.  Invitation GUID: {0}", invitationGuid), e);
+            }
+        }
+
     }
 }

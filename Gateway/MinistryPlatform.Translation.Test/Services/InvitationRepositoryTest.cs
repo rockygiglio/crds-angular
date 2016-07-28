@@ -118,5 +118,32 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(dto.RecipientName, result.RecipientName);
             Assert.AreEqual(dto.RequestDate, result.RequestDate);
         }
+
+
+        [Test]
+        public void MarkInvitationAsUsedTest()
+        {
+            const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
+
+            var returned = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Invitation_Id", 178},
+                    {"Source_ID", 123123},
+                    {"Email_address", "test@userdomain.com"},
+                    {"Group_Role_ID", "66"},
+                    {"Invitation_Type_ID", 1},
+                    {"Recipient_Name", "Test User"},
+                    {"Invitation_Date", "1/13/2004"},
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(InvitationPageId, It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(returned);
+            _ministryPlatformService.Setup(mocked => mocked.UpdateRecord(InvitationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>())).Verifiable();
+
+            _fixture.MarkInvitationAsUsed(invitationGuid);
+            _ministryPlatformService.VerifyAll();
+        }
     }
 }
