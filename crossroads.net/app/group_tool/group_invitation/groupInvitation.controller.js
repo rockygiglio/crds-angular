@@ -8,20 +8,18 @@ export default class GroupInvitationController {
     this.log = $log;
     this.rootScope = $rootScope;
 
-    this.invitationGUID = this.state.params.invitationGUID;
     this.ready = false;
     this.error = false;
     this.processing = false;
-    this.groupId = 0;
+    this.group = null;
   }
 
   $onInit() {
-    this.ready = true;
-    /*
     if (this.state.params.invitationGUID !== undefined && this.state.params.invitationGUID !== null) {
       this.invitationGUID = this.state.params.invitationGUID;
-      this.groupService.getGroup(this.groupId).then((data) => {
-        this.data = data;
+
+      this.groupService.getGroupByInvitationGUID(this.invitationGUID).then((data) => {
+        this.group = data;
         this.ready = true;
       },
       (err) => {
@@ -31,16 +29,18 @@ export default class GroupInvitationController {
       });
     }
     else {
-      //TODO map object posted from create into data object
       this.ready = true;
     }
-    */
+  }
+
+  invitationExists() {
+    return this.group !== null;
   }
 
   accept() {
     this.processing = true;
 
-    this.participantService.acceptDenyInvitation(this.groupId, this.invitationGUID, true).then(() => {
+    this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, true).then(() => {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationSuccessGrowler);
     },
     (err) => {
@@ -54,7 +54,7 @@ export default class GroupInvitationController {
   deny() {
     this.processing = true;
 
-    this.participantService.acceptDenyInvitation(this.groupId, this.invitationGUID, false).then(() => {
+    this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, false).then(() => {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationSuccessGrowler);
     },
     (err) => {
