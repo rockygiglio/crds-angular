@@ -67,7 +67,7 @@ namespace MinistryPlatform.Translation.Repositories
         private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes)
         {
             var token = base.ApiLogin();
-            var attributeCategories = attributes.Select(attribute => attribute.CategoryId).ToList();
+            var attributeCategories = attributes.Select(attribute => attribute.CategoryId).Distinct().ToList();
             List<MpAttribute> missingAttributes = new List<MpAttribute>();
 
             foreach (var category in attributeCategories)
