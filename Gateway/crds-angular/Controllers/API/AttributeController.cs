@@ -18,9 +18,9 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(int))]
         [Route("api/attribute/createorupdate")]
-        public IHttpActionResult CreateOrUpdate([FromBody] List<AttributeDTO> attrList)
+        public IHttpActionResult CreateOrUpdate([FromBody] List<AttributeTypeDTO> attrList, int attributeType)
         {
-            var status = _attributeService.CreateOrUpdateAttributes(attrList);
+            var status = _attributeService.CreateOrUpdateAttributes(attrList[attributeType].Attributes, attributeType);
             return this.Ok(status);
         }
 

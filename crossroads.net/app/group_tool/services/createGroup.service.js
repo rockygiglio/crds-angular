@@ -585,16 +585,63 @@ export default class CreateGroupService {
         });
 
         var ageRangeJson = {
-            "91": {
+            '91': {
                 "attributeTypeId": 91,
                 "name": "Age Range",
                 "attributes": ids
             }
         }
 
-        smallGroup.attributeTypes = ageRangeJson;
+        var ids = []
+
+        _.forEach(this.model.categories, (category) => {
+            ids.push(
+                {
+                    name: category.detail,
+                    description: null,
+                    selected: true,
+                    attributeTypeId: 90,
+                    sortOrder: 0,
+                    categoryId: category.value,
+                    category: this.getCategoryFromId(category.value),
+                    startDate: "0001-01-01T00:00:00",                  
+               }
+            )
+        });
+        var categoriesJson = {
+            '90': {
+                attributeTypeid: 90,
+                name: "Group Category",
+                attributes: ids
+            }
+        }
+        smallGroup.mapCategories(categoriesJson);
+        smallGroup.attributeTypes = {ageRangeJson, categoriesJson}
         return smallGroup;
 
+    }
+
+    getCategoryFromId(id) {
+        var returnString = '';
+        debugger;
+        switch(id) {
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
+                returnString = "Life Stage";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
+                returnString = "Neighborhoods";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH:
+                returnString = "Spiritual Growth";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST:
+                returnString = "Interest";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING:
+                returnString = "Healing";
+                break;
+        }
+        return returnString;
     }
 
     getGroupTypeAttributeIdFromName(name) {

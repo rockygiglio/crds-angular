@@ -44,10 +44,10 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public void createMissingAttributes(List<MpAttribute> attributes)
+        public void createMissingAttributes(List<MpAttribute> attributes, int attributeType)
         {
             var token = base.ApiLogin();
-            List<MpAttribute> attributesToCreate = GetNewAttributes(attributes);
+            List<MpAttribute> attributesToCreate = GetNewAttributes(attributes, attributeType);
 
             foreach (var attribute in attributesToCreate)
             {
@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes)
+        private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes, int attributeType)
         {
             var token = base.ApiLogin();
             var attributeCategories = attributes.Select(attribute => attribute.CategoryId).Distinct().ToList();
@@ -74,7 +74,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 var filter = "," + String.Join(" OR ", attributes
                     .Where(attCategory => attCategory.CategoryId == category)
-                    .Select(attribute => attribute.Name.ToLower()).ToList()) + ",,90,,,"+category;
+                    .Select(attribute => attribute.Name.ToLower()).ToList()) + ",,"+attributeType+",,,"+category;
 
                 var foundNames = _ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter)
                     .Select(records => records.ToString("Attribute_Name").ToLower()).ToList();

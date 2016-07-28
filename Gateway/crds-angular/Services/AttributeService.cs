@@ -49,7 +49,7 @@ namespace crds_angular.Services
             return attributeDto;
         }
 
-        public int CreateOrUpdateAttributes(List<AttributeDTO> attributes)
+        public int CreateOrUpdateAttributes(List<AttributeDTO> attributes, int attributeType)
         {
             var attributesList = attributes.Select(attribute => new MpAttribute
             {
@@ -63,7 +63,7 @@ namespace crds_angular.Services
                 AttributeTypeId = attribute.AttributeTypeId ?? default(int)
             }).ToList();
 
-            this._attributeService.createMissingAttributes(attributesList);
+            this._attributeService.createMissingAttributes(attributesList, attributeType);
      
             return 1;
         }

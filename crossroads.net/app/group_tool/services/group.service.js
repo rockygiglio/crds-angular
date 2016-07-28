@@ -170,6 +170,9 @@ export default class GroupService {
   }
 
   saveCreateGroupForm(smallGroup) {
+    debugger;
+    this.saveNewAttributes(smallGroup.attributeTypes);
+    
     let promise = this.resource(`${__API_ENDPOINT__}api/group`)
                           .save({}, smallGroup).$promise;
     return promise.then((data) => {
@@ -179,6 +182,15 @@ export default class GroupService {
         throw err;
       });
   }
+
+    saveNewAttributes(attributes){
+      let promise = this.resource(`${__API_ENDPOINT__}api/attribute/createorupdate`)
+                          .save({attributeTypeId: CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID}, attributes).$promise;
+      return promise.then((data) => {
+      }, (err) => {
+        throw err;
+      });
+    }
 
     saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
