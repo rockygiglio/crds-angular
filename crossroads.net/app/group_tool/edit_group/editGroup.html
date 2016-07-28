@@ -1,0 +1,24 @@
+<preloader full-screen='false' ng-show='!editGroup.ready'> </preloader>
+<div ng-show='editGroup.ready'>
+  <h1>
+    Edit Your Group
+  </h1>
+  <p>Hi leader! </p>
+  <form ng-submit="createGroup.previewGroup()" novalidate name="editGroup.editGroupForm">
+    <formly-form model="createGroup.createGroupService.model" fields="createGroup.fields" form="createGroup.createGroupForm" options="createGroup.options" ng-cloak>
+      <div class="col-md-12 push-top text-center">
+        <button type="submit" class="btn btn-primary submit-button">Preview Group</button>
+      </div>
+    </formly-form>
+  </form>
+
+  <!--<div>-->
+    <!--<pre>{{createGroup.createGroupService.model.ageRangeLookup | json}}</pre>-->
+    <!--<pre>{{createGroup.createGroupService.model.typeIDLookup | json}}</pre>-->
+    <!--<pre>{{createGroup.createGroupService.model.sitesIDLookup | json}}</pre>-->
+    <!--<pre>{{createGroup.createGroupService.model.meetingDaysIDLookup | json}}</pre>-->
+    <!--<pre>{{createGroup.profile | json}}</pre>-->
+    <!--<pre>{{createGroup.fields | json}}</pre>-->
+    <!--<pre>{{createGroup.createGroupService.model | json}}</pre>-->
+  <!--</div>-->
+</div>

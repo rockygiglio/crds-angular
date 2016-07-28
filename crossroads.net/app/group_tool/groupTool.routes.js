@@ -54,6 +54,37 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.edit', {
+      parent: 'noSideBar',
+      url: '/groups/edit',
+      template: '<edit-group></edit-group>',
+      resolve:{
+        stateList: (CreateGroupService, GroupService) =>{
+          return GroupService.getStates().then((data) => {
+            CreateGroupService.statesLookup = data;
+          })
+        },
+        profile: (CreateGroupService, GroupService) => {
+          if(!CreateGroupService.resolved) {
+            return GroupService.getProfileData().then((data) => {
+              CreateGroupService.model.profile = data;
+            })
+          }
+        },
+        countryList: (CreateGroupService, Lookup) => {
+          return Lookup.query({table: 'countries'}, (data) => {
+            CreateGroupService.countryLookup = data;
+          })
+        }
+      },
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Edit Your Group',
+          description: ''
+        }
+      }
+    })
     .state('grouptool.create.preview', {
       url: '/groups/create/preview',
       parent: 'noSideBar',
