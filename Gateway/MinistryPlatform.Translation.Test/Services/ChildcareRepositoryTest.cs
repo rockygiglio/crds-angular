@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -91,17 +92,17 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const String token = "random long string";
 
-            var retVal = new List<List<MPChildcareEmail>>()
+            var retVal = new List<List<MpContact>>()
             {
-                new List<MPChildcareEmail>()
+                new List<MpContact>()
                 {
-                    new MPChildcareEmail() {EmailAddress = "matt.silbernagel@ingagepartners.com"},
-                    new MPChildcareEmail() {EmailAddress = "silbermm@gmail.com"}
+                    new MpContact() {EmailAddress = "matt.silbernagel@ingagepartners.com"},
+                    new MpContact() {EmailAddress = "silbermm@gmail.com"}
                 }
             };
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MPChildcareEmail>("api_crds_ChildcareReminderEmails")).Returns(retVal);
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails")).Returns(retVal);
             
             var resp = _fixture.GetChildcareReminderEmails(token);
             _ministryPlatformRest.VerifyAll();
@@ -113,13 +114,13 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const String token = "random long string";
 
-            var retVal = new List<List<MPChildcareEmail>>()
+            var retVal = new List<List<MpContact>>()
             {
-                new List<MPChildcareEmail>() { }         
+                new List<MpContact>() { }         
             };
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MPChildcareEmail>("api_crds_ChildcareReminderEmails")).Returns(retVal);
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails")).Returns(retVal);
 
             var resp = _fixture.GetChildcareReminderEmails(token);
             _ministryPlatformRest.VerifyAll();
@@ -132,7 +133,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "random long string";
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MPChildcareEmail>("api_crds_ChildcareReminderEmails")).Throws<Exception>();
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails")).Throws<Exception>();
 
             Assert.Throws<Exception>(() =>
             {

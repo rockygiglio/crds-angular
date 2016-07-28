@@ -22,32 +22,41 @@ namespace Crossroads.ChildcareRsvp
             section.Configure(container);
 
             TlsHelper.AllowTls12();
-
+            var exitCode = 0;
             var childcareService = container.Resolve<ChildcareService>();
             try
             {
                 Log.Info("Sending notifications for cancellations");
-                childcareService.SendChildcareCancellationNotification();
+                childcareService.SendChildcareCancellationNotification();                
             }
             catch (Exception ex)
             {
                 Log.Error("Childcare Cancellation Notifcation Failed", ex);
-                Environment.Exit(9999);
+                exitCode = 1;
             }
-
 
             try
             {
-                Log.Info("starting childcare rsvp");
-                childcareService.SendRequestForRsvp();
-                Log.Info("all done");
+                Log.Info("Sending childcare reminders");
+                childcareService.SendChildcareReminders();
             }
             catch (Exception ex)
-            {
-                Log.Error("Childcare RSVP Email Process failed.", ex);
-                Environment.Exit(9999);
+            {                
+                Log.Error("Sending Childcare Reminders failed", ex);
+                exitCode = 2;
             }
-            Environment.Exit(0);
+            //try
+            //{
+            //    Log.Info("starting childcare rsvp");
+            //    childcareService.SendRequestForRsvp();
+            //    Log.Info("all done");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error("Childcare RSVP Email Process failed.", ex);
+            //    Environment.Exit(9999);
+            //}
+            Environment.Exit(exitCode);
         }
     }
 }
