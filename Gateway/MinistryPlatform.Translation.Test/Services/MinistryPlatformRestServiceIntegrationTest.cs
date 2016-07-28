@@ -79,6 +79,7 @@ namespace MinistryPlatform.Translation.Test.Services
             }
         }
 
+        [Test]
         public void TestChildcareRequestDatesProcedure()
         {
             Console.WriteLine("TestChildcareRequestDatesProcedure");

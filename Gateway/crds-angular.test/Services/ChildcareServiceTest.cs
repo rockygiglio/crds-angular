@@ -541,96 +541,6 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldSendChildcareReminders()
-        {
-            const string token = "apiToken";
-
-            const int childcareTemplateId = 56345;
-
-            var email1 = new MpContact() {EmailAddress = "matt.silbernagel@ingagepartners.com", ContactId = 2186211};
-            var email2 = new MpContact() {EmailAddress = "lakshmi.nair@ingagepartners.com", ContactId = 2562428};
-            var emailList = new List<MpContact>() { email1, email2 };
-            _childcareRepository.Setup(m => m.GetChildcareReminderEmails(token)).Returns(emailList);            
-
-            var threeDaysOut = DateTime.Now.AddDays(3);
-
-            var template = new MpMessageTemplate()
-            {
-                Body = "<html> whatever </html>",
-                FromContactId = 12,
-                FromEmailAddress = "updates@crossroads.net",
-                ReplyToContactId = 12,
-                ReplyToEmailAddress = "updates@crossroads.net",
-                Subject = "subject"
-            };
-
-            _communicationService.Setup(m => m.GetTemplate(childcareTemplateId)).Returns(template);
-
-            var communication = new MpCommunication()
-            {
-                EmailBody = "<html> whatever </html>",
-                AuthorUserId = 5,
-                DomainId = 1,
-                EmailSubject = "subject",
-                FromContact = new MpContact() {ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                MergeData = new Dictionary<string, object>(),
-                ReplyToContact = new MpContact() {ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                TemplateId = childcareTemplateId,
-                ToContacts = emailList
-            };
-
-            _apiUserService.Setup(m => m.GetToken()).Returns(token);
-            
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("ChildcareReminderTemplateId")).Returns(childcareTemplateId);
-
-            var threeDaysOut = DateTime.Now.AddDays(3);
-
-            var template1ToSend = new MpCommunication()
-            {
-                EmailBody = "<html> whatever </html>",
-                AuthorUserId = 5,
-                DomainId = 1,
-                EmailSubject = "subject",
-                FromContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                MergeData = new Dictionary<string, object>() {
-                    {"Nickname", "Matt"},
-                    {"Childcare_Date", threeDaysOut.ToString("d")},
-                    {"Childcare_Day", threeDaysOut.ToString("dddd M")}
-                },
-                ReplyToContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                TemplateId = childcareTemplateId,
-                ToContacts = new List<MpContact>() {  email1 }
-            };
-
-            var template2ToSend = new MpCommunication()
-            {
-                EmailBody = "<html> whatever </html>",
-                AuthorUserId = 5,
-                DomainId = 1,
-                EmailSubject = "subject",
-                FromContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                MergeData = new Dictionary<string, object>() {
-                    {"Nickname", "Lax"},
-                    {"Childcare_Date", threeDaysOut.ToString("d")},
-                    {"Childcare_Day", threeDaysOut.ToString("dddd M")}
-                },
-                ReplyToContact = new MpContact() { ContactId = 12, EmailAddress = "updates@crossroads.net" },
-                TemplateId = childcareTemplateId,
-                ToContacts = new List<MpContact>() { email2 }
-            };
-           
-            _communicationService.Setup(m => m.SendMessage(template1ToSend, false)).Returns(1);
-            _communicationService.Setup(m => m.SendMessage(template2ToSend, false)).Returns(1);
-
-            _fixture.SendChildcareReminders();
-
-            _configurationWrapper.VerifyAll();
-            _contactService.VerifyAll();
-            _communicationService.VerifyAll();
-
-        }
-
-        [Test]
         public void ShouldGetReminderCommunication()
         {
             const int childcareTemplateId = 56345;
@@ -672,7 +582,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetChildcareReminderMergeData()
         {
-            var email1 = new MpContact() { EmailAddress = "matt.silbernagel@ingagepartners.com", ContactId = 2186211 };
+            var email1 = new MpContact() { EmailAddress = "matt.silbernagel@ingagepartners.com", ContactId = 2186211 };         
             var date = new DateTime(2016, 2, 21);
             var personObj = new MpMyContact()
             {
@@ -681,6 +591,7 @@ namespace crds_angular.test.Services
             };
 
             _contactService.Setup(m => m.GetContactById(email1.ContactId)).Returns(personObj);
+            _configurationWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("http://blah/");
             var data = _fixture.SetMergeDataForChildcareReminder(email1, date);
             Assert.AreEqual("Sunday, February 21", data["Childcare_Day"]);
             Assert.AreEqual("2/21/2016", data["Childcare_Date"]);          

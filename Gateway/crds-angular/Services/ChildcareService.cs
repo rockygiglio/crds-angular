@@ -272,12 +272,14 @@ namespace crds_angular.Services
         public Dictionary<string, object> SetMergeDataForChildcareReminder(MpContact toContact, DateTime threeDaysOut)
         {
             var person = _contactService.GetContactById(toContact.ContactId);
+            var url = _configurationWrapper.GetConfigValue("BaseUrl");
 
             return new Dictionary<string, object>()
             {
                 {"Nickname", person.Nickname},
                 {"Childcare_Date", threeDaysOut.ToString("d")},
-                {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")}
+                {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
+                {"BaseUrl", url }
             };
         }
 
