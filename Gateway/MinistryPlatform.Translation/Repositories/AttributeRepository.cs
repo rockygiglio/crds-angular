@@ -11,7 +11,9 @@ namespace MinistryPlatform.Translation.Repositories
     public class AttributeRepository : BaseRepository, IAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-            
+        private readonly int attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
+        private readonly int attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
+
         public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
@@ -44,7 +46,21 @@ namespace MinistryPlatform.Translation.Repositories
 
         public void createMissingAttributes(List<MpAttribute> attributes)
         {
+            var token = base.ApiLogin();
             List<MpAttribute> attributesToCreate = GetNewAttributes(attributes);
+
+            foreach (var attribute in attributesToCreate)
+            {
+                var values = new Dictionary<string, object>
+                {
+                    {"Attribute_Name", attribute.Name.ToLower()},
+                    {"Attribute_Category_ID", attribute.CategoryId},
+                    {"Attribute_Type_ID", attribute.AttributeTypeId},
+                    {"PreventMultipleSelection", attribute.PreventMultipleSelection},
+                    {"Sort_Order", attribute.SortOrder}
+                };
+                _ministryPlatformService.CreateRecord(attributesPageId, values, token, true);
+            }
         }
 
         private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes)
@@ -52,9 +68,9 @@ namespace MinistryPlatform.Translation.Repositories
             var token = base.ApiLogin();
             var filter = "," + String.Join(" OR ", attributes.Select(attribute => attribute.Name.ToLower()).ToList())+",,90";
 
-            var foundNames = _ministryPlatformService.GetPageViewRecords(2185, token, filter).Select(records => records["Attribute_Name"]).ToList();
+            var foundNames = _ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter).Select(records => records.ToString("Attribute_Name").ToLower()).ToList();
 
-            var missingAttributes = attributes.Where(attribute => foundNames.All(o => attribute.Name.Contains((string) o)) == false).ToList();
+            var missingAttributes = attributes.Where(attribute => foundNames.All(o => attribute.Name.ToLower().Contains((string) o)) == false).ToList();
             return missingAttributes;
         }
     }
