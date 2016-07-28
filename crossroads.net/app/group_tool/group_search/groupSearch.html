@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h1 class="page-header">Find a Group</h1>
+    <p class="push-bottom">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+      nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+    <form role="form" name="groupSearchForm" ng-submit="groupSearch.submit()">
+      <div class="form-group">
+        <label for="query">Search</label>
+        <input id="query" ng-model="search.query" type="text" class="form-control" placeholder="Ex: Boxing, Joe Smith, Crossroads Site">
+      </div>
+
+      <div class="row push-half-bottom">
+        <div class="col-xs-12">
+          <hr>
+          <div class="text-center or-divider">
+            <p><span> and / or </span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">What part of town would you like to meet?</label>
+        <input id="location" ng-model="search.location" type="text" class="form-control" placeholder="Address, city or zip">
+      </div>
+
+      <div class="push-top text-right">
+        <loading-button
+          input-type='submit'
+          normal-text='Search'
+          loading-text='Searching...'
+          loading='groupSearch.processing'
+          loading-class='disabled'
+          input-classes='btn btn-primary'/>
+        </p>
+      </div>
+
+    </form>
+  </div>
+</div>

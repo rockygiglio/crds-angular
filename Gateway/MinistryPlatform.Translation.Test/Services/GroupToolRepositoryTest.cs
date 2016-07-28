@@ -28,6 +28,11 @@ namespace MinistryPlatform.Translation.Test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("InvitationPageID")).Returns(InvitationPageID);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupInquiresSubPage")).Returns(GroupInquiriesSubPageId);
 
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
+
+            auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+
             _fixture = new GroupToolRepository(_ministryPlatformService.Object, config.Object, auth.Object, comm.Object);
         }
 
@@ -68,9 +73,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             );
 
-            _ministryPlatformService.Setup(mocked => mocked.GetSubPageRecords(GroupInquiriesSubPageId, groupId, token)).Returns(returned);
+            _ministryPlatformService.Setup(mocked => mocked.GetSubPageRecords(GroupInquiriesSubPageId, groupId, It.IsAny<string>())).Returns(returned);
 
-            var result = _fixture.GetInquiries(groupId, token);
+            var result = _fixture.GetInquiries(groupId);
             _ministryPlatformService.VerifyAll();
 
             Assert.IsNotNull(result);

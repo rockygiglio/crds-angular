@@ -95,5 +95,18 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.detail.requests', {
       url: '/requests',
       template: '<group-detail-requests></group-detail-requests>'
-    });
+    })
+    .state('grouptool.search', {
+      parent: 'noSideBar',
+      url: '/groups/search',
+      template: '<group-search></group-search>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Find a Group',
+          description: ''
+        }
+      }
+    })
+  ;
 }
