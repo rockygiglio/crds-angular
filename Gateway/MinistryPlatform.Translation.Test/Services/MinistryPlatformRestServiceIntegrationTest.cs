@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MinistryPlatform.Translation.Models.Attributes;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -26,6 +29,38 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
             _fixture = new MinistryPlatformRestRepository(restClient);
+        }
+
+        [Test]
+        public void TestChildcareDashboardProcedure()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@Domain_ID", 1},
+                {"@Contact_ID", 2186211}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<ChildcareDashboard>("api_crds_getChildcareDashboard", parms);
+            foreach (var p in results)
+            {               
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault());
+            }
+        }
+
+        [Test]
+        public void TestChildRsvpdProcedure()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@ContactID", 100030266},
+                {"@EventGroupID", 172309}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault().Rsvpd);
+            }
         }
 
         [Test]

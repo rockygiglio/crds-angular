@@ -23,6 +23,7 @@ class RequestChildcareController {
     this.ministries = RequestChildcareService.getMinistries();
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 7);
+    this.mpTools = MPTools;
     this.name = 'request-childcare';
     this.requestChildcareService = RequestChildcareService;
     this.rootScope = $rootScope;
@@ -30,15 +31,55 @@ class RequestChildcareController {
     this.startTime = new Date();
     this.startTime.setHours(9);
     this.startTime.setMinutes(30);
-    this.endTime = this.startTime;
+    this.endTime = new Date();
+    this.endTime.setHours(10);
+    this.endTime.setMinutes(30);
     this.uid = $cookies.get('userId');
     this.validation = Validation;
-    this.viewReady = true;
+    this.viewReady = false;
     this.window = $window;
     this.datesSelected = true;
+    this.recordId = -1;
+    this.updating = false;
+    this.error = false;
+
+    if (this.allowAccess) {
+      this.recordId = Number(MPTools.getParams().recordId);
+      if (this.recordId !== -1) {
+        this.isRequestPending(this.populatePendingRequest, this.showError);
+      } else {
+        this.viewReady = true;
+      }
+    }
   }
 
-  generateDateList() {
+  filterTimes(time) {
+    let t = time;
+    if (time.Childcare_Start_Time === undefined && Number(this.choosenPreferredTime) !== -1) {
+      t = _.find(this.filteredTimes, (tm) => {
+        return tm.dp_RecordID === Number(time);
+      });
+    }
+    return t;
+  }
+
+  formatPreferredTime(time) {
+    if (time.dp_RecordID === -1) {
+            return this.customSessionTime;
+    } else {
+      time = this.filterTimes(time);
+      const startTimeArr = time['Childcare_Start_Time'].split(':');
+      const endTimeArr = time['Childcare_End_Time'].split(':');
+      const startTime = moment().set(
+        {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
+      const endTime = moment().set(
+        {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
+      const day = time['Meeting_Day'];
+      return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
+    }
+  }
+
+  generateDateList(defaultSelection = true) {
     if (this.runDateGenerator) {
       this.datesSelected = true;
       let dayOfWeek = this.choosenPreferredTime.Meeting_Day;
@@ -53,7 +94,7 @@ class RequestChildcareController {
           return { 
             unix: d.unix(),
             date: d,
-            selected: true
+            selected: defaultSelection
           };
         });
       } else if (this.choosenFrequency === 'Monthly') {
@@ -65,7 +106,7 @@ class RequestChildcareController {
           return {
             unix: d.unix(),
             date: d,
-            selected: true
+            selected: defaultSelection
           };
         });
       } else {
@@ -79,6 +120,16 @@ class RequestChildcareController {
       }
       this.runDateGenerator = false;
     }
+  }
+
+  getTimeHours(timeString) {
+    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
+    return militaryTime.split(':')[0];
+  }
+
+  getTimeMinutes(timeString) {
+    var militaryTime = moment(timeString, ['hh:mm A']).format('HH:mm');
+    return militaryTime.split(':')[1];
   }
 
   getGroups() {
@@ -103,6 +154,16 @@ class RequestChildcareController {
 
   getWeekOfMonth(startDate) {
     return Math.ceil(startDate.date() / 7);
+  }
+
+  isRequestPending(success, error) {
+    this.request = this.requestChildcareService.getChildcareRequest(this.recordId, (d) => {
+      if (d.Status === 'Pending') {
+        success(d, this);
+      } else {
+        error(this);
+      }
+    });
   }
 
   onEndDateChange(endDate) {
@@ -134,6 +195,68 @@ class RequestChildcareController {
     });
   }
 
+  populatePendingRequest(d, context = this) { 
+    context.updating = true;
+    context.startDate = new Date(moment(d.StartDate));
+    context.endDate = new Date(moment(d.EndDate));
+    context.choosenCongregation = _.find(context.mpTools.congregations, (c) => {
+      return c.dp_RecordID === d.LocationId;
+    });
+
+    context.choosenMinistry = _.find(context.mpTools.ministries, (c) => {
+      return c.dp_RecordID === d.MinistryId;
+    });
+    context.choosenGroup = _.find(context.getGroups(), (c) => {
+      return c.dp_RecordID === d.GroupId;
+    });
+    context.choosenGroup = { dp_RecordID: d.GroupId,  dp_RecordName: d.GroupName };
+    context.choosenFrequency = d.Frequency;
+    context.notes = d.DecisionNotes;
+
+    context.preferredTimes.$promise.then(() => {
+      context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {
+        return context.formatPreferredTime(c) === d.PreferredTime;
+      });
+
+      if (context.choosenPreferredTime === undefined) {
+        context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {
+          return context.formatPreferredTime(c) === context.customSessionTime;
+        });
+        context.customSessionSelected = true;
+        var customDay = d.PreferredTime.substr(0, d.PreferredTime.indexOf(','));
+        context.dayOfWeek = customDay;
+
+        var times = d.PreferredTime.split(' ');
+        context.startTime.setHours(context.getTimeHours(times[1]));
+        context.startTime.setMinutes(context.getTimeMinutes(times[1]));
+
+        context.endTime.setHours(context.getTimeHours(times[3]));
+        context.endTime.setMinutes(context.getTimeMinutes(times[3]));
+      }
+    });
+
+    context.runDateGenerator = false;
+    context.datesList = d.DatesList.map((date) => {
+      return { selected: true, date: moment(date), unix: moment(date).unix(), };
+    });
+    context.viewReady = true;
+  }
+
+  preferredTimeChanged() {
+    if (this.choosenPreferredTime.dp_RecordID === -1) {
+      this.customSessionSelected = true;
+    } else {
+      this.customSessionSelected = false;
+    }
+    this.runDateGenerator = true;
+  }
+
+  showError(context = this) {
+    context.viewReady = true;
+    context.error = true;
+    context.errorMessage = context.rootScope.MESSAGES.mptool_access_error;
+  }
+
   showGaps() {
     if (this.choosenPreferredTime &&
         (this.choosenPreferredTime.Meeting_Day !== null || this.dayOfWeek) &&
@@ -161,41 +284,6 @@ class RequestChildcareController {
     return this.choosenCongregation && this.choosenMinistry && this.groups.length > 0;
   }
 
-  preferredTimeChanged() {
-    if (this.choosenPreferredTime.dp_RecordID === -1) {
-      this.customSessionSelected = true;
-    } else {
-      this.customSessionSelected = false;
-    }
-    this.runDateGenerator = true;
-  }
-
-  filterTimes(time) {
-    let t = time;
-    if (time.Childcare_Start_Time === undefined && Number(this.choosenPreferredTime) !== -1) {
-      t = _.find(this.filteredTimes, (tm) => {
-        return tm.dp_RecordID === Number(time);
-      });
-    }
-    return t;
-  }
-
-  formatPreferredTime(time) {
-    if (time.dp_RecordID === -1) {
-            return this.customSessionTime;
-    } else {
-      time = this.filterTimes(time);
-      const startTimeArr = time['Childcare_Start_Time'].split(':');
-      const endTimeArr = time['Childcare_End_Time'].split(':');
-      const startTime = moment().set(
-        {'hour': parseInt(startTimeArr[0]), 'minute': parseInt(startTimeArr[1])});
-      const endTime = moment().set(
-        {'hour': parseInt(endTimeArr[0]), 'minute': parseInt(endTimeArr[1])});
-      const day = time['Meeting_Day'];
-      return `${day}, ${startTime.format('h:mmA')} - ${endTime.format('h:mmA')}`;
-    }
-  }
-
   submit() {
     this.saving = true;
     if (this.childcareRequestForm.$invalid) {
@@ -212,6 +300,7 @@ class RequestChildcareController {
         time = `${this.dayOfWeek}, ${start.format('h:mmA')} - ${end.format('h:mmA')}`;
       }
       const dto = {
+        childcareRequestId: this.recordId,
         requester: this.uid,
         site: this.choosenCongregation.dp_RecordID,
         ministry: this.choosenMinistry.dp_RecordID,
@@ -223,23 +312,38 @@ class RequestChildcareController {
         notes: this.notes,
         dates: this.datesList.filter( (d) => { return d.selected === true;}).map( (d) => { return d.date; })
       };
-      const save = this.requestChildcareService.saveRequest(dto);
-      save.$promise.then(() => {
-        this.log.debug('saved!');
-        this.saving = false;
-        this.window.close();
-      }, () => {
-        this.saving = false;
-        this.log.error('error!');
-        this.saving = false;
-      });
+      if (this.updating) {
+        const save = this.requestChildcareService.updateRequest(dto);
+        save.$promise.then(() => {
+          this.log.debug('updated!');
+          this.saving = false;
+          this.updating = false;
+          this.window.close();
+        }, () => {
+          this.saving = false;
+          this.log.error('error!');
+          this.saving = false;
+          this.updating = false;
+        });
+      } else {
+        const save = this.requestChildcareService.saveRequest(dto);
+        save.$promise.then(() => {
+          this.log.debug('saved!');
+          this.saving = false;
+          this.window.close();
+        }, () => {
+          this.saving = false;
+          this.log.error('error!');
+          this.saving = false;
+        });
+      }
     }
   }
 
   validateField(fieldName) {
     return this.validation.showErrors(this.childcareRequestForm, fieldName);
   }
-    
+
   validateDateSelection() {
       return !this.datesSelected;
   }

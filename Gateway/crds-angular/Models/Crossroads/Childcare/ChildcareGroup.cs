@@ -22,7 +22,7 @@ namespace crds_angular.Models.Crossroads.Childcare
         public int CongregationId { get; set; }
 
         [JsonProperty(PropertyName = "maxAge")]
-        public int MaximumAge { get; set; }
+        public int? MaximumAge { get; set; }
 
         [JsonProperty(PropertyName = "remainingCapacity")]
         public int RemainingCapacity { get; set; }
@@ -32,6 +32,9 @@ namespace crds_angular.Models.Crossroads.Childcare
 
         [JsonProperty(PropertyName = "childcareGroupId")]
         public int ChildcareGroupId { get; set; }
+
+        [JsonProperty(PropertyName = "groupParticipantId")]
+        public int GroupParticipantId { get; set; }
 
         public ChildcareGroup()
         {

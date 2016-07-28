@@ -5,6 +5,10 @@ GroupDetailAboutComponent.$inject = [ ];
 export default function GroupDetailAboutComponent() {
 
   let groupDetailAboutComponent = {
+    bindings: {
+      data: '<',
+      edit: '<'
+    },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',
     controller: controller,

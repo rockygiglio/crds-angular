@@ -1,101 +1,73 @@
-.my-groups-links {
-  padding-left: 2%;
-  margin-left: -65px;
+my-groups {
+  @media (min-width: $screen-md) {
+    .is-flex {
+      display: flex;
+    }
 
-  a {
-    border-radius: 3px;
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .flex-row {
+      flex-direction: row;
+    }
+
+    .flex-col {
+      flex-direction: column;
+    }
+
+    .flex-grow {
+      //flex-grow: 1;
+      flex: 1 1 auto;
+    }
+  }
+
+  .my-groups-static {
+    height: 150px;
+  }
+
+  .my-groups-static-vert {
+    @include vertical-align();
+
+    font-size: 90%;
+    font-weight: bold;
+
+    svg {
+      width: 65px;
+      height: 65px;
+    }
+  }
+
+  .my-groups-links {
+    a {
+      display: table;
+    }
   }
 }
 
-.my-groups {
-  padding-right: 0px;
-  display: flex;
-  flex-wrap: wrap;
-
-  group-card {
-    width: 45%;
-    margin: 1%;
-
-    .group-detail {
-      height: 375px;
-      background-color: #d9d9d9;
-      border-style: solid;
-      border-width: thin;
-      padding-left: 7%;
-      padding-right: 7%;
-      padding-bottom: 7%;
-
-      .group-title {
-        font-weight: 500;
-        color: #222222;
-        line-height: 1.22222222;
-        font-size: 19px;
-        margin-top: 16px;
-
-        span {
-          font-weight: 300;
-        }
-      }
-
-      .group-details {
-        height: 83%;
-      }
-
-      .group-buttons {
-        margin-top: 9px;
-
-        button {
-          width: 175px;
-        }
-      }
+group-card {
+  // Constrain max width of group cards for IE 11 Flexbox issue
+  .panel-heading, .panel-body {
+    @media (min-width: $screen-md) {
+      max-width: 331px;
     }
 
-    .group-detail:nth-of-type(2n) {
-      margin-right: 0;
-    }
-
-    .group-detail:nth-of-type(2n+1) {
-      margin-left: 0;
-    }
-
-    .group-action {
-      height: 375px;
-
-      div.group-pad {
-        background-color: #fff;
-        height: 5%;
-      }
-
-      div.group-panel {
-        height: 47.5%;
-        text-align: center;
-        border-style: solid;
-        border-width: thin;
-        background-color: #d9d9d9;
-        cursor: pointer;
-
-        svg {
-          margin-top: 13px;
-          width: 66px;
-          height: 66px;
-        }
-
-        .group-title {
-          font-weight: 500;
-          color: #222222;
-          line-height: 1.22222222;
-          font-size: 19px;
-          margin-top: 10%;
-        }
-      }
-    }
-
-    .group-action:nth-of-type(2n) {
-      margin-right: 0;
-    }
-
-    .group-action:nth-of-type(2n+1) {
-      margin-left: 0;
+    @media (min-width: $screen-lg) {
+      max-width: 408px;
     }
   }
+
+  .group-card-buttons {
+    .row {
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+
+    [class*='col-'] {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+
 }
+

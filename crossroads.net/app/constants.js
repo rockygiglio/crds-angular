@@ -11,6 +11,7 @@
       COMMUNITY_GROUPS: 'crossroads.community',
       CROSSROADS: 'crossroads',
       FORM_BUILDER: 'crossroads.form_builder',
+      FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       //GROUP_FINDER: 'crossroads.group_finder',
@@ -44,6 +45,8 @@
       TRIP_EXPERIENCE: 62,
       UNDIVIDED_FACILITATOR_TRAINING: 85,
       UNDIVIDED_RSVP_KICKOFF: 86,
+      GROUP_AGE_RANGE: 91,
+      GROUP_TYPE: 73
     },
     ATTRIBUTE_IDS: {
       ALL_ALLERGIES: 3971,
@@ -60,6 +63,13 @@
       PREVIOUS_TRIP_EXPERIENCE: 3949,
       VICTIM_OF_ABUSE: 3973,
       START_ATTEND_REASON: 59,
+    },
+    ATTRIBUTE_CATEGORY_IDS: {
+      LIFE_STAGES: 17,
+      NEIGHBORHOODS: 18,
+      SPIRITUAL_GROWTH: 19,
+      INTEREST: 20,
+      HEALING: 21
     },
     NON_CROSSROADS_LOCATIONS: {
       I_DO_NOT_ATTEND_CROSSROADS: 2,
@@ -82,13 +92,24 @@
       }
     },
     GROUP: {
+      ATTRIBUTE_TYPE_ID: 90,
+      AGE_RANGE_ATTRIBUTE_TYPE_ID: 91,
+      GROUP_TYPE_ATTRIBUTE_TYPE_ID: 73,
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
+        SMALL_GROUPS: 1,
       },
       ROLES: {
         MEMBER: 16,
-        LEADER: 22
+        LEADER: 22,
+        APPRENTICE: 66
       },
     },
+    INVITATION: {
+      TYPES: {
+        GROUP: 1,
+        TRIP: 2
+      }
+    }
   };
 })();

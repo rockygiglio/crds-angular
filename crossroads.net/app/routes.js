@@ -69,6 +69,11 @@
           abstract: true,
           templateUrl: 'templates/screenWidth.html'
         })
+        .state('centeredContentPage', {
+          parent: 'root',
+          abstract: true,
+          templateUrl: 'templates/centeredContentPage.html'
+        })
         .state('noHeaderOrFooter', {
           parent: 'root',
           abstract: true,
@@ -359,6 +364,39 @@
           data: {
             meta: {
               title: 'Explore',
+              description: ''
+            }
+          }
+        })
+        .state('ng2test', {
+          parent: 'noHeaderOrFooter',
+          url: '/ng2test',
+          template: '<ng2-test></ng2-test>',
+          data: {
+            meta: {
+              title: 'Ng2Test',
+              description: ''
+            }
+          }
+        })
+        .state('live', {
+          parent: 'screenWidth',
+          url: '/live',
+          template: '<streaming></streaming>',
+          data: {
+            meta: {
+              title: 'Live',
+              description: ''
+            }
+          }
+        })
+        .state('livestream', {
+          parent: 'noHeaderOrFooter',
+          url: '/live/stream',
+          template: '<streaming-video></streaming-video>',
+          data: {
+            meta: {
+              title: 'Live',
               description: ''
             }
           }

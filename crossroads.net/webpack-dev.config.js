@@ -31,7 +31,9 @@ module.exports = {
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
-    formbuilder: ['./app/formBuilder/formBuilder.module.js']
+    formbuilder: ['./app/formBuilder/formBuilder.module.js'],
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
+    boot: ['./app/boot.ts']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
@@ -43,6 +45,9 @@ module.exports = {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].js',
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   devtool: 'sourcemap',
   debug: true,
@@ -78,7 +83,21 @@ module.exports = {
             },
             {
               test: /\.html$/,
-              loader: 'ng-cache?prefix=[dir]'
+              loader: 'ng-cache?prefix=[dir]',
+              exclude: [/\.ng2component\.html$/]
+            },
+            {
+              test: /\.ts$/,
+              loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+              exclude: [/\.(spec|e2e)\.ts$/]
+            },
+            {
+              test: /\.json$/,
+              loaders: ["json-loader"]
+            },
+            {
+              test: /\.ng2component\.html$/,
+              loader: 'raw-loader'
             }
     ]
   },

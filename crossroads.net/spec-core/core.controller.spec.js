@@ -4,7 +4,15 @@ describe('CoreController', function() {
 
   var $controller, $rootScope, Message, MESSAGES, $aside, $scope, controller, growl, screenSize, $state;
 
-  beforeEach(inject(function(_$controller_, _$rootScope_, _ContentBlock_, _SiteConfig_, _MESSAGES_, _$aside_, _growl_, _screenSize_, _$state_, _$log_){
+  beforeEach(angular.mock.module({
+    ContentMessageService: {
+      set: function () {
+        return;
+      }
+    }
+  }));
+
+  beforeEach(inject(function(_$controller_, _$rootScope_, _ContentBlock_, _SiteConfig_, _MESSAGES_, _$aside_, _growl_, _screenSize_, _$state_, _$log_, _ContentMessageService_){
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     ContentBlock = _ContentBlock_;
@@ -14,6 +22,7 @@ describe('CoreController', function() {
     growl = _growl_;
     screenSize = _screenSize_;
     $state = _$state_;
+    contentMessageService = _ContentMessageService_;
     $scope = $rootScope.$new();
     controller = $controller('coreController', {
       '$scope': $scope,
@@ -24,7 +33,8 @@ describe('CoreController', function() {
       'growl': growl,
       '$aside': $aside,
       'screenSize': screenSize,
-      '$state': $state
+      '$state': $state,
+      'contentMessageService': contentMessageService
     });
   }));
 
