@@ -277,7 +277,7 @@ namespace crds_angular.Services
            return  _groupService.CreateGroup(mpgroup);
         }
 
-        private int AddEventGroup(int eventId, int groupId, string token)
+        public int AddEventGroup(int eventId, int groupId, string token)
         {
             var eventGroup = new MpEventGroup
             {

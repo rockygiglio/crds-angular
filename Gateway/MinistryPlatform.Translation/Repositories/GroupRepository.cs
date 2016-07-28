@@ -272,6 +272,27 @@ namespace MinistryPlatform.Translation.Repositories
                     g.MaximumAge = (int) mx;
                 }
 
+                object mp = null;
+                groupDetails.TryGetValue("Minimum_Participants", out mp);
+                if (mp != null)
+                {
+                    g.MinimumParticipants = (int)mp;
+                }
+
+                object sd = null;
+                groupDetails.TryGetValue("Start_Date", out sd);
+                if (sd != null)
+                {
+                    g.StartDate = (DateTime)sd;
+                }
+
+                object mid = null;
+                groupDetails.TryGetValue("Ministry_ID", out mid);
+                if (mid != null)
+                {
+                    g.MinistryId = (int)mid;
+                }
+
                 if (g.WaitList)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,
