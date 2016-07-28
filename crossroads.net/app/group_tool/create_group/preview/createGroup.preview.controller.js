@@ -1,32 +1,61 @@
 
 export default class CreateGroupPreviewController {
   /*@ngInject*/
-  constructor(GroupService, CreateGroupService, ImageService, $state, $log) {
+  constructor(GroupService, CreateGroupService, Group, ImageService, $state, $log, $rootScope) {
     this.groupService = GroupService;
+    this.group = Group;
     this.createGroupService = CreateGroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.log = $log;
+    this.rootScope = $rootScope;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
-    //this.log.debug('groupService: ', this.groupService.createData.group);
   }
 
   $onInit() {
     this.groupData = this.createGroupService.mapSmallGroup();
+    this.groupId = '';
   }
 
-  editGroup() {
-    // this.groupService.createData = this.model;
-    this.state.go('grouptool.create');
+  save() {
+    this.saving = true;
+    this.successfulSave = false;
+    try {
+      var promise = this.groupService.saveCreateGroupForm(this.groupData)
+        .then( (data) => {
+          this.state.go('grouptool.mygroups')
+          CreateGroupService.resolved = false;
+        })
+
+      // promise.then(function () {
+      //   this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+      //   this.saving = false;
+      //   this.successfulSave = true;
+      //   $anchorScroll();
+      // },
+      //   function (data) {
+      //     if (data && data.contentBlockMessage) {
+      //       this.state.go('grouptool.mygroups');
+      //       this.rootScope.$emit('notify', data.contentBlockMessage);
+      //     } else {
+      //       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      //     }
+      //     this.saving = false;
+      //     this.successfulSave = false;
+      //   }
+      // );
+
+     
+
+    }
+    catch (error) {
+      this.saving = false;
+      this.successfulSave = false;
+      throw (error);
+    }
+
   }
-
-  submitGroup() {
-    this.state.go('grouptool.mygroups');
-  }
-
-  //ui-sref='grouptool.mygroups'
-
 }

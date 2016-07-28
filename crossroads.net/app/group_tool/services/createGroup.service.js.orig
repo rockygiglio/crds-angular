@@ -27,7 +27,6 @@ export default class CreateGroupService {
             }];
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
-        //this.countryLookup is added by the route resolve of the createGroupController.
     }
 
     preloadModel() {
@@ -54,7 +53,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'profile.congregationId',
-                type: 'formlyBuilderSelect',
+                type: 'select',
                 templateOptions: {
                     label: 'At what site do you regularly attend service?',
                     required: true,
@@ -80,7 +79,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.genderId',
-                    type: 'formlyBuilderRadio',
+                    type: 'radio',
                     templateOptions: {
                         label: 'Gender',
                         required: true,
@@ -113,21 +112,21 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'profile.addressLine1',
-                type: 'formlyBuilderInput',
+                type: 'input',
                 templateOptions: {
                     label: 'Street',
                     required: true,
                 }
             }, {
                     key: 'profile.city',
-                    type: 'formlyBuilderInput',
+                    type: 'input',
                     templateOptions: {
                         label: 'City',
                         required: true,
                     }
                 }, {
                     key: 'profile.state',
-                    type: 'formlyBuilderSelect',
+                    type: 'select',
                     templateOptions: {
                         label: 'State',
                         required: true,
@@ -137,19 +136,17 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'profile.postalCode',
-                    type: 'formlyBuilderInput',
+                    type: 'input',
                     templateOptions: {
                         label: 'Zip',
                         required: true,
                     }
                 }, {
-                    key: 'profile.address.country',
-                    type: 'formlyBuilderSelect',
+                    key: 'profile.foreignCountry',
+                    type: 'input',
                     templateOptions: {
                         label: 'Country',
-                        valueProp: 'dp_RecordName',
-                        labelProp: 'dp_RecordName',
-                        options: this.countryLookup
+                        required: true,
                     }
                 }]
         };
@@ -161,7 +158,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'specificDay',
-                type: 'formlyBuilderRadio',
+                type: 'radio',
                 templateOptions: {
                     labelProp: 'label',
                     required: true,
@@ -176,7 +173,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.meeting.day',
-                    type: 'formlyBuilderSelect',
+                    type: 'select',
                     hideExpression: '!model.specificDay',
                     templateOptions: {
                         label: 'Day',
@@ -210,7 +207,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.frequency',
-                    type: 'formlyBuilderSelect',
+                    type: 'select',
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
@@ -228,7 +225,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.meeting.online',
-                type: 'formlyBuilderRadio',
+                type: 'radio',
                 templateOptions: {
                     label: 'Where will your group meet?',
                     required: true,
@@ -245,7 +242,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.meeting.address.street',
-                    type: 'formlyBuilderInput',
+                    type: 'input',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'Street',
@@ -256,7 +253,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.city',
-                    type: 'formlyBuilderInput',
+                    type: 'input',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'City',
@@ -267,7 +264,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.state',
-                    type: 'formlyBuilderSelect',
+                    type: 'select',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         label: 'State',
@@ -281,7 +278,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.address.zip',
-                    type: 'formlyBuilderInput',
+                    type: 'input',
                     optionsTypes: ['zipcode'],
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
@@ -293,7 +290,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.kidFriendly',
-                    type: 'formlyBuilderRadio',
+                    type: 'radio',
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         required: true,
@@ -338,7 +335,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.typeId',
-                type: 'formlyBuilderRadio',
+                type: 'radio',
                 templateOptions: {
                     labelProp: 'name',
                     required: true,
@@ -363,7 +360,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
-                type: 'formlyBuilderMultiCheckbox',
+                type: 'multiCheckbox',
                 templateOptions: {
                     valueProp: 'attributeId',
                     required: true,
@@ -389,7 +386,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.groupName',
-                type: 'formlyBuilderInput',
+                type: 'input',
                 templateOptions: {
                     label: 'Group Name',
                     required: true,
@@ -397,7 +394,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'group.groupDescription',
-                    type: 'formlyBuilderTextarea',
+                    type: 'textarea',
                     templateOptions: {
                         label: 'Group Description',
                         required: true,
@@ -414,7 +411,7 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.availableOnline',
-                type: 'formlyBuilderRadio',
+                type: 'radio',
                 templateOptions: {
                     valueProp: 'accessId',
                     labelProp: 'accessLabel',
@@ -434,23 +431,19 @@ export default class CreateGroupService {
             wrapper: 'createGroup',
             templateOptions: {
                 sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: ''
+                sectionHelp: 'Not much to say when you\'re high abouve the helpy help'
             },
             fieldGroup: [{
                 key: 'categories',
                 type: 'multiCheckBoxCombo',
                 templateOptions: {
                     required: true,
-                    valueProp: 'categoryId',
-                    labelProp: 'label',
-                    descProp: 'labelDesc',
-                    placeholder: 'placeholder',
                     options: [{
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                            label: 'Life Stage',
-                            labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
-                            placeholder: 'Life Stages detail...'
-                        }, {
+                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        label: 'Life Stage',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
+                        placeholder: 'Life Stages detail...'
+                    }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
                             labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
@@ -464,13 +457,18 @@ export default class CreateGroupService {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
                             labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.',
-                            placeholder: 'Interest detail...'
+                            placeholder: 'interest detail...'
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
                             labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
-                            placeholder: 'Healing detail...'
-                    }],
+                            placeholder: 'healing detail'
+                        }
+                    ],
+                    valueProp: 'categoryId',
+                    labelProp: 'label',
+                    descProp: 'labelDesc',
+                    placeholder: 'placeholder'
                 }
             }]
         }
@@ -492,8 +490,6 @@ export default class CreateGroupService {
         }
     }
 
-
-    //This is ugly and needs to be refactored
     mapSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
@@ -530,19 +526,21 @@ export default class CreateGroupService {
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-
+<<<<<<< HEAD
         smallGroup.meetingDayId = this.model.group.meeting.day;
+        smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
         if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
         {
             delete smallGroup.meetingTime;
         }      
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
-
+=======
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
-            smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+            smallGroup.meetingTime = this.model.group.meeting.time;
         }
         smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+>>>>>>> ee1d14f7103eb6ae17e78bd1ff123ea5db9cf944
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
