@@ -41,5 +41,21 @@ namespace MinistryPlatform.Translation.Repositories
                 SortOrder = record.ToInt("Sort_Order")
             }).ToList();
         }
+
+        public void createMissingAttributes(List<MpAttribute> attributes)
+        {
+            List<MpAttribute> attributesToCreate = GetNewAttributes(attributes);
+        }
+
+        private List<MpAttribute> GetNewAttributes(List<MpAttribute> attributes)
+        {
+            var token = base.ApiLogin();
+            var filter = "," + String.Join(" OR ", attributes.Select(attribute => attribute.Name.ToLower()).ToList())+",,90";
+
+            var foundNames = _ministryPlatformService.GetPageViewRecords(2185, token, filter).Select(records => records["Attribute_Name"]).ToList();
+
+            var missingAttributes = attributes.Where(attribute => foundNames.All(o => attribute.Name.Contains((string) o)) == false).ToList();
+            return missingAttributes;
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace crds_angular.Services.Interfaces
     {
         List<AttributeTypeDTO> GetAttributeTypes(int? attributeTypeId);
         AttributeDTO ConvertAttributeToAttributeDto(MpAttribute attribute);
+        int CreateOrUpdateAttributes(List<AttributeDTO> attributes);
     }
 }
