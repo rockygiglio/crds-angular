@@ -339,6 +339,7 @@
     <Compile Include="Models\Crossroads\Subscription\OptInRequest.cs" />
     <Compile Include="Models\Crossroads\Subscription\OptInResponse.cs" />
     <Compile Include="Models\Crossroads\Invitation.cs" />
+    <Compile Include="Models\Crossroads\Trip\CreateTripParticipantDto.cs" />
     <Compile Include="Models\HouseHoldData.cs" />
     <Compile Include="Models\Json\EventCopyRequest.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />

@@ -3,20 +3,26 @@ using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
 {
     class CampaignRepository : BaseRepository, ICampaignRepository
     {
-        private IConfigurationWrapper _configurationWrapper;
-        private IMinistryPlatformService _ministryPlatformService;
+        
+        private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly IApiUserRepository _apiUserRepository;
 
-        public CampaignRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public CampaignRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _configurationWrapper = configurationWrapper;
+            _ministryPlatformRest = ministryPlatformRest;
+            _apiUserRepository = apiUserRepository;
         }
 
         public MpPledgeCampaign GetPledgeCampaign(int campaignId)
@@ -53,6 +59,13 @@ namespace MinistryPlatform.Translation.Repositories
            
         }
 
-        
+        public List<MpTripRecord> GetGoTripDetailsByCampaign(int pledgeCampaignId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var parms = new Dictionary<string, object> { { "Pledge_Campaign_ID", pledgeCampaignId } };
+            var tripRecords = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpTripRecord>(_configurationWrapper.GetConfigValue("TripRecordProc"), parms);
+            List<MpTripRecord> tripRecord = tripRecords.FirstOrDefault()?? new List<MpTripRecord>();
+            return tripRecord;
+        }
     }
 }

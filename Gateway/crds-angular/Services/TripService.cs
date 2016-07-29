@@ -28,6 +28,7 @@ namespace crds_angular.Services
         private readonly IDonorRepository _mpDonorService;
         private readonly IPledgeRepository _mpPledgeService;
         private readonly ICampaignRepository _campaignService;
+        private readonly IParticipantRepository _participantService;
         private readonly IPrivateInviteRepository _privateInviteService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
@@ -44,6 +45,7 @@ namespace crds_angular.Services
                            IFormSubmissionRepository formSubmissionService,
                            MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                            IDonorRepository donorService,
+                           IParticipantRepository participantService,
                            IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,
                            IPrivateInviteRepository privateInviteService,
@@ -71,6 +73,7 @@ namespace crds_angular.Services
             _personService = personService;
             _serveService = serveService;
             _destinationService = destinationService;
+            _participantService = participantService;
         }
 
         public List<TripGroupDto> GetGroupsByEventId(int eventId)
@@ -371,10 +374,35 @@ namespace crds_angular.Services
 
         public int CreateTripParticipant(CreateTripParticipantDto dto)
         {
-            var eventId = )
+            var tripRecords = _campaignService.GetGoTripDetailsByCampaign(dto.PledgeCampaignId);
+            Participant participant = _participantService.GetParticipant(dto.ContactId);
+            
 
-            return 3;
-            throw new NotImplementedException();
+            var tripApplicantRecord = new TripApplicant
+            {
+                ContactId = dto.ContactId,
+                ParticipantId = participant.ParticipantId
+            };
+
+            var tripApplicants = new List<TripApplicant>();
+            tripApplicants.Add(tripApplicantRecord);
+
+            foreach (var tripRecord in tripRecords)
+            {
+                var campaign = new PledgeCampaign
+                {
+                    DestinationId = tripRecord.CampaignDestinationId,
+                    FundraisingGoal = tripRecord.CampaignFundRaisingGoal,
+                    PledgeCampaignId = dto.PledgeCampaignId
+                };
+                var tripParticipantRecord = new SaveTripParticipantsDto
+                {
+                    Applicants = tripApplicants,
+                    Campaign = campaign,
+                    GroupId = tripRecord.GroupId
+                };
+                SaveParticipants(tripParticipantRecord);
+            }            
         }
 
         public List<int> SaveParticipants(SaveTripParticipantsDto dto)
@@ -397,7 +425,7 @@ namespace crds_angular.Services
                 }
                 CreatePledge(dto, applicant);
                 EventRegistration(events, applicant, dto.Campaign.DestinationId);
-                SendTripParticipantSuccess(applicant.ContactId, events);
+   //             SendTripParticipantSuccess(applicant.ContactId, events);
             }
 
             return groupParticipants;
