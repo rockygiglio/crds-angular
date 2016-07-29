@@ -357,6 +357,12 @@ namespace crds_angular.Services
                 detail.ChildCareAvailable = g.ChildCareAvailable;
                 detail.WaitListGroupId = g.WaitListGroupId;
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
+                detail.MeetingFrequencyID = g.MeetingFrequencyID;
+                detail.AvailableOnline = g.AvailableOnline;
+                detail.MeetingTime = g.MeetingTime;
+                detail.MeetingDayId = g.MeetingDayId;
+                detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
+
                 if (events != null)
                 {
                     detail.Events = events.Select(Mapper.Map<MpEvent, Event>).ToList();

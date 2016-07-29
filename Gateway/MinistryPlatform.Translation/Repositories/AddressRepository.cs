@@ -5,6 +5,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Helpers;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -76,6 +77,24 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return string.Format("\"{0}\"", input);
+        }
+
+        public MpAddress GetAddressById(string token, int id)
+        {
+            var record = _ministryPlatformService.GetRecord(AddressPageId, id, token);
+            var dict = MPFormatConversion.MPFormatToDictionary(record);
+
+            var address = new MpAddress()
+            {
+                Address_ID = dict.ToInt("Address_ID"),
+                Address_Line_1 = dict.ToString("Address_Line_1"),
+                Address_Line_2 = dict.ToString("Address_Line_2"),
+                City = dict.ToString("City"),
+                State = dict.ToString("State/Region"),
+                Postal_Code = dict.ToString("Postal_Code")
+            };
+
+            return address;
         }
     }
 }

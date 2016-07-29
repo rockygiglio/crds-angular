@@ -80,10 +80,10 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
             CreateGroupService.statesLookup = data;
           })
         },
-        profile: (CreateGroupService, GroupService) => {
+        profile: ($stateParams, CreateGroupService, GroupService) => {
           if(!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((profile) => {
-              return GroupService.getGroupData().then((group) => {
+              return GroupService.getGroupData($stateParams.groupId).then((group) => {
                 CreateGroupService.setEditModel(group, profile);
               })
             })
