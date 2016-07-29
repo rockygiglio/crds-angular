@@ -11,6 +11,7 @@
       pages: [],
       reset: reset,
       TripApplication: $resource(__API_ENDPOINT__ + 'api/trip-application'),
+      TripParticipant: $resource(___API_ENDPOINT__+ 'api/trip-participant'),
       thankYouMessage: '',
     };
 

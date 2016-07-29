@@ -218,7 +218,8 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
         form.$setSubmitted(true);
         if (form.$valid) {
           $log.debug('form valid');
-          saveData();
+          saveTripParticipant();
+          saveData();        
         } else {
           $log.debug('form INVALID');
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
@@ -409,6 +410,18 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       vm.signupService.pageId = 'thanks';
       vm.tpForm.$setPristine();
       $state.go('tripsignup.application.thankyou');
+    }
+
+    function saveTripParticipant(){
+
+      var dto={};
+      dto.contactId = vm.signupService.person.contactId;
+      dto.pledgeCampaignId = vm.signupService.campaign.id;
+      vm.signupService.TripParticipant.$save(dto, function(){
+        $log.debug('create trip participant successful');
+      }, function(err){
+        $log.debug('create trip participant unsuccessful)');
+      });
     }
 
     function showFrequentFlyer(airline) {

@@ -369,6 +369,14 @@ namespace crds_angular.Services
             return myTrips;
         }
 
+        public int CreateTripParticipant(CreateTripParticipantDto dto)
+        {
+            var eventId = )
+
+            return 3;
+            throw new NotImplementedException();
+        }
+
         public List<int> SaveParticipants(SaveTripParticipantsDto dto)
         {
             var groupParticipants = new List<int>();
