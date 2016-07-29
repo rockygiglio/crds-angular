@@ -18,10 +18,10 @@
         <div class='col-md-2'><strong>Category</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.categories.toString()}}</div>
         <div class='col-md-2'><strong>Where</strong></div>
-         <div ng-if='groupDetailAbout.isGroupMember()'>
+         <div ng-if='(groupDetailAbout.userInGroup()) && (groupDetailAbout.groupExists())'>
            <div  class='col-md-4'>{{groupDetailAbout.data.address.toString()}}</div>
         </div>
-        <div ng-if='!groupDetailAbout.isGroupMember()'>
+        <div ng-if='(!groupDetailAbout.userInGroup()) || (!groupDetailAbout.groupExists())'>
           <div  class='col-md-4'>{{groupDetailAbout.data.address.getZip()}}</div>
         </div>
       </div>
@@ -36,8 +36,12 @@
         <div class='col-md-4'>
           <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='!$last'>,&nbsp;</span></span>
         </div>
-        <div class='col-md-2'><strong>Childcare</strong></div>
+        <div class='col-md-2'><strong>Kids Welcome</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.kidsWelcome | yesNo}}</div>
+      </div>
+      <div class='row' ng-if='(!groupDetailAbout.groupExists()) || (groupDetailAbout.userInGroup())'>
+        <div class='col-md-2'><strong>Visibility</strong></div>
+        <div class='col-md-4'>{{groupDetailAbout.data.visibility()}}</div>
       </div>
       <div class='row'>&nbsp;</div>
       <div class='row'>
