@@ -553,9 +553,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 MeetingTime = "18000",
                 GroupRoleId = 16,
                 MinimumAge = 0,
-                MaximumParticipants = 9,
                 MinimumParticipants = 8,
                 MaximumAge = 99,
+                KidsWelcome = false,
+                MeetingFrequencyID = null,
                 Address = new MpAddress()
                 {
                     Address_ID = 43567
@@ -584,7 +585,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Enable_Waiting_List", false },
                 {"Online_RSVP_Minimum_Age", 0 },
                 {"Maximum_Age", 99 },
-                {"Minimum_Participants", 8 }
+                {"Minimum_Participants", 8 },
+                {"Kids_Welcome", false },
+                {"Meeting_Frequency_ID", null }
 
             };
            

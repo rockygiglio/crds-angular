@@ -24,7 +24,7 @@ describe('Group Tool SmallGroup', () => {
       'groupFullInd': false,
       'waitListInd': false,
       'waitListGroupId': 0,
-      'childCareInd': false,
+      'kidsWelcome': false,
       'minAge': 0,
       'SignUpFamilyMembers': null,
       'events': null,
@@ -107,7 +107,7 @@ describe('Group Tool SmallGroup', () => {
         }
       }
     };
-    
+
     smallGroup = new SmallGroup(mockJson);
   });
 
@@ -178,6 +178,48 @@ describe('Group Tool SmallGroup', () => {
     it('address is undefined', () => {
       smallGroup.address = undefined;
       expect(smallGroup.meetingLocation()).toEqual('Online');
+    });
+  });
+
+  describe('visibility()', () => {
+    it('is visible online', () => {
+      smallGroup.availableOnline = true;
+      expect(smallGroup.visibility()).toEqual('Public');
+    });
+
+    it('is not visible online', () => {
+      smallGroup.address = null;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+
+    it('is undefined', () => {
+      smallGroup.address = undefined;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+
+    it('is null', () => {
+      smallGroup.address = undefined;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+  });
+
+  describe('participantInGroup()', () => {
+    it('participant is in group', () => {
+      expect(smallGroup.participantInGroup(2562378)).toEqual(true);
+    });
+
+    it('participant is not in group', () => {
+      expect(smallGroup.participantInGroup(2233445)).toEqual(false);
+    });
+
+    it('participant contactID is null', () => {
+      var nullThing = null;
+      expect(smallGroup.participantInGroup(nullThing)).toEqual(false);
+    });
+
+    it('participant contactID is undefined', () => {
+      var undefinedThing = undefined;
+      expect(smallGroup.participantInGroup(undefinedThing)).toEqual(false);
     });
   });
 

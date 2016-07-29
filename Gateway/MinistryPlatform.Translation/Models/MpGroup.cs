@@ -28,6 +28,7 @@ namespace MinistryPlatform.Translation.Models
         public int? MeetingDayId { get; set; }
         public string MeetingDay { get; set; }
         public string MeetingFrequency { get; set; }
+        public int? MeetingFrequencyID { get; set; }
         public int CongregationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -37,7 +38,6 @@ namespace MinistryPlatform.Translation.Models
         public int GroupRoleId { get; set; }
         public MpAddress Address { get; set; }
         public int MinimumParticipants { get; set; }
-        public int MaximumParticipants { get; set; }
         public bool? KidsWelcome { get; set; }
 
         public MpGroup()
