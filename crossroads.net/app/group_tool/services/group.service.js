@@ -205,7 +205,13 @@ export default class GroupService {
                           get({invitationGUID: invitationGUID}).$promise;
 
     return promise.then((data) => {
-      return new SmallGroup(data);
+      let group = new SmallGroup(data);
+      group.primaryContact = {
+        imageUrl: `${this.imgService.ProfileImageBaseURL}${group.contactId}`,
+        contactId: group.contactId
+      };
+
+      return group;
     },
     (err) => {
       throw err;

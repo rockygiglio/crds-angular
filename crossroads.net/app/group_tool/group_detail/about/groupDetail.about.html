@@ -1,7 +1,7 @@
 <preloader full-screen='false' ng-show='!groupDetailAbout.ready'> </preloader>
 
 <div class='container-fluid' ng-show='groupDetailAbout.ready'>
-  <div class='row' ng-if="groupDetailAbout.userInGroup()">
+  <div class='row' ng-if="groupDetailAbout.userInGroup() && !groupDetailAbout.forInvitation">
     <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolDetailPageAboutHeadingSubtext.content | html"></div>
   </div>
   <p></p>
