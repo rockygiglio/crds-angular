@@ -382,7 +382,7 @@ namespace crds_angular.test.Services
             objectAllAttribute.SingleSelect = new Dictionary<int, ObjectSingleAttributeDTO>();
 
             _invitationRepository.Setup(mocked => mocked.GetOpenInvitation(It.IsAny<string>())).Returns(mpInvitationDto);
-            groupService.Setup(mocked => mocked.getGroupDetails(123123)).Returns(g);
+            groupService.Setup(mocked => mocked.GetSmallGroupDetailsById(123123)).Returns(g);
             _attributeService.Setup(mocked => mocked.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
             _objectAttributeService.Setup(
                 mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))

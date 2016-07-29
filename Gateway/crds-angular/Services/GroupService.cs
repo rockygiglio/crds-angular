@@ -329,7 +329,7 @@ namespace crds_angular.Services
         {
             var invitation = _invitationRepository.GetOpenInvitation(invitationGuid);
 
-            var group = Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(invitation.SourceId));
+            var group = Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.GetSmallGroupDetailsById(invitation.SourceId));
             var groups = new List<GroupDTO> {@group};
 
             GetGroupAttributes(token, groups);

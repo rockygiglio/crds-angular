@@ -690,6 +690,14 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
+        public MpGroup GetSmallGroupDetailsById(int groupId)
+        {
+            var apiToken = ApiLogin();
+            var group = ministryPlatformService.GetRecordDict(GroupsPageId, groupId, apiToken, false);
+
+            return MapRecordToMpGroup(group);
+        }
+
         private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
         {
             return new MpGroup

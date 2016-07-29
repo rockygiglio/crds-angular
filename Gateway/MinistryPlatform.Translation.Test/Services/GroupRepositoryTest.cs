@@ -599,6 +599,18 @@ namespace MinistryPlatform.Translation.Test.Services
          
             Assert.IsNotNull(resp);  
             Assert.AreEqual(groupId, resp);
-        }        
+        }
+
+        [Test]
+        public void GetSmallGroupDetailsByIdTest()
+        {
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
+                .Returns(MockMyGroups()[0]);
+
+            var resp = _fixture.GetSmallGroupDetailsById(456);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.AreEqual("Full Throttle", resp.Name);
+        }
     }
 }
