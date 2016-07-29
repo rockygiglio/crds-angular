@@ -45,7 +45,6 @@ namespace crds_angular.Services
                            IFormSubmissionRepository formSubmissionService,
                            MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                            IDonorRepository donorService,
-                           IParticipantRepository participantService,
                            IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,
                            IPrivateInviteRepository privateInviteService,
@@ -55,7 +54,8 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationRepository destinationService)
+                           IDestinationRepository destinationService,
+                           IParticipantRepository participantService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
