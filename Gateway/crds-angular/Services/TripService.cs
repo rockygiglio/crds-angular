@@ -377,10 +377,7 @@ namespace crds_angular.Services
             var tripRecords = _campaignService.GetGoTripDetailsByCampaign(dto.PledgeCampaignId);
             Participant participant = _participantService.GetParticipant(dto.ContactId);
             MpContactDonor tripDonor = _mpDonorService.GetContactDonor(dto.ContactId);
-            if (tripDonor.DonorId == 0)
-            {
-                tripDonor.DonorId = null;
-            }
+            
             var tripApplicantRecord = new TripApplicant
             {
                 ContactId = dto.ContactId,
@@ -528,7 +525,7 @@ namespace crds_angular.Services
             int donorId;
             var addPledge = true;
 
-            if (applicant.DonorId != null)
+            if (applicant.DonorId != null && applicant.DonorId != 0)
             {
                 donorId = (int) applicant.DonorId;
                 addPledge = !_mpPledgeService.DonorHasPledge(dto.Campaign.PledgeCampaignId, donorId);
