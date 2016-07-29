@@ -553,7 +553,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 MeetingTime = "18000",
                 GroupRoleId = 16,
                 MinimumAge = 0,
-                MaximumParticipants = 9,
                 MinimumParticipants = 8,
                 MaximumAge = 99,
                 KidsWelcome = false,
