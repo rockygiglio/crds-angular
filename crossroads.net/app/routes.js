@@ -379,6 +379,17 @@
             }
           }
         })
+        .state('ng2testcmsdata', {
+          parent: 'noHeaderOrFooter',
+          url: '/ng2testcmsdata',
+          template: '<ng2-test-cms-data></ng2-test-cms-data>',
+          data: {
+            meta: {
+              title: 'Ng2TestCMSData',
+              description: ''
+            }
+          }
+        })
         .state('live', {
           parent: 'screenWidth',
           url: '/live',

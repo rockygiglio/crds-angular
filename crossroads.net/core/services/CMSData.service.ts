@@ -5,12 +5,23 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class CMSDataService {
-    private apiSeriesUrl = 'contentint.crossroads.net/api/series/1'
+    private apiUrl = 'https://contentint.crossroads.net/api/'
 
     constructor(private http: Http) { }
     
-    getFirstInSeries() {
-        return this.http.get(this.apiSeriesUrl)
-                            .map(response => response.json());
+    getSeriesById(id: number) {
+        return this.http.get(this.apiUrl + `series/${id}`)
+    }
+
+    getSeriesByTitle(title: string) {
+        return this.http.get(this.apiUrl + `series?title=${title}`)
+    }
+
+    getMessageByTitle(title: string) {
+        return this.http.get(this.apiUrl + `messages?title=${title}`)
+    }
+
+    getMostRecent4Messages() {
+        return this.http.get(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`)
     }
 }
