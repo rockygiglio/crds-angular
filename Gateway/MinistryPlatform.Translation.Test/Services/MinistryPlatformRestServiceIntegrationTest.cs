@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
@@ -64,6 +65,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestChildcareEmailProcedure()
+        { 
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {                
+                {"@DaysOut", 4}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault().EmailAddress);
+            }
+        }
+
+        [Test]
         public void TestChildcareRequestDatesProcedure()
         {
             Console.WriteLine("TestChildcareRequestDatesProcedure");
@@ -77,7 +93,6 @@ namespace MinistryPlatform.Translation.Test.Services
 
         }
 
-       
         [Test]
         public void TestSearchAllPaymentTypes()
         {
