@@ -372,16 +372,18 @@ namespace crds_angular.Services
             return myTrips;
         }
 
-        public int CreateTripParticipant(CreateTripParticipantDto dto)
+        public void CreateTripParticipant(CreateTripParticipantDto dto)
         {
             var tripRecords = _campaignService.GetGoTripDetailsByCampaign(dto.PledgeCampaignId);
             Participant participant = _participantService.GetParticipant(dto.ContactId);
+            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(dto.ContactId);
             
 
             var tripApplicantRecord = new TripApplicant
             {
                 ContactId = dto.ContactId,
-                ParticipantId = participant.ParticipantId
+                ParticipantId = participant.ParticipantId,
+                DonorId = tripDonor.DonorId
             };
 
             var tripApplicants = new List<TripApplicant>();
@@ -402,7 +404,7 @@ namespace crds_angular.Services
                     GroupId = tripRecord.GroupId
                 };
                 SaveParticipants(tripParticipantRecord);
-            }            
+            }                   
         }
 
         public List<int> SaveParticipants(SaveTripParticipantsDto dto)

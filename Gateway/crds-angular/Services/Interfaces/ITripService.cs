@@ -15,6 +15,6 @@ namespace crds_angular.Services.Interfaces
         int GeneratePrivateInvite(PrivateInviteDto dto, string token);
         bool ValidatePrivateInvite(int pledgeCampaignId, string guid, string token);
         int SaveApplication(TripApplicationDto dto);
-        int CreateTripParticipant(CreateTripParticipantDto dto);
+        void CreateTripParticipant(CreateTripParticipantDto dto);
     }
 }
