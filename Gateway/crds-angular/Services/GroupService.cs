@@ -333,6 +333,7 @@ namespace crds_angular.Services
             var groups = new List<GroupDTO> {@group};
 
             GetGroupAttributes(token, groups);
+            GetGroupParticipants(groups);
 
             return groups[0];
         }
@@ -462,8 +463,14 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             GetGroupAttributes(token, groupDetail);
+            GetGroupParticipants(groupDetail);
 
-            foreach (var group in groupDetail)
+            return groupDetail;
+        }
+
+        private void GetGroupParticipants(List<GroupDTO> groups)
+        {
+            foreach (var group in groups)
             {
                 var p = _mpGroupService.GetGroupParticipants(group.GroupId, true);
                 if (p != null && p.Any())
@@ -471,8 +478,6 @@ namespace crds_angular.Services
                     group.Participants = p.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
                 }
             }
-
-            return groupDetail;
         }
 
         private void GetGroupAttributes(string token, List<GroupDTO> groups)
