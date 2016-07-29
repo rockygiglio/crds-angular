@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -324,10 +325,16 @@ namespace crds_angular.Services
             return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(groupId));
         }
 
-        public GroupDTO GetGroupDetailsByInvitationGuid(string invitationGuid)
+        public GroupDTO GetGroupDetailsByInvitationGuid(string token, string invitationGuid)
         {
             var invitation = _invitationRepository.GetOpenInvitation(invitationGuid);
-            return Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(invitation.SourceId));
+
+            var group = Mapper.Map<MpGroup, GroupDTO>(_mpGroupService.getGroupDetails(invitation.SourceId));
+            var groups = new List<GroupDTO> {@group};
+
+            GetGroupAttributes(token, groups);
+
+            return groups[0];
         }
 
         public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
@@ -454,12 +461,28 @@ namespace crds_angular.Services
 
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
+            GetGroupAttributes(token, groupDetail);
+
+            foreach (var group in groupDetail)
+            {
+                var p = _mpGroupService.GetGroupParticipants(group.GroupId, true);
+                if (p != null && p.Any())
+                {
+                    group.Participants = p.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
+                }
+            }
+
+            return groupDetail;
+        }
+
+        private void GetGroupAttributes(string token, List<GroupDTO> groups)
+        {
             var configuration = MpObjectAttributeConfigurationFactory.Group();
 
-            foreach(var attributeType in new []{_groupCategoryAttributeTypeId, _groupTypeAttributeTypeId, _groupAgeRangeAttributeTypeId})
+            foreach (var attributeType in new[] { _groupCategoryAttributeTypeId, _groupTypeAttributeTypeId, _groupAgeRangeAttributeTypeId })
             {
                 var types = _attributeService.GetAttributes(attributeType);
-                foreach (var group in groupDetail)
+                foreach (var group in groups)
                 {
                     var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, types);
                     foreach (var multi in attributesTypes.MultiSelect)
@@ -472,19 +495,6 @@ namespace crds_angular.Services
                     }
                 }
             }
-
-            foreach (var group in groupDetail)
-            {
-                var p = _mpGroupService.GetGroupParticipants(group.GroupId, true);
-                if (p != null && p.Any())
-                {
-                    group.Participants = p.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
-                }
-            }
-
-            
-
-            return groupDetail;
         }
 
         public Participant GetParticipantRecord(string token) 

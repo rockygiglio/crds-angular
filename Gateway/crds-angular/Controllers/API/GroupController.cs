@@ -144,7 +144,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var group = _groupService.GetGroupDetailsByInvitationGuid(invitationGuid);
+                    var group = _groupService.GetGroupDetailsByInvitationGuid(token, invitationGuid);
 
                     return Ok(group);
                 }
