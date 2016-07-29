@@ -1522,7 +1522,7 @@ namespace crds_angular.test.Services
                 && d.CheckNumber == null 
                 && d.CheckScannerBatchName == null 
                 && d.DonationAmt == -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue)
-                && d.DonationStatus == (int)crds_angular.Models.Crossroads.Stewardship.DonationStatus.Deposited 
+                && d.DonationStatus == (int)crds_angular.Models.Crossroads.Stewardship.DonationStatus.Declined 
                 && d.DonorAcctId.Equals(string.Empty) 
                 && d.DonorId == 987
                 && d.FeeAmt == refund.Data[0].BalanceTransaction.Fee 
