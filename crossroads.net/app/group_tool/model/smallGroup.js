@@ -129,7 +129,6 @@ export default class SmallGroup {
   }
 
   participantInGroup(participantContactID){
-    debugger;
     if (!participantContactID || !this.participants){
       return false; 
     } else if (_.find(this.participants, (participant) => { return participant.contactId == participantContactID } )){
