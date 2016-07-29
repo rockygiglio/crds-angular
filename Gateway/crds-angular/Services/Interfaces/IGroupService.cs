@@ -42,5 +42,7 @@ namespace crds_angular.Services.Interfaces
         List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token);
 
         List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
+
+        void EndDateGroup(int groupId);
     }
 }
