@@ -36,7 +36,8 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         profile: (CreateGroupService, GroupService) => {
           if(!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((data) => {
-              CreateGroupService.model.profile = data;
+              //CreateGroupService.model.profile = data;
+              CreateGroupService.setCreateModel(data);
             })
           }
         },
@@ -71,6 +72,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       url: '/groups/edit/{groupId:int}',
       template: '<edit-group> </edit-group>',
       resolve:{
+        // we are not using any of these resolves in the controller.
+        // we are using these resolves to prepare the CreateGroupService
+        // before the controller is initialized
         stateList: (CreateGroupService, GroupService) =>{
           return GroupService.getStates().then((data) => {
             CreateGroupService.statesLookup = data;
@@ -78,8 +82,10 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         },
         profile: (CreateGroupService, GroupService) => {
           if(!CreateGroupService.resolved) {
-            return GroupService.getProfileData().then((data) => {
-              CreateGroupService.model.profile = data;
+            return GroupService.getProfileData().then((profile) => {
+              return GroupService.getGroupData().then((group) => {
+                CreateGroupService.setEditModel(group, profile);
+              })
             })
           }
         },
@@ -87,13 +93,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           return Lookup.query({table: 'countries'}, (data) => {
             CreateGroupService.countryLookup = data;
           })
-        },
-        group: (CreateGroupService, GroupService) => {
-          if(!CreateGroupService.resolved) {
-            return GroupService.getGroupData().then((data) => {
-              CreateGroupService.model.group = data;
-            })
-          }
         },
       },
       data: {

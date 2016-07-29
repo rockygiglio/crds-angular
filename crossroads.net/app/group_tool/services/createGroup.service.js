@@ -31,34 +31,47 @@ export default class CreateGroupService {
         //this.countryLookup is added by the route resolve of the createGroupController.
     }
 
-    preloadModel() {
-        if (!this.resolved) {
-            this.model.profile.oldEmail = this.model.profile.emailAddress;
-            delete this.model.profile.householdMembers;
-            delete this.model.profile.congregationId;
-debugger;
-// TODO: If/else not working as expected, don't want to over-write the model.group object populated from database on an edit
-// TODO: need to map, them model.group here is in smallGroup object format, needs to be mapped to form's object structure
-            if(this.model.group !== undefined || this.model.group !== null) {
-              this.model.group = {
-                  meeting: {
-                      time: "1983-07-16T21:00:00.000Z"
-                  }
-              };
-            }
-            else {
-                this.model.group.meeting = {
-                   time: "1983-07-16T21:00:00.000Z"
-              };
-            }
-
-            this.model.specificDay = true;
+    setEditModel(groupData, profileData){
+        if (!this.resolved){
+            this.preloadModel(profileData);
+            //this.mapFromSmallGroup(groupData);
             this.resolved = true;
         }
     }
 
+    setCreateModel(profileData) {
+        if (!this.resolved){
+            this.preloadModel(profileData);
+            this.resolved = true;
+        }
+    }
+
+    preloadModel(profile) {
+debugger;
+        this.model.profile = profile;
+        this.model.profile.oldEmail = profile.emailAddress;
+        delete this.model.profile.householdMembers;
+        delete this.model.profile.congregationId;
+debugger;
+    // TODO: If/else not working as expected, don't want to over-write the model.group object populated from database on an edit
+    // TODO: need to map, them model.group here is in smallGroup object format, needs to be mapped to form's object structure
+        if(this.model.group !== undefined || this.model.group !== null) {
+            this.model.group = {
+                meeting: {
+                    time: "1983-07-16T21:00:00.000Z"
+                }
+            };
+        }
+        else {
+            this.model.group.meeting = {
+                time: "1983-07-16T21:00:00.000Z"
+            };
+        }
+
+        this.model.specificDay = true;
+    }
+
     getFields() {
-        this.preloadModel();
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -491,22 +504,119 @@ debugger;
             groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
             groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
+    
+    mapFromSmallGroup(){
+        //     this.model.grou
 
-    getMeetingLocation() {
-        let meetingDay = 'Flexible Meeting Time';
-        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
-            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
-            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
-        }
-        else {
-            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
-        }
+        //     let groupType = _.find(this.typeIdLookup, (groupType) => {
+        //         return groupType.attributeId == this.model.group.typeId
+        //     });
+
+        //     let ageRangeNames = [];
+        //     _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
+        //         ageRangeNames.push(new AgeRange({
+        //             name: _.find(this.ageRangeLookup, (range) => {
+        //                 return range.attributeId == selectedRange
+        //             }).name
+        //         })
+        //         )
+        //     });
+
+        //     var primaryContactId = this.model.profile.contactId;
+
+        //     let smallGroup = new SmallGroup();
+
+        //     smallGroup.primaryContact = {
+        //       imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+        //       contactId: primaryContactId
+        //     };
+
+        //     smallGroup.groupName = this.model.group.groupName;
+        //     smallGroup.groupDescription = this.model.group.groupDescription;
+        //     smallGroup.groupType = new GroupType({ name: groupType.name });
+        //     smallGroup.contactId = this.model.profile.contactId;
+        //     if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+        //         smallGroup.ageRange = ageRangeNames;
+        //     }
+        //     smallGroup.address = new Address();
+        //     if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
+        //         smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+        //         smallGroup.address.addressLine2 = '';
+        //         smallGroup.address.state = this.model.group.meeting.address.state;
+        //         smallGroup.address.zip = this.model.group.meeting.address.zip;
+        //     }
+        //     else {
+        //         smallGroup.address.zip = null;
+        //     }
+        //     smallGroup.kidsWelcome = this.model.group.kidFriendly;
+        //     smallGroup.meetingTimeFrequency = this.getMeetingLocation();
+
+        //     smallGroup.meetingDayId = this.model.group.meeting.day;
+        //     if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
+        //     {
+        //         delete smallGroup.meetingTime;
+        //     }
+        //     smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+
+        //     if (this.model.specificDay) {
+        //         smallGroup.meetingDayId = this.model.group.meeting.day;
+        //         smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+        //     }
+        //     smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        //     smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+        //     smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        //     smallGroup.congregationId = this.model.profile.congregationId;
+        //     smallGroup.startDate = this.model.group.startDate;
+        //     smallGroup.availableOnline = this.model.group.availableOnline;
+        //     smallGroup.participants = [new Participant({
+        //         groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+        //         , nickName: this.model.profile.nickName
+        //         , lastName: this.model.profile.lastName
+        //         , contactId: parseInt(this.session.exists('userId'))
+        //     }
+        //     )];
+
+        //     smallGroup.profile = new Profile(this.model.profile);
+
+        //     smallGroup.singleAttributes = {
+        //         "73": {
+        //             "attribute": {
+        //                 "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
+        //             },
+        //         }
+        //     }
+
+        //     var ids = [];
+        //     _.forEach(this.model.groupAgeRangeIds, (id) => {
+        //         ids.push(
+        //             {
+        //                 "attributeId": id,
+        //                 "name": "Middle School Students",
+        //                 "description": null,
+        //                 "selected": true,
+        //                 "startDate": "0001-01-01T00:00:00",
+        //                 "endDate": null,
+        //                 "notes": null,
+        //                 "sortOrder": 0,
+        //                 "category": null,
+        //                 "categoryDescription": null
+        //             })
+        //     });
+
+        //     var ageRangeJson = {
+        //         "91": {
+        //             "attributeTypeId": 91,
+        //             "name": "Age Range",
+        //             "attributes": ids
+        //         }
+        //     }
+
+        //     smallGroup.attributeTypes = ageRangeJson;
+        //     return smallGroup;
     }
 
-
     //This is ugly and needs to be refactored
-    mapSmallGroup() {
+    mapToSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
         });
@@ -521,13 +631,11 @@ debugger;
             )
         });
 
-        var primaryContactId = this.model.profile.contactId;
-
         let smallGroup = new SmallGroup();
 
         smallGroup.primaryContact = {
-          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-          contactId: primaryContactId
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${this.model.profile.contactId}`,
+          contactId: this.model.profile.contactId
         };
 
         smallGroup.groupName = this.model.group.groupName;
@@ -634,5 +742,17 @@ debugger;
                 groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
         }
         return groupTypeId;
+    }
+
+    getMeetingLocation() {
+        let meetingDay = 'Flexible Meeting Time';
+        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
+        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
+            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+        }
+        else {
+            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
+        }
     }
 }

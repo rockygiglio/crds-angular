@@ -15,7 +15,7 @@ export default class CreateGroupPreviewController {
   }
 
   $onInit() {
-    this.groupData = this.createGroupService.mapSmallGroup();
+    this.groupData = this.createGroupService.mapToSmallGroup();
     this.groupId = '';
   }
 

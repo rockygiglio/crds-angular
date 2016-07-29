@@ -44,7 +44,7 @@ describe('CreateGroupPreviewController', () => {
       });
 
       spyOn(state, 'go').and.callFake(function() {});
-      spyOn(createGroupService, 'mapSmallGroup').and.callFake(function() {
+      spyOn(createGroupService, 'mapToSmallGroup').and.callFake(function() {
         return {};
       });
 
