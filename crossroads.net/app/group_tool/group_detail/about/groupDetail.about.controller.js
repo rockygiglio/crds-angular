@@ -1,11 +1,12 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log) {
+  constructor(GroupService, ImageService, $state, $log, $cookies) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.log = $log;
+    this.cookies = $cookies;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
@@ -43,5 +44,21 @@ export default class GroupDetailAboutController {
     else {
       return false;
     }
+  }
+
+  groupExists() {
+    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  userInGroup() {
+    if (this.data){
+      return this.data.participantInGroup(this.cookies.get("userId"));
+    }
+    return false;
   }
 }

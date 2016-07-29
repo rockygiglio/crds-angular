@@ -98,6 +98,14 @@ export default class SmallGroup {
     return 'Participant';
   }
 
+  visibility() {
+    if(this.availableOnline === true) {
+      return 'Public';
+    } else {
+      return 'Private';
+    }
+  }
+
   meetingLocation() {
     if(this.address === null || this.address === undefined) {
       return 'Online';
@@ -118,5 +126,18 @@ export default class SmallGroup {
     }
 
     return categoriesString;
+  }
+
+  participantInGroup(participantContactID){
+    debugger;
+    if (!participantContactID || !this.participants){
+      return false; 
+    } else if (_.find(this.participants, (participant) => { return participant.contactId == participantContactID } )){
+      return true;
+    }
+
+    return false;
+
+    
   }
 }
