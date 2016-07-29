@@ -76,6 +76,14 @@
           <DataField>Group_Name</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
+        <Field Name="PC_Nickname">
+          <DataField>PC_Nickname</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="PC_Lastname">
+          <DataField>PC_Lastname</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
         <Field Name="Is_Student_Volunteer">
           <DataField>Is_Student_Volunteer</DataField>
           <rd:UserDefined>true</rd:UserDefined>
@@ -784,7 +792,7 @@
                                         <Style />
                                       </TextRun>
                                       <TextRun>
-                                        <Value>=Fields!Nickname.Value</Value>
+                                        <Value>=Fields!PC_Nickname.Value</Value>
                                         <Style />
                                       </TextRun>
                                       <TextRun>
@@ -792,7 +800,7 @@
                                         <Style />
                                       </TextRun>
                                       <TextRun>
-                                        <Value>=Fields!Last_Name.Value</Value>
+                                        <Value>=Fields!PC_Lastname.Value</Value>
                                         <Style />
                                       </TextRun>
                                     </TextRuns>
