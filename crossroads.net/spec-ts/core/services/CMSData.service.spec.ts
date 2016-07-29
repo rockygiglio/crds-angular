@@ -10,13 +10,14 @@ import {
   beforeEach,
   it,
   inject,
+  async,
   beforeEachProviders  
 } from '@angular/core/testing';
 
 import { CMSDataService } from '../../../core/services/CMSData.service'
 
-fdescribe('Service: CMSData', () => {
-  let service;
+describe('Service: CMSData', () => {
+  let cmsService;
 
   beforeEachProviders(() => [
     HTTP_PROVIDERS,
@@ -24,24 +25,17 @@ fdescribe('Service: CMSData', () => {
   ]);
 
   beforeEach(inject([CMSDataService], s => {
-    service = s;
+    cmsService = s;
   }))
 
   it('creates an instance of the service', () => {
-    expect(service).toBeTruthy;
+    expect(cmsService).toBeFalsy;
   });
 
-  it('is able to retrieve the first series', () => {
-    service.getFirstInSeries().subscribe(x => {
-      expect(x.title).toBe("Where I Went in '97...");
+  it('is able to retrieve the first series', async(() => {
+    cmsService.getFirstInSeries().subscribe(x => {
+      expect(x.title).toMatch("Foobar");
     });
-  });
-  
-  it('is able to retrieve series by title', () => {
-  });
-
-  it('is able to retrieve past weekends', () => {
-    pending();
-  });
+  }));
 });
 
