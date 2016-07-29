@@ -236,6 +236,54 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendChildcareReminders()
+        {
+            var token = _apiUserService.GetToken();                     
+            var toEmails = _childcareRepository.GetChildcareReminderEmails(token);
+            var threeDaysOut = DateTime.Now.AddDays(3);
+
+            foreach (var toContact in toEmails)
+            {
+                var mergeData = SetMergeDataForChildcareReminder(toContact, threeDaysOut);
+                var communication = SetupChilcareReminderCommunication(toContact, mergeData);               
+                _communicationService.SendMessage(communication, false);
+            };                                   
+        }
+
+        public MpCommunication SetupChilcareReminderCommunication(MpContact recipient, Dictionary<string,object> mergeData)
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareReminderTemplateId");
+            var template = _communicationService.GetTemplate(templateId);
+
+            var fromId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
+            var from = _contactService.GetContactEmail(fromId);
+            var fromContact = new MpContact { ContactId = fromId, EmailAddress = from };
+
+            return _communicationService.GetTemplateAsCommunication(templateId, 
+                                                                fromId, 
+                                                                from, 
+                                                                fromId, 
+                                                                from, 
+                                                                recipient.ContactId, 
+                                                                recipient.EmailAddress, 
+                                                                mergeData);
+        }
+
+        public Dictionary<string, object> SetMergeDataForChildcareReminder(MpContact toContact, DateTime threeDaysOut)
+        {
+            var person = _contactService.GetContactById(toContact.ContactId);
+            var url = _configurationWrapper.GetConfigValue("BaseUrl");
+
+            return new Dictionary<string, object>()
+            {
+                {"Nickname", person.Nickname},
+                {"Childcare_Date", threeDaysOut.ToString("d")},
+                {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
+                {"Base_URL", url }
+            };
+        }
+
+
         private Dictionary<int, int> GetChildcareEventsfortheDates(List<MpEvent> events, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
         {
             var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
