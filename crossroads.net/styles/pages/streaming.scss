@@ -64,8 +64,12 @@ streaming {
       position: absolute;
       right: 0;
       display: none;
+
       @media (min-width: $screen-xs-min) {
         display: block;
+      }
+      @media (max-width: $screen-sm-min) {
+        margin-top: -5px;
       }
     }
 
@@ -107,6 +111,9 @@ streaming {
           font-weight: 100;
           position: relative;
           top: -0.25em;
+          @media only screen and (max-width:  $screen-xs-min){
+            display: none;
+          }
         }
       }
 
@@ -169,7 +176,10 @@ streaming {
     }
 
     h1 {
-      font-size: 338%;
+      font-size: 238%;
+      @media (min-width: $screen-md-min) {
+        font-size: 338%;
+      }
       line-height: 100%;
       margin-bottom: 0.5em;
     }
