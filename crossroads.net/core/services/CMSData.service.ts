@@ -24,4 +24,11 @@ export class CMSDataService {
     getMostRecent4Messages() {
         return this.http.get(encodeURI(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`));
     }
+
+    getCurrentSeries() {
+        let currentSeriesGrouping =  this.http.get(encodeURI(this.apiUrl + `series?startDate__LessThan=${Date.now()}&endDate__GreaterThan=${Date.new()}&endDate__sort=ASC`));
+        // TODO: currentSeries is an observable, not an array. Need to figure out how
+        // to get the first element in this response as it is the "current series"
+        let currentSeries = currentSeriesGrouping.shift();
+    }
 }

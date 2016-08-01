@@ -97,6 +97,20 @@ describe('Service: CMSData', () => {
         service.getMostRecent4Messages();
       })));
 
+  it('should use an HTTP call to obtain the current series',
+    inject(
+      [CMSDataService, MockBackend],
+      fakeAsync((service: CMSDataService, backend: MockBackend) => {
+        backend.connections.subscribe((connection: MockConnection) => {
+
+          expect(connection.request.method).toBe(RequestMethod.Get);
+          expect(connection.request.url).toBe(
+            `https://contentint.crossroads.net/api/series?startDate__LessThan${Date.now()}&endDate__GreaterThan${Date.now()}`);
+        });
+
+        service.getCurrentSeries();
+      })));
+
 
 });
 
