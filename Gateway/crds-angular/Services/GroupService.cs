@@ -202,7 +202,7 @@ namespace crds_angular.Services
                     _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {
-                        foreach (var e in events)
+                        foreach (var e in events.Where(x => x.EventType != "Childcare"))
                         {
                             _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
                             _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
