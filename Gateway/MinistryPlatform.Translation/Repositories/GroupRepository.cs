@@ -16,6 +16,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
+        private readonly IAddressRepository _addressRepository;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly int GroupsParticipantsPageId = Convert.ToInt32(AppSettings("GroupsParticipants"));
         private readonly int GroupsParticipantsSubPageId = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
@@ -44,14 +45,16 @@ namespace MinistryPlatform.Translation.Repositories
                                IAuthenticationRepository authenticationService,
                                ICommunicationRepository communicationService,
                                IContactRepository contactService,
-                               IContentBlockService contentBlockService)
+                               IContentBlockService contentBlockService,
+                               IAddressRepository addressRepository)
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
-            this._configurationWrapper = configurationWrapper;
-            this._communicationService = communicationService;
-            this._contactService = contactService;
-            this._contentBlockService = contentBlockService;
+            _configurationWrapper = configurationWrapper;
+            _communicationService = communicationService;
+            _contactService = contactService;
+            _contentBlockService = contentBlockService;
+            _addressRepository = addressRepository;
         }
 
         public int CreateGroup(MpGroup group)
@@ -690,6 +693,20 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
+        public MpGroup GetSmallGroupDetailsById(int groupId)
+        {
+            var apiToken = ApiLogin();
+            var response = ministryPlatformService.GetRecordDict(GroupsPageId, groupId, apiToken, false);
+            var group = MapRecordToMpGroup(response);
+
+            if (response.ContainsKey("Offsite_Meeting_Address") && response.ToNullableInt("Offsite_Meeting_Address") != null)
+            {
+                group.Address = _addressRepository.GetAddressById(apiToken, response.ToInt("Offsite_Meeting_Address"));
+            }
+
+            return group;
+        }
+
         private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
         {
             return new MpGroup
@@ -698,23 +715,23 @@ namespace MinistryPlatform.Translation.Repositories
                 CongregationId = record.ToInt("Congregation_ID"),
                 KidsWelcome = (record.ContainsKey("Kids_Welcome") ? record["Kids_Welcome"] as bool? : null),
                 Name = record.ToString("Group_Name"),
-                GroupRoleId = record.ToInt("Group_Role_ID"),
+                GroupRoleId = record.ContainsKey("Group_Role_ID") ? record.ToInt("Group_Role_ID") : -1,
                 GroupDescription = record.ToString("Description"),
                 MinistryId = record.ToInt("Ministry_ID"),
                 ContactId = record.ToInt("Primary_Contact"),
-                PrimaryContactName = record.ToString("Primary_Contact_Name"),
-                PrimaryContactEmail = record.ToString("Primary_Contact_Email"),
+                PrimaryContactName = record.ContainsKey("Primary_Contact_Name") ? record.ToString("Primary_Contact_Name") : record.ToString("Primary_Contact_Text"),
+                PrimaryContactEmail = record.ContainsKey("Primary_Contact_Email") ? record.ToString("Primary_Contact_Email") : string.Empty,
                 GroupType = record.ToInt("Group_Type_ID"),
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
-                MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : string.Empty),
+                MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : (record.ContainsKey("Meeting_Day_ID_Text") ? record.ToString("Meeting_Day_ID_Text") : string.Empty)),
                 MeetingTime = record.ToString("Meeting_Time"),
-                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : string.Empty),
+                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty)),
                 AvailableOnline = record.ToBool("Available_Online"),
                 MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
                 RemainingCapacity = (record.ContainsKey("Remaining_Capacity") ? record["Remaining_Capacity"] as int? : null),
-                Address = new MpAddress()
+                Address = record.ContainsKey("Address_ID") ? new MpAddress()
                 {
                     Address_ID = record.ToInt("Address_ID"),
                     Address_Line_1 = record.ToString("Address_Line_1"),
@@ -723,7 +740,7 @@ namespace MinistryPlatform.Translation.Repositories
                     State = record.ToString("State"),
                     Postal_Code = record.ToString("Zip_Code"),
                     Foreign_Country = record.ToString("Foreign_Country")
-                }
+                } : new MpAddress()
             };
         }
     }

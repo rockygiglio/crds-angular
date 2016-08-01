@@ -13,6 +13,8 @@ namespace crds_angular.Services.Interfaces
 
         GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken);
 
+        GroupDTO GetGroupDetailsByInvitationGuid(string token, string invitationGuid);
+
         void addParticipantToGroupNoEvents(int groupId, ParticipantSignup participant);
 
         void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants);

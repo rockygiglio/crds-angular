@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -77,5 +78,22 @@ namespace MinistryPlatform.Translation.Repositories
 
             return string.Format("\"{0}\"", input);
         }
-    }
+
+        public MpAddress GetAddressById(string token, int id)
+        {
+            var record = _ministryPlatformService.GetRecordDict(AddressPageId, id, token);
+
+            var address = new MpAddress()
+            {
+                Address_ID = record.ToInt("Address_ID"),
+                Address_Line_1 = record.ToString("Address_Line_1"),
+                Address_Line_2 = record.ToString("Address_Line_2"),
+                City = record.ToString("City"),
+                State = record.ToString("State/Region"),
+                Postal_Code = record.ToString("Postal_Code")
+            };
+
+            return address;
+        }
+}
 }
