@@ -25,7 +25,7 @@ declare var _: any;
         </ul>
       </div>
       <div *ngIf="isBroadcasting" class="in-progress">
-        <i>Live stream in progress...</i> <a href="#" class="btn btn-sm">Watch Now</a>
+        <i>Live stream in progress...</i> <a href="/live/stream" class="btn btn-sm">Watch Now</a>
       </div>
     </div>
   `,

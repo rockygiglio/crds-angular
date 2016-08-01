@@ -10,7 +10,7 @@ import Profile from '../model/profile';
 
 export default class CreateGroupService {
     /*@ngInject*/
-    constructor($log, Profile, GroupService, Session, $rootScope) {
+    constructor($log, Profile, GroupService, Session, $rootScope, ImageService) {
         this.log = $log;
         this.profile = Profile;
         this.groupService = GroupService;
@@ -18,6 +18,7 @@ export default class CreateGroupService {
         this.rootScope = $rootScope;
         this.model = {};
         this.resolved = false;
+        this.imageService = ImageService;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -509,7 +510,14 @@ export default class CreateGroupService {
             )
         });
 
+        var primaryContactId = this.model.profile.contactId;
+
         let smallGroup = new SmallGroup();
+
+        smallGroup.primaryContact = {
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+          contactId: primaryContactId
+        };
 
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupDescription = this.model.group.groupDescription;
@@ -581,7 +589,6 @@ export default class CreateGroupService {
                     "category": null,
                     "categoryDescription": null
                 })
-
         });
 
         var ageRangeJson = {

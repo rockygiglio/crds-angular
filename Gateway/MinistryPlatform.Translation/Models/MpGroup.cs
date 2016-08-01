@@ -38,7 +38,6 @@ namespace MinistryPlatform.Translation.Models
         public int GroupRoleId { get; set; }
         public MpAddress Address { get; set; }
         public int MinimumParticipants { get; set; }
-        public int MaximumParticipants { get; set; }
         public bool? KidsWelcome { get; set; }
 
         public MpGroup()
