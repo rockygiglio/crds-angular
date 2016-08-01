@@ -37,6 +37,23 @@ describe('GroupDetailAboutController', () => {
         fixture = new GroupDetailAboutController(groupService, imageService, state, log, cookies);
     }));
 
+    describe('groupExists() function', () => {
+      it('should be true', () => {
+        expect(fixture.groupExists()).toBeTruthy();
+      });
+
+      it('should be true', () => {
+        state.params.groupId = null;
+        expect(fixture.groupExists()).toBeFalsy();
+      });
+      
+      it('should be true', () => {
+        state.params.groupId = null;
+        fixture.data = {groupId: 123};
+        expect(fixture.groupExists()).toBeTruthy();
+      });
+    });
+
     describe('the constructor', () => {
         it('should initialize properties', () => {
             expect(fixture.defaultProfileImageUrl).toEqual(imageService.DefaultProfileImage);
@@ -72,6 +89,7 @@ describe('GroupDetailAboutController', () => {
           expect(fixture.data.primaryContact.imageUrl).toEqual(`${imageService.ProfileImageBaseURL}${groupData.contactId}`);
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeFalsy();
+          expect(fixture.forInvitation).toBeFalsy();
         });
 
         it('should set error state if trouble getting requests', () => {

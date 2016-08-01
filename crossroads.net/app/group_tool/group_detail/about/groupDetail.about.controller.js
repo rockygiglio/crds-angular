@@ -11,6 +11,8 @@ export default class GroupDetailAboutController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+
+    this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
   }
 
   $onInit() {
@@ -38,7 +40,8 @@ export default class GroupDetailAboutController {
   }
 
   groupExists() {
-    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+    if ((this.state.params.groupId !== undefined && this.state.params.groupId !== null) ||
+          (this.data !== null && this.data !== undefined && this.data.groupId !== undefined && this.data.groupId !==null)) {
       return true;
     }
     else {
