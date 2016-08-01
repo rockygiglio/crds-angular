@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -26,39 +27,47 @@ export class StreamspotService {
   public nextEvent: EventEmitter<any> = new EventEmitter();
   public events: Promise<Event[]>;
 
+  public subscriber: any;
+  private eventResponse: any;
+
   constructor(private http: Http) {
     this.events = this.getEvents();
   }
 
+  parseEvents(): any {
+    return _
+      .chain(this.eventResponse)
+      .sortBy('start')
+      .map((object:Event) => {
+        // create event objects
+        return Event.build(object);
+      })
+      .filter((event:Event) => {
+        // return only current or upcoming events
+        return event.isBroadcasting() || event.isUpcoming();
+      })
+      .value();
+  }
+
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
-    // let url = 'http://localhost:3000/app/streaming/data/events.json'
+    // let url = 'http://localhost:8080/app/streaming/data/events.json'
 
     return this.http
       .get(url, {headers: this.headers})
       .toPromise()
       .catch(this.handleError)
       .then((response) => {
-        let events = response.json().data.events;
-        return _
-          .chain(events)
-          .sortBy('start')
-          .map((object:Event) => {
-            // create event objects
-            return Event.build(object);
-          })
-          .filter((event:Event) => {
-            // return only current or upcoming events
-            return event.isBroadcasting() || event.isUpcoming();
-          })
-          .value();
-      })
-      .then((events) => {
+        this.eventResponse = response.json().data.events;
+        let events = this.parseEvents();
         if(events.length == 0) return events;
-        let event = _(events).first();
-        // dispatch updates
-        this.isBroadcasting.emit(event.isBroadcasting());
-        this.nextEvent.emit(event);
+        Observable.interval(1000).subscribe(() => {
+          // reparse in order to get the next upcoming event
+          let event = _(this.parseEvents()).first();
+          // dispatch updates
+          this.isBroadcasting.emit(event.isBroadcasting());
+          this.nextEvent.emit(event);
+        });
         return events;
       })
       ;
