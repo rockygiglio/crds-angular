@@ -395,7 +395,7 @@ namespace crds_angular.Services
                         {
                             ContactId = member.ContactId,
                             DisplayName = member.Nickname + ' ' + member.LastName,
-                            ChildEligible = (member.Age < childcareDashboard.ChildcareMaxAge),
+                            ChildEligible = (member.Age <= childcareDashboard.ChildcareMaxAge),
                             ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
                         };
                         eligibleChildren.Add(echild);
