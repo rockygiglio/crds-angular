@@ -579,10 +579,10 @@ export default class CreateGroupService {
             ids.push(
                 {
                     "attributeId": id,
-                    "name": "Middle School Students",
-                    "description": null,
+                    "name": id.ageRange,
+                    "description": id.description,
                     "selected": true,
-                    "startDate": "0001-01-01T00:00:00",
+                    "startDate": id.start,
                     "endDate": null,
                     "notes": null,
                     "sortOrder": 0,
@@ -604,33 +604,42 @@ export default class CreateGroupService {
         _.forEach(this.model.categories, (category) => {
             ids.push(
                 {
+                    attributeId: 0,
                     name: category.detail,
-                    description: null,
+                    description: category.description,
                     selected: true,
-                    attributeTypeId: 90,
+                    startDate: category.startDate,
+                    endDate: null,
+                    notes: null,
                     sortOrder: 0,
-                    categoryId: category.value,
                     category: this.getCategoryFromId(category.value),
-                    startDate: "0001-01-01T00:00:00",                  
+                    categoryDescription: null
+               
                }
             )
         });
         var categoriesJson = {
             '90': {
-                attributeTypeid: 90,
-                name: "Group Category",
-                attributes: ids
+                "attributeTypeid": 90,
+                "name": "Group Category",
+                "attributes": ids
             }
         }
         smallGroup.mapCategories(categoriesJson);
-        smallGroup.attributeTypes = {ageRangeJson, categoriesJson}
+        var ar = JSON.stringify(ageRangeJson);
+        ar = ar.substr(0, ar.length-1);
+        
+        var cat = JSON.stringify(categoriesJson);
+        cat = cat.substr(1, cat.length-1);
+        
+        smallGroup.attributeTypes = ar + ',' + cat
+        //smallGroup.attributeTypes = JSON.stringify(ageRangeJson);
         return smallGroup;
-
+ 
     }
 
     getCategoryFromId(id) {
         var returnString = '';
-        debugger;
         switch(id) {
             case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
                 returnString = "Life Stage";
