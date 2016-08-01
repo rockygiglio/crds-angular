@@ -144,7 +144,7 @@ export default class CreateGroupService {
                         required: true,
                     }
                 }, {
-                    key: 'profile.address.country',
+                    key: 'profile.foreignCountry',
                     type: 'formlyBuilderSelect',
                     templateOptions: {
                         label: 'Country',
