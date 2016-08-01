@@ -242,7 +242,7 @@ namespace crds_angular.Services
             var toEmails = _childcareRepository.GetChildcareReminderEmails(token);
             var threeDaysOut = DateTime.Now.AddDays(3);
 
-            foreach (var toContact in toEmails)
+            foreach (var toContact in toEmails.Where((contact) => contact.EmailAddress != null))
             {
                 var mergeData = SetMergeDataForChildcareReminder(toContact, threeDaysOut);
                 var communication = SetupChilcareReminderCommunication(toContact, mergeData);               
@@ -279,7 +279,7 @@ namespace crds_angular.Services
                 {"Nickname", person.Nickname},
                 {"Childcare_Date", threeDaysOut.ToString("d")},
                 {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
-                {"Base_URL", url }
+                {"Base_URL", $"https://{url}" }
             };
         }
 
