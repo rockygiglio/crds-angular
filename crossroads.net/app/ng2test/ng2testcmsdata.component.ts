@@ -17,29 +17,43 @@ export class Ng2TestCMSDataComponent implements OnInit {
   someText: string;
   cmsSeriesTitle: string;
   cmsGotSeriesByTitle: string;
+  cmsGot4Messages: any;
   
   constructor(private cmsDataService: CMSDataService) {
     this.someText = "Content from CMS"
   }
 
+  // returns JavaScript Series Object
   getFirstServiceFromCms(id: number) {
     return this.cmsDataService.getSeriesById(id)
                               .subscribe((response) => { 
-                                this.cmsSeriesTitle = response.json().series.title;
-                                console.log(response.json());
+                                this.cmsSeriesTitle = response.json();
+                                console.log(response.json().series);
                               });
   }
 
+  // returns first Object in an array of JavaScript Series Objects
   getSeriesByTitle(title: string) {
     return this.cmsDataService.getSeriesByTitle(title)
                               .subscribe((response) => {
-                                console.log(response.json().series);
+                                this.cmsGotSeriesByTitle = response.json().series.shift;
+                                console.log(response.json().series.shift());
+                              })
+  }
+
+  // returns an array of 4 Message Objects
+  getMostRecent4Messages() {
+    return this.cmsDataService.getMostRecent4Messages()
+                              .subscribe((response) => {
+                                this.cmsGot4Messages = response.json().messages;
+                                console.log(response.json().messages);
                               })
   }
 
   ngOnInit() {
     this.getFirstServiceFromCms(1);
     this.getSeriesByTitle("Dollars, Sense and Sensibility");
+    this.getMostRecent4Messages();
   }
 }
 
