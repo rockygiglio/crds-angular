@@ -96,12 +96,13 @@ namespace crds_angular.Services
             try
             {
                 var mpGroup = Mapper.Map<MpGroup>(group);
-                var categoryAttributes = group.AttributeTypes[91];
+                var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
                 var configuration = MpObjectAttributeConfigurationFactory.Group();
 
-                //_attributeService.CreateMissingAttributesReturnAttributeIds(mpGroup..AttributeTypes[91].Attributes,91);
+                categoryAttributes = _attributeService.CreateMissingAttributesReturnAttributeIds(categoryAttributes,90);
+                group.AttributeTypes[90].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)

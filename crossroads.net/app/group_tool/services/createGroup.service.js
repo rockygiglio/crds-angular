@@ -605,6 +605,7 @@ export default class CreateGroupService {
             ids.push(
                 {
                     attributeId: 0,
+                    attributeTypeId: 90,
                     name: category.detail,
                     description: category.description,
                     selected: true,

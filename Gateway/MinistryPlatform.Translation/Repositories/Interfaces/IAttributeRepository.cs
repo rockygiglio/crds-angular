@@ -6,6 +6,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IAttributeRepository
     {
         List<MpAttribute> GetAttributes(int? attributeTypeId);
-        void CreateMissingAttributesReturnAttributeIds(List<MpAttribute> attributes, int attributeType);
+        List<MpAttribute> CreateMissingAttributesReturnAttributeIds(List<MpAttribute> attributes, int attributeType);
     }
 }
