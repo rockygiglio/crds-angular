@@ -6,6 +6,7 @@ import { StreamspotService } from './streamspot.service';
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
 
 var WOW = require('wow.js/dist/wow.min.js');
+var $:any = require('jquery');
 
 @Component({
   selector: 'streaming',
@@ -27,5 +28,12 @@ export class StreamingComponent {
       offset: 100,
       mobile: false
     }).init();
+  }
+
+  scrollToSchedule() {
+    $('html, body').animate({
+      scrollTop: $('schedule').offset().top
+    }, 1000);
+    return false;
   }
 }
