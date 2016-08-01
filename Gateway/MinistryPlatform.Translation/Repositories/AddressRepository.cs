@@ -81,17 +81,16 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpAddress GetAddressById(string token, int id)
         {
-            var record = _ministryPlatformService.GetRecord(AddressPageId, id, token);
-            var dict = MPFormatConversion.MPFormatToDictionary(record);
+            var record = _ministryPlatformService.GetRecordDict(AddressPageId, id, token);
 
             var address = new MpAddress()
             {
-                Address_ID = dict.ToInt("Address_ID"),
-                Address_Line_1 = dict.ToString("Address_Line_1"),
-                Address_Line_2 = dict.ToString("Address_Line_2"),
-                City = dict.ToString("City"),
-                State = dict.ToString("State/Region"),
-                Postal_Code = dict.ToString("Postal_Code")
+                Address_ID = record.ToInt("Address_ID"),
+                Address_Line_1 = record.ToString("Address_Line_1"),
+                Address_Line_2 = record.ToString("Address_Line_2"),
+                City = record.ToString("City"),
+                State = record.ToString("State/Region"),
+                Postal_Code = record.ToString("Postal_Code")
             };
 
             return address;

@@ -68,7 +68,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var searchString = string.Format(",,,,,{0},{1}", invitationGuid, false);
+                var searchString = string.Format(",,,,,\"{0}\",\"{1}\"", invitationGuid, false);
                 var mpResults = _ministryPlatformService.GetRecordsDict(_invitationPageId, token, searchString, string.Empty);
                 var invitation = (mpResults != null && mpResults.Count > 0) ? mpResults.FirstOrDefault() : null;
 
