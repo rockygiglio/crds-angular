@@ -10,18 +10,18 @@ export class CMSDataService {
     constructor(private http: Http) { }
     
     getSeriesById(id: number) {
-        return this.http.get(this.apiUrl + `series/${id}`)
+        return this.http.get(encodeURI(this.apiUrl + `series/${id}`));
     }
 
     getSeriesByTitle(title: string) {
-        return this.http.get(this.apiUrl + `series?title=${title}`)
+        return this.http.get(encodeURI(this.apiUrl + `series?title=${title}`));
     }
 
     getMessageByTitle(title: string) {
-        return this.http.get(this.apiUrl + `messages?title=${title}`)
+        return this.http.get(encodeURI(this.apiUrl + `messages?title=${title}`));
     }
 
     getMostRecent4Messages() {
-        return this.http.get(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`)
+        return this.http.get(encodeURI(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`));
     }
 }

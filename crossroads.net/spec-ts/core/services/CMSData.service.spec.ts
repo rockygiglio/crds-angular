@@ -91,7 +91,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            'https://contentint.crossroads.net/api/messages?date__sort=DESC&__limit[]=4');
+            'https://contentint.crossroads.net/api/messages?date__sort=DESC&__limit%5B%5D=4');
         });
 
         service.getMostRecent4Messages();
