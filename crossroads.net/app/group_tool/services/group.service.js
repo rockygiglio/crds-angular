@@ -170,8 +170,7 @@ export default class GroupService {
   }
 
   saveCreateGroupForm(smallGroup) {
-    debugger;
-    this.saveNewAttributes(smallGroup.attributeTypes);
+
     
     let promise = this.resource(`${__API_ENDPOINT__}api/group`)
                           .save({}, smallGroup).$promise;
