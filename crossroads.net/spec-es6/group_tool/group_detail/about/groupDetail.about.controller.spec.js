@@ -10,7 +10,8 @@ describe('GroupDetailAboutController', () => {
         rootScope,
         log,
         qApi,
-        mockProfile;
+        mockProfile,
+        cookies;
 
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
@@ -27,12 +28,13 @@ describe('GroupDetailAboutController', () => {
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
         qApi = $injector.get('$q');
+        cookies = $injector.get('$cookies');
 
         state.params = {
           groupId: 123
         };
 
-        fixture = new GroupDetailAboutController(groupService, imageService, state, log);
+        fixture = new GroupDetailAboutController(groupService, imageService, state, log, cookies);
     }));
 
     describe('the constructor', () => {
