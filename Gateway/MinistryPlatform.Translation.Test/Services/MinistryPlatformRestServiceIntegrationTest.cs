@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
@@ -77,6 +78,18 @@ namespace MinistryPlatform.Translation.Test.Services
 
         }
 
+        [Test]
+        public void TestEndDateGroup()
+        {
+            Console.WriteLine("TestEndDateGroup");
+            var groupId = 172501;
+            var fields = new Dictionary<string, object>
+            {
+                {"Group_ID", groupId },
+                {"End_Date", DateTime.Today}
+            };
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("dbo.Groups", groupId, fields);
+        }
        
         [Test]
         public void TestSearchAllPaymentTypes()

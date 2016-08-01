@@ -478,6 +478,12 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
+        public void EndDateGroup(int groupId)
+        {
+            //_mpGroupService.UpdateGroupInquiry();
+            throw new NotImplementedException();
+        }
+
         public Participant GetParticipantRecord(string token) 
         {
             var participant = _participantService.GetParticipantRecord(token);            
