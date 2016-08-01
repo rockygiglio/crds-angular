@@ -277,7 +277,7 @@ namespace crds_angular.Services
             return new Dictionary<string, object>()
             {
                 {"Nickname", person.Nickname},
-                {"Childcare_Date", threeDaysOut.ToString("d")},
+                {"Childcare_Date", threeDaysOut.ToString("MM/dd/yyyy")},
                 {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
                 {"Base_URL", url }
             };
@@ -725,7 +725,7 @@ namespace crds_angular.Services
                 var mergeData = new Dictionary<string, object>
                 {
                     {"Group_Name", participant.EnrollerGroupName },
-                    {"Childcare_Date", participant.ChildcareEventDate.ToString("d") },
+                    {"Childcare_Date", participant.ChildcareEventDate.ToString("MM/dd/yyyy") },
                     {"Group_Member_Nickname", participant.EnrollerNickname },
                     {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
                     {"Child_List", kiddos}
