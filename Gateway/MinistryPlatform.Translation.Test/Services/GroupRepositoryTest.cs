@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
@@ -24,6 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
+        private Mock<IAddressRepository> _addressService;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
@@ -38,7 +40,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object);
+            _addressService = new Mock<IAddressRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressService.Object);
 
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
