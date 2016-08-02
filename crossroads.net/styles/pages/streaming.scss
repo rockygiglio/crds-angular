@@ -31,9 +31,22 @@ streaming {
     font-weight: 300;
   }
 
-  > section {
+  > .wrapper {
     @include make-row();
     @include clearfix();
+  }
+
+  .fixed-header {
+    .navbar-section {
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+    .intro {
+      margin-top: 66px;
+    }
   }
 
   .navbar-section {
@@ -43,14 +56,6 @@ streaming {
     padding: 1em 0;
     font-size: 90%;
     min-height: 52px;
-
-    &.affix {
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      right: 0;
-      top: 0;
-    }
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
