@@ -230,4 +230,15 @@ export default class GroupService {
     });
   }
 
+  getSearchGroups(searchString, locationString) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/1/group/search`).
+    get({s: searchString, loc: locationString}).$promise;
+
+    return promise.then((data) => {
+          return !(data.Groups === null || data.Groups === undefined)
+        },
+        (err) => {
+          throw err;
+        });
+  }
 }

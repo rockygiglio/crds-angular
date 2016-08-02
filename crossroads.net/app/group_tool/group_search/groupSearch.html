@@ -6,7 +6,7 @@
       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     </p>
-    <form role="form" name="groupSearchForm" ng-submit="groupSearch.submit()">
+    <form role="form" name="groupSearchForm" >
       <div class="form-group">
         <label for="query">Search</label>
         <input id="query" ng-model="search.query" type="text" class="form-control" placeholder="Ex: Boxing, Joe Smith, Crossroads Site">
@@ -27,13 +27,14 @@
       </div>
 
       <div class="push-top text-right">
-        <loading-button
-          input-type='submit'
-          normal-text='Search'
-          loading-text='Searching...'
-          loading='groupSearch.processing'
-          loading-class='disabled'
-          input-classes='btn btn-primary'/>
+        <!--<loading-button-->
+          <!--input-type='submit'-->
+          <!--normal-text='Search'-->
+          <!--loading-text='Searching...'-->
+          <!--loading='groupSearch.processing'-->
+          <!--loading-class='disabled'-->
+          <!--input-classes='btn btn-primary'/>-->
+        <button type="button" class="btn btn-primary" ui-sref="grouptool.search-results({query: search.query, location: search.location})" >Search</button>
         </p>
       </div>
 

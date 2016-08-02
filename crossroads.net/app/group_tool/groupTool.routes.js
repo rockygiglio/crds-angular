@@ -123,6 +123,16 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.search-results', {
       parent: 'noSideBar',
       url: '/groups/search/results',
+      params: {
+        query: {
+          value: null,
+          squash: true
+        },
+        location: {
+          value: null,
+          squash: true
+        }
+      },
       template: '<group-search-results></group-search-results>',
       data: {
         isProtected: true,

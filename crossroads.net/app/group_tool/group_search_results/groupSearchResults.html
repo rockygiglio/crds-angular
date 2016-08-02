@@ -1,4 +1,6 @@
-<div>
+<preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
+
+<div ng-if='groupSearchResults.ready'>
   <h1 class="page-header">Search Results</h1>
   <div class="group-search-tools row">
     <div class="col-sm-5 push-half-bottom">
