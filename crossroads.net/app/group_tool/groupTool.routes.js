@@ -122,7 +122,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search-results', {
       parent: 'noSideBar',
-      url: '/groups/search/results',
+      url: '/groups/search/results?query&location',
       params: {
         query: {
           value: null,

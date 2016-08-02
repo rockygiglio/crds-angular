@@ -41,7 +41,7 @@ export default class GroupSearchResultsController {
   }
 
   submit() {
-    this.doSearch(search.query, search.location);
+    this.doSearch(this.search.query, this.search.location);
   }
 
   searchWithLocation() {
