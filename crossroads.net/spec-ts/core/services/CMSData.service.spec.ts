@@ -102,10 +102,11 @@ describe('Service: CMSData', () => {
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
-
+          let todaysDate = new Date().toISOString().slice(0, 10)
+          
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__LessThan${Date.now()}&endDate__GreaterThan${Date.now()}`);
+            `https://contentint.crossroads.net/api/series?startDate__LessThan=${todaysDate}&endDate__GreaterThan=${todaysDate}&endDate__sort=ASC`);
         });
 
         service.getCurrentSeries();
@@ -113,4 +114,3 @@ describe('Service: CMSData', () => {
 
 
 });
-
