@@ -3,9 +3,9 @@
 
   module.exports = TripsSignupService;
 
-  TripsSignupService.$inject = ['$resource', '$location', '$log', 'Session'];
+  TripsSignupService.$inject = ['$resource', '$location', '$log'];
 
-  function TripsSignupService($resource, $location, $log, Session) {
+  function TripsSignupService($resource, $location, $log) {
     var signupService = {
       activate: activate,
       pages: [],
@@ -38,6 +38,10 @@
         signupService.page6 = page6();
       }
 
+      setupProps();
+    }
+
+    function setupProps() {
       //relying on Pledge Campaign Nickname field feels very fragile, is there another way?
       signupService.friendlyPageTitle = signupService.campaign.nickname;
       switch (signupService.campaign.nickname) {
@@ -56,6 +60,7 @@
           signupService.numberOfPages = 6;
           break;
       }
+
     }
 
     function reset(campaign) {
