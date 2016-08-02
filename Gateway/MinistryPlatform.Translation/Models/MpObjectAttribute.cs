@@ -11,5 +11,8 @@ namespace MinistryPlatform.Translation.Models
         public DateTime? EndDate { get; set; }
         public string Notes { get; set; }
         public string AttributeTypeName { get; set; }
+        public string Name { get; set; }
+        public bool Selected { get; set; }
+        public string Category { get; set; }
     }
 }

@@ -13,6 +13,8 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private GroupToolRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
+        private Mock<IApiUserRepository> _apiUserRepository;
 
         private const int InvitationPageID = 55;
         private const int GroupInquiriesSubPageId = 304;
@@ -21,9 +23,11 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
+            _apiUserRepository = new Mock<IApiUserRepository>(MockBehavior.Strict);
+
             var config = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             var auth = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
-            var comm = new Mock<ICommunicationRepository>(MockBehavior.Strict);
 
             config.Setup(mocked => mocked.GetConfigIntValue("InvitationPageID")).Returns(InvitationPageID);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupInquiresSubPage")).Returns(GroupInquiriesSubPageId);
@@ -33,7 +37,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new GroupToolRepository(_ministryPlatformService.Object, config.Object, auth.Object, comm.Object);
+            _fixture = new GroupToolRepository(_ministryPlatformService.Object, config.Object, auth.Object, _ministryPlatformRestRepository.Object, _apiUserRepository.Object);
         }
 
         [Test]
