@@ -25,7 +25,7 @@ BEGIN
 
 	-- split keyword string - we search in each column for these
 	CREATE TABLE #Keywords (Keyword NVARCHAR(MAX));
-	INSERT INTO #Keywords SELECT Item FROM dp_Split(@SearchString, ',');
+	INSERT INTO #Keywords SELECT UPPER(Item) FROM dp_Split(@SearchString, ',');
 
 	SELECT 
 	Group_ID AS [GroupId], 
@@ -96,9 +96,17 @@ BEGIN
 		DECLARE @DynamicQuery VARCHAR(MAX)
 		SET @DynamicQuery = 'SELECT * FROM #AllGroups WHERE '
 
+		DECLARE @Group_Description_Subquery NVARCHAR(MAX)
+		SELECT @Group_Description_Subquery = STUFF((
+			select ' UPPER(GroupDescription) LIKE ''%' + Keyword + '%'' OR '
+			from #Keywords
+			FOR XML PATH('')
+			)
+			,1,1,'')
+
 		DECLARE @Group_Name_Subquery NVARCHAR(MAX)
 		SELECT @Group_Name_Subquery = STUFF((
-			select ' Name LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Name) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -106,7 +114,7 @@ BEGIN
 
 		DECLARE @Group_Participants_Subquery NVARCHAR(MAX)
 		SELECT @Group_Participants_Subquery = STUFF((
-			select ' GroupParticipants LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(GroupParticipants) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -114,7 +122,7 @@ BEGIN
 
 		DECLARE @MultiSelectAttributes_Subquery NVARCHAR(MAX)
 		SELECT @MultiSelectAttributes_Subquery = STUFF((
-			select ' MultiSelectAttributes LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(MultiSelectAttributes) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -122,7 +130,7 @@ BEGIN
 
 		DECLARE @SingleSelectAttributes_Subquery NVARCHAR(MAX)
 		SELECT @SingleSelectAttributes_Subquery = STUFF((
-			select ' SingleSelectAttributes LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(SingleSelectAttributes) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -130,7 +138,7 @@ BEGIN
 
 		DECLARE @Site_Subquery NVARCHAR(MAX)
 		SELECT @Site_Subquery = STUFF((
-			select ' Congregation LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Congregation) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -138,7 +146,7 @@ BEGIN
 
 		DECLARE @Address_Subquery NVARCHAR(MAX)
 		SELECT @Address_Subquery = STUFF((
-			select ' Address_Line_1 LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Address_Line_1) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -146,7 +154,7 @@ BEGIN
 
 		DECLARE @City_Subquery NVARCHAR(MAX)
 		SELECT @City_Subquery = STUFF((
-			select ' City LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(City) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -154,7 +162,7 @@ BEGIN
 
 		DECLARE @State_Subquery NVARCHAR(MAX)
 		SELECT @State_Subquery = STUFF((
-			select ' State LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(State) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -162,7 +170,7 @@ BEGIN
 
 		DECLARE @Zip_Subquery NVARCHAR(MAX)
 		SELECT @Zip_Subquery = STUFF((
-			select ' Postal_Code LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Postal_Code) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -170,7 +178,7 @@ BEGIN
 
 		DECLARE @Meeting_Day_Subquery NVARCHAR(MAX)
 		SELECT @Meeting_Day_Subquery = STUFF((
-			select ' MeetingDay LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(MeetingDay) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -178,7 +186,7 @@ BEGIN
 
 		DECLARE @Meeting_Time_Subquery NVARCHAR(MAX)
 		SELECT @Meeting_Time_Subquery = STUFF((
-			select ' MeetingTime LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(MeetingTime) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -186,13 +194,13 @@ BEGIN
 
 		DECLARE @Meeting_Frequency_Subquery NVARCHAR(MAX)
 		SELECT @Meeting_Frequency_Subquery = STUFF((
-			select ' Meeting_Frequency LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Meeting_Frequency) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
 			,1,1,'')
 
-		SET @DynamicQuery = CONCAT(@DynamicQuery, @Group_Name_Subquery, @Group_Participants_Subquery, @MultiSelectAttributes_Subquery, @MultiSelectAttributes_Subquery,
+		SET @DynamicQuery = CONCAT(@DynamicQuery, @Group_Name_Subquery, @Group_Description_Subquery, @Group_Participants_Subquery, @MultiSelectAttributes_Subquery, @MultiSelectAttributes_Subquery,
 			@Site_Subquery, @Address_Subquery, @City_Subquery, @State_Subquery, @Zip_Subquery, @Meeting_Day_Subquery, @Meeting_Time_Subquery)
 
 		-- need to figure out a better way to handle the dangling OR
