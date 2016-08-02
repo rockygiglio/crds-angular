@@ -96,7 +96,6 @@
 
     function page4() {
       return {
-        lottery: null,
         groupCommonName: null,
         roommateFirstChoice: null,
         roommateSecondChoice: null,
