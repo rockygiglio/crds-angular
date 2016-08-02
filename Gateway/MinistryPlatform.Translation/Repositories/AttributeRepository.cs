@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public List<MpAttribute> CreateMissingAttributesReturnAttributeIds(List<MpAttribute> attributes, int attributeType)
+        public List<MpAttribute> CreateMissingAttributes(List<MpAttribute> attributes, int attributeType)
         {
             var token = base.ApiLogin();
 
