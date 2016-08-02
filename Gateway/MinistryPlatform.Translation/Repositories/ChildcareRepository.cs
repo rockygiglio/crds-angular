@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -42,6 +43,13 @@ namespace MinistryPlatform.Translation.Repositories
                 return rsvpList.FirstOrDefault().Rsvpd;
             }
             return false;            
+        }
+
+        public List<MpContact> GetChildcareReminderEmails(string token)
+        {
+            var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails");
+            var emailList = storedProcReturn.FirstOrDefault();
+            return emailList;
         }
 
         public List<MpChildcareCancelledNotification> GetChildcareCancellations()

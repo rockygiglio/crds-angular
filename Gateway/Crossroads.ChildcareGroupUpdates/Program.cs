@@ -60,6 +60,8 @@ namespace Crossroads.ChildcareGroupUpdates
                     groupdto.StartDate = mpevent.EventStartDate;
                     groupdto.Participants?.Clear();
                     groupdto.Events?.Clear();
+                    groupdto.MeetingDayId = null;
+                    groupdto.MeetingFrequencyID = null;
                     //change the dates
                     
                     var newgroupdto = groupService.CreateGroup(groupdto);
