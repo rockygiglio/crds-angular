@@ -58,18 +58,30 @@ describe('Request Childcare Controller', () => {
       });
     spyOn(cookies, 'get').and.returnValue(uid);
     spyOn(MPTools, 'getParams').and.returnValue({
-      recordId: null 
+      recordId: -1
     });
+
+    /*spyOn(requestChildcareService, 'getChildcareRequest').and.returnValue(*/
+
+    /*);*/
 
   }));
 
   it('should set allowAccess to false if not authorized', () => {
     spyOn(MPTools, 'allowAccess').and.returnValue(false); 
-    commonExpectations();
+    controller = new RequestChildcareController(rootScope,
+                                                MPTools,
+                                                CRDS_TOOLS_CONSTANTS,
+                                                log,
+                                                requestChildcareService,
+                                                validation,
+                                                cookies,
+                                                _window);
     expect(controller.allowAccess).toBe(false);
   });
 
   it('should show the gaps in frequency widget', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenPreferredTime = { 
       Childcare_Day_ID: 3,
@@ -92,11 +104,13 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should not show the gaps in frequency widget', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     expect(controller.showGaps()).toBe(false);
   });
 
   it('should get a list of dates for a weekly occurence', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenPreferredTime = {
       Childcare_Day_ID: 3,
@@ -136,6 +150,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should get a list of dates for a montly occurence', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenPreferredTime = {
       Childcare_Day_ID: 3,
@@ -173,6 +188,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should get monthly recurrance and include the last date', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenPreferredTime = {
       Childcare_Day_ID: 3,
@@ -213,6 +229,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should get the correct week of the month', function() {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     var firstTuesday =  moment(new Date(2016, 5, 7));
     var weekOfMonth = controller.getWeekOfMonth(firstTuesday);
@@ -220,6 +237,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should get groups and preferred times', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenCongregation = { dp_RecordID: 2 };
     controller.choosenMinistry = {dp_RecordID: 3};
@@ -229,6 +247,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should show groups', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     controller.choosenCongregation = { dp_RecordID: 2 };
     controller.choosenMinistry = { dp_RecordID: 3 };
@@ -239,11 +258,13 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should not show groups if ministry and congregation are not set', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     expect(controller.showGroups()).toBeFalsy(); 
   });
 
   it('should not show groups if the groups list is empty', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     controller.choosenCongregation = { dp_RecordID: 2 };
     controller.choosenMinistry = { dp_RecordID: 3 };
     controller.groups = [];
@@ -251,6 +272,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should format the preferred time correctly', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     const time = {
       'Childcare_Start_Time': '09:00:00',
@@ -261,6 +283,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should submit the form', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();    
     // fake form 
     controller.childcareRequestForm = {
@@ -285,6 +308,7 @@ describe('Request Childcare Controller', () => {
   });
 
   it('should not submit the form if $invalid', () => {
+    spyOn(MPTools, 'allowAccess').and.returnValue(true);
     commonExpectations();
     // fake form 
     controller.childcareRequestForm = {
