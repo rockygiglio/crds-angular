@@ -40,7 +40,8 @@ namespace crds_angular.Controllers.API
 
             TripApplicationResponseDto response;
             try
-            {
+            {                
+                _tripService.CreateTripParticipant(dto.ContactId, dto.PledgeCampaignId);
                 var message = _messageFactory.CreateMessage(dto);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
                 response = new TripApplicationResponseDto
@@ -61,22 +62,5 @@ namespace crds_angular.Controllers.API
             return ((IHttpActionResult) RestHttpActionResult<TripApplicationResponseDto>.Ok(response));
         }
 
-        [Route("api/trip-participant"), HttpPost]
-        public IHttpActionResult CreateTripParticipant([FromBody] CreateTripParticipantDto dto)
-        {
-            return Authorized(token =>
-            {
-                try
-                {
-                    _tripService.CreateTripParticipant(dto);
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    var apiError = new ApiErrorDto("Create Trip Participant Failed", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
-        }
     }
 }

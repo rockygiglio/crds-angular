@@ -372,15 +372,15 @@ namespace crds_angular.Services
             return myTrips;
         }
 
-        public void CreateTripParticipant(CreateTripParticipantDto dto)
+        public void CreateTripParticipant(int contactId, int pledgeCampaignId)
         {
-            var tripRecords = _campaignService.GetGoTripDetailsByCampaign(dto.PledgeCampaignId);
-            Participant participant = _participantService.GetParticipant(dto.ContactId);
-            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(dto.ContactId);
+            var tripRecords = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId);
+            Participant participant = _participantService.GetParticipant(contactId);
+            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(contactId);
             
             var tripApplicantRecord = new TripApplicant
             {
-                ContactId = dto.ContactId,
+                ContactId = contactId,
                 ParticipantId = participant.ParticipantId,
                 DonorId = tripDonor.DonorId
             };
@@ -394,7 +394,7 @@ namespace crds_angular.Services
                 {
                     DestinationId = tripRecord.CampaignDestinationId,
                     FundraisingGoal = tripRecord.CampaignFundRaisingGoal,
-                    PledgeCampaignId = dto.PledgeCampaignId
+                    PledgeCampaignId = pledgeCampaignId
                 };
                 var tripParticipantRecord = new SaveTripParticipantsDto
                 {
@@ -717,7 +717,6 @@ namespace crds_angular.Services
             var page4 = applicationData.PageFour;
             answers.Add(new MpFormAnswer {Response = page4.GroupCommonName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GroupCommonName")});
             answers.Add(new MpFormAnswer {Response = page4.InterestedInGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.InterestedInGroupLeader")});
-            answers.Add(new MpFormAnswer {Response = page4.Lottery, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Lottery")});
             answers.Add(new MpFormAnswer {Response = page4.RoommateFirstChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateFirstChoice")});
             answers.Add(new MpFormAnswer {Response = page4.RoommateSecondChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateSecondChoice")});
             answers.Add(new MpFormAnswer {Response = page4.SupportPersonEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SupportPersonEmail")});
