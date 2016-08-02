@@ -1,5 +1,8 @@
 <h1 class='page-header'>Group Detail</h1>
-<tabset>
+
+<preloader full-screen='false' ng-if='!groupDetail.ready'> </preloader>
+
+<tabset ng-if='groupDetail.ready'>
   <tab ng-repeat='tab in groupDetail.tabs' heading='{{tab.title}}' active='tab.active' ng-click='groupDetail.goToTab(tab)'
     class='{{tab.class}}'>
     <ui-view ng-if='tab.active'></ui-view>

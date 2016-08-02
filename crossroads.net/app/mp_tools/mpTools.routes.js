@@ -119,9 +119,9 @@
     .state('tools.requestChildcare', {
       url: '/requestchildcare',
       template: '<request-childcare> </request-childcare>',
-	    resolve: { 
-        LookupService: 'LookupService', 
-        Congregations: fetchCongregations,  
+      resolve: { 
+        LookupService: 'LookupService',
+        Congregations: fetchCongregations,
         Ministries: fetchMinistries,
         MPTools: 'MPTools'
       }
@@ -265,7 +265,7 @@
         }
       });
 
-	   function fetchCongregations(LookupService, MPTools, $q) {
+      function fetchCongregations(LookupService, MPTools, $q) {
         var deferred = $q.defer();
         var lkups = LookupService.Congregations.query();
         lkups.$promise.then( (data) => {
@@ -276,7 +276,7 @@
           deferred.reject();
         });
         return deferred.promise;
-      };
+      }
 
       function fetchMinistries(LookupService, MPTools, $q) {
         var deferred = $q.defer();
@@ -289,7 +289,7 @@
           deferred.reject();
         });
         return deferred.promise;
-      };
+      }
 
   }
 })();

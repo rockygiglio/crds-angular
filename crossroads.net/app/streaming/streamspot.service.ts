@@ -1,6 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
+declare var __STREAMSPOT_API_KEY__: string;
+
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
@@ -15,7 +17,7 @@ export class StreamspotService {
   // #TODO - move to ENV file?
   //
   private url    = 'https://api.streamspot.com/';  // URL to web api
-  private apiKey = '82437b4d-4e38-42e2-83b6-148fcfaf36fb';
+  private apiKey = __STREAMSPOT_API_KEY__;
   private id     = 'crossr4915'
   private headers = new Headers({
     'Content-Type': 'application/json',
