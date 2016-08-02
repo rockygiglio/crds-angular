@@ -20,6 +20,7 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationService;
         private readonly IGroupRepository _groupRepository;
         private readonly IParticipantRepository _participantRepository;
+        private readonly IContactRepository _contactRepository;
 
         private readonly int _groupInvitationType;
         private readonly int _groupInvitationEmailTemplate;
@@ -38,13 +39,15 @@ namespace crds_angular.Services
                            ICommunicationRepository communicationService, 
                            IConfigurationWrapper configuration,
                            IGroupRepository groupRepository,
-                           IParticipantRepository participantRepository)
+                           IParticipantRepository participantRepository,
+                           IContactRepository contactRepository)
         {
 
             _invitationRepository = invitationRepository;
             _communicationService = communicationService;
             _groupRepository = groupRepository;
             _participantRepository = participantRepository;
+            _contactRepository = contactRepository;
 
             _groupInvitationType = configuration.GetConfigIntValue("GroupInvitationType");
             _groupInvitationEmailTemplate = configuration.GetConfigIntValue("GroupInvitationEmailTemplate");
@@ -72,7 +75,8 @@ namespace crds_angular.Services
 
                 try
                 {
-                    SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
+                    //SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
+                    SendEmail(invitation, leaderParticipantRecord, group.Name);
                 }
                 catch (Exception e)
                 {
@@ -130,8 +134,10 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation, string leaderName, string groupName)
+        private void SendEmail(MpInvitation invitation, Participant leader, string groupName)
         {
+            var leaderContact = _contactRepository.GetContactById(leader.ContactId);
+
             // basic merge data here
             var mergeData = new Dictionary<string, object>
             {
@@ -143,7 +149,7 @@ namespace crds_angular.Services
             if (invitation.InvitationType == _groupInvitationType)
             {
                 emailTemplateId = _groupInvitationEmailTemplate;
-                mergeData.Add("Leader_Name", leaderName);
+                mergeData.Add("Leader_Name", leaderContact.Nickname + " " + leaderContact.Last_Name);
                 mergeData.Add("Group_Name", groupName);
             } else if (invitation.InvitationType == _tripInvitationType)
             {
@@ -161,8 +167,8 @@ namespace crds_angular.Services
             };
             var replyTo = new MpContact
             {
-                ContactId = emailTemplate.ReplyToContactId,
-                EmailAddress = emailTemplate.ReplyToEmailAddress
+                ContactId = leader.ContactId,
+                EmailAddress = leader.EmailAddress
             };
 
             var to = new List<MpContact>

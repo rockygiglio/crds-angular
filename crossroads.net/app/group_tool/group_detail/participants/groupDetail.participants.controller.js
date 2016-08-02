@@ -15,6 +15,7 @@ export default class GroupDetailParticipantsController {
     this.ready = false;
     this.error = false;
     this.processing = false;
+    this.isLeader = false;
 
     this.setListView();
   }
@@ -28,6 +29,10 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     });
+
+    this.groupService.getIsLeader(this.groupId).then((isLeader) => {
+      this.isLeader = isLeader;
+    })
   }
 
   loadGroupParticipants() {

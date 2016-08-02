@@ -44,6 +44,14 @@ streaming {
     font-size: 90%;
     min-height: 52px;
 
+    &.affix {
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
     }
@@ -401,6 +409,12 @@ streaming {
     }
     &, h2 {
       color: #FFF;
+    }
+
+    .addthis_crossroads_sharing {
+      a {
+        float: none;
+      }
     }
   }
 

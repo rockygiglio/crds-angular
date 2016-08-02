@@ -7,7 +7,8 @@ export default function GroupDetailAboutComponent() {
   let groupDetailAboutComponent = {
     bindings: {
       data: '<',
-      edit: '<'
+      edit: '<',
+      forInvitation: '<'
     },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',

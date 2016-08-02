@@ -48,6 +48,11 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
+        public List<List<T>> GetFromStoredProc<T>(string procedureName)
+        {
+            return GetFromStoredProc<T>(procedureName, new Dictionary<string, object>());
+        }
+
         public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
             var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));

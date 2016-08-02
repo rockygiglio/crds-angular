@@ -19,17 +19,17 @@
     <div class='col-md-12'>
       <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
         <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEmailView()'>Email Group</a>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()'>Edit</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
       </p>
       <p class='text-center' ng-if='groupDetailParticipants.isEditView()'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Cancel</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()' ng-if='groupDetailParticipants.isLeader'>Cancel</a>
       </p>
     </div>
   </div>
 </div>
 
 <!-- Delete a participant -->
-<div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView()'>
+<div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView() && groupDetailParticipants.isLeader'>
   <group-message person="groupDetailParticipants.deleteParticipant"
     normal-loading-text="Remove Participant"
     loading-loading-text="Removing..."
