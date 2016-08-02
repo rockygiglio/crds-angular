@@ -25,6 +25,8 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
 
         private readonly int _defaultGroupRoleId;
+        private readonly int _defaultGroupTypeId;
+
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -59,8 +61,9 @@ namespace crds_angular.Services
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
-            
-            _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+            _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
+
+               _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
         }
@@ -70,6 +73,8 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
+                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, sourceId);
+
                 var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
             }
@@ -87,6 +92,8 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
+                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+
                 var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
             }

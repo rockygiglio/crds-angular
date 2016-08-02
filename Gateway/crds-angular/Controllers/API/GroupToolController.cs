@@ -237,5 +237,40 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        /// <summary>
+        /// Return if the user is a group leader
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that we want to check if the user is a Leader of.</param>
+        /// <param name="groupTypeId">An integer identifying the group type that we want to check if the user is a Leader of.</param>
+        /// <returns>MyGroup</returns>
+        [RequiresAuthorization]
+        [AcceptVerbs("GET")]
+        [ResponseType(typeof(MyGroup))]
+        [Route("api/grouptool/{groupId}/{groupTypeId}/isleader")]
+        [HttpGet]
+        public IHttpActionResult GetIfIsGroupLeader(int groupId, int groupTypeId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+
+                    //Will return group if they are a group leader
+                    return Ok(group);
+                }
+                catch(NotGroupLeaderException)
+                {
+                    //Will return empty group if they are not a group leader
+                    return Ok(new MyGroup());
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("Get if leader Failed", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }
