@@ -394,22 +394,22 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       application.inviteGUID = $stateParams.invite;
       application.$save(function() {
         $log.debug('trip application save successful');
-      }, function() {
+        _.each(vm.signupService.familyMembers, function(f) {
+          if (f.contactId === vm.signupService.contactId) {
+            f.signedUp = true;
+            f.signedUpDate = new Date();
+          }
+        });
 
+        vm.signupService.pageId = 'thanks';
+        vm.tpForm.$setPristine();
+        $state.go('tripsignup.application.thankyou');
+      }, function() {
+        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         $log.debug('trip application save unsuccessful');
       });
 
-      _.each(vm.signupService.familyMembers, function(f) {
-        if (f.contactId === vm.signupService.contactId) {
-          f.signedUp = true;
-          f.signedUpDate = new Date();
-        }
-      });
-
-      vm.signupService.pageId = 'thanks';
-      vm.tpForm.$setPristine();
-      $state.go('tripsignup.application.thankyou');
-    }
+          }
 
     function showFrequentFlyer(airline) {
       if (airline.attributeId === attributes.SOUTHAFRICA_FREQUENT_FLYER) {
