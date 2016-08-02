@@ -34,13 +34,13 @@ namespace MinistryPlatform.Translation.Repositories
             this._groupInquiresSubPageId = _configurationWrapper.GetConfigIntValue("GroupInquiresSubPage");
         }
 
-        public List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId, string token)
+        public List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId)
         {
             var mpInvitations = new List<MpInvitation>();
             try
             {
                 var searchString = string.Format(",,,{0},{1},,false", invitationTypeId, sourceId);
-                var mpResults = _ministryPlatformService.GetRecords(_invitationPageId, token, searchString, string.Empty);
+                var mpResults = _ministryPlatformService.GetRecords(_invitationPageId, ApiLogin(), searchString, string.Empty);
                 var invitations = MPFormatConversion.MPFormatToList(mpResults);
 
                 // Translate object format from MP to an MpInvitaion object
@@ -74,12 +74,12 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
 
-        public List<MpInquiry> GetInquiries(int groupId, string token)
+        public List<MpInquiry> GetInquiries(int groupId)
         {
             var mpInquiries = new List<MpInquiry>();
             try
             {
-                var inquiries = _ministryPlatformService.GetSubPageRecords(this._groupInquiresSubPageId, groupId, token);
+                var inquiries = _ministryPlatformService.GetSubPageRecords(this._groupInquiresSubPageId, groupId, ApiLogin());
                
                 // Translate object format from MP to an MpInquiry object
                 if (inquiries != null && inquiries.Count > 0)

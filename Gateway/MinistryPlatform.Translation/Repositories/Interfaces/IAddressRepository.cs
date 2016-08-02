@@ -7,5 +7,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         int Create(MpAddress address);
         List<MpAddress> FindMatches(MpAddress address);
+        MpAddress GetAddressById(string token, int id);
     }
 }

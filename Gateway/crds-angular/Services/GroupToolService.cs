@@ -22,7 +22,9 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IContentBlockService _contentBlockService;
+        private readonly IInvitationRepository _invitationRepository;
 
+        private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -43,7 +45,8 @@ namespace crds_angular.Services
                            IParticipantRepository participantRepository,
                            ICommunicationRepository communicationRepository,
                            IContentBlockService contentBlockService,
-                           IConfigurationWrapper configurationWrapper)
+                           IConfigurationWrapper configurationWrapper, 
+                           IInvitationRepository invitationRepository)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -52,8 +55,11 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
             _communicationRepository = communicationRepository;
             _contentBlockService = contentBlockService;
+            _invitationRepository = invitationRepository;
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
@@ -64,7 +70,7 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
-                var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId, token);
+                var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
             }
             catch (Exception e)
@@ -81,7 +87,7 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
-                var mpRequests = _groupToolRepository.GetInquiries(groupId, token);
+                var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
             }
             catch (Exception e)
@@ -305,7 +311,31 @@ namespace crds_angular.Services
             }
         }
 
-	public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
+        public void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept)
+        {
+            try
+            {
+                //If they accept the invite get their participant record and them to the group as a member.
+                if (accept)
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    _groupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _defaultGroupRoleId, false, DateTime.Now);
+                }
+
+                _invitationRepository.MarkInvitationAsUsed(invitationGuid);
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not accept = {0} from group {1}", accept, groupId), e);
+            }
+        }
+
+        public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
@@ -361,3 +391,4 @@ namespace crds_angular.Services
         }
     }
 }
+

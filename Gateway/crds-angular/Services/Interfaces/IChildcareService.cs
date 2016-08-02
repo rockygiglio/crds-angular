@@ -4,6 +4,7 @@ using crds_angular.Models;
 using crds_angular.Models.Crossroads.Childcare;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 
 namespace crds_angular.Services.Interfaces
@@ -24,5 +25,8 @@ namespace crds_angular.Services.Interfaces
         void SendChildcareCancellationNotification();
         void UpdateChildcareRequest(ChildcareRequestDto request, string token);
         List<ChildCareDate> UpdateAvailableChildCareDates(List<ChildCareDate> currentDates, DateTime dateToAdd, bool hasBeenCancelled);
+        void SendChildcareReminders();
+        MpCommunication SetupChilcareReminderCommunication(MpContact recipient, Dictionary<string, object> mergeData);
+        Dictionary<string, object> SetMergeDataForChildcareReminder(MpContact toContact, DateTime threeDaysOut);
     }
 }

@@ -236,6 +236,54 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendChildcareReminders()
+        {
+            var token = _apiUserService.GetToken();                     
+            var toEmails = _childcareRepository.GetChildcareReminderEmails(token);
+            var threeDaysOut = DateTime.Now.AddDays(3);
+
+            foreach (var toContact in toEmails.Where((contact) => contact.EmailAddress != null))
+            {
+                var mergeData = SetMergeDataForChildcareReminder(toContact, threeDaysOut);
+                var communication = SetupChilcareReminderCommunication(toContact, mergeData);               
+                _communicationService.SendMessage(communication, false);
+            };                                   
+        }
+
+        public MpCommunication SetupChilcareReminderCommunication(MpContact recipient, Dictionary<string,object> mergeData)
+        {
+            var templateId = _configurationWrapper.GetConfigIntValue("ChildcareReminderTemplateId");
+            var template = _communicationService.GetTemplate(templateId);
+
+            var fromId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
+            var from = _contactService.GetContactEmail(fromId);
+            var fromContact = new MpContact { ContactId = fromId, EmailAddress = from };
+
+            return _communicationService.GetTemplateAsCommunication(templateId, 
+                                                                fromId, 
+                                                                from, 
+                                                                fromId, 
+                                                                from, 
+                                                                recipient.ContactId, 
+                                                                recipient.EmailAddress, 
+                                                                mergeData);
+        }
+
+        public Dictionary<string, object> SetMergeDataForChildcareReminder(MpContact toContact, DateTime threeDaysOut)
+        {
+            var person = _contactService.GetContactById(toContact.ContactId);
+            var url = _configurationWrapper.GetConfigValue("BaseUrl");
+
+            return new Dictionary<string, object>()
+            {
+                {"Nickname", person.Nickname},
+                {"Childcare_Date", threeDaysOut.ToString("MM/dd/yyyy")},
+                {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
+                {"Base_URL", $"https://{url}" }
+            };
+        }
+
+
         private Dictionary<int, int> GetChildcareEventsfortheDates(List<MpEvent> events, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
         {
             var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
@@ -341,17 +389,17 @@ namespace crds_angular.Services
 
                 foreach (var member in householdData.AllMembers)
                 {
-                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
+                    if (member.HouseholdPosition != null && !member.HouseholdPosition.ToUpper().StartsWith("HEAD") && member.HouseholdPosition.StartsWith("Minor") && eligibleChildren.All(c => c.ContactId != member.ContactId)) //TODO: Get rid of magic string. Household Position
                     {
                         var echild = new ChildcareRsvp
                         {
                             ContactId = member.ContactId,
                             DisplayName = member.Nickname + ' ' + member.LastName,
-                            ChildEligible = (member.Age < childcareDashboard.ChildcareMaxAge),
+                            ChildEligible = (member.Age <= childcareDashboard.ChildcareMaxAge),
                             ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
                         };
                         eligibleChildren.Add(echild);
-                    }
+                    }                       
                 }
 
                 var ccEvent = dashboard.AvailableChildcareDates.First(d => d.EventDate.Date == childcareDashboard.EventStartDate.Date);
@@ -677,7 +725,7 @@ namespace crds_angular.Services
                 var mergeData = new Dictionary<string, object>
                 {
                     {"Group_Name", participant.EnrollerGroupName },
-                    {"Childcare_Date", participant.ChildcareEventDate.ToString("d") },
+                    {"Childcare_Date", participant.ChildcareEventDate.ToString("MM/dd/yyyy") },
                     {"Group_Member_Nickname", participant.EnrollerNickname },
                     {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
                     {"Child_List", kiddos}

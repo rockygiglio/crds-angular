@@ -10,7 +10,8 @@ describe('GroupDetailAboutController', () => {
         rootScope,
         log,
         qApi,
-        mockProfile;
+        mockProfile,
+        cookies;
 
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
@@ -27,13 +28,31 @@ describe('GroupDetailAboutController', () => {
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
         qApi = $injector.get('$q');
+        cookies = $injector.get('$cookies');
 
         state.params = {
           groupId: 123
         };
 
-        fixture = new GroupDetailAboutController(groupService, imageService, state, log);
+        fixture = new GroupDetailAboutController(groupService, imageService, state, log, cookies);
     }));
+
+    describe('groupExists() function', () => {
+      it('should be true', () => {
+        expect(fixture.groupExists()).toBeTruthy();
+      });
+
+      it('should be true', () => {
+        state.params.groupId = null;
+        expect(fixture.groupExists()).toBeFalsy();
+      });
+      
+      it('should be true', () => {
+        state.params.groupId = null;
+        fixture.data = {groupId: 123};
+        expect(fixture.groupExists()).toBeTruthy();
+      });
+    });
 
     describe('the constructor', () => {
         it('should initialize properties', () => {
@@ -70,6 +89,7 @@ describe('GroupDetailAboutController', () => {
           expect(fixture.data.primaryContact.imageUrl).toEqual(`${imageService.ProfileImageBaseURL}${groupData.contactId}`);
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeFalsy();
+          expect(fixture.forInvitation).toBeFalsy();
         });
 
         it('should set error state if trouble getting requests', () => {

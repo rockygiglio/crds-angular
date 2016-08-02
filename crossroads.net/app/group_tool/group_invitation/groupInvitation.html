@@ -1,0 +1,46 @@
+<span dynamic-content="$root.MESSAGES.joinGroupToolHeader.content | html"></span>
+
+<preloader full-screen='false' ng-if="!groupInvitation.ready"> </preloader>
+
+<div ng-if='groupInvitation.ready'>
+  <div ng-if="!groupInvitation.invitationExists()">
+    <div class='row'>
+      <div class='col-md-12'>
+        <p class='text-center' ng-if="!groupInvitation.invitationExists()">
+          <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolInvitationDoesNotExist.content | html"></div>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="groupInvitation.invitationExists()">
+    <div class='row'>
+      <div class='col-md-12' dynamic-content="$root.MESSAGES.joinGroupToolSubHeader.content | html"></div></span>
+    </div>
+    <div class='row'>
+      <div class='col-md-12'>
+        <group-detail-about data="groupInvitation.group" for-invitation="true"></group-detail-about>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-md-12'>
+        <p class='text-center'>
+          <loading-button
+                  normal-text='No Thanks'
+                  loading-text='No Thanks'
+                  loading='groupInvitation.processing'
+                  loading-class='disabled'
+                  input-classes='btn btn-standard'
+                  ng-click='groupInvitation.deny()'></loading-button>
+          <loading-button
+                  normal-text='Join Group'
+                  loading-text='Joining Group...'
+                  loading='groupInvitation.processing'
+                  loading-class='disabled'
+                  input-classes='btn btn-primary'
+                  ng-click='groupInvitation.accept()'></loading-button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

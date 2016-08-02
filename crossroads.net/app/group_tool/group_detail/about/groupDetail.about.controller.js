@@ -1,15 +1,18 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log) {
+  constructor(GroupService, ImageService, $state, $log, $cookies) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.log = $log;
+    this.cookies = $cookies;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+
+    this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
   }
 
   $onInit() {
@@ -36,12 +39,20 @@ export default class GroupDetailAboutController {
     }
   }
 
-  isGroupMember() {
-    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+  groupExists() {
+    if ((this.state.params.groupId !== undefined && this.state.params.groupId !== null) ||
+          (this.data !== null && this.data !== undefined && this.data.groupId !== undefined && this.data.groupId !==null)) {
       return true;
     }
     else {
       return false;
     }
+  }
+
+  userInGroup() {
+    if (this.data){
+      return this.data.participantInGroup(this.cookies.get("userId"));
+    }
+    return false;
   }
 }
