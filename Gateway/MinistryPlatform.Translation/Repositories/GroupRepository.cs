@@ -230,7 +230,7 @@ namespace MinistryPlatform.Translation.Repositories
                 }
 
                 object md = null;
-                groupDetails.TryGetValue("Meeting_Day_Id", out md);
+                groupDetails.TryGetValue("Meeting_Day_ID", out md);
                 if (md != null)
                 {
                     g.MeetingDayId = (int)md;

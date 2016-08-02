@@ -187,8 +187,8 @@ export default class GroupService {
   }
 
   saveEditGroupForm(smallGroup) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group`)
-                          .put({}, smallGroup).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/edit`)
+                          .save({}, smallGroup).$promise;
     return promise.then((data) => {
         this.saveProfile(smallGroup.profile);
       }, (err) => {

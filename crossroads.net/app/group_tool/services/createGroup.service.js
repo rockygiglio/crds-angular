@@ -32,7 +32,7 @@ export default class CreateGroupService {
     }
 
     setEditModel(groupData, profileData){
-debugger;
+        //this.log.debug("GroupDataFromServer:");
         this.log.debug(groupData);
         if (!this.resolved){
             this.preloadModel(profileData);
@@ -53,8 +53,6 @@ debugger;
         this.model.profile.oldEmail = profile.emailAddress;
         delete this.model.profile.householdMembers;
         delete this.model.profile.congregationId;
-    // TODO: If/else not working as expected, don't want to over-write the model.group object populated from database on an edit
-    // TODO: need to map, them model.group here is in smallGroup object format, needs to be mapped to form's object structure
         if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
                 meeting: {
@@ -72,6 +70,7 @@ debugger;
     }
 
     getFields() {
+        //this.log.debug(this.model);
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -374,7 +373,7 @@ debugger;
                     $scope.to.loading = GroupService.getGroupGenderMixType().then(function (response) {
                         $scope.to.options = response.attributes;
                         CreateGroupService.typeIdLookup = response.attributes;
-                        $log.debug(CreateGroupService.model)
+                        //$log.debug(CreateGroupService.model)
                         return response;
                     });
                 }
@@ -505,113 +504,38 @@ debugger;
             groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
-    mapFromSmallGroup(){
-    //    let groupType = _.find(this.typeIdLookup, (groupType) => {
-    //         return groupType.attributeId == this.model.group.typeId
-    //     });
-
-    //     let ageRangeNames = [];
-    //     _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
-    //         ageRangeNames.push(new AgeRange({
-    //             name: _.find(this.ageRangeLookup, (range) => {
-    //                 return range.attributeId == selectedRange
-    //             }).name
-    //         })
-    //         )
-    //     });
-
-    //     let smallGroup = new SmallGroup();
-
-    //     smallGroup.primaryContact = {
-    //       imageUrl: `${this.imageService.ProfileImageBaseURL}${this.model.profile.contactId}`,
-    //       contactId: this.model.profile.contactId
-    //     };
-
-    //     smallGroup.groupName = this.model.group.groupName;
-    //     smallGroup.groupDescription = this.model.group.groupDescription;
-    //     smallGroup.groupType = new GroupType({ name: groupType.name });
-    //     smallGroup.contactId = this.model.profile.contactId;
-    //     if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
-    //         smallGroup.ageRange = ageRangeNames;
-    //     }
-    //     smallGroup.address = new Address();
-    //     if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
-    //         smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-    //         smallGroup.address.addressLine2 = '';
-    //         smallGroup.address.state = this.model.group.meeting.address.state;
-    //         smallGroup.address.zip = this.model.group.meeting.address.zip;
-    //     }
-    //     else {
-    //         smallGroup.address.zip = null;
-    //     }
-    //     smallGroup.kidsWelcome = this.model.group.kidFriendly;
-    //     smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-
-    //     smallGroup.meetingDayId = this.model.group.meeting.day;
-    //     if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
-    //     {
-    //         delete smallGroup.meetingTime;
-    //     }
-    //     smallGroup.meetingFrequency = this.model.group.meeting.frequency;
-
-    //     if (this.model.specificDay) {
-    //         smallGroup.meetingDayId = this.model.group.meeting.day;
-    //         smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-    //     }
-    //     smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
-    //     smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
-    //     smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-    //     smallGroup.congregationId = this.model.profile.congregationId;
-    //     smallGroup.startDate = this.model.group.startDate;
-    //     smallGroup.availableOnline = this.model.group.availableOnline;
-    //     smallGroup.participants = [new Participant({
-    //         groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-    //         , nickName: this.model.profile.nickName
-    //         , lastName: this.model.profile.lastName
-    //         , contactId: parseInt(this.session.exists('userId'))
-    //     }
-    //     )];
-
-    //     smallGroup.profile = new Profile(this.model.profile);
-
-    //     smallGroup.singleAttributes = {
-    //         "73": {
-    //             "attribute": {
-    //                 "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
-    //             },
-    //         }
-    //     }
-
-    //     var ids = [];
-    //     _.forEach(this.model.groupAgeRangeIds, (id) => {
-    //         ids.push(
-    //             {
-    //                 "attributeId": id,
-    //                 "name": "Middle School Students",
-    //                 "description": null,
-    //                 "selected": true,
-    //                 "startDate": "0001-01-01T00:00:00",
-    //                 "endDate": null,
-    //                 "notes": null,
-    //                 "sortOrder": 0,
-    //                 "category": null,
-    //                 "categoryDescription": null
-    //             })
-    //     });
-
-    //     var ageRangeJson = {
-    //         "91": {
-    //             "attributeTypeId": 91,
-    //             "name": "Age Range",
-    //             "attributes": ids
-    //         }
-    //     }
-
-    //     smallGroup.attributeTypes = ageRangeJson;
-    //     return smallGroup;
+    mapFromSmallGroup(groupData){
+        this.model.group.meeting.frequency = groupData.meetingFrequencyID;
+        this.model.group.groupName = groupData.groupName;
+        this.model.group.groupDescription = groupData.groupDescription;
+        if (groupData.address != null && groupData.address != undefined){
+            this.model.group.meeting.address = {
+                street: groupData.address.addressLine1,
+                city: groupData.address.city,
+                state: groupData.address.state,
+                zip: groupData.address.zip,
+                addressId: groupData.address.addressId 
+            }
+            this.model.group.meeting.online = false;
+        } else {
+            this.model.group.meeting.online = true;
+        }
+        this.model.group.kidFriendly = groupData.kidsWelcome;
+        this.model.group.availableOnline = groupData.availableOnline;
+        this.model.group.startDate = moment(new Date(groupData.startDate)).toDate();
+        this.model.group.meeting.time = moment(new Date('1983-07-16 ' + groupData.meetingTime)).toDate();
+        this.model.group.meeting.day = groupData.meetingDayId;
+        groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+        this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+        var ageRangeIds = [];
+        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+            if (value.selected)
+                ageRangeIds.push(value.attributeId)
+        });
+        this.model.groupAgeRangeIds = ageRangeIds;
+        this.model.groupId = groupData.groupId;
     }
 
-    //This is ugly and needs to be refactored
     mapToSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
@@ -645,6 +569,7 @@ debugger;
         if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
             smallGroup.address.addressLine2 = '';
+            smallGroup.address.city = this.model.group.meeting.address.city;
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
         }
@@ -681,11 +606,10 @@ debugger;
 
         smallGroup.profile = new Profile(this.model.profile);
 
-        smallGroup.singleAttributes = {
-            "73": {
-                "attribute": {
-                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
-                },
+        smallGroup.singleAttributes = {};
+        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
+            "attribute": {
+                "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
             }
         }
 
@@ -706,15 +630,18 @@ debugger;
                 })
         });
 
-        var ageRangeJson = {
-            "91": {
-                "attributeTypeId": 91,
+        var ageRangeJson = {};
+        ageRangeJson[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID] = {
+                "attributeTypeId": CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID,
                 "name": "Age Range",
                 "attributes": ids
-            }
         }
 
         smallGroup.attributeTypes = ageRangeJson;
+
+        smallGroup.groupId = this.model.groupId;
+
+
         return smallGroup;
 
     }

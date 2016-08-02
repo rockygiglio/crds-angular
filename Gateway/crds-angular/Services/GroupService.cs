@@ -362,6 +362,7 @@ namespace crds_angular.Services
                 detail.MeetingTime = g.MeetingTime;
                 detail.MeetingDayId = g.MeetingDayId;
                 detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
+                detail.StartDate = g.StartDate;
 
                 if (events != null)
                 {

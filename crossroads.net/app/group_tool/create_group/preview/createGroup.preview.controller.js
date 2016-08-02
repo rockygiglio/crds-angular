@@ -12,14 +12,19 @@ export default class CreateGroupPreviewController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+    this.edit = false;
   }
 
   $onInit() {
+    debugger;
     this.groupData = this.createGroupService.mapToSmallGroup();
     this.groupId = '';
+
+    this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
   }
 
   save() {
+    debugger;
     this.saving = true;
     this.successfulSave = false;
     try {
@@ -38,6 +43,7 @@ export default class CreateGroupPreviewController {
   }
 
   saveEdits() {
+    debugger;
     this.saving = true;
     this.successfulSave = false;
     try {
@@ -53,6 +59,10 @@ export default class CreateGroupPreviewController {
       throw (error);
     }
 
+  }
+
+  submit() {
+    this.edit ? this.saveEdits() : this.save();
   }
 
 }

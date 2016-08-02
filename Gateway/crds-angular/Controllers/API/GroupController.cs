@@ -74,8 +74,8 @@ namespace crds_angular.Controllers.API
         /// <returns>The input GroupDTO</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
-        [HttpPut]
-        [Route("api/group")]
+        [HttpPost]
+        [Route("api/group/edit")]
         public IHttpActionResult EditGroup([FromBody] GroupDTO group)
         {
             return Authorized(token =>

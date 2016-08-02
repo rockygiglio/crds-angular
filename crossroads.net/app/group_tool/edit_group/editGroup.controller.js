@@ -3,12 +3,14 @@ import SmallGroup from '../model/smallGroup';
 
 export default class EditGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService) {
+    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope, $stateParams) {
         this.log = $log;
         this.state = $state;
         this.participantService = ParticipantService;
         this.createGroupService = CreateGroupService;
         this.groupService = GroupService;
+        this.rootScope = $rootScope;
+        this.stateParams = $stateParams;
         this.ready = false;
         this.approvedLeader = false;
         this.fields = [];
@@ -35,7 +37,7 @@ export default class EditGroupController {
 
     previewGroup() {
         if (this.editGroupForm.$valid) {
-            this.state.go('grouptool.create.preview');
+            this.state.go('grouptool.edit.preview');
         } else {
             this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
         }

@@ -64,7 +64,21 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         meta: {
           title: 'Preview a Group',
           description: ''
-        }
+        },
+        isCreate: true
+      }
+    })
+    .state('grouptool.edit.preview', {
+      url: '/groups/edit/preview',
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Preview a Group',
+          description: ''
+        },
+        isCreate: false
       }
     })
     .state('grouptool.edit', {
