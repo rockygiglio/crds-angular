@@ -40,11 +40,4 @@ export class StreamingComponent {
       mobile: false
     }).init();
   }
-
-  scrollToSchedule() {
-    $('html, body').animate({
-      scrollTop: $('schedule').offset().top
-    }, 1000);
-    return false;
-  }
 }
