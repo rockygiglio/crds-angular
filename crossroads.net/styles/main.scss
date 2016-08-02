@@ -75,6 +75,7 @@
 @import 'pages/errorpage.scss';
 @import 'pages/go_trip_giving.scss';
 @import 'pages/group_finder.scss';
+@import 'pages/group-search-results.scss';
 @import 'pages/profile.scss';
 @import 'animate/animate.scss';
 @import 'pages/my-trip.scss';
@@ -85,3 +86,4 @@
 @import 'lib/angular-growl.scss';
 @import 'lib/ng-img-crop.scss';
 @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix.css');
+@import '../node_modules/ng-table/dist/ng-table.css';

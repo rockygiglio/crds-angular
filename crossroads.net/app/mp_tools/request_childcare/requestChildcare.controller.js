@@ -13,6 +13,10 @@ class RequestChildcareController {
               $cookies,
               $window) {
     this.allowAccess = MPTools.allowAccess(CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.ChildcareRequestTool);
+    if (!this.allowAccess) {
+      this.viewReady = true;
+      return;
+    }
     this.congregations = RequestChildcareService.getCongregations();
     this.currentRequest = Number(MPTools.getParams().recordId);
     this.datesList = [];
