@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
@@ -291,6 +292,8 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<GroupParticipantDTO, MpGroupParticipant>();
 
             Mapper.CreateMap<MpInquiry, Inquiry>();
+            Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
+            Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
         }
     }
 }

@@ -18,5 +18,7 @@ namespace crds_angular.Models.Crossroads.Attribute
         public string CategoryDescription { get; set; }
         [JsonProperty(PropertyName = "sortOrder")]
         public int SortOrder { get; set; }
+        [JsonProperty(PropertyName = "attributeTypeId")]
+        public int? AttributeTypeId { get; set; }
     }
 }
