@@ -5,9 +5,19 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class CMSDataService {
+    // TODO: Inquire about what the appropriate apiUrl is.
     private apiUrl = 'https://contentint.crossroads.net/api/'
 
     constructor(private http: Http) { }
+    
+    // TODO: Consider this design. Is it best practice to just provide an Observable
+    // or should the service go one step further an provider the single object/
+    // array of objects that is used by the component?
+    
+    getCurrentSeries() {
+        let todaysDate = new Date().toISOString().slice(0, 10);
+        return this.http.get(encodeURI(this.apiUrl + `series?startDate__LessThan=${todaysDate}&endDate__GreaterThan=${todaysDate}&endDate__sort=ASC`));
+    }
     
     getSeriesById(id: number) {
         return this.http.get(encodeURI(this.apiUrl + `series/${id}`));
@@ -23,12 +33,5 @@ export class CMSDataService {
 
     getMostRecent4Messages() {
         return this.http.get(encodeURI(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`));
-    }
-
-    getCurrentSeries() {
-        let currentSeriesGrouping =  this.http.get(encodeURI(this.apiUrl + `series?startDate__LessThan=${Date.now()}&endDate__GreaterThan=${Date.new()}&endDate__sort=ASC`));
-        // TODO: currentSeries is an observable, not an array. Need to figure out how
-        // to get the first element in this response as it is the "current series"
-        let currentSeries = currentSeriesGrouping.shift();
     }
 }

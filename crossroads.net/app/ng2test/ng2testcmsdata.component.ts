@@ -9,6 +9,8 @@ import { CMSDataService } from '../../core/services/CMSData.service'
     <p>{{cmsSeriesTitle}}</p>
     <h2>Series Title by Search</h2>
     <p>{{cmsGotSeriesByTitle}}</p>
+    <h2>Current Series</h2>
+    <p>{{currentSeries}}</p>
     `,
   providers: [CMSDataService]
 })
@@ -18,6 +20,7 @@ export class Ng2TestCMSDataComponent implements OnInit {
   cmsSeriesTitle: string;
   cmsGotSeriesByTitle: string;
   cmsGot4Messages: any;
+  currentSeries: any;
   
   constructor(private cmsDataService: CMSDataService) {
     this.someText = "Content from CMS"
@@ -50,10 +53,19 @@ export class Ng2TestCMSDataComponent implements OnInit {
                               })
   }
 
+  getCurrentSeries() {
+    return this.cmsDataService.getCurrentSeries()
+                              .subscribe((response) => {
+                                this.currentSeries = response.json().series.shift;
+                                console.log("The current Series is: " + response.json().series.shift());
+                              })
+  }
+
   ngOnInit() {
     this.getFirstServiceFromCms(1);
     this.getSeriesByTitle("Dollars, Sense and Sensibility");
     this.getMostRecent4Messages();
+    this.getCurrentSeries();
   }
 }
 
