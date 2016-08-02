@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupToolRepository : BaseRepository, IGroupToolRepository
     {
-        private const string SearchGroupsProcName = "api_crds_SearchGroups";
+        public const string SearchGroupsProcName = "api_crds_SearchGroups";
         private readonly int _invitationPageId;
         private readonly int _groupInquiresSubPageId;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -75,7 +75,7 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitations;
         }
 
-        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] searchTerms = null)
+        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null)
         {
             var token = _apiUserRepository.GetToken();
 
@@ -83,9 +83,9 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 {"@GroupTypeId", groupTypeId}
             };
-            if (searchTerms != null && searchTerms.Any())
+            if (keywords != null && keywords.Any())
             {
-                parms.Add("@SearchString", string.Join(",", searchTerms));
+                parms.Add("@SearchString", string.Join(",", keywords));
             }
 
             var results = _mpRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpGroupSearchResultDto>(SearchGroupsProcName, parms);

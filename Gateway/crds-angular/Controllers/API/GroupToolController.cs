@@ -120,17 +120,17 @@ namespace crds_angular.Controllers.API
         /// Search for a group matching the requested type and search terms.
         /// </summary>
         /// <param name="groupTypeId">An integer identifying the type of group to search for</param>
-        /// <param name="searchTerms">The optional keywords to search for</param>
+        /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
         [AcceptVerbs("GET")]
         [Route("api/grouptool/grouptype/{groupTypeId:int}/group/search")]
         [ResponseType(typeof(List<GroupDTO>))]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string searchTerms = null, [FromUri(Name = "loc")] string location = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null)
         {
             try
             {
-                var result = _groupToolService.SearchGroups(groupTypeId, searchTerms, location);
+                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location);
                 if (result == null || !result.Any())
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
