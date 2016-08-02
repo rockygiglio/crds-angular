@@ -4,12 +4,14 @@ import { CountdownComponent } from './countdown.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
+import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
 
 var WOW = require('wow.js/dist/wow.min.js');
+var $:any = require('jquery');
 
 @Component({
   selector: 'streaming',
-  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent],
+  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll],
   providers: [StreamspotService],
   templateUrl: './streaming.ng2component.html'
 })
@@ -27,5 +29,12 @@ export class StreamingComponent {
       offset: 100,
       mobile: false
     }).init();
+  }
+
+  scrollToSchedule() {
+    $('html, body').animate({
+      scrollTop: $('schedule').offset().top
+    }, 1000);
+    return false;
   }
 }
