@@ -250,20 +250,8 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
-                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType))
-                .AfterMap((src, dest) => {
-                    if (!string.IsNullOrEmpty(src.MeetingTime))
-                    {
-                        var timeSpan = TimeSpan.Parse(src.MeetingTime);
-                        var time = DateTime.Today.Add(timeSpan);                      
-                        dest.MeetingTimeFrequency = string.Format("{0}'s at {1}, {2}", src.MeetingDay, time.ToString("h:mm tt"), src.MeetingFrequency);
-                    }
-                    else
-                    {
-                        dest.MeetingTimeFrequency = string.Format("Flexible Meeting Time, {0}", src.MeetingFrequency);
-                    }
-                    
-                }); 
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
+  
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
