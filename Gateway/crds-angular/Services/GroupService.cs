@@ -100,6 +100,11 @@ namespace crds_angular.Services
 
                 var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+
+                if (group.AttributeTypes.ContainsKey(91) && (group.AttributeTypes[91].Attributes.Count(a => a.AttributeId == 7089 || a.AttributeId == 7090) > 0))
+                {
+                    _mpGroupService.SendNewStudentMinistryGroupAlertEmail((List<MpGroupParticipant>) mpGroup.Participants);
+                }
             }
             catch (Exception e)
             {
