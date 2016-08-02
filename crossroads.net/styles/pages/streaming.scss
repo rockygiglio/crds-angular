@@ -204,13 +204,6 @@ streaming {
 
   .current-series {
 
-    #series:before {
-      display: block; 
-      content: " "; 
-      margin-top: -66px; 
-      height: 66px; 
-      visibility: hidden; 
-    }
     figure {
       margin-top: 1em;
       margin-bottom: 1.75em;
