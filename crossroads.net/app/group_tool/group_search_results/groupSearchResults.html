@@ -42,7 +42,7 @@
   </div>
 
   <table ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
-    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+    <tr ng-repeat-start="group in groupSearchResults.results" class="group-result pointer" ng-click="group.expanded = !group.expanded">
       <td title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td title="'Category'" sortable="'category'" class="group-category">{{group.category}}</td>
       <td title="'Detail'" sortable="'detail'" class="group-detail">{{group.detail}}</td>
