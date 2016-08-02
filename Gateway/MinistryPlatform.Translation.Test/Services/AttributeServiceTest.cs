@@ -125,6 +125,16 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(true, attribute.PreventMultipleSelection);
         }
 
+        [Test]
+        public void ShouldCreateAttributes()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
+
         private static List<Dictionary<string, object>> GetPageViewRecordsResponse()
         {
             return new List<Dictionary<string, object>>

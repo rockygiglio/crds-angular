@@ -11,16 +11,15 @@ namespace MinistryPlatform.Translation.Repositories
     public class AttributeRepository : BaseRepository, IAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly int attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
-        private readonly int attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
+        private readonly int _attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
+        private readonly int _attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
 
         public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
         }
-
-
+        
         public List<MpAttribute> GetAttributes(int? attributeTypeId)
         {
             var token = base.ApiLogin();
@@ -51,7 +50,6 @@ namespace MinistryPlatform.Translation.Repositories
 
             List<string> foundNames = new List<string>();
 
-
             foreach (var category in attributeCategories)
             {
                 var filter = "," + String.Join(" OR ",
@@ -59,7 +57,7 @@ namespace MinistryPlatform.Translation.Repositories
                                                    .Where(attCategory => attCategory.CategoryId == category)
                                                    .Select(attribute => attribute.Name.ToLower()).ToList()) + ",," + attributeType + ",,," + category;
 
-                foundNames.AddRange(_ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter)
+                foundNames.AddRange(_ministryPlatformService.GetPageViewRecords(_attributesByTypePageViewId, token, filter)
                     .Select(records => records.ToString("Attribute_Name").ToLower()).ToList());
             }
 
@@ -69,7 +67,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {
                     var filter = $",{attribute.Name},,,,,,{attribute.Category}";
                     attributes.First(a => a.Name == attribute.Name && a.CategoryId == attribute.CategoryId)
-                        .AttributeId = _ministryPlatformService.GetPageViewRecords(attributesByTypePageViewId, token, filter)[0].ToInt("Attribute_ID");
+                        .AttributeId = _ministryPlatformService.GetPageViewRecords(_attributesByTypePageViewId, token, filter)[0].ToInt("Attribute_ID");
                 }
                 else
                 {
@@ -83,7 +81,7 @@ namespace MinistryPlatform.Translation.Repositories
                     };
 
                     attributes.First(a => a.Name == attribute.Name && a.CategoryId == attribute.CategoryId)
-                        .AttributeId = _ministryPlatformService.CreateRecord(attributesPageId, values, token, true);
+                        .AttributeId = _ministryPlatformService.CreateRecord(_attributesPageId, values, token, true);
                 }
             }
 
