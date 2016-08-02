@@ -397,11 +397,11 @@ namespace crds_angular.Services
             }
         }
 
-        public List<GroupDTO> SearchGroups(int groupTypeId, string searchTerms = null, string location = null)
+        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)
         {
             // Split single search term into multiple words, broken on whitespace
-            // TODO Need to remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
-            var search = string.IsNullOrWhiteSpace(searchTerms) ? null : searchTerms.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
+            // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
+            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
             var results = _groupToolRepository.SearchGroups(groupTypeId, search);
             if (results == null || !results.Any())

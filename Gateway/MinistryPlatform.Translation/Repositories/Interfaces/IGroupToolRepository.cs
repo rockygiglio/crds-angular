@@ -8,6 +8,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId);
         List<MpInquiry> GetInquiries(int groupId);
-        List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] searchTerms = null);
+        List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null);
     }
 }
