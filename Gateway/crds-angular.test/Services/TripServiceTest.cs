@@ -35,6 +35,7 @@ namespace crds_angular.test.Services
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
         private Mock<IDestinationRepository> _destinationService;
+        private Mock<IParticipantRepository> _participantRepository;
         private TripService _fixture;
 
         [SetUp]
@@ -47,6 +48,7 @@ namespace crds_angular.test.Services
             _eventService = new Mock<IEventRepository>();
             _donorService = new Mock<IDonorRepository>();
             _pledgeService = new Mock<IPledgeRepository>();
+            _participantRepository = new Mock<IParticipantRepository>();
             _campaignService = new Mock<ICampaignRepository>();
             _privateInviteService = new Mock<IPrivateInviteRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
@@ -63,6 +65,7 @@ namespace crds_angular.test.Services
                                        _formSubmissionService.Object,
                                        _eventService.Object,
                                        _donorService.Object,
+                                       _participantRepository.Object,
                                        _pledgeService.Object,
                                        _campaignService.Object,
                                        _privateInviteService.Object,
