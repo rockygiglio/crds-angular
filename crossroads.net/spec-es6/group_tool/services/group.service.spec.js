@@ -439,4 +439,15 @@ describe('Group Tool Group Service', () => {
       expect(promise.$$state.status).toEqual(1);
     });
   });
+  
+  describe('getGroupByInvitationGUID(invitationGUID) function', () => {
+    it('get the group', () => {
+      httpBackend.expectGET(`${endpoint}/group/invitation/123212312`).
+                  respond(200, {});
+
+      var promise = fixture.getGroupByInvitationGUID(123212312);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+    });
+  });
 });

@@ -46,8 +46,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 SourceId = 44
             };
 
-            const string token = "adamantium";
-
             const int invitationId = 987;
             const string invitationGuid = "1020304050";
 
@@ -75,6 +73,77 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreSame(dto, result);
             Assert.AreEqual(invitationId, result.InvitationId);
             Assert.AreEqual(invitationGuid, result.InvitationGuid);
+        }
+
+
+        [Test]
+        public void GetOpenInvitationTest()
+        {
+            var dto = new MpInvitation
+            {
+                SourceId = 123123,
+                EmailAddress = "test@userdomain.com",
+                GroupRoleId = 66,
+                InvitationType = 1,
+                RecipientName = "Test User",
+                RequestDate = new DateTime(2004, 1, 13)
+            };
+            
+            const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
+
+            var returned = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"dp_RecordID", 178},
+                    {"Source_ID", 123123},
+                    {"Email_address", "test@userdomain.com"},
+                    {"Group_Role_ID", "66"},
+                    {"Invitation_Type_ID", 1},
+                    {"Recipient_Name", "Test User"},
+                    {"Invitation_Date", "1/13/2004"},
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(InvitationPageId, It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(returned);
+
+            var result = _fixture.GetOpenInvitation(invitationGuid);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dto.SourceId, result.SourceId);
+            Assert.AreEqual(dto.EmailAddress, result.EmailAddress);
+            Assert.AreEqual(dto.GroupRoleId, result.GroupRoleId);
+            Assert.AreEqual(dto.InvitationType, result.InvitationType);
+            Assert.AreEqual(dto.RecipientName, result.RecipientName);
+            Assert.AreEqual(dto.RequestDate, result.RequestDate);
+        }
+
+
+        [Test]
+        public void MarkInvitationAsUsedTest()
+        {
+            const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
+
+            var returned = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"dp_RecordID", 178},
+                    {"Source_ID", 123123},
+                    {"Email_address", "test@userdomain.com"},
+                    {"Group_Role_ID", "66"},
+                    {"Invitation_Type_ID", 1},
+                    {"Recipient_Name", "Test User"},
+                    {"Invitation_Date", "1/13/2004"},
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(InvitationPageId, It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(returned);
+            _ministryPlatformService.Setup(mocked => mocked.UpdateRecord(InvitationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>())).Verifiable();
+
+            _fixture.MarkInvitationAsUsed(invitationGuid);
+            _ministryPlatformService.VerifyAll();
         }
     }
 }

@@ -216,4 +216,22 @@ export default class GroupService {
       });
   }
 
+  getGroupByInvitationGUID(invitationGUID) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/invitation/:invitationGUID`).
+                          get({invitationGUID: invitationGUID}).$promise;
+
+    return promise.then((data) => {
+      let group = new SmallGroup(data);
+      group.primaryContact = {
+        imageUrl: `${this.imgService.ProfileImageBaseURL}${group.contactId}`,
+        contactId: group.contactId
+      };
+
+      return group;
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
 }

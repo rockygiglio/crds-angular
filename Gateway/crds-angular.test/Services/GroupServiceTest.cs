@@ -41,6 +41,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IAttributeRepository> _attributeService;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<MPServices.IUserRepository> _userRespository;
+        private Mock<MPServices.IInvitationRepository> _invitationRepository;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -78,6 +79,7 @@ namespace crds_angular.test.Services
             _contactService = new Mock<MPServices.IContactRepository>();
             _emailCommunicationService = new Mock<IEmailCommunication>();
             _userRespository = new Mock<MPServices.IUserRepository>();
+            _invitationRepository = new Mock<MPServices.IInvitationRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
@@ -100,7 +102,8 @@ namespace crds_angular.test.Services
                                        _apiUserService.Object,
                                        _attributeService.Object,
                                        _emailCommunicationService.Object,
-                                       _userRespository.Object);
+                                       _userRespository.Object,
+                                       _invitationRepository.Object);
         }
 
         [Test]
@@ -351,6 +354,50 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void GetGroupDetailsByInvitationGuidTest()
+        {
+            var mpInvitationDto = new MpInvitation
+            {
+                SourceId = 123123,
+                EmailAddress = "test@userdomain.com",
+                GroupRoleId = 66,
+                InvitationType = 1,
+                RecipientName = "Test User",
+                RequestDate = new DateTime(2004, 1, 13)
+            };
+
+            var g = new MpGroup
+            {
+                TargetSize = 0,
+                Full = true,
+                Participants = new List<MpGroupParticipant>(),
+                GroupType = 90210,
+                WaitList = true,
+                WaitListGroupId = 10101,
+                GroupId = 98765
+            };
+
+            var objectAllAttribute = new ObjectAllAttributesDTO();
+            objectAllAttribute.MultiSelect = new Dictionary<int, ObjectAttributeTypeDTO>();
+            objectAllAttribute.SingleSelect = new Dictionary<int, ObjectSingleAttributeDTO>();
+
+            _invitationRepository.Setup(mocked => mocked.GetOpenInvitation(It.IsAny<string>())).Returns(mpInvitationDto);
+            groupService.Setup(mocked => mocked.GetSmallGroupDetailsById(123123)).Returns(g);
+            _attributeService.Setup(mocked => mocked.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
+            _objectAttributeService.Setup(
+                mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
+                .Returns(objectAllAttribute);
+
+            var response = fixture.GetGroupDetailsByInvitationGuid("akjsfkasjfd;alsdfsa;f,", "crazy long guid");
+
+            groupService.VerifyAll();
+            contactRelationshipService.VerifyAll();
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(g.GroupId, response.GroupId);
+        }
+
+        [Test]
         public void GetGroupsForParticipant()
         {
             const string token = "1234frd32";
@@ -365,7 +412,6 @@ namespace crds_angular.test.Services
 
             groupService.VerifyAll();
             Assert.IsNotNull(grps);
-
         }
 
         [Test]

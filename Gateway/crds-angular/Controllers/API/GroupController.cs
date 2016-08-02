@@ -162,6 +162,34 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Return the group dto for the invitation guid (Private Invitation)
+        /// </summary>
+        /// <param name="invitationGuid">An string representing the unique private invite key</param>
+        /// <returns>A list of Group DTO</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [AcceptVerbs("GET")]
+        [Route("api/group/invitation/{invitationGUID}")]
+        public IHttpActionResult GetGroupByInvitationGuid(string invitationGuid)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupService.GetGroupDetailsByInvitationGuid(token, invitationGuid);
+
+                    return Ok(group);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Get Group", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
         [RequiresAuthorization]
         [ResponseType(typeof (List<Event>))]
         [Route("api/group/{groupId}/events")]
@@ -244,7 +272,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <returns>A list of all small groups for the given user (group type of 1)</returns>
         [RequiresAuthorization]
-        [ResponseType(typeof(List<GroupContactDTO>))]
+        [ResponseType(typeof(List<GroupDTO>))]
         [Route("api/group/mine/{groupTypeId}/{groupId:int?}")]
         public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
         {

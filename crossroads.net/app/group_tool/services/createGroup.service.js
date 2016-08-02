@@ -167,10 +167,11 @@ export default class CreateGroupService {
                         required: true,
                     }
                 }, {
-                    key: 'profile.address.country',
+                    key: 'profile.foreignCountry',
                     type: 'formlyBuilderSelect',
                     templateOptions: {
                         label: 'Country',
+                        required: true,
                         valueProp: 'dp_RecordName',
                         labelProp: 'dp_RecordName',
                         options: this.countryLookup
@@ -276,7 +277,7 @@ export default class CreateGroupService {
                         required: true,
                     },
                     expressionProperties: {
-                        'templateOptions.required': 'model.group.meeting.online'
+                        'templateOptions.required': '!model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.city',
@@ -287,7 +288,7 @@ export default class CreateGroupService {
                         required: true,
                     },
                     expressionProperties: {
-                        'templateOptions.required': 'model.group.meeting.online'
+                        'templateOptions.required': '!model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.state',
@@ -301,7 +302,7 @@ export default class CreateGroupService {
                         options: this.statesLookup
                     },
                     expressionProperties: {
-                        'templateOptions.required': 'model.group.meeting.online'
+                        'templateOptions.required': '!model.group.meeting.online'
                     }
                 }, {
                     key: 'group.meeting.address.zip',
@@ -313,7 +314,7 @@ export default class CreateGroupService {
                         required: true
                     },
                     expressionProperties: {
-                        'templateOptions.required': 'model.group.meeting.online'
+                        'templateOptions.required': '!model.group.meeting.online'
                     }
                 }, {
                     key: 'group.kidFriendly',
@@ -334,7 +335,7 @@ export default class CreateGroupService {
                             }]
                     },
                     expressionProperties: {
-                        'templateOptions.required': 'model.group.meeting.online'
+                        'templateOptions.required': '!model.group.meeting.online'
                     }
                 }]
         };

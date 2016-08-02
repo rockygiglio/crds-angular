@@ -24,6 +24,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IGroupRepository> _groupRepository;
         private Mock<MPServices.IParticipantRepository> _participantRepository;
         private Mock<IContentBlockService> _contentBlockService;
+        private Mock<MPServices.IInvitationRepository> _invitationRepositor;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -40,6 +41,7 @@ namespace crds_angular.test.Services
             _groupRepository = new Mock<MPServices.IGroupRepository>(MockBehavior.Strict);
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
+            _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -53,7 +55,8 @@ namespace crds_angular.test.Services
                                             _participantRepository.Object,
                                             _communicationRepository.Object,
                                             _contentBlockService.Object,
-                                            configuration.Object);
+                                            configuration.Object,
+                                            _invitationRepositor.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -281,6 +284,42 @@ namespace crds_angular.test.Services
             _groupRepository.VerifyAll();
             _communicationRepository.VerifyAll();
 
+        }
+
+        [Test]
+        public void TestAcceptDenyGroupInvitationAccepting()
+        {
+            string token = "afdsak;fkjadfjkas;fpeiwjkja";
+            int groupId = 23;
+            string invitationGuid = "akdfjadfjajeoihqwpoi392053qiweur9";
+
+
+            var participant = new Participant
+            {
+                ParticipantId = 9090
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(participant);
+            _groupRepository.Setup(mocked => mocked.addParticipantToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<DateTime>(), null, false, null)).Returns(1);
+            _invitationRepositor.Setup(mocked => mocked.MarkInvitationAsUsed(It.IsAny<string>())).Verifiable();
+
+            _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, true);
+            _participantRepository.VerifyAll();
+            _groupRepository.VerifyAll();
+            _invitationRepositor.VerifyAll();
+        }
+
+        [Test]
+        public void TestAcceptDenyGroupInvitationDenying()
+        {
+            string token = "afdsak;fkjadfjkas;fpeiwjkja";
+            int groupId = 23;
+            string invitationGuid = "akdfjadfjajeoihqwpoi392053qiweur9";
+
+            _invitationRepositor.Setup(mocked => mocked.MarkInvitationAsUsed(It.IsAny<string>())).Verifiable();
+
+            _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, false);
+            _invitationRepositor.VerifyAll();
         }
 
         [Test]

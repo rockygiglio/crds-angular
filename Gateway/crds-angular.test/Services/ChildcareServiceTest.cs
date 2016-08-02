@@ -594,7 +594,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("http://blah/");
             var data = _fixture.SetMergeDataForChildcareReminder(email1, date);
             Assert.AreEqual("Sunday, February 21", data["Childcare_Day"]);
-            Assert.AreEqual("2/21/2016", data["Childcare_Date"]);          
+            Assert.AreEqual("02/21/2016", data["Childcare_Date"]);          
             Assert.AreEqual("Matt", data["Nickname"]);
         }
 

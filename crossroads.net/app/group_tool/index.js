@@ -27,3 +27,4 @@ import groupDetail from './group_detail';
 import groupMessage from './group_message';
 import groupSearch from './group_search';
 import editGroup from './edit_group';
+import groupInvitation from './group_invitation';
