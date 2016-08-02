@@ -97,11 +97,12 @@ namespace crds_angular.Services
             {
                 var mpGroup = Mapper.Map<MpGroup>(group);
 
-                if (group.AttributeTypes.ContainsKey(90) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
+                if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
                 {
                     var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
-                    categoryAttributes = _attributeService.CreateMissingAttributesReturnAttributeIds(categoryAttributes, 90);
-                    group.AttributeTypes[90].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
+
+                    categoryAttributes = _attributeService.CreateMissingAttributes(categoryAttributes, _groupCategoryAttributeTypeId);
+                    group.AttributeTypes[_groupCategoryAttributeTypeId].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
                 }
 
                 group.GroupId = _mpGroupService.CreateGroup(mpGroup);

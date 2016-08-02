@@ -63,7 +63,7 @@ namespace crds_angular.Services
                 AttributeTypeId = attribute.AttributeTypeId ?? default(int)
             }).ToList();
 
-            this._attributeService.CreateMissingAttributesReturnAttributeIds(attributesList, attributeType);
+            this._attributeService.CreateMissingAttributes(attributesList, attributeType);
      
             return 1;
         }
