@@ -328,4 +328,15 @@ describe('GroupDetailParticipantsController', () => {
 
         });
     });
+
+    describe('emailList() function', () => {
+      it('is should return a list of the emails', () => {
+        fixture.data = [
+          new Participant({nickName: 'f1', lastName: 'l1', groupRoleId: constants.GROUP.ROLES.MEMBER, email: 'dtkocher@callibrity.com'}),
+          new Participant({nickName: 'f2', lastName: 'l2', groupRoleId: constants.GROUP.ROLES.LEADER, email: 'jim.kriz@ingagepartners.com'})
+        ];
+
+        expect(fixture.emailList()).toEqual('dtkocher@callibrity.com,jim.kriz@ingagepartners.com,');
+      });
+    });
 });

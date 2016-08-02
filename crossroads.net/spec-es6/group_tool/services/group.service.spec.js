@@ -450,4 +450,32 @@ describe('Group Tool Group Service', () => {
       expect(promise.$$state.status).toEqual(2);
     });
   });
+  
+  describe('getIsLeader(groupId) function', () => {
+    it('they are a leader', () => {
+      httpBackend.expectGET(`${endpoint}/grouptool/123212312/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/isleader`).
+                  respond(200, {Group: 'hi'});
+
+      
+      var promise = fixture.getIsLeader(123212312);
+      httpBackend.flush();
+      
+      promise.then(function(data) {
+        expect(data).toEqual(true);
+      });
+    });
+    
+    it('they are not a leader', () => {
+      httpBackend.expectGET(`${endpoint}/grouptool/123212312/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/isleader`).
+                  respond(200, {});
+
+      
+      var promise = fixture.getIsLeader(123212312);
+      httpBackend.flush();
+      
+      promise.then(function(data) {
+        expect(data).toEqual(false);
+      });
+    });
+  });
 });

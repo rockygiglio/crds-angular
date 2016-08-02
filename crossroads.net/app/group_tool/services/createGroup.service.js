@@ -446,13 +446,14 @@ export default class CreateGroupService {
                     valueProp: 'categoryId',
                     labelProp: 'label',
                     descProp: 'labelDesc',
+                    maxFieldLength: '25',
                     placeholder: 'placeholder',
                     options: [{
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                            label: 'Life Stage',
-                            labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
-                            placeholder: 'Life Stages detail...'
-                        }, {
+                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        label: 'Life Stage',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
+                        placeholder: 'Life Stages detail...'
+                    }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
                             labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
@@ -472,7 +473,7 @@ export default class CreateGroupService {
                             label: 'Healing',
                             labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
                             placeholder: 'Healing detail...'
-                    }],
+                        }],
                 }
             }]
         }
@@ -516,8 +517,8 @@ export default class CreateGroupService {
         let smallGroup = new SmallGroup();
 
         smallGroup.primaryContact = {
-          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-          contactId: primaryContactId
+            imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+            contactId: primaryContactId
         };
 
         smallGroup.groupName = this.model.group.groupName;
@@ -541,10 +542,9 @@ export default class CreateGroupService {
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
 
         smallGroup.meetingDayId = this.model.group.meeting.day;
-        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
-        {
+        if (smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined) {
             delete smallGroup.meetingTime;
-        }      
+        }
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
 
         if (this.model.specificDay) {
@@ -555,7 +555,7 @@ export default class CreateGroupService {
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
-        smallGroup.startDate = this.model.group.startDate;
+        smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
         smallGroup.availableOnline = this.model.group.availableOnline;
         smallGroup.participants = [new Participant({
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
@@ -580,10 +580,10 @@ export default class CreateGroupService {
             ids.push(
                 {
                     "attributeId": id,
-                    "name": "Middle School Students",
-                    "description": null,
+                    "name": id.ageRange,
+                    "description": id.description,
                     "selected": true,
-                    "startDate": "0001-01-01T00:00:00",
+                    "startDate": id.start,
                     "endDate": null,
                     "notes": null,
                     "sortOrder": 0,
@@ -593,16 +593,78 @@ export default class CreateGroupService {
         });
 
         var ageRangeJson = {
-            "91": {
+            '91': {
                 "attributeTypeId": 91,
                 "name": "Age Range",
                 "attributes": ids
             }
         }
 
-        smallGroup.attributeTypes = ageRangeJson;
+        var ids = []
+
+        _.forEach(this.model.categories, (category) => {
+            ids.push(
+                {
+                    attributeId: 0,
+                    attributeTypeId: 90,
+                    name: category.detail,
+                    description: category.description,
+                    selected: true,
+                    startDate: category.startDate,
+                    endDate: null,
+                    notes: null,
+                    sortOrder: 0,
+                    category: this.getCategoryFromId(category.value),
+                    categoryId: category.value,
+                    categoryDescription: null
+
+                }
+            )
+        });
+        var categoriesJson = {
+            '90': {
+                "attributeTypeid": 90,
+                "name": "Group Category",
+                "attributes": ids
+            }
+        }
+        debugger;
+        smallGroup.mapCategories(categoriesJson);
+
+        smallGroup.attributeTypes = $.extend({}, ageRangeJson, categoriesJson);
         return smallGroup;
 
+    }
+
+    convertAttributeTypes(list) {
+        var results = {};
+        _.each(list, function (item) {
+            results[item.attributeTypeId] = item;
+        });
+
+        return results;
+    }
+
+    getCategoryFromId(id) {
+        var returnString = '';
+        switch (id) {
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
+                returnString = "Life Stage";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
+                returnString = "Neighborhoods";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH:
+                returnString = "Spiritual Growth";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST:
+                returnString = "Interest";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING:
+                returnString = "Healing";
+                break;
+        }
+        return returnString;
     }
 
     getGroupTypeAttributeIdFromName(name) {

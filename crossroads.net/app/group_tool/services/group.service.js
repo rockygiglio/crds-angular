@@ -180,7 +180,7 @@ export default class GroupService {
       });
   }
 
-    saveParticipant(participants, groupId) {
+  saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
 
@@ -212,6 +212,18 @@ export default class GroupService {
       };
 
       return group;
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
+  getIsLeader(groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/isleader`).
+                          get({groupId: groupId, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promise.then((data) => {
+      return !(data.Group === null || data.Group === undefined)
     },
     (err) => {
       throw err;

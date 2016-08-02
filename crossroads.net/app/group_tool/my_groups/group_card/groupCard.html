@@ -34,12 +34,12 @@
         </div>
 
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top">
+          <a ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
             <svg viewBox="0 0 32 32" class="icon icon-mail5">
               <use xlink:href="#mail5"></use>
             </svg>
             Email Group
-          </button>
+          </a>
         </div>
 
         <div class="col-md-6 col-sm-12">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top">
+          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToInvite()">
             <svg viewBox="0 0 32 32" class="icon icon-user6">
               <use xlink:href="#user6"></use>
             </svg>

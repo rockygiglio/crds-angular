@@ -8,6 +8,7 @@ namespace MinistryPlatform.Translation.Models
         public string Category { get; set; }
         public int? CategoryId { get; set; }
         public string CategoryDescription { get; set; }
+        public bool? Selected { get; set; }
 
         public int AttributeTypeId { get; set; }
         public string AttributeTypeName { get; set; }
