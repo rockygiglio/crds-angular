@@ -596,11 +596,44 @@ namespace crds_angular.test.Services
         [Test]
         public void CanGetInvitationsForGroups()
         {
-            _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>())).Returns(getMpInvations());
             var sourceId = 1;
             var invitationTypeId = 1;
             var token = "dude";
 
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO()
+                {
+                    GroupName = "group name",
+                    GroupDescription = "group description",
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = 123,
+                            GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = 12132133,
+                            GroupParticipantId = 12411,
+                            NickName = "nickname",
+                            ContactId = 90,
+                            Email = "80"
+                        }
+                    },
+                }
+            };
+
+            var me = new Participant
+            {
+                ParticipantId = 123,
+                ContactId = 90,
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(me);
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(groups);
+            _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>())).Returns(getMpInvations());
             var invitations =  _fixture.GetInvitations(sourceId, invitationTypeId, token);
 
             Assert.AreEqual(4, invitations.Count);
@@ -694,9 +727,42 @@ namespace crds_angular.test.Services
                     Placed = true,
                 });
 
+            var groups = new List<GroupDTO>
+            {
+                new GroupDTO()
+                {
+                    GroupName = "group name",
+                    GroupDescription = "group description",
+                    Participants = new List<GroupParticipantDTO>
+                    {
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = 123,
+                            GroupRoleId = GroupRoleLeader
+                        },
+                        new GroupParticipantDTO
+                        {
+                            ParticipantId = 12132133,
+                            GroupParticipantId = 12411,
+                            NickName = "nickname",
+                            ContactId = 90,
+                            Email = "80"
+                        }
+                    },
+                }
+            };
+
+            var me = new Participant
+            {
+                ParticipantId = 123,
+                ContactId = 90,
+            };
+
             var groupId = 1;
             var token = "dude";
 
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(me);
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(groups);
             _groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>())).Returns(mpResults);
 
             var inquiries = _fixture.GetInquiries(groupId, token);

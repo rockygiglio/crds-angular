@@ -11,13 +11,15 @@ export default class GroupDetailAboutController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+    this.isLeader = false;
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
   }
 
   $onInit() {
+    this.groupId = this.state.params.groupId || this.data.groupId;
+
     if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
-      this.groupId = this.state.params.groupId;
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
         var primaryContactId = this.data.contactId;
@@ -37,11 +39,14 @@ export default class GroupDetailAboutController {
       //TODO map object posted from create into data object
       this.ready = true;
     }
+
+    this.groupService.getIsLeader(this.groupId).then((isLeader) => {
+      this.isLeader = isLeader;
+    })
   }
 
   groupExists() {
-    if ((this.state.params.groupId !== undefined && this.state.params.groupId !== null) ||
-          (this.data !== null && this.data !== undefined && this.data.groupId !== undefined && this.data.groupId !==null)) {
+    if (this.groupId !== undefined && this.groupId !== null) {
       return true;
     }
     else {
