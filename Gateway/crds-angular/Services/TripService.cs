@@ -376,8 +376,8 @@ namespace crds_angular.Services
         {
             var tripRecords = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId);
             Participant participant = _participantService.GetParticipant(contactId);
-            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(contactId);
-            
+            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(contactId);       
+
             var tripApplicantRecord = new TripApplicant
             {
                 ContactId = contactId,
