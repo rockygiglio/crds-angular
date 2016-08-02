@@ -12,7 +12,11 @@ export class StreamspotIframeComponent {
   constructor(private streamspotService: StreamspotService) {
 
     this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
-      window.location.href = '/live';
+
+      if ( inProgress === false ) {
+        window.location.href = '/live';
+      }
+      
     });
 
   }

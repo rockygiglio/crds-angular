@@ -417,7 +417,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       var dto={};
       dto.contactId = vm.signupService.person.contactId;
       dto.pledgeCampaignId = vm.signupService.campaign.id;
-      vm.signupService.TripParticipant.$save(dto, function(){
+      vm.signupService.CreateTripParticipant.save(dto, function(){
         $log.debug('create trip participant successful');
       }, function(err){
         $log.debug('create trip participant unsuccessful)');

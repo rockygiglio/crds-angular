@@ -45,7 +45,6 @@ namespace crds_angular.Services
                            IFormSubmissionRepository formSubmissionService,
                            MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
                            IDonorRepository donorService,
-                           IParticipantRepository participantService,
                            IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,
                            IPrivateInviteRepository privateInviteService,
@@ -55,7 +54,8 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationRepository destinationService)
+                           IDestinationRepository destinationService,
+                           IParticipantRepository participantService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
@@ -378,7 +378,6 @@ namespace crds_angular.Services
             Participant participant = _participantService.GetParticipant(dto.ContactId);
             MpContactDonor tripDonor = _mpDonorService.GetContactDonor(dto.ContactId);
             
-
             var tripApplicantRecord = new TripApplicant
             {
                 ContactId = dto.ContactId,
@@ -526,7 +525,7 @@ namespace crds_angular.Services
             int donorId;
             var addPledge = true;
 
-            if (applicant.DonorId != null)
+            if (applicant.DonorId != null && applicant.DonorId != 0)
             {
                 donorId = (int) applicant.DonorId;
                 addPledge = !_mpPledgeService.DonorHasPledge(dto.Campaign.PledgeCampaignId, donorId);

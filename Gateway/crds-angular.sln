@@ -157,8 +157,8 @@ Global
 		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Demo|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Demo|Any CPU.Build.0 = Debug|Any CPU
-		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Integration|Any CPU.ActiveCfg = Release|Any CPU
-		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Integration|Any CPU.Build.0 = Release|Any CPU
+		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F3C5648-03BD-4BEE-9833-9391F9470A0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
