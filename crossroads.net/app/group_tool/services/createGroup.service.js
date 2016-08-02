@@ -628,7 +628,6 @@ export default class CreateGroupService {
                 "attributes": ids
             }
         }
-        debugger;
         smallGroup.mapCategories(categoriesJson);
 
         smallGroup.attributeTypes = $.extend({}, ageRangeJson, categoriesJson);
