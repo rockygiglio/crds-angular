@@ -12,8 +12,8 @@
         </div>
 
         <div class="form-group col-md-6" ng-show="!tripsSignup.isIndia()" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'commonName') }">
-          <label for="common-name" class="control-label" ng-class="{ 'required': tripsSignup.commonNameRequired() }">Common Name</label>
-          <input ng-model="tripsSignup.signupService.page4.groupCommonName" type="text" class="form-control" name="commonName" id="common-name" placeholder="Common Name" ng-required="tripsSignup.commonNameRequired()">
+          <label for="common-name" class="control-label">Common Name</label>
+          <input ng-model="tripsSignup.signupService.page4.groupCommonName" type="text" class="form-control" name="commonName" id="common-name" placeholder="Common Name">
           <ng-messages for="tripsSignup.tripAppPage4.commonName.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'commonName')">
             <span ng-message="required">
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
