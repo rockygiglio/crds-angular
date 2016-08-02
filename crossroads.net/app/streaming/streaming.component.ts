@@ -3,12 +3,13 @@ import { ScheduleComponent } from './schedule.component';
 import { CountdownComponent } from './countdown.component';
 import { StreamspotService } from './streamspot.service';
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
+import { StickyHeaderDirective } from './sticky-header.directive';
 
 var WOW = require('wow.js/dist/wow.min.js');
 
 @Component({
   selector: 'streaming',
-  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent],
+  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, StickyHeaderDirective],
   providers: [StreamspotService],
   templateUrl: './streaming.ng2component.html'
 })
