@@ -11,7 +11,6 @@ namespace MinistryPlatform.Translation.Repositories
     class CampaignRepository : BaseRepository, ICampaignRepository
     {
         
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IApiUserRepository _apiUserRepository;
@@ -20,7 +19,6 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
-            _configurationWrapper = configurationWrapper;
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
         }
