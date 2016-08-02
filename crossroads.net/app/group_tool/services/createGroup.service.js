@@ -555,7 +555,7 @@ export default class CreateGroupService {
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
-        smallGroup.startDate = this.model.group.startDate;
+        smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
         smallGroup.availableOnline = this.model.group.availableOnline;
         smallGroup.participants = [new Participant({
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
