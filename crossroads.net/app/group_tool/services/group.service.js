@@ -180,7 +180,7 @@ export default class GroupService {
       });
   }
 
-    saveParticipant(participants, groupId) {
+  saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
 
