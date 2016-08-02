@@ -1,8 +1,8 @@
 "ID","Title","Content","Type","Category"
 "320","streamingLandingIntro","<h1>Hi. Welcome to Crossroads Anywhere.</h1><p>This isn't your average ""church TV."" We're groups of people meeting in person every week to explore who God is in a language we can understand. Whether you're exploring whether or not God exists or a you’re committed Christ-follower, we're glad you’re here.</p><p>On this page, you can attend a Crossroads service, find friends nearby and learn more about hosting in your own home.</p>","info","main"
-"321","streamingLandingCurrentSeries","<h2>Death to Religion <small>RUNS: april 1st - May 2nd</small></h2><p class=""lead"">Religion means judgement. It means rules and check-the-boxes. We want relationship. And Jesus came to give that to us. Relationship means love, personality, invitation and challenge within the context of someone who knows you intimately. Sure, relationship is sloppy, but it’s worth it.</p><p><small>Topics covered:<br> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inci didunt ut labore et dolore magna aliqua.</small></p><p><a href=""#"" class=""btn btn-primary btn-block-mobile"">Watch Trailer</a></p>","info","main"
+"321","streamingLandingCurrentSeries","<h2>TOGETHER: How to Make &amp; Keep Better Friends <small>RUNS: August 6th - August 28th</small></h2><p class=""lead"">Lone wolves, rugged individualists, and detached hermits all have one thing in common: they die. God created us to thrive TOGETHER. But it's not always easy. Join us as we talk about how to make TOGETHER work for all of us.</p><p><small>Topics covered:<br> friends, #letsbetogether, groups</small></p><p><a href=""https://www.youtube.com/watch?v=NYJ8c81AQJw"" class=""btn btn-primary btn-block-mobile"">Watch Trailer</a></p>","info","main"
 "322","streamingLandingCommunity","<h2>We Are Where You Are</h2><p>Crossroads Anywhere is more than ""church TV."" It's friends and neighbors meeting across the country in living rooms to hear a relevant, biblical message we can apply to our everyday lives.</p>","info","main"
-"323","streamingLandingHostIntro","<h2>Create a Community Where You Are</h2><p>We believe growth happens in community. It's kinda our thing.</p><p>Take the next step and open up your home for the weekend service. You can do this by becoming a host. This is the place start your community and get the resources to make it awesome.</p>","info","main"
+"323","streamingLandingHostIntro","<h2>Create a Community Where You Are</h2><p>We believe growth happens in community. It's kinda our thing.</p><p>Take the next step and open up your home for the weekend service. You can do this by becoming a host. This is the place to start your community and get the resources to make it awesome.</p>","info","main"
 "324","streamingLandingHostTips","<h3>Tips for Hosting</h3><p>You gather the people, we'll bring the awesome. Here are the basics of hosting a killer weekend service.</p><ul><li>Don't sweat the details. People want to hang out with you and the service will be great.</li>
 <li>Pick a space. Like your living room. Somewhere people can gather, talk, and hang out.</li>
 <li>Crank up the volume. It's way easier to sing along when your friends can't hear you.</li>
@@ -17,35 +17,43 @@
 <figcaption>Roku</figcaption></figure><figure class=""apple-tv wow fadeIn""><div><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--watch-apple-tv.png"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></div>
 <figcaption>Apple TV <span>(Version 4)<br>Download app in App Store, search ""Crossroads Anywhere""</span></figcaption></figure>","info","main"
 "328","streamingLandingSchedule","<div class=""row"">
-<div class=""date""><strong>Friday </strong>7/29</div>
+<div class=""date""><strong>Monday - Friday</strong></div>
 <div class=""time"">
 <ul class=""list-unstyled""><li>6:00 PM EST</li>
 <li>8:00 PM EST</li>
 <li>10:00 PM EST</li>
 </ul></div>
 </div><div class=""row"">
-<div class=""date""><strong>Saturday</strong>7/30</div>
+<div class=""date""><strong>Saturday</strong></div>
 <div class=""time"">
-<ul class=""list-unstyled""><li>4:15 PM EST</li>
-<li>6:00 PM EST</li>
+<ul class=""list-unstyled""><li>4:30 PM EST</li>
+<li>6:15 PM EST</li>
+<li>8:00 PM EST</li>
+<li>10:00 PM EST</li>
 </ul></div>
 </div><div class=""row"">
-<div class=""date""><strong>Sunday</strong>7/31</div>
+<div class=""date""><strong>Sunday</strong></div>
 <div class=""time"">
-<ul class=""list-unstyled""><li>8:15 AM EST</li>
-<li>9:50 AM EST</li>
-<li>11:30 AM EST</li>
+<ul class=""list-unstyled""><li>8:30 AM EST</li>
+<li>10:05 AM EST</li>
+<li>11:45 AM EST</li>
+<li>2:00 PM EST</li>
+<li>4:00 PM EST</li>
+<li>6:00 PM EST</li>
+<li>8:00 PM EST</li>
+<li>10:00 PM EST</li>
 </ul></div>
 </div>","info","main"
-"329","streamingLandingCurrentSeriesImage","<p><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-death-to-religion.jpg?h=600"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></p>","info","main"
-"330","streamingLandingPastWeekend1","<figure><a href=""#""> <img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week1.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">Spark #2</a></figcaption></figure><section><h3>Two words that can save any marriage.</h3>
-<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+"329","streamingLandingCurrentSeriesImage","<p><img src=""https://crds-cms-uploads.imgix.net/content/images/second-screen/streaming--series-together.jpg?h=600"" data-src=""//crds-cms-uploads.imgix.net/content/images/second-screen/streaming--series-together.jpg?h=600"" alt="""" class=""img-responsive imgix-fluid"" title=""""></p>","info","main"
+"330","streamingLandingPastWeekend1","<figure><a href=""https://www.crossroads.net/message/3801/Brian-Tome----You-can-t-say-that-in-church-""> <img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week1.jpg"" alt="""" class=""img-responsive imgix-fluid"" src=""https://crds-cms-uploads.imgix.net/content/images/streaming--series-week1.jpg"" title=""""></a> <figcaption><a href=""https://www.crossroads.net/message/3801/Brian-Tome----You-can-t-say-that-in-church-"">Spark #5</a></figcaption></figure><section><h3>You can’t say that in church</h3>
+<p>Brian Tome talks about what people think should and shouldn’t be allowed to say in church.</p>
 </section>","info","main"
-"331","streamingLandingPastWeekend2","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">The Super bowl of preaching</a></figcaption></figure><section><p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+"331","streamingLandingPastWeekend2","<figure><a href=""https://www.crossroads.net/message/3800/Matt-Welty---The-Unparalleled-Power-of-Community--David-Kinnaman---Data-and-Discovering-Why-God-Made-You""><img data-src=""//crds-cms-uploads.imgix.net/content/images/second-screen/streaming--spark-week4.jpg"" alt="""" class=""img-responsive imgix-fluid"" src=""https://crds-cms-uploads.imgix.net/content/images/second-screen/streaming--spark-week4.jpg"" title=""""></a> <figcaption><a href=""https://www.crossroads.net/message/3800/Matt-Welty---The-Unparalleled-Power-of-Community--David-Kinnaman---Data-and-Discovering-Why-God-Made-You"">Spark #4</a></figcaption></figure><section><h3>The Unparalleled Power of Community &amp; Data and Discovering Why God Made You</h3>
+<p>Matt Welty talks about how important community is to your personal and spiritual growth. Dave Kinnaman talks about the importance of work and how it is God's design for our lives.</p>
 </section>","info","main"
-"332","streamingLandingPastWeekend3","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week3.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">Life Hacks (4)</a></figcaption></figure><section><h3>Time Hacks</h3>
-<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+"332","streamingLandingPastWeekend3","<figure><a href=""https://www.crossroads.net/series/235/We-Stand-Undivided""><img data-src=""//crds-cms-uploads.imgix.net/content/images/second-screen/streaming--undivided-week1.jpg"" alt="""" class=""img-responsive imgix-fluid"" src=""https://crds-cms-uploads.imgix.net/content/images/second-screen/streaming--undivided-week1.jpg"" title=""""></a> <figcaption><a href=""https://www.crossroads.net/series/235/We-Stand-Undivided"">Undivided</a></figcaption></figure><section><h3>We stand Undivided</h3>
+<p>Chuck Mingo talks about community and how to respond to the terrible race-related violence and rising tensions in our country.</p>
 </section>","info","main"
-"333","streamingLandingPastWeekend4","<figure><a href=""#""><img data-src=""//crds-cms-uploads.imgix.net/content/images/streaming--series-week4.jpg"" alt="""" class=""img-responsive imgix-fluid"" src="""" title=""""></a> <figcaption><a href=""#"">James: Putting your faith to work #1</a></figcaption></figure><section><h3>Confession</h3>
-<p>Lorem ipsum dolor sit amet consec te tur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua.</p>
+"333","streamingLandingPastWeekend4","<figure><a href=""https://www.crossroads.net/message/3795/Latasha-Patrick---Why-my-daughter-will-fail-statistics--Paco-Pancham----How-a-suitcase-and--800-changed-my-life-""><img data-src=""//crds-cms-uploads.imgix.net/content/images/second-screen/streaming--spark-week3.jpg"" alt="""" class=""img-responsive imgix-fluid"" src=""https://crds-cms-uploads.imgix.net/content/images/second-screen/streaming--spark-week3.jpg"" title=""""></a> <figcaption><a href=""https://www.crossroads.net/message/3795/Latasha-Patrick---Why-my-daughter-will-fail-statistics--Paco-Pancham----How-a-suitcase-and--800-changed-my-life-"">Spark #3</a></figcaption></figure><section><h3>Why my daughter will fail statistics. &amp; How a suitcase and $800 changed my life.</h3>
+<p>Latasha Patrick talks about how being a single mother left her determined for her and her daughter to not fall to statics. Paco Pancham talks about how having faith and taking a risk changed his family's life with $800 and a suitcase.</p>
 </section>","info","main"
