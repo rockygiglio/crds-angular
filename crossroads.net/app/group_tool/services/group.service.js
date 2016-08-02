@@ -218,4 +218,16 @@ export default class GroupService {
     });
   }
 
+  getIsLeader(groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/isleader`).
+                          get({groupId: groupId, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promise.then((data) => {
+      return !(data.Group === null || data.Group === undefined)
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
 }

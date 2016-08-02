@@ -39,17 +39,21 @@ describe('GroupDetailAboutController', () => {
 
     describe('groupExists() function', () => {
       it('should be true', () => {
+        fixture.$onInit();
         expect(fixture.groupExists()).toBeTruthy();
       });
 
       it('should be true', () => {
         state.params.groupId = null;
+        fixture.data = {};
+        fixture.$onInit();
         expect(fixture.groupExists()).toBeFalsy();
       });
       
       it('should be true', () => {
         state.params.groupId = null;
         fixture.data = {groupId: 123};
+        fixture.$onInit();
         expect(fixture.groupExists()).toBeTruthy();
       });
     });
