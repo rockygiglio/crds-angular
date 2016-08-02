@@ -633,7 +633,7 @@ namespace crds_angular.Services
             try
             {
                 var mpGroup = Mapper.Map<MpGroup>(group);
-                group.GroupId = _mpGroupService.UpdateGroup(mpGroup);
+                _mpGroupService.UpdateGroup(mpGroup);
 
                 var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);

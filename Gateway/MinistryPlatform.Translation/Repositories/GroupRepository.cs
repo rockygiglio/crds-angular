@@ -18,7 +18,6 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IContentBlockService _contentBlockService;
         private readonly IAddressRepository _addressRepository;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IAddressRepository _addressService;
         private readonly int GroupsParticipantsPageId = Convert.ToInt32(AppSettings("GroupsParticipants"));
         private readonly int GroupsParticipantsSubPageId = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
         private readonly int CurrentGroupsParticipantsSubPage = Convert.ToInt32(AppSettings("CurrentGroupsParticipantsSubPage"));
@@ -162,34 +161,6 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpGroup getGroupDetails(int groupId)
         {
-            //var values = new Dictionary<string, object>
-            //{
-            //    {"Group_Name", group.Name},
-            //    {"Group_Type_ID", group.GroupType},
-            //    {"Ministry_ID", group.MinistryId},
-            //    {"Congregation_ID", group.CongregationId},
-            //    {"Primary_Contact", group.ContactId},
-            //    {"Description", group.GroupDescription},
-            //    {"Start_Date", group.StartDate},
-            //    {"End_Date", endDate},
-            //    {"Target_Size", group.TargetSize },
-            //+    {"Offsite_Meeting_Address", addressId },
-            //    {"Group_Is_Full", group.Full },
-            //    {"Available_Online", group.AvailableOnline },
-            //    {"Meeting_Time", group.MeetingTime },
-            //    {"Meeting_Day_Id", group.MeetingDayId },
-            //+    {"Domain_ID", 1 },
-            //    {"Child_Care_Available", group.ChildCareAvailable },
-            //    {"Remaining_Capacity", group.RemainingCapacity },
-            //    {"Enable_Waiting_List", group.WaitList },
-            //    {"Online_RSVP_Minimum_Age", group.MinimumAge },
-            //    {"Maximum_Age", group.MaximumAge },
-            //    {"Minimum_Participants", group.MinimumParticipants },
-            //    {"Kids_Welcome", group.KidsWelcome },
-            //+    {"Meeting_Frequency_ID", group.MeetingFrequencyID }
-
-            //};
-
             return (WithApiLogin<MpGroup>(apiToken =>
             {
                 logger.Debug("Getting group details for group " + groupId);
@@ -241,7 +212,7 @@ namespace MinistryPlatform.Translation.Repositories
                 groupDetails.TryGetValue("Offsite_Meeting_Address", out oma);
                 if (oma != null)
                 {
-                    g.Address = _addressService.GetAddressById(apiToken, (int)oma);
+                    g.Address = _addressRepository.GetAddressById(apiToken, (int)oma);
                 }
 
                 object c = null;

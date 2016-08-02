@@ -29,12 +29,16 @@ export default class CreateGroupService {
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
         //this.countryLookup is added by the route resolve of the createGroupController.
+        //this.originalAttributeTypes is added by setEditModel and used in mapToSmallGroup
+        //this.originalSingleAttributes is added by setEditModel and used in mapToSmallGroup
     }
 
     setEditModel(groupData, profileData){
         //this.log.debug("GroupDataFromServer:");
         this.log.debug(groupData);
         if (!this.resolved){
+            this.originalAttributeTypes = groupData.attributeTypes;
+            this.originalSingleAttributes = groupData.singleAttributes;
             this.preloadModel(profileData);
             this.mapFromSmallGroup(groupData);
             this.resolved = true;
@@ -538,10 +542,48 @@ export default class CreateGroupService {
     }
 
     mapToSmallGroup() {
+    //group setup
+        let smallGroup = new SmallGroup();
+        smallGroup.contactId = this.model.profile.contactId;
+        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        smallGroup.groupId = this.model.groupId;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+            , contactId: parseInt(this.session.exists('userId'))
+        })];
+        
+    //profile
+        smallGroup.primaryContact = {
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${this.model.profile.contactId}`,
+          contactId: this.model.profile.contactId
+        };
+        smallGroup.congregationId = this.model.profile.congregationId;
+        smallGroup.profile = new Profile(this.model.profile);
+
+    //groupType
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
         });
 
+        smallGroup.groupType = new GroupType({ name: groupType.name });
+        
+        //add the single attributes this group came in with to the small group model
+        smallGroup.singleAttributes = {};
+        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined){
+            smallGroup.singleAttributes = this.originalSingleAttributes;
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId = this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name);
+        } else {
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
+                "attribute": {
+                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
+                }
+            }
+        }
+
+    //groupAge
         let ageRangeNames = [];
         _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
             ageRangeNames.push(new AgeRange({
@@ -551,21 +593,67 @@ export default class CreateGroupService {
             })
             )
         });
-
-        let smallGroup = new SmallGroup();
-
-        smallGroup.primaryContact = {
-          imageUrl: `${this.imageService.ProfileImageBaseURL}${this.model.profile.contactId}`,
-          contactId: this.model.profile.contactId
-        };
-
-        smallGroup.groupName = this.model.group.groupName;
-        smallGroup.groupDescription = this.model.group.groupDescription;
-        smallGroup.groupType = new GroupType({ name: groupType.name });
-        smallGroup.contactId = this.model.profile.contactId;
-        if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+        if (this.model.groupAgeRangeIds != undefined && this.model.groupAgeRangeIds != null) {
             smallGroup.ageRange = ageRangeNames;
         }
+
+        smallGroup.attributeTypes = {};
+        if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
+            // set the original attribute types on to the small group
+            smallGroup.attributeTypes = this.originalAttributeTypes;
+            // set selected age ranges to true, all others to false
+            _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (ageRange) => {
+                if (_.includes(this.model.groupAgeRangeIds, ageRange.attributeId, 0)) {
+                    ageRange.selected = true;
+                } else {
+                    ageRange.selected = false;
+                }
+            });
+        } else {
+            var ids = [];
+            _.forEach(this.model.groupAgeRangeIds, (id) => {
+                ids.push(
+                    {
+                        "attributeId": id,
+                        "name": "",
+                        "description": null,
+                        "selected": true,
+                        "startDate": "0001-01-01T00:00:00",
+                        "endDate": null,
+                        "notes": null,
+                        "sortOrder": 0,
+                        "category": null,
+                        "categoryDescription": null
+                    })
+            });
+
+            var ageRangeJson = {};
+            ageRangeJson[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID] = {
+                "attributeTypeId": CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID,
+                "name": "Age Range",
+                "attributes": ids
+            }
+
+            smallGroup.attributeTypes = ageRangeJson;
+        }
+
+    //groupStartDate
+        smallGroup.startDate = this.model.group.startDate;
+
+    //groupMeetingTime
+        smallGroup.meetingDayId = this.model.group.meeting.day;
+        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined){
+            delete smallGroup.meetingTime;
+        }
+        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+
+        if (this.model.specificDay) {
+            smallGroup.meetingDayId = this.model.group.meeting.day;
+            smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+        }
+        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        
+    //groupMeetingPlace
         smallGroup.address = new Address();
         if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
@@ -577,71 +665,18 @@ export default class CreateGroupService {
         else {
             smallGroup.address.zip = null;
         }
+
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
 
-        smallGroup.meetingDayId = this.model.group.meeting.day;
-        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined)
-        {
-            delete smallGroup.meetingTime;
-        }
-        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+    //groupMeetingCategory
 
-        if (this.model.specificDay) {
-            smallGroup.meetingDayId = this.model.group.meeting.day;
-            smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-        }
-        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
-        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
-        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-        smallGroup.congregationId = this.model.profile.congregationId;
-        smallGroup.startDate = this.model.group.startDate;
-        smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.participants = [new Participant({
-            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            , nickName: this.model.profile.nickName
-            , lastName: this.model.profile.lastName
-            , contactId: parseInt(this.session.exists('userId'))
-        }
-        )];
+    //groupAbout
+        smallGroup.groupName = this.model.group.groupName;
+        smallGroup.groupDescription = this.model.group.groupDescription;
 
-        smallGroup.profile = new Profile(this.model.profile);
-
-        smallGroup.singleAttributes = {};
-        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
-            "attribute": {
-                "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
-            }
-        }
-
-        var ids = [];
-        _.forEach(this.model.groupAgeRangeIds, (id) => {
-            ids.push(
-                {
-                    "attributeId": id,
-                    "name": "Middle School Students",
-                    "description": null,
-                    "selected": true,
-                    "startDate": "0001-01-01T00:00:00",
-                    "endDate": null,
-                    "notes": null,
-                    "sortOrder": 0,
-                    "category": null,
-                    "categoryDescription": null
-                })
-        });
-
-        var ageRangeJson = {};
-        ageRangeJson[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID] = {
-                "attributeTypeId": CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID,
-                "name": "Age Range",
-                "attributes": ids
-        }
-
-        smallGroup.attributeTypes = ageRangeJson;
-
-        smallGroup.groupId = this.model.groupId;
-
+    //groupVisibilityFields
+        smallGroup.availableOnline = this.model.group.availableOnline;  
 
         return smallGroup;
 
