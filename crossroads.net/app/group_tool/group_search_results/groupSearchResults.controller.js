@@ -1,6 +1,8 @@
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, $state) {
+  constructor(NgTableParams, GroupService, $state) {
+    this.groupService = GroupService;
+
     this.search = null;
     this.processing = false;
     this.state = $state;
@@ -10,25 +12,36 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.searchedWithLocation = false;
 
-
-
     this.tableParams = new NgTableParams({}, { dataset: this.results });
   }
 
   $onInit() {
-    //debugger;
+    this.search = {
+      query: this.state.params.query,
+      location: this.state.params.location
+    };
+    this.doSearch(this.state.params.query, this.state.params.location);
+  }
 
-
-    //console.log(this.state.query);
-
-    this.results = MOCK_DATA;
-
-
-    this.ready = true;
+  doSearch(query, location) {
+    this.ready = false;
+    this.results = [];
+    this.groupService.search(query, location).then(
+      (data) => {
+        this.results = data;
+      },
+      (err) => {
+        this.results = [];
+      }
+    ).finally(
+      () => {
+        this.ready = true;
+      }
+    );
   }
 
   submit() {
-    console.log('Search Submit');
+    this.doSearch(search.query, search.location);
   }
 
   searchWithLocation() {
