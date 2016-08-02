@@ -52,5 +52,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void UpdateGroupInquiry(int groupId, int inquiryId, bool approved);
         List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null);
         MpGroup GetSmallGroupDetailsById(int groupId);
+        void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders);
     }
 }

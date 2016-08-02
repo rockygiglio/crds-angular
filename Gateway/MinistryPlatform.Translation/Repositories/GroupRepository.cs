@@ -575,15 +575,22 @@ namespace MinistryPlatform.Translation.Repositories
             _communicationService.SendMessage(confirmation);
         }
 
-        public void SendNewStudentMinistryGroupAlertEmail(String nickName, String lastName, String email)
+
+        public void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders)
         {
             var emailTemplate = _communicationService.GetTemplate(NewStudentMinistryGroupAlertEmailTemplate);
+            const string toEmail = "studentministry@crossroads.net";
+
+            string formattedData = "<ul> ";
+
+            foreach (var participant in leaders)
+            {
+                formattedData += $"<li>Name: {participant.NickName} {participant.LastName}  Email: {participant.Email} </li>";
+            }
 
             var mergeData = new Dictionary<string, object>
             {
-                {"Nickname", nickName},
-                {"Last_Name", lastName},
-                {"Last_Name", lastName}
+                {"Leaders", formattedData + "</ul>"}
             };
 
             var domainId = Convert.ToInt32(AppSettings("DomainId"));
@@ -597,9 +604,8 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 new MpContact
                 {
-                    //  TODO 
-                    //ContactId = toContact,
-                    //EmailAddress = toContactInfo.Email_Address
+                    ContactId = _contactService.GetContactIdByEmail(toEmail),
+                    EmailAddress = toEmail
                 }
             };
 
