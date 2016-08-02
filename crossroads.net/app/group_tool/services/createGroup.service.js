@@ -446,6 +446,7 @@ export default class CreateGroupService {
                     valueProp: 'categoryId',
                     labelProp: 'label',
                     descProp: 'labelDesc',
+                    maxFieldLength: '25',
                     placeholder: 'placeholder',
                     options: [{
                         categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
