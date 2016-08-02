@@ -5,24 +5,28 @@ import { VideoJSComponent } from '../../app/streaming/videojs.component';
 import { StreamspotService } from '../../app/streaming/streamspot.service';
 import { describe, it, expect, inject, beforeEach, addProviders, beforeEachProviders, async } from '@angular/core/testing';
 
+class MockStreamspotService extends StreamspotService {
+  constructor() {
+    super(null)
+  }
+  getEvents(): any {
+    return [];
+  }
+}
+
 describe('Component: VideoJS', () => {
 
-  beforeEachProviders(() => {
-    return [
+  beforeEach(() => {
+    addProviders([
       HTTP_PROVIDERS,
-      StreamspotService
-    ];
+      { provide: StreamspotService, useClass: MockStreamspotService }
+    ])
   });
 
-  it('should create the component with service successfully.',
-    async(
-      inject([StreamspotService], (streamspotService: StreamspotService) => {
+  it('should create the component with service successfully.', () => {
+    let component = new VideoJSComponent(new MockStreamspotService());
+    expect(component).toBeTruthy();
 
-        let component = new VideoJSComponent(streamspotService);
-        expect(component).toBeTruthy();
-
-      })
-    )
-  );
+  });
 
 });
