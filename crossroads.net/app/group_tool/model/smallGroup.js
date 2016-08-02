@@ -136,7 +136,15 @@ export default class SmallGroup {
     }
 
     return false;
+  }
 
-    
+  emailList() {
+    let emailList = "";
+
+    this.participants.forEach(function(participant) {
+      emailList = `${emailList}${participant.email},`;
+    }, emailList);
+
+    return emailList;
   }
 }
