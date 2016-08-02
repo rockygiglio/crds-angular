@@ -17,6 +17,7 @@
                 ng-model="multiCheckboxCombo.detail[$index]"
                 ng-change="multiCheckboxCombo.change()"
                 ng-if="multiCheckboxCombo.checked[$index]"
+                maxlength="{{to.maxFieldLength}}"
                 placeholder="{{option[to.placeholder]}}"
                 class="form-control ng-pristine ng-valid ng-empty">
     </div>
