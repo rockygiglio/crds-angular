@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Group_ID", groupId },
                 {"End_Date", DateTime.Today}
             };
-            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("dbo.Groups", groupId, fields);
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Groups", groupId, fields);
         }
        
         [Test]

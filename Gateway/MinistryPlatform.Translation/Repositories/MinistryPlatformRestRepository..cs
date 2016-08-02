@@ -120,7 +120,7 @@ namespace MinistryPlatform.Translation.Repositories
             var url = string.Format("/tables/{0}", tableName);
             var request = new RestRequest(url, Method.PUT);
             AddAuthorization(request);
-            request.AddParameter("application/json", FormatStoredProcBody(fields), ParameterType.RequestBody);
+            request.AddParameter("application/json", "[" + FormatStoredProcBody(fields) + "]", ParameterType.RequestBody);
 
             var response = _ministryPlatformRestClient.Execute(request);
             response.CheckForErrors(string.Format("Error updating {0}", tableName), true);

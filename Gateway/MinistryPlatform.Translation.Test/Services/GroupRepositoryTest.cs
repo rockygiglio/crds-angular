@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
-using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -19,6 +15,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private GroupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<ICommunicationRepository> _communicationService;
@@ -33,12 +30,13 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _authService = new Mock<IAuthenticationRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object);
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object);
 
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");

@@ -38,8 +38,10 @@ namespace MinistryPlatform.Translation.Repositories
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
 
         private IMinistryPlatformService ministryPlatformService;
+        private IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
         public GroupRepository(IMinistryPlatformService ministryPlatformService,
+                               IMinistryPlatformRestRepository ministryPlatformRestRepository,
                                IConfigurationWrapper configurationWrapper,
                                IAuthenticationRepository authenticationService,
                                ICommunicationRepository communicationService,
@@ -48,6 +50,7 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
+            this._ministryPlatformRestRepository = ministryPlatformRestRepository;
             this._configurationWrapper = configurationWrapper;
             this._communicationService = communicationService;
             this._contactService = contactService;
@@ -144,6 +147,17 @@ namespace MinistryPlatform.Translation.Repositories
             dictionary.Add("End_Date", DateTime.Now);
             dictionary.Add("Group_ID", groupId);
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
+        }
+
+        public void EndDateGroup(int groupId, DateTime? endDate)
+        {
+            var apiToken = ApiLogin();
+            var fields = new Dictionary<string, object>
+            {
+                {"Group_ID", groupId },
+                {"End_Date", endDate ?? DateTime.Now }
+            };
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields );
         }
 
         public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)

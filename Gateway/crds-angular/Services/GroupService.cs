@@ -480,8 +480,7 @@ namespace crds_angular.Services
 
         public void EndDateGroup(int groupId)
         {
-            //_mpGroupService.UpdateGroupInquiry();
-            throw new NotImplementedException();
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
         }
 
         public Participant GetParticipantRecord(string token) 
