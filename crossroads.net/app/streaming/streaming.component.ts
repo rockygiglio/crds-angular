@@ -11,7 +11,6 @@ var WOW = require('wow.js/dist/wow.min.js');
 @Component({
   selector: 'streaming',
   directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, StickyHeaderDirective],
-  providers: [StreamspotService],
   templateUrl: './streaming.ng2component.html'
 })
 
