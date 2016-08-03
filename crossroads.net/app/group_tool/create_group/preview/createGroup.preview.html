@@ -1,4 +1,11 @@
 <group-detail-about data="createGroupPreview.groupData"> </group-detail-about>
       <button ng-if="!createGroupPreview.edit" type="submit" class="btn btn-primary" ui-sref='grouptool.create'>Edit</button>
       <button ng-if="createGroupPreview.edit" type="submit" class="btn btn-primary" ui-sref='grouptool.edit({ groupId: createGroupPreview.groupData.groupId })'>Edit</button>
-      <button type="submit" class="btn btn-primary" ng-click="createGroupPreview.submit()">Submit Group</button>
+      <loading-button
+            normal-text='Submit Group'
+            loading-text='Saving...'
+            loading='createGroupPreview.saving'
+            loading-class='disabled'
+            input-classes='btn btn-primary'
+            type="submit"
+            ng-click='createGroupPreview.submit()'></loading-button>

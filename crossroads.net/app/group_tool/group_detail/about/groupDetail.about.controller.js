@@ -45,6 +45,14 @@ export default class GroupDetailAboutController {
     })
   }
 
+  getAddress() {
+    if (this.state.current.name == "grouptool.edit.preview" || !this.userInGroup()){
+      return this.data.address.getZip()
+    } else {
+      return this.data.address.toString()
+    }
+  }
+
   groupExists() {
     if (this.groupId !== undefined && this.groupId !== null) {
       return true;

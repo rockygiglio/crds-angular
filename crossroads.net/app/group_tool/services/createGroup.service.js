@@ -48,6 +48,8 @@ export default class CreateGroupService {
     setCreateModel(profileData) {
         if (!this.resolved){
             this.preloadModel(profileData);
+            delete this.model.profile.householdMembers;
+            delete this.model.profile.congregationId;
             this.resolved = true;
         }
     }
@@ -55,8 +57,6 @@ export default class CreateGroupService {
     preloadModel(profile) {
         this.model.profile = profile;
         this.model.profile.oldEmail = profile.emailAddress;
-        delete this.model.profile.householdMembers;
-        delete this.model.profile.congregationId;
         if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
                 meeting: {
