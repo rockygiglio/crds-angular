@@ -7,7 +7,7 @@
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
         <label for="query">Search</label>
         <div class="input-group">
-          <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="Ex: Boxing, Joe Smith, Crossroads Site">
+          <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
           <span class="group-search-icon input-group-btn">
             <button type="submit" class="btn btn-default">
               <svg viewBox="0 0 32 32" class="icon search3">
@@ -23,11 +23,11 @@
         <a ng-click="groupSearchResults.showLocationInput = true">Find Groups Near You</a>
       </div>
       <div ng-show="groupSearchResults.showLocationInput">
-        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.searchWithLocation()">
+        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit()">
           <label for="location">What part of town would you like to meet?</label>
           <div class="group-location-input-wrapper">
-            <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="Address, city or zip">
-            <button type="submit" class="btn btn-primary" ng-click="groupSearchResults.searchWithLocation()">
+            <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}">
+            <button type="submit" class="btn btn-primary">
               <span ng-show="!groupSearchResults.searchedWithLocation">Save</span>
               <span ng-show="groupSearchResults.searchedWithLocation">Update</span>
             </button>

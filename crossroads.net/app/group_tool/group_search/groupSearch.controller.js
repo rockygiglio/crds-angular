@@ -1,12 +1,6 @@
+
 export default class GroupSearchController {
   /*@ngInject*/
-  constructor($rootScope) {
-    this.rootScope = $rootScope;
-    this.search = null;
-    this.processing = false;
+  constructor() {
   }
-
-  //submit() {
-  //  this.submitAction({person: this.person});
-  //}
 }

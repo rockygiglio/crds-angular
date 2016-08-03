@@ -82,7 +82,6 @@ describe('GroupDetailAboutController', () => {
           fixture.$onInit();
           rootScope.$digest();
 
-
           expect(fixture.groupId).toEqual(state.params.groupId);
           expect(groupService.getGroup).toHaveBeenCalledWith(state.params.groupId);
           expect(fixture.data).toBeDefined();
@@ -96,6 +95,35 @@ describe('GroupDetailAboutController', () => {
           expect(fixture.forInvitation).toBeFalsy();
         });
 
+        it('should set image url if group data exists', () => {
+          state.params.groupId = undefined;
+
+          let groupData = {
+            contactId: 987,
+            groupId: 123
+          };
+
+          fixture.data = groupData;
+
+          spyOn(groupService, 'getGroup').and.callFake(function(groupId) {
+          });
+
+          fixture.$onInit();
+          rootScope.$digest();
+
+          expect(fixture.groupId).toEqual(groupData.groupId);
+          expect(groupService.getGroup).not.toHaveBeenCalled();
+          expect(fixture.data).toBeDefined();
+          expect(fixture.data.primaryContact).toBeDefined();
+          expect(fixture.data.primaryContact.contactId).toBeDefined();
+          expect(fixture.data.primaryContact.contactId).toEqual(groupData.contactId);
+          expect(fixture.data.primaryContact.imageUrl).toBeDefined();
+          expect(fixture.data.primaryContact.imageUrl).toEqual(`${imageService.ProfileImageBaseURL}${groupData.contactId}`);
+          expect(fixture.ready).toBeTruthy();
+          expect(fixture.error).toBeFalsy();
+          expect(fixture.forInvitation).toBeFalsy();
+        });
+        
         it('should set error state if trouble getting requests', () => {
           let deferred = qApi.defer();
           let error = {
