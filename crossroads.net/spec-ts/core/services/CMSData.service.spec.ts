@@ -20,6 +20,7 @@ import {
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
 import { CMSDataService } from '../../../core/services/CMSData.service';
+declare var __CMS_ENDPOINT__: string;
 
 const mockHttpProvider = {
   deps: [ MockBackend, BaseRequestOptions ],
@@ -40,48 +41,37 @@ describe('Service: CMSData', () => {
       CMSDataService
     ];
   });
-
-  it('should use an HTTP call to obtain series by id',
+  
+  it('should use an HTTP call to obtain current series',
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
+          let todaysDate = new Date().toISOString().slice(0, 10);
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            'https://contentint.crossroads.net/api/series/228');
+            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=14`);
         });
 
-        service.getSeriesById(228);
+        service.getCurrentSeries();
       })));
 
-  it('should use an HTTP call to obtain series by title',
+  it('should use an HTTP call to obtain the nearest series',
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
-
+          let todaysDate = new Date().toISOString().slice(0, 10)
+          
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            'https://contentint.crossroads.net/api/series?title=Death%20to%20Religion');
+            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=1`);
         });
 
-        service.getSeriesByTitle("Death to Religion");
+        service.getNearestSeries();
       })));
 
-  it('should use an HTTP call to obtain message by title',
-    inject(
-      [CMSDataService, MockBackend],
-      fakeAsync((service: CMSDataService, backend: MockBackend) => {
-        backend.connections.subscribe((connection: MockConnection) => {
-
-          expect(connection.request.method).toBe(RequestMethod.Get);
-          expect(connection.request.url).toBe(
-            'https://contentint.crossroads.net/api/messages?title=Death%20to%20Rules');
-        });
-
-        service.getMessageByTitle("Death to Rules");
-      })));
 
   it('should use an HTTP call to obtain most recent 4 messages',
     inject(
@@ -94,23 +84,64 @@ describe('Service: CMSData', () => {
             'https://contentint.crossroads.net/api/messages?date__sort=DESC&__limit%5B%5D=4');
         });
 
-        service.getMostRecent4Messages();
+        service.getXMostRecentMessages(4);
       })));
 
-  it('should use an HTTP call to obtain the current series',
+  it('should use an HTTP call to obtain messages',
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
-          let todaysDate = new Date().toISOString().slice(0, 10)
-          
+
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__LessThan=${todaysDate}&endDate__GreaterThan=${todaysDate}&endDate__sort=ASC`);
+            `https://contentint.crossroads.net/api/messages?title=Hello%20World`);
         });
 
-        service.getCurrentSeries();
+        service.getMessages('title=Hello World');
       })));
 
+  it('should use an HTTP call to obtain series',
+    inject(
+      [CMSDataService, MockBackend],
+      fakeAsync((service: CMSDataService, backend: MockBackend) => {
+        backend.connections.subscribe((connection: MockConnection) => {
 
+          expect(connection.request.method).toBe(RequestMethod.Get);
+          expect(connection.request.url).toBe(
+            `https://contentint.crossroads.net/api/messages?title=Hello%20World`);
+        });
+
+        service.getSeries('title=Hello World');
+      })));
+
+  it('should use an HTTP call to obtain digital program',
+    inject(
+      [CMSDataService, MockBackend],
+      fakeAsync((service: CMSDataService, backend: MockBackend) => {
+        backend.connections.subscribe((connection: MockConnection) => {
+
+          expect(connection.request.method).toBe(RequestMethod.Get);
+          expect(connection.request.url).toBe(
+            `https://contentint.crossroads.net/api/features`);
+        });
+
+        service.getDigitalProgram();
+      })));
+
+  it('should use an HTTP call to obtain content block',
+    inject(
+      [CMSDataService, MockBackend],
+      fakeAsync((service: CMSDataService, backend: MockBackend) => {
+        backend.connections.subscribe((connection: MockConnection) => {
+
+          expect(connection.request.method).toBe(RequestMethod.Get);
+          expect(connection.request.url).toBe(
+            `https://contentint.crossroads.net/api/contentblock?title=Hello%20World`);
+        });
+
+        service.getContentBlock('title=Hello World');
+      })));
+     
+      
 });

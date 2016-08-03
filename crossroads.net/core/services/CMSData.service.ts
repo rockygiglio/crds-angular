@@ -1,37 +1,61 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http} from '@angular/http';
 import { Subject } from 'rxjs/Subject';
+declare var __CMS_ENDPOINT__: string;
 
 @Injectable()
 export class CMSDataService {
-    // TODO: Inquire about what the appropriate apiUrl is.
-    private apiUrl = 'https://contentint.crossroads.net/api/'
-
     constructor(private http: Http) { }
-    
-    // TODO: Consider this design. Is it best practice to just provide an Observable
-    // or should the service go one step further an provider the single object/
-    // array of objects that is used by the component?
     
     getCurrentSeries() {
         let todaysDate = new Date().toISOString().slice(0, 10);
-        return this.http.get(encodeURI(this.apiUrl + `series?startDate__LessThan=${todaysDate}&endDate__GreaterThan=${todaysDate}&endDate__sort=ASC`));
+        let currentSeriesAPIAddress = `api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=1`
+        let obs = this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress))
+                                        .map(rsp => rsp.json().series[0]);
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress))
+                                        .map(this.responseHasContent)
+                                        .flatMap( x => {
+                                            return x ?  obs : this.getNearestSeries()
+                                        });
+    }
+
+    private responseHasContent(resp) {
+        console.log(resp);
+        var obj = resp.json();
+        return resp && obj.series.length > 0;
+    }
+
+    public getNearestSeries() {
+        let todaysDate = new Date().toISOString().slice(0, 10);
+        let nearestSeriesAPIAddress = `api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit[]=1`
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + nearestSeriesAPIAddress))
+                        .map(rsp => {return rsp.json().series[0]})
     }
     
-    getSeriesById(id: number) {
-        return this.http.get(encodeURI(this.apiUrl + `series/${id}`));
+    getXMostRecentMessages(limit:number) {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?date__sort=DESC&__limit[]=${limit}`))
+                        .map(rsp => {return rsp.json().messages});
+    }
+    
+    getMessages(queryString:string) {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?${queryString}`))
+                        .map(rsp => {return rsp.json().messages});
     }
 
-    getSeriesByTitle(title: string) {
-        return this.http.get(encodeURI(this.apiUrl + `series?title=${title}`));
+    getSeries(queryString:string) {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/series?${queryString}`))
+                        .map(rsp => {return rsp.json().series})        
     }
 
-    getMessageByTitle(title: string) {
-        return this.http.get(encodeURI(this.apiUrl + `messages?title=${title}`));
+    getDigitalProgram() {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/features`))
+                        .map(rsp => {return rsp.json().features});
     }
 
-    getMostRecent4Messages() {
-        return this.http.get(encodeURI(this.apiUrl + `messages?date__sort=DESC&__limit[]=4`));
+    getContentBlock(title:string) {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/contentblock?title=${title}`))
+                        .map(rsp => {return rsp.json().contentblocks[0]});
     }
+
 }
