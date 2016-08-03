@@ -189,7 +189,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Target_Size", (short) 5},
                 {"Group_Is_Full", true},
                 {"Enable_Waiting_List", true},
-                {"dp_RecordID", 522}
+                {"dp_RecordID", 522},
+                {"Start_Date", new DateTime(2014, 3, 4) }
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
@@ -207,7 +208,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Role_Title", "Boss"},
                     {"Last_Name", "Anderson"},
                     {"Nickname", "Neo"},
-                    {"Email", "Neo@fun.com"}
+                    {"Email", "Neo@fun.com"},
+                    {"Start_Date", new DateTime(2014, 3, 4) }
 
                 });
             }
