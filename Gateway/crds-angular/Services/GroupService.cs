@@ -649,6 +649,12 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<MpGroup>(group);
                 _mpGroupService.UpdateGroup(mpGroup);
 
+                List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
+                if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
+                {
+                    updateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
+                }
+
                 if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
                 {
                     var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
@@ -668,6 +674,18 @@ namespace crds_angular.Services
             }
 
             return group;
+        }
+
+        private void updateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        {
+            var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
+
+            foreach (var part in mpParticipants)
+            {
+                part.StartDate = groupStartDate;
+            }
+
+            _mpGroupService.UpdateGroupParticipant(mpParticipants);
         }
 
     }

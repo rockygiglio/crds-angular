@@ -32,6 +32,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }
 
+        [JsonProperty(PropertyName = "startDate")]
+        public DateTime? StartDate { get; set; }
+
         [JsonProperty(PropertyName = "attributeTypes")]
         public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
 
