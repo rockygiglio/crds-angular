@@ -28,6 +28,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IParticipantRepository> _participantRepository;
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<MPServices.IInvitationRepository> _invitationRepositor;
+        private Mock<IAddressProximityService> _addressProximityService;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -45,6 +46,7 @@ namespace crds_angular.test.Services
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
+            _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -59,7 +61,8 @@ namespace crds_angular.test.Services
                                             _communicationRepository.Object,
                                             _contentBlockService.Object,
                                             configuration.Object,
-                                            _invitationRepositor.Object);
+                                            _invitationRepositor.Object,
+                                            _addressProximityService.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]

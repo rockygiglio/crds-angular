@@ -405,7 +405,7 @@ namespace crds_angular.test.controllers
             _groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);            
 
             IHttpActionResult result = _fixture.PostGroup(group);
-            _addressServiceMock.Verify(x=> x.FindOrCreateAddress(group.Address), Times.Once);
+            _addressServiceMock.Verify(x=> x.FindOrCreateAddress(group.Address, true), Times.Once);
             _groupServiceMock.VerifyAll();            
         }
 
@@ -435,7 +435,7 @@ namespace crds_angular.test.controllers
             _groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
 
             IHttpActionResult result = _fixture.PostGroup(group);
-            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);
+            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address, true), Times.Never);
             _groupServiceMock.VerifyAll();
         }
 
@@ -465,7 +465,7 @@ namespace crds_angular.test.controllers
             _groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
 
             IHttpActionResult result = _fixture.PostGroup(group);
-            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);
+            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address, true), Times.Never);
             _groupServiceMock.VerifyAll();
         }
 
@@ -486,7 +486,7 @@ namespace crds_angular.test.controllers
             _groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);
 
             IHttpActionResult result = _fixture.PostGroup(group);
-            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address), Times.Never);            
+            _addressServiceMock.Verify(x => x.FindOrCreateAddress(group.Address, true), Times.Never);            
             _groupServiceMock.VerifyAll();
         }
 

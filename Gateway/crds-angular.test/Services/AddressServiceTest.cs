@@ -2,6 +2,7 @@
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
@@ -14,6 +15,7 @@ namespace crds_angular.test.Services
 
         private AddressService _fixture;
         private Mock<MPServices.IAddressRepository> _mpAddressServiceMock;
+        private Mock<IAddressProximityService> _addressProximityService;
 
         [SetUp]
         public void SetUp()
@@ -21,8 +23,9 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             _mpAddressServiceMock = new Mock<MPServices.IAddressRepository>(MockBehavior.Strict);
+            _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
 
-            _fixture = new AddressService(_mpAddressServiceMock.Object);            
+            _fixture = new AddressService(_mpAddressServiceMock.Object, _addressProximityService.Object);            
         }
 
         [Test]

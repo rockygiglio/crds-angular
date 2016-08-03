@@ -23,6 +23,7 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IContentBlockService _contentBlockService;
         private readonly IInvitationRepository _invitationRepository;
+        private readonly IAddressProximityService _addressProximityService;
 
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
@@ -48,7 +49,8 @@ namespace crds_angular.Services
                            ICommunicationRepository communicationRepository,
                            IContentBlockService contentBlockService,
                            IConfigurationWrapper configurationWrapper, 
-                           IInvitationRepository invitationRepository)
+                           IInvitationRepository invitationRepository,
+                           IAddressProximityService addressProximityService)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -58,6 +60,7 @@ namespace crds_angular.Services
             _communicationRepository = communicationRepository;
             _contentBlockService = contentBlockService;
             _invitationRepository = invitationRepository;
+            _addressProximityService = addressProximityService;
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
@@ -401,7 +404,7 @@ namespace crds_angular.Services
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
-            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
+            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Replace("'", "''")).ToArray();
 
             var results = _groupToolRepository.SearchGroups(groupTypeId, search);
             if (results == null || !results.Any())
@@ -409,12 +412,27 @@ namespace crds_angular.Services
                 return null;
             }
 
-            if (!string.IsNullOrWhiteSpace(location))
+            var groups = results.Select(Mapper.Map<GroupDTO>).ToList();
+
+            if (string.IsNullOrWhiteSpace(location))
             {
-                // TODO Parse a location string into an address, and call proximity API to get approximate distances on results
+                return groups;
             }
 
-            return results.Select(Mapper.Map<GroupDTO>).ToList();
+            try
+            {
+                var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
+                for(var i = 0; i < groups.Count; i++)
+                {
+                    groups[i].Proximity = proximities[i];
+                }
+            }
+            catch (InvalidAddressException e)
+            {
+                _logger.Error($"Can't validate origin address {location}", e);
+            }
+
+            return groups;
         }
     }
 }

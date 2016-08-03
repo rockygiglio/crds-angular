@@ -47,7 +47,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 State = "OH",
                 Postal_Code = "45454",
                 Foreign_Country = "USA",
-                County = "Hamilton"
+                County = "Hamilton",
+                Longitude = 123.45,
+                Latitude = 678.90
             };
 
             var values = new Dictionary<string, object>
@@ -58,7 +60,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"State/Region", "OH"},
                 {"Postal_Code", "45454"},
                 {"Foreign_Country", "USA"},
-                {"County", "Hamilton"}
+                {"County", "Hamilton"},
+                {"Longitude", addr.Longitude },
+                {"Latitude", addr.Latitude }
             };
 
             _ministryPlatformService.Setup(m => m.CreateRecord(271, It.IsAny<Dictionary<string, object>>(), apiToken, false)).Returns(addressId);
