@@ -213,6 +213,10 @@ export default class CreateGroupService {
                 }, {
                     key: 'group.meeting.frequency',
                     type: 'formlyBuilderSelect',
+                    hideExpression: '!model.specificDay',
+                    expressionProperties: {
+                        'templateOptions.required': 'model.specificDay'
+                    },                    
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
