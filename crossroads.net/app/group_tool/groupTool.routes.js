@@ -96,6 +96,18 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       url: '/requests',
       template: '<group-detail-requests></group-detail-requests>'
     })
+    .state('grouptool.invitation', {
+      url: '/groups/invitation/accept/{invitationGUID}',
+      parent: 'noSideBar',
+      template: '<group-invitation></group-invitation>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Join Group',
+          description: ''
+        }
+      }
+    })
     .state('grouptool.search', {
       parent: 'noSideBar',
       url: '/groups/search',
@@ -104,6 +116,28 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         isProtected: true,
         meta: {
           title: 'Find a Group',
+          description: ''
+        }
+      }
+    })
+    .state('grouptool.search-results', {
+      parent: 'noSideBar',
+      url: '/groups/search/results?query&location',
+      params: {
+        query: {
+          value: null,
+          squash: true
+        },
+        location: {
+          value: null,
+          squash: true
+        }
+      },
+      template: '<group-search-results></group-search-results>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Search Results',
           description: ''
         }
       }

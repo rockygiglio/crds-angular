@@ -1,0 +1,72 @@
+<div>
+  <h1 class="page-header">Search Results</h1>
+  <div class="group-search-tools row">
+    <div class="col-sm-5 push-half-bottom">
+      <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
+        <label for="query">{{$root.MESSAGES.groupToolSearchPageKeywordLabel.content | htmlToPlainText}}</label>
+        <div class="input-group">
+          <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
+          <span class="group-search-icon input-group-btn">
+            <button type="submit" class="btn btn-default">
+              <svg viewBox="0 0 32 32" class="icon search3">
+                <use xlink:href="#search3"></use>
+              </svg>
+            </button>
+          </span>
+        </div>
+      </form>
+    </div>
+    <div class="group-location-tool col-sm-6 col-sm-offset-1 push-half-bottom">
+      <div ng-show="!groupSearchResults.showLocationInput && !groupSearchResults.search.location.length" class="group-location-toggle">
+        <a ng-click="groupSearchResults.showLocationInput = true">Find Groups Near You</a>
+      </div>
+      <div ng-show="groupSearchResults.showLocationInput">
+        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit()">
+          <label for="location">{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
+          <div class="group-location-input-wrapper">
+            <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}">
+            <button type="submit" class="btn btn-primary">
+              <span ng-show="!groupSearchResults.searchedWithLocation">Save</span>
+              <span ng-show="groupSearchResults.searchedWithLocation">Update</span>
+            </button>
+            <button type="button" class="btn btn-standard" ng-click="groupSearchResults.showLocationInput = false">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div ng-show="!groupSearchResults.showLocationInput && groupSearchResults.search.location.length > 0" class="group-location-toggle">
+        <label>Groups Near:</label> <a ng-click="groupSearchResults.showLocationInput = true">{{groupSearchResults.search.location}}</a>
+      </div>
+    </div>
+  </div>
+
+  <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
+
+  <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
+    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+      <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
+      <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
+      <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
+      <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
+      <td data-title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
+      <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
+      <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
+      <td data-title="'Distance'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a>Map</a></td>
+    </tr>
+    <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
+      <td colspan="8">
+        <group-detail-about data="group"></group-detail-about>
+      </td>
+    </tr>
+  </table>
+
+  <div ng-show='groupSearchResults.ready' class="group-results-mobile hidden-sm hidden-md hidden-lg push-half-top">
+    <div ng-repeat="group in groupSearchResults.results" class="group-result push-half-bottom soft-half-bottom">
+      <div class="row">
+        <strong class="col-xs-10">{{group.groupName}}</strong>
+        <div class="col-xs-2">Map</div>
+      </div>
+      <div>{{group.categories.join(', ')}}</div>
+      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
+    </div>
+  </div>
+</div>

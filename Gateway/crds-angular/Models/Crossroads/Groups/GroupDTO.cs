@@ -28,6 +28,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "congregationId")]
         public int CongregationId { get; set; }
 
+        [JsonProperty(PropertyName = "congregationName")]
+        public string Congregation { get; set; }
+
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
 
@@ -82,7 +85,7 @@ namespace crds_angular.Models.Crossroads.Groups
         public string MeetingFrequency { get; set; }
 
         [JsonProperty(PropertyName = "meetingFrequencyID")]
-        public int MeetingFrequencyID { get; set; }
+        public int? MeetingFrequencyID { get; set; }
 
         [JsonProperty(PropertyName = "meetingTimeFrequency")]
         public string MeetingTimeFrequency { get; set; }

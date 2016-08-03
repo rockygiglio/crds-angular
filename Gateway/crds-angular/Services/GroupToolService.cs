@@ -22,6 +22,10 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IContentBlockService _contentBlockService;
+        private readonly IInvitationRepository _invitationRepository;
+
+        private readonly int _defaultGroupRoleId;
+        private readonly int _defaultGroupTypeId;
 
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
@@ -43,7 +47,8 @@ namespace crds_angular.Services
                            IParticipantRepository participantRepository,
                            ICommunicationRepository communicationRepository,
                            IContentBlockService contentBlockService,
-                           IConfigurationWrapper configurationWrapper)
+                           IConfigurationWrapper configurationWrapper, 
+                           IInvitationRepository invitationRepository)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -52,9 +57,13 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
             _communicationRepository = communicationRepository;
             _contentBlockService = contentBlockService;
+            _invitationRepository = invitationRepository;
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
-            _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+            _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
+
+               _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
         }
@@ -64,6 +73,8 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
+                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, sourceId);
+
                 var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
             }
@@ -81,6 +92,8 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
+                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+
                 var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
             }
@@ -305,7 +318,31 @@ namespace crds_angular.Services
             }
         }
 
-	public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
+        public void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept)
+        {
+            try
+            {
+                //If they accept the invite get their participant record and them to the group as a member.
+                if (accept)
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    _groupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _defaultGroupRoleId, false, DateTime.Now);
+                }
+
+                _invitationRepository.MarkInvitationAsUsed(invitationGuid);
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException(string.Format("Could not accept = {0} from group {1}", accept, groupId), e);
+            }
+        }
+
+        public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
@@ -358,6 +395,26 @@ namespace crds_angular.Services
             {
                 throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
             }
+        }
+
+        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)
+        {
+            // Split single search term into multiple words, broken on whitespace
+            // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
+            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
+
+            var results = _groupToolRepository.SearchGroups(groupTypeId, search);
+            if (results == null || !results.Any())
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                // TODO Parse a location string into an address, and call proximity API to get approximate distances on results
+            }
+
+            return results.Select(Mapper.Map<GroupDTO>).ToList();
         }
     }
 }

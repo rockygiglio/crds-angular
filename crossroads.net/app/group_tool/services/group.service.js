@@ -180,7 +180,7 @@ export default class GroupService {
       });
   }
 
-    saveParticipant(participants, groupId) {
+  saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
 
@@ -200,4 +200,54 @@ export default class GroupService {
       });
   }
 
+  getGroupByInvitationGUID(invitationGUID) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/invitation/:invitationGUID`).
+                          get({invitationGUID: invitationGUID}).$promise;
+
+    return promise.then((data) => {
+      let group = new SmallGroup(data);
+      group.primaryContact = {
+        imageUrl: `${this.imgService.ProfileImageBaseURL}${group.contactId}`,
+        contactId: group.contactId
+      };
+
+      return group;
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
+  getIsLeader(groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/isleader`).
+                          get({groupId: groupId, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promise.then((data) => {
+      return !(data.Group === null || data.Group === undefined)
+    },
+    (err) => {
+      throw err;
+    });
+  }
+
+  search(searchString, locationString) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`).
+    query({s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promise.then((data) => {
+          let groups = data.map((group) => {
+            return new SmallGroup(group);
+          });
+
+          if(!groups || groups.length === 0) {
+            var err = {'status': 404, 'statusText': 'Group not found'};
+            throw err;
+          }
+
+          return groups;
+        },
+        (err) => {
+          throw err;
+        });
+  }
 }

@@ -47,5 +47,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<T> Search<T>(string searchString = null, string selectColumns = null);
 
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
+
+        void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields);
     }
 }

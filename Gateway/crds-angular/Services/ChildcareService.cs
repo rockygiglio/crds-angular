@@ -242,7 +242,7 @@ namespace crds_angular.Services
             var toEmails = _childcareRepository.GetChildcareReminderEmails(token);
             var threeDaysOut = DateTime.Now.AddDays(3);
 
-            foreach (var toContact in toEmails)
+            foreach (var toContact in toEmails.Where((contact) => contact.EmailAddress != null))
             {
                 var mergeData = SetMergeDataForChildcareReminder(toContact, threeDaysOut);
                 var communication = SetupChilcareReminderCommunication(toContact, mergeData);               
@@ -277,9 +277,9 @@ namespace crds_angular.Services
             return new Dictionary<string, object>()
             {
                 {"Nickname", person.Nickname},
-                {"Childcare_Date", threeDaysOut.ToString("d")},
+                {"Childcare_Date", threeDaysOut.ToString("MM/dd/yyyy")},
                 {"Childcare_Day", threeDaysOut.ToString("dddd, MMMM dd")},
-                {"Base_URL", url }
+                {"Base_URL", $"https://{url}" }
             };
         }
 
@@ -395,7 +395,7 @@ namespace crds_angular.Services
                         {
                             ContactId = member.ContactId,
                             DisplayName = member.Nickname + ' ' + member.LastName,
-                            ChildEligible = (member.Age < childcareDashboard.ChildcareMaxAge),
+                            ChildEligible = (member.Age <= childcareDashboard.ChildcareMaxAge),
                             ChildHasRsvp = _childcareRepository.IsChildRsvpd(member.ContactId, childcareDashboard.ChildcareGroupID, token)
                         };
                         eligibleChildren.Add(echild);
@@ -725,7 +725,7 @@ namespace crds_angular.Services
                 var mergeData = new Dictionary<string, object>
                 {
                     {"Group_Name", participant.EnrollerGroupName },
-                    {"Childcare_Date", participant.ChildcareEventDate.ToString("d") },
+                    {"Childcare_Date", participant.ChildcareEventDate.ToString("MM/dd/yyyy") },
                     {"Group_Member_Nickname", participant.EnrollerNickname },
                     {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
                     {"Child_List", kiddos}
@@ -747,6 +747,11 @@ namespace crds_angular.Services
             foreach (var participant in notificationData)
             {
                 _groupService.endDateGroupParticipant(participant.ChildGroupId, participant.ChildGroupParticipantId);
+            }
+
+            foreach (var group in notificationData.DistinctBy(g => g.ChildGroupId))
+            {
+                _groupService.EndDateGroup(group.ChildGroupId);
             }
         }
     } 

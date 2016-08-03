@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
-using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Communication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -19,11 +14,13 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private GroupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
+        private Mock<IAddressRepository> _addressRepository;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
@@ -33,13 +30,14 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _authService = new Mock<IAuthenticationRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object);
-
+            _addressRepository = new Mock<IAddressRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -403,7 +401,6 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = ",,,,\"" + groupTypeId + "\"";
 
@@ -426,7 +423,6 @@ namespace MinistryPlatform.Translation.Test.Services
             const int groupId = 987;
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, groupTypeId);
 
@@ -599,6 +595,18 @@ namespace MinistryPlatform.Translation.Test.Services
          
             Assert.IsNotNull(resp);  
             Assert.AreEqual(groupId, resp);
-        }        
+        }
+
+        [Test]
+        public void GetSmallGroupDetailsByIdTest()
+        {
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
+                .Returns(MockMyGroups()[0]);
+
+            var resp = _fixture.GetSmallGroupDetailsById(456);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.AreEqual("Full Throttle", resp.Name);
+        }
     }
 }
