@@ -1,12 +1,12 @@
 <div class="wrapper" stickyHeader>
   <section class="navbar-section" >
     <div class="container wow fadeIn">
-      <a href="#series" class="btn see-schedule">
+      <pageScroll href="#series" class="btn see-schedule">
         See Schedule
         <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
           <use xlink:href="#arrow-down9"></use>
         </svg>
-      </a>
+      </pageScroll>
       <countdown></countdown>
     </div>
   </section>
@@ -28,7 +28,9 @@
       <article class="wow fadeInUp">
         <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
       </article>
-      <div class="wow fadeInUp"><schedule></schedule></div>
+      <aside id="schedule">
+        <schedule class="wow fadeInUp"></schedule>
+      </aside>
     </main>
   </section>
 

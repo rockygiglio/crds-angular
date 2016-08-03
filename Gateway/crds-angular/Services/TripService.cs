@@ -28,6 +28,7 @@ namespace crds_angular.Services
         private readonly IDonorRepository _mpDonorService;
         private readonly IPledgeRepository _mpPledgeService;
         private readonly ICampaignRepository _campaignService;
+        private readonly IParticipantRepository _participantService;
         private readonly IPrivateInviteRepository _privateInviteService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
@@ -53,7 +54,8 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationRepository destinationService)
+                           IDestinationRepository destinationService,
+                           IParticipantRepository participantService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
@@ -71,6 +73,7 @@ namespace crds_angular.Services
             _personService = personService;
             _serveService = serveService;
             _destinationService = destinationService;
+            _participantService = participantService;
         }
 
         public List<TripGroupDto> GetGroupsByEventId(int eventId)
@@ -369,6 +372,40 @@ namespace crds_angular.Services
             return myTrips;
         }
 
+        public void CreateTripParticipant(int contactId, int pledgeCampaignId)
+        {
+            var tripRecords = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId);
+            Participant participant = _participantService.GetParticipant(contactId);
+            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(contactId);       
+
+            var tripApplicantRecord = new TripApplicant
+            {
+                ContactId = contactId,
+                ParticipantId = participant.ParticipantId,
+                DonorId = tripDonor.DonorId
+            };
+
+            var tripApplicants = new List<TripApplicant>();
+            tripApplicants.Add(tripApplicantRecord);
+
+            foreach (var tripRecord in tripRecords)
+            {
+                var campaign = new PledgeCampaign
+                {
+                    DestinationId = tripRecord.CampaignDestinationId,
+                    FundraisingGoal = tripRecord.CampaignFundRaisingGoal,
+                    PledgeCampaignId = pledgeCampaignId
+                };
+                var tripParticipantRecord = new SaveTripParticipantsDto
+                {
+                    Applicants = tripApplicants,
+                    Campaign = campaign,
+                    GroupId = tripRecord.GroupId
+                };
+                SaveParticipants(tripParticipantRecord);
+            }
+        }
+
         public List<int> SaveParticipants(SaveTripParticipantsDto dto)
         {
             var groupParticipants = new List<int>();
@@ -389,7 +426,6 @@ namespace crds_angular.Services
                 }
                 CreatePledge(dto, applicant);
                 EventRegistration(events, applicant, dto.Campaign.DestinationId);
-                SendTripParticipantSuccess(applicant.ContactId, events);
             }
 
             return groupParticipants;
@@ -488,7 +524,7 @@ namespace crds_angular.Services
             int donorId;
             var addPledge = true;
 
-            if (applicant.DonorId != null)
+            if (applicant.DonorId != null && applicant.DonorId != 0)
             {
                 donorId = (int) applicant.DonorId;
                 addPledge = !_mpPledgeService.DonorHasPledge(dto.Campaign.PledgeCampaignId, donorId);
@@ -680,7 +716,6 @@ namespace crds_angular.Services
             var page4 = applicationData.PageFour;
             answers.Add(new MpFormAnswer {Response = page4.GroupCommonName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GroupCommonName")});
             answers.Add(new MpFormAnswer {Response = page4.InterestedInGroupLeader, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.InterestedInGroupLeader")});
-            answers.Add(new MpFormAnswer {Response = page4.Lottery, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Lottery")});
             answers.Add(new MpFormAnswer {Response = page4.RoommateFirstChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateFirstChoice")});
             answers.Add(new MpFormAnswer {Response = page4.RoommateSecondChoice, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.RoommateSecondChoice")});
             answers.Add(new MpFormAnswer {Response = page4.SupportPersonEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.SupportPersonEmail")});
