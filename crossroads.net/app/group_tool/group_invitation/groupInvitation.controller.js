@@ -11,7 +11,9 @@ export default class GroupInvitationController {
 
     this.ready = false;
     this.error = false;
-    this.processing = false;
+    this.processingDeny = false;
+    this.processingAccept = false;
+
     this.group = null;
   }
 
@@ -39,7 +41,7 @@ export default class GroupInvitationController {
   }
 
   accept() {
-    this.processing = true;
+    this.processingAccept = true;
 
     this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, true).then(() => {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationSuccessGrowler);
@@ -49,12 +51,12 @@ export default class GroupInvitationController {
       this.log.error(`Unable to accept group Invitation: ${err.status} - ${err.statusText}`);
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationFailureGrowler);
     }).finally(() => {
-      this.processing = false;
+      this.processingAccept = false;
     });
   }
 
   deny() {
-    this.processing = true;
+    this.processingDeny = true;
 
     this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, false).then(() => {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationSuccessGrowler);
@@ -64,7 +66,7 @@ export default class GroupInvitationController {
       this.log.error(`Unable to revoke group Invitation: ${err.status} - ${err.statusText}`);
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationFailureGrowler);
     }).finally(() => {
-      this.processing = false;
+      this.processingDeny = false;
     });
   }
 
