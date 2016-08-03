@@ -43,7 +43,7 @@
         </div>
 
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top">
+          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToEdit()">
             <svg viewBox="0 0 32 32" class="icon icon-pencil4">
               <use xlink:href="#pencil4"></use>
             </svg>

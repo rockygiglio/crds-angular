@@ -19,6 +19,7 @@ export default class CreateGroupService {
         this.model = {};
         this.resolved = false;
         this.imageService = ImageService;
+        this.primaryContact = null;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -39,6 +40,7 @@ export default class CreateGroupService {
         if (!this.resolved){
             this.originalAttributeTypes = groupData.attributeTypes;
             this.originalSingleAttributes = groupData.singleAttributes;
+            this.primaryContact = groupData.contactId;
             this.preloadModel(profileData);
             this.mapFromSmallGroup(groupData);
             this.resolved = true;
@@ -510,6 +512,7 @@ export default class CreateGroupService {
             groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
+    //this badly needs to be unit tested
     mapFromSmallGroup(groupData){
         this.model.group.meeting.frequency = groupData.meetingFrequencyID;
         this.model.group.groupName = groupData.groupName;
@@ -538,14 +541,30 @@ export default class CreateGroupService {
             if (value.selected)
                 ageRangeIds.push(value.attributeId)
         });
+        var categories = [];
+        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+            if (value.selected)
+                categories.push({
+                    value: this.getIdFromCategory(value.category),
+                    detail: value.name
+                })
+        });
         this.model.groupAgeRangeIds = ageRangeIds;
+        this.model.categories = categories;
         this.model.groupId = groupData.groupId;
     }
 
+    //this also needs unit tests
     mapToSmallGroup() {
     //group setup
         let smallGroup = new SmallGroup();
-        smallGroup.contactId = this.model.profile.contactId;
+        //on an edit, we shouldn't change the contactId of a group because then if a co-leader edits the 
+        //group they will be the new primary contact, and we don't want that.
+        if (this.primaryContact != null || this.primaryContact != undefined){
+            smallGroup.contactId = this.primaryContact;
+        } else {
+            smallGroup.contactId = this.model.profile.contactId;
+        }
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.groupId = this.model.groupId;
@@ -641,36 +660,44 @@ export default class CreateGroupService {
         smallGroup.startDate = this.model.group.startDate;
 
     //groupMeetingTime
-        smallGroup.meetingDayId = this.model.group.meeting.day;
-        if(smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined){
-            delete smallGroup.meetingTime;
-        }
+        
         smallGroup.meetingFrequency = this.model.group.meeting.frequency;
-
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        } else {
+            smallGroup.meetingDayId = null;
+            smallGroup.meetingTime = null;
+            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
         }
-        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        
         
     //groupMeetingPlace
-        smallGroup.address = new Address();
-        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
+        if (!this.model.group.meeting.online){
+            smallGroup.address = new Address();
             smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
             smallGroup.address.addressLine2 = '';
             smallGroup.address.city = this.model.group.meeting.address.city;
             smallGroup.address.state = this.model.group.meeting.address.state;
             smallGroup.address.zip = this.model.group.meeting.address.zip;
+            smallGroup.kidsWelcome = this.model.group.kidFriendly;
+        } else {
+            smallGroup.address = null;
+            smallGroup.kidsWelcome = false;
         }
-        else {
-            smallGroup.address.zip = null;
-        }
-
-        smallGroup.kidsWelcome = this.model.group.kidFriendly;
-        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-
+            
+            smallGroup.meetingTimeFrequency = this.getMeetingLocation();
     //groupCategory
         var ids = []
+
+        //set every category that the group came in with to selected = false if this is a load and 
+        //let the database worry about whether or not what we've added is new.
+        if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
+            _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (attribute) => {
+                attribute.selected = false;
+            });
+        }
 
         _.forEach(this.model.categories, (category) => {
             ids.push(
@@ -691,13 +718,12 @@ export default class CreateGroupService {
                 }
             )
         });
-        var categoriesJson = {
-            '90': {
-                "attributeTypeid": 90,
-                "name": "Group Category",
-                "attributes": ids
-            }
-        }
+        var categoriesJson = {};
+        categoriesJson[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID]= {
+            "attributeTypeid": CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID,
+            "name": "Group Category",
+            "attributes": ids
+        };
         smallGroup.mapCategories(categoriesJson);
         //double check this stuff after the merge
         smallGroup.attributeTypes = $.extend({}, smallGroup.attributeTypes, categoriesJson);
@@ -707,7 +733,6 @@ export default class CreateGroupService {
 
     //groupVisibilityFields
         smallGroup.availableOnline = this.model.group.availableOnline;  
-
         return smallGroup;
 
     }
@@ -743,6 +768,28 @@ export default class CreateGroupService {
         return returnString;
     }
 
+    getIdFromCategory(category) {
+        var categoryId = null;
+        switch (category) {
+            case "Life Stage":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES;
+                break;
+            case "Neighborhoods":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS;
+                break;
+            case "Spiritual Growth":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH;
+                break;
+            case "Interest":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST;
+                break;
+            case "Healing":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING;
+                break;
+        }
+        return categoryId;
+    }
+
     getGroupTypeAttributeIdFromName(name) {
         var groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
         switch (name) {
@@ -767,7 +814,7 @@ export default class CreateGroupService {
     getMeetingLocation() {
         let meetingDay = 'Flexible Meeting Time';
         let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
+        if (this.model.specificDay) {
             meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
             return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
         }

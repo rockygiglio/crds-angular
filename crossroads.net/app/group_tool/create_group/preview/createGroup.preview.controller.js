@@ -25,6 +25,7 @@ export default class CreateGroupPreviewController {
   save() {
     this.saving = true;
     this.successfulSave = false;
+    debugger;
     try {
       var promise = this.groupService.saveCreateGroupForm(this.groupData)
         .then( (data) => {
@@ -48,8 +49,10 @@ export default class CreateGroupPreviewController {
     try {
       var promise = this.groupService.saveEditGroupForm(this.groupData)
         .then( (data) => {
-          this.state.go('grouptool.mygroups')
+          this.saving = false;
+          this.successfulSave = true;
           this.createGroupService.resolved = false;
+          this.state.go('grouptool.mygroups')
         })
     }
     catch (error) {

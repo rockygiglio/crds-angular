@@ -51,11 +51,18 @@ export default class GroupDetailAboutController {
     };
   }
 
+  //this is not efficient, gets called every time the digest cycle runs
   getAddress() {
-    if (this.state.current.name == "grouptool.edit.preview" || !this.userInGroup()){
-      return this.data.address.getZip()
-    } else {
-      return this.data.address.toString()
+    if (this.ready){
+      if (this.data.address != null || this.data.address != undefined){
+        if (this.state.current.name == "grouptool.edit.preview" || this.state.current.name == "grouptool.create.preview" || !this.userInGroup()){
+          return this.data.address.getZip()
+        } else {
+          return this.data.address.toString()
+        }
+      } else {
+        return 'Online'
+      }
     }
   }
 

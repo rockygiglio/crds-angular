@@ -61,7 +61,7 @@ namespace MinistryPlatform.Translation.Repositories
                     .Select(records => records.ToString("Attribute_Name").ToLower()).ToList());
             }
 
-            foreach (var attribute in attributes)
+            foreach (var attribute in attributes.Where(a => a.AttributeId == 0))
             {
                 if (foundNames.Contains(attribute.Name.ToLower()))
                 {
