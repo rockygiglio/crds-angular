@@ -532,10 +532,10 @@ export default class CreateGroupService {
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
         smallGroup.meetingDayId = this.model.group.meeting.day;
-        if (smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined) {
+        if (smallGroup.meetingDayId === null || smallGroup.meetingDayId === undefined) {
             delete smallGroup.meetingTime;
         } else {
-            var dayObj = this.meetingDaysLookup[smallGroup.meetingDayId];
+            var dayObj = this.meetingDaysLookup.filter(day=>day.dp_RecordID === smallGroup.meetingDayId)[0];
             smallGroup.meetingDay = dayObj.dp_RecordName;
         }
 
@@ -545,9 +545,14 @@ export default class CreateGroupService {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
             var freqObj = this.meetingFrequencyLookup[smallGroup.meetingFrequencyId-1];
-            if (freqObj != 'undefined' && freqObj != 'null') {
+            if (freqObj !== undefined && freqObj !== null) {
                 smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
             }
+        }
+        else {
+            smallGroup.meetingDayId = null;
+            smallGroup.meetingTime = null;
+            smallGroup.meetingDay = null;
         }
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;

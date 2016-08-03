@@ -150,7 +150,7 @@ export default class SmallGroup {
 
   getMeetingTime() {
     let meetingDayStr = 'Flexible Meeting Time';
-    if (this.meetingDay !== 'undefined' && this.meetingDay !== null) {
+    if (this.meetingDay !== undefined && this.meetingDay !== null) {
       meetingDayStr = this.meetingDay + '\'s at ' + this.meetingTime + ', ' + this.meetingFrequencyText;
     }
     return meetingDayStr;
