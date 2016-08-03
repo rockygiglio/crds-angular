@@ -38,13 +38,12 @@ export class StreamspotService {
       .chain(this.eventResponse)
       .sortBy('start')
       .map((object:Event) => {
-        // create event objects
-        return Event.build(object);
+        let event = Event.build(object);
+        if (event.isBroadcasting() || event.isUpcoming()) {
+          return event;
+        }
       })
-      .filter((event:Event) => {
-        // return only current or upcoming events
-        return event.isBroadcasting() || event.isUpcoming();
-      })
+      .compact()
       .value();
   }
 
@@ -67,11 +66,12 @@ export class StreamspotService {
       .then((response) => {
         this.eventResponse = response.json().data.events;
         let events = this.parseEvents();
-        if(events.length == 0) return events;
-        this.broadcast()
-        Observable.interval(1000).subscribe(() => {
+        if (events.length > 0) {
           this.broadcast()
-        });
+          Observable.interval(1000).subscribe(() => {
+            this.broadcast()
+          }); 
+        }
         return events;
       })
       ;
