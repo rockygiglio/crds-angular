@@ -48,6 +48,14 @@ export class StreamspotService {
       .value();
   }
 
+  broadcast(): any {
+    // reparse in order to get the next upcoming event
+    let event = _(this.parseEvents()).first();
+    // dispatch updates
+    this.isBroadcasting.emit(event.isBroadcasting());
+    this.nextEvent.emit(event);
+  }
+
   getEvents(): Promise<Event[]> {
     let url = `${this.url}broadcaster/${this.id}/events`;
     // let url = 'http://localhost:8080/app/streaming/data/events.json'
@@ -60,12 +68,9 @@ export class StreamspotService {
         this.eventResponse = response.json().data.events;
         let events = this.parseEvents();
         if(events.length == 0) return events;
+        this.broadcast()
         Observable.interval(1000).subscribe(() => {
-          // reparse in order to get the next upcoming event
-          let event = _(this.parseEvents()).first();
-          // dispatch updates
-          this.isBroadcasting.emit(event.isBroadcasting());
-          this.nextEvent.emit(event);
+          this.broadcast()
         });
         return events;
       })
