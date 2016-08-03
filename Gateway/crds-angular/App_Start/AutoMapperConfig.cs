@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
@@ -15,6 +16,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -249,22 +251,34 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
             Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 
+            Mapper.CreateMap<MpObjectAttribute, ObjectAttributeDTO>();
+            Mapper.CreateMap<MpObjectAttributeType, ObjectAttributeTypeDTO>();
+
+            Mapper.CreateMap<MpObjectAttribute, ObjectSingleAttributeDTO>()
+                .ForMember(dest => dest.Value, opts => opts.MapFrom(src => src));
+            Mapper.CreateMap<MpObjectAttribute, AttributeDTO>();
+
+            Mapper.CreateMap<MpGroupSearchResultDto, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType))
+                .IncludeBase<MpGroup, GroupDTO>();
+
             Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType))
-                .AfterMap((src, dest) => {
+                .AfterMap((src, dest) =>
+                {
                     if (!string.IsNullOrEmpty(src.MeetingTime))
                     {
                         var timeSpan = TimeSpan.Parse(src.MeetingTime);
-                        var time = DateTime.Today.Add(timeSpan);                      
+                        var time = DateTime.Today.Add(timeSpan);
                         dest.MeetingTimeFrequency = string.Format("{0}'s at {1}, {2}", src.MeetingDay, time.ToString("h:mm tt"), src.MeetingFrequency);
                     }
                     else
                     {
                         dest.MeetingTimeFrequency = string.Format("Flexible Meeting Time, {0}", src.MeetingFrequency);
                     }
-                    
-                }); 
+                });
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))

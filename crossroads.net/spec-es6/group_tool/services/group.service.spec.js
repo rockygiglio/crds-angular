@@ -450,6 +450,68 @@ describe('Group Tool Group Service', () => {
       expect(promise.$$state.status).toEqual(2);
     });
   });
+
+  describe('search() function', () => {
+    let groups = [{
+      'groupName': 'Learning and Growing In Life',
+    },{
+      'groupName': 'Bible Study',
+    },{
+      'groupName': 'Bible Study 2',
+    }];
+
+    it('should search by keywords and location', () => {
+      let keyword = 'keywords';
+      let loc = 'oakley';
+      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+                  respond(200, groups);
+      let promise = fixture.search(keyword, loc);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data).toBeDefined();
+        expect(data.length).toEqual(groups.length);
+        for(let i = 0; i < data.length; i++) {
+          expect(data[i] instanceof SmallGroup).toBeTruthy();
+          expect(data[i].groupName).toEqual(groups[i].groupName);
+        }
+      });
+    });
+
+    it('should throw 404 error if no groups found', () => {
+      let keyword = 'keywords';
+      let loc = 'oakley';
+      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+                  respond(200, []);
+      let promise = fixture.search(keyword, loc);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+      promise.then((data) => {
+        expect('This should never be called - if it is, it means our 404 error was not thrown').toEqual('');
+      }, (err) => {
+        expect(err).toBeDefined();
+        expect(err.status).toBeDefined();
+        expect(err.status).toEqual(404);
+      });
+    });
+
+    it('should rethrow error if backend call fails', () => {
+      let keyword = 'keywords';
+      let loc = 'oakley';
+      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+                  respond(500);
+      let promise = fixture.search(keyword, loc);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(2);
+      promise.then((data) => {
+        expect('This should never be called - if it is, it means our error was not rethrown').toEqual('');
+      }, (err) => {
+        expect(err).toBeDefined();
+        expect(err.status).toBeDefined();
+        expect(err.status).toEqual(500);
+      });
+    });
+  });
   
   describe('getIsLeader(groupId) function', () => {
     it('they are a leader', () => {
