@@ -14,9 +14,6 @@ var _ = require('lodash');
 @Injectable()
 export class StreamspotService {
 
-  //
-  // #TODO - move to ENV file?
-  //
   private url    = 'https://api.streamspot.com/';  // URL to web api
   private apiKey = __STREAMSPOT_API_KEY__;
   private id     = 'crossr4915'
@@ -76,7 +73,7 @@ export class StreamspotService {
   }
 
   getEventsByDate(): Promise<Object[]> {
-    return this.getEvents().then(response => {
+    return this.events.then(response => {
       return _.chain(response)
         .groupBy('dayOfYear')
         .value();
