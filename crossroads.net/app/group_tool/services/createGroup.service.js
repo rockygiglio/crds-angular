@@ -78,13 +78,14 @@ export default class CreateGroupService {
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us about yourself.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupProfile.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupProfileHelp.content | html'
             },
             fieldGroup: [{
                 key: 'profile.congregationId',
                 type: 'formlyBuilderSelect',
                 templateOptions: {
-                    label: 'At what site do you regularly attend service?',
+                    label: 'What site do you regularly attend service?',
                     required: true,
                     valueProp: 'dp_RecordID',
                     labelProp: 'dp_RecordName',
@@ -137,7 +138,8 @@ export default class CreateGroupService {
         var profileAddressFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What’s your address?'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAddress.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAddressHelp.content | html'
             },
             fieldGroup: [{
                 key: 'profile.addressLine1',
@@ -185,8 +187,8 @@ export default class CreateGroupService {
         var groupMeetingDateTimeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'When will your group meet?',
-                sectionHelp: 'To get the most out of your group, you’ll want to meet on a regular basis. We recommend weekly, but we want you to choose what’s best for your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupMeetingTime.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupMeetingTimeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'specificDay',
@@ -252,8 +254,8 @@ export default class CreateGroupService {
         var groupMeetingLocationFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us about your meeting place.',
-                sectionHelp: 'We’re not asking for the blueprint of your home, just a few details about where you’ll meet, if you have pets and if your group is kid-friendly.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupMeetingLocation.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupMeetingLocationHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.meeting.online',
@@ -265,7 +267,7 @@ export default class CreateGroupService {
                     valueProp: 'online',
                     inline: false,
                     options: [{
-                        label: 'Location',
+                        label: 'In person',
                         online: false
                     }, {
                             label: 'Online',
@@ -326,12 +328,12 @@ export default class CreateGroupService {
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         required: true,
-                        label: 'Will your group have childcare?',
+                        label: 'Are kids welcome at the group?',
                         labelProp: 'label',
                         valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            label: 'Yep. Kids are welcome.  As a group, we’ll decide what to do with them.',
                             kidFriendly: true
                         }, {
                                 label: 'No. Adults only please.',
@@ -346,7 +348,8 @@ export default class CreateGroupService {
         var groupStartFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us the start date of your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupStartDate.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupStartDateHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.startDate',
@@ -362,8 +365,8 @@ export default class CreateGroupService {
         var groupTypeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: 'We’re not trying to recreate a scene from your school lunchroom. Some groups like to roll with just guys or strictly married couples.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupType.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupTypeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.typeId',
@@ -387,8 +390,8 @@ export default class CreateGroupService {
         var groupAgeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What age range is your group going to be?',
-                sectionHelp: 'Select as many as you like. If you want to lead middle and high school students, you must be approved by Student Ministry and complete a background check.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAge.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAgeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
@@ -413,8 +416,9 @@ export default class CreateGroupService {
         var groupAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us what your group is all about.',
-                sectionHelp: 'Now’s the time to add some personality, and tell us all about your group. Keep in mind, this is the description people will see when they search for groups to join.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAbout.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAboutHelp.content | html',
+                groupExample: '$root.MESSAGES.groupToolCreateGroupAboutExample.content | html'
             },
             fieldGroup: [{
                 key: 'group.groupName',
@@ -438,8 +442,8 @@ export default class CreateGroupService {
         var groupVisibilityFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Set your group to public or private.',
-                sectionHelp: 'Choose whether your group will be viewable to everyone or only the people in your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupVisibility.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupVisibilityHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.availableOnline',
@@ -453,7 +457,7 @@ export default class CreateGroupService {
                         accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
                     }, {
                             accessId: false,
-                            accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
+                            accessLabel: 'Private (Your group will NOT be viewable in search results.)'
                         }]
                 }
             }]
@@ -462,8 +466,8 @@ export default class CreateGroupService {
         var groupCategoryFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: ''
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupCategory.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupCategoryHelp.content | html'
             },
             fieldGroup: [{
                 key: 'categories',
@@ -478,36 +482,36 @@ export default class CreateGroupService {
                     options: [{
                         categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
                         label: 'Life Stage',
-                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
-                        placeholder: 'Life Stages detail...'
+                        labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
+                        placeholder: 'Ex. new family, young married, college, empty nesters'
                     }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
-                            labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
-                            placeholder: 'Neighborhood detail...'
+                            labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
+                            placeholder: 'Ex. Norwood, Gaslight'
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
                             label: 'Spirtual Growth',
-                            labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.',
-                            placeholder: 'Spritual Growth detail...'
+                            labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
+                            placeholder: 'Ex. Huddle, James'
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
-                            labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.',
-                            placeholder: 'Interest detail...'
+                            labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
+                            placeholder: 'Ex. Boxing, XBox'
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
-                            labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
-                            placeholder: 'Healing detail...'
+                            labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
+                            placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
                         }],
                 }
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupTypeFields,
-            groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
-            groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
+        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields,
+            groupMeetingLocationFields, groupStartFields, groupTypeFields, groupAgeFields, 
+            groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
     mapFromSmallGroup(groupData){

@@ -384,6 +384,37 @@ namespace MinistryPlatform.Translation.Repositories
             return (WithApiLogin(apiToken => { return LoadGroupParticipants(groupId, apiToken, active); }));
         }
 
+        public int UpdateGroupParticipant(List<MpGroupParticipant> participants)
+        {
+            int retValue = -1;
+
+            foreach (var participant in participants)
+            {
+                var values = new Dictionary<string, object>
+                {
+                    {"Participant_ID", participant.ParticipantId},
+                    {"Group_Participant_ID", participant.GroupParticipantId },
+                    {"Start_Date", participant.StartDate },
+                    {"Group_Role_ID", participant.GroupRoleId }
+                };
+
+                retValue = WithApiLogin<int>(token =>
+                {
+                    try
+                    {
+                        ministryPlatformService.UpdateSubRecord(GroupsParticipantsPageId, values, token);
+                        return 1;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ApplicationException("Error updating group_participant: " + e.Message);
+                    }
+                });
+            }
+
+            return retValue;
+        }
+
         public List<MpGroupSearchResult> GetSearchResults(int groupTypeId)
         {
             var apiToken = ApiLogin();
@@ -468,7 +499,8 @@ namespace MinistryPlatform.Translation.Repositories
                             GroupRoleTitle = p.ToString("Role_Title"),
                             LastName = p.ToString("Last_Name"),
                             NickName = p.ToString("Nickname"),
-                            Email = p.ToString("Email")
+                            Email = p.ToString("Email"),
+                            StartDate = p.ToNullableDate("Start_Date")
                         });
                     }
                 }

@@ -56,5 +56,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         MpGroup GetSmallGroupDetailsById(int groupId);
         int UpdateGroup(MpGroup mpGroup);
+        int UpdateGroupParticipant(List<MpGroupParticipant> participants);
     }
 }
