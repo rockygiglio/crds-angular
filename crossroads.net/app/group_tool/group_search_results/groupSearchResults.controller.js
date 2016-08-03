@@ -34,7 +34,7 @@ export default class GroupSearchResultsController {
         this.results.push(...data);
       },
       (err) => {
-        this.results.length = 0;
+        // TODO what happens on error? (could be 404/no results, or other error)
       }
     ).finally(
       () => {
