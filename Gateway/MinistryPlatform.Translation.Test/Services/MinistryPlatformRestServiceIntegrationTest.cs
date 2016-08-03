@@ -94,6 +94,19 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestEndDateGroup()
+        {
+            Console.WriteLine("TestEndDateGroup");
+            var groupId = 172501;
+            var fields = new Dictionary<string, object>
+            {
+                {"Group_ID", groupId },
+                {"End_Date", DateTime.Today}
+            };
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Groups", groupId, fields);
+        }
+
+        [Test]
         public void TestSearchAllPaymentTypes()
         {
             Console.WriteLine("TestSearchAllPaymentTypes");

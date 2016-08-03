@@ -14,6 +14,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private GroupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<ICommunicationRepository> _communicationService;
@@ -29,14 +30,14 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _authService = new Mock<IAuthenticationRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
             _addressRepository = new Mock<IAddressRepository>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
-
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
