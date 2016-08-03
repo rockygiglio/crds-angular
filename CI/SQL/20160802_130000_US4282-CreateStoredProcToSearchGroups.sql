@@ -200,7 +200,7 @@ BEGIN
 			)
 			,1,1,'')
 
-		SET @DynamicQuery = CONCAT(@DynamicQuery, @Group_Name_Subquery, @Group_Description_Subquery, @Group_Participants_Subquery, @MultiSelectAttributes_Subquery, @MultiSelectAttributes_Subquery,
+		SET @DynamicQuery = CONCAT(@DynamicQuery, @Group_Name_Subquery, @Group_Description_Subquery, @Group_Participants_Subquery, @MultiSelectAttributes_Subquery, @SingleSelectAttributes_Subquery,
 			@Site_Subquery, @Address_Subquery, @City_Subquery, @State_Subquery, @Zip_Subquery, @Meeting_Day_Subquery, @Meeting_Time_Subquery)
 
 		-- need to figure out a better way to handle the dangling OR
@@ -211,4 +211,3 @@ BEGIN
 	END
 
 END
-

@@ -5,7 +5,7 @@
   <div class="group-search-tools row">
     <div class="col-sm-5 push-half-bottom">
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
-        <label for="query">Search</label>
+        <label for="query">{{$root.MESSAGES.groupToolSearchPageKeywordLabel.content | htmlToPlainText}}</label>
         <div class="input-group">
           <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
           <span class="group-search-icon input-group-btn">
@@ -24,7 +24,7 @@
       </div>
       <div ng-show="groupSearchResults.showLocationInput">
         <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit()">
-          <label for="location">What part of town would you like to meet?</label>
+          <label for="location">{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
           <div class="group-location-input-wrapper">
             <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}">
             <button type="submit" class="btn btn-primary">
