@@ -1,6 +1,4 @@
-<preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
-
-<div ng-if='groupSearchResults.ready'>
+<div>
   <h1 class="page-header">Search Results</h1>
   <div class="group-search-tools row">
     <div class="col-sm-5 push-half-bottom">
@@ -41,7 +39,9 @@
     </div>
   </div>
 
-  <table ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
+  <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
+
+  <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
@@ -59,7 +59,7 @@
     </tr>
   </table>
 
-  <div class="group-results-mobile hidden-sm hidden-md hidden-lg push-half-top">
+  <div ng-show='groupSearchResults.ready' class="group-results-mobile hidden-sm hidden-md hidden-lg push-half-top">
     <div ng-repeat="group in groupSearchResults.results" class="group-result push-half-bottom soft-half-bottom">
       <div class="row">
         <strong class="col-xs-10">{{group.groupName}}</strong>
