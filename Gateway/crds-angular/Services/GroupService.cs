@@ -35,10 +35,11 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserRepository _apiUserService;
-        private readonly IAttributeRepository _attributeService;
+        private readonly IAttributeRepository _attributeRepository;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IUserRepository _userRepository;
         private readonly IInvitationRepository _invitationRepository;
+        private readonly IAttributeService _attributeService;
 
 
         /// <summary>
@@ -62,10 +63,11 @@ namespace crds_angular.Services
                             IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
                             IApiUserRepository apiUserService, 
-                            IAttributeRepository attributeService,
+                            IAttributeRepository attributeRepository,
                             IEmailCommunication emailCommunicationService,
                             IUserRepository userRepository,
-                            IInvitationRepository invitationRepository)
+                            IInvitationRepository invitationRepository,
+                            IAttributeService attributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -78,10 +80,11 @@ namespace crds_angular.Services
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
-            _attributeService = attributeService;
+            _attributeRepository = attributeRepository;
             _emailCommunicationService = emailCommunicationService;
             _userRepository = userRepository;
             _invitationRepository = invitationRepository;
+            _attributeService = attributeService;
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -435,7 +438,7 @@ namespace crds_angular.Services
 
             var groupDetail = groups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeRepository.GetAttributes(null);
             foreach (var group in groupDetail)
             {
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
@@ -457,7 +460,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeRepository.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
@@ -502,7 +505,7 @@ namespace crds_angular.Services
 
             foreach (var attributeType in new[] { _groupCategoryAttributeTypeId, _groupTypeAttributeTypeId, _groupAgeRangeAttributeTypeId })
             {
-                var types = _attributeService.GetAttributes(attributeType);
+                var types = _attributeRepository.GetAttributes(attributeType);
                 foreach (var group in groups)
                 {
                     var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, types);
@@ -593,7 +596,7 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeService.GetAttributes(90);
+            var mpAttributes = _attributeRepository.GetAttributes(90);
             foreach (var participant in participants)
             {
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
@@ -630,7 +633,7 @@ namespace crds_angular.Services
 
             var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
             //var configuration = MpObjectAttributeConfigurationFactory.Group();
-            //var mpAttributes = _attributeService.GetAttributes(null);
+            //var mpAttributes = _attributeRepository.GetAttributes(null);
 
             //foreach (var group in groupDetail)
             //{
