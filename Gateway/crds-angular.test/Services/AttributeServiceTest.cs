@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using crds_angular.Services;
 using MinistryPlatform.Translation.Models;
 using Moq;
@@ -117,6 +118,10 @@ namespace crds_angular.test.Services
 
             var result = _fixture.CreateMissingAttributes(inputList, 3);
             _mpAttributeRepository.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Count, 3, "Result count should match what was passed in");
+            Assert.AreEqual(result.Count(attribute => attribute.AttributeId == 0), 0, "All attributes should have an id that does not equal zero");
 
         }
 
