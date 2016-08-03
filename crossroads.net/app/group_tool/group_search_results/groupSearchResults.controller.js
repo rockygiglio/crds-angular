@@ -28,26 +28,25 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.searchedWithLocation = location && location.length > 0;
     this.ready = false;
-    this.results = [];
+    this.results.length = 0;
     this.groupService.search(query, location).then(
       (data) => {
-        this.results = data;
+        this.results.push(...data);
       },
       (err) => {
-        this.results = [];
+        this.results.length = 0;
       }
     ).finally(
       () => {
+        // TODO Need to figure out pagination, etc
+        // This resets the ngTable count so we see all the results
+        this.tableParams.parameters({count: this.results.length});
         this.ready = true;
       }
     );
   }
 
   submit() {
-    this.doSearch(this.search.query, this.search.location);
-  }
-
-  searchWithLocation() {
     this.doSearch(this.search.query, this.search.location);
   }
 

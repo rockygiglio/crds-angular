@@ -42,15 +42,15 @@
   </div>
 
   <table ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
-    <tr ng-repeat-start="group in groupSearchResults.results" class="group-result pointer" ng-click="group.expanded = !group.expanded">
-      <td title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
-      <td title="'Category'" sortable="'category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
-      <td title="'Detail'" sortable="'detail'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
-      <td title="'Group Type'" sortable="'groupType'" class="group-type">{{group.groupType.name}}</td>
-      <td title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
-      <td title="'Day'" sortable="'day'" class="group-day">{{group.meetingDay}}</td>
-      <td title="'Time'" sortable="'time'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
-      <td title="'Distance'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a>Map</a></td>
+    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+      <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
+      <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
+      <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
+      <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
+      <td data-title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
+      <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
+      <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
+      <td data-title="'Distance'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a>Map</a></td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
@@ -65,8 +65,8 @@
         <strong class="col-xs-10">{{group.groupName}}</strong>
         <div class="col-xs-2">Map</div>
       </div>
-      <div>{{group.category}} / {{group.detail}}</div>
-      <div>{{group.day}} at {{group.time}}</div>
+      <div>{{group.categories.join(', ')}}</div>
+      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
     </div>
   </div>
 </div>
