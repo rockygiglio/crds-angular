@@ -103,9 +103,6 @@ namespace crds_angular.Models.Crossroads.Trip
             [Required]
             public string InterestedInGroupLeader { get; set; }
 
-            [JsonProperty(PropertyName = "lottery")]
-            public string Lottery { get; set; }
-
             [JsonProperty(PropertyName = "roommateFirstChoice")]
             public string RoommateFirstChoice { get; set; }
 

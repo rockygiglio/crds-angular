@@ -171,6 +171,7 @@
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
     <Compile Include="Models\MpMessageTemplate.cs" />
     <Compile Include="Models\MpInvitation.cs" />
+    <Compile Include="Models\MpTripRecord.cs" />
     <Compile Include="Models\MpObjectAttributeType.cs" />
     <Compile Include="Models\MpUser.cs" />
     <Compile Include="Models\MpGoVolunteerSkill.cs" />
