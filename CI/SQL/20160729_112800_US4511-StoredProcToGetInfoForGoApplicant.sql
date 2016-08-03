@@ -32,7 +32,7 @@ BEGIN
 	JOIN dbo.events e ON e.program_id = pc.program_id AND e.Event_Type_ID = @GoTripEventTypeID
 	JOIN dbo.event_groups eg ON eg.event_id = e.event_id
 	JOIN groups g ON g.group_id = eg.group_id
-	WHERE pledge_campaign_id = 10000000
+	WHERE pledge_campaign_id = @Pledge_Campaign_ID
 
 END
 GO
