@@ -403,7 +403,7 @@ namespace crds_angular.Services
                     GroupId = tripRecord.GroupId
                 };
                 SaveParticipants(tripParticipantRecord);
-            }                   
+            }
         }
 
         public List<int> SaveParticipants(SaveTripParticipantsDto dto)
@@ -426,7 +426,6 @@ namespace crds_angular.Services
                 }
                 CreatePledge(dto, applicant);
                 EventRegistration(events, applicant, dto.Campaign.DestinationId);
-   //             SendTripParticipantSuccess(applicant.ContactId, events);
             }
 
             return groupParticipants;

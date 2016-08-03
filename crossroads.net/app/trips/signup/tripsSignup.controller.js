@@ -144,22 +144,8 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       if (checked.length > 0) {
         return true;
       }
-
       return false;
-
     }
-
-    //TODO: this seems unessecary now
-    /*function commonNameRequired() {*/
-      //switch (vm.signupService.page4.lottery) {
-        //case null:
-          //return false;
-        //case 'As long as I am selected, I will go on the trip.':
-          //return false;
-        //default:
-          //return true;
-      //}
-    /*}*/
 
     function enforceAgeRestriction() {
       var minAge = 13;
