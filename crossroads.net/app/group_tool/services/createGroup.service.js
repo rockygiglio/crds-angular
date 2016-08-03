@@ -216,7 +216,7 @@ export default class CreateGroupService {
                     hideExpression: '!model.specificDay',
                     expressionProperties: {
                         'templateOptions.required': 'model.specificDay'
-                    },                    
+                    },
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
@@ -487,19 +487,6 @@ export default class CreateGroupService {
             groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
 
-    getMeetingLocation() {
-        let meetingDay = 'Flexible Meeting Time';
-        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
-            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
-            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
-        }
-        else {
-            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
-        }
-    }
-
-
     //This is ugly and needs to be refactored
     mapSmallGroup() {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
@@ -543,19 +530,25 @@ export default class CreateGroupService {
             smallGroup.address.zip = null;
         }
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
-        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
 
         smallGroup.meetingDayId = this.model.group.meeting.day;
         if (smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined) {
             delete smallGroup.meetingTime;
+        } else {
+            var dayObj = this.meetingDaysLookup[smallGroup.meetingDayId];
+            smallGroup.meetingDay = dayObj.dp_RecordName;
         }
-        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+
+        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
 
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+            var freqObj = this.meetingFrequencyLookup[smallGroup.meetingFrequencyId-1];
+            if (freqObj != 'undefined' && freqObj != 'null') {
+                smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
+            }
         }
-        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
         smallGroup.congregationId = this.model.profile.congregationId;
@@ -633,7 +626,7 @@ export default class CreateGroupService {
             }
         }
         smallGroup.mapCategories(categoriesJson);
-
+        smallGroup.meetingFrequency = smallGroup.getMeetingTime();
         smallGroup.attributeTypes = $.extend({}, ageRangeJson, categoriesJson);
         return smallGroup;
 

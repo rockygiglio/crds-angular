@@ -8,8 +8,8 @@ import AgeRange from './ageRange';
 
 export default class SmallGroup {
 
-  constructor(jsonObject){
-    if(jsonObject) {
+  constructor(jsonObject) {
+    if (jsonObject) {
       this.createSubObjects(jsonObject);
       this.deleteSubObjects(jsonObject);
       Object.assign(this, jsonObject);
@@ -20,8 +20,7 @@ export default class SmallGroup {
     this.address = (jsonObject.address === undefined || jsonObject.address === null) ? null : new Address(jsonObject.address);
 
     this.participants = [];
-    if(jsonObject.Participants != undefined && jsonObject.Participants != null)
-    {
+    if (jsonObject.Participants != undefined && jsonObject.Participants != null) {
       this.participants =
         jsonObject.Participants.map((particpant) => {
           return new Participant(particpant);
@@ -32,7 +31,7 @@ export default class SmallGroup {
     this.groupType = this.mapSingleAttribute(CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID, jsonObject.singleAttributes, GroupType);
 
     let ageRanges = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID, jsonObject.attributeTypes, AgeRange);
-    if(ageRanges && ageRanges.length > 0) {
+    if (ageRanges && ageRanges.length > 0) {
       this.ageRange = ageRanges;
     } else {
       this.ageRange = new AgeRange();
@@ -41,14 +40,13 @@ export default class SmallGroup {
 
   mapSelectedMultiAttributes(attributeTypeId, attributeTypes, outputObj) {
     var selected = [];
-    if(attributeTypes !== undefined && attributeTypes != null &&
-        attributeTypes[attributeTypeId] !== undefined &&
-        attributeTypes[attributeTypeId] != null &&
-        attributeTypes[attributeTypeId].attributes !== undefined &&
-        attributeTypes[attributeTypeId].attributes != null)
-    {
-      attributeTypes[attributeTypeId].attributes.forEach(function(attribute) {
-        if(attribute.selected) {
+    if (attributeTypes !== undefined && attributeTypes != null &&
+      attributeTypes[attributeTypeId] !== undefined &&
+      attributeTypes[attributeTypeId] != null &&
+      attributeTypes[attributeTypeId].attributes !== undefined &&
+      attributeTypes[attributeTypeId].attributes != null) {
+      attributeTypes[attributeTypeId].attributes.forEach(function (attribute) {
+        if (attribute.selected) {
           selected.push(new outputObj(attribute));
         }
       });
@@ -57,12 +55,11 @@ export default class SmallGroup {
   }
 
   mapSingleAttribute(attributeTypeId, attributeTypes, outputObj) {
-    if(attributeTypes !== undefined && attributeTypes != null &&
-        attributeTypes[attributeTypeId] !== undefined &&
-        attributeTypes[attributeTypeId] != null &&
-        attributeTypes[attributeTypeId].attribute !== undefined &&
-        attributeTypes[attributeTypeId].attribute != null)
-    {
+    if (attributeTypes !== undefined && attributeTypes != null &&
+      attributeTypes[attributeTypeId] !== undefined &&
+      attributeTypes[attributeTypeId] != null &&
+      attributeTypes[attributeTypeId].attribute !== undefined &&
+      attributeTypes[attributeTypeId].attribute != null) {
       return new outputObj(attributeTypes[attributeTypeId].attribute);
     } else {
       return null;
@@ -75,8 +72,7 @@ export default class SmallGroup {
   }
 
   leaders() {
-    if (!this.participants)
-    {
+    if (!this.participants) {
       return [];
     }
     return this.participants.filter((value) => {
@@ -85,11 +81,11 @@ export default class SmallGroup {
   }
 
   isLeader() {
-   return this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
+    return this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
   }
 
   role() {
-    if(this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER) {
+    if (this.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER) {
       return 'Leader';
     } else if (this.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE) {
       return 'Apprentice';
@@ -99,7 +95,7 @@ export default class SmallGroup {
   }
 
   visibility() {
-    if(this.availableOnline === true) {
+    if (this.availableOnline === true) {
       return 'Public';
     } else {
       return 'Private';
@@ -107,7 +103,7 @@ export default class SmallGroup {
   }
 
   meetingLocation() {
-    if(this.address === null || this.address === undefined) {
+    if (this.address === null || this.address === undefined) {
       return 'Online';
     }
 
@@ -118,25 +114,24 @@ export default class SmallGroup {
     return this.address.getZip();
   }
 
-  mapCategories(jsonObject)
-  {
+  mapCategories(jsonObject) {
     this.categories = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID, jsonObject, Category);
   }
 
   categoriesToString() {
     let categoriesString = this.categories.length > 0 ? `${this.categories[0]}` : '';
 
-    for(let idx=1; idx < this.categories.length; idx++) {
+    for (let idx = 1; idx < this.categories.length; idx++) {
       categoriesString += `, ${this.categories[idx].toString()}`;
     }
 
     return categoriesString;
   }
 
-  participantInGroup(participantContactID){
-    if (!participantContactID || !this.participants){
-      return false; 
-    } else if (_.find(this.participants, (participant) => { return participant.contactId == participantContactID } )){
+  participantInGroup(participantContactID) {
+    if (!participantContactID || !this.participants) {
+      return false;
+    } else if (_.find(this.participants, (participant) => { return participant.contactId == participantContactID })) {
       return true;
     }
 
@@ -146,10 +141,18 @@ export default class SmallGroup {
   emailList() {
     let emailList = "";
 
-    this.participants.forEach(function(participant) {
+    this.participants.forEach(function (participant) {
       emailList = `${emailList}${participant.email},`;
     }, emailList);
 
     return emailList;
+  }
+
+  getMeetingTime() {
+    let meetingDayStr = 'Flexible Meeting Time';
+    if (this.meetingDay !== 'undefined' && this.meetingDay !== null) {
+      meetingDayStr = this.meetingDay + '\'s at ' + this.meetingTime + ', ' + this.meetingFrequencyText;
+    }
+    return meetingDayStr;
   }
 }
