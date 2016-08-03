@@ -473,13 +473,14 @@ export default class CreateGroupService {
                     valueProp: 'categoryId',
                     labelProp: 'label',
                     descProp: 'labelDesc',
+                    maxFieldLength: '25',
                     placeholder: 'placeholder',
                     options: [{
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                            label: 'Life Stage',
-                            labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
-                            placeholder: 'Life Stages detail...'
-                        }, {
+                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                        label: 'Life Stage',
+                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
+                        placeholder: 'Life Stages detail...'
+                    }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
                             labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
@@ -499,7 +500,7 @@ export default class CreateGroupService {
                             label: 'Healing',
                             labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
                             placeholder: 'Healing detail...'
-                    }],
+                        }],
                 }
             }]
         }
@@ -633,7 +634,6 @@ export default class CreateGroupService {
                 "name": "Age Range",
                 "attributes": ids
             }
-
             smallGroup.attributeTypes = ageRangeJson;
         }
 
@@ -669,8 +669,38 @@ export default class CreateGroupService {
         smallGroup.kidsWelcome = this.model.group.kidFriendly;
         smallGroup.meetingTimeFrequency = this.getMeetingLocation();
 
-    //groupMeetingCategory
+    //groupCategory
+        var ids = []
 
+        _.forEach(this.model.categories, (category) => {
+            ids.push(
+                {
+                    attributeId: 0,
+                    attributeTypeId: 90,
+                    name: category.detail,
+                    description: category.description,
+                    selected: true,
+                    startDate: category.startDate,
+                    endDate: null,
+                    notes: null,
+                    sortOrder: 0,
+                    category: this.getCategoryFromId(category.value),
+                    categoryId: category.value,
+                    categoryDescription: null
+
+                }
+            )
+        });
+        var categoriesJson = {
+            '90': {
+                "attributeTypeid": 90,
+                "name": "Group Category",
+                "attributes": ids
+            }
+        }
+        smallGroup.mapCategories(categoriesJson);
+        //double check this stuff after the merge
+        smallGroup.attributeTypes = $.extend({}, smallGroup.attributeTypes, categoriesJson);
     //groupAbout
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupDescription = this.model.group.groupDescription;
@@ -680,6 +710,37 @@ export default class CreateGroupService {
 
         return smallGroup;
 
+    }
+
+    convertAttributeTypes(list) {
+        var results = {};
+        _.each(list, function (item) {
+            results[item.attributeTypeId] = item;
+        });
+
+        return results;
+    }
+
+    getCategoryFromId(id) {
+        var returnString = '';
+        switch (id) {
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
+                returnString = "Life Stage";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
+                returnString = "Neighborhoods";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH:
+                returnString = "Spiritual Growth";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST:
+                returnString = "Interest";
+                break;
+            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING:
+                returnString = "Healing";
+                break;
+        }
+        return returnString;
     }
 
     getGroupTypeAttributeIdFromName(name) {

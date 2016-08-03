@@ -748,6 +748,11 @@ namespace crds_angular.Services
             {
                 _groupService.endDateGroupParticipant(participant.ChildGroupId, participant.ChildGroupParticipantId);
             }
+
+            foreach (var group in notificationData.DistinctBy(g => g.ChildGroupId))
+            {
+                _groupService.EndDateGroup(group.ChildGroupId);
+            }
         }
     } 
 }

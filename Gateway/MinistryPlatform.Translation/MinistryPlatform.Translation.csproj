@@ -118,6 +118,7 @@
     <Compile Include="Models\Childcare\MpChildcareCancelledNotification.cs" />
     <Compile Include="Models\Childcare\MpChildcareDashboard.cs" />
     <Compile Include="Models\Childcare\MPRspvd.cs" />
+    <Compile Include="Models\DTO\MpGroupSearchResultDto.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
     <Compile Include="Models\MpMessageTemplate.cs" />
     <Compile Include="Models\MpInvitation.cs" />
+    <Compile Include="Models\MpObjectAttributeType.cs" />
     <Compile Include="Models\MpUser.cs" />
     <Compile Include="Models\MpGoVolunteerSkill.cs" />
     <Compile Include="Models\MPOrganization.cs" />

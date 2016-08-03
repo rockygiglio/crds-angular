@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
@@ -9,6 +11,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using Moq;
 using NUnit.Framework;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
@@ -811,6 +814,48 @@ namespace crds_angular.test.Services
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
             _communicationRepository.VerifyAll();
+        }
+
+        [Test]
+        public void TestSearchGroupsNoKeywordsNothingFound()
+        {
+            const int groupTypeId = 1;
+            var keywords = new[] { "kw1", "kw2" };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null)).Returns(new List<MpGroupSearchResultDto>());
+            var results = _fixture.SearchGroups(groupTypeId);
+            _groupToolRepository.VerifyAll();
+            Assert.IsNull(results);
+        }
+
+        [Test]
+        public void TestSearchGroups()
+        {
+            const int groupTypeId = 1;
+            var keywords = new[] { "kw1", "kw2" };
+            var searchResults = new List<MpGroupSearchResultDto>
+            {
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 123,
+                    Name = "group 1",
+                    GroupType = 1231
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 456,
+                    Name = "group 2",
+                    GroupType = 4564
+                }
+            };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords)).Returns(searchResults);
+            var results = _fixture.SearchGroups(groupTypeId, string.Join(" ", keywords));
+            _groupToolRepository.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(searchResults.Count, results.Count);
+            foreach (var expected in searchResults)
+            {
+                Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
+            }
         }
     }
 }

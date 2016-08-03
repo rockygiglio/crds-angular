@@ -18,7 +18,7 @@
   <div class='row'>
     <div class='col-md-12'>
       <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEmailView()'>Email Group</a>
+        <a type='button' class='btn btn-primary' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
         <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
       </p>
       <p class='text-center' ng-if='groupDetailParticipants.isEditView()'>
