@@ -118,6 +118,11 @@ export default class SmallGroup {
     return this.address.getZip();
   }
 
+  mapCategories(jsonObject)
+  {
+    this.categories = this.mapSelectedMultiAttributes(CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID, jsonObject, Category);
+  }
+
   categoriesToString() {
     let categoriesString = this.categories.length > 0 ? `${this.categories[0]}` : '';
 
@@ -136,7 +141,15 @@ export default class SmallGroup {
     }
 
     return false;
+  }
 
-    
+  emailList() {
+    let emailList = "";
+
+    this.participants.forEach(function(participant) {
+      emailList = `${emailList}${participant.email},`;
+    }, emailList);
+
+    return emailList;
   }
 }

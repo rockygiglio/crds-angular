@@ -180,7 +180,7 @@ export default class GroupService {
       });
   }
 
-    saveParticipant(participants, groupId) {
+  saveParticipant(participants, groupId) {
       let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
                           .save({groupId: groupId}, participants).$promise;
 
@@ -230,4 +230,24 @@ export default class GroupService {
     });
   }
 
+  search(searchString, locationString) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`).
+    query({s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}).$promise;
+
+    return promise.then((data) => {
+          let groups = data.map((group) => {
+            return new SmallGroup(group);
+          });
+
+          if(!groups || groups.length === 0) {
+            var err = {'status': 404, 'statusText': 'Group not found'};
+            throw err;
+          }
+
+          return groups;
+        },
+        (err) => {
+          throw err;
+        });
+  }
 }

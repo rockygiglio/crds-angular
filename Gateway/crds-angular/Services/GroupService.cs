@@ -96,9 +96,18 @@ namespace crds_angular.Services
             try
             {
                 var mpGroup = Mapper.Map<MpGroup>(group);
-                group.GroupId = _mpGroupService.CreateGroup(mpGroup);
 
-                var configuration = MpObjectAttributeConfigurationFactory.Group();
+                if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
+                {
+                    var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
+
+                    categoryAttributes = _attributeService.CreateMissingAttributes(categoryAttributes, _groupCategoryAttributeTypeId);
+                    group.AttributeTypes[_groupCategoryAttributeTypeId].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
+                }
+
+                group.GroupId = _mpGroupService.CreateGroup(mpGroup);
+                //save group attributes
+                var configuration = MpObjectAttributeConfigurationFactory.Group();            
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
             }
             catch (Exception e)
@@ -500,6 +509,11 @@ namespace crds_angular.Services
                     }
                 }
             }
+        }
+
+        public void EndDateGroup(int groupId)
+        {
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
         }
 
         public Participant GetParticipantRecord(string token) 
