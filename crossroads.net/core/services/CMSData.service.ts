@@ -53,8 +53,8 @@ export class CMSDataService {
                         .map(rsp => {return rsp.json().features});
     }
 
-    getContentBlock(title:string) {
-        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/contentblock?title=${title}`))
+    getContentBlock(queryString:string) {
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/contentblock?${queryString}`))
                         .map(rsp => {return rsp.json().contentblocks[0]});
     }
 
