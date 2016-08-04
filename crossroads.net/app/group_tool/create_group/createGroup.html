@@ -1,11 +1,6 @@
 <preloader full-screen='false' ng-show='!createGroup.ready'> </preloader>
 <div ng-show='createGroup.ready'>
-  <h1>
-    Start a Group
-  </h1>
-  <p>Hi leader! This is the place to create your group. We’ve come up with a list of questions to help you define your group’s
-    style and will (in the end) connect you with people looking for the same thing you are.</p>
-  <p>If you already have some friends who want to join your group, hang tight—you’ll have a chance to invite them later.</p>
+  <div dynamic-content="$root.MESSAGES.groupToolCreateGroupHeading.content | html"></div>
   <form ng-submit="createGroup.previewGroup()" novalidate name="createGroup.createGroupForm">
     <formly-form model="createGroup.createGroupService.model" fields="createGroup.fields" form="createGroup.createGroupForm" options="createGroup.options" ng-cloak>
       <div class="col-md-12 push-top text-center">

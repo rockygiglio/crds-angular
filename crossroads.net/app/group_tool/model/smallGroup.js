@@ -18,7 +18,6 @@ export default class SmallGroup {
 
   createSubObjects(jsonObject) {
     this.address = (jsonObject.address === undefined || jsonObject.address === null) ? null : new Address(jsonObject.address);
-
     this.participants = [];
     if (jsonObject.Participants != undefined && jsonObject.Participants != null) {
       this.participants =
@@ -36,6 +35,10 @@ export default class SmallGroup {
     } else {
       this.ageRange = new AgeRange();
     }
+    this.meetingDay = jsonObject.meetingDay;
+    this.meetingTime = jsonObject.meetingTime;
+    this.meetingFrequencyText = jsonObject.meetingFrequency;
+    this.meetingTimeFrequency = this.getGroupCardWhenField();
   }
 
   mapSelectedMultiAttributes(attributeTypeId, attributeTypes, outputObj) {

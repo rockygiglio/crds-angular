@@ -18,18 +18,19 @@
         <div class='col-md-2'><strong>Category</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.categories.join(', ')}}</div>
         <div class='col-md-2'><strong>Where</strong></div>
-         <div ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation) && groupDetailAbout.groupExists() '>
+         <div  class='col-md-4'>{{groupDetailAbout.getAddress()}}</div>
+         <!--<div ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation) && groupDetailAbout.groupExists() '>
            <div  class='col-md-4'>{{groupDetailAbout.data.address.toString()}}</div>
         </div>
         <div ng-if='(!groupDetailAbout.userInGroup() && !groupDetailAbout.forInvitation)'>
           <div  class='col-md-4'>{{groupDetailAbout.data.address.getZip()}}</div>
-        </div>
+        </div>-->
       </div>
       <div class='row'>
         <div class='col-md-2'><strong>Group Type</strong></div>
         <div class='col-md-4'>{{groupDetailAbout.data.groupType.name}}</div>
         <div class='col-md-2'><strong>When</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.meetingFrequency}}</div>
+        <div class='col-md-4'>{{groupDetailAbout.data.meetingTimeFrequency}}</div>
       </div>
       <div class='row'>
         <div class='col-md-2'><strong>Leaders</strong></div>
@@ -53,7 +54,7 @@
   <div class='row'>&nbsp;</div>
   <div class='row' ng-if='groupDetailAbout.isLeader'>
     <div class='col-md-12'>
-      <p class='text-center'><button type='button' class='btn btn-primary'>Edit</button></p>
+      <p class='text-center'><button type='button' ng-click='grouptool.edit({ groupId: createGroupPreview.state.params.groupId })' class='btn btn-primary'>Edit</button></p>
     </div>
   </div>
 </div>
