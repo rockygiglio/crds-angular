@@ -13,8 +13,7 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.searchedWithLocation = false;
 
-    this.tableParams = new NgTableParams({}, { dataset: this.results, sorting: { proximity: 'asc' }});
-    //this.tableParams = new NgTableParams({}, { dataset: this.results });
+    this.tableParams = new NgTableParams({}, { dataset: this.results });
   }
 
   $onInit() {
@@ -32,7 +31,6 @@ export default class GroupSearchResultsController {
     this.results.length = 0;
     this.groupService.search(query, location).then(
       (data) => {
-        debugger;
         this.results.push(...data);
       },
       (err) => {
@@ -41,8 +39,12 @@ export default class GroupSearchResultsController {
     ).finally(
       () => {
         // TODO Need to figure out pagination, etc
-        // This resets the ngTable count so we see all the results
-        this.tableParams.parameters({count: this.results.length});
+        // This resets the ngTable count so we see all the results and sets sorting appropriately
+        let parms = {
+          count: this.results.length
+        };
+        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
+        this.tableParams.parameters(parms);
         this.ready = true;
       }
     );

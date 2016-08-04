@@ -87,6 +87,7 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.results).toBe(originalResults);
       expect(fixture.results.length).toEqual(groups.length);
       expect(fixture.tableParams.parameters().count).toEqual(groups.length);
+      expect(fixture.tableParams.parameters().sorting.proximity).toEqual('asc');
     });
 
     it('should empty out results if error calling service', () => {
@@ -112,6 +113,7 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.results).toBe(originalResults);
       expect(fixture.results.length).toEqual(0);
       expect(fixture.tableParams.parameters().count).toEqual(0);
+      expect(fixture.tableParams.parameters().sorting.groupName).toEqual('asc');
     });
   });
 });
