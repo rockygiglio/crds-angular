@@ -631,7 +631,7 @@ export default class CreateGroupService {
             }
         }
         smallGroup.mapCategories(categoriesJson);
-        smallGroup.meetingFrequency = smallGroup.getMeetingTime();
+        smallGroup.meetingFrequency = smallGroup.getGroupCardWhenField();
         smallGroup.attributeTypes = $.extend({}, ageRangeJson, categoriesJson);
         return smallGroup;
 

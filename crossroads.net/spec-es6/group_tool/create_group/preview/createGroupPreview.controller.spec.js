@@ -2,25 +2,25 @@ import constants from 'crds-constants';
 import CreateGroupPreviewController from '../../../../app/group_tool/create_group/preview/createGroup.preview.controller'
 describe('CreateGroupPreviewController', () => {
   let fixture,
-      groupService, 
-      createGroupService, 
-      group, 
-      imageService, 
-      state, 
-      log, 
-      rootScope,
-      api;
+    groupService,
+    createGroupService,
+    group,
+    imageService,
+    state,
+    log,
+    rootScope,
+    api;
 
   var mockProfile;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-  beforeEach(angular.mock.module(($provide)=> {
+  beforeEach(angular.mock.module(($provide) => {
     mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
     $provide.value('Profile', mockProfile);
   }));
 
-  beforeEach(inject(($injector)=> {
+  beforeEach(inject(($injector) => {
     groupService = $injector.get('GroupService');
     createGroupService = $injector.get('CreateGroupService');
     group = $injector.get('Group');
@@ -39,12 +39,12 @@ describe('CreateGroupPreviewController', () => {
       let deferred = api.defer();
       deferred.resolve({});
 
-      spyOn(groupService, 'saveCreateGroupForm').and.callFake( function() {
+      spyOn(groupService, 'saveCreateGroupForm').and.callFake(function () {
         return deferred.promise;
       });
 
-      spyOn(state, 'go').and.callFake(function() {});
-      spyOn(createGroupService, 'mapSmallGroup').and.callFake(function() {
+      spyOn(state, 'go').and.callFake(function () { });
+      spyOn(createGroupService, 'mapSmallGroup').and.callFake(function () {
         return {};
       });
 
@@ -53,5 +53,6 @@ describe('CreateGroupPreviewController', () => {
       expect(fixture.groupService.saveCreateGroupForm).toHaveBeenCalledWith(fixture.groupData);
     })
   });
+ 
 });
 
