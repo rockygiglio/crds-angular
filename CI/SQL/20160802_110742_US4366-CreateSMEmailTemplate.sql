@@ -12,3 +12,7 @@ INSERT INTO [dbo].dp_Communications
 
 SET IDENTITY_INSERT [dbo].[dp_Communications] OFF;
 END
+
+UPDATE [dbo].dp_Communications 
+SET [Body] = N'The following group leaders are posting a group for students Grades (either 6-8, or 9-12) in the group tool.  <br />Please check to ensure this person is known and approved by SM.  <br />If not, please proceed with your normal process for approval/background check with this person.  <br />If you do not know them, ask them to remove their group until you have approved them.<br /><br />[Leaders]'
+WHERE Communication_ID = 280854;
