@@ -659,7 +659,8 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<MpGroup>(group);
                 _mpGroupService.UpdateGroup(mpGroup);
 
-                List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
+                List<MpGroupParticipant> groupParticipants = _mpGroupService.GetGroupParticipants(group.GroupId, true);
+
                 if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
                 {
                     UpdateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
@@ -678,7 +679,7 @@ namespace crds_angular.Services
 
                 if (group.MinorAgeGroupsAdded)
                 {
-                    var leaders = Mapper.Map<List<MpGroupParticipant>>(groupParticipants).Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
+                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
                     _mpGroupService.SendNewStudentMinistryGroupAlertEmail(leaders);
                 }
             }
@@ -692,16 +693,14 @@ namespace crds_angular.Services
             return group;
         }
 
-        private void UpdateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
-            var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
-
-            foreach (var part in mpParticipants)
+            foreach (var part in participants)
             {
                 part.StartDate = groupStartDate;
             }
 
-            _mpGroupService.UpdateGroupParticipant(mpParticipants);
+            _mpGroupService.UpdateGroupParticipant(participants);
         }
 
     }
