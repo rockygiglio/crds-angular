@@ -28,6 +28,7 @@ export default class CreateGroupPreviewController {
     try {
       var promise = this.groupService.saveCreateGroupForm(this.groupData)
         .then( (data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolCreateGroupSuccess);
           this.saving = false;
           this.successfulSave = true;
           this.createGroupService.resolved = false;
@@ -35,6 +36,7 @@ export default class CreateGroupPreviewController {
         })
     }
     catch (error) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       this.saving = false;
       this.successfulSave = false;
       throw (error);
@@ -48,6 +50,7 @@ export default class CreateGroupPreviewController {
     try {
       var promise = this.groupService.saveEditGroupForm(this.groupData)
         .then( (data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolEditGroupSuccess);
           this.saving = false;
           this.successfulSave = true;
           this.createGroupService.resolved = false;
@@ -55,6 +58,7 @@ export default class CreateGroupPreviewController {
         })
     }
     catch (error) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       this.saving = false;
       this.successfulSave = false;
       throw (error);

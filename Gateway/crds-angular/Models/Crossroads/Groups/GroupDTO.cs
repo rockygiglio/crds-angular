@@ -120,6 +120,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "minorAgeGroupsAdded")]
         public bool MinorAgeGroupsAdded { get; set; } = false;
 
+        [JsonProperty(PropertyName = "proximity")]
+        public decimal? Proximity { get; set; }
+
         public GroupDTO()
         {
             AttributeTypes = new Dictionary<int, ObjectAttributeTypeDTO>();

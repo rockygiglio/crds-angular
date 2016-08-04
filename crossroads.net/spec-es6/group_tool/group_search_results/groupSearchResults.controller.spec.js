@@ -36,7 +36,7 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeFalsy();
       expect(fixture.tableParams instanceof ngTableParams).toBeTruthy();
-      expect(fixture.tableParams.settings().dataset).toBe(fixture.results);
+      expect(fixture.tableParams.settings().dataset).toBe(null);
     });
   });
 
@@ -63,7 +63,7 @@ describe('GroupSearchResultsController', () => {
   });
 
   describe('doSearch() function', () => {
-    it('should replace the result contents on successful service call', () => {
+    it('should replace the results on successful service call', () => {
       let originalResults = fixture.results;
       fixture.results.length = 0;
       fixture.results.push({groupName: 'name'});
@@ -84,12 +84,14 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeTruthy();
       expect(fixture.ready).toBeTruthy();
-      expect(fixture.results).toBe(originalResults);
+      expect(fixture.results).not.toBe(originalResults);
       expect(fixture.results.length).toEqual(groups.length);
+      expect(fixture.tableParams.settings().dataset).toBe(fixture.results);
       expect(fixture.tableParams.parameters().count).toEqual(groups.length);
+      expect(fixture.tableParams.parameters().sorting.proximity).toEqual('asc');
     });
 
-    it('should empty out results if error calling service', () => {
+    it('should reset results if error calling service', () => {
       let originalResults = fixture.results;
       fixture.results.length = 0;
       fixture.results.push({groupName: 'name'});
@@ -109,9 +111,11 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeFalsy();
       expect(fixture.ready).toBeTruthy();
-      expect(fixture.results).toBe(originalResults);
+      expect(fixture.results).not.toBe(originalResults);
       expect(fixture.results.length).toEqual(0);
+      expect(fixture.tableParams.settings().dataset).toBe(fixture.results);
       expect(fixture.tableParams.parameters().count).toEqual(0);
+      expect(fixture.tableParams.parameters().sorting.groupName).toEqual('asc');
     });
   });
 });

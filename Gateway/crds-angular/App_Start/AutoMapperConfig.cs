@@ -293,14 +293,18 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
                 .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
                 .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
-                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
+                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID))
+                .ForMember(dest => dest.Longitude, opts => opts.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opts => opts.MapFrom(src => src.Latitude));
 
             Mapper.CreateMap<AddressDTO, MpAddress>()
                 .ForMember(dest => dest.Address_Line_1, opts => opts.MapFrom(src => src.AddressLine1))
                 .ForMember(dest => dest.Address_Line_2, opts => opts.MapFrom(src => src.AddressLine2))
                 .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))
                 .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
-                .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
+                .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID))
+                .ForMember(dest => dest.Longitude, opts => opts.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opts => opts.MapFrom(src => src.Latitude));
 
             Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
             Mapper.CreateMap<GroupParticipantDTO, MpGroupParticipant>();
