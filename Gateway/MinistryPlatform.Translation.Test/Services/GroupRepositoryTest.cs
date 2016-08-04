@@ -610,5 +610,78 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual("Full Throttle", resp.Name);
         }
+
+        [Test]
+        public void UpdateGroupParticipantTest()
+        {
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    ParticipantId = 1,
+                    GroupParticipantId = 2,
+                    GroupRoleId = 22,
+                    StartDate = DateTime.Now
+                }
+            };
+
+            _ministryPlatformService.Setup(
+                mocked =>
+                    mocked.UpdateSubRecord(_groupsParticipantsPageId,
+                                           It.Is<Dictionary<string, object>>(
+                                               d => d["Participant_ID"].Equals(participants[0].ParticipantId) && d["Group_Participant_ID"].Equals(participants[0].GroupParticipantId) && d["Group_Role_ID"].Equals(participants[0].GroupRoleId) && d["Start_Date"].Equals(participants[0].StartDate)),
+                                           AuthenticateResponse()["token"].ToString())).Verifiable();
+
+            
+            var resp = _fixture.UpdateGroupParticipant(participants);
+
+            _ministryPlatformService.VerifyAll();
+            Assert.AreEqual(1, resp);
+
+        }
+
+        [Test]
+        public void TestUpdateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+            const int groupId = 854725;
+
+            var existingGroup = new MpGroup()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = groupId,
+                GroupType = 1,
+                MinistryId = 8,
+                ContactId = 74657,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                TargetSize = 0,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinimumAge = 0,
+                MinimumParticipants = 8,
+                MaximumAge = 99,
+                KidsWelcome = false,
+                MeetingFrequencyID = 1,
+                Address = new MpAddress()
+                {
+                    Address_ID = 43567
+                }              
+            };
+
+            _ministryPlatformService.Setup(mock => mock.UpdateRecord(_groupsPageId,It.IsAny<Dictionary<string, object>>(), It.IsAny<string>())).Verifiable();
+
+            var result = _fixture.UpdateGroup(existingGroup);
+            Assert.AreEqual(1, result);
+        }
     }
 }
