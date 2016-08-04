@@ -4,8 +4,8 @@ import { CMSDataService } from '../../core/services/CMSData.service'
 @Component({
   selector: 'ng2-test-cms-data',
   template: `
-      <h1>Current Series</h1>
-      <p>{{currentSeries.title}}</p>
+    <h1>Current Series</h1>
+    <p>{{currentSeries.title}}</p>
     `,
   providers: [CMSDataService]
 })

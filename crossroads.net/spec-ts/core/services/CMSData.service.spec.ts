@@ -66,7 +66,7 @@ describe('Service: CMSData', () => {
           
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=1`);
+            `https://contentint.crossroads.net/api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit[]=1`);
         });
 
         service.getNearestSeries();
@@ -142,6 +142,5 @@ describe('Service: CMSData', () => {
 
         service.getContentBlock('title=Hello World');
       })));
-     
       
 });
