@@ -20,7 +20,7 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            _mapsApiClient = new MapsAPIClient(new ConfigurationWrapper().GetEnvironmentVarAsString("GOOGLE_PROXIMITY_SECRET_KEY"));
+            _mapsApiClient = new MapsAPIClient(new ConfigurationWrapper().GetEnvironmentVarAsString("GOOGLE_API_SECRET_KEY"));
 
             _fixture = new GoogleMapsAddressProximityService(_mapsApiClient);
         }
