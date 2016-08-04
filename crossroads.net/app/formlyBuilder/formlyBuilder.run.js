@@ -200,7 +200,7 @@
                     change: setModel
                 };
 
-                // initialrize the checkboxes check property
+                // initialize the checkboxes check property
                 $scope.$watch('model', function modelWatcher(newModelValue) {
                     var modelValue, valueProp;
                     if (Object.keys(newModelValue).length) {
@@ -208,11 +208,27 @@
 
                         $scope.$watch('to.options', function optionsWatcher(newOptionsValues) {
                             if (newOptionsValues && Array.isArray(newOptionsValues) && Array.isArray(modelValue)) {
+                                debugger;
                                 valueProp = to.valueProp || 'value';
                                 for (var index = 0; index < newOptionsValues.length; index++) {
                                     //$scope.multiCheckboxCombo.checked[index] = modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
-                                    $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { return item.value == newOptionsValues[index][valueProp] }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
+                                    // $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { 
+                                    //     return item.value == newOptionsValues[index][valueProp] 
+                                    // }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
+                                    var item = _.find(modelValue, (item) => { 
+                                        return item.value == newOptionsValues[index][valueProp] 
+                                    })
+
+                                    if (item != null || item != undefined){
+                                        $scope.multiCheckboxCombo.detail[index] = item.detail;
+                                        $scope.multiCheckboxCombo.checked[index] = true;
+                                    } else {
+                                        $scope.multiCheckboxCombo.detail[index] = '';
+                                        $scope.multiCheckboxCombo.checked[index] = false;
+                                    } 
                                 }
+
+
                             }
                         });
                     }
