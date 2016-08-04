@@ -35,30 +35,65 @@ namespace crds_angular.Services
 
         public void SendEmail(EmailCommunicationDTO email, string token)
         {
-            var communication = new MpCommunication();
-            communication.DomainId = DomainID;
-            communication.AuthorUserId = email.FromUserId ?? DefaultAuthorUserId;
+            var template = _communicationService.GetTemplate(email.TemplateId);
 
-            if (token == null && email.FromUserId == null)
+            if (token == null && email.FromUserId == null && template.FromContactId == 0)
             {
-                throw (new InvalidOperationException("Must provide either email.FromUserId or an authentication token."));
+                throw (new InvalidOperationException("Must provide either email.FromUserId from  or an authentication token."));
             }
 
-            var replyToContactId = email.ReplyToContactId ?? DefaultContactEmailId;
-            var from = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(DefaultContactEmailId) };
+            //ReplyToContact - If passed in, use it.  Otherwise, get from template.
+            var replyToContactId = email.ReplyToContactId ?? template.ReplyToContactId;
             var replyTo = new MpContact { ContactId = replyToContactId, EmailAddress = _communicationService.GetEmailFromContactId(replyToContactId) };
-            var recipient = new MpContact {ContactId = email.ToContactId, EmailAddress = _communicationService.GetEmailFromContactId(email.ToContactId) };
 
-            communication.FromContact = from;
-            communication.ReplyToContact = replyTo;
-            communication.ToContacts.Add(recipient);
+            //FromContact - If passed in, use it.  Otherwise, get from template.
+            var fromContactId = email.FromContactId ?? template.FromContactId;
+            var from = new MpContact { ContactId = DefaultContactEmailId, EmailAddress = _communicationService.GetEmailFromContactId(fromContactId) };
 
-            var template = _communicationService.GetTemplate(email.TemplateId);
-            communication.TemplateId = email.TemplateId;
-            communication.EmailBody = template.Body;
-            communication.EmailSubject = template.Subject;
+            //ToContacts - If passed in, use it.  Otherwise, get from emailAddress.  If no contact for the emailAddress, use the default.
+            MpContact to;
+            if (email.ToContactId != null)
+            {
+                to = new MpContact { ContactId = (int)email.ToContactId, EmailAddress = _communicationService.GetEmailFromContactId((int)email.ToContactId) };
+            }
+            else if (email.emailAddress != null)
+            {
+                var contactId = 0;
+                try
+                {
+                    contactId = _contactService.GetContactIdByEmail(email.emailAddress);
+                }
+                catch (Exception)
+                {
+                    //work around incorrectly handled case where multiple contacts exists for a single contact
+                    contactId = 0;
+                }
 
-            communication.MergeData = email.MergeData;
+                if (contactId == 0)
+                {
+                    contactId = DefaultContactEmailId;
+                }
+                to = new MpContact { ContactId = contactId, EmailAddress = email.emailAddress };
+            }
+            else
+            {
+                throw (new InvalidOperationException("Must provide either ToContactId or emailAddress."));
+            }
+
+            var communication = new MpCommunication
+            {
+                DomainId = DomainID,
+                AuthorUserId = email.FromUserId ?? DefaultAuthorUserId,
+                TemplateId = email.TemplateId,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                ReplyToContact = replyTo,
+                FromContact = from,
+                StartDate = email.StartDate ?? DateTime.Now,
+                MergeData = email.MergeData,
+                ToContacts = new List<MpContact>()
+            };
+            communication.ToContacts.Add(to);
 
             if (!communication.MergeData.ContainsKey("BaseUrl"))
             {
@@ -93,5 +128,6 @@ namespace crds_angular.Services
             }
             _communicationService.SendMessage(comm);
         }
+
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace crds_angular.Models.Crossroads
 {
     public class EmailCommunicationDTO
     {
         [JsonProperty(PropertyName = "fromContactId")]
-        public int FromContactId { get; set; }
+        public int? FromContactId { get; set; }
 
         [JsonProperty(PropertyName = "replyToContact")]
         public int? ReplyToContactId { get; set; }
@@ -15,7 +16,7 @@ namespace crds_angular.Models.Crossroads
         public int? FromUserId { get; set; }
 
         [JsonProperty(PropertyName = "toContactId")]
-        public int ToContactId { get; set; }
+        public int? ToContactId { get; set; }
 
         [JsonProperty(PropertyName = "templateId")]
         public int TemplateId { get; set; }
@@ -28,5 +29,8 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "emailAddress")]
         public string emailAddress { get; set; }
+
+        [JsonProperty(PropertyName = "startDate", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? StartDate { get; set; }
     }
 }

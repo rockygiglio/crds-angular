@@ -58,5 +58,22 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        /// <summary>
+        /// Schedule an email to a specific contactId/emailAddress at a specific time
+        /// </summary>
+        [Route("api/scheduleemail")]
+        public IHttpActionResult PostReminder(EmailCommunicationDTO email)
+        {
+            try
+            {
+                _emailCommunication.SendEmail(email);
+                return this.Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return this.InternalServerError();
+            }
+        }
     }
 }
