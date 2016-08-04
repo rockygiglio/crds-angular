@@ -51,8 +51,8 @@
 
     <div class="col-md-2 col-md-offset-1 col-sm-12 my-groups-links">
       <nav>
-          <div dynamic-content="$root.MESSAGES.groupToolMyGroupsLinks.content | html">
-          </div>
+        <div ng-if="myGroups.approvedLeader" dynamic-content="$root.MESSAGES.groupToolMyGroupsLinksLeader.content | html"></div>
+        <div ng-if="!myGroups.approvedLeader" dynamic-content="$root.MESSAGES.groupToolMyGroupsLinksParticipant.content | html"></div>
       </nav>
     </div>
 
