@@ -75,6 +75,51 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void UpdateAddress()
+        {
+            const string apiToken = "useme";
+            const int addressId = 785645;
+
+            var addr = new MpAddress
+            {
+                Address_ID = addressId,
+                Address_Line_1 = "321 Road Ln",
+                Address_Line_2 = "Suite 100",
+                City = "Madison",
+                State = "OH",
+                Postal_Code = "45454",
+                Foreign_Country = "USA",
+                County = "Hamilton",
+                Longitude = 123.45,
+                Latitude = 678.90
+            };
+
+            _ministryPlatformService.Setup(m => m.UpdateRecord(271, It.IsAny<Dictionary<string, object>>(), apiToken));
+
+            var addrId = _fixture.Update(addr);
+            _ministryPlatformService.Verify(
+                mocked =>
+                    mocked.UpdateRecord(271,
+                                        It.Is<Dictionary<string, object>>(
+                                            d =>
+                                                d["Address_ID"].Equals(addr.Address_ID) &&
+                                                d["Address_Line_1"].Equals(addr.Address_Line_1) &&
+                                                d["Address_Line_2"].Equals(addr.Address_Line_2) &&
+                                                d["City"].Equals(addr.City) &&
+                                                d["State/Region"].Equals(addr.State) &&
+                                                d["Postal_Code"].Equals(addr.Postal_Code) &&
+                                                d["Foreign_Country"].Equals(addr.Foreign_Country) &&
+                                                d["County"].Equals(addr.County) &&
+                                                d["Longitude"].Equals(addr.Longitude) &&
+                                                d["Latitude"].Equals(addr.Latitude)
+                                            ),
+                                        "useme"));
+
+            Assert.IsNotNull(addrId);
+            Assert.AreEqual(addressId, addrId);
+        }
+
+        [Test]
         public void FindMatches()
         {
            var addrRecords = new List<Dictionary<string, object>>()
@@ -88,7 +133,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"State/Region", "OH"},
                     {"Postal_Code", "45454"},
                     {"Foreign_Country", "USA"},
-                    {"County", "Hamilton"}
+                    {"County", "Hamilton"},
+                    {"Longitude", "123.45"},
+                    {"Latitude", "678.90"},
                 }
             };
 
@@ -101,7 +148,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 State = "OH",
                 Postal_Code = "45454",
                 Foreign_Country = "USA",
-                County = "Hamilton"
+                County = "Hamilton",
+                Longitude = 123.45,
+                Latitude = 678.90
             };
 
             _ministryPlatformService.Setup(m => m.GetRecordsDict(271, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(addrRecords);
@@ -116,6 +165,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(addr.City, records[0].City);
             Assert.AreEqual(addr.State, records[0].State);
             Assert.AreEqual(addr.Postal_Code, records[0].Postal_Code);
+            Assert.AreEqual(addr.Longitude, records[0].Longitude);
+            Assert.AreEqual(addr.Latitude, records[0].Latitude);
         }
 
     }
