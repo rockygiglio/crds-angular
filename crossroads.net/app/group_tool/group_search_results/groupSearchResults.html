@@ -50,8 +50,7 @@
       <td data-title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
-      <!--<td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== null">{{group.proximity}} mi</span></td>-->
-      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity">{{group.proximity}} mi</span></td>
+      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
       <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Zip Code'" sortable="'address.zip'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a ng-if="group.address.zip">{{group.address.zip}}</a></td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">

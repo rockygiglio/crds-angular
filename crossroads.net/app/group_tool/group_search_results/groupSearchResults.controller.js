@@ -13,7 +13,7 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.searchedWithLocation = false;
 
-    this.tableParams = new NgTableParams({}, { dataset: this.results });
+    this.tableParams = new NgTableParams({}, {});
   }
 
   $onInit() {
@@ -28,10 +28,10 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.searchedWithLocation = location && location.length > 0;
     this.ready = false;
-    this.results.length = 0;
+    this.results = [];
     this.groupService.search(query, location).then(
       (data) => {
-        this.results.push(...data);
+        this.results = data;
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
@@ -39,11 +39,18 @@ export default class GroupSearchResultsController {
     ).finally(
       () => {
         // TODO Need to figure out pagination, etc
+
         // This resets the ngTable count so we see all the results and sets sorting appropriately
         let parms = {
           count: this.results.length
         };
         parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
+
+        // This resets the dataset so ngTable properly renders the new search results
+        let settings = {
+          dataset: this.results
+        };
+        this.tableParams.settings(settings);
         this.tableParams.parameters(parms);
         this.ready = true;
       }
