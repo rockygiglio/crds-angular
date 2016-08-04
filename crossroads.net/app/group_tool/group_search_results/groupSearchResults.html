@@ -55,18 +55,31 @@
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
         <group-detail-about data="group"></group-detail-about>
+        <div class="text-right push-half-bottom soft-half-right">
+          <button type="button" class="btn btn-secondary" ng-click="group.expanded = false">Close</button>
+          <button type="button" class="btn btn-primary">Request to Join</button>
+        </div>
       </td>
     </tr>
   </table>
 
-  <div ng-show='groupSearchResults.ready' class="group-results-mobile hidden-sm hidden-md hidden-lg push-half-top">
-    <div ng-repeat="group in groupSearchResults.results" class="group-result push-half-bottom soft-half-bottom">
+  <div ng-show='groupSearchResults.ready' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
+    <div ng-repeat-start="group in groupSearchResults.results"
+         class="group-result push-half-bottom soft-half-bottom"
+         ng-click="group.expanded = !group.expanded">
       <div class="row">
         <strong class="col-xs-10">{{group.groupName}}</strong>
-        <div class="col-xs-2">Map</div>
+        <div class="col-xs-2 pointer" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()">Map</div>
       </div>
       <div>{{group.categories.join(', ')}}</div>
       <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
+    </div>
+    <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
+      <group-detail-about data="group"></group-detail-about>
+      <div class="soft-half">
+        <button type="button" class="btn btn-primary btn-block">Request to Join</button>
+        <button type="button" class="btn btn-secondary btn-block" ng-click="group.expanded = false">Close</button>
+      </div>
     </div>
   </div>
 </div>
