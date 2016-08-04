@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -6,6 +7,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -155,6 +157,56 @@ namespace crds_angular.test.controllers
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
+        }
+
+        [Test]
+        public void TestSearchGroupsNoGroupsFound()
+        {
+            const int groupTypeId = 123;
+            const string keywords = "kw1,kw2";
+            const string location = "123 main st";
+
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Returns(new List<GroupDTO>());
+            var result = _fixture.SearchGroups(groupTypeId, keywords, location);
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<RestHttpActionResult<List<GroupDTO>>>(result);
+            var restResult = (RestHttpActionResult<List<GroupDTO>>)result;
+            Assert.AreEqual(HttpStatusCode.NotFound, restResult.StatusCode);
+        }
+
+        [Test]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void TestSearchGroupsWithException()
+        {
+            const int groupTypeId = 123;
+            const string keywords = "kw1,kw2";
+            const string location = "123 main st";
+            var exception = new Exception("whoa nelly");
+
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Throws(exception);
+            _fixture.SearchGroups(groupTypeId, keywords, location);
+        }
+
+        [Test]
+        public void TestSearchGroups()
+        {
+            const int groupTypeId = 123;
+            const string keywords = "kw1,kw2";
+            const string location = "123 main st";
+            var searchResults = new List<GroupDTO>
+            {
+                new GroupDTO(),
+                new GroupDTO()
+            };
+
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Returns(searchResults);
+            var result = _fixture.SearchGroups(groupTypeId, keywords, location);
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<List<GroupDTO>>>(result);
+            var restResult = (OkNegotiatedContentResult<List<GroupDTO>>)result;
+            Assert.AreSame(searchResults, restResult.Content);
         }
 
     }

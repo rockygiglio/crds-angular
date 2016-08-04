@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Json;
 using crds_angular.Security;
 
 namespace crds_angular.Controllers.API
@@ -111,6 +114,35 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }
+
+        /// <summary>
+        /// Search for a group matching the requested type and search terms.
+        /// </summary>
+        /// <param name="groupTypeId">An integer identifying the type of group to search for</param>
+        /// <param name="keywords">The optional keywords to search for</param>
+        /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
+        /// <returns>A list of groups matching the terms</returns>
+        [AcceptVerbs("GET")]
+        [Route("api/grouptool/grouptype/{groupTypeId:int}/group/search")]
+        [ResponseType(typeof(List<GroupDTO>))]
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null)
+        {
+            try
+            {
+                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location);
+                if (result == null || !result.Any())
+                {
+                    return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Error searching for group", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         /// <summary>

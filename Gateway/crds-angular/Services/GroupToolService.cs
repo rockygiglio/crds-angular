@@ -396,6 +396,25 @@ namespace crds_angular.Services
                 throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
             }
         }
+
+        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)
+        {
+            // Split single search term into multiple words, broken on whitespace
+            // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
+            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
+
+            var results = _groupToolRepository.SearchGroups(groupTypeId, search);
+            if (results == null || !results.Any())
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                // TODO Parse a location string into an address, and call proximity API to get approximate distances on results
+            }
+
+            return results.Select(Mapper.Map<GroupDTO>).ToList();
+        }
     }
 }
-

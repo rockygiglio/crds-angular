@@ -40,8 +40,10 @@ namespace MinistryPlatform.Translation.Repositories
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
 
         private IMinistryPlatformService ministryPlatformService;
+        private IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
         public GroupRepository(IMinistryPlatformService ministryPlatformService,
+                               IMinistryPlatformRestRepository ministryPlatformRestRepository,
                                IConfigurationWrapper configurationWrapper,
                                IAuthenticationRepository authenticationService,
                                ICommunicationRepository communicationService,
@@ -51,6 +53,7 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
             _contactService = contactService;
@@ -150,6 +153,17 @@ namespace MinistryPlatform.Translation.Repositories
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
         }
 
+        public void EndDateGroup(int groupId, DateTime? endDate)
+        {
+            var apiToken = ApiLogin();
+            var fields = new Dictionary<string, object>
+            {
+                {"Group_ID", groupId },
+                {"End_Date", endDate ?? DateTime.Now }
+            };
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields );
+        }
+
         public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)
         {
             var apiToken = ApiLogin();
@@ -187,11 +201,47 @@ namespace MinistryPlatform.Translation.Repositories
                     g.KidsWelcome = (Boolean)kw;
                 }
 
+                
+                object ao = null;
+                groupDetails.TryGetValue("Available_Online", out ao);
+                if (ao != null)
+                {
+                    g.AvailableOnline = (Boolean)ao;
+                }
+
+                object mt = null;
+                groupDetails.TryGetValue("Meeting_Time", out mt);
+                if (mt != null)
+                {
+                    g.MeetingTime = (string)mt.ToString();
+                }
+
+                object md = null;
+                groupDetails.TryGetValue("Meeting_Day_ID", out md);
+                if (md != null)
+                {
+                    g.MeetingDayId = (int)md;
+                }
+
+                object oma = null;
+                groupDetails.TryGetValue("Offsite_Meeting_Address", out oma);
+                if (oma != null)
+                {
+                    g.Address = _addressRepository.GetAddressById(apiToken, (int)oma);
+                }
+
                 object c = null;
                 groupDetails.TryGetValue("Primary_Contact", out c);
                 if (c != null)
                 {
                     g.ContactId = (int)c;
+                }
+
+                object mf = null;
+                groupDetails.TryGetValue("Meeting_Frequency_ID", out mf);
+                if (mf != null)
+                {
+                    g.MeetingFrequencyID = (int) mf;
                 }
 
                 object gid = null;
@@ -335,6 +385,37 @@ namespace MinistryPlatform.Translation.Repositories
             return (WithApiLogin(apiToken => { return LoadGroupParticipants(groupId, apiToken, active); }));
         }
 
+        public int UpdateGroupParticipant(List<MpGroupParticipant> participants)
+        {
+            int retValue = -1;
+
+            foreach (var participant in participants)
+            {
+                var values = new Dictionary<string, object>
+                {
+                    {"Participant_ID", participant.ParticipantId},
+                    {"Group_Participant_ID", participant.GroupParticipantId },
+                    {"Start_Date", participant.StartDate },
+                    {"Group_Role_ID", participant.GroupRoleId }
+                };
+
+                retValue = WithApiLogin<int>(token =>
+                {
+                    try
+                    {
+                        ministryPlatformService.UpdateSubRecord(GroupsParticipantsPageId, values, token);
+                        return 1;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ApplicationException("Error updating group_participant: " + e.Message);
+                    }
+                });
+            }
+
+            return retValue;
+        }
+
         public List<MpGroupSearchResult> GetSearchResults(int groupTypeId)
         {
             var apiToken = ApiLogin();
@@ -419,7 +500,8 @@ namespace MinistryPlatform.Translation.Repositories
                             GroupRoleTitle = p.ToString("Role_Title"),
                             LastName = p.ToString("Last_Name"),
                             NickName = p.ToString("Nickname"),
-                            Email = p.ToString("Email")
+                            Email = p.ToString("Email"),
+                            StartDate = p.ToNullableDate("Start_Date")
                         });
                     }
                 }
@@ -792,6 +874,59 @@ namespace MinistryPlatform.Translation.Repositories
                     Foreign_Country = record.ToString("Foreign_Country")
                 } : new MpAddress()
             };
+        }
+
+        public int UpdateGroup(MpGroup group)
+        {
+            logger.Debug("Updating group");
+
+            var addressId = (group.Address != null) ? group.Address.Address_ID : null;
+            var endDate = group.EndDate.HasValue ? (object)group.EndDate.Value : null;
+
+            var values = new Dictionary<string, object>
+            {
+                {"Group_Name", group.Name},
+                {"Group_ID", group.GroupId},
+                {"Group_Type_ID", group.GroupType},
+                {"Ministry_ID", group.MinistryId},
+                {"Congregation_ID", group.CongregationId},
+                {"Primary_Contact", group.ContactId},
+                {"Description", group.GroupDescription},
+                {"Start_Date", group.StartDate},
+                {"End_Date", endDate},
+                {"Target_Size", group.TargetSize },
+                {"Offsite_Meeting_Address", addressId },
+                {"Group_Is_Full", group.Full },
+                {"Available_Online", group.AvailableOnline },
+                {"Meeting_Time", group.MeetingTime },
+                {"Meeting_Day_Id", group.MeetingDayId },
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", group.ChildCareAvailable },
+                {"Remaining_Capacity", group.RemainingCapacity },
+                {"Enable_Waiting_List", group.WaitList },
+                {"Online_RSVP_Minimum_Age", group.MinimumAge },
+                {"Maximum_Age", group.MaximumAge },
+                {"Minimum_Participants", group.MinimumParticipants },
+                {"Kids_Welcome", group.KidsWelcome },
+                {"Meeting_Frequency_ID", group.MeetingFrequencyID }
+
+            };
+
+            var retValue = WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.UpdateRecord(GroupsPageId, values, token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error updating group: " + e.Message);
+                }
+            });
+
+            logger.Debug("Updated group " + retValue);
+            return (retValue);
         }
     }
 }

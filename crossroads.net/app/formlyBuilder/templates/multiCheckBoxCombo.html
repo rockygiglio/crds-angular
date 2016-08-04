@@ -9,7 +9,7 @@
               class="formly-field-checkbox ng-valid ng-not-empty ng-valid-parse">
         <strong>{{option[to.labelProp || 'name']}}</strong>
       </label>
-      <p class="soft-left ng-binding">{{option[to.descProp] || 'name'}}</p>    
+      <p class="soft-left ng-binding" dynamic-content="{{option[to.descProp]}}"></p>    
     </div>
     <div class="row soft-left">
         <input type="input"

@@ -35,10 +35,11 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
         private readonly IApiUserRepository _apiUserService;
-        private readonly IAttributeRepository _attributeService;
+        private readonly IAttributeRepository _attributeRepository;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IUserRepository _userRepository;
         private readonly IInvitationRepository _invitationRepository;
+        private readonly IAttributeService _attributeService;
 
 
         /// <summary>
@@ -62,10 +63,11 @@ namespace crds_angular.Services
                             IContactRepository contactService, 
                             IObjectAttributeService objectAttributeService, 
                             IApiUserRepository apiUserService, 
-                            IAttributeRepository attributeService,
+                            IAttributeRepository attributeRepository,
                             IEmailCommunication emailCommunicationService,
                             IUserRepository userRepository,
-                            IInvitationRepository invitationRepository)
+                            IInvitationRepository invitationRepository,
+                            IAttributeService attributeService)
 
         {
             _mpGroupService = mpGroupService;
@@ -78,10 +80,11 @@ namespace crds_angular.Services
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
             _apiUserService = apiUserService;
-            _attributeService = attributeService;
+            _attributeRepository = attributeRepository;
             _emailCommunicationService = emailCommunicationService;
             _userRepository = userRepository;
             _invitationRepository = invitationRepository;
+            _attributeService = attributeService;
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -388,6 +391,13 @@ namespace crds_angular.Services
                 detail.ChildCareAvailable = g.ChildCareAvailable;
                 detail.WaitListGroupId = g.WaitListGroupId;
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
+                detail.MeetingFrequencyID = g.MeetingFrequencyID;
+                detail.AvailableOnline = g.AvailableOnline;
+                detail.MeetingTime = g.MeetingTime;
+                detail.MeetingDayId = g.MeetingDayId;
+                detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
+                detail.StartDate = g.StartDate;
+
                 if (events != null)
                 {
                     detail.Events = events.Select(Mapper.Map<MpEvent, Event>).ToList();
@@ -433,7 +443,7 @@ namespace crds_angular.Services
 
             var groupDetail = groups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeRepository.GetAttributes(null);
             foreach (var group in groupDetail)
             {
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
@@ -455,7 +465,7 @@ namespace crds_angular.Services
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeService.GetAttributes(null);
+            var mpAttributes = _attributeRepository.GetAttributes(null);
             foreach (var group in groupDetail)
             {               
                 var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
@@ -500,7 +510,7 @@ namespace crds_angular.Services
 
             foreach (var attributeType in new[] { _groupCategoryAttributeTypeId, _groupTypeAttributeTypeId, _groupAgeRangeAttributeTypeId })
             {
-                var types = _attributeService.GetAttributes(attributeType);
+                var types = _attributeRepository.GetAttributes(attributeType);
                 foreach (var group in groups)
                 {
                     var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, types);
@@ -514,6 +524,11 @@ namespace crds_angular.Services
                     }
                 }
             }
+        }
+
+        public void EndDateGroup(int groupId)
+        {
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
         }
 
         public Participant GetParticipantRecord(string token) 
@@ -586,10 +601,10 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeService.GetAttributes(90);
+
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }
@@ -623,7 +638,7 @@ namespace crds_angular.Services
 
             var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
             //var configuration = MpObjectAttributeConfigurationFactory.Group();
-            //var mpAttributes = _attributeService.GetAttributes(null);
+            //var mpAttributes = _attributeRepository.GetAttributes(null);
 
             //foreach (var group in groupDetail)
             //{
@@ -633,6 +648,52 @@ namespace crds_angular.Services
             //}
 
             return groupDetail;
+        }
+
+        public GroupDTO UpdateGroup(GroupDTO group)
+        {
+            try
+            {
+                var mpGroup = Mapper.Map<MpGroup>(group);
+                _mpGroupService.UpdateGroup(mpGroup);
+
+                List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
+                if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
+                {
+                    UpdateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
+                }
+
+                if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
+                {
+                    var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
+
+                    categoryAttributes = _attributeService.CreateMissingAttributes(categoryAttributes, _groupCategoryAttributeTypeId);
+                    group.AttributeTypes[_groupCategoryAttributeTypeId].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
+                }
+
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
+                _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not update group {0}", group.GroupName);
+                _logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            return group;
+        }
+
+        private void UpdateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        {
+            var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
+
+            foreach (var part in mpParticipants)
+            {
+                part.StartDate = groupStartDate;
+            }
+
+            _mpGroupService.UpdateGroupParticipant(mpParticipants);
         }
 
     }

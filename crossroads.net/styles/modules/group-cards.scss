@@ -36,6 +36,16 @@ my-groups {
       width: 65px;
       height: 65px;
     }
+
+    // Find a Group disabled until Aug 27
+    div.find-disabled {
+      font-weight: normal;
+      margin-top: -5px;
+    }
+
+    svg.find-disabled {
+      color: $gray-lighter;
+    }
   }
 
   .my-groups-links {
@@ -58,6 +68,18 @@ group-card {
   }
 
   .group-card-buttons {
+    .btn {
+      // Adjust group card button text for medium size where the text is overlapping the button at 100%
+      @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+        font-size: 92%;
+      }
+    }
+
+    // Adjust the vertical centering of the button icons to line up with the button text
+    svg {
+      margin-bottom: 3px;
+    }
+
     .row {
       margin-left: -8px;
       margin-right: -8px;
