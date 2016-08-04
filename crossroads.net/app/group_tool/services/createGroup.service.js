@@ -697,7 +697,6 @@ export default class CreateGroupService {
             smallGroup.meetingTimeFrequency = this.getMeetingLocation();
     //groupCategory
         var ids = []
-
         //set every category that the group came in with to selected = false if this is a load and 
         //let the database worry about whether or not what we've added is new.
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
@@ -757,7 +756,7 @@ export default class CreateGroupService {
         var returnString = '';
         switch (id) {
             case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
-                returnString = "Life Stage";
+                returnString = "Life Stages";
                 break;
             case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
                 returnString = "Neighborhoods";
@@ -778,7 +777,7 @@ export default class CreateGroupService {
     getIdFromCategory(category) {
         var categoryId = null;
         switch (category) {
-            case "Life Stage":
+            case "Life Stages":
                 categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES;
                 break;
             case "Neighborhoods":
