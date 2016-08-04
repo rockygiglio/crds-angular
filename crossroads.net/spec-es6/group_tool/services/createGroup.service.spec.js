@@ -1,12 +1,12 @@
 
 import CONSTANTS from 'crds-constants';
-import SmallGroup from '../model/smallGroup';
-import Participant from '../model/participant';
-import AgeRange from '../model/ageRange';
-import Address from '../model/address';
-import Category from '../model/category';
-import GroupType from '../model/groupType';
-import Profile from '../model/profile';
+import SmallGroup from '../../../app/group_tool/model/smallGroup';
+import Participant from '../../../app/group_tool/model/participant';
+import AgeRange from '../../../app/group_tool/model/ageRange';
+import Address from '../../../app/group_tool/model/address';
+import Category from '../../../app/group_tool/model/category';
+import GroupType from '../../../app/group_tool/model/groupType';
+import Profile from '../../../app/group_tool/model/profile';
 
 describe('Group Tool Group Service', () => {
   let fixture,
@@ -39,9 +39,9 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('mapToSmallGroup() smallGroup', () => {
-    it('should return smallGroup object mapped from model', () => {
+  // describe('mapToSmallGroup() smallGroup', () => {
+  //   it('should return smallGroup object mapped from model', () => {
         
-    });
-  });
+  //   });
+  // });
 });

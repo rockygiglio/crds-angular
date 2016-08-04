@@ -1,5 +1,5 @@
 import constants from 'crds-constants';
-import CreateGroupPreviewController from '../../../../app/group_tool/create_group/preview/createGroup.preview.controller'
+import CreateGroupPreviewController from '../../../../app/group_tool/create_group/preview/createGroup.preview.controller';
 describe('CreateGroupPreviewController', () => {
   let fixture,
     groupService,

@@ -791,6 +791,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
         {
+            var timeOfMeeting = !string.IsNullOrEmpty(record.ToString("Meeting_Time")) ? DateTime.Parse(record.ToString("Meeting_Time")).ToShortTimeString(): string.Empty;
             return new MpGroup
             {
                 GroupId = record.ToInt("Group_ID"),
@@ -808,7 +809,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
                 MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : (record.ContainsKey("Meeting_Day_ID_Text") ? record.ToString("Meeting_Day_ID_Text") : string.Empty)),
-                MeetingTime = record.ToString("Meeting_Time"),
+                MeetingTime = timeOfMeeting,
                 MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty)),
                 AvailableOnline = record.ToBool("Available_Online"),
                 MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
