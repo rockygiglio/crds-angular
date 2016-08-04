@@ -1,9 +1,8 @@
 
 export default class CreateGroupPreviewController {
   /*@ngInject*/
-  constructor(GroupService, CreateGroupService, Group, ImageService, $state, $log, $rootScope) {
+  constructor(GroupService, CreateGroupService, ImageService, $state, $log, $rootScope) {
     this.groupService = GroupService;
-    this.group = Group;
     this.createGroupService = CreateGroupService;
     this.imageService = ImageService;
     this.state = $state;
@@ -13,11 +12,14 @@ export default class CreateGroupPreviewController {
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+    this.edit = false;
+    this.saving = false;
   }
 
   $onInit() {
-    this.groupData = this.createGroupService.mapSmallGroup();
-    this.groupId = '';
+    this.groupData = this.createGroupService.mapToSmallGroup();
+
+    this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
   }
 
   save() {
@@ -26,30 +28,11 @@ export default class CreateGroupPreviewController {
     try {
       var promise = this.groupService.saveCreateGroupForm(this.groupData)
         .then( (data) => {
+          this.saving = false;
+          this.successfulSave = true;
+          this.createGroupService.resolved = false;
           this.state.go('grouptool.mygroups')
-          CreateGroupService.resolved = false;
         })
-
-      // promise.then(function () {
-      //   this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-      //   this.saving = false;
-      //   this.successfulSave = true;
-      //   $anchorScroll();
-      // },
-      //   function (data) {
-      //     if (data && data.contentBlockMessage) {
-      //       this.state.go('grouptool.mygroups');
-      //       this.rootScope.$emit('notify', data.contentBlockMessage);
-      //     } else {
-      //       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      //     }
-      //     this.saving = false;
-      //     this.successfulSave = false;
-      //   }
-      // );
-
-     
-
     }
     catch (error) {
       this.saving = false;
@@ -58,4 +41,29 @@ export default class CreateGroupPreviewController {
     }
 
   }
+
+  saveEdits() {
+    this.saving = true;
+    this.successfulSave = false;
+    try {
+      var promise = this.groupService.saveEditGroupForm(this.groupData)
+        .then( (data) => {
+          this.saving = false;
+          this.successfulSave = true;
+          this.createGroupService.resolved = false;
+          this.state.go('grouptool.mygroups')
+        })
+    }
+    catch (error) {
+      this.saving = false;
+      this.successfulSave = false;
+      throw (error);
+    }
+
+  }
+
+  submit() {
+    this.edit ? this.saveEdits() : this.save();
+  }
+
 }
