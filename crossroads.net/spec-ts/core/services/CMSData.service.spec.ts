@@ -42,21 +42,21 @@ describe('Service: CMSData', () => {
     ];
   });
   
-  it('should use an HTTP call to obtain current series',
+  it('should use an HTTP call to obtain the current series',
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
-          let todaysDate = new Date().toISOString().slice(0, 10);
-
+          let todaysDate = new Date().toISOString().slice(0, 10)
+          
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=14`);
+            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit%5B%5D=1`);
         });
 
         service.getCurrentSeries();
       })));
-
+  
   it('should use an HTTP call to obtain the nearest series',
     inject(
       [CMSDataService, MockBackend],
@@ -66,7 +66,7 @@ describe('Service: CMSData', () => {
           
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit[]=1`);
+            `https://contentint.crossroads.net/api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit%5B%5D=1`);
         });
 
         service.getNearestSeries();
@@ -109,7 +109,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/messages?title=Hello%20World`);
+            `https://contentint.crossroads.net/api/series?title=Hello%20World`);
         });
 
         service.getSeries('title=Hello World');
