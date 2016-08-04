@@ -9,7 +9,7 @@ export default class Address {
     if(this.zip === null) {
       return 'Online';
     }
-    else if(this.addressLine2 === null) {
+    else if(this.addressLine2 === null || this.addressLine2 === '' || this.addressLine2 === 'undefined') {
       return `${this.addressLine1}, ${this.city} ${this.state}, ${this.zip}`;
     }
 

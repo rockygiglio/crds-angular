@@ -45,6 +45,8 @@ namespace crds_angular.Services.Interfaces
 
         List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
 
+        GroupDTO UpdateGroup(GroupDTO @group);
+
         void EndDateGroup(int groupId);
     }
 }

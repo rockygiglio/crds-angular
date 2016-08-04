@@ -8,4 +8,8 @@ export default class GroupCardController {
   goToInvite() {
     this.state.go('grouptool.detail.requests', {groupId: this.group.groupId});
   }
+
+  goToEdit() {
+    this.state.go('grouptool.edit', {groupId: this.group.groupId});
+  }
 }

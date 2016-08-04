@@ -19,6 +19,7 @@ export default class CreateGroupService {
         this.model = {};
         this.resolved = false;
         this.imageService = ImageService;
+        this.primaryContact = null;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -29,35 +30,64 @@ export default class CreateGroupService {
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
         //this.countryLookup is added by the route resolve of the createGroupController.
+        //this.originalAttributeTypes is added by setEditModel and used in mapToSmallGroup
+        //this.originalSingleAttributes is added by setEditModel and used in mapToSmallGroup
     }
 
-    preloadModel() {
-        if (!this.resolved) {
-            this.model.profile.oldEmail = this.model.profile.emailAddress;
+    setEditModel(groupData, profileData){
+        //this.log.debug("GroupDataFromServer:");
+        this.log.debug(groupData);
+        if (!this.resolved){
+            this.originalAttributeTypes = groupData.attributeTypes;
+            this.originalSingleAttributes = groupData.singleAttributes;
+            this.primaryContact = groupData.contactId;
+            this.preloadModel(profileData);
+            this.mapFromSmallGroup(groupData);
+            this.resolved = true;
+        }
+    }
+
+    setCreateModel(profileData) {
+        if (!this.resolved){
+            this.preloadModel(profileData);
             delete this.model.profile.householdMembers;
             delete this.model.profile.congregationId;
+            this.resolved = true;
+        }
+    }
+
+    preloadModel(profile) {
+        this.model.profile = profile;
+        this.model.profile.oldEmail = profile.emailAddress;
+        if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
                 meeting: {
                     time: "1983-07-16T21:00:00.000Z"
                 }
             };
-            this.model.specificDay = true;
-            this.resolved = true;
         }
+        else {
+            this.model.group.meeting = {
+                time: "1983-07-16T21:00:00.000Z"
+            };
+        }
+
+        this.model.specificDay = true;
     }
 
     getFields() {
-        this.preloadModel();
+        //this.log.debug(this.model);
         var profileAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us about yourself.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupProfile.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupProfileHelp.content | html'
             },
             fieldGroup: [{
                 key: 'profile.congregationId',
                 type: 'formlyBuilderSelect',
                 templateOptions: {
-                    label: 'At what site do you regularly attend service?',
+                    label: 'What site do you regularly attend service?',
                     required: true,
                     valueProp: 'dp_RecordID',
                     labelProp: 'dp_RecordName',
@@ -110,7 +140,8 @@ export default class CreateGroupService {
         var profileAddressFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What’s your address?'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAddress.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAddressHelp.content | html'
             },
             fieldGroup: [{
                 key: 'profile.addressLine1',
@@ -158,8 +189,8 @@ export default class CreateGroupService {
         var groupMeetingDateTimeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'When will your group meet?',
-                sectionHelp: 'To get the most out of your group, you’ll want to meet on a regular basis. We recommend weekly, but we want you to choose what’s best for your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupMeetingTime.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupMeetingTimeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'specificDay',
@@ -172,7 +203,7 @@ export default class CreateGroupService {
                         label: 'Specific Day and Time',
                         value: true
                     }, {
-                            label: 'Flexible Meeting Times/Not Sure Yet',
+                            label: 'Flexible Meeting Time/Not Sure Yet',
                             value: false
                         }]
                 }
@@ -225,8 +256,8 @@ export default class CreateGroupService {
         var groupMeetingLocationFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us about your meeting place.',
-                sectionHelp: 'We’re not asking for the blueprint of your home, just a few details about where you’ll meet, if you have pets and if your group is kid-friendly.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupMeetingLocation.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupMeetingLocationHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.meeting.online',
@@ -238,7 +269,7 @@ export default class CreateGroupService {
                     valueProp: 'online',
                     inline: false,
                     options: [{
-                        label: 'Location',
+                        label: 'In person',
                         online: false
                     }, {
                             label: 'Online',
@@ -299,12 +330,12 @@ export default class CreateGroupService {
                     hideExpression: 'model.group.meeting.online',
                     templateOptions: {
                         required: true,
-                        label: 'Will your group have childcare?',
+                        label: 'Are kids welcome at the group?',
                         labelProp: 'label',
                         valueProp: 'kidFriendly',
                         inline: false,
                         options: [{
-                            label: 'Yep. Kids are welcome and as a group we’ll make plans.',
+                            label: 'Yep. Kids are welcome.  As a group, we’ll decide what to do with them.',
                             kidFriendly: true
                         }, {
                                 label: 'No. Adults only please.',
@@ -319,7 +350,8 @@ export default class CreateGroupService {
         var groupStartFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us the start date of your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupStartDate.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupStartDateHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.startDate',
@@ -335,8 +367,8 @@ export default class CreateGroupService {
         var groupTypeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: 'We’re not trying to recreate a scene from your school lunchroom. Some groups like to roll with just guys or strictly married couples.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupType.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupTypeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.typeId',
@@ -351,7 +383,7 @@ export default class CreateGroupService {
                     $scope.to.loading = GroupService.getGroupGenderMixType().then(function (response) {
                         $scope.to.options = response.attributes;
                         CreateGroupService.typeIdLookup = response.attributes;
-                        $log.debug(CreateGroupService.model)
+                        //$log.debug(CreateGroupService.model)
                         return response;
                     });
                 }
@@ -360,8 +392,8 @@ export default class CreateGroupService {
         var groupAgeFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What age range is your group going to be?',
-                sectionHelp: 'Select as many as you like. If you want to lead middle and high school students, you must be approved by Student Ministry and complete a background check.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAge.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAgeHelp.content | html'
             },
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
@@ -386,14 +418,16 @@ export default class CreateGroupService {
         var groupAboutFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Tell us what your group is all about.',
-                sectionHelp: 'Now’s the time to add some personality, and tell us all about your group. Keep in mind, this is the description people will see when they search for groups to join.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupAbout.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupAboutHelp.content | html',
+                groupExample: '$root.MESSAGES.groupToolCreateGroupAboutExample.content | html'
             },
             fieldGroup: [{
                 key: 'group.groupName',
                 type: 'formlyBuilderInput',
                 templateOptions: {
                     label: 'Group Name',
+                    placeholder:'Ex. Brewing Brothers' ,
                     required: true,
                     maxlength: 75
                 }
@@ -403,6 +437,7 @@ export default class CreateGroupService {
                     templateOptions: {
                         label: 'Group Description',
                         required: true,
+                        placeholder: 'Ex:This group is for men in their 30s who like to brew their own beer. We’ll meet regularly to come up with a new beer and brew it together, and share some beers while we build friendships. We’ll meet in Pleasant Ridge weekly in my home.',
                         rows: 6,
                         maxlength: 2000
                     }
@@ -411,8 +446,8 @@ export default class CreateGroupService {
         var groupVisibilityFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'Set your group to public or private.',
-                sectionHelp: 'Choose whether your group will be viewable to everyone or only the people in your group.'
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupVisibility.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupVisibilityHelp.content | html'
             },
             fieldGroup: [{
                 key: 'group.availableOnline',
@@ -423,10 +458,10 @@ export default class CreateGroupService {
                     required: true,
                     options: [{
                         accessId: true,
-                        accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
+                        accessLabel: 'Public (Your group will be viewable in search results for everyone to see.)'
                     }, {
                             accessId: false,
-                            accessLabel: 'Private (Your group will NOT be viewable in search results for everyone.)'
+                            accessLabel: 'Private (Your group will NOT be publically viewable in search results.)'
                         }]
                 }
             }]
@@ -435,8 +470,8 @@ export default class CreateGroupService {
         var groupCategoryFields = {
             wrapper: 'createGroup',
             templateOptions: {
-                sectionLabel: 'What kind of group would you like to lead?',
-                sectionHelp: ''
+                sectionLabel: '$root.MESSAGES.groupToolCreateGroupCategory.content | html',
+                sectionHelp: '$root.MESSAGES.groupToolCreateGroupCategoryHelp.content | html'
             },
             fieldGroup: [{
                 key: 'categories',
@@ -448,60 +483,134 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
-                    options: [{
-                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                        label: 'Life Stage',
-                        labelDesc: 'For people in a similar life stage like empty nesters, singles, foster parents, moms, young married couples, etc.',
-                        placeholder: 'Life Stages detail...'
-                    }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-                            label: 'Neighborhoods',
-                            labelDesc: 'Your group is primarily focused on building community with the people who live closest together in your town, zip code or on your street.',
-                            placeholder: 'Neighborhood detail...'
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                            label: 'Spirtual Growth',
-                            labelDesc: 'Grow together through Huddle, reading a book or studying the Bible and applying what you learn to your everyday life.',
-                            placeholder: 'Spritual Growth detail...'
-                        }, {
+                    options: [
+                        {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
-                            labelDesc: 'For people who share a common activity. From cooking to karate, motorcycles to frisbee golf, veterans or entrepreneurs, whatever your interest, we bet there’s a group looking for it.',
-                            placeholder: 'Interest detail...'
-                        }, {
+                            labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
+                            placeholder: 'Ex. Boxing, XBox'
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+                            label: 'Neighborhoods',
+                            labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
+                            placeholder: 'Ex. Norwood, Gaslight'
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+                            label: 'Spirtual Growth',
+                            labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
+                            placeholder: 'Ex. Huddle, James'
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                            label: 'Life Stage',
+                            labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
+                            placeholder: 'Ex. new family, young married, college, empty nesters'
+                        },{
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
-                            labelDesc: 'For people looking for healing and recovery in an area of life like grief, infertility, addiction, divorce, crisis, etc.',
-                            placeholder: 'Healing detail...'
+                            labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
+                            placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
                         }],
                 }
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupTypeFields,
-            groupAgeFields, groupStartFields, groupMeetingDateTimeFields,
-            groupMeetingLocationFields, groupCategoryFields, groupAboutFields, groupVisibilityFields];
+        return [profileAboutFields, profileAddressFields, groupTypeFields, groupAgeFields,
+            groupStartFields, groupMeetingDateTimeFields, groupMeetingLocationFields, 
+            groupCategoryFields, groupAboutFields, groupVisibilityFields];
+    }
+    
+    //this badly needs to be unit tested
+    mapFromSmallGroup(groupData){
+        this.model.group.meeting.frequency = groupData.meetingFrequencyID;
+        this.model.group.groupName = groupData.groupName;
+        this.model.group.groupDescription = groupData.groupDescription;
+        if (groupData.address != null && groupData.address != undefined){
+            this.model.group.meeting.address = {
+                street: groupData.address.addressLine1,
+                city: groupData.address.city,
+                state: groupData.address.state,
+                zip: groupData.address.zip,
+                addressId: groupData.address.addressId 
+            }
+            this.model.group.meeting.online = false;
+        } else {
+            this.model.group.meeting.online = true;
+        }
+        this.model.group.kidFriendly = groupData.kidsWelcome;
+        this.model.group.availableOnline = groupData.availableOnline;
+        this.model.group.startDate = moment(new Date(groupData.startDate)).toDate();
+        this.model.group.meeting.time = moment(new Date('1983-07-16 ' + groupData.meetingTime)).toDate();
+        this.model.group.meeting.day = groupData.meetingDayId;
+        groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+        this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+        var ageRangeIds = [];
+        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+            if (value.selected)
+                ageRangeIds.push(value.attributeId)
+        });
+        var categories = [];
+        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+            if (value.selected)
+                categories.push({
+                    value: this.getIdFromCategory(value.category),
+                    detail: value.name
+                })
+        });
+        this.model.groupAgeRangeIds = ageRangeIds;
+        this.model.categories = categories;
+        this.model.groupId = groupData.groupId;
     }
 
-    getMeetingLocation() {
-        let meetingDay = 'Flexible Meeting Time';
-        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
-        if (this.model.group.meeting.day != 'undefined' && this.model.group.meeting.day != null) {
-            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
-            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+    //this also needs unit tests
+    mapToSmallGroup() {
+    //group setup
+        let smallGroup = new SmallGroup();
+        //on an edit, we shouldn't change the contactId of a group because then if a co-leader edits the 
+        //group they will be the new primary contact, and we don't want that.
+        if (this.primaryContact != null || this.primaryContact != undefined){
+            smallGroup.contactId = this.primaryContact;
+        } else {
+            smallGroup.contactId = this.model.profile.contactId;
         }
-        else {
-            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
-        }
-    }
+        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        smallGroup.groupId = this.model.groupId;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+            , contactId: parseInt(this.session.exists('userId'))
+        })];
+        
+    //profile
+        smallGroup.primaryContact = {
+          imageUrl: `${this.imageService.ProfileImageBaseURL}${this.model.profile.contactId}`,
+          contactId: this.model.profile.contactId
+        };
+        smallGroup.congregationId = this.model.profile.congregationId;
+        smallGroup.profile = new Profile(this.model.profile);
 
-
-    //This is ugly and needs to be refactored
-    mapSmallGroup() {
+    //groupType
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId == this.model.group.typeId
         });
 
+        smallGroup.groupType = new GroupType({ name: groupType.name });
+        
+        //add the single attributes this group came in with to the small group model
+        smallGroup.singleAttributes = {};
+        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined){
+            smallGroup.singleAttributes = this.originalSingleAttributes;
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId = this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name);
+        } else {
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
+                "attribute": {
+                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
+                }
+            }
+        }
+
+    //groupAge
         let ageRangeNames = [];
         _.forEach(this.model.groupAgeRangeIds, (selectedRange) => {
             ageRangeNames.push(new AgeRange({
@@ -511,96 +620,91 @@ export default class CreateGroupService {
             })
             )
         });
-
-        var primaryContactId = this.model.profile.contactId;
-
-        let smallGroup = new SmallGroup();
-
-        smallGroup.primaryContact = {
-            imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-            contactId: primaryContactId
-        };
-
-        smallGroup.groupName = this.model.group.groupName;
-        smallGroup.groupDescription = this.model.group.groupDescription;
-        smallGroup.groupType = new GroupType({ name: groupType.name });
-        smallGroup.contactId = this.model.profile.contactId;
-        if (this.model.groupAgeRangeIds !== undefined && this.model.groupAgeRangeIds !== null) {
+        if (this.model.groupAgeRangeIds != undefined && this.model.groupAgeRangeIds != null) {
             smallGroup.ageRange = ageRangeNames;
         }
-        smallGroup.address = new Address();
-        if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
-            smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-            smallGroup.address.addressLine2 = '';
-            smallGroup.address.state = this.model.group.meeting.address.state;
-            smallGroup.address.zip = this.model.group.meeting.address.zip;
-        }
-        else {
-            smallGroup.address.zip = null;
-        }
-        smallGroup.kidsWelcome = this.model.group.kidFriendly;
-        smallGroup.meetingTimeFrequency = this.getMeetingLocation();
 
-        smallGroup.meetingDayId = this.model.group.meeting.day;
-        if (smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined) {
-            delete smallGroup.meetingTime;
-        }
-        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+        smallGroup.attributeTypes = {};
+        if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
+            // set the original attribute types on to the small group
+            smallGroup.attributeTypes = this.originalAttributeTypes;
+            // set selected age ranges to true, all others to false
+            _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (ageRange) => {
+                if (_.includes(this.model.groupAgeRangeIds, ageRange.attributeId, 0)) {
+                    ageRange.selected = true;
+                } else {
+                    ageRange.selected = false;
+                }
+            });
+        } else {
+            var ids = [];
+            _.forEach(this.model.groupAgeRangeIds, (id) => {
+                ids.push(
+                    {
+                        "attributeId": id,
+                        "name": "",
+                        "description": null,
+                        "selected": true,
+                        "startDate": "0001-01-01T00:00:00",
+                        "endDate": null,
+                        "notes": null,
+                        "sortOrder": 0,
+                        "category": null,
+                        "categoryDescription": null
+                    })
+            });
 
-        if (this.model.specificDay) {
-            smallGroup.meetingDayId = this.model.group.meeting.day;
-            smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-        }
-        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
-        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
-        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-        smallGroup.congregationId = this.model.profile.congregationId;
-        smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
-        smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.participants = [new Participant({
-            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            , nickName: this.model.profile.nickName
-            , lastName: this.model.profile.lastName
-            , contactId: parseInt(this.session.exists('userId'))
-        }
-        )];
-
-        smallGroup.profile = new Profile(this.model.profile);
-
-        smallGroup.singleAttributes = {
-            "73": {
-                "attribute": {
-                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
-                },
-            }
-        }
-
-        var ids = [];
-        _.forEach(this.model.groupAgeRangeIds, (id) => {
-            ids.push(
-                {
-                    "attributeId": id,
-                    "name": id.ageRange,
-                    "description": id.description,
-                    "selected": true,
-                    "startDate": id.start,
-                    "endDate": null,
-                    "notes": null,
-                    "sortOrder": 0,
-                    "category": null,
-                    "categoryDescription": null
-                })
-        });
-
-        var ageRangeJson = {
-            '91': {
-                "attributeTypeId": 91,
+            var ageRangeJson = {};
+            ageRangeJson[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID] = {
+                "attributeTypeId": CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID,
                 "name": "Age Range",
                 "attributes": ids
             }
+            smallGroup.attributeTypes = ageRangeJson;
         }
 
+    //groupStartDate
+        smallGroup.startDate = this.model.group.startDate;
+
+    //groupMeetingTime
+        
+        smallGroup.meetingFrequency = this.model.group.meeting.frequency;
+        if (this.model.specificDay) {
+            smallGroup.meetingDayId = this.model.group.meeting.day;
+            smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
+            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        } else {
+            smallGroup.meetingDayId = null;
+            smallGroup.meetingTime = null;
+            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+        }
+        
+        
+    //groupMeetingPlace
+        if (!this.model.group.meeting.online){
+            smallGroup.address = new Address();
+            smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
+            smallGroup.address.addressLine2 = '';
+            smallGroup.address.city = this.model.group.meeting.address.city;
+            smallGroup.address.state = this.model.group.meeting.address.state;
+            smallGroup.address.zip = this.model.group.meeting.address.zip;
+            smallGroup.kidsWelcome = this.model.group.kidFriendly;
+        } else {
+            smallGroup.address = null;
+            smallGroup.kidsWelcome = false;
+        }
+            
+            smallGroup.meetingTimeFrequency = this.getMeetingLocation();
+    //groupCategory
         var ids = []
+
+        //set every category that the group came in with to selected = false if this is a load and 
+        //let the database worry about whether or not what we've added is new.
+        if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
+            _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (attribute) => {
+                attribute.selected = false;
+            });
+        }
 
         _.forEach(this.model.categories, (category) => {
             ids.push(
@@ -621,17 +725,21 @@ export default class CreateGroupService {
                 }
             )
         });
-        var categoriesJson = {
-            '90': {
-                "attributeTypeid": 90,
-                "name": "Group Category",
-                "attributes": ids
-            }
-        }
-        debugger;
+        var categoriesJson = {};
+        categoriesJson[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID]= {
+            "attributeTypeid": CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID,
+            "name": "Group Category",
+            "attributes": ids
+        };
         smallGroup.mapCategories(categoriesJson);
+        //double check this stuff after the merge
+        smallGroup.attributeTypes = $.extend({}, smallGroup.attributeTypes, categoriesJson);
+    //groupAbout
+        smallGroup.groupName = this.model.group.groupName;
+        smallGroup.groupDescription = this.model.group.groupDescription;
 
-        smallGroup.attributeTypes = $.extend({}, ageRangeJson, categoriesJson);
+    //groupVisibilityFields
+        smallGroup.availableOnline = this.model.group.availableOnline;  
         return smallGroup;
 
     }
@@ -667,6 +775,28 @@ export default class CreateGroupService {
         return returnString;
     }
 
+    getIdFromCategory(category) {
+        var categoryId = null;
+        switch (category) {
+            case "Life Stage":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES;
+                break;
+            case "Neighborhoods":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS;
+                break;
+            case "Spiritual Growth":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH;
+                break;
+            case "Interest":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST;
+                break;
+            case "Healing":
+                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING;
+                break;
+        }
+        return categoryId;
+    }
+
     getGroupTypeAttributeIdFromName(name) {
         var groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
         switch (name) {
@@ -686,5 +816,17 @@ export default class CreateGroupService {
                 groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
         }
         return groupTypeId;
+    }
+
+    getMeetingLocation() {
+        let meetingDay = 'Flexible Meeting Time';
+        let meetingFreq = _.find(this.meetingFrequencyLookup, (freq) => { return freq.meetingFrequencyId == this.model.group.meeting.frequency });
+        if (this.model.specificDay) {
+            meetingDay = _.find(this.meetingDaysLookup, (day) => { return day.dp_RecordID == this.model.group.meeting.day });
+            return meetingDay.dp_RecordName + '\'s at ' + moment(this.model.group.meeting.time).format('LT') + ', ' + meetingFreq.meetingFrequencyDesc;
+        }
+        else {
+            return meetingDay + ", " + meetingFreq.meetingFrequencyDesc;
+        }
     }
 }

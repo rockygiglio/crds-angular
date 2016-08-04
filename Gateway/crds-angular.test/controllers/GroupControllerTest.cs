@@ -553,5 +553,43 @@ namespace crds_angular.test.controllers
             Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupParticipantDTO>>), result);
             Assert.AreEqual(0, participant.Count);
         }
+
+        [Test]
+        public void shouldEditGroupSuccessfully()
+        {
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            var returnGroup = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Returns(returnGroup);
+
+            IHttpActionResult result = _fixture.EditGroup(group);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(CreatedNegotiatedContentResult<GroupDTO>), result);
+        }
+
+        [Test]
+        public void shouldNotEditGroup()
+        {
+            Exception ex = new Exception();
+
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
+
+            IHttpActionResult result = _fixture.EditGroup(group);
+            _groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
     }
 }
