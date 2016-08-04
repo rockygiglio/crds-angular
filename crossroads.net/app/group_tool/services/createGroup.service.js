@@ -203,7 +203,7 @@ export default class CreateGroupService {
                         label: 'Specific Day and Time',
                         value: true
                     }, {
-                            label: 'Flexible Meeting Times/Not Sure Yet',
+                            label: 'Flexible Meeting Time/Not Sure Yet',
                             value: false
                         }]
                 }
@@ -427,6 +427,7 @@ export default class CreateGroupService {
                 type: 'formlyBuilderInput',
                 templateOptions: {
                     label: 'Group Name',
+                    placeholder:'Ex. Brewing Brothers' ,
                     required: true,
                     maxlength: 75
                 }
@@ -436,6 +437,7 @@ export default class CreateGroupService {
                     templateOptions: {
                         label: 'Group Description',
                         required: true,
+                        placeholder: 'Ex:This group is for men in their 30s who like to brew their own beer. We’ll meet regularly to come up with a new beer and brew it together, and share some beers while we build friendships. We’ll meet in Pleasant Ridge weekly in my home.',
                         rows: 6,
                         maxlength: 2000
                     }
@@ -456,10 +458,10 @@ export default class CreateGroupService {
                     required: true,
                     options: [{
                         accessId: true,
-                        accessLabel: 'Public (Your group will be viewable in search results for everyone.)'
+                        accessLabel: 'Public (Your group will be viewable in search results for everyone to see.)'
                     }, {
                             accessId: false,
-                            accessLabel: 'Private (Your group will NOT be viewable in search results.)'
+                            accessLabel: 'Private (Your group will NOT be publically viewable in search results.)'
                         }]
                 }
             }]
@@ -481,27 +483,28 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
-                    options: [{
-                        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                        label: 'Life Stage',
-                        labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
-                        placeholder: 'Ex. new family, young married, college, empty nesters'
-                    }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-                            label: 'Neighborhoods',
-                            labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
-                            placeholder: 'Ex. Norwood, Gaslight'
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                            label: 'Spirtual Growth',
-                            labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
-                            placeholder: 'Ex. Huddle, James'
-                        }, {
+                    options: [
+                        {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
                             labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
                             placeholder: 'Ex. Boxing, XBox'
-                        }, {
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+                            label: 'Neighborhoods',
+                            labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
+                            placeholder: 'Ex. Norwood, Gaslight'
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+                            label: 'Spirtual Growth',
+                            labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
+                            placeholder: 'Ex. Huddle, James'
+                        },{
+                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+                            label: 'Life Stage',
+                            labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
+                            placeholder: 'Ex. new family, young married, college, empty nesters'
+                        },{
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
                             labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
@@ -511,8 +514,8 @@ export default class CreateGroupService {
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields,
-            groupMeetingLocationFields, groupStartFields, groupTypeFields, groupAgeFields, 
+        return [profileAboutFields, profileAddressFields, groupTypeFields, groupAgeFields,
+            groupStartFields, groupMeetingDateTimeFields, groupMeetingLocationFields, 
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
