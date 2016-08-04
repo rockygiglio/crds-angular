@@ -49,14 +49,17 @@ namespace crds_angular.Controllers.API
             _mpPledgeService = mpPledgeService;
         }
 
+        //  GetDonations
         /// <summary>
-        /// Retrieve list of donations for the logged-in donor, optionally for the specified year, and optionally returns only soft credit donations (by default returns only direct gifts).
+        /// Gets the donations of a donor.
         /// </summary>
-        /// <param name="softCredit">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
-        /// <param name="donationYear">A year filter (YYYY format) for donations returned - defaults to null, meaning return all available donations regardless of year.</param>
-        /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
-        /// <param name="limit">A limit of donations to return starting at the most resent - defaults to null, meaning return all available donations with no limit.</param>
-        /// <returns>A list of DonationDTOs</returns>
+        /// <returns>A list of donations including only direct gifts, or only soft credit donations, or both by default.</returns>
+        //
+        /// <param name="donationYear">optional: the year of donations to return: YYYY - only the specified year, null - all years.</param>
+        /// <param name="impersonateDonorId">optional: the donor to impersonate: id - the targeted donor, null - the logged-in donor</param>
+        /// <param name="limit">optional: the number of donations to return: integer - the n most resent donations, null - all donations.</param>
+        /// <param name="softCredit">optional: the type of returned content: true - only soft-credits, false - only direct gifts, null - both.</param>
+        //
         [Route("api/donations/{donationYear:regex(\\d{4})?}")]
         [HttpGet]
         public IHttpActionResult GetDonations(string donationYear = null,
@@ -89,11 +92,14 @@ namespace crds_angular.Controllers.API
             }));
         }
 
+        //  GetDonationYears
         /// <summary>
-        /// Retrieve a list of donation years for the logged-in donor.  This includes any year the donor has given either directly, or via soft-credit.
+        /// Gets the donation years of a donor, which includes any year the donor has given direct gifts, or soft-credits.
         /// </summary>
-        /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
-        /// <returns>A list of years (string)</returns>
+        /// <returns>A list of years (YYYY strings)</returns>
+        //
+        /// <param name="impersonateDonorId">optional: the donor to impersonate: id - the targeted donor, null - the logged-in donor</param>
+        //
         [Route("api/donations/years")]
         [HttpGet]
         public IHttpActionResult GetDonationYears([FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
