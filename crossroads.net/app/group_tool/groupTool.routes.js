@@ -36,7 +36,8 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         profile: (CreateGroupService, GroupService) => {
           if(!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((data) => {
-              CreateGroupService.model.profile = data;
+              //CreateGroupService.model.profile = data;
+              CreateGroupService.setCreateModel(data);
             })
           }
         },
@@ -62,6 +63,56 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         isProtected: true,
         meta: {
           title: 'Preview a Group',
+          description: ''
+        },
+        isCreate: true
+      }
+    })
+    .state('grouptool.edit.preview', {
+      url: '/groups/edit/preview',
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Preview a Group',
+          description: ''
+        },
+        isCreate: false
+      }
+    })
+    .state('grouptool.edit', {
+      parent: 'noSideBar',
+      url: '/groups/edit/{groupId:int}',
+      template: '<edit-group> </edit-group>',
+      resolve:{
+        // we are not using any of these resolves in the controller.
+        // we are using these resolves to prepare the CreateGroupService
+        // before the controller is initialized
+        stateList: (CreateGroupService, GroupService) =>{
+          return GroupService.getStates().then((data) => {
+            CreateGroupService.statesLookup = data;
+          })
+        },
+        profile: ($stateParams, CreateGroupService, GroupService) => {
+          if(!CreateGroupService.resolved) {
+            return GroupService.getProfileData().then((profile) => {
+              return GroupService.getGroupData($stateParams.groupId).then((group) => {
+                CreateGroupService.setEditModel(group, profile);
+              })
+            })
+          }
+        },
+        countryList: (CreateGroupService, Lookup) => {
+          return Lookup.query({table: 'countries'}, (data) => {
+            CreateGroupService.countryLookup = data;
+          })
+        },
+      },
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Edit Your Group',
           description: ''
         }
       }

@@ -44,13 +44,33 @@ describe('CreateGroupPreviewController', () => {
       });
 
       spyOn(state, 'go').and.callFake(function() {});
-      spyOn(createGroupService, 'mapSmallGroup').and.callFake(function() {
+      spyOn(createGroupService, 'mapToSmallGroup').and.callFake(function() {
         return {};
       });
 
       fixture.$onInit();
       fixture.save();
       expect(fixture.groupService.saveCreateGroupForm).toHaveBeenCalledWith(fixture.groupData);
+    })
+  });
+
+  describe('saveEdits', () => {
+    it('should call save for edits', () => {
+      let deferred = api.defer();
+      deferred.resolve({});
+
+      spyOn(groupService, 'saveEditGroupForm').and.callFake( function() {
+        return deferred.promise;
+      });
+
+      spyOn(state, 'go').and.callFake(function() {});
+      spyOn(createGroupService, 'mapToSmallGroup').and.callFake(function() {
+        return {};
+      });
+
+      fixture.$onInit();
+      fixture.saveEdits();
+      expect(fixture.groupService.saveEditGroupForm).toHaveBeenCalledWith(fixture.groupData);
     })
   });
 });

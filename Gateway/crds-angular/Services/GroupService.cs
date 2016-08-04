@@ -386,6 +386,13 @@ namespace crds_angular.Services
                 detail.ChildCareAvailable = g.ChildCareAvailable;
                 detail.WaitListGroupId = g.WaitListGroupId;
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
+                detail.MeetingFrequencyID = g.MeetingFrequencyID;
+                detail.AvailableOnline = g.AvailableOnline;
+                detail.MeetingTime = g.MeetingTime;
+                detail.MeetingDayId = g.MeetingDayId;
+                detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
+                detail.StartDate = g.StartDate;
+
                 if (events != null)
                 {
                     detail.Events = events.Select(Mapper.Map<MpEvent, Event>).ToList();
@@ -589,10 +596,10 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeRepository.GetAttributes(90);
+
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }
@@ -636,6 +643,52 @@ namespace crds_angular.Services
             //}
 
             return groupDetail;
+        }
+
+        public GroupDTO UpdateGroup(GroupDTO group)
+        {
+            try
+            {
+                var mpGroup = Mapper.Map<MpGroup>(group);
+                _mpGroupService.UpdateGroup(mpGroup);
+
+                List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
+                if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
+                {
+                    UpdateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
+                }
+
+                if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
+                {
+                    var categoryAttributes = Mapper.Map<List<MpAttribute>>(group.AttributeTypes[90].Attributes);
+
+                    categoryAttributes = _attributeService.CreateMissingAttributes(categoryAttributes, _groupCategoryAttributeTypeId);
+                    group.AttributeTypes[_groupCategoryAttributeTypeId].Attributes = Mapper.Map<List<ObjectAttributeDTO>>(categoryAttributes);
+                }
+
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
+                _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not update group {0}", group.GroupName);
+                _logger.Error(message, e);
+                throw (new ApplicationException(message, e));
+            }
+
+            return group;
+        }
+
+        private void UpdateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        {
+            var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
+
+            foreach (var part in mpParticipants)
+            {
+                part.StartDate = groupStartDate;
+            }
+
+            _mpGroupService.UpdateGroupParticipant(mpParticipants);
         }
 
     }
