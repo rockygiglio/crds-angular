@@ -51,7 +51,7 @@ describe('Service: CMSData', () => {
           
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit%5B%5D=1`);
+            `${__CMS_ENDPOINT__}api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit%5B%5D=1`);
         });
 
         service.getCurrentSeries();
@@ -66,7 +66,7 @@ describe('Service: CMSData', () => {
           
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit%5B%5D=1`);
+            `${__CMS_ENDPOINT__}api/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit%5B%5D=1`);
         });
 
         service.getNearestSeries();
@@ -81,7 +81,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            'https://contentint.crossroads.net/api/messages?date__sort=DESC&__limit%5B%5D=4');
+            `${__CMS_ENDPOINT__}api/messages?date__sort=DESC&__limit%5B%5D=4`);
         });
 
         service.getXMostRecentMessages(4);
@@ -95,7 +95,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/messages?title=Hello%20World`);
+            `${__CMS_ENDPOINT__}api/messages?title=Hello%20World`);
         });
 
         service.getMessages('title=Hello World');
@@ -109,7 +109,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/series?title=Hello%20World`);
+            `${__CMS_ENDPOINT__}api/series?title=Hello%20World`);
         });
 
         service.getSeries('title=Hello World');
@@ -123,7 +123,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/features`);
+            `${__CMS_ENDPOINT__}api/features`);
         });
 
         service.getDigitalProgram();
@@ -137,7 +137,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `https://contentint.crossroads.net/api/contentblock?title=Hello%20World`);
+            `${__CMS_ENDPOINT__}api/contentblock?title=Hello%20World`);
         });
 
         service.getContentBlock('title=Hello World');
