@@ -25,7 +25,6 @@ export default class CreateGroupPreviewController {
   save() {
     this.saving = true;
     this.successfulSave = false;
-    debugger;
     try {
       var promise = this.groupService.saveCreateGroupForm(this.groupData)
         .then( (data) => {
