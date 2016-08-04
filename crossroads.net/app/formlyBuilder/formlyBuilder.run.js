@@ -208,7 +208,6 @@
 
                         $scope.$watch('to.options', function optionsWatcher(newOptionsValues) {
                             if (newOptionsValues && Array.isArray(newOptionsValues) && Array.isArray(modelValue)) {
-                                debugger;
                                 valueProp = to.valueProp || 'value';
                                 for (var index = 0; index < newOptionsValues.length; index++) {
                                     //$scope.multiCheckboxCombo.checked[index] = modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
