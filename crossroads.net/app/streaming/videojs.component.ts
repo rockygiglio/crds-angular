@@ -8,8 +8,7 @@ require('videojs-contrib-hls/dist/videojs-contrib-hls');
 
 @Component({
   selector: 'videojs',
-  templateUrl: './videojs.ng2component.html',
-  providers: [StreamspotService]
+  templateUrl: './videojs.ng2component.html'
 })
 
 export class VideoJSComponent implements AfterViewInit {

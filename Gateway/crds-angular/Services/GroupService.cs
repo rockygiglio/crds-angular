@@ -596,10 +596,10 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
 
             var apiToken = _apiUserService.GetToken();
-            var mpAttributes = _attributeRepository.GetAttributes(90);
+
             foreach (var participant in participants)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration, mpAttributes);
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, participant.GroupParticipantId, configuration);
                 participant.AttributeTypes = attributesTypes.MultiSelect;
                 participant.SingleAttributes = attributesTypes.SingleSelect;
             }
@@ -655,7 +655,7 @@ namespace crds_angular.Services
                 List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
                 if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
                 {
-                    updateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
+                    UpdateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
                 }
 
                 if (group.AttributeTypes.ContainsKey(_groupCategoryAttributeTypeId) && group.AttributeTypes[90].Attributes.Any(a => a.AttributeId == 0))
@@ -679,7 +679,7 @@ namespace crds_angular.Services
             return group;
         }
 
-        private void updateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        private void UpdateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
         {
             var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
 

@@ -14,7 +14,6 @@ var $:any = require('jquery');
 @Component({
   selector: 'streaming',
   directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective],
-  providers: [StreamspotService],
   templateUrl: './streaming.ng2component.html'
 })
 

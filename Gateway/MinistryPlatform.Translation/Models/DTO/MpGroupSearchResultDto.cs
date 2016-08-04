@@ -68,6 +68,14 @@ namespace MinistryPlatform.Translation.Models.DTO
             {
                 Address.Postal_Code = _unmappedData["Postal_Code"].Value<string>();
             }
+            if (_unmappedData.ContainsKey("Longitude"))
+            {
+                Address.Longitude = _unmappedData["Longitude"].Value<double?>();
+            }
+            if (_unmappedData.ContainsKey("Latitude"))
+            {
+                Address.Latitude = _unmappedData["Latitude"].Value<double?>();
+            }
         }
 
         private void MapMultiSelectAttributes()

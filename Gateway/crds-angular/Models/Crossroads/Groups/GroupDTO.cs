@@ -114,6 +114,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "kidsWelcome")]
         public bool? KidsWelcome { get; set; }
 
+        [JsonProperty(PropertyName = "proximity")]
+        public decimal? Proximity { get; set; }
+
         public GroupDTO()
         {
             AttributeTypes = new Dictionary<int, ObjectAttributeTypeDTO>();
