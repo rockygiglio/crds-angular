@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
@@ -9,16 +10,16 @@ namespace crds_angular.Services
 {
     public class AttributeService : IAttributeService
     {
-        private readonly MPInterfaces.IAttributeRepository _attributeService;
+        private readonly MPInterfaces.IAttributeRepository _attributeRepository;
 
-        public AttributeService(MPInterfaces.IAttributeRepository attributeService)
+        public AttributeService(MPInterfaces.IAttributeRepository attributeRepository)
         {
-            _attributeService = attributeService;
+            _attributeRepository = attributeRepository;
         }
 
         public List<AttributeTypeDTO> GetAttributeTypes(int? attributeTypeId)
         {
-            var attributes = _attributeService.GetAttributes(attributeTypeId);
+            var attributes = _attributeRepository.GetAttributes(attributeTypeId);
 
             var attributeTypes = new Dictionary<int, AttributeTypeDTO>();
 
@@ -65,6 +66,42 @@ namespace crds_angular.Services
                 attributeTypes[key] = attributeTypeDto;
             }
             return key;
+        }
+
+        public List<MpAttribute> CreateMissingAttributes(List<MpAttribute> attributes, int attributeType)
+        {
+            var attributeCategories = attributes.Select(attribute => attribute.CategoryId).Distinct().ToList();
+
+            List<string> foundNames = new List<string>();
+
+
+            foreach (var category in attributeCategories)
+            {
+                var filter = "," + String.Join(" OR ",
+                                               attributes
+                                                   .Where(attCategory => attCategory.CategoryId == category)
+                                                   .Select(attribute => attribute.Name.ToLower()).ToList()) + ",," + attributeType + ",,," + category;
+                //TODO: I think we can just set the attribute ID here if we find it.
+                foundNames.AddRange(_attributeRepository.GetAttributesByFilter(filter)
+                                        .Select(records => records.Name.ToLower()).ToList());
+            }
+
+            foreach (var attribute in attributes)
+            {
+                if (foundNames.Contains(attribute.Name.ToLower()))
+                {
+                    var filter = $",{attribute.Name},,,,,,{attribute.Category}";
+                    attributes.First(a => a.Name == attribute.Name && a.CategoryId == attribute.CategoryId)
+                        .AttributeId = _attributeRepository.GetAttributesByFilter(filter)[0].AttributeId;
+                }
+                else
+                {
+                    attributes.First(a => a.Name == attribute.Name && a.CategoryId == attribute.CategoryId)
+                        .AttributeId = _attributeRepository.CreateAttribute(attribute);
+                }
+            }
+
+            return attributes;
         }
     }
 }

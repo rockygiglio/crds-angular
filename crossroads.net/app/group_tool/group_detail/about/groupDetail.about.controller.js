@@ -22,27 +22,33 @@ export default class GroupDetailAboutController {
     if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
-        var primaryContactId = this.data.contactId;
-        this.data.primaryContact = {
-          imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
-          contactId: primaryContactId
-        };
-        this.ready = true;
+        this.setGroupImageUrl();
+        this.groupService.getIsLeader(this.groupId).then((isLeader) => {
+          this.isLeader = isLeader;
+        });        
       },
       (err) => {
         this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
         this.error = true;
+      }).finally(() => {
         this.ready = true;
       });
-    }
-    else {
-      //TODO map object posted from create into data object
+    } else if(this.data != null) {
+      this.setGroupImageUrl();
+      this.ready = true;
+    } else {
+      // TODO map object posted from create into data object, then call this.setGroupImageUrl()
+      //this.setGroupImageUrl();
       this.ready = true;
     }
+  }
 
-    this.groupService.getIsLeader(this.groupId).then((isLeader) => {
-      this.isLeader = isLeader;
-    })
+  setGroupImageUrl() {
+    var primaryContactId = this.data.contactId;
+    this.data.primaryContact = {
+      imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
+      contactId: primaryContactId
+    };
   }
 
   groupExists() {

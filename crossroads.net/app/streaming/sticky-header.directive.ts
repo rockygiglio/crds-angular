@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Input, HostListener } from "@angular/core";
+import {Directive, ElementRef, HostListener } from "@angular/core";
 
 @Directive({
     selector: "[stickyHeader]"
@@ -13,9 +13,9 @@ export class StickyHeaderDirective {
 
   @HostListener('window:scroll', ['$event']) handleScrollEvent(e) {
     if (window.pageYOffset > 92) {
-      this.el.classList.add('affix');
+      this.el.classList.add('fixed-header');
     } else {
-      this.el.classList.remove('affix');
+      this.el.classList.remove('fixed-header');
     }
   }
 }
