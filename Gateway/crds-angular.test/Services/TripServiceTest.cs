@@ -13,6 +13,8 @@ using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces
 using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
+using ICampaignRepository = MinistryPlatform.Translation.Repositories.Interfaces.ICampaignRepository;
+using IParticipantRepository = MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository;
 
 namespace crds_angular.test.Services
 {
@@ -35,6 +37,7 @@ namespace crds_angular.test.Services
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
         private Mock<IDestinationRepository> _destinationService;
+        private Mock<IParticipantRepository> _participantService;
         private TripService _fixture;
 
         [SetUp]
@@ -56,6 +59,7 @@ namespace crds_angular.test.Services
             _personService = new Mock<IPersonService>();
             _serveService = new Mock<IServeService>();
             _destinationService = new Mock<IDestinationRepository>();
+            _participantService = new Mock<IParticipantRepository>();
 
             _fixture = new TripService(_eventParticipantService.Object,
                                        _donationService.Object,
@@ -72,7 +76,8 @@ namespace crds_angular.test.Services
                                        _configurationWrapper.Object,
                                        _personService.Object,
                                        _serveService.Object,
-                                       _destinationService.Object);
+                                       _destinationService.Object,
+                                       _participantService.Object);
         }
 
         [Test]

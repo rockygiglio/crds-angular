@@ -38,10 +38,11 @@ namespace crds_angular.test.Services
         private Mock<IConfigurationWrapper> config;
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPServices.IApiUserRepository> _apiUserService;
-        private Mock<MPServices.IAttributeRepository> _attributeService;
+        private Mock<MPServices.IAttributeRepository> _attributeRepository;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<MPServices.IUserRepository> _userRespository;
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
+        private Mock<IAttributeService> _attributeService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -83,7 +84,9 @@ namespace crds_angular.test.Services
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
-            _attributeService = new Mock<MPServices.IAttributeRepository>();
+            _attributeRepository = new Mock<MPServices.IAttributeRepository>();
+            _attributeService = new Mock<IAttributeService>();
+            
 
             config = new Mock<IConfigurationWrapper>();
 
@@ -100,10 +103,11 @@ namespace crds_angular.test.Services
                                        _contactService.Object,
                                        _objectAttributeService.Object,
                                        _apiUserService.Object,
-                                       _attributeService.Object,
+                                       _attributeRepository.Object,
                                        _emailCommunicationService.Object,
                                        _userRespository.Object,
-                                       _invitationRepository.Object);
+                                       _invitationRepository.Object,
+                                       _attributeService.Object);
         }
 
         [Test]
@@ -383,7 +387,7 @@ namespace crds_angular.test.Services
 
             _invitationRepository.Setup(mocked => mocked.GetOpenInvitation(It.IsAny<string>())).Returns(mpInvitationDto);
             groupService.Setup(mocked => mocked.GetSmallGroupDetailsById(123123)).Returns(g);
-            _attributeService.Setup(mocked => mocked.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
+            _attributeRepository.Setup(mocked => mocked.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
             _objectAttributeService.Setup(
                 mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(objectAllAttribute);
