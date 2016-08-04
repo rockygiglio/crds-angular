@@ -142,6 +142,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Messaging" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -223,6 +224,7 @@
     <Compile Include="Services\DonorServiceTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
     <Compile Include="Services\GatewayLookupServiceTest.cs" />
+    <Compile Include="Services\GoogleMapsAddressProximityServiceTest.cs" />
     <Compile Include="Services\GoSkillsServiceTest.cs" />
     <Compile Include="Services\GoVolunteerServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />

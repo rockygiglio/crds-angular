@@ -404,7 +404,7 @@ namespace crds_angular.Services
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
-            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Replace("'", "''")).ToArray();
+            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
             var results = _groupToolRepository.SearchGroups(groupTypeId, search);
             if (results == null || !results.Any())
@@ -422,14 +422,18 @@ namespace crds_angular.Services
             try
             {
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
-                for(var i = 0; i < groups.Count; i++)
+                for (var i = 0; i < groups.Count; i++)
                 {
                     groups[i].Proximity = proximities[i];
                 }
             }
             catch (InvalidAddressException e)
             {
-                _logger.Error($"Can't validate origin address {location}", e);
+                _logger.Info($"Can't validate origin address {location}", e);
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Can't search by proximity for address {location}", e);
             }
 
             return groups;

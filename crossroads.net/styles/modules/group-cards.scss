@@ -36,6 +36,16 @@ my-groups {
       width: 65px;
       height: 65px;
     }
+
+    // Find a Group disabled until Aug 27
+    div.find-disabled {
+      font-weight: normal;
+      margin-top: -5px;
+    }
+
+    svg.find-disabled {
+      color: $gray-lighter;
+    }
   }
 
   .my-groups-links {

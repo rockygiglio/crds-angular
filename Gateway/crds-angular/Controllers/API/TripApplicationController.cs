@@ -40,7 +40,8 @@ namespace crds_angular.Controllers.API
 
             TripApplicationResponseDto response;
             try
-            {
+            {                
+                _tripService.CreateTripParticipant(dto.ContactId, dto.PledgeCampaignId);
                 var message = _messageFactory.CreateMessage(dto);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
                 response = new TripApplicationResponseDto
@@ -60,5 +61,6 @@ namespace crds_angular.Controllers.API
             }
             return ((IHttpActionResult) RestHttpActionResult<TripApplicationResponseDto>.Ok(response));
         }
+
     }
 }

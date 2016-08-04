@@ -83,7 +83,7 @@ namespace MinistryPlatform.Translation.Repositories
             double longitude;
             var addresses = records.Select(record => new MpAddress()
             {
-                Address_ID = record.ToInt("Address_ID"),
+                Address_ID = record.ToInt("dp_RecordID"),
                 Address_Line_1 = record.ToString("Address_Line_1"),
                 Address_Line_2 = record.ToString("Address_Line_2"),
                 City = record.ToString("City"),
