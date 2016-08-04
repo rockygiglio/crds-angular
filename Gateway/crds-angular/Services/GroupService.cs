@@ -51,6 +51,7 @@ namespace crds_angular.Services
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
+        private readonly int _GroupRoleLeader;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -92,6 +93,7 @@ namespace crds_angular.Services
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
+            _GroupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -113,7 +115,7 @@ namespace crds_angular.Services
                 var configuration = MpObjectAttributeConfigurationFactory.Group();            
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
 
-                if (group.AttributeTypes.ContainsKey(91) && (group.AttributeTypes[91].Attributes.Count(a => a.AttributeId == 7089 || a.AttributeId == 7090) > 0))
+                if (group.MinorAgeGroupsAdded)
                 {
                     _mpGroupService.SendNewStudentMinistryGroupAlertEmail((List<MpGroupParticipant>) mpGroup.Participants);
                 }
@@ -673,6 +675,12 @@ namespace crds_angular.Services
 
                 var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+
+                if (group.MinorAgeGroupsAdded)
+                {
+                    var leaders = Mapper.Map<List<MpGroupParticipant>>(groupParticipants).Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
+                    _mpGroupService.SendNewStudentMinistryGroupAlertEmail(leaders);
+                }
             }
             catch (Exception e)
             {
