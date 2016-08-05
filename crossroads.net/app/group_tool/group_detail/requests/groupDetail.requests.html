@@ -1,10 +1,10 @@
-<preloader full-screen='false' ng-if="!groupDetailRequests.ready && groupDetailRequests.currentView = 'List'"> </preloader>
+<preloader full-screen='false' ng-if="!groupDetailRequests.ready && groupDetailRequests.listView()"> </preloader>
 
 <div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
 
   <!-- Invite text and button for Mobile -->
   <div class="hidden-sm hidden-md hidden-lg">
-    <div ng-if="groupDetailRequests.inquired.length == 0 && groupDetailRequests.invited.length == 0" class="row push-bottom push-top">
+    <div ng-if="groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
       <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
       </div>
@@ -92,7 +92,7 @@
 
   <!-- Invite text and button for Desktop -->
   <div class="hidden-xs">
-    <div ng-if="groupDetailRequests.inquired.length == 0 && groupDetailRequests.invited.length == 0" class="row push-bottom push-top">
+    <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
       <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
       </div>

@@ -125,4 +125,16 @@ export default class GroupDetailRequestsController {
   denyView() {
     return this.currentView === 'Deny';
   }
+
+  hasRequests() {
+    return this.inquired && this.inquired.length > 0;
+  }
+
+  hasInvites() {
+    return this.invited && this.invited.length > 0;
+  }
+
+  hasRequestsOrInvites() {
+    return this.hasRequests() || this.hasInvites();
+  }
 }

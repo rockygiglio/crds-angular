@@ -342,5 +342,51 @@ describe('GroupDetailRequestsController', () => {
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolDenyInquiryFailureGrowler);
       });
     });
+
+    describe('Request and invite method', () => {
+      it('hasRequests() should be false with no requests', () => {
+        fixture.inquired = [];
+        expect(fixture.hasRequests()).toBeFalsy();
+      });
+
+      it('hasRequests() should be true with some requests', () => {
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequests()).toBeTruthy();
+      });
+
+      it('hasInvites() should be false with no invites', () => {
+        fixture.invited = [];
+        expect(fixture.hasInvites()).toBeFalsy();
+      });
+
+      it('hasInvites() should be true with some invites', () => {
+        fixture.invited = [ {} ];
+        expect(fixture.hasInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be false with no requests or invites', () => {
+        fixture.invited = [];
+        fixture.inquired = [];
+        expect(fixture.hasRequestsOrInvites()).toBeFalsy();
+      });
+
+      it('hasRequestsOrInvites() should be true with no requests but some invites', () => {
+        fixture.invited = [ {} ];
+        fixture.inquired = [];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be true with no invites but some requests', () => {
+        fixture.invited = [ ];
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be true with requests and invites', () => {
+        fixture.invited = [ {} ];
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
+      });
+    });
   });
 });
