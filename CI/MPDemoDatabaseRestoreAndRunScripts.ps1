@@ -11,7 +11,7 @@
 )
 
 #Use mutex to ensure only 1 process executing against DBServer / DB at a time
-$uniqueName = "MPRestoreAndRunScripts$DBServer$DBName" 
+$uniqueName = "MPDemoDatabaseRestoreAndRunScripts$DBServer$DBName" 
 $singleInstanceMutex = New-Object System.Threading.Mutex($false, $uniqueName)
 
 try
@@ -22,7 +22,7 @@ try
  
     if($LASTEXITCODE -eq 0) 
     {
-        .\MPDemoDatabaseRestore.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword
+        .\MPTestDatabaseRestore.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword
     }
 
     if($LASTEXITCODE -eq 0)
