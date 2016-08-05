@@ -534,8 +534,16 @@ export default class CreateGroupService {
         }
         this.model.group.kidFriendly = groupData.kidsWelcome;
         this.model.group.availableOnline = groupData.availableOnline;
-        this.model.group.startDate = moment(new Date(groupData.startDate)).toDate();
-        this.model.group.meeting.time = moment(new Date('1983-07-16 ' + groupData.meetingTime)).toDate();
+        this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
+        
+        if(groupData.meetingTime == null || groupData.meetingTime == undefined) {
+            this.model.group.meeting.time = "1983-07-16T21:00:00.000Z";
+        }
+        else {
+            let splitTime = groupData.meetingTime.split(":");
+            this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
+        }
+
         this.model.group.meeting.day = groupData.meetingDayId;
         groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
         this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
