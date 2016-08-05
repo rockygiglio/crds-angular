@@ -9,6 +9,7 @@ describe('GroupDetailRequestsController', () => {
       state,
       rootScope,
       log,
+      stateParams,
       qApi;
 
   var mockProfile;
@@ -26,6 +27,7 @@ describe('GroupDetailRequestsController', () => {
     rootScope = $injector.get('$rootScope');
     log = $injector.get('$log');
     qApi = $injector.get('$q');
+    stateParams = $injector.get('$stateParams');
 
     rootScope.MESSAGES = {
       generalError: 'general error',
@@ -37,7 +39,7 @@ describe('GroupDetailRequestsController', () => {
       groupId: 123
     };
 
-    fixture = new GroupDetailRequestsController(groupService, state, rootScope, log);
+    fixture = new GroupDetailRequestsController(groupService, state, stateParams, rootScope, log);
   }));
 
   describe('the constructor', () => {

@@ -61,7 +61,8 @@ export default class CreateGroupService {
         this.model.profile.oldEmail = profile.emailAddress;
         if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
-                meeting: {
+                startDate: moment().format("MM/DD/YYYY"),
+                meeting: {                  
                     time: "1983-07-16T21:00:00.000Z"
                 }
             };
@@ -69,7 +70,8 @@ export default class CreateGroupService {
         else {
             this.model.group.meeting = {
                 time: "1983-07-16T21:00:00.000Z"
-            };
+            }
+            this.model.startDate = moment().format("MM/DD/YYYY");
         }
 
         this.model.specificDay = true;
@@ -351,23 +353,6 @@ export default class CreateGroupService {
                     }
                 }]
         };
-        var groupStartFields = {
-            wrapper: 'createGroup',
-            templateOptions: {
-                sectionLabel: '$root.MESSAGES.groupToolCreateGroupStartDate.content | html',
-                sectionHelp: '$root.MESSAGES.groupToolCreateGroupStartDateHelp.content | html'
-            },
-            fieldGroup: [{
-                key: 'group.startDate',
-                type: 'datepicker',
-                templateOptions: {
-                    label: 'Start Date',
-                    required: true,
-                    type: 'text',
-                    datepickerPopup: 'MM/dd/yyyy'
-                }
-            }]
-        };
         var groupTypeFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -518,8 +503,8 @@ export default class CreateGroupService {
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupTypeFields, groupAgeFields,
-            groupStartFields, groupMeetingDateTimeFields, groupMeetingLocationFields, 
+        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields, 
+            groupMeetingLocationFields, groupTypeFields, groupAgeFields, 
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
@@ -560,6 +545,16 @@ export default class CreateGroupService {
                     detail: value.name
                 })
         });
+
+        if(_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)))
+        {
+            this.alreadyHasMinors = true;
+        }
+        else
+        {
+            this.alreadyHasMinors = false;
+        }
+
         this.model.groupAgeRangeIds = ageRangeIds;
         this.model.categories = categories;
         this.model.groupId = groupData.groupId;
@@ -583,6 +578,7 @@ export default class CreateGroupService {
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
             , nickName: this.model.profile.nickName
             , lastName: this.model.profile.lastName
+            , email: this.model.profile.emailAddress
             , contactId: parseInt(this.session.exists('userId'))
         })];
         
@@ -646,6 +642,10 @@ export default class CreateGroupService {
             _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (ageRange) => {
                 if (_.includes(this.model.groupAgeRangeIds, ageRange.attributeId, 0)) {
                     ageRange.selected = true;
+                    if((ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE) && !this.alreadyHasMinors)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
                 } else {
                     ageRange.selected = false;
                 }
@@ -666,6 +666,10 @@ export default class CreateGroupService {
                         "category": null,
                         "categoryDescription": null
                     })
+                    if(id == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || id == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
             });
 
             var ageRangeJson = {};

@@ -114,6 +114,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "kidsWelcome")]
         public bool? KidsWelcome { get; set; }
 
+        [JsonProperty(PropertyName = "minorAgeGroupsAdded")]
+        public bool MinorAgeGroupsAdded { get; set; } = false;
+
         [JsonProperty(PropertyName = "proximity")]
         public decimal? Proximity { get; set; }
 
