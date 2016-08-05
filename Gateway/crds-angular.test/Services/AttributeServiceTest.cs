@@ -12,13 +12,18 @@ namespace crds_angular.test.Services
     {
         private AttributeService _fixture;
         private Mock<MPServices.IAttributeRepository> _mpAttributeRepository;
+        private Mock<MPServices.IMinistryPlatformRestRepository> _mpRestRepository;
+        private Mock<MPServices.IApiUserRepository> _mpApiUserRepository;
 
         [SetUp]
         public void SetUp()
         {
             _mpAttributeRepository = new Mock<MPServices.IAttributeRepository>(MockBehavior.Strict);
+            _mpRestRepository = new Mock<MPServices.IMinistryPlatformRestRepository>();
+            _mpApiUserRepository = new Mock<MPServices.IApiUserRepository>();
 
-            _fixture = new AttributeService(_mpAttributeRepository.Object);
+
+            _fixture = new AttributeService(_mpAttributeRepository.Object, _mpRestRepository.Object, _mpApiUserRepository.Object);
         }
 
         [Test]
@@ -79,41 +84,26 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _mpAttributeRepository.SetupSequence(mocked => mocked.GetAttributesByFilter(It.IsAny<string>()))
-                .Returns(new List<MpAttribute>()
+            _mpApiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
+            _mpRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_mpRestRepository.Object);
+            _mpRestRepository.Setup(mocked => mocked.Search<MpRestAttribute>(It.IsAny<string>(), It.IsAny<string>())).Returns(
+                new List<MpRestAttribute>()
                 {
-                    inputList[0]
-                })
-                .Returns(new List<MpAttribute>()
-                {
-                    inputList[2]
-                })
-                .Returns(new List<MpAttribute>()
-                {
-                     new MpAttribute()
-                {
-                    AttributeId = 1,
-                    Name = "Existing Attribute 1",
-                    CategoryId = 2,
-                    Category = "Category #1",
-                    AttributeTypeId = 3,
-                    AttributeTypeName = "AttributeType #1",
-                    PreventMultipleSelection = false
-                }
-                }).Returns(new List<MpAttribute>()
-                {
-                    new MpAttribute()
-                {
-                    AttributeId = 2,
-                    Name = "Existing Attribute 2",
-                    CategoryId = 3,
-                    Category = "Category #2",
-                    AttributeTypeId = 3,
-                    AttributeTypeName = "AttributeType #1",
-                    PreventMultipleSelection = false
-                }
+                    new MpRestAttribute()
+                    {
+                        AttributeId = 1,
+                        Name = "Existing Attribute 1",
+                        CategoryId = 2,
+                        AttributeTypeId = 3,
+                    }, 
+                    new MpRestAttribute()
+                    {
+                        AttributeId = 2,
+                        Name = "Existing Attribute 2",
+                        CategoryId = 3,
+                        AttributeTypeId = 3
+                    }
                 });
-
             _mpAttributeRepository.Setup(mocked => mocked.CreateAttribute(It.IsAny<MpAttribute>())).Returns(3);
 
             var result = _fixture.CreateMissingAttributes(inputList, 3);
