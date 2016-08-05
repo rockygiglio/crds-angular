@@ -627,17 +627,6 @@ export default class CreateGroupService {
         if (this.model.groupAgeRangeIds != undefined && this.model.groupAgeRangeIds != null) {
             smallGroup.ageRange = ageRangeNames;
         }
-        // smallGroup.address = new Address();
-        // if (this.model.group.meeting.address !== undefined && this.model.group.meeting.address !== null) {
-        //     smallGroup.address.addressLine1 = this.model.group.meeting.address.street;
-        //     smallGroup.address.addressLine2 = '';
-        //     smallGroup.address.state = this.model.group.meeting.address.state;
-        //     smallGroup.address.zip = this.model.group.meeting.address.zip;
-        // }
-        // else {
-        //     smallGroup.address.zip = null;
-        // }
-        // smallGroup.kidsWelcome = this.model.group.kidFriendly;
 
         smallGroup.meetingDayId = this.model.group.meeting.day;
         if (smallGroup.meetingDayId === null || smallGroup.meetingDayId === undefined) {
@@ -719,17 +708,6 @@ export default class CreateGroupService {
         }
         )];
 
-        // smallGroup.profile = new Profile(this.model.profile);
-
-        // smallGroup.singleAttributes = {
-        //     "73": {
-        //         "attribute": {
-        //             "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
-        //         },
-        //     }
-        // }
-        
-        
     //groupMeetingPlace
         if (!this.model.group.meeting.online){
             smallGroup.address = new Address();
@@ -744,8 +722,7 @@ export default class CreateGroupService {
             smallGroup.kidsWelcome = false;
         }
             
-            //smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-    //groupCategory
+        //groupCategory
         var ids = []
 
         //set every category that the group came in with to selected = false if this is a load and 
