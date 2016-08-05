@@ -532,6 +532,7 @@ export default class CreateGroupService {
         this.model.group.meeting.day = groupData.meetingDayId;
         groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
         this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+
         var ageRangeIds = [];
         _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
             if (value.selected)
@@ -595,17 +596,18 @@ export default class CreateGroupService {
             return groupType.attributeId == this.model.group.typeId
         });
 
-        smallGroup.groupType = new GroupType({ name: groupType.name });
+        smallGroup.groupType = new GroupType({ attributeId: groupType.attributeId, name: groupType.name });
         
         //add the single attributes this group came in with to the small group model
         smallGroup.singleAttributes = {};
         if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined){
             smallGroup.singleAttributes = this.originalSingleAttributes;
-            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId = this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name);
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute  = smallGroup.groupType;
+
         } else {
             smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
                 "attribute": {
-                    "attributeId": this.getGroupTypeAttributeIdFromName(smallGroup.groupType.name)
+                    "attributeId": smallGroup.groupType.attributeId
                 }
             }
         }
@@ -829,27 +831,6 @@ export default class CreateGroupService {
                 break;
         }
         return categoryId;
-    }
-
-    getGroupTypeAttributeIdFromName(name) {
-        var groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
-        switch (name) {
-            case 'Anyone is welcome':
-                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
-                break;
-            case 'Men only':
-                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_MENONLY;
-                break;
-            case 'Women only':
-                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_WOMENONLY;
-                break;
-            case 'Married couples':
-                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_COUPLES;
-                break;
-            default:
-                groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_ANYONE;
-        }
-        return groupTypeId;
     }
 
     getMeetingLocation() {
