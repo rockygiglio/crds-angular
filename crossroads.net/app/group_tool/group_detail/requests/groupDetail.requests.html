@@ -1,8 +1,8 @@
 <preloader full-screen='false' ng-if="!groupDetailRequests.ready && groupDetailRequests.currentView = 'List'"> </preloader>
 
 <div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
-  <div class="table-responsive">
-    <table class="table group-requests-list">
+  <div class="table-responsive push-bottom">
+    <table class="table group-requests-list" ng-if="groupDetailRequests.inquired.length > 0 && groupDetailRequests.invited.length > 0">
       <thead>
         <th class='col-md-1'></th>
         <th class='col-md-2'>Name</th>
@@ -56,7 +56,13 @@
       </tbody>
     </table>
   </div>
-  <div class='row'>&nbsp;</div>
+
+  <div ng-if="groupDetailRequests.inquired.length == 0 && groupDetailRequests.invited.length == 0" class="row push-bottom push-top">
+    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+      <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
+    </div>
+  </div>
+
   <div class='container-fluid'>
     <div class='row'>
       <div class='col-sm-12'>
