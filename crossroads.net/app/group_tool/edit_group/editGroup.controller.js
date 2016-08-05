@@ -12,24 +12,24 @@ export default class EditGroupController {
         this.rootScope = $rootScope;
         this.stateParams = $stateParams;
         this.ready = false;
-        this.approvedLeader = false;
+        this.leader = false;
         this.fields = [];
         this.createGroupForm = {};
         this.options = {};
     }
 
     $onInit() {
-        this.participantService.get().then((data) => {
-            if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
-                this.approvedLeader = true;
+        this.groupService.getIsLeader(this.state.params.groupId).then((data) => {
+            if (data == true) {
+                this.leader = true;
                 this.ready = true;
             } else {
-                this.state.go("content", { "link": "/groups/leader" });
+                this.state.go("grouptool.mygroups");
             }
         },
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                this.state.go("content", { "link": "/groups/leader" });
+                this.state.go("grouptool.mygroups");
             });
 
         this.fields = this.createGroupService.getFields();
