@@ -556,6 +556,16 @@ export default class CreateGroupService {
                     detail: value.name
                 })
         });
+
+        if(_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)))
+        {
+            this.alreadyHasMinors = true;
+        }
+        else
+        {
+            this.alreadyHasMinors = false;
+        }
+
         this.model.groupAgeRangeIds = ageRangeIds;
         this.model.categories = categories;
         this.model.groupId = groupData.groupId;
@@ -579,6 +589,7 @@ export default class CreateGroupService {
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
             , nickName: this.model.profile.nickName
             , lastName: this.model.profile.lastName
+            , email: this.model.profile.emailAddress
             , contactId: parseInt(this.session.exists('userId'))
         })];
         
@@ -623,7 +634,6 @@ export default class CreateGroupService {
         if (this.model.groupAgeRangeIds != undefined && this.model.groupAgeRangeIds != null) {
             smallGroup.ageRange = ageRangeNames;
         }
-
         smallGroup.attributeTypes = {};
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
             // set the original attribute types on to the small group
@@ -632,6 +642,10 @@ export default class CreateGroupService {
             _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (ageRange) => {
                 if (_.includes(this.model.groupAgeRangeIds, ageRange.attributeId, 0)) {
                     ageRange.selected = true;
+                    if((ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE) && !this.alreadyHasMinors)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
                 } else {
                     ageRange.selected = false;
                 }
@@ -652,6 +666,10 @@ export default class CreateGroupService {
                         "category": null,
                         "categoryDescription": null
                     })
+                    if(id == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || id == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
             });
 
             var ageRangeJson = {};
