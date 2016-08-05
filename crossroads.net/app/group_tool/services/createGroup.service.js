@@ -246,6 +246,10 @@ export default class CreateGroupService {
                 }, {
                     key: 'group.meeting.frequency',
                     type: 'formlyBuilderSelect',
+                    hideExpression: '!model.specificDay',
+                    expressionProperties: {
+                        'templateOptions.required': 'model.specificDay'
+                    },
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
@@ -619,6 +623,17 @@ export default class CreateGroupService {
         if (this.model.groupAgeRangeIds != undefined && this.model.groupAgeRangeIds != null) {
             smallGroup.ageRange = ageRangeNames;
         }
+
+        smallGroup.meetingDayId = this.model.group.meeting.day;
+        if (smallGroup.meetingDayId === null || smallGroup.meetingDayId === undefined) {
+            delete smallGroup.meetingTime;
+        } else {
+            var dayObj = this.meetingDaysLookup.filter(day=>day.dp_RecordID === smallGroup.meetingDayId)[0];
+            smallGroup.meetingDay = dayObj.dp_RecordName;
+        }
+
+        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+
         smallGroup.attributeTypes = {};
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
             // set the original attribute types on to the small group
@@ -665,7 +680,6 @@ export default class CreateGroupService {
             }
             smallGroup.attributeTypes = ageRangeJson;
         }
-
     //groupStartDate
         smallGroup.startDate = this.model.group.startDate;
 
@@ -675,14 +689,29 @@ export default class CreateGroupService {
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
-        } else {
+            var freqObj = this.meetingFrequencyLookup[smallGroup.meetingFrequencyId-1];
+            if (freqObj !== undefined && freqObj !== null) {
+                smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
+            }
+        }
+        else {
             smallGroup.meetingDayId = null;
             smallGroup.meetingTime = null;
-            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+            smallGroup.meetingDay = null;
         }
-        
-        
+        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        smallGroup.congregationId = this.model.profile.congregationId;
+        smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
+        smallGroup.availableOnline = this.model.group.availableOnline;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+            , contactId: parseInt(this.session.exists('userId'))
+        }
+        )];
+
     //groupMeetingPlace
         if (!this.model.group.meeting.online){
             smallGroup.address = new Address();
@@ -697,8 +726,7 @@ export default class CreateGroupService {
             smallGroup.kidsWelcome = false;
         }
             
-            smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-    //groupCategory
+        //groupCategory
         var ids = []
         //set every category that the group came in with to selected = false if this is a load and 
         //let the database worry about whether or not what we've added is new.
@@ -727,6 +755,7 @@ export default class CreateGroupService {
                 }
             )
         });
+
         var categoriesJson = {};
         categoriesJson[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID]= {
             "attributeTypeid": CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID,
@@ -742,7 +771,10 @@ export default class CreateGroupService {
 
     //groupVisibilityFields
         smallGroup.availableOnline = this.model.group.availableOnline;  
-        return smallGroup;
+
+        smallGroup.meetingTimeFrequency = smallGroup.getGroupCardWhenField();
+
+        return smallGroup; 
 
     }
 

@@ -1,7 +1,7 @@
 
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 
-describe('Group Tool SmallGroup', () => {
+describe('Group Tool SmallGroup', () => { 
 
   let smallGroup,
     mockJson;
@@ -234,5 +234,11 @@ describe('Group Tool SmallGroup', () => {
       expect(smallGroup.emailList()).toEqual('dtkocher@callibrity.com,jim.kriz@ingagepartners.com,');
     });
   });
+
+  describe('getGroupCardWhenField', () => {
+    it('should return a group location string for display', () => {
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30:00, Every Week');
+    }); 
+  });  
 
 });
