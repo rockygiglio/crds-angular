@@ -5,14 +5,26 @@
 #   -BackupPath path_on_server   The directory on the DB server to write the backup file (required)
 #   -DBUser user                 The SQLServer user to login to the DBServer (optional, defaults to environment variable MP_SOURCE_DB_USER)
 #   -DBPassword password         The SQLServer password to login to the DBServer (optional, defaults to environment variable MP_SOURCE_DB_PASSWORD)
+#   -ForceBackup force           Force the backup to execute reguardless of existing backup (optional, defaults to false)
 
 Param (
   [string]$DBServer = "mp-demo-db.centralus.cloudapp.azure.com", # default to external IP for MPTest02
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [string]$BackupPath = "F:\Backups",
   [string]$DBUser = $(Get-ChildItem Env:MP_SOURCE_DB_USER).Value, # Default to environment variable
-  [string]$DBPassword = $(Get-ChildItem Env:MP_SOURCE_DB_PASSWORD).Value # Default to environment variable
+  [string]$DBPassword = $(Get-ChildItem Env:MP_SOURCE_DB_PASSWORD).Value, # Default to environment variable
+  [boolean]$ForceBackup = $FALSE # Default to use existing backup file
 )
+
+$backupDateStamp = Get-Date -format 'yyyyMMdd';
+$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
+$backupDescription="$DBName - Full Database Backup $backupDateStamp"
+
+if (($ForceBackup -eq $FALSE) -and (Test-Path $backupFileName))
+{
+    echo "Status: Skipping backup since backup file already exists";
+    exit 0;
+}
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
@@ -20,9 +32,7 @@ $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
 
-$backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
-$backupDescription="$DBName - Full Database Backup $backupDateStamp"
+
 
 $backupSql = @"
 USE [master];
