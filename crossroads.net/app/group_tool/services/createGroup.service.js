@@ -61,7 +61,8 @@ export default class CreateGroupService {
         this.model.profile.oldEmail = profile.emailAddress;
         if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
-                meeting: {
+                startDate: moment().format("MM/DD/YYYY"),
+                meeting: {                  
                     time: "1983-07-16T21:00:00.000Z"
                 }
             };
@@ -69,7 +70,8 @@ export default class CreateGroupService {
         else {
             this.model.group.meeting = {
                 time: "1983-07-16T21:00:00.000Z"
-            };
+            }
+            this.model.startDate = moment().format("MM/DD/YYYY");
         }
 
         this.model.specificDay = true;
@@ -347,23 +349,6 @@ export default class CreateGroupService {
                     }
                 }]
         };
-        var groupStartFields = {
-            wrapper: 'createGroup',
-            templateOptions: {
-                sectionLabel: '$root.MESSAGES.groupToolCreateGroupStartDate.content | html',
-                sectionHelp: '$root.MESSAGES.groupToolCreateGroupStartDateHelp.content | html'
-            },
-            fieldGroup: [{
-                key: 'group.startDate',
-                type: 'datepicker',
-                templateOptions: {
-                    label: 'Start Date',
-                    required: true,
-                    type: 'text',
-                    datepickerPopup: 'MM/dd/yyyy'
-                }
-            }]
-        };
         var groupTypeFields = {
             wrapper: 'createGroup',
             templateOptions: {
@@ -514,8 +499,8 @@ export default class CreateGroupService {
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupTypeFields, groupAgeFields,
-            groupStartFields, groupMeetingDateTimeFields, groupMeetingLocationFields, 
+        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields, 
+            groupMeetingLocationFields, groupTypeFields, groupAgeFields, 
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
