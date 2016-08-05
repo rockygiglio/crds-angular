@@ -34,6 +34,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
+        private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -656,6 +657,55 @@ namespace MinistryPlatform.Translation.Repositories
             _communicationService.SendMessage(confirmation);
         }
 
+
+        public void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders)
+        {
+            var emailTemplate = _communicationService.GetTemplate(NewStudentMinistryGroupAlertEmailTemplate);
+            const string toEmail = "studentministry@crossroads.net";
+
+            string formattedData = "<ul> ";
+
+            foreach (var participant in leaders)
+            {
+                formattedData += $"<li>Name: {participant.NickName} {participant.LastName}  Email: {participant.Email} </li>";
+            }
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Leaders", formattedData + "</ul>"}
+            };
+
+            var domainId = Convert.ToInt32(AppSettings("DomainId"));
+            var from = new MpContact()
+            {
+                ContactId = DefaultEmailContactId,
+                EmailAddress = _communicationService.GetEmailFromContactId(DefaultEmailContactId)
+            };
+
+            var to = new List<MpContact>
+            {
+                new MpContact
+                {
+                    ContactId = _contactService.GetContactIdByEmail(toEmail),
+                    EmailAddress = toEmail
+                }
+            };
+
+            var newStudentMinistryGroup = new MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = 5,
+                DomainId = domainId,
+                FromContact = from,
+                MergeData = mergeData,
+                ReplyToContact = from,
+                TemplateId = NewStudentMinistryGroupAlertEmailTemplate,
+                ToContacts = to
+            };
+            _communicationService.SendMessage(newStudentMinistryGroup);
+        }
+
         public List<MpGroupParticipant> getEventParticipantsForGroup(int groupId, int eventId)
         {
             var records = ministryPlatformService.GetPageViewRecords("ParticipantsByGroupAndEvent", ApiLogin(), String.Format("{0},{1}", groupId, eventId));
@@ -808,7 +858,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
                 MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : (record.ContainsKey("Meeting_Day_ID_Text") ? record.ToString("Meeting_Day_ID_Text") : string.Empty)),
-                MeetingTime = record.ToString("Meeting_Time"),
+                MeetingTime = !string.IsNullOrEmpty(record.ToString("Meeting_Time")) ? DateTime.Parse(record.ToString("Meeting_Time")).ToShortTimeString() : string.Empty,
                 MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty)),
                 AvailableOnline = record.ToBool("Available_Online"),
                 MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),

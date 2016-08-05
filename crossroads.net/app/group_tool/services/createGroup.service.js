@@ -61,7 +61,8 @@ export default class CreateGroupService {
         this.model.profile.oldEmail = profile.emailAddress;
         if(this.model.group !== undefined || this.model.group !== null) {
             this.model.group = {
-                meeting: {
+                startDate: moment().format("MM/DD/YYYY"),
+                meeting: {                  
                     time: "1983-07-16T21:00:00.000Z"
                 }
             };
@@ -69,7 +70,8 @@ export default class CreateGroupService {
         else {
             this.model.group.meeting = {
                 time: "1983-07-16T21:00:00.000Z"
-            };
+            }
+            this.model.startDate = moment().format("MM/DD/YYYY");
         }
 
         this.model.specificDay = true;
@@ -244,6 +246,10 @@ export default class CreateGroupService {
                 }, {
                     key: 'group.meeting.frequency',
                     type: 'formlyBuilderSelect',
+                    hideExpression: '!model.specificDay',
+                    expressionProperties: {
+                        'templateOptions.required': 'model.specificDay'
+                    },
                     templateOptions: {
                         label: 'Frequency',
                         required: true,
@@ -346,23 +352,6 @@ export default class CreateGroupService {
                         'templateOptions.required': '!model.group.meeting.online'
                     }
                 }]
-        };
-        var groupStartFields = {
-            wrapper: 'createGroup',
-            templateOptions: {
-                sectionLabel: '$root.MESSAGES.groupToolCreateGroupStartDate.content | html',
-                sectionHelp: '$root.MESSAGES.groupToolCreateGroupStartDateHelp.content | html'
-            },
-            fieldGroup: [{
-                key: 'group.startDate',
-                type: 'datepicker',
-                templateOptions: {
-                    label: 'Start Date',
-                    required: true,
-                    type: 'text',
-                    datepickerPopup: 'MM/dd/yyyy'
-                }
-            }]
         };
         var groupTypeFields = {
             wrapper: 'createGroup',
@@ -514,8 +503,8 @@ export default class CreateGroupService {
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupTypeFields, groupAgeFields,
-            groupStartFields, groupMeetingDateTimeFields, groupMeetingLocationFields, 
+        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields, 
+            groupMeetingLocationFields, groupTypeFields, groupAgeFields, 
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
     
@@ -556,6 +545,16 @@ export default class CreateGroupService {
                     detail: value.name
                 })
         });
+
+        if(_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)))
+        {
+            this.alreadyHasMinors = true;
+        }
+        else
+        {
+            this.alreadyHasMinors = false;
+        }
+
         this.model.groupAgeRangeIds = ageRangeIds;
         this.model.categories = categories;
         this.model.groupId = groupData.groupId;
@@ -579,6 +578,7 @@ export default class CreateGroupService {
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
             , nickName: this.model.profile.nickName
             , lastName: this.model.profile.lastName
+            , email: this.model.profile.emailAddress
             , contactId: parseInt(this.session.exists('userId'))
         })];
         
@@ -624,6 +624,16 @@ export default class CreateGroupService {
             smallGroup.ageRange = ageRangeNames;
         }
 
+        smallGroup.meetingDayId = this.model.group.meeting.day;
+        if (smallGroup.meetingDayId === null || smallGroup.meetingDayId === undefined) {
+            delete smallGroup.meetingTime;
+        } else {
+            var dayObj = this.meetingDaysLookup.filter(day=>day.dp_RecordID === smallGroup.meetingDayId)[0];
+            smallGroup.meetingDay = dayObj.dp_RecordName;
+        }
+
+        smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+
         smallGroup.attributeTypes = {};
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
             // set the original attribute types on to the small group
@@ -632,6 +642,10 @@ export default class CreateGroupService {
             _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (ageRange) => {
                 if (_.includes(this.model.groupAgeRangeIds, ageRange.attributeId, 0)) {
                     ageRange.selected = true;
+                    if((ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || ageRange.attributeId == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE) && !this.alreadyHasMinors)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
                 } else {
                     ageRange.selected = false;
                 }
@@ -652,6 +666,10 @@ export default class CreateGroupService {
                         "category": null,
                         "categoryDescription": null
                     })
+                    if(id == CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || id == CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE)
+                    {
+                        smallGroup.minorAgeGroupsAdded = true;
+                    }
             });
 
             var ageRangeJson = {};
@@ -662,7 +680,6 @@ export default class CreateGroupService {
             }
             smallGroup.attributeTypes = ageRangeJson;
         }
-
     //groupStartDate
         smallGroup.startDate = this.model.group.startDate;
 
@@ -672,14 +689,29 @@ export default class CreateGroupService {
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
-        } else {
+            var freqObj = this.meetingFrequencyLookup[smallGroup.meetingFrequencyId-1];
+            if (freqObj !== undefined && freqObj !== null) {
+                smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
+            }
+        }
+        else {
             smallGroup.meetingDayId = null;
             smallGroup.meetingTime = null;
-            smallGroup.meetingFrequencyId = this.model.group.meeting.frequency;
+            smallGroup.meetingDay = null;
         }
-        
-        
+        smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
+        smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        smallGroup.congregationId = this.model.profile.congregationId;
+        smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
+        smallGroup.availableOnline = this.model.group.availableOnline;
+        smallGroup.participants = [new Participant({
+            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+            , nickName: this.model.profile.nickName
+            , lastName: this.model.profile.lastName
+            , contactId: parseInt(this.session.exists('userId'))
+        }
+        )];
+
     //groupMeetingPlace
         if (!this.model.group.meeting.online){
             smallGroup.address = new Address();
@@ -694,10 +726,8 @@ export default class CreateGroupService {
             smallGroup.kidsWelcome = false;
         }
             
-            smallGroup.meetingTimeFrequency = this.getMeetingLocation();
-    //groupCategory
+        //groupCategory
         var ids = []
-
         //set every category that the group came in with to selected = false if this is a load and 
         //let the database worry about whether or not what we've added is new.
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined){
@@ -725,6 +755,7 @@ export default class CreateGroupService {
                 }
             )
         });
+
         var categoriesJson = {};
         categoriesJson[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID]= {
             "attributeTypeid": CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID,
@@ -740,7 +771,10 @@ export default class CreateGroupService {
 
     //groupVisibilityFields
         smallGroup.availableOnline = this.model.group.availableOnline;  
-        return smallGroup;
+
+        smallGroup.meetingTimeFrequency = smallGroup.getGroupCardWhenField();
+
+        return smallGroup; 
 
     }
 
@@ -757,7 +791,7 @@ export default class CreateGroupService {
         var returnString = '';
         switch (id) {
             case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
-                returnString = "Life Stage";
+                returnString = "Life Stages";
                 break;
             case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
                 returnString = "Neighborhoods";
@@ -778,7 +812,7 @@ export default class CreateGroupService {
     getIdFromCategory(category) {
         var categoryId = null;
         switch (category) {
-            case "Life Stage":
+            case "Life Stages":
                 categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES;
                 break;
             case "Neighborhoods":
