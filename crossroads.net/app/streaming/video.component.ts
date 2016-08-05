@@ -31,9 +31,4 @@ export class VideoComponent {
   submitCount() {
     this.countSubmit = true;
   }
-
-  goBack() {
-    window.location.href = '/live';
-  }
-
 }
