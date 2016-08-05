@@ -39,6 +39,10 @@ export default class GroupService {
     return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
   }
 
+  getCountries() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/countries').query().$promise;
+  }
+
   getSites() {
     return this.lookupService.Sites.query().$promise;
   }
