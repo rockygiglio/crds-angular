@@ -15,7 +15,7 @@ Param (
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
+$backupFileName=Join-Path $BackupPath "$DBName-Backup-$backupDateStamp.trn"
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 

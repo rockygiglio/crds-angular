@@ -17,7 +17,7 @@ Param (
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
+$backupFileName=Join-Path $BackupPath "$DBName-Backup-$backupDateStamp.trn"
 $backupDescription="$DBName - Full Database Backup $backupDateStamp"
 
 if (($ForceBackup -eq $FALSE) -and (Test-Path $backupFileName))
