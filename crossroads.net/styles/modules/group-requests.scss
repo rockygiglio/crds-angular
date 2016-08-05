@@ -1,4 +1,8 @@
 group-detail-requests {
+  .group-detail-title-mobile {
+    border-bottom: solid 1px $gray-lighter;
+  }
+
   .group-request-header {
     border-bottom: 2px solid $gray-lighter;
     font-weight: bold;
