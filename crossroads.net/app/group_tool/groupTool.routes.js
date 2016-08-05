@@ -145,7 +145,13 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail.requests', {
       url: '/requests',
-      template: '<group-detail-requests></group-detail-requests>'
+      template: '<group-detail-requests></group-detail-requests>',
+      params: {
+        view: {
+          value: null,
+          squash: true
+        }
+      }
     })
     .state('grouptool.invitation', {
       url: '/groups/invitation/accept/{invitationGUID}',

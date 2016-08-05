@@ -1,4 +1,4 @@
-<preloader full-screen='false' ng-if="!groupDetailRequests.ready"> </preloader>
+<preloader full-screen='false' ng-if="!groupDetailRequests.ready && groupDetailRequests.currentView = 'List'"> </preloader>
 
 <div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
   <div class="table-responsive">
