@@ -3,7 +3,7 @@ import SmallGroup from '../model/smallGroup';
 
 export default class EditGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope, $stateParams) {
+    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope, $stateParams, $window) {
         this.log = $log;
         this.state = $state;
         this.participantService = ParticipantService;
@@ -16,6 +16,7 @@ export default class EditGroupController {
         this.fields = [];
         this.createGroupForm = {};
         this.options = {};
+        this.window = $window;
     }
 
     $onInit() {
@@ -33,6 +34,26 @@ export default class EditGroupController {
             });
 
         this.fields = this.createGroupService.getFields();
+
+        this.stateChangeWatcher = this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+            if (!toState.name.startsWith('grouptool.edit'))
+            {
+                if (this.editGroupForm.$dirty) {
+                    if (!this.window.confirm('Are you sure you want to leave this page?')) {
+                        event.preventDefault();
+                        return;
+                    }
+                    else {
+                        this.createGroupService.reset();
+                        this.stateChangeWatcher();
+                        return;
+                    }
+                }
+                this.createGroupService.reset();
+                this.stateChangeWatcher();
+                return;
+            }
+        });
     }
 
     previewGroup() {
