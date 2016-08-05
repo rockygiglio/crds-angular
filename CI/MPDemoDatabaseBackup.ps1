@@ -17,14 +17,14 @@ Param (
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName=Join-Path $BackupPath "$DBName-Backup-$backupDateStamp.trn"
+$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
 $backupDescription="$DBName - Full Database Backup $backupDateStamp"
 
-if (($ForceBackup -eq $FALSE) -and (Test-Path $backupFileName))
-{
-    echo "Status: Skipping backup since backup file already exists";
-    exit 0;
-}
+#if (($ForceBackup -eq $FALSE) -and (Test-Path $backupFileName))
+#{
+#    echo "Status: Skipping backup since backup file already exists";
+#    exit 0;
+#}
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
