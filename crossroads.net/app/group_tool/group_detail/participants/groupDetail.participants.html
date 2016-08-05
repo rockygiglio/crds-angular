@@ -1,18 +1,16 @@
 <preloader full-screen='false' ng-show='!groupDetailParticipants.ready'> </preloader>
 
 <!-- List or Edit participants -->
-<div class='container-fluid' 
+<div
   ng-show='groupDetailParticipants.ready'
   ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
-  <div class='row'>
-    <div class='col-md-12 group-participants'>
-      <group-detail-participant-card 
-        ng-repeat='participant in groupDetailParticipants.data'
-        delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
-        participant='participant'
-        edit='groupDetailParticipants.isEditView()'>
-      </group-detail-participant-card>
-    </div>
+  <div class='row push-top'>
+    <group-detail-participant-card class="col-xs-12 col-sm-6 col-lg-4 push-bottom"
+      ng-repeat='participant in groupDetailParticipants.data'
+      delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+      participant='participant'
+      edit='groupDetailParticipants.isEditView()'>
+    </group-detail-participant-card>
   </div>
   <div class='row'>&nbsp;</div>
   <div class='row'>
