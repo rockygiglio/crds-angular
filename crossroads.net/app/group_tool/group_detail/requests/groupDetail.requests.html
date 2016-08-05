@@ -4,7 +4,7 @@
 
   <!-- Invite text and button for Mobile -->
   <div class="hidden-sm hidden-md hidden-lg">
-    <div ng-if="groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
+    <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
       <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
       </div>
@@ -16,7 +16,7 @@
   </div>
 
   <!-- Requests Table -->
-  <div ng-if="groupDetailRequests.inquired.length > 0 && groupDetailRequests.invited.length > 0" class="push-bottom">
+  <div ng-if="groupDetailRequests.hasRequestsOrInvites()" class="push-bottom">
     <!-- Header Row -->
     <div class="group-request-header row hidden-xs push-top soft-half-bottom">
       <div class="col-sm-10 col-md-9">
