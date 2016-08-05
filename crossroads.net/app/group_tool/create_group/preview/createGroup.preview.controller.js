@@ -31,7 +31,7 @@ export default class CreateGroupPreviewController {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolCreateGroupSuccess);
           this.saving = false;
           this.successfulSave = true;
-          this.createGroupService.resolved = false;
+          this.createGroupService.reset();
           this.state.go('grouptool.mygroups')
         })
     }
@@ -53,7 +53,7 @@ export default class CreateGroupPreviewController {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolEditGroupSuccess);
           this.saving = false;
           this.successfulSave = true;
-          this.createGroupService.resolved = false;
+          this.createGroupService.reset();
           this.state.go('grouptool.mygroups')
         })
     }

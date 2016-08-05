@@ -3,7 +3,7 @@ import SmallGroup from '../model/smallGroup';
 
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope) {
+    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope, $window) {
         this.log = $log;
         this.state = $state;
         this.participantService = ParticipantService;
@@ -15,6 +15,7 @@ export default class CreateGroupController {
         this.fields = [];
         this.createGroupForm = {};
         this.options = {};
+        this.window = $window;
     }
 
     $onInit() {
@@ -33,6 +34,24 @@ export default class CreateGroupController {
             });
 
         this.fields = this.createGroupService.getFields();
+        this.stateChangeWatcher = this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+            if (!toState.name.startsWith('grouptool.create')) {
+                if (this.createGroupForm.$dirty) {
+                    if (!this.window.confirm('Are you sure you want to leave this page?')) {
+                        event.preventDefault();
+                        return;
+                    }
+                    else {
+                        this.createGroupService.reset();
+                        this.stateChangeWatcher();
+                        return;
+                    }
+                }
+                this.createGroupService.reset();
+                this.stateChangeWatcher();
+                return;
+            }
+        });
     }
 
     previewGroup() {
@@ -42,5 +61,4 @@ export default class CreateGroupController {
             this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
         }
     }
-
 }

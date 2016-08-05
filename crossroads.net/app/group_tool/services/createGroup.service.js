@@ -33,6 +33,13 @@ export default class CreateGroupService {
         //this.originalAttributeTypes is added by setEditModel and used in mapToSmallGroup
         //this.originalSingleAttributes is added by setEditModel and used in mapToSmallGroup
     }
+    reset(){
+        this.resolved = false;
+        this.model = {};
+        this.profileData = {};
+        this.originalAttributeTypes = null;
+        this.originalSingleAttributes = null;
+    }
 
     setEditModel(groupData, profileData){
         //this.log.debug("GroupDataFromServer:");
