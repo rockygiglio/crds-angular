@@ -10,6 +10,9 @@
 
   <div class="row">
     <div class="col-md-9 col-sm-12">
+      <div ng-if="!myGroups.groups.length" dynamic-content="$root.MESSAGES.groupToolMyGroupsHelpText.content | html" class="push-bottom">
+      </div>
+
       <div class="row is-flex flex-wrap">
         <div ng-repeat="group in myGroups.groups" class="col-md-6 col-sm-12 is-flex flex-col">
           <group-card group="group" class="is-flex flex-grow"></group-card>
