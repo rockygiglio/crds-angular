@@ -81,4 +81,8 @@ export default class GroupDetailAboutController {
     }
     return false;
   }
+
+  goToEdit() {
+    this.state.go('grouptool.edit', {groupId: this.state.params.groupId});
+  }
 }
