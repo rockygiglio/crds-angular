@@ -1,16 +1,14 @@
 ﻿using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.Results;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
-using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers
 {
-    public class AddressController : MPAuth
+    public class AddressController : ApiController
     {
         private readonly IAddressProximityService _addressProximityService;
 
