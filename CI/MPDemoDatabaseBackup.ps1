@@ -20,18 +20,61 @@ $backupDateStamp = Get-Date -format 'yyyyMMdd';
 $backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
 $backupDescription="$DBName - Full Database Backup $backupDateStamp"
 
-#if (($ForceBackup -eq $FALSE) -and (Test-Path $backupFileName))
-#{
-#    echo "Status: Skipping backup since backup file already exists";
-#    exit 0;
-#}
-
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
 $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
 
+$backupAlreadyExists = @"
+WITH LastBackup AS
+(
+    SELECT
+        database_name,
+        backup_finish_date,
+		physical_device_name,
+        rownum = 
+            ROW_NUMBER() OVER
+            (
+                PARTITION BY database_name
+                ORDER BY backup_finish_date DESC
+            )
+    FROM msdb.dbo.backupset bs
+		INNER JOIN msdb..BackupMediaFamily bmf ON [bs].[media_set_id] = [bmf].[media_set_id]
+	WHERE 
+		-- Database Backup
+		type = 'D'
+)
+SELECT *
+FROM [LastBackup] b
+WHERE 
+	b.[RowNum] = 1 AND
+	b.Database_Name = '$DBName' AND 
+	b.Physical_Device_Name = '$backupFileName'
+"@;
+
+if ($ForceBackup -eq $FALSE)
+{
+    $lastRestorCommand = $connection.CreateCommand();
+    $lastRestorCommand.CommandText = "$backupAlreadyExists";
+    $lastRestorCommand.CommandTimeout = 10000;    
+
+    $reader = $lastRestorCommand.ExecuteReader();
+    try
+    {
+        if($reader.HasRows)
+        {
+            # We have resuls so skip backup
+            echo "Status: Skipping backup since backup file already exists";
+            exit 0;
+        }
+    }
+    finally
+    {
+        $reader.Close();
+        $reader.Dispose();
+    }
+}
 
 
 $backupSql = @"
@@ -39,7 +82,7 @@ USE [master];
 BACKUP DATABASE [$DBName]
 TO DISK = N'$backupFileName'
 WITH COPY_ONLY, NOFORMAT, INIT, NAME = N'$backupDescription', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
-"@;
+"@
 
 $command = $connection.CreateCommand();
 $command.CommandText = "$backupSql";
