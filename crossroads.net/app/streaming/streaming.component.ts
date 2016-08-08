@@ -5,6 +5,7 @@ import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
 import { CMSDataService } from '../../core/services/CMSData.service'
+import { ReplaceNonAlphaNumericPipe } from '../../core/filters/replace-non-alpha-numeric.pipe';
 import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
 import { PageScrollConfig } from '../ng2-page-scroll/ng2-page-scroll-config';
 import { StickyHeaderDirective } from './sticky-header.directive';
@@ -17,13 +18,15 @@ declare var _: any;
   selector: 'streaming',
   directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective],
   templateUrl: './streaming.ng2component.html',
-  providers: [CMSDataService]
+  providers: [CMSDataService],
+  pipes: [ReplaceNonAlphaNumericPipe]
 })
 
 export class StreamingComponent {
   inProgress: boolean = false;
   currentSeries: any;
-  mostRecent: any;
+  mostRecent: any = [];
+  series: any = [];
 
   constructor(private streamspotService: StreamspotService, private cmsDataService: CMSDataService) {
 
@@ -39,27 +42,42 @@ export class StreamingComponent {
       this.inProgress = inProgress;
     });
 
-    // this.currentSeries = this.cmsDataService.getCurrentSeries()
-    //                       .subscribe((currentSeries) => {
-    //                         this.currentSeries = currentSeries;
-    //                         console.log(this.currentSeries);
-    //                       });
+    this.cmsDataService
+        .getXMostRecentMessages(5)
+        .subscribe((mostRecent) => {
+          this.mostRecent = mostRecent;
 
-    this.mostRecent = this.cmsDataService.getXMostRecentMessages(5)
-                        .subscribe((mostRecent) => {
-                          _.each((mostRecent) => {
-                            mostRecent.seriesTitle = this.cmsDataService.getSeries(mostRecent.series)
-                              .subscribe((series) => {
-                                console.log(series);
-                              })
-                          })
-                          this.mostRecent = mostRecent;
-                          console.log(this.mostRecent)
-                        })
+          _.each(mostRecent, (event, key) => {
+            if (typeof event.series !== "undefined") {
+              event.delay = key * 100;
 
-    new WOW({
-      offset: 100,
-      mobile: false
-    }).init();
+              event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
+              if (typeof event.messageVideo.still !== 'undefined') {
+                event.image = event.messageVideo.still.filename
+              } 
+              event.imageSrc = event.image.replace(/https*:/, '')
+
+              // check if this series title already exists
+              if (this.series[event.series]) {
+                event.seriesTitle = this.series[event.series];
+              }
+              
+              this.cmsDataService.getSeries(`id=${event.series}`)
+                .subscribe((series) => {
+                  event.seriesTitle = typeof series.title !== 'undefined' ? series.title : 'Message';
+
+                  // save series titles to prevent lookup for series that are known
+                  this.series[event.series] = series.title;
+                })
+            }
+          })
+
+          console.log('mostRecent', this.mostRecent)
+        })
+
+    // new WOW({
+    //   offset: 100,
+    //   mobile: false
+    // }).init();
   }
 }
