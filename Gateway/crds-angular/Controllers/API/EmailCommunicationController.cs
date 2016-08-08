@@ -4,6 +4,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using crds_angular.Exceptions.Models;
 
 namespace crds_angular.Controllers.API
 {
@@ -72,7 +73,8 @@ namespace crds_angular.Controllers.API
             }
             catch (System.Exception ex)
             {
-                return this.InternalServerError();
+                var apiError = new ApiErrorDto("Schedule Email failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
     }
