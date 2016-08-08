@@ -2,11 +2,8 @@ var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var definePlugin = new webpack.DefinePlugin({
-  __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
-  __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
-  __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_TR1GulD113hGh2RgoLhFqO0M'),
-});
+var environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
+var definePlugin = new webpack.DefinePlugin(environmentVars.get());
 
 module.exports = function(config) {
   config.set({

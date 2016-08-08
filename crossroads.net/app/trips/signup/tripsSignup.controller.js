@@ -46,7 +46,6 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.ageLimitReached = true;
     vm.buttonText = 'Next';
     vm.campaign = Campaign;
-    vm.commonNameRequired = commonNameRequired;
     vm.contactId = contactId;
     vm.destination = vm.campaign.nickname;
     vm.enforceAgeRestriction = enforceAgeRestriction;
@@ -69,6 +68,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.signupService = TripsSignupService;
     vm.skillsSelected = skillsSelected;
     vm.spiritualSelected = spiritualSelected;
+    vm.submitting = false;
     vm.tripName = vm.campaign.name;
     vm.underAge = underAge;
     vm.validateProfile = validateProfile;
@@ -145,20 +145,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       if (checked.length > 0) {
         return true;
       }
-
       return false;
-
-    }
-
-    function commonNameRequired() {
-      switch (vm.signupService.page4.lottery) {
-        case null:
-          return false;
-        case 'As long as I am selected, I will go on the trip.':
-          return false;
-        default:
-          return true;
-      }
     }
 
     function enforceAgeRestriction() {
@@ -214,6 +201,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     function handleSubmit(form) {
       $log.debug('handleSubmit start');
+      vm.submitting = true;
       if (form !== null) {
         form.$setSubmitted(true);
         if (form.$valid) {
@@ -221,6 +209,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
           saveData();
         } else {
           $log.debug('form INVALID');
+          vm.submitting = false;
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
       } else {
@@ -394,22 +383,22 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       application.inviteGUID = $stateParams.invite;
       application.$save(function() {
         $log.debug('trip application save successful');
-      }, function() {
+        _.each(vm.signupService.familyMembers, function(f) {
+          if (f.contactId === vm.signupService.contactId) {
+            f.signedUp = true;
+            f.signedUpDate = new Date();
+          }
+        });
 
+        vm.signupService.pageId = 'thanks';
+        vm.tpForm.$setPristine();
+        $state.go('tripsignup.application.thankyou');
+      }, function() {
+        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         $log.debug('trip application save unsuccessful');
       });
 
-      _.each(vm.signupService.familyMembers, function(f) {
-        if (f.contactId === vm.signupService.contactId) {
-          f.signedUp = true;
-          f.signedUpDate = new Date();
-        }
-      });
-
-      vm.signupService.pageId = 'thanks';
-      vm.tpForm.$setPristine();
-      $state.go('tripsignup.application.thankyou');
-    }
+          }
 
     function showFrequentFlyer(airline) {
       if (airline.attributeId === attributes.SOUTHAFRICA_FREQUENT_FLYER) {

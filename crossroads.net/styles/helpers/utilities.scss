@@ -185,6 +185,10 @@ a.underline,
     margin-left: $line-height-computed / 2;
 }
 
+.push-quarter-bottom {
+  margin-bottom: $line-height-computed / 4;
+}
+
 .flush {
     margin: 0;
 }
@@ -602,7 +606,8 @@ a.underline,
 .nav,
 .pagination,
 .carousel,
-.panel-title a {
+.panel-title a,
+a[ng-click] {
     cursor: pointer;
 }
 

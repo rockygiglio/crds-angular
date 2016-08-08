@@ -28,6 +28,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "congregationId")]
         public int CongregationId { get; set; }
 
+        [JsonProperty(PropertyName = "congregationName")]
+        public string Congregation { get; set; }
+
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }
 
@@ -81,8 +84,8 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "meetingFrequency")]
         public string MeetingFrequency { get; set; }
 
-        [JsonProperty(PropertyName = "meetingTimeFrequency")]
-        public string MeetingTimeFrequency { get; set; }
+        [JsonProperty(PropertyName = "meetingFrequencyID")]
+        public int? MeetingFrequencyID { get; set; }
 
         [JsonProperty(PropertyName = "groupRoleId")]
         public int GroupRoleId { get; set; }
@@ -110,6 +113,12 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "kidsWelcome")]
         public bool? KidsWelcome { get; set; }
+
+        [JsonProperty(PropertyName = "minorAgeGroupsAdded")]
+        public bool MinorAgeGroupsAdded { get; set; } = false;
+
+        [JsonProperty(PropertyName = "proximity")]
+        public decimal? Proximity { get; set; }
 
         public GroupDTO()
         {

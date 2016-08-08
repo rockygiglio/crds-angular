@@ -1,6 +1,9 @@
 var webpack = require('webpack');
 var path = require('path');
 
+var environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
+var definePlugin = new webpack.DefinePlugin(environmentVars.get());
+
 module.exports = function (config) {
     config.set({
         basePath: '',
@@ -25,8 +28,15 @@ module.exports = function (config) {
                       test: /\.json$/,
                       loaders: ["json-loader"]
                     }
+                ],
+                noParse: [
+                    /video\.js/,
+                    /videojs-contrib-hls/
                 ]
-            }
+            },
+            plugins: [
+                definePlugin
+            ]
         },
 
 

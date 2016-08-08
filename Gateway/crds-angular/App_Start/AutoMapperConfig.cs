@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
@@ -14,6 +16,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -248,23 +251,26 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
             Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 
-            Mapper.CreateMap<MpGroup, GroupDTO>()
+            Mapper.CreateMap<MpObjectAttribute, ObjectAttributeDTO>();
+            Mapper.CreateMap<MpObjectAttributeType, ObjectAttributeTypeDTO>();
+
+            Mapper.CreateMap<MpObjectAttribute, ObjectSingleAttributeDTO>()
+                .ForMember(dest => dest.Value, opts => opts.MapFrom(src => src));
+            Mapper.CreateMap<MpObjectAttribute, AttributeDTO>();
+
+            Mapper.CreateMap<MpGroupSearchResultDto, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType))
-                .AfterMap((src, dest) => {
-                    if (!string.IsNullOrEmpty(src.MeetingTime))
-                    {
-                        var timeSpan = TimeSpan.Parse(src.MeetingTime);
-                        var time = DateTime.Today.Add(timeSpan);                      
-                        dest.MeetingTimeFrequency = string.Format("{0}'s at {1}, {2}", src.MeetingDay, time.ToString("h:mm tt"), src.MeetingFrequency);
-                    }
-                }); 
+                .IncludeBase<MpGroup, GroupDTO>();
+
+            Mapper.CreateMap<MpGroup, GroupDTO>()
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
                 
-
             Mapper.CreateMap<MpGroupSearchResult, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name));
 
@@ -273,18 +279,25 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.AddressLine2, opts => opts.MapFrom(src => src.Address_Line_2))
                 .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Postal_Code))
                 .ForMember(dest => dest.ForeignCountry, opts => opts.MapFrom(src => src.Foreign_Country))
-                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID));
+                .ForMember(dest => dest.AddressID, opts => opts.MapFrom(src => src.Address_ID))
+                .ForMember(dest => dest.Longitude, opts => opts.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opts => opts.MapFrom(src => src.Latitude));
 
             Mapper.CreateMap<AddressDTO, MpAddress>()
                 .ForMember(dest => dest.Address_Line_1, opts => opts.MapFrom(src => src.AddressLine1))
                 .ForMember(dest => dest.Address_Line_2, opts => opts.MapFrom(src => src.AddressLine2))
                 .ForMember(dest => dest.Postal_Code, opts => opts.MapFrom(src => src.PostalCode))
                 .ForMember(dest => dest.Foreign_Country, opts => opts.MapFrom(src => src.ForeignCountry))
-                .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID));
+                .ForMember(dest => dest.Address_ID, opts => opts.MapFrom(src => src.AddressID))
+                .ForMember(dest => dest.Longitude, opts => opts.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opts => opts.MapFrom(src => src.Latitude));
 
             Mapper.CreateMap<MpGroupParticipant, GroupParticipantDTO>();
+            Mapper.CreateMap<GroupParticipantDTO, MpGroupParticipant>();
 
             Mapper.CreateMap<MpInquiry, Inquiry>();
+            Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
+            Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
         }
     }
 }

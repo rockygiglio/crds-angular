@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using System.Device.Location;
 
 namespace crds_angular.Models.Crossroads
 {
@@ -32,5 +33,20 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "county")]
         public string County { get; set; }
 
+        [JsonProperty(PropertyName = "longitude")]
+        public double? Longitude { get; set; }
+
+        [JsonProperty(PropertyName = "latitude")]
+        public double? Latitude { get; set; }
+
+        public bool HasGeoCoordinates()
+        {
+            return Longitude.HasValue && Latitude.HasValue;
+        }
+
+        public override string ToString()
+        {
+            return $"{AddressLine1} {AddressLine2}, {City}, {State}, {PostalCode}";
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories;
@@ -40,7 +41,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"@Domain_ID", 1},
                 {"@Contact_ID", 2186211}
             };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<ChildcareDashboard>("api_crds_getChildcareDashboard", parms);
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpChildcareDashboard>("api_crds_getChildcareDashboard", parms);
             foreach (var p in results)
             {               
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault());
@@ -61,6 +62,48 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault().Rsvpd);
             }
+        }
+
+        [Test]
+        public void TestChildcareEmailProcedure()
+        { 
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {                
+                {"@DaysOut", 4}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault().EmailAddress);
+            }
+        }
+
+        [Test]
+        public void TestChildcareRequestDatesProcedure()
+        {
+            Console.WriteLine("TestChildcareRequestDatesProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@ChildcareRequestID", 179}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).PostStoredProc("api_crds_DeleteDatesForChildcareRequest", parms);
+
+            Console.WriteLine("Results\t" + results.ToString());
+
+        }
+
+        [Test]
+        public void TestEndDateGroup()
+        {
+            Console.WriteLine("TestEndDateGroup");
+            var groupId = 172501;
+            var fields = new Dictionary<string, object>
+            {
+                {"Group_ID", groupId },
+                {"End_Date", DateTime.Today}
+            };
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Groups", groupId, fields);
         }
 
         [Test]

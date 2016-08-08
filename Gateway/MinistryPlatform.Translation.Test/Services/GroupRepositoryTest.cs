@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.Interfaces;
-using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Communication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -19,11 +14,13 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private GroupRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
+        private Mock<IAddressRepository> _addressRepository;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
@@ -33,13 +30,14 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _authService = new Mock<IAuthenticationRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object);
-
+            _addressRepository = new Mock<IAddressRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -111,7 +109,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Start_Date", startDate},
                 {"End_Date", endDate},
                 {"Employee_Role", true},
-                {"Child_Care_Requested", true}
+                {"Child_Care_Requested", true},
+                {"Enrolled_By", null }
             };
 
             int groupParticipantId = _fixture.addParticipantToGroup(123, 456, 789, true, startDate, endDate, true);
@@ -190,7 +189,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Target_Size", (short) 5},
                 {"Group_Is_Full", true},
                 {"Enable_Waiting_List", true},
-                {"dp_RecordID", 522}
+                {"dp_RecordID", 522},
+                {"Start_Date", new DateTime(2014, 3, 4) }
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
@@ -208,7 +208,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Role_Title", "Boss"},
                     {"Last_Name", "Anderson"},
                     {"Nickname", "Neo"},
-                    {"Email", "Neo@fun.com"}
+                    {"Email", "Neo@fun.com"},
+                    {"Start_Date", new DateTime(2014, 3, 4) }
 
                 });
             }
@@ -402,7 +403,6 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = ",,,,\"" + groupTypeId + "\"";
 
@@ -425,7 +425,6 @@ namespace MinistryPlatform.Translation.Test.Services
             const int groupId = 987;
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int participantId = 9876;
             const int groupTypeId = 19;
             string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, groupTypeId);
 
@@ -481,7 +480,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"End_Date", "2018-02-11"},
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Day", "Monday" },
-                    {"Meeting_Time", "180000"},
+                    {"Meeting_Time", "06:00:00"},
                     {"Meeting_Frequency", "Monday's at 6:00 PM, Every Other Week" },
                     {"Available_Online", false},
                     {"Maximum_Age", 10 },
@@ -510,7 +509,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"End_Date", "2020-01-01"},
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Day", "Wednesday" },
-                    {"Meeting_Time", "140000"},
+                    {"Meeting_Time", "14:00:00"},
                     {"Meeting_Frequency", "Wednesday's at 2:00 PM, Every Other Week" },
                     {"Available_Online", true},
                     {"Maximum_Age", 10},
@@ -549,12 +548,13 @@ namespace MinistryPlatform.Translation.Test.Services
                 WaitList = false,
                 ChildCareAvailable = false,
                 MeetingDayId = 2,
-                MeetingTime = "18000",
+                MeetingTime = "15:15:00",
                 GroupRoleId = 16,
                 MinimumAge = 0,
-                MaximumParticipants = 9,
                 MinimumParticipants = 8,
                 MaximumAge = 99,
+                KidsWelcome = false,
+                MeetingFrequencyID = null,
                 Address = new MpAddress()
                 {
                     Address_ID = 43567
@@ -575,7 +575,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Offsite_Meeting_Address", 43567 },
                 {"Group_Is_Full", false },
                 {"Available_Online", true },
-                {"Meeting_Time", "18000" },
+                {"Meeting_Time", "15:15:00" },
                 {"Meeting_Day_Id", 2},
                 {"Domain_ID", 1 },
                 {"Child_Care_Available", false },
@@ -583,7 +583,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Enable_Waiting_List", false },
                 {"Online_RSVP_Minimum_Age", 0 },
                 {"Maximum_Age", 99 },
-                {"Minimum_Participants", 8 }
+                {"Minimum_Participants", 8 },
+                {"Kids_Welcome", false },
+                {"Meeting_Frequency_ID", null }
 
             };
            
@@ -595,6 +597,91 @@ namespace MinistryPlatform.Translation.Test.Services
          
             Assert.IsNotNull(resp);  
             Assert.AreEqual(groupId, resp);
-        }        
+        }
+
+        [Test]
+        public void GetSmallGroupDetailsByIdTest()
+        {
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
+                .Returns(MockMyGroups()[0]);
+
+            var resp = _fixture.GetSmallGroupDetailsById(456);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.AreEqual("Full Throttle", resp.Name);
+        }
+
+        [Test]
+        public void UpdateGroupParticipantTest()
+        {
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    ParticipantId = 1,
+                    GroupParticipantId = 2,
+                    GroupRoleId = 22,
+                    StartDate = DateTime.Now
+                }
+            };
+
+            _ministryPlatformService.Setup(
+                mocked =>
+                    mocked.UpdateSubRecord(_groupsParticipantsPageId,
+                                           It.Is<Dictionary<string, object>>(
+                                               d => d["Participant_ID"].Equals(participants[0].ParticipantId) && d["Group_Participant_ID"].Equals(participants[0].GroupParticipantId) && d["Group_Role_ID"].Equals(participants[0].GroupRoleId) && d["Start_Date"].Equals(participants[0].StartDate)),
+                                           AuthenticateResponse()["token"].ToString())).Verifiable();
+
+            
+            var resp = _fixture.UpdateGroupParticipant(participants);
+
+            _ministryPlatformService.VerifyAll();
+            Assert.AreEqual(1, resp);
+
+        }
+
+        [Test]
+        public void TestUpdateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+            const int groupId = 854725;
+
+            var existingGroup = new MpGroup()
+            {
+                Name = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = groupId,
+                GroupType = 1,
+                MinistryId = 8,
+                ContactId = 74657,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                Full = false,
+                TargetSize = 0,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitList = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "15:15:00",
+                GroupRoleId = 16,
+                MinimumAge = 0,
+                MinimumParticipants = 8,
+                MaximumAge = 99,
+                KidsWelcome = false,
+                MeetingFrequencyID = 1,
+                Address = new MpAddress()
+                {
+                    Address_ID = 43567
+                }              
+            };
+
+            _ministryPlatformService.Setup(mock => mock.UpdateRecord(_groupsPageId,It.IsAny<Dictionary<string, object>>(), It.IsAny<string>())).Verifiable();
+
+            var result = _fixture.UpdateGroup(existingGroup);
+            Assert.AreEqual(1, result);
+        }
     }
 }

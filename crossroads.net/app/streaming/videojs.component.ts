@@ -8,8 +8,7 @@ require('videojs-contrib-hls/dist/videojs-contrib-hls');
 
 @Component({
   selector: 'videojs',
-  templateUrl: './videojs.ng2component.html',
-  providers: [StreamspotService]
+  templateUrl: './videojs.ng2component.html'
 })
 
 export class VideoJSComponent implements AfterViewInit {
@@ -37,11 +36,9 @@ export class VideoJSComponent implements AfterViewInit {
     });
 
     this.streamspot.getBroadcasting((data: any) => {
-      var isBroadcasting: boolean = data.isBroadcasting;
+      let isBroadcasting: boolean = data.isBroadcasting;
       if ( !isBroadcasting ) {
-        
         window.location.href = '/live';
-
       }
 
       // set player source

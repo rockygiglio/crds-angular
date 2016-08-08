@@ -38,9 +38,12 @@ namespace crds_angular.test.Services
         private Mock<IConfigurationWrapper> config;
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPServices.IApiUserRepository> _apiUserService;
-        private Mock<MPServices.IAttributeRepository> _attributeService;
+        private Mock<MPServices.IAttributeRepository> _attributeRepository;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<MPServices.IUserRepository> _userRespository;
+        private Mock<MPServices.IInvitationRepository> _invitationRepository;
+        private Mock<IAttributeService> _attributeService;
+        private const int DomainId = 66;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -78,10 +81,13 @@ namespace crds_angular.test.Services
             _contactService = new Mock<MPServices.IContactRepository>();
             _emailCommunicationService = new Mock<IEmailCommunication>();
             _userRespository = new Mock<MPServices.IUserRepository>();
+            _invitationRepository = new Mock<MPServices.IInvitationRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<MPServices.IApiUserRepository>();
-            _attributeService = new Mock<MPServices.IAttributeRepository>();
+            _attributeRepository = new Mock<MPServices.IAttributeRepository>();
+            _attributeService = new Mock<IAttributeService>();
+            
 
             config = new Mock<IConfigurationWrapper>();
 
@@ -98,9 +104,11 @@ namespace crds_angular.test.Services
                                        _contactService.Object,
                                        _objectAttributeService.Object,
                                        _apiUserService.Object,
-                                       _attributeService.Object,
+                                       _attributeRepository.Object,
                                        _emailCommunicationService.Object,
-                                       _userRespository.Object);
+                                       _userRespository.Object,
+                                       _invitationRepository.Object,
+                                       _attributeService.Object);
         }
 
         [Test]
@@ -115,7 +123,7 @@ namespace crds_angular.test.Services
             const int groupParticipantId = 987;
 
             participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
-            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null))
                 .Returns(groupParticipantId);
 
             fixture.addContactToGroup(groupId, contactId);
@@ -160,7 +168,7 @@ namespace crds_angular.test.Services
             var ex = new ApplicationException("DOH!!!!!");
 
             participantService.Setup(mocked => mocked.GetParticipant(contactId)).Returns(participant);
-            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false))
+            groupService.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null))
                 .Throws(ex);
 
             try
@@ -261,8 +269,8 @@ namespace crds_angular.test.Services
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
-            groupService.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(999456);
-            groupService.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(888456);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(999456);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
             groupService.Setup(mocked => mocked.SendCommunityGroupConfirmationEmail(It.IsAny<int>(), 456, true, false));
 
             var events = new List<MpEvent>
@@ -351,6 +359,50 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void GetGroupDetailsByInvitationGuidTest()
+        {
+            var mpInvitationDto = new MpInvitation
+            {
+                SourceId = 123123,
+                EmailAddress = "test@userdomain.com",
+                GroupRoleId = 66,
+                InvitationType = 1,
+                RecipientName = "Test User",
+                RequestDate = new DateTime(2004, 1, 13)
+            };
+
+            var g = new MpGroup
+            {
+                TargetSize = 0,
+                Full = true,
+                Participants = new List<MpGroupParticipant>(),
+                GroupType = 90210,
+                WaitList = true,
+                WaitListGroupId = 10101,
+                GroupId = 98765
+            };
+
+            var objectAllAttribute = new ObjectAllAttributesDTO();
+            objectAllAttribute.MultiSelect = new Dictionary<int, ObjectAttributeTypeDTO>();
+            objectAllAttribute.SingleSelect = new Dictionary<int, ObjectSingleAttributeDTO>();
+
+            _invitationRepository.Setup(mocked => mocked.GetOpenInvitation(It.IsAny<string>())).Returns(mpInvitationDto);
+            groupService.Setup(mocked => mocked.GetSmallGroupDetailsById(123123)).Returns(g);
+            _attributeRepository.Setup(mocked => mocked.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
+            _objectAttributeService.Setup(
+                mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
+                .Returns(objectAllAttribute);
+
+            var response = fixture.GetGroupDetailsByInvitationGuid("akjsfkasjfd;alsdfsa;f,", "crazy long guid");
+
+            groupService.VerifyAll();
+            contactRelationshipService.VerifyAll();
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(g.GroupId, response.GroupId);
+        }
+
+        [Test]
         public void GetGroupsForParticipant()
         {
             const string token = "1234frd32";
@@ -365,7 +417,6 @@ namespace crds_angular.test.Services
 
             groupService.VerifyAll();
             Assert.IsNotNull(grps);
-
         }
 
         [Test]
@@ -696,7 +747,7 @@ namespace crds_angular.test.Services
             };
             groupService.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
-            groupService.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false)).Returns(999456);
+            groupService.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(999456);
             
             fixture.addParticipantToGroupNoEvents(456, mockParticipantSignup.FirstOrDefault());
 
@@ -736,6 +787,218 @@ namespace crds_angular.test.Services
 
             return groups;
 
+        }
+
+        [Test]
+        public void shouldUpdateGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16
+            };
+
+            groupService.Setup(mocked => mocked.GetGroupParticipants(group.GroupId, true)).Returns(new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    Email = "DukeNukem@compuserv.net",
+                    ContactId = 12,
+                    GroupParticipantId = 13,
+                    GroupRoleId = 22,
+                    GroupRoleTitle = "Member",
+                    LastName = "Nukem",
+                    NickName = "Duke",
+                    ParticipantId = 11,
+                    StartDate = start
+                }
+            });
+            groupService.Setup(mocked => mocked.UpdateGroup(It.IsAny<MpGroup>())).Returns(14);
+            this._objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>()))
+                .Returns(new ObjectAllAttributesDTO());
+
+            var groupResp = fixture.UpdateGroup(group);
+
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void shouldUpdateGroupThatHasMinors()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinorAgeGroupsAdded = true
+            };
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    Email = "DukeNukem@compuserv.net",
+                    ContactId = 12,
+                    GroupParticipantId = 13,
+                    GroupRoleId = 22,
+                    GroupRoleTitle = "Member",
+                    LastName = "Nukem",
+                    NickName = "Duke",
+                    ParticipantId = 11,
+                    StartDate = start
+                }
+            };
+
+            groupService.Setup(mocked => mocked.GetGroupParticipants(group.GroupId, true)).Returns(participants);
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 12,
+                FromEmailAddress = "me@here.com",
+                ReplyToContactId = 34,
+                ReplyToEmailAddress = "you@there.com",
+                Subject = "subject"
+            };
+
+            const string toEmail = "studentministry@crossroads.net";
+
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationService.Setup(
+               mocked =>
+                   mocked.SendMessage(
+                       It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                               c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                               c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
+                               c.MergeData["Leaders"].ToString().Equals($"<ul> <li>Name: {participants[0].NickName} {participants[0].LastName}  Email: {participants[0].Email} </li></ul>")),
+                       false)).Returns(77);
+
+            groupService.Setup(mocked => mocked.UpdateGroup(It.IsAny<MpGroup>())).Returns(14);
+            this._objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>()))
+                .Returns(new ObjectAllAttributesDTO());
+
+            var groupResp = fixture.UpdateGroup(group);
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void shouldSendEmailIfCreatingMinorGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 0,
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinorAgeGroupsAdded = true,
+                Participants = new List<GroupParticipantDTO>()
+                {
+                    new GroupParticipantDTO()
+                    {
+                        ParticipantId = 1,
+                        GroupRoleId = 22,
+                        GroupParticipantId = 2,
+                        Email = "groupymcgroupface@gmail.com",
+                        StartDate = DateTime.Now,
+                        ContactId = 1,
+                        NickName = "GroupMan",
+                        LastName = "Jones",
+                        GroupRoleTitle = "Leader"
+                    }
+                }
+    
+            };
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 12,
+                FromEmailAddress = "me@here.com",
+                ReplyToContactId = 34,
+                ReplyToEmailAddress = "you@there.com",
+                Subject = "subject"
+            };
+
+            const string toEmail = "studentministry@crossroads.net";
+
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationService.Setup(
+               mocked =>
+                   mocked.SendMessage(
+                       It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                               c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                               c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
+                               c.MergeData["Leaders"].ToString().Equals($"<ul> <li>Name: {group.Participants[0].NickName} {group.Participants[0].LastName}  Email: {group.Participants[0].Email} </li></ul>")),
+                       false)).Returns(77);
+
+            groupService.Setup(mocked => mocked.CreateGroup(It.IsAny<MpGroup>())).Returns(14);
+            this._objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>()))
+                .Returns(new ObjectAllAttributesDTO());
+
+            var groupResp = fixture.CreateGroup(group);
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
         }
     }
 }

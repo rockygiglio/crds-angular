@@ -19,6 +19,7 @@ namespace crds_angular.test.Services
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IGroupRepository> _groupRepository;
         private Mock<IParticipantRepository> _participantRepository;
+        private Mock<IContactRepository> _contactRespository;
 
         private const int GroupInvitationType = 11;
         private const int GroupInvitationEmailTemplate = 22;
@@ -38,6 +39,7 @@ namespace crds_angular.test.Services
             _invitationRepository = new Mock<IInvitationRepository>(MockBehavior.Strict);
             _groupRepository = new Mock<IGroupRepository>(MockBehavior.Strict);
             _participantRepository = new Mock<IParticipantRepository>(MockBehavior.Strict);
+            _contactRespository = new Mock<IContactRepository>(MockBehavior.Strict);
             var config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("GroupInvitationType")).Returns(GroupInvitationType);
@@ -48,13 +50,14 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupRoleLeader);
 
-            _fixture = new InvitationService(_invitationRepository.Object, _communicationService.Object, config.Object, _groupRepository.Object, _participantRepository.Object);
+            _fixture = new InvitationService(_invitationRepository.Object, _communicationService.Object, config.Object, _groupRepository.Object, _participantRepository.Object, _contactRespository.Object);
         }
 
         [Test]
         public void CanCreateInvitationsForGroups()
         {
             const string token = "dude";
+
             var invitation = new Invitation()
             {
                 EmailAddress = "dudley@doright.com",
@@ -82,8 +85,32 @@ namespace crds_angular.test.Services
                         It.Is<MpInvitation>(
                             i =>
                                 i.InvitationType == invitation.InvitationType && i.EmailAddress.Equals(invitation.EmailAddress) && i.GroupRoleId == invitation.GroupRoleId &&
-                                i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId),
-                        token)).Returns(mpInvitation);
+                                i.RecipientName.Equals(invitation.RecipientName) && i.RequestDate.Equals(invitation.RequestDate) && i.SourceId == invitation.SourceId))).Returns(mpInvitation);
+
+            var testGroup = new MpGroup
+            {
+                GroupId = 33,
+                Name = "TestGroup"
+            };
+
+            _groupRepository.Setup(mocked => mocked.getGroupDetails(invitation.SourceId)).Returns(testGroup);
+
+            var testLeaderParticipant = new Participant
+            {
+                DisplayName = "TestLeaderName",
+                ContactId = 123,
+                EmailAddress = "you@there.com"
+            };
+
+            var leaderContact = new MpMyContact
+            {
+                Last_Name = "TestLast",
+                Nickname = "TestNick"
+            };
+
+            _contactRespository.Setup(mocked => mocked.GetContactById(testLeaderParticipant.ContactId)).Returns(leaderContact);
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(testLeaderParticipant);
 
             var template = new MpMessageTemplate
             {
@@ -96,18 +123,35 @@ namespace crds_angular.test.Services
             };
             _communicationService.Setup(mocked => mocked.GetTemplate(GroupInvitationEmailTemplate)).Returns(template);
 
+            //_communicationService.Setup(
+            //    mocked =>
+            //        mocked.SendMessage(
+            //            It.Is<MpCommunication>(
+            //                c =>
+            //                    c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+            //                    c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+            //                    c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+            //                    c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(invitation.EmailAddress) &&
+            //                    c.MergeData["Invitation_GUID"].ToString().Equals(mpInvitation.InvitationGuid) &&
+            //                    c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName) &&
+            //                    c.MergeData["Leader_Name"].ToString().Equals(testLeaderParticipant.DisplayName) &&
+            //                    c.MergeData["Group_Name"].ToString().Equals(testGroup.Name)),
+            //            false)).Returns(77);
+
             _communicationService.Setup(
-                mocked =>
-                    mocked.SendMessage(
-                        It.Is<MpCommunication>(
-                            c =>
-                                c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
-                                c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
-                                c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
-                                c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(invitation.EmailAddress) &&
-                                c.MergeData["Invitation_GUID"].ToString().Equals(mpInvitation.InvitationGuid) &&
-                                c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName)),
-                        false)).Returns(77);
+               mocked =>
+                   mocked.SendMessage(
+                       It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                               c.ReplyToContact.ContactId == testLeaderParticipant.ContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                               c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(invitation.EmailAddress) &&
+                               c.MergeData["Invitation_GUID"].ToString().Equals(mpInvitation.InvitationGuid) &&
+                               c.MergeData["Recipient_Name"].ToString().Equals(mpInvitation.RecipientName) &&
+                               c.MergeData["Leader_Name"].ToString().Equals(leaderContact.Nickname + " " + leaderContact.Last_Name) &&
+                               c.MergeData["Group_Name"].ToString().Equals(testGroup.Name)),
+                       false)).Returns(77);
 
             var created = _fixture.CreateInvitation(invitation, token);
             _invitationRepository.VerifyAll();

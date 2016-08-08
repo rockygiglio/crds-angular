@@ -22,4 +22,3 @@ export class Ng2TestComponent {
 </div>`
 
 }
-

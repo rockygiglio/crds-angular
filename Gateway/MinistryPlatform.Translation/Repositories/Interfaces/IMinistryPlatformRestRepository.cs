@@ -25,6 +25,14 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="procedureName">The name of the stored procedure to execute</param>
+        /// <returns></returns>
+        List<List<T>> GetFromStoredProc<T>(string procedureName);
+
+        /// <summary>
+        /// Get results from a stored procedure in Ministry Platform
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="procedureName">The name of the stored procedure to execute</param>
         /// <param name="parameters">Parameters for the stored procedure. Key is paramter name and Value is the value.</param>
         /// <returns></returns>
         List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters);
@@ -37,5 +45,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <param name="selectColumns">Optionally specify which columns to retrieve from MP.  This is a comma-separated list of column names.  If not specified, all columns will be retrieved.</param>
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
         List<T> Search<T>(string searchString = null, string selectColumns = null);
+
+        int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
+
+        void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields);
     }
 }

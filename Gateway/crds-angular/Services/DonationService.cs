@@ -459,7 +459,7 @@ namespace crds_angular.Services
                 CheckNumber = null,
                 CheckScannerBatchName = null,
                 DonationAmt = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue),
-                DonationStatus = (int)DonationStatus.Deposited,
+                DonationStatus = (int)DonationStatus.Declined,
                 DonorAcctId = string.Empty,
                 DonorId = _bankErrorRefundDonorId,
                 FeeAmt = refund.Data[0].BalanceTransaction.Fee,

@@ -43,13 +43,14 @@ describe('Childcare Dashboard Service', () => {
     const dto = {
       groupId: 54321,
       childId: 12345,
-      registered: true
+      registered: true,
+      enrolledBy: 2344556
     };
 
     httpBackend
       .expectPOST(`${endpoint}/childcare/rsvp`, dto)
       .respond(200);
-    childcareService.saveRSVP(dto.childId, dto.groupId, true);
+    childcareService.saveRSVP(dto.childId, dto.groupId, dto.enrolledBy, true);
     httpBackend.flush();
   });
 
@@ -57,13 +58,14 @@ describe('Childcare Dashboard Service', () => {
     const dto = {
       groupId: 54321,
       childId: 12345,
-      registered: false
+      registered: false,
+      enrolledBy: 2344556
     };
 
     httpBackend
       .expectPOST(`${endpoint}/childcare/rsvp`, dto)
       .respond(200);
-    childcareService.saveRSVP(dto.childId, dto.groupId, false);
+    childcareService.saveRSVP(dto.childId, dto.groupId, dto.enrolledBy, false);
     httpBackend.flush();
   });
 

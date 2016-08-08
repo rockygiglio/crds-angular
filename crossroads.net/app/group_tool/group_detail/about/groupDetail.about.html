@@ -1,55 +1,85 @@
 <preloader full-screen='false' ng-show='!groupDetailAbout.ready'> </preloader>
 
 <div class='container-fluid' ng-show='groupDetailAbout.ready'>
-  <div class='row'>
+  <div class='row' ng-if="groupDetailAbout.isLeader">
     <div class='col-md-12' dynamic-content="$root.MESSAGES.groupToolDetailPageAboutHeadingSubtext.content | html"></div>
   </div>
   <p></p>
-  <div class='row'>
-    <div class='col-md-1'><img class='img-responsive imgix-fluid' ng-src='{{groupDetailAbout.data.primaryContact.imageUrl}}' err-src='{{groupDetailAbout.defaultProfileImageUrl}}'></div>
-    <div class='col-md-11'>
-      <div class='row'>
-        <div class='col-md-2'><strong>Group Name</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.groupName}}</div>
-        <div class='col-md-2'><strong>Age Range</strong></div>
-        <div class='col-md-4'><span ng-repeat='range in groupDetailAbout.data.ageRange'>{{range.name}}<span ng-if='!$last'>,&nbsp;</span></span></div>
-      </div>
-      <div class='row'>
-        <div class='col-md-2'><strong>Category</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.categories.toString()}}</div>
-        <div class='col-md-2'><strong>Where</strong></div>
-         <div ng-if='groupDetailAbout.isGroupMember()'>
-           <div  class='col-md-4'>{{groupDetailAbout.data.address.toString()}}</div>
+
+  <div class="row">
+    <div class='col-md-1 col-sm-2 col-xs-3 push-quarter-bottom'><img class='img-responsive imgix-fluid' ng-src='{{groupDetailAbout.data.primaryContact.imageUrl}}' err-src='{{groupDetailAbout.defaultProfileImageUrl}}'></div>
+    <div class='col-xs-9 hidden-sm hidden-md hidden-lg push-quarter-bottom'><h4 class="mobile-push-half-top">{{groupDetailAbout.data.groupName}}</h4></div>
+
+    <div class="col-md-11 col-sm-10 col-xs-12">
+      <div class="row">
+
+        <div class="col-sm-6">
+          <div class="row hidden-xs push-half-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Group Name</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.groupName}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Category</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.categories.join(', ')}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Group Type</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.groupType.name}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Leaders</strong></div>
+            <div class='col-sm-8'>
+              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='!$last'>,&nbsp;</span></span>
+            </div>
+          </div>
+          <div class='row push-quarter-bottom' ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation)'>
+            <div class='group-detail-label col-sm-4'><strong>Visibility</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.visibility()}}</div>
+          </div>
         </div>
-        <div ng-if='!groupDetailAbout.isGroupMember()'>
-          <div  class='col-md-4'>{{groupDetailAbout.data.address.getZip()}}</div>
+
+        <div class="col-sm-6">
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Age Range</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.ageRange.join(', ')}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Where</strong></div>
+            <div class="col-sm-8">{{groupDetailAbout.getAddress()}}</div>
+            <!--<div ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation) && groupDetailAbout.groupExists() '>-->
+              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.toString()}}</div>-->
+            <!--</div>-->
+            <!--<div ng-if='(!groupDetailAbout.userInGroup() && !groupDetailAbout.forInvitation)'>-->
+              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.getZip()}}</div>-->
+            <!--</div>-->
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>When</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.meetingTimeFrequency}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Kids Welcome</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.kidsWelcome | yesNo}}</div>
+          </div>
         </div>
+
       </div>
-      <div class='row'>
-        <div class='col-md-2'><strong>Group Type</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.groupType.name}}</div>
-        <div class='col-md-2'><strong>When</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.meetingTimeFrequency}}</div>
+
+      <div class='row hidden-xs'>&nbsp;</div>
+
+      <div class="row">
+        <div class='col-sm-2'><strong>Description</strong></div>
+        <div class='col-sm-10'>{{groupDetailAbout.data.groupDescription}}</div>
       </div>
-      <div class='row'>
-        <div class='col-md-2'><strong>Leaders</strong></div>
-        <div class='col-md-4'>
-          <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='!$last'>,&nbsp;</span></span>
-        </div>
-        <div class='col-md-2'><strong>Childcare</strong></div>
-        <div class='col-md-4'>{{groupDetailAbout.data.kidsWelcome | yesNo}}</div>
-      </div>
-      <div class='row'>&nbsp;</div>
-      <div class='row'>
-        <div class='col-md-2'><strong>Description</strong></div>
-        <div class='col-md-10'>{{groupDetailAbout.data.groupDescription}}</div>
-      </div>
+
     </div>
   </div>
-  <div class='row'>&nbsp;</div>
-  <div class='row' ng-if='groupDetailAbout.data.isLeader()'>
+
+  <div class='row push-top' ng-if='groupDetailAbout.isLeader'>
     <div class='col-md-12'>
-      <p class='text-center'><button type='button' class='btn btn-primary'>Edit</button></p>
+      <p class='text-right'><button type='button' ng-click='groupDetailAbout.goToEdit()' class='btn btn-primary btn-block-mobile'>Edit</button></p>
     </div>
   </div>
+
+
 </div>
