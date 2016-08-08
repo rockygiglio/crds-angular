@@ -501,7 +501,7 @@ namespace MinistryPlatform.Translation.Repositories
                             LastName = p.ToString("Last_Name"),
                             NickName = p.ToString("Nickname"),
                             Email = p.ToString("Email"),
-                            StartDate = p.ToNullableDate("Start_Date")
+                            StartDate = (p["Start_Date"] != null) ? p.ToNullableDate("Start_Date") : default(DateTime)
                         });
                     }
                 }
