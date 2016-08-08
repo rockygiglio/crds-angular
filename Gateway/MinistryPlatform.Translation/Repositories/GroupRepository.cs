@@ -491,7 +491,7 @@ namespace MinistryPlatform.Translation.Repositories
                     p.TryGetValue("Participant_ID", out pid);
                     if (pid != null)
                     {
-                        groupParticipants.Add(new MpGroupParticipant
+                        var parti = new MpGroupParticipant
                         {
                             ContactId = p.ToInt("Contact_ID"),
                             ParticipantId = p.ToInt("Participant_ID"),
@@ -500,9 +500,14 @@ namespace MinistryPlatform.Translation.Repositories
                             GroupRoleTitle = p.ToString("Role_Title"),
                             LastName = p.ToString("Last_Name"),
                             NickName = p.ToString("Nickname"),
-                            Email = p.ToString("Email"),
-                            StartDate = (p["Start_Date"] != null) ? p.ToNullableDate("Start_Date") : default(DateTime)
-                        });
+                            Email = p.ToString("Email")
+                        };
+
+                        if (p.ContainsKey("Start_Date"))
+                        {
+                            parti.StartDate = p.ToNullableDate("Start_Date");
+                        }                        
+                        groupParticipants.Add(parti);
                     }
                 }
             }
