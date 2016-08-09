@@ -21,7 +21,6 @@ export class CMSDataService {
     }
 
     private responseHasContent(resp) {
-        console.log(resp);
         var obj = resp.json();
         return resp && obj.series.length > 0;
     }
