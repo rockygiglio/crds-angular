@@ -1,14 +1,26 @@
+// angular imports
 import { Component } from '@angular/core';
+
+// streaming
 import { ScheduleComponent } from './schedule.component';
 import { CountdownComponent } from './countdown.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
+import { StickyHeaderDirective } from './sticky-header.directive';
+
+// CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
 import { CMSDataService } from '../../core/services/CMSData.service'
-import { ReplaceNonAlphaNumericPipe } from '../media/filters/replace-non-alpha-numeric.pipe';
+
+// Third-party
 import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
 import { PageScrollConfig } from '../ng2-page-scroll/ng2-page-scroll-config';
-import { StickyHeaderDirective } from './sticky-header.directive';
+
+// pipes
+import { ReplaceNonAlphaNumericPipe } from '../media/pipes/replace-non-alpha-numeric.pipe';
+import { HtmlToPlainTextPipe } from '../../core/pipes/html-to-plain-text.pipe';
+import { TruncatePipe } from '../../core/pipes/truncate.pipe';
+
 
 var WOW = require('wow.js/dist/wow.min.js');
 var $:any = require('jquery');
@@ -19,7 +31,7 @@ declare var _: any;
   directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
-  pipes: [ReplaceNonAlphaNumericPipe]
+  pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
 })
 
 export class StreamingComponent {

@@ -54,7 +54,7 @@
             </figure>
             <section>
               <h3>{{ event.title }}</h3>
-              <p [innerHTML]="event.description"></p>
+              <p>{{ event.description | htmlToPlainText | truncate: 38 }}</p>
             </section>
           </article>
         </div>
