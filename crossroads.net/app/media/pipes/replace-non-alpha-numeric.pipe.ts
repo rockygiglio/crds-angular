@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
 @Pipe({
-  name: 'replaceNonAlphaNumeric',
-  pure: true
+  name: 'replaceNonAlphaNumeric'
 })
 
 export class ReplaceNonAlphaNumericPipe implements PipeTransform {
