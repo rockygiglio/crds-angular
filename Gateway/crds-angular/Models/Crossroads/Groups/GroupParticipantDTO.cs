@@ -43,8 +43,5 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "singleAttributes")]
         public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
-
-        [JsonProperty(PropertyName = "congregation")]
-        public string Congregation { get; set; }
     }
 }
