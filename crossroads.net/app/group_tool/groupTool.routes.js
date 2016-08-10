@@ -196,5 +196,17 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.end-group', {
+      parent: 'noSideBar',
+      url: '/groups/end/{groupId:int}',
+      template: '<end-group></end-group>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'End Your Group',
+          description: ''
+        }
+      }
+    })
   ;
 }
