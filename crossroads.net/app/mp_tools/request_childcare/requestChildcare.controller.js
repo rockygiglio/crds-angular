@@ -215,7 +215,7 @@ class RequestChildcareController {
     });
     context.choosenGroup = { dp_RecordID: d.GroupId,  dp_RecordName: d.GroupName };
     context.choosenFrequency = d.Frequency;
-    context.notes = d.DecisionNotes;
+    context.notes = d.Notes;
 
     context.preferredTimes.$promise.then(() => {
       context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {
