@@ -21,7 +21,7 @@ export default class CreateGroupPreviewController {
 
     this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
     this.stateChangeWatcher = this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
-            if (!toState.name.startsWith('grouptool.edit') || !toState.name.startsWith('grouptool.create'))
+            if (!toState.name.startsWith('grouptool.edit') && !toState.name.startsWith('grouptool.create'))
             {
                 this.createGroupService.reset();
                 this.stateChangeWatcher();
