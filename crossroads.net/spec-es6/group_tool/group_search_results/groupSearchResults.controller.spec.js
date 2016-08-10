@@ -94,7 +94,7 @@ describe('GroupSearchResultsController', () => {
     it('should reset results if error calling service', () => {
       let originalResults = fixture.results;
       fixture.results.length = 0;
-      fixture.results.push({groupName: 'name'});
+      fixture.results.push({meetingDay: 'name'});
       fixture.showLocationInput = true;
       fixture.ready = false;
       fixture.tableParams.parameters().count = 1;
@@ -115,7 +115,7 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.results.length).toEqual(0);
       expect(fixture.tableParams.settings().dataset).toBe(fixture.results);
       expect(fixture.tableParams.parameters().count).toEqual(0);
-      expect(fixture.tableParams.parameters().sorting.groupName).toEqual('asc');
+      expect(fixture.tableParams.parameters().sorting.meetingDay).toEqual('asc');
     });
   });
 });
