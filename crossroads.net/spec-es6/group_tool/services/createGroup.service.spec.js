@@ -39,4 +39,10 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
+  // describe('mapToSmallGroupType() function', () => {
+  //   it('it maps correctly', () => {
+
+  //   });
+  // });
+
 });

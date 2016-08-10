@@ -19,7 +19,7 @@ export default class CreateGroupPreviewController {
   $onInit() {
     this.groupData = this.createGroupService.mapToSmallGroup();
 
-    this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
+    this.edit = this.groupData.groupId === null || this.groupData.groupId === undefined ? false : true;
   }
 
   save() {
