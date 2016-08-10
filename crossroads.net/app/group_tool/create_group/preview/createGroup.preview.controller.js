@@ -40,7 +40,7 @@ export default class CreateGroupPreviewController {
           this.createGroupService.reset();
           this.state.go('grouptool.mygroups')
         })
-    }
+    } 
     catch (error) {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       this.saving = false;
@@ -74,10 +74,6 @@ export default class CreateGroupPreviewController {
 
   submit() {
     this.edit ? this.saveEdits() : this.save();
-  }
-
-  redirectToDashboard() {
-    this.state.go('grouptool.mygroups');
   }
 
 }
