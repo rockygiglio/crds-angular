@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
 declare var __STREAMSPOT_API_KEY__: string;
+declare var __STREAMSPOT_NP_API_KEY__: string;
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -16,20 +17,45 @@ export class StreamspotService {
   //
   // #TODO - move to ENV file?
   //
-  private url    = 'https://api.streamspot.com/';  // URL to web api
-  private apiKey = __STREAMSPOT_API_KEY__;
-  private id     = 'crossr4915'
-  private headers = new Headers({
-    'Content-Type': 'application/json',
-    'x-API-Key': this.apiKey
-  });
+  url: string = 'https://api.streamspot.com/';  // URL to web api
+  apiKey: string = '';
+  id: string = '';
+
+  pKey: string = __STREAMSPOT_API_KEY__;
+  npKey: string = __STREAMSPOT_NP_API_KEY__;
+
+  pId: string = 'crossr4915';
+  npId: string = 'crossr30e3';
+
+  headers: Headers;
 
   public isBroadcasting: EventEmitter<any> = new EventEmitter();
   public nextEvent: EventEmitter<any> = new EventEmitter();
   public events: Promise<Event[]>;
 
   constructor(private http: Http) {
+
+    this.toggleDev(false);
     this.events = this.getEvents();
+
+  }
+
+  toggleDev(isDev: boolean) {
+
+    if ( isDev === true ) {
+      this.apiKey = this.npKey;
+      this.id = this.npId;
+    }
+    else {
+      this.apiKey = this.pKey;
+      this.id = this.pId;
+    }
+
+    this.headers = new Headers({
+      'Content-Type': 'application/json',
+      'x-API-Key': this.apiKey
+    });
+
   }
 
   getEvents(): Promise<Event[]> {
@@ -86,6 +112,11 @@ export class StreamspotService {
     );
   }
 
+  getPlayers(cb: Function) {
+    let url = `${this.url}broadcaster/${this.id}/players`;
+    this.get(url, cb);
+  }
+
   getBroadcaster(cb: Function) {
     let url = `${this.url}broadcaster/${this.id}`;
     this.get(url, cb);
@@ -97,8 +128,8 @@ export class StreamspotService {
   }
 
   private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    console.error('An error occurred');
+    return Promise.reject(error);
   }
 
 }

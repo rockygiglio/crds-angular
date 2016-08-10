@@ -2,12 +2,11 @@ import { Component, AfterViewInit } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 var videojs = require('video.js/dist/video');
-//var sstracker = require('https://d2i0qcc2ysg3s9.cloudfront.net/analytics-pre-release.js');
 
 declare var window: any;
 window.videojs = videojs;
-//window.Tracker = sstracker;
 
+require('./vendor/streamspotAnalytics');
 require('videojs-contrib-hls/dist/videojs-contrib-hls');
 
 @Component({
@@ -19,66 +18,85 @@ require('videojs-contrib-hls/dist/videojs-contrib-hls');
 export class VideoJSComponent implements AfterViewInit {
 
   player: any;
-
-  nonPublicUrl: string = "//limelight1.streamspot.com/dvr/smil:crossr30e3.smil/playlist.m3u8";
-  productionUrl: string = "//limelight1.streamspot.com/url/smil:crossr4915.smil/playlist.m3u8";
-  testUrl: string = "//qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
-
-  ssid: string = "crossr30e3";
-  //ssid: string = "crossr4915";
-
-  url: string = "";
+  url: string;
   id: string = "videojs-player";
-  width: number = 640;
-  height: number = 380;
-  poster: string = "//d2i0qcc2ysg3s9.cloudfront.net/crossr4915_0333c740_spark_titlepng_resized.png";
+  width: number = 320;
+  height: number = 190;
+  poster: string;
   visible: boolean = true;
 
   constructor(private streamspot: StreamspotService) {}
 
   ngAfterViewInit() {
-    this.url = this.productionUrl;
 
-    // set up video
-    this.player = window.videojs(this.id, {
-      "techOrder": ["flash", "html5"],
-      "fluid": true
-    });
+    // toggeling dev
+    this.streamspot.toggleDev(true);
 
-    // create play handler (analytics)
-    this.player.on('play', () => {
-      var streamName = 'crossr30e3_mbr2'
-//      window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.ssid);
- //     window.SSTracker.start(this.url, true, this.ssid);
-    })
+    this.streamspot.getBroadcaster((data: any) => {
 
-    // create stop handler (analytics)
-    this.player.on('pause', () => {
-//      if(window.SSTracker){
-//        window.SSTracker.stop();
-//        window.SSTracker = null;
-//      }
-    })
+      if ( data.broadcaster != undefined ) {
 
-    // do callback for broadcasting event
-    this.streamspot.getBroadcasting((data: any) => {
+        var broadcaster = data.broadcaster;
 
-      var isBroadcasting: boolean = data.isBroadcasting;
-      if ( isBroadcasting === false ) {
+        this.url = broadcaster.live_src.cdn_hls;
+        this.streamspot.getPlayers((data: any) => {
+
+          if ( data.players != undefined ) {
+
+            // this needs to change later to get the default player
+            var defaultPlayer = data.players[0];
+
+            this.poster = defaultPlayer.bgLink;
+            this.player = window.videojs(this.id, {
+              "techOrder": ["html5", "flash"],
+              "fluid": true,
+              "poster" : this.poster,
+              "preload": 'auto'
+            });
+
+            // create play handler (analytics)
+            this.player.on('play', () => {
+              window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.id);
+              window.SSTracker.start(this.url, true, this.streamspot.id);
+            });
+
+            // create stop handler (analytics)
+            this.player.on('pause', () => {
+              if(window.SSTracker){
+                window.SSTracker.stop();
+                window.SSTracker = null;
+              }
+            });
+
+            broadcaster.isBroadcasting = true;
+            if ( broadcaster.isBroadcasting === true ) {
         
-        window.location.href = '/live';
+              this.player.src([
+                {
+                  "type": "application/x-mpegURL",
+                  "src": this.url
+                }
+              ]);
+
+              this.player.ready(() => {
+                this.player.play();
+              });
+            }
+            else {
+              console.log('No broadcast available.');
+              window.location.href = '/live';
+            }
+
+          }
+          else {
+            console.log('Failed to get players for video stream.');
+          }
+
+        });
 
       }
       else {
-
-        // set player source
-        this.player.src({
-          "type": "application/x-mpegURL",
-          "src": this.url
-        });
-
-        this.player.play();
-
+        console.log('Failed to get broadcaster from API');
       }
 
     });
