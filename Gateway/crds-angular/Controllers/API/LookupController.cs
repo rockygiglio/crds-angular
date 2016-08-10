@@ -86,6 +86,9 @@ namespace crds_angular.Controllers.API
                 case "childcarelocations":
                     ret = _lookupRepository.ChildcareLocations(token);
                     break;
+                case "groupReasonEnded":
+                    ret = _lookupRepository.GroupReasonEnded(token);
+                    break;
                 default:
                     break;
             }

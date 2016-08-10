@@ -46,6 +46,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "endDate")]
         public DateTime? EndDate { get; set; }
 
+        [JsonProperty(PropertyName = "reasonEndedId")]
+        public int? ReasonEndedId { get; set; }
+
         [JsonProperty(PropertyName = "availableOnline")]
         public bool AvailableOnline { get; set; }
 
