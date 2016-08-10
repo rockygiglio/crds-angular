@@ -19,6 +19,26 @@ export default class ChangeParticipantRoleController {
     return false;
   }
 
+  leaderDisabled() {
+    return true;
+  }
+
+  apprenticeDisabled() {
+    return true;
+  }
+
+  warningLeaderMax() {
+    return true;
+  }
+
+  warningLeaderApproval() {
+    return false;
+  }
+
+  warningApprenticeMax() {
+    return true;
+  }
+
   cancel() {
 
   }

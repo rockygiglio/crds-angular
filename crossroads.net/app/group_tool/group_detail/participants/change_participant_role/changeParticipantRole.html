@@ -4,54 +4,48 @@
 
       <h3>Change Role - {{changeParticipantRole.participant.displayName()}}</h3>
 
-      <div>
-        <p>
-          Groups can have a maximum of 2 Leaders and 1 Apprentice
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-          et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-      </div>
+      <!-- groupToolChangeRoleInstructions -->
+      <div dynamic-content="$root.MESSAGES.groupToolChangeRoleInstructions.content | html"></div>
 
       <div class="radio">
         <label>
           <input type="radio" name="roleOptions" id="roleOptionsParticipant" value="participant" ng-checked="changeParticipantRole.isParticipant()">
           Participant
-          <p class="help-block">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
+          <!-- groupToolChangeRoleParticipantDescription -->
+          <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleParticipantDescription.content | html"></div>
         </label>
       </div>
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsLeader" value="leader" ng-checked="changeParticipantRole.isLeader()">
+          <input type="radio" name="roleOptions" id="roleOptionsLeader" value="leader" ng-checked="changeParticipantRole.isLeader()" ng-disabled="changeParticipantRole.leaderDisabled()">
           Leader
-          <p class="help-block">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
+
+          <!-- groupToolChangeRoleWarningLeaderMax -->
+          <div ng-if="changeParticipantRole.warningLeaderMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderMax.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
+
+          <!-- groupToolChangeRoleWarningLeaderApproval -->
+          <div ng-if="changeParticipantRole.warningLeaderApproval()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderApproval.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
+
+          <!-- groupToolChangeRoleLeaderDescription -->
+          <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleLeaderDescription.content | html"></div>
         </label>
       </div>
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsApprentice" value="apprentice" ng-checked="changeParticipantRole.isApprentice()">
+          <input type="radio" name="roleOptions" id="roleOptionsApprentice" value="apprentice" ng-checked="changeParticipantRole.isApprentice()" ng-disabled="changeParticipantRole.apprenticeDisabled()">
           Apprentice
-          <p class="help-block">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
+
+          <!-- groupToolChangeRoleWarningApprenticeMax -->
+          <div ng-if="changeParticipantRole.warningApprenticeMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningApprenticeMax.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
+
+          <!-- groupToolChangeRoleApprenticeDescription -->
+          <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleApprenticeDescription.content | html"></div>
         </label>
       </div>
 
-      <div class='form-group push-double-top'>
+      <div class='form-group push-top soft-top'>
         <label for='emailMessage' class='wide-label'>Your Message (Optional)</label>
         <textarea type='textarea'
                   rows='8' class='form-control' id='emailMessage' name='emailMessage' ng-model='groupMessage.person.message'

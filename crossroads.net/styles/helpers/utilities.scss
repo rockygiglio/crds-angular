@@ -185,36 +185,6 @@ a.underline,
     margin-left: $line-height-computed / 2;
 }
 
-.push-double {
-    margin: $line-height-computed * 2;
-}
-
-.push-double-top {
-    margin-top: $line-height-computed * 2;
-}
-
-.push-double-right {
-    margin-right: $line-height-computed * 2;
-}
-
-.push-double-bottom {
-    margin-bottom: $line-height-computed * 2;
-}
-
-.push-double-left {
-    margin-left: $line-height-computed * 2;
-}
-
-.push-double-ends {
-    margin-top: $line-height-computed * 2;
-    margin-bottom: $line-height-computed * 2;
-}
-
-.push-double-sides {
-    margin-right: $line-height-computed * 2;
-    margin-left: $line-height-computed * 2;
-}
-
 .push-quarter-bottom {
   margin-bottom: $line-height-computed / 4;
 }
@@ -306,6 +276,10 @@ a.underline,
 
 .soft-half-left {
     padding-left: $line-height-computed / 2;
+}
+
+.soft-quarter {
+    padding: $line-height-computed / 4;
 }
 
 .soft-quarter-left {
