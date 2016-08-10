@@ -39,6 +39,7 @@ export default class CreateGroupService {
         this.profileData = {};
         this.originalAttributeTypes = null;
         this.originalSingleAttributes = null;
+        this.primaryContact = null;
     }
 
     setEditModel(groupData, profileData){
