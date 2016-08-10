@@ -17,7 +17,8 @@ Param (
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
+$backupFileName="$DBName-Backup-$backupDateStamp.trn";
+$backupFileNameFull="$BackupPath\$backupFileName";
 $backupDescription="$DBName - Full Database Backup $backupDateStamp"
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
@@ -50,7 +51,7 @@ FROM [LastBackup] b
 WHERE 
 	b.[RowNum] = 1 AND
 	b.Database_Name = '$DBName' AND 
-	b.Physical_Device_Name = '$backupFileName'
+	b.Physical_Device_Name like '$BackupPath%$backupFileName'
 "@;
 
 if ($ForceBackup -eq $FALSE)
@@ -76,11 +77,10 @@ if ($ForceBackup -eq $FALSE)
     }
 }
 
-
 $backupSql = @"
 USE [master];
 BACKUP DATABASE [$DBName]
-TO DISK = N'$backupFileName'
+TO DISK = N'$backupFileNameFull'
 WITH COPY_ONLY, NOFORMAT, INIT, NAME = N'$backupDescription', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
 "@
 
@@ -91,14 +91,14 @@ $command.CommandTimeout = 600000;
 $exitCode = 0;
 $exitMessage = "Success";
 
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning backup to file $backupFileName on server $DBServer"
+echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning backup to file $backupFileNameFull on server $DBServer"
 try {
   $command.ExecuteNonQuery();
 } catch [System.Exception] {
   $exitCode = 1;
   $exitMessage = "ERROR - Backup failed: " + $_.Exception.Message;
 }
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished backup to file $backupFileName on server $DBServer"
+echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished backup to file $backupFileNameFull on server $DBServer"
 
 echo "Status: $exitMessage"
 exit $exitCode
