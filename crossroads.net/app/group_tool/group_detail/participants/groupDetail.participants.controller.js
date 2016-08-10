@@ -15,6 +15,8 @@ export default class GroupDetailParticipantsController {
     this.ready = false;
     this.error = false;
     this.processing = false;
+    this.isLeader = false;
+    this.data = [];
 
     this.setListView();
   }
@@ -28,6 +30,10 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     });
+
+    this.groupService.getIsLeader(this.groupId).then((isLeader) => {
+      this.isLeader = isLeader;
+    })
   }
 
   loadGroupParticipants() {
@@ -147,5 +153,15 @@ export default class GroupDetailParticipantsController {
     ).finally(() => {
       this.processing = false;
     });
+  }
+
+  emailList() {
+    let emailList = "";
+
+    this.data.forEach(function(participant) {
+      emailList = `${emailList}${participant.email},`;
+    }, emailList);
+
+    return emailList;
   }
 }

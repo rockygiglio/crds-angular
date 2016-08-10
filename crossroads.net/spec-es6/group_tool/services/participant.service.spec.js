@@ -60,4 +60,15 @@ describe('Group Tool Participant Service', () => {
         });
     });
   });
+  
+  describe('acceptDenyInvitation(groupId, invitationGUID, accept) function', () => {
+    it('get the group', () => {
+      httpBackend.expectPOST(`${endpoint}/grouptool/group/123/invitation/1232131231312`).
+                  respond(200, {});
+
+      var promise = fixture.acceptDenyInvitation(123, 1232131231312, true);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+    });
+  });
 });

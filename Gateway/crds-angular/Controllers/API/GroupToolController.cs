@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Json;
 using crds_angular.Security;
 
 namespace crds_angular.Controllers.API
@@ -16,7 +19,7 @@ namespace crds_angular.Controllers.API
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService)
         {
-            this._groupToolService = groupToolService;
+            _groupToolService = groupToolService;
         }
 
         [AcceptVerbs("POST")]
@@ -114,6 +117,35 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Search for a group matching the requested type and search terms.
+        /// </summary>
+        /// <param name="groupTypeId">An integer identifying the type of group to search for</param>
+        /// <param name="keywords">The optional keywords to search for</param>
+        /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
+        /// <returns>A list of groups matching the terms</returns>
+        [AcceptVerbs("GET")]
+        [Route("api/grouptool/grouptype/{groupTypeId:int}/group/search")]
+        [ResponseType(typeof(List<GroupDTO>))]
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null)
+        {
+            try
+            {
+                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location);
+                if (result == null || !result.Any())
+                {
+                    return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Error searching for group", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        /// <summary>
         /// Allows a group leader to accept or deny a group inquirier.
         /// </summary>
         /// <param name="groupTypeId">An integer identifying the type of group.</param>
@@ -146,7 +178,39 @@ namespace crds_angular.Controllers.API
             });
         }
 
-	/// <summary>
+        /// <summary>
+        /// Allows an invitee to accept or deny a group invitation.
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the invitation is associated to.</param>
+        /// <param name="invitationGuid">An string identifying the private invitation.</param>
+        /// <param name="accept">A boolean showing if the invitation is being approved or denied.</param>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [Route("api/grouptool/group/{groupId:int}/invitation/{invitationGuid}")]
+        [HttpPost]
+        public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationGuid, [FromBody]bool accept)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.AcceptDenyGroupInvitation(token, groupId, invitationGuid, accept);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when accepting: {0}, for group {1}", accept, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Send an email message to all members of a Group
         /// Requires the user to be a leader of the Group
         /// Will return a 404 if the user is not a Leader of the group
@@ -169,6 +233,41 @@ namespace crds_angular.Controllers.API
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto("Error sending a Group email for groupID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Return if the user is a group leader
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that we want to check if the user is a Leader of.</param>
+        /// <param name="groupTypeId">An integer identifying the group type that we want to check if the user is a Leader of.</param>
+        /// <returns>MyGroup</returns>
+        [RequiresAuthorization]
+        [AcceptVerbs("GET")]
+        [ResponseType(typeof(MyGroup))]
+        [Route("api/grouptool/{groupId}/{groupTypeId}/isleader")]
+        [HttpGet]
+        public IHttpActionResult GetIfIsGroupLeader(int groupId, int groupTypeId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+
+                    //Will return group if they are a group leader
+                    return Ok(group);
+                }
+                catch(NotGroupLeaderException)
+                {
+                    //Will return empty group if they are not a group leader
+                    return Ok(new MyGroup());
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("Get if leader Failed", exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

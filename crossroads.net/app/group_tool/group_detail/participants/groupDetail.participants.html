@@ -1,35 +1,36 @@
 <preloader full-screen='false' ng-show='!groupDetailParticipants.ready'> </preloader>
 
 <!-- List or Edit participants -->
-<div class='container-fluid' 
+<div
   ng-show='groupDetailParticipants.ready'
   ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
-  <div class='row'>
-    <div class='col-md-12 group-participants'>
-      <group-detail-participant-card 
-        ng-repeat='participant in groupDetailParticipants.data'
-        delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
-        participant='participant'
-        edit='groupDetailParticipants.isEditView()'>
-      </group-detail-participant-card>
-    </div>
+  <div class='row push-top'>
+    <group-detail-participant-card class="col-xs-12 col-sm-6 col-lg-4 push-bottom"
+      ng-repeat='participant in groupDetailParticipants.data'
+      delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+      participant='participant'
+      edit='groupDetailParticipants.isEditView()'>
+    </group-detail-participant-card>
   </div>
   <div class='row'>&nbsp;</div>
-  <div class='row'>
+
+  <div ng-if="groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
+
+  <div ng-if="groupDetailParticipants.data.length > 1" class='row'>
     <div class='col-md-12'>
       <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEmailView()'>Email Group</a>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()'>Edit</a>
+        <a type='button' class='btn btn-primary' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
       </p>
       <p class='text-center' ng-if='groupDetailParticipants.isEditView()'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()'>Cancel</a>
+        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()' ng-if='groupDetailParticipants.isLeader'>Cancel</a>
       </p>
     </div>
   </div>
 </div>
 
 <!-- Delete a participant -->
-<div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView()'>
+<div class='container-fluid' ng-if='groupDetailParticipants.isDeleteView() && groupDetailParticipants.isLeader'>
   <group-message person="groupDetailParticipants.deleteParticipant"
     normal-loading-text="Remove Participant"
     loading-loading-text="Removing..."

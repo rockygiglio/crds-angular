@@ -37,13 +37,6 @@ describe('GroupDetailInviteController', () => {
     it('should initialize properties', () => {
       expect(fixture.groupId).toEqual(123);
       expect(fixture.invite).toBe(null);
-
-      expect(fixture.groupParticipantRoles).toEqual([
-        { 'id': constants.GROUP.ROLES.MEMBER, 'label': 'Participant' },
-        { 'id': constants.GROUP.ROLES.LEADER, 'label': 'Co-Leader' },
-        { 'id': constants.GROUP.ROLES.APPRENTICE, 'label': 'Apprentice' }
-      ]);
-      
       expect(fixture.processing).toBeFalsy();
     });
   });
@@ -55,6 +48,7 @@ describe('GroupDetailInviteController', () => {
       expect(fixture.invite).toBeDefined();
       expect(fixture.invite.invitationType).toEqual(constants.INVITATION.TYPES.GROUP);
       expect(fixture.invite.sourceId).toEqual(123);
+      expect(fixture.invite.groupRoleId).toEqual(constants.GROUP.ROLES.MEMBER);
     });
   });
 

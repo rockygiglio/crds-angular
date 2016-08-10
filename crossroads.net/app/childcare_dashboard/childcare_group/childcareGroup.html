@@ -19,12 +19,15 @@
         class="list-group-item form-group">
       {{child.childName}}
       <toggle-switch
+        ng-if = "child.eligible"
         ng-model="child.rsvpness"
         on-label="Yes"
         off-label="No"
         class="pull-right"
         ng-click="childcareGroup.validateAndRsvp(child, child.rsvpness)" >
-      <toggle-switch>
+      </toggle-switch>
+      <span ng-if="!child.eligible" class="pull-right hidden-xs hidden-sm" dynamic-content='$root.MESSAGES.childexceedsMaxAge.content | html'></span>
+      <div ng-if="!child.eligible" class="hidden-md hidden-lg" dynamic-content='$root.MESSAGES.childexceedsMaxAge.content | html'></div>
     </li>
   </ul>
 </div>

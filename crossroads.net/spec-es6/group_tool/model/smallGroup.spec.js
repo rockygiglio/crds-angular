@@ -1,7 +1,7 @@
 
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 
-describe('Group Tool SmallGroup', () => {
+describe('Group Tool SmallGroup', () => { 
 
   let smallGroup,
     mockJson;
@@ -24,7 +24,7 @@ describe('Group Tool SmallGroup', () => {
       'groupFullInd': false,
       'waitListInd': false,
       'waitListGroupId': 0,
-      'childCareInd': false,
+      'kidsWelcome': false,
       'minAge': 0,
       'SignUpFamilyMembers': null,
       'events': null,
@@ -107,7 +107,7 @@ describe('Group Tool SmallGroup', () => {
         }
       }
     };
-    
+
     smallGroup = new SmallGroup(mockJson);
   });
 
@@ -181,10 +181,64 @@ describe('Group Tool SmallGroup', () => {
     });
   });
 
+  describe('visibility()', () => {
+    it('is visible online', () => {
+      smallGroup.availableOnline = true;
+      expect(smallGroup.visibility()).toEqual('Public');
+    });
+
+    it('is not visible online', () => {
+      smallGroup.address = null;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+
+    it('is undefined', () => {
+      smallGroup.address = undefined;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+
+    it('is null', () => {
+      smallGroup.address = undefined;
+      expect(smallGroup.visibility()).toEqual('Private');
+    });
+  });
+
+  describe('participantInGroup()', () => {
+    it('participant is in group', () => {
+      expect(smallGroup.participantInGroup(2562378)).toEqual(true);
+    });
+
+    it('participant is not in group', () => {
+      expect(smallGroup.participantInGroup(2233445)).toEqual(false);
+    });
+
+    it('participant contactID is null', () => {
+      var nullThing = null;
+      expect(smallGroup.participantInGroup(nullThing)).toEqual(false);
+    });
+
+    it('participant contactID is undefined', () => {
+      var undefinedThing = undefined;
+      expect(smallGroup.participantInGroup(undefinedThing)).toEqual(false);
+    });
+  });
+
   describe('categoriesToString()', () => {
     it('is Interest / Boxing, Men\'s / Father\'s', () => {
       expect(smallGroup.categoriesToString()).toEqual('Interest / Boxing, Men\'s / Father\'s');
     });
   });
+
+  describe('emailList()', () => {
+    it('is should return a list of the emails', () => {
+      expect(smallGroup.emailList()).toEqual('dtkocher@callibrity.com,jim.kriz@ingagepartners.com,');
+    });
+  });
+
+  describe('getGroupCardWhenField', () => {
+    it('should return a group location string for display', () => {
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30:00, Every Week');
+    }); 
+  });  
 
 });

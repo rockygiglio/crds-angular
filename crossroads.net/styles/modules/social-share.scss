@@ -2,21 +2,21 @@
   display: block;
 
   &.addthis_32x32_style {
-    .at4-icon {
-      height: 32px;
-      width: 32px;
+    .at4-icon, .at-icon-wrapper, .at-icon {
+      height: 32px !important;
+      width: 32px !important;
     }
   }
 
   &.addthis_20x20_style {
-    .at4-icon {
+    .at4-icon, .at-icon-wrapper, .at-icon  {
       height: 20px;
       width: 20px;
     }
   }
 
   &.addthis_16x16_style {
-    .at4-icon {
+    .at4-icon, .at-icon-wrapper, .at-icon  {
       height: 16px;
       width: 16px;
     }
@@ -33,7 +33,7 @@
       }
     }
 
-    .at4-icon {
+    .at4-icon, .at-icon-wrapper, .at-icon  {
       text-align: center;
       background-position: center;
       border-radius: 50%;

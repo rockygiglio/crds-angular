@@ -1,4 +1,6 @@
-﻿namespace MinistryPlatform.Translation.Models
+﻿using System;
+
+namespace MinistryPlatform.Translation.Models
 {
     public class MpGroupParticipant
     {
@@ -10,5 +12,6 @@
         public int GroupRoleId { get; set; }
         public string GroupRoleTitle { get; set; }
         public string Email { get; set; }
+        public DateTime? StartDate { get; set; }
     }
 }

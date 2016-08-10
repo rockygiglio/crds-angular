@@ -2,9 +2,12 @@
 export default class MyGroupsController {
 
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, ParticipantService) {
     this.groupService = GroupService;
+    this.participantService = ParticipantService;
+
     this.groups = [];
+    this.approvedLeader = false;
     this.ready = false;
     this.error = false;
     this.errorMsg = '';
@@ -29,6 +32,18 @@ export default class MyGroupsController {
       this.error = true;
       this.ready = true;
     });
+
+    // Determine if this participant is a leader
+    this.participantService.get().then((data) => {
+        if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
+          this.approvedLeader = true;
+        }
+      },
+
+      (err) => {
+        this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
+      });
+
   }
 
 }

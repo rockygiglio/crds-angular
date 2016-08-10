@@ -8,11 +8,14 @@ class ChildcareDashboardGroupController {
     this.modal = $modal;
     this.root = $rootScope;
     this.childcareService = ChildcareDashboardService;
+  }
+
+  $onInit() {
     if(this.isEventClosed()) {
-      this.message = $rootScope.MESSAGES.childcareEventClosed.content;
+      this.message = this.root.MESSAGES.childcareEventClosed.content;
     }
     if(!this.hasEligibleChildren()) {
-      this.message = $rootScope.MESSAGES.noEligibleChildren.content;
+      this.message = this.root.MESSAGES.noEligibleChildren.content;
     }
   }
 
@@ -51,10 +54,11 @@ class ChildcareDashboardGroupController {
   }
 
   rsvp(child) {
-    var resp = this.childcareService.saveRSVP(child.contactId, this.communityGroup.childcareGroupId, child.rsvpness);
-    resp.$promise.then(() => {
-
-    }, (err) => {
+    var resp = this.childcareService.saveRSVP(child.contactId,
+                                              this.communityGroup.childcareGroupId,
+                                              this.communityGroup.groupParticipantId,
+                                              child.rsvpness);
+    resp.$promise.then(() => { }, (err) => {
       child.rsvpness = !child.rsvpness;
       // display an error message...
       if (err.status === 412) {

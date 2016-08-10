@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -23,9 +24,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _childcareEmailPageViewId;
         private readonly int _childcareEventType;
         private readonly IGroupRepository _groupService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
 
-        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventRepository eventService, IGroupRepository groupService)
+        public ChildcareRequestRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventRepository eventService, IGroupRepository groupService, IMinistryPlatformRestRepository ministryPlatformRest)
         {
+            _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
             _eventService = eventService;
@@ -136,13 +139,17 @@ namespace MinistryPlatform.Translation.Repositories
           }
         }
 
-        public void DeleteAllChildcareRequestDates(int childcareRequestId,  string token)
+        public void DeleteAllChildcareRequestDates(int childcareRequestId)
         {
-            var datesList = GetChildcareRequestDates(childcareRequestId);
-            foreach (var date in datesList)
+            // using new api
+            var apiToken = _apiUserService.GetToken();
+
+            var parms = new Dictionary<string, object>()
             {
-                _ministryPlatformService.DeleteRecord(_childcareRequestDatesPageId, date.ChildcareRequestDateId, null, token);
-            }
+                {"@ChildcareRequestID", childcareRequestId}
+            };
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).PostStoredProc("api_crds_DeleteDatesForChildcareRequest", parms);
+
         }
 
         public List<MpChildcareRequestDate> GetChildcareRequestDates(int childcareRequestId)
@@ -208,30 +215,11 @@ namespace MinistryPlatform.Translation.Repositories
             return requestedDate;
         }
 
-        public Dictionary<int, int> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates)
+        public List<MpEvent> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
         {
-            var apiToken = _apiUserService.GetToken();
-
-            var request = GetChildcareRequestForReview(childcareRequestId);
-            var prefTime = request.PreferredTime.Substring(request.PreferredTime.IndexOf(',') + 1).Split('-');
-            var requestStartTime = DateTime.ParseExact(prefTime[0].Trim(), "h:mmtt", CultureInfo.InvariantCulture );
-            var requestEndTime = DateTime.ParseExact(prefTime[1].Trim(), "h:mmtt", CultureInfo.InvariantCulture);
-
-            var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken);
-
-            var reqEvents = new Dictionary<int, int>();
-            foreach (var date in requestedDates)
-            {
-                var foundEvent = events.SingleOrDefault(
-                    e => (e.EventStartDate == date.RequestDate.Date.Add(requestStartTime.TimeOfDay)) && 
-                    (e.EventEndDate == date.RequestDate.Date.Add(requestEndTime.TimeOfDay)) && 
-                    (e.CongregationId == request.LocationId));
-                if (foundEvent != null)
-                {
-                    reqEvents.Add(date.ChildcareRequestDateId, foundEvent.EventId);
-                }
-            }
-            return reqEvents;
+           var apiToken = _apiUserService.GetToken();
+           var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken);
+           return events;
         }
 
         public MpChildcareRequest GetChildcareRequestForReview(int childcareRequestId)

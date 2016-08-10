@@ -48,6 +48,11 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
+        public List<List<T>> GetFromStoredProc<T>(string procedureName)
+        {
+            return GetFromStoredProc<T>(procedureName, new Dictionary<string, object>());
+        }
+
         public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
             var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
@@ -64,6 +69,32 @@ namespace MinistryPlatform.Translation.Repositories
                 return default(List<List<T>>);
             }
             return content;
+        }
+
+        public int PostStoredProc(string procedureName, Dictionary<string, object> parameters)
+        {
+            var url = string.Format("/procs/{0}", procedureName );
+            var request = new RestRequest(url, Method.POST);
+            AddAuthorization(request);
+          
+            request.AddParameter("application/json", FormatStoredProcBody(parameters), ParameterType.RequestBody);
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+
+            return (int)response.ResponseStatus;
+        }
+
+        private static string FormatStoredProcBody(Dictionary<string, object> parameters)
+        {
+            var parmlist = new List<string>();
+            foreach (var item in parameters)
+            {
+                var parm = "\"" + item.Key + "\":\"" + item.Value + "\"";
+                parmlist.Add(parm);
+            }
+             
+            return "{" + string.Join(",", parmlist) + "}";
         }
 
         private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
@@ -87,6 +118,17 @@ namespace MinistryPlatform.Translation.Repositories
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
 
             return content;
+        }
+
+        public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
+        {
+            var url = string.Format("/tables/{0}", tableName);
+            var request = new RestRequest(url, Method.PUT);
+            AddAuthorization(request);
+            request.AddParameter("application/json", "[" + FormatStoredProcBody(fields) + "]", ParameterType.RequestBody);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            response.CheckForErrors(string.Format("Error updating {0}", tableName), true);
         }
 
         private void AddAuthorization(IRestRequest request)

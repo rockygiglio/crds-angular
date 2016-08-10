@@ -49,9 +49,7 @@
       GiveTransferService.processing = true;
 
       if (!vm.dto.initialized || toState.name === 'tripgiving') {
-        event.preventDefault();
-        initDefaultState();
-        return;
+         return;
       }
 
       vm.donationService.transitionForLoggedInUserBasedOnExistingDonor(event, toState);
@@ -63,7 +61,16 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams) {
+    // Short-circuit this handler if we're not transitioning TO a give state
+      if (toState && !/^tripgiving.*/.test(toState.name)) {
+        return;
+      }
       vm.dto.processing = false;
+      if ((!vm.dto.initialized || toState.name === 'tripgiving') && toState.name !== GiveFlow.thankYou) {
+        event.preventDefault();
+        initDefaultState();
+        return;
+      }
       if (toState.name === GiveFlow.thankYou) {
         vm.dto.initialized = false;
       }

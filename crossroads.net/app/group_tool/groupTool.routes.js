@@ -34,8 +34,15 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           })
         },
         profile: (CreateGroupService, GroupService) => {
-          return GroupService.getProfileData().then((data) => {
-            CreateGroupService.profileData = data;   
+          if(!CreateGroupService.resolved) {
+            return GroupService.getProfileData().then((data) => {
+              CreateGroupService.setCreateModel(data);
+            })
+          }
+        },
+        countryList: (CreateGroupService, GroupService) => {
+          return GroupService.getCountries().then((data) => {
+            CreateGroupService.countryLookup = data;
           })
         }
       },
@@ -48,13 +55,61 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       }
     })
     .state('grouptool.create.preview', {
-      url: '/groups/create/preview',
       parent: 'noSideBar',
       template: '<create-group-preview> </create-group-preview>',
       data: {
         isProtected: true,
         meta: {
           title: 'Preview a Group',
+          description: ''
+        },
+        isCreate: true
+      }
+    })
+    .state('grouptool.edit.preview', {
+      parent: 'noSideBar',
+      template: '<create-group-preview> </create-group-preview>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Preview a Group',
+          description: ''
+        },
+        isCreate: false
+      }
+    })
+    .state('grouptool.edit', {
+      parent: 'noSideBar',
+      url: '/groups/edit/{groupId:int}',
+      template: '<edit-group> </edit-group>',
+      resolve:{
+        // we are not using any of these resolves in the controller.
+        // we are using these resolves to prepare the CreateGroupService
+        // before the controller is initialized
+        stateList: (CreateGroupService, GroupService) =>{
+          return GroupService.getStates().then((data) => {
+            CreateGroupService.statesLookup = data;
+          })
+        },
+        profile: ($stateParams, CreateGroupService, GroupService) => {
+          if(!CreateGroupService.resolved) {
+            return GroupService.getProfileData().then((profile) => {
+              return GroupService.getGroupData($stateParams.groupId).then((group) => {
+                CreateGroupService.setEditModel(group, profile);
+              })
+            })
+          }
+        },
+        countryList: (CreateGroupService, GroupService) => {
+          return GroupService.getCountries().then((data) => {
+            CreateGroupService.countryLookup = data;
+          })
+        },
+      },
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Edit Your Group',
           description: ''
         }
       }
@@ -87,6 +142,59 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail.requests', {
       url: '/requests',
-      template: '<group-detail-requests></group-detail-requests>'
-    });
+      template: '<group-detail-requests></group-detail-requests>',
+      params: {
+        view: {
+          value: null,
+          squash: true
+        }
+      }
+    })
+    .state('grouptool.invitation', {
+      url: '/groups/invitation/accept/{invitationGUID}',
+      parent: 'noSideBar',
+      template: '<group-invitation></group-invitation>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Join Group',
+          description: ''
+        }
+      }
+    })
+    .state('grouptool.search', {
+      parent: 'noSideBar',
+      url: '/groups/search',
+      template: '<group-search></group-search>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Find a Group',
+          description: ''
+        }
+      }
+    })
+    .state('grouptool.search-results', {
+      parent: 'noSideBar',
+      url: '/groups/search/results?query&location',
+      params: {
+        query: {
+          value: null,
+          squash: true
+        },
+        location: {
+          value: null,
+          squash: true
+        }
+      },
+      template: '<group-search-results></group-search-results>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Search Results',
+          description: ''
+        }
+      }
+    })
+  ;
 }

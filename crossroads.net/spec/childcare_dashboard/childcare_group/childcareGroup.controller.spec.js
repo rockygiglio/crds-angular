@@ -44,7 +44,7 @@ describe('Childcare Group Component Controller', () => {
 
     controller = new ChildcareDashboardGroupController(rootScope, scope, modal, childcareDashboardService);
     controller.communityGroup = {eligibleChildren: [] };
-
+    controller.$onInit();
     spyOn(rootScope, '$emit').and.callThrough();
 
   }));
@@ -105,7 +105,7 @@ describe('Childcare Group Component Controller', () => {
       $resolved: true
     });
     var result = controller.rsvp(cg.eligibleChildren[0], true);
-    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,true);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234, 987654321, true);
   });
 
   it('should cancel the rsvp when toggle is set to off', () => {
@@ -121,7 +121,7 @@ describe('Childcare Group Component Controller', () => {
     });
 
     var result = controller.rsvp(cg.eligibleChildren[0]);
-    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234, 987654321, false);
   });
 
   it('should display an error message when there is an error', () => {
@@ -140,7 +140,7 @@ describe('Childcare Group Component Controller', () => {
     var result = controller.rsvp(controller.communityGroup.eligibleChildren[0], false);
 
 
-    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234, 987654321, false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
     expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpError);
   });
@@ -159,7 +159,7 @@ describe('Childcare Group Component Controller', () => {
     controller.communityGroup.eligibleChildren[0].rsvpness = false;
     var result = controller.rsvp(controller.communityGroup.eligibleChildren[0], false);
 
-    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234 ,false);
+    expect(childcareDashboardService.saveRSVP).toHaveBeenCalledWith(100030266, 1234, 987654321, false);
     expect(controller.communityGroup.eligibleChildren[0].rsvpness).toBe(true);
     expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.childcareRsvpFull);
 
@@ -184,6 +184,7 @@ describe('Childcare Group Component Controller', () => {
      groupName: '(t) Fathers Oakley CG',
      maxAge: 0,
      remainingCapacity: 0,
+     groupParticipantId: 987654321
     };
   }
 

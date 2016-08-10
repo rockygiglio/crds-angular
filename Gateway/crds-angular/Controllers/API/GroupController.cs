@@ -24,18 +24,21 @@ namespace crds_angular.Controllers.API
         private readonly IParticipantRepository _participantService;
         private readonly IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
+        private readonly IGroupToolService _groupToolService;
 
         public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
                                IParticipantRepository participantService,
                                IAddressService addressService,
-                               IGroupSearchService groupSearchService)
+                               IGroupSearchService groupSearchService,
+                               IGroupToolService groupToolService)
         {
             _groupService = groupService;
             _authenticationService = authenticationService;
             _participantService = participantService;
             _addressService = addressService;
             _groupSearchService = groupSearchService;
+            _groupToolService = groupToolService;
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace crds_angular.Controllers.API
                 {
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
-                        _addressService.FindOrCreateAddress(group.Address);
+                        _addressService.FindOrCreateAddress(group.Address, true);
                     }
 
                     group = _groupService.CreateGroup(group);
@@ -62,6 +65,40 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not create group", e);
+                    return BadRequest();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Edit a group for the authenticated user.
+        /// </summary>
+        /// <param name="group">The data required to edit the group, GroupDTO</param>
+        /// <returns>The input GroupDTO</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [HttpPost]
+        [Route("api/group/edit")]
+        public IHttpActionResult EditGroup([FromBody] GroupDTO group)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, 1, group.GroupId);
+                    if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
+                    {
+                        _addressService.FindOrCreateAddress(group.Address);
+                    }
+
+                    group = _groupService.UpdateGroup(group);
+                    _logger.DebugFormat("Successfully updated group {0} ", group.GroupId);
+                    return (Created(string.Format("api/group/{0}", group.GroupId), group));
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not update group", e);
                     return BadRequest();
                 }
             });
@@ -119,6 +156,34 @@ namespace crds_angular.Controllers.API
                     var detail = _groupService.getGroupDetails(groupId, contactId, participant, token);
 
                     return Ok(detail);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Get Group", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        /// <summary>
+        /// Return the group dto for the invitation guid (Private Invitation)
+        /// </summary>
+        /// <param name="invitationGuid">An string representing the unique private invite key</param>
+        /// <returns>A list of Group DTO</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [AcceptVerbs("GET")]
+        [Route("api/group/invitation/{invitationGUID}")]
+        public IHttpActionResult GetGroupByInvitationGuid(string invitationGuid)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupService.GetGroupDetailsByInvitationGuid(token, invitationGuid);
+
+                    return Ok(group);
                 }
                 catch (Exception e)
                 {
@@ -211,7 +276,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <returns>A list of all small groups for the given user (group type of 1)</returns>
         [RequiresAuthorization]
-        [ResponseType(typeof(List<GroupContactDTO>))]
+        [ResponseType(typeof(List<GroupDTO>))]
         [Route("api/group/mine/{groupTypeId}/{groupId:int?}")]
         public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
         {

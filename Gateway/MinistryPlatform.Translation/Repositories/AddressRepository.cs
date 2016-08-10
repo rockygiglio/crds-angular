@@ -5,6 +5,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Helpers;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -12,19 +13,42 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
-        private readonly int AddressPageId;
+        private readonly int _addressPageId;
+        private readonly int _addressApiPageViewId;
 
         public AddressRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
-            AddressPageId = configurationWrapper.GetConfigIntValue("Addresses");
+            _addressPageId = configurationWrapper.GetConfigIntValue("Addresses");
+            _addressApiPageViewId = configurationWrapper.GetConfigIntValue("AddressesApiPageView");
         }
 
         public int Create(MpAddress address)
         {
             var apiToken = _apiUserService.GetToken();
 
+            var values = MapAddressDictionary(address);
+
+            var addressId = _ministryPlatformService.CreateRecord(_addressPageId, values, apiToken);
+
+            return addressId;
+        }
+
+        public int Update(MpAddress address)
+        {
+            var apiToken = _apiUserService.GetToken();
+
+            var values = MapAddressDictionary(address);
+            values.Add("Address_ID", address.Address_ID.Value);
+
+            _ministryPlatformService.UpdateRecord(_addressPageId, values, apiToken);
+
+            return address.Address_ID.Value;
+        }
+
+        private static Dictionary<string, object> MapAddressDictionary(MpAddress address)
+        {
             var values = new Dictionary<string, object>()
             {
                 {"Address_Line_1", address.Address_Line_1},
@@ -34,11 +58,11 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Postal_Code", address.Postal_Code},
                 {"Foreign_Country", address.Foreign_Country},
                 {"County", address.County},
+                {"Longitude", address.Longitude },
+                {"Latitude", address.Latitude }
             };
 
-            var addressId = _ministryPlatformService.CreateRecord(AddressPageId, values, apiToken);
-
-            return addressId;
+            return values;
         }
 
         public List<MpAddress> FindMatches(MpAddress address)
@@ -52,8 +76,12 @@ namespace MinistryPlatform.Translation.Repositories
                                        AddQuotesIfNotEmpty(address.Postal_Code),
                                        AddQuotesIfNotEmpty(address.Foreign_Country));
 
-            var records = _ministryPlatformService.GetRecordsDict(AddressPageId, apiToken, search);
+            var records = _ministryPlatformService.GetPageViewRecords(_addressApiPageViewId, apiToken, search);
 
+            object longitudeObj;
+            object latitudeObj;
+            double latitude;
+            double longitude;
             var addresses = records.Select(record => new MpAddress()
             {
                 Address_ID = record.ToInt("dp_RecordID"),
@@ -63,6 +91,8 @@ namespace MinistryPlatform.Translation.Repositories
                 State = record.ToString("State/Region"),
                 Postal_Code = record.ToString("Postal_Code"),
                 Foreign_Country = record.ToString("Foreign_Country"),
+                Latitude = record.TryGetValue("Latitude", out latitudeObj) && latitudeObj != null && double.TryParse(latitudeObj.ToString(), out latitude) ? latitude : (double?)null,
+                Longitude = record.TryGetValue("Longitude", out longitudeObj) && longitudeObj != null && double.TryParse(longitudeObj.ToString(), out longitude) ? longitude : (double?)null,
             }).ToList();
 
             return addresses;
@@ -77,5 +107,22 @@ namespace MinistryPlatform.Translation.Repositories
 
             return string.Format("\"{0}\"", input);
         }
-    }
+
+        public MpAddress GetAddressById(string token, int id)
+        {
+            var record = _ministryPlatformService.GetRecordDict(_addressPageId, id, token);
+
+            var address = new MpAddress()
+            {
+                Address_ID = record.ToInt("Address_ID"),
+                Address_Line_1 = record.ToString("Address_Line_1"),
+                Address_Line_2 = record.ToString("Address_Line_2"),
+                City = record.ToString("City"),
+                State = record.ToString("State/Region"),
+                Postal_Code = record.ToString("Postal_Code")
+            };
+
+            return address;
+        }
+}
 }

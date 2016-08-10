@@ -25,7 +25,7 @@ declare var _: any;
         </ul>
       </div>
       <div *ngIf="isBroadcasting" class="in-progress">
-        <i>Live stream in progress...</i> <a href="#" class="btn btn-sm">Watch Now</a>
+        <i>Live stream in progress...</i> <a href="/live/stream" class="btn btn-sm">Watch Now</a>
       </div>
     </div>
   `,
@@ -50,7 +50,7 @@ export class CountdownComponent implements OnInit {
   private createCountdown() {
     this.streamspotService.nextEvent.subscribe((event: Event) => {
       this.event = event;
-      this.subscriber = Observable.interval(1000).subscribe(() => this.parseEvent());
+      this.parseEvent();
     });
   }
 
@@ -59,8 +59,8 @@ export class CountdownComponent implements OnInit {
   }
 
   parseEvent() {
-    this.isCountdown = moment().tz(moment.tz.guess()).isBefore(this.event.start);
-    this.isBroadcasting = !this.isCountdown && moment().tz(moment.tz.guess()).isBefore(this.event.end);
+    this.isCountdown = this.event.isUpcoming();
+    this.isBroadcasting = this.event.isBroadcasting();
 
     let duration = moment.duration(
       +this.event.start - +moment(),
@@ -71,11 +71,6 @@ export class CountdownComponent implements OnInit {
     this.countdown.minutes = this.pad(duration.minutes());
     this.countdown.seconds = this.pad(duration.seconds());
     this.displayCountdown  = true;
-
-    if (!this.isCountdown && !this.isBroadcasting) {
-      this.subscriber.unsubscribe();
-      this.createCountdown();
-    }
   }
 
 }

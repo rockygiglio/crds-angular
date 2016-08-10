@@ -1,100 +1,105 @@
-<section class="navbar-section">
-  <div class="container wow fadeIn">
-    <a href="#series" class="btn see-schedule">
-      See Schedule
-      <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
-	      <use xlink:href="#arrow-down9"></use>
-      </svg>
-    </a>
-    <countdown></countdown>
-  </div>
-</section>
+<div class="wrapper" stickyHeader>
+  <section class="navbar-section" >
+    <div class="container wow fadeIn">
+      <pageScroll href="#schedule" class="btn see-schedule">
+        See Schedule
+        <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
+          <use xlink:href="#arrow-down9"></use>
+        </svg>
+      </pageScroll>
+      <countdown></countdown>
+    </div>
+  </section>
 
-<section class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
-  <div class="wow fadeInUp">
-    <dynamic-content-ng2 title="streamingLandingIntro"></dynamic-content-ng2>
-    <p *ngIf="inProgress" class="wow fadeIn"><a href="#" class="btn btn-primary">Watch Now</a></p>
-  </div>
-</section>
+  <section class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+    <div class="wow fadeInUp">
+      <dynamic-content-ng2 title="streamingLandingIntro"></dynamic-content-ng2>
+      <p *ngIf="inProgress" class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+    </div>
+  </section>
 
-<section class="current-series">
-  <figure class="container text-center wow fadeIn">
-    <dynamic-content-ng2 title="streamingLandingCurrentSeriesImage"></dynamic-content-ng2>
-    <figcaption>Current Series</figcaption>
-  </figure>
+  <section class="current-series">
+    <figure class="container text-center wow fadeIn">
+      <dynamic-content-ng2 title="streamingLandingCurrentSeriesImage"></dynamic-content-ng2>
+      <figcaption>Current Series</figcaption>
+    </figure>
 
-  <main id="series" class="container">
-    <article class="wow fadeInUp">
-      <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
-    </article>
-    <div class="wow fadeInUp"><schedule></schedule></div>
-  </main>
-</section>
+    <main id="series" class="container">
+      <article class="wow fadeInUp">
+        <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
+      </article>
+      <aside id="schedule">
+        <schedule class="wow fadeInUp"></schedule>
+      </aside>
+    </main>
+  </section>
 
-<section class="past-weekends">
-  <div class="container">
-    <header>
-      <a href="/media" class="pull-right view-all-desktop">View All Past Weekends</a>
-      <h2>Past Weekends</h2>
+  <section class="past-weekends">
+    <div class="container">
+      <header>
+        <a href="/media" class="pull-right view-all-desktop">View All Past Weekends</a>
+        <h2>Past Weekends</h2>
+      </header>
+
+      <div class="row">
+        <article class="crds-card wow fadeInUp">
+          <dynamic-content-ng2 title="streamingLandingPastWeekend1"></dynamic-content-ng2>
+        </article>
+
+        <article class="crds-card wow fadeInUp" data-wow-delay="100ms">
+          <dynamic-content-ng2 title="streamingLandingPastWeekend2"></dynamic-content-ng2>
+        </article>
+
+        <article class="crds-card wow fadeInUp" data-wow-delay="200ms">
+          <dynamic-content-ng2 title="streamingLandingPastWeekend3"></dynamic-content-ng2>
+        </article>
+
+        <article class="crds-card wow fadeInUp" data-wow-delay="300ms">
+          <dynamic-content-ng2 title="streamingLandingPastWeekend4"></dynamic-content-ng2>
+        </article>
+      </div>
+
+      <a href="/media" class="btn btn-primary btn-block-mobile view-all-mobile">View All Past Weekends</a>
+    </div>
+  </section>
+
+  <section class="ways-to-watch wow fadeIn">
+    <div class="container">
+      <header>
+        <h2>Ways to Watch</h2>
+      </header>
+      <div class="row">
+        <dynamic-content-ng2 title="streamingLandingWaysToWatch"></dynamic-content-ng2>
+      </div>
+    </div>
+  </section>
+
+  <section class="community imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-map.jpg?w=1&fit=crop">
+    <div class="wow fadeInUp">
+      <dynamic-content-ng2 title="streamingLandingCommunity"></dynamic-content-ng2>
+      <social-sharing class="clearfix addthis_crossroads_sharing addthis_32x32_style"></social-sharing>
+    </div>
+  </section>
+
+  <section class="group-host">
+    <header class="crds-hero wow fadeInUp">
+      <div>
+        <dynamic-content-ng2 title="streamingLandingHostIntro"></dynamic-content-ng2>
+      </div>
     </header>
 
-    <div class="row">
-      <article class="crds-card wow fadeInUp">
-        <dynamic-content-ng2 title="streamingLandingPastWeekend1"></dynamic-content-ng2>
-      </article>
-
-      <article class="crds-card wow fadeInUp" data-wow-delay="100ms">
-        <dynamic-content-ng2 title="streamingLandingPastWeekend2"></dynamic-content-ng2>
-      </article>
-
-      <article class="crds-card wow fadeInUp" data-wow-delay="200ms">
-        <dynamic-content-ng2 title="streamingLandingPastWeekend3"></dynamic-content-ng2>
-      </article>
-
-      <article class="crds-card wow fadeInUp" data-wow-delay="300ms">
-        <dynamic-content-ng2 title="streamingLandingPastWeekend4"></dynamic-content-ng2>
-      </article>
+    <div class="container">
+      <div>
+        <article class="wow fadeIn" data-wow-delay="150ms">
+          <dynamic-content-ng2 title="streamingLandingHostTips"></dynamic-content-ng2>
+        </article>
+        <article class="wow fadeIn" data-wow-delay="250ms">
+          <dynamic-content-ng2 title="streamingLandingHostBecome"></dynamic-content-ng2>
+        </article>
+        <article class="wow fadeIn" data-wow-delay="350ms">
+          <dynamic-content-ng2 title="streamingLandingHostKids"></dynamic-content-ng2>
+        </article>
+      </div>
     </div>
-
-    <a href="/media" class="btn btn-primary btn-block-mobile view-all-mobile">View All Past Weekends</a>
-  </div>
-</section>
-
-<section class="ways-to-watch wow fadeIn">
-  <div class="container">
-    <header>
-      <h2>Ways to Watch</h2>
-    </header>
-    <div class="row">
-      <dynamic-content-ng2 title="streamingLandingWaysToWatch"></dynamic-content-ng2>
-    </div>
-  </div>
-</section>
-
-<section class="community imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-map.jpg?w=1&fit=crop">
-  <div class="wow fadeInUp">
-    <dynamic-content-ng2 title="streamingLandingCommunity"></dynamic-content-ng2>
-  </div>
-</section>
-
-<section class="group-host">
-  <header class="crds-hero wow fadeInUp">
-    <div>
-      <dynamic-content-ng2 title="streamingLandingHostIntro"></dynamic-content-ng2>
-    </div>
-  </header>
-
-  <div class="container">
-    <div>
-      <article class="wow fadeIn" data-wow-delay="150ms">
-        <dynamic-content-ng2 title="streamingLandingHostTips"></dynamic-content-ng2>
-      </article>
-      <article class="wow fadeIn" data-wow-delay="250ms">
-        <dynamic-content-ng2 title="streamingLandingHostBecome"></dynamic-content-ng2>
-      </article>
-      <article class="wow fadeIn" data-wow-delay="350ms">
-        <dynamic-content-ng2 title="streamingLandingHostKids"></dynamic-content-ng2>
-      </article>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
