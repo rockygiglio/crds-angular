@@ -34,6 +34,7 @@ describe('Group Tool Group Service', () => {
     httpBackend = $injector.get('$httpBackend');
     ImageService = $injector.get('ImageService');
 
+
     fixture = new CreateGroupService(log, profile, groupService, session, rootScope, ImageService);
   }));
 
@@ -147,16 +148,20 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  // describe('mapToSmallGroupType() function', () => {
-  //   it('it maps correctly', () => {
-  //     let groupType = {
-  //       'attributeId': 7009,
-  //       'name': 'Women only (don\'t be a creeper, dude).'
-  //     };
+  describe('mapToSmallGroupType() function', () => {
+    it('group types are mapped correctly', () => {
 
-  //     //smallGroup.groupType = groupType;
-  //     fixture.mapToSmallGroupType(smallGroup);
-  //   });
-  // });
+    fixture.typeIdLookup = [
+      {'attributeId': 7007,'name': 'Men and women together (like God intended).'},
+      {'attributeId': 7008,'name': 'Men only (no girls allowed).'},
+      {'attributeId': 7009,'name': 'Women only (don\'t be a creeper, dude).'},
+      {'attributeId': 7010,'name': 'Couples (married, engaged, etc.).'},
+      ];
+
+      fixture.model.group.typeId = 7009;
+
+      fixture.mapToSmallGroupType(smallGroup);
+    });
+  });
 
 });
