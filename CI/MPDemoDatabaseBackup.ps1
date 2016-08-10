@@ -56,11 +56,11 @@ WHERE
 
 if ($ForceBackup -eq $FALSE)
 {
-    $lastRestorCommand = $connection.CreateCommand();
-    $lastRestorCommand.CommandText = "$backupAlreadyExists";
-    $lastRestorCommand.CommandTimeout = 10000;    
+    $lastRestoreCommand = $connection.CreateCommand();
+    $lastRestoreCommand.CommandText = "$backupAlreadyExists";
+    $lastRestoreCommand.CommandTimeout = 10000;    
 
-    $reader = $lastRestorCommand.ExecuteReader();
+    $reader = $lastRestoreCommand.ExecuteReader();
     try
     {
         if($reader.HasRows)
