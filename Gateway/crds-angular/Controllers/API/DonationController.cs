@@ -60,6 +60,7 @@ namespace crds_angular.Controllers.API
         /// <param name="limit">optional: the number of donations to return: integer - the n most resent donations, null - all donations.</param>
         /// <param name="softCredit">optional: the type of returned content: true - only soft-credits, false - only direct gifts, null - both.</param>
         //
+        [RequiresAuthorization]
         [Route("api/donations/{donationYear:regex(\\d{4})?}")]
         [HttpGet]
         public IHttpActionResult GetDonations(string donationYear = null,
@@ -100,6 +101,7 @@ namespace crds_angular.Controllers.API
         //
         /// <param name="impersonateDonorId">optional: the donor to impersonate: id - the targeted donor, null - the logged-in donor</param>
         //
+        [RequiresAuthorization]
         [Route("api/donations/years")]
         [HttpGet]
         public IHttpActionResult GetDonationYears([FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
@@ -127,6 +129,14 @@ namespace crds_angular.Controllers.API
             }));
         }
 
+        // post donation
+        /// <summary>
+        /// Donate from the target donor
+        /// </summary>
+        /// <returns>200 if successful, error otherwise</returns>
+        //
+        [RequiresAuthorization]
+        [AllowAnonymous]
         [ResponseType(typeof (DonationDTO))]
         [Route("api/donation")]
         public IHttpActionResult Post([FromBody] CreateDonationDTO dto)
@@ -136,6 +146,13 @@ namespace crds_angular.Controllers.API
                                () => CreateDonationAndDistributionUnauthenticated(dto)));
         }
 
+        // SendMessageToDonor
+        /// <summary>
+        /// Donate from the target donor
+        /// </summary>
+        /// <returns>200 if successful, error otherwise</returns>
+        //
+        [RequiresAuthorization]
         [Route("api/donation/message")]
         public IHttpActionResult SendMessageToDonor([FromBody] MessageToDonorDTO dto)
         {
@@ -147,6 +164,15 @@ namespace crds_angular.Controllers.API
             }));
         }
 
+        // GetGPExportFile
+        /// <summary>
+        /// Generate the GP report for the specified deposit and selection
+        /// </summary>
+        /// <returns>The report if successful, error otherwise</returns>
+        //
+        /// <param name="selectionId">???</param>
+        /// <param name="depositId">???</param>
+        //
         [RequiresAuthorization]
         [Route("api/gpexport/file/{selectionId}/{depositId}")]
         [HttpGet]
@@ -170,6 +196,15 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        // GetGPExportFileNames
+        /// <summary>
+        /// Generate the list of GP reports for the specified selection
+        /// </summary>
+        /// <returns>The list of names if successful, error otherwise</returns>
+        //
+        /// <param name="selectionId">???</param>
+        //
+        [RequiresAuthorization]
         [ResponseType(typeof (List<DepositDTO>))]
         [Route("api/gpexport/filenames/{selectionId}")]
         [HttpGet]
