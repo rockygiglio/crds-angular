@@ -59,6 +59,7 @@ module.exports = {
                 path.resolve(__dirname, 'app'),
                 path.resolve(__dirname, 'node_modules/angular-stripe')
               ],
+              exclude: [/streamspotAnalytics\.js$/],
               loader: 'ng-annotate!babel-loader'
             },
             {
