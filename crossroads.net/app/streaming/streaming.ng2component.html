@@ -43,7 +43,7 @@
 
       <div class="row">
         <div *ngFor="let event of mostRecent; let i = index" >
-          <article class="crds-card wow fadeInUp" [attr.data-wow-delay]="event.delay" *ngIf="event.series">
+          <article class="crds-card wow fadeInUp" [attr.data-wow-delay]="event.wowDelay" *ngIf="event.series">
             <figure>
               <a class="sixteen-nine" href="/message/{{ event.id }}/{{ event.title | replaceNonAlphaNumeric }}">
                 <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="event.imageSrc" src="{{ event.image }}" title="{{ event.seriesTitle }}">
