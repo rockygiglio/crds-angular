@@ -45,13 +45,12 @@
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Where</strong></div>
-            <div class="col-sm-8">{{groupDetailAbout.getAddress()}}</div>
-            <!--<div ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation) && groupDetailAbout.groupExists() '>-->
-              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.toString()}}</div>-->
-            <!--</div>-->
-            <!--<div ng-if='(!groupDetailAbout.userInGroup() && !groupDetailAbout.forInvitation)'>-->
-              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.getZip()}}</div>-->
-            <!--</div>-->
+            <div class="col-sm-8" ng-if='groupDetailAbout.forSearch && groupDetailAbout.data.hasAddress()'>
+              <a href="https://maps.google.com/maps?f=q&q={{groupDetailAbout.data.address.zip}}" target="_new">{{groupDetailAbout.getAddress()}}
+                  <span ng-if='groupDetailAbout.data.proximity !== undefined && groupDetailAbout.data.proximity !== null'>({{groupDetailAbout.data.proximity}} mi)</span>
+              </a>
+            </div>
+            <div class="col-sm-8" ng-if='!groupDetailAbout.forSearch || !groupDetailAbout.data.hasAddress()'>{{groupDetailAbout.getAddress()}}</div>
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>When</strong></div>
