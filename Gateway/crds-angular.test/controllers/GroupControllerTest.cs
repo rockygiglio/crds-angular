@@ -594,35 +594,36 @@ namespace crds_angular.test.controllers
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
         }
 
-        //[Test]
-        //public void ShouldEndGroupSuccessfully()
-        //{
-        //    var groupId = 9876;
-        //    var groupReasonEndedId = 1;
+        [Test]
+        public void ShouldEndGroupSuccessfully()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
 
-        //    _groupServiceMock.Setup(mocked => mocked.EndDateGroupWithReason(groupId, groupReasonEndedId));
+            _groupServiceMock.Setup(mocked => mocked.EndDateGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
 
-        //    IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
-        //    Assert.IsNotNull(result);
-        //    Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<Boolean>), result);
-        //}
+            IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
 
-        //[Test]
-        //public void ShouldNotEndGroup()
-        //{
-        //    Exception ex = new Exception();
+            _groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<Boolean>), result);
 
-        //    var group = new GroupDTO()
-        //    {
-        //        GroupName = "This will work"
-        //    };
+        }
 
-        //    _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
+        [Test]
+        public void ShouldNotEndGroup()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            Exception ex = new Exception();
 
-        //    IHttpActionResult result = _fixture.EditGroup(group);
-        //    _groupServiceMock.VerifyAll();
-        //    Assert.IsNotNull(result);
-        //    Assert.IsInstanceOf(typeof(BadRequestResult), result);
-        //}
+            _groupServiceMock.Setup(mocked => mocked.EndDateGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
+
+            IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
+
+            _groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
     }
 }

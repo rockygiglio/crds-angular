@@ -72,15 +72,23 @@ namespace crds_angular.Controllers.API
 
         
         [RequiresAuthorization]
-        [ResponseType(typeof(GroupDTO))]
+        [ResponseType(typeof(Boolean))]
         [HttpPost]
         [Route("api/group/{groupId}/end")]
         public IHttpActionResult EndGroup(int groupId, int groupReasonEndedId)
         {
             return Authorized(token =>
             {
-                _groupService.EndDateGroup(groupId, groupReasonEndedId);
-                return Ok(false);
+                try
+                {
+                    _groupService.EndDateGroup(groupId, groupReasonEndedId);
+                    return Ok(true);
+                } 
+                catch (Exception e)
+                {
+                    _logger.Error("Could not end group", e);
+                    return BadRequest();
+                }
             });
         }
 
