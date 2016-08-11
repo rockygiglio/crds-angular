@@ -38,7 +38,7 @@ export default class EndGroupController {
       try {
         var promise = this.groupService.endGroup(this.groupId, this.model.reasonEndedId)
           .then((data) => {
-            this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolCreateGroupSuccess);
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolEndGroupSuccess);
             this.saving = false;
             this.successfulSave = true;
             this.state.go('grouptool.mygroups')
