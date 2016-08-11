@@ -153,7 +153,7 @@ namespace MinistryPlatform.Translation.Repositories
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
         }
 
-        public void EndDateGroup(int groupId, DateTime? endDate)
+        public void EndDateGroup(int groupId, DateTime? endDate = null, int? reasonEndedId = null)
         {
             var apiToken = ApiLogin();
             var fields = new Dictionary<string, object>
@@ -161,7 +161,11 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Group_ID", groupId },
                 {"End_Date", endDate ?? DateTime.Now }
             };
-            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields );
+
+            if (reasonEndedId != null) 
+                fields.Add("Reason_Ended", reasonEndedId);
+
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields);
         }
 
         public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)

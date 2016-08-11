@@ -70,6 +70,20 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        
+        [RequiresAuthorization]
+        [ResponseType(typeof(GroupDTO))]
+        [HttpPost]
+        [Route("api/group/end")]
+        public IHttpActionResult EndGroup(int groupId, int groupReasonEndedId)
+        {
+            return Authorized(token =>
+            {
+                _groupService.EndDateGroup(groupId, groupReasonEndedId);
+                return Ok(false);
+            });
+        }
+
         /// <summary>
         /// Edit a group for the authenticated user.
         /// </summary>

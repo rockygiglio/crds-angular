@@ -557,7 +557,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldEditGroupSuccessfully()
+        public void ShouldEditGroupSuccessfully()
         {
             var group = new GroupDTO()
             {
@@ -577,7 +577,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldNotEditGroup()
+        public void ShouldNotEditGroup()
         {
             Exception ex = new Exception();
 
@@ -593,5 +593,36 @@ namespace crds_angular.test.controllers
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
         }
+
+        //[Test]
+        //public void ShouldEndGroupSuccessfully()
+        //{
+        //    var groupId = 9876;
+        //    var groupReasonEndedId = 1;
+
+        //    _groupServiceMock.Setup(mocked => mocked.EndDateGroupWithReason(groupId, groupReasonEndedId));
+
+        //    IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
+        //    Assert.IsNotNull(result);
+        //    Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<Boolean>), result);
+        //}
+
+        //[Test]
+        //public void ShouldNotEndGroup()
+        //{
+        //    Exception ex = new Exception();
+
+        //    var group = new GroupDTO()
+        //    {
+        //        GroupName = "This will work"
+        //    };
+
+        //    _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
+
+        //    IHttpActionResult result = _fixture.EditGroup(group);
+        //    _groupServiceMock.VerifyAll();
+        //    Assert.IsNotNull(result);
+        //    Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        //}
     }
 }

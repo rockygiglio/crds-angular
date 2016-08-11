@@ -98,10 +98,12 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             Console.WriteLine("TestEndDateGroup");
             var groupId = 172501;
+            var reasonEnded = 1;
             var fields = new Dictionary<string, object>
             {
                 {"Group_ID", groupId },
-                {"End_Date", DateTime.Today}
+                {"End_Date", DateTime.Today},
+                {"Reason_Ended", reasonEnded}
             };
             _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Groups", groupId, fields);
         }
