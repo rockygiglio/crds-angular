@@ -77,6 +77,10 @@ module.exports = function(config) {
             test: /\.html$/,
             loader: 'ng-cache?prefix=[dir]'
           }
+        ],
+        noParse: [
+            path.join(__dirname, "node_modules", "video.js","dist","video.js"),
+            /videojs-contrib-hls/
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]

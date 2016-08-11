@@ -30,7 +30,7 @@ module.exports = function (config) {
                     }
                 ],
                 noParse: [
-                    /video\.js/,
+                    path.join(__dirname, "node_modules", "video.js","dist","video.js"),
                     /videojs-contrib-hls/
                 ]
             },

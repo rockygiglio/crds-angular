@@ -8,8 +8,9 @@ module.exports = {
       __STRIPE_API_VERSION__: JSON.stringify(process.env.CRDS_STRIPE_API_VERSION),
       __SOUNDCLOUD_API_KEY__: JSON.stringify(process.env.CRDS_SOUNDCLOUD_KEY || '67723f3ff9ea6bda29331ac06ce2960c'),
       __AWS_SEARCH_ENDPOINT__: JSON.stringify(process.env.CRDS_AWS_SEARCH_ENDPOINT || 'https://vs9gac5tz7.execute-api.us-east-1.amazonaws.com/prod/'),
-      __STREAMSPOT_API_KEY__: JSON.stringify(process.env.CRDS_STREAMSPOT_KEY || '82437b4d-4e38-42e2-83b6-148fcfaf36fb'),
-      __STREAMSPOT_NP_API_KEY__: JSON.stringify(process.env.CRDS_STREAMSPOT_KEY || 'a0cb38cb-8146-47c2-b11f-6d93f4647389')
+      __STREAMSPOT_ENDPOINT__: JSON.stringify(process.env.CRDS_STREAMSPOT_ENDPOINT || 'https://api.streamspot.com/'),
+      __STREAMSPOT_API_KEY__: JSON.stringify(process.env.CRDS_STREAMSPOT_API_KEY || '82437b4d-4e38-42e2-83b6-148fcfaf36fb'),
+      __STREAMSPOT_SSID__: JSON.stringify(process.env.CRDS_STREAMSPOT_SSID || 'crossr4915')
     }
   }
 }

@@ -3,7 +3,8 @@ import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 declare var __STREAMSPOT_API_KEY__: string;
-declare var __STREAMSPOT_NP_API_KEY__: string;
+declare var __STREAMSPOT_SSID__: string;
+declare var __STREAMSPOT_ENDPOINT__: string;
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -15,20 +16,12 @@ var _ = require('lodash');
 @Injectable()
 export class StreamspotService {
 
-  //
-  // #TODO - move to ENV file?
-  //
-  url: string = 'https://api.streamspot.com/';  // URL to web api
-  apiKey: string = '';
-  id: string = '';
-
-  pKey: string = __STREAMSPOT_API_KEY__;
-  npKey: string = __STREAMSPOT_NP_API_KEY__;
-
-  pId: string = 'crossr4915';
-  npId: string = 'crossr30e3';
-
-  headers: Headers;
+  url: string = __STREAMSPOT_ENDPOINT__;
+  ssid: string = __STREAMSPOT_SSID__;
+  headers: Headers = new Headers({
+    'Content-Type': 'application/json',
+    'x-API-Key': __STREAMSPOT_API_KEY__
+  });
 
   public isBroadcasting: EventEmitter<any> = new EventEmitter();
   public nextEvent: EventEmitter<any> = new EventEmitter();
@@ -38,10 +31,7 @@ export class StreamspotService {
   private eventResponse: any;
 
   constructor(private http: Http) {
-
-    this.toggleDev(false);
     this.events = this.getEvents();
-
   }
 
   parseEvents(): any {
@@ -66,26 +56,8 @@ export class StreamspotService {
     this.nextEvent.emit(event);
   }
 
-  toggleDev(isDev: boolean) {
-
-    if ( isDev === true ) {
-      this.apiKey = this.npKey;
-      this.id = this.npId;
-    }
-    else {
-      this.apiKey = this.pKey;
-      this.id = this.pId;
-    }
-
-    this.headers = new Headers({
-      'Content-Type': 'application/json',
-      'x-API-Key': this.apiKey
-    });
-
-  }
-
   getEvents(): Promise<Event[]> {
-    let url = `${this.url}broadcaster/${this.id}/events`;
+    let url = `${this.url}broadcaster/${this.ssid}/events`;
     // let url = 'http://localhost:8080/app/streaming/data/events.json'
 
     return this.http
@@ -127,17 +99,17 @@ export class StreamspotService {
   }
 
   getPlayers(cb: Function) {
-    let url = `${this.url}broadcaster/${this.id}/players`;
+    let url = `${this.url}broadcaster/${this.ssid}/players`;
     this.get(url, cb);
   }
 
   getBroadcaster(cb: Function) {
-    let url = `${this.url}broadcaster/${this.id}`;
+    let url = `${this.url}broadcaster/${this.ssid}?players=true`;
     this.get(url, cb);
   }
 
   getBroadcasting(cb: Function) {
-    let url = `${this.url}broadcaster/${this.id}/broadcasting`;
+    let url = `${this.url}broadcaster/${this.ssid}/broadcasting`;
     this.get(url, cb);
   }
 
