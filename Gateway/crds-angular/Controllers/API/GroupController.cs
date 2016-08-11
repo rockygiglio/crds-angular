@@ -74,7 +74,7 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
         [HttpPost]
-        [Route("api/group/end")]
+        [Route("api/group/{groupId}/end")]
         public IHttpActionResult EndGroup(int groupId, int groupReasonEndedId)
         {
             return Authorized(token =>
