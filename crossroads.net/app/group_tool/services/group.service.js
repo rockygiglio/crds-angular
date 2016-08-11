@@ -137,7 +137,6 @@ export default class GroupService {
       });
   }
 
-
   endGroup(groupId, groupReasonEndedId) {
     let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/end`)
                           .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
