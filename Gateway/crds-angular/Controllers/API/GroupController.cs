@@ -70,19 +70,19 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        
+
+        [AcceptVerbs("POST")]
         [RequiresAuthorization]
-        [ResponseType(typeof(Boolean))]
         [HttpPost]
-        [Route("api/group/{groupId}/end")]
-        public IHttpActionResult EndGroup(int groupId, int groupReasonEndedId)
+        [Route("api/group/{groupId:int}/end")]
+        public IHttpActionResult EndGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
         {
             return Authorized(token =>
             {
                 try
                 {
                     _groupService.EndDateGroup(groupId, groupReasonEndedId);
-                    return Ok(true);
+                    return Ok();
                 } 
                 catch (Exception e)
                 {
