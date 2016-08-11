@@ -41,6 +41,7 @@ export default class CreateGroupService {
         this.profileData = {};
         this.originalAttributeTypes = null;
         this.originalSingleAttributes = null;
+        this.primaryContact = null;
     }
 
     setEditModel(groupData, profileData) {
@@ -701,6 +702,7 @@ export default class CreateGroupService {
             smallGroup.meetingTime = null;
             smallGroup.meetingDay = null;
         }
+
     }
 
     mapToSmallGroupMeetingPlace(smallGroup) {
