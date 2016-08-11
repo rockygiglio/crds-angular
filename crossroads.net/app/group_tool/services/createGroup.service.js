@@ -518,53 +518,27 @@ export default class CreateGroupService {
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
 
-    //this badly needs to be unit tested
-    mapFromSmallGroup(groupData) {
-        this.model.group.meeting.frequency = groupData.meetingFrequencyID;
-        this.model.group.groupName = groupData.groupName;
-        this.model.group.groupDescription = groupData.groupDescription;
-        if (groupData.address != null && groupData.address != undefined) {
-            this.model.group.meeting.address = {
-                street: groupData.address.addressLine1,
-                city: groupData.address.city,
-                state: groupData.address.state,
-                zip: groupData.address.zip,
-                addressId: groupData.address.addressId
-            }
-            this.model.group.meeting.online = false;
-        } else {
-            this.model.group.meeting.online = true;
-        }
-        this.model.group.kidFriendly = groupData.kidsWelcome;
+    //******************************************************************
+   
+    mapFromSmallGroupMeetingAbout(smallGroup) {
         this.model.group.availableOnline = groupData.availableOnline;
+        this.model.groupId = smallGroup.groupId;
+        this.model.group.groupName = smallGroup.groupName;
+        this.model.group.groupDescription = smallGroup.groupDescription;
         this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
+    }    
 
-        if (groupData.meetingTime == null || groupData.meetingTime == undefined) {
-            this.model.group.meeting.time = "1983-07-16T21:00:00.000Z";
-        }
-        else {
-            let splitTime = groupData.meetingTime.split(":");
-            this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
-        }
 
-        this.model.group.meeting.day = groupData.meetingDayId;
-        groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+    mapFromSmallGroupSingleAttributes(smallGroup) {
         this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+    }
 
+    mapFromSmallGroupMultipleAttributes(smallGroup) {
         var ageRangeIds = [];
         _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
             if (value.selected)
                 ageRangeIds.push(value.attributeId)
-        });
-        var categories = [];
-        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
-            if (value.selected)
-                categories.push({
-                    value: this.getIdFromCategory(value.category),
-                    detail: value.name
-                })
-        });
-
+        });        
         if (_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE))) {
             this.alreadyHasMinors = true;
         }
@@ -573,9 +547,126 @@ export default class CreateGroupService {
         }
 
         this.model.groupAgeRangeIds = ageRangeIds;
-        this.model.categories = categories;
-        this.model.groupId = groupData.groupId;
     }
+
+    mapFromSmallGroupMeetingDay(smallGroup) {
+        this.model.group.meeting.day = smallGroup.meetingDayId;
+        groupData.meetingDayId == null || smallGroup.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+    }    
+
+    mapFromSmallGroupMeetingTime(smallGroup) {
+        this.model.group.meeting.frequency = smallGroup.meetingFrequencyID;
+        if (smallGroup.meetingTime == null || smallGroup.meetingTime == undefined) {
+            this.model.group.meeting.time = "1983-07-16T21:00:00.000Z";
+        }
+        else {
+            let splitTime = smallGroup.meetingTime.split(":");
+            this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
+        }        
+
+    }
+
+
+
+    mapFromSmallGroupMeetingPlace(smallGroup) {
+        if (smallGroup.address != null && smallGroup.address != undefined) {
+            this.model.group.meeting.address = {
+                street: smallGroup.address.addressLine1,
+                city: smallGroup.address.city,
+                state: smallGroup.address.state,
+                zip: smallGroup.address.zip,
+                addressId: smallGroup.address.addressId
+            }
+            this.model.group.meeting.online = false;
+        } else {
+            this.model.group.meeting.online = true;
+        }
+        this.model.group.kidFriendly = smallGroup.kidsWelcome;        
+    }
+
+    mapFromSmallGroupCategory(smallGroup) {
+        var categories = [];
+        _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+            if (value.selected)
+                categories.push({
+                    value: this.getIdFromCategory(value.category),
+                    detail: value.name
+                })
+        });
+        this.model.categories = categories;
+    }
+
+    //*********************************************************************************
+    mapFromSmallGroup(smallGroup) {
+        this.mapFromSmallGroupAbout(smallGroup);
+        this.mapFromSmallGroupType(smallGroup);
+        this.mapFromSmallGroupSingleAttributes(smallGroup);
+        this.mapFromSmallGroupMultipleAttributes(smallGroup);
+        this.mapFromSmallGroupMeetingDay(smallGroup);
+        this.mapFromSmallGroupMeetingTime(smallGroup);
+        this.mapFromSmallGroupMeetingPlace(smallGroup);
+        this.mapFromSmallGroupCategory(smallGroup);
+
+
+
+
+        //        this.model.group.meeting.frequency = groupData.meetingFrequencyID;
+        // this.model.group.groupName = groupData.groupName;
+        // this.model.group.groupDescription = groupData.groupDescription;
+        //if (groupData.address != null && groupData.address != undefined) {
+        //     this.model.group.meeting.address = {
+        //         street: groupData.address.addressLine1,
+        //         city: groupData.address.city,
+        //         state: groupData.address.state,
+        //         zip: groupData.address.zip,
+        //         addressId: groupData.address.addressId
+        //     }
+        //     this.model.group.meeting.online = false;
+        // } else {
+        //     this.model.group.meeting.online = true;
+        // }
+        // this.model.group.kidFriendly = groupData.kidsWelcome;
+        // this.model.group.availableOnline = groupData.availableOnline;
+        // this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
+
+        // if (groupData.meetingTime == null || groupData.meetingTime == undefined) {
+        //     this.model.group.meeting.time = "1983-07-16T21:00:00.000Z";
+        // }
+        // else {
+        //     let splitTime = groupData.meetingTime.split(":");
+        //     this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
+        // }
+
+        // this.model.group.meeting.day = groupData.meetingDayId;
+        // groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+        //this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+
+        // var ageRangeIds = [];
+        // _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+        //     if (value.selected)
+        //         ageRangeIds.push(value.attributeId)
+        // });
+        // var categories = [];
+        // _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+        //     if (value.selected)
+        //         categories.push({
+        //             value: this.getIdFromCategory(value.category),
+        //             detail: value.name
+        //         })
+        // });
+
+        // if (_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE))) {
+        //     this.alreadyHasMinors = true;
+        // }
+        // else {
+        //     this.alreadyHasMinors = false;
+        // }
+
+        // this.model.groupAgeRangeIds = ageRangeIds;
+        //this.model.categories = categories;
+        //this.model.groupId = groupData.groupId;
+    }
+
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
@@ -720,7 +811,7 @@ export default class CreateGroupService {
         }
     }
 
-   mapToSmallGroupCategory(smallGroup){
+    mapToSmallGroupCategory(smallGroup) {
         var ids = []
         //set every category that the group came in with to selected = false if this is a load and
         //let the database worry about whether or not what we've added is new.
@@ -758,9 +849,9 @@ export default class CreateGroupService {
         };
         smallGroup.mapCategories(categoriesJson);
         smallGroup.attributeTypes = $.extend({}, smallGroup.attributeTypes, categoriesJson);
-   }
+    }
 
-//*********************************************************************
+    //*********************************************************************
     mapToSmallGroup() {
         let smallGroup = new SmallGroup();
         this.mapToSmallGroupAbout(smallGroup);
@@ -789,7 +880,7 @@ export default class CreateGroupService {
 
         return smallGroup;
     }
-//*********************************************************************
+    //*********************************************************************
 
     convertAttributeTypes(list) {
         var results = {};
