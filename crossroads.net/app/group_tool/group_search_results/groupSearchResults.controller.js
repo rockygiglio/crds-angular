@@ -44,7 +44,7 @@ export default class GroupSearchResultsController {
         let parms = {
           count: this.results.length
         };
-        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
+        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { meetingDay: 'asc' };
 
         // This resets the dataset so ngTable properly renders the new search results
         let settings = {

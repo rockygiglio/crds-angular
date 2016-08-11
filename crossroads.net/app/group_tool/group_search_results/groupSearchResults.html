@@ -47,7 +47,7 @@
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
       <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
       <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
-      <td data-title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
+      <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
       <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
@@ -55,7 +55,7 @@
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
-        <group-detail-about data="group"></group-detail-about>
+        <group-detail-about data="group" for-search="true"></group-detail-about>
         <div class="text-right push-half-bottom soft-half-right">
           <button type="button" class="btn btn-secondary" ng-click="group.expanded = false">Close</button>
           <button type="button" class="btn btn-primary">Request to Join</button>
@@ -76,7 +76,7 @@
       <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
     </div>
     <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
-      <group-detail-about data="group"></group-detail-about>
+      <group-detail-about data="group" for-search="true"></group-detail-about>
       <div class="soft-half">
         <button type="button" class="btn btn-primary btn-block">Request to Join</button>
         <button type="button" class="btn btn-secondary btn-block" ng-click="group.expanded = false">Close</button>
