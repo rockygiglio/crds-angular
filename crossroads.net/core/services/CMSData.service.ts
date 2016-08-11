@@ -16,7 +16,7 @@ export class CMSDataService {
         return this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress))
                                         .map(this.responseHasContent)
                                         .flatMap( x => {
-                                            return x ?  obs : this.getNearestSeries()
+                                            return x ? obs : this.getNearestSeries()
                                         });
     }
 
