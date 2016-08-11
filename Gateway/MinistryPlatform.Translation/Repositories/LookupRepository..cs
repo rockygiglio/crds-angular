@@ -80,7 +80,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<Dictionary<string, object>> GroupReasonEnded(string token)
         {
             token = ApiLogonIfNotAuthenticated(token);
-            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("GroupEndedLookup"), token);
+            return _ministryPlatformServiceImpl.GetRecordsDict(AppSettings("GroupEndedLookup"), token);
         }
 
         public IEnumerable<T> GetList<T>(string token)
