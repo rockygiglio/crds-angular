@@ -9,7 +9,13 @@
         <p>{{currentSeriesTitle}}</p>
         <p>{{currentSeriesRunningDates}}</p>
         <p>{{currentSeriesDescription | htmlToPlainText}}</p>
-        <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
+        <p>Topics covered:</p>
+        <ul>
+          <li *ngFor="let tag of currentSeriesTags">
+            {{tag}}
+          </li>
+        </ul>
+        <a href={{currentSeriesTrailer}} class="btn btn-primary">Watch Trailer</a>
       </article>
       <aside id="schedule">
         <schedule class="wow fadeInUp"></schedule>

@@ -34,6 +34,8 @@ export class CurrentSeriesComponent {
   currentSeriesRunningDates: string;
   currentSeriesStartDate: string;
   currentSeriesEndDate: string;
+  currentSeriesTags: string[];
+  currentSeriesTrailer: string;
   
   constructor(private cmsDataService: CMSDataService) {
 
@@ -49,6 +51,8 @@ export class CurrentSeriesComponent {
                                        this.currentSeriesStartDate = cs.startDate
                                        this.currentSeriesEndDate = cs.endDate
                                        this.currentSeriesRunningDates = this.getRunningDates()
+                                       this.currentSeriesTags = this.getTagsArray(cs)
+                                       this.currentSeriesTrailer = cs.trailerLink
                                      })
   }
 
@@ -56,5 +60,14 @@ export class CurrentSeriesComponent {
     let momentStartDate = moment(this.currentSeriesStartDate).format("MMM D");
     let momentEndDate = moment(this.currentSeriesEndDate).format("MMM D");
     return `RUNS: ${momentStartDate} - ${momentEndDate}`
+  }
+
+  private getTagsArray(currentSeries): string[] {
+    let tagsArray = currentSeries.tags.map(this.getTagTitle)
+    return tagsArray
+  }
+
+  private getTagTitle(tag) {
+    return tag.title
   }
 }
