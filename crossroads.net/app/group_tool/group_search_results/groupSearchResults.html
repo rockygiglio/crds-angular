@@ -39,6 +39,10 @@
     </div>
   </div>
 
+  <div>
+    <group-search-filter filter-params="groupSearchResults.tableParams" />
+  </div>
+
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
   <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
