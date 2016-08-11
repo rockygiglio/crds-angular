@@ -8,7 +8,8 @@ export default function GroupDetailAboutComponent() {
     bindings: {
       data: '<',
       edit: '<',
-      forInvitation: '<'
+      forInvitation: '<',
+      forSearch: '<'
     },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',
