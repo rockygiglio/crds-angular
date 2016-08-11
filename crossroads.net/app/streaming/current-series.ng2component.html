@@ -6,16 +6,15 @@
 
     <main id="series" class="container">
       <article class="wow fadeInUp">
-        <p>{{currentSeriesTitle}}</p>
-        <p>{{currentSeriesRunningDates}}</p>
-        <p>{{currentSeriesDescription | htmlToPlainText}}</p>
-        <p>Topics covered:</p>
-        <ul>
+        <h2>{{currentSeriesTitle}} <small>{{ currentSeriesRunningDates}} </small></h2>
+        <p class="lead">{{currentSeriesDescription | htmlToPlainText}}</p>
+        <p class="small">Topics covered:</p>
+        <ul class="topic-list">
           <li *ngFor="let tag of currentSeriesTags">
-            {{tag}}
+            <a href="/search?q={{tag | replaceNonAlphaNumeric }}">{{tag}}</a>
           </li>
         </ul>
-        <a href={{currentSeriesTrailer}} class="btn btn-primary">Watch Trailer</a>
+        <p><a href={{currentSeriesTrailer}} class="btn btn-primary">Watch Trailer</a></p>
       </article>
       <aside id="schedule">
         <schedule class="wow fadeInUp"></schedule>

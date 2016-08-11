@@ -57,8 +57,8 @@ export class CurrentSeriesComponent {
   }
 
   private getRunningDates() {
-    let momentStartDate = moment(this.currentSeriesStartDate).format("MMM D");
-    let momentEndDate = moment(this.currentSeriesEndDate).format("MMM D");
+    let momentStartDate = moment(this.currentSeriesStartDate).format("MMMM Do");
+    let momentEndDate = moment(this.currentSeriesEndDate).format("MMMM Do");
     return `RUNS: ${momentStartDate} - ${momentEndDate}`
   }
 
