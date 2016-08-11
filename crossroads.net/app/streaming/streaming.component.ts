@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 
 // streaming
+import { CurrentSeriesComponent } from './current-series.component'
 import { ScheduleComponent } from './schedule.component';
 import { CountdownComponent } from './countdown.component';
 import { SocialSharingComponent } from './social-sharing.component';
@@ -28,7 +29,9 @@ declare var _: any;
 
 @Component({
   selector: 'streaming',
-  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective],
+  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent,
+               SocialSharingComponent, PageScroll, StickyHeaderDirective,
+               CurrentSeriesComponent],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
   pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
