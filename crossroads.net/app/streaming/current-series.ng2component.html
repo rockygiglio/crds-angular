@@ -1,0 +1,18 @@
+<section class="current-series">
+    <figure class="container text-center wow fadeIn">
+      <img src="{{currentSeriesPicture}}">
+      <figcaption>Current Series</figcaption>
+    </figure>
+
+    <main id="series" class="container">
+      <article class="wow fadeInUp">
+        <p>{{currentSeriesTitle}}</p>
+        <p>{{currentSeriesRunningDates}}</p>
+        <p>{{currentSeriesDescription | htmlToPlainText}}</p>
+        <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
+      </article>
+      <aside id="schedule">
+        <schedule class="wow fadeInUp"></schedule>
+      </aside>
+    </main>
+  </section>
