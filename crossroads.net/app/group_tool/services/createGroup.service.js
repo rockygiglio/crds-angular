@@ -519,14 +519,14 @@ export default class CreateGroupService {
     }
 
     //******************************************************************
-   
+
     mapFromSmallGroupMeetingAbout(smallGroup) {
         this.model.group.availableOnline = groupData.availableOnline;
         this.model.groupId = smallGroup.groupId;
         this.model.group.groupName = smallGroup.groupName;
         this.model.group.groupDescription = smallGroup.groupDescription;
         this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
-    }    
+    }
 
 
     mapFromSmallGroupSingleAttributes(smallGroup) {
@@ -538,7 +538,7 @@ export default class CreateGroupService {
         _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
             if (value.selected)
                 ageRangeIds.push(value.attributeId)
-        });        
+        });
         if (_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE))) {
             this.alreadyHasMinors = true;
         }
@@ -552,7 +552,7 @@ export default class CreateGroupService {
     mapFromSmallGroupMeetingDay(smallGroup) {
         this.model.group.meeting.day = smallGroup.meetingDayId;
         groupData.meetingDayId == null || smallGroup.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
-    }    
+    }
 
     mapFromSmallGroupMeetingTime(smallGroup) {
         this.model.group.meeting.frequency = smallGroup.meetingFrequencyID;
@@ -562,7 +562,7 @@ export default class CreateGroupService {
         else {
             let splitTime = smallGroup.meetingTime.split(":");
             this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
-        }        
+        }
 
     }
 
@@ -581,7 +581,7 @@ export default class CreateGroupService {
         } else {
             this.model.group.meeting.online = true;
         }
-        this.model.group.kidFriendly = smallGroup.kidsWelcome;        
+        this.model.group.kidFriendly = smallGroup.kidsWelcome;
     }
 
     mapFromSmallGroupCategory(smallGroup) {
@@ -598,75 +598,15 @@ export default class CreateGroupService {
 
     //*********************************************************************************
     mapFromSmallGroup(smallGroup) {
-        this.mapFromSmallGroupAbout(smallGroup);
-        this.mapFromSmallGroupType(smallGroup);
-        this.mapFromSmallGroupSingleAttributes(smallGroup);
-        this.mapFromSmallGroupMultipleAttributes(smallGroup);
-        this.mapFromSmallGroupMeetingDay(smallGroup);
-        this.mapFromSmallGroupMeetingTime(smallGroup);
-        this.mapFromSmallGroupMeetingPlace(smallGroup);
-        this.mapFromSmallGroupCategory(smallGroup);
-
-
-
-
-        //        this.model.group.meeting.frequency = groupData.meetingFrequencyID;
-        // this.model.group.groupName = groupData.groupName;
-        // this.model.group.groupDescription = groupData.groupDescription;
-        //if (groupData.address != null && groupData.address != undefined) {
-        //     this.model.group.meeting.address = {
-        //         street: groupData.address.addressLine1,
-        //         city: groupData.address.city,
-        //         state: groupData.address.state,
-        //         zip: groupData.address.zip,
-        //         addressId: groupData.address.addressId
-        //     }
-        //     this.model.group.meeting.online = false;
-        // } else {
-        //     this.model.group.meeting.online = true;
-        // }
-        // this.model.group.kidFriendly = groupData.kidsWelcome;
-        // this.model.group.availableOnline = groupData.availableOnline;
-        // this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
-
-        // if (groupData.meetingTime == null || groupData.meetingTime == undefined) {
-        //     this.model.group.meeting.time = "1983-07-16T21:00:00.000Z";
-        // }
-        // else {
-        //     let splitTime = groupData.meetingTime.split(":");
-        //     this.model.group.meeting.time = moment(new Date(1983, 7, 16, splitTime[0], splitTime[1], splitTime[2]));
-        // }
-
-        // this.model.group.meeting.day = groupData.meetingDayId;
-        // groupData.meetingDayId == null || groupData.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
-        //this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
-
-        // var ageRangeIds = [];
-        // _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
-        //     if (value.selected)
-        //         ageRangeIds.push(value.attributeId)
-        // });
-        // var categories = [];
-        // _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
-        //     if (value.selected)
-        //         categories.push({
-        //             value: this.getIdFromCategory(value.category),
-        //             detail: value.name
-        //         })
-        // });
-
-        // if (_.includes(ageRangeIds, (CONSTANTS.ATTRIBUTE_IDS.MIDDLESCHOOLAGE || CONSTANTS.ATTRIBUTE_IDS.HIGHSCHOOLAGE))) {
-        //     this.alreadyHasMinors = true;
-        // }
-        // else {
-        //     this.alreadyHasMinors = false;
-        // }
-
-        // this.model.groupAgeRangeIds = ageRangeIds;
-        //this.model.categories = categories;
-        //this.model.groupId = groupData.groupId;
+        mapFromSmallGroupAbout(smallGroup);
+        mapFromSmallGroupType(smallGroup);
+        mapFromSmallGroupSingleAttributes(smallGroup);
+        mapFromSmallGroupMultipleAttributes(smallGroup);
+        mapFromSmallGroupMeetingDay(smallGroup);
+        mapFromSmallGroupMeetingTime(smallGroup);
+        mapFromSmallGroupMeetingPlace(smallGroup);
+        mapFromSmallGroupCategory(smallGroup);
     }
-
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
@@ -696,16 +636,12 @@ export default class CreateGroupService {
 
     mapToSmallGroupSingleAttributes(smallGroup) {
         smallGroup.singleAttributes = {};
-        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined) {
+        if (this.originalSingleAttributes != undefined && this.originalSingleAttributes != null) {
             smallGroup.singleAttributes = this.originalSingleAttributes;
-            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute = smallGroup.groupType;
-        } else {
-            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
-                "attribute": {
-                    "attributeId": smallGroup.groupType.attributeId
-                }
-            }
         }
+        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = smallGroup.groupType;
+
+
     }
 
     mapToSmallGroupMultipleAttributes(smallGroup) {

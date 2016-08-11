@@ -8,7 +8,6 @@ export default class MessageParticipantsController {
   submit(form, message) {
 
     if(!form.$valid) {
-      debugger;
       this.processing = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;

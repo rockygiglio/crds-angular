@@ -6,7 +6,7 @@ import AgeRange from '../../../app/group_tool/model/ageRange';
 import Address from '../../../app/group_tool/model/address';
 import Category from '../../../app/group_tool/model/category';
 import GroupType from '../../../app/group_tool/model/groupType';
-import Profile from '../../../app/group_tool/model/profile';
+import CreateGroupService from '../../../app/group_tool/services/createGroup.service';
 
 describe('Group Tool Group Service', () => {
   let smallGroup,
@@ -14,27 +14,33 @@ describe('Group Tool Group Service', () => {
 
   let fixture,
     log,
-    profile,
+    mockProfile,
     groupService,
     session,
     rootScope,
     authenticated,
     httpBackend,
-    ImageService;
+    ImageService,
+    profile;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.GROUP_TOOL));
 
-  beforeEach(inject(function($injector) {
+  beforeEach(angular.mock.module(($provide) => {
+    mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+    $provide.value('Profile', mockProfile);
+  }));
+
+
+  beforeEach(inject(function ($injector) {
     log = $injector.get('$log');
-    profile = $injector.get('Profile');
     groupService = $injector.get('GroupService')
     session = $injector.get('Session');
     rootScope = $injector.get('$rootScope');
-    resource = $injector.get('$resource');
     httpBackend = $injector.get('$httpBackend');
     ImageService = $injector.get('ImageService');
+    profile = $injector.get('Profile');
 
-
+    smallGroup = new SmallGroup();
     fixture = new CreateGroupService(log, profile, groupService, session, rootScope, ImageService);
   }));
 
@@ -44,20 +50,21 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-   describe('mapToSmallGroupType() function', () => {
+  describe('mapToSmallGroupType() function', () => {
     it('group types are mapped correctly', () => {
- 
-  //   fixture.typeIdLookup = [
-  //     {'attributeId': 7007,'name': 'Men and women together (like God intended).'},
-  //     {'attributeId': 7008,'name': 'Men only (no girls allowed).'},
-  //     {'attributeId': 7009,'name': 'Women only (don\'t be a creeper, dude).'},
-  //     {'attributeId': 7010,'name': 'Couples (married, engaged, etc.).'},
-  //     ];
 
-  //     //fixture.model.group.typeId = 7009;
-
-  //    // fixture.mapToSmallGroupType(smallGroup);
-     });
+      fixture.typeIdLookup = [
+        { 'attributeId': 7007, 'name': 'Men and women together (like God intended).' },
+        { 'attributeId': 7008, 'name': 'Men only (no girls allowed).' },
+        { 'attributeId': 7009, 'name': 'Women only (don\'t be a creeper, dude).' },
+        { 'attributeId': 7010, 'name': 'Couples (married, engaged, etc.).' },
+      ];
+      let model ={group: {'typeId':7009}};
+      fixture.model = model;
+      
+      fixture.mapToSmallGroupType(smallGroup);
+      expect(smallGroup.groupType.attributeId).toEqual(model.group.typeId);
+    });
   });
 
 });

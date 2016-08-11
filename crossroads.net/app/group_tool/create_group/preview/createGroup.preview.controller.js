@@ -16,18 +16,18 @@ export default class CreateGroupPreviewController {
     this.saving = false;
   }
 
-  $onInit() {
-    this.groupData = this.createGroupService.mapToSmallGroup();
-
-
-    this.edit = this.groupData.groupId === null || this.groupData.groupId === undefined ? false : true;
-
-    if (!toState.name.startsWith('grouptool.edit') && !toState.name.startsWith('grouptool.create')) {
-      this.createGroupService.reset();
-      this.stateChangeWatcher();
-      return;
-    }
-  }
+$onInit() { 
+   this.groupData = this.createGroupService.mapToSmallGroup();
+   this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
+   this.stateChangeWatcher = this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+           if (!toState.name.startsWith('grouptool.edit') && !toState.name.startsWith('grouptool.create'))
+           {
+               this.createGroupService.reset();
+               this.stateChangeWatcher();
+               return;
+           }
+       });
+ }
 
 
 
