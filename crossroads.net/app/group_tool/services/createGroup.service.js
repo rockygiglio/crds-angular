@@ -493,7 +493,7 @@ export default class CreateGroupService {
                             placeholder: 'Ex. Norwood, Gaslight'
                         },{
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                            label: 'Spirtual Growth',
+                            label: 'Spiritual Growth',
                             labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
                             placeholder: 'Ex. Huddle, James'
                         },{
