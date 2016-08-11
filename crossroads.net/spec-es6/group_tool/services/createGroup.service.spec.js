@@ -39,11 +39,4 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-/*
-  describe('mapToSmallGroup() smallGroup', () => {
-    it('should return smallGroup object mapped from model', () => {
-        
-    });
-  });
-*/
 });

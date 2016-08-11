@@ -55,6 +55,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void EndDateGroup(int groupId, DateTime? endDate);
 
         MpGroup GetSmallGroupDetailsById(int groupId);
+        void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders);
         int UpdateGroup(MpGroup mpGroup);
         int UpdateGroupParticipant(List<MpGroupParticipant> participants);
     }

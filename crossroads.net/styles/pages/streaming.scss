@@ -57,6 +57,7 @@ streaming {
   > .wrapper {
     @include make-row();
     @include clearfix();
+    overflow-x: hidden;
   }
 
   .fixed-header {
@@ -690,8 +691,14 @@ streaming {
     }
   }
 
+  .control-container {
+    background: #252526;
+    padding: 10px 0;
+  }
+
   .pushdown-container {
     background: #252526;
+
     .pull-right {
       color: #FFF;
       display: block;

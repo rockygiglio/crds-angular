@@ -24,18 +24,21 @@ namespace crds_angular.Controllers.API
         private readonly IParticipantRepository _participantService;
         private readonly IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
+        private readonly IGroupToolService _groupToolService;
 
         public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
                                IParticipantRepository participantService,
                                IAddressService addressService,
-                               IGroupSearchService groupSearchService)
+                               IGroupSearchService groupSearchService,
+                               IGroupToolService groupToolService)
         {
             _groupService = groupService;
             _authenticationService = authenticationService;
             _participantService = participantService;
             _addressService = addressService;
             _groupSearchService = groupSearchService;
+            _groupToolService = groupToolService;
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace crds_angular.Controllers.API
                 {
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
-                        _addressService.FindOrCreateAddress(group.Address);
+                        _addressService.FindOrCreateAddress(group.Address, true);
                     }
 
                     group = _groupService.CreateGroup(group);
@@ -82,6 +85,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, 1, group.GroupId);
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
                         _addressService.FindOrCreateAddress(group.Address);

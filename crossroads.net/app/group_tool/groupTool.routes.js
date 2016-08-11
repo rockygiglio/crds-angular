@@ -36,13 +36,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         profile: (CreateGroupService, GroupService) => {
           if(!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((data) => {
-              //CreateGroupService.model.profile = data;
               CreateGroupService.setCreateModel(data);
             })
           }
         },
-        countryList: (CreateGroupService, Lookup) => {
-          return Lookup.query({table: 'countries'}, (data) => {
+        countryList: (CreateGroupService, GroupService) => {
+          return GroupService.getCountries().then((data) => {
             CreateGroupService.countryLookup = data;
           })
         }
@@ -56,7 +55,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       }
     })
     .state('grouptool.create.preview', {
-      url: '/groups/create/preview',
       parent: 'noSideBar',
       template: '<create-group-preview> </create-group-preview>',
       data: {
@@ -69,7 +67,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       }
     })
     .state('grouptool.edit.preview', {
-      url: '/groups/edit/preview',
       parent: 'noSideBar',
       template: '<create-group-preview> </create-group-preview>',
       data: {
@@ -103,8 +100,8 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
             })
           }
         },
-        countryList: (CreateGroupService, Lookup) => {
-          return Lookup.query({table: 'countries'}, (data) => {
+        countryList: (CreateGroupService, GroupService) => {
+          return GroupService.getCountries().then((data) => {
             CreateGroupService.countryLookup = data;
           })
         },
@@ -145,7 +142,13 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail.requests', {
       url: '/requests',
-      template: '<group-detail-requests></group-detail-requests>'
+      template: '<group-detail-requests></group-detail-requests>',
+      params: {
+        view: {
+          value: null,
+          squash: true
+        }
+      }
     })
     .state('grouptool.invitation', {
       url: '/groups/invitation/accept/{invitationGUID}',

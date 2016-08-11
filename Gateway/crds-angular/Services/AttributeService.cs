@@ -11,10 +11,16 @@ namespace crds_angular.Services
     public class AttributeService : IAttributeService
     {
         private readonly MPInterfaces.IAttributeRepository _attributeRepository;
+        private readonly MPInterfaces.IMinistryPlatformRestRepository _ministryPlatformRestRepository;
+        private readonly MPInterfaces.IApiUserRepository _apiUserRepository;
 
-        public AttributeService(MPInterfaces.IAttributeRepository attributeRepository)
+        public AttributeService(MPInterfaces.IAttributeRepository attributeRepository,
+                                MPInterfaces.IMinistryPlatformRestRepository restRepository, 
+                                MPInterfaces.IApiUserRepository apiUserRepository)
         {
             _attributeRepository = attributeRepository;
+            _ministryPlatformRestRepository = restRepository;
+            _apiUserRepository = apiUserRepository;
         }
 
         public List<AttributeTypeDTO> GetAttributeTypes(int? attributeTypeId)
@@ -70,29 +76,19 @@ namespace crds_angular.Services
 
         public List<MpAttribute> CreateMissingAttributes(List<MpAttribute> attributes, int attributeType)
         {
-            var attributeCategories = attributes.Select(attribute => attribute.CategoryId).Distinct().ToList();
 
-            List<string> foundNames = new List<string>();
+            var attributesToSearch = attributes.Select(a => $"(Attribute_Name='{a.Name}' AND Attribute_Category_Id={a.CategoryId})");
 
+            string searchFilter = $"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")";
 
-            foreach (var category in attributeCategories)
-            {
-                var filter = "," + String.Join(" OR ",
-                                               attributes
-                                                   .Where(attCategory => attCategory.CategoryId == category)
-                                                   .Select(attribute => attribute.Name.ToLower()).ToList()) + ",," + attributeType + ",,," + category;
-                //TODO: I think we can just set the attribute ID here if we find it.
-                foundNames.AddRange(_attributeRepository.GetAttributesByFilter(filter)
-                                        .Select(records => records.Name.ToLower()).ToList());
-            }
+            var foundNames = _ministryPlatformRestRepository.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpRestAttribute>(searchFilter, "Attribute_ID, Attribute_Name, ATTRIBUTE_CATEGORY_ID");
 
             foreach (var attribute in attributes)
             {
-                if (foundNames.Contains(attribute.Name.ToLower()))
+                if (foundNames.Count(a => String.Equals(a.Name, attribute.Name, StringComparison.CurrentCultureIgnoreCase) && a.CategoryId == attribute.CategoryId) > 0)
                 {
-                    var filter = $",{attribute.Name},,,,,,{attribute.Category}";
-                    attributes.First(a => a.Name == attribute.Name && a.CategoryId == attribute.CategoryId)
-                        .AttributeId = _attributeRepository.GetAttributesByFilter(filter)[0].AttributeId;
+                    attribute.AttributeId = foundNames.First(foundAttribute => String.Equals(foundAttribute.Name, attribute.Name, StringComparison.CurrentCultureIgnoreCase) 
+                                                            && foundAttribute.CategoryId == attribute.CategoryId).AttributeId;
                 }
                 else
                 {
