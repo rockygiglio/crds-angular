@@ -86,31 +86,23 @@ export class StreamspotService {
     })
   }
 
-  get(url: string, cb: Function = (data: any) => {}) {
-    this.http.get(url, { headers: this.headers })
-    .subscribe(
-      data => {
-        if ( cb !== undefined ) {
-          cb(data.json().data);
-        }
-      },
-      err => this.handleError(err.json().message)
-    );
+  get(url: string): Observable<any> {
+    return this.http.get(url, { headers: this.headers }).map(response => response.json());
   }
 
-  getPlayers(cb: Function) {
-    let url = `${this.url}broadcaster/${this.ssid}/players`;
-    this.get(url, cb);
-  }
-
-  getBroadcaster(cb: Function) {
+  getBroadcaster(): Observable<any> {
     let url = `${this.url}broadcaster/${this.ssid}?players=true`;
-    this.get(url, cb);
+    return this.get(url);
   }
 
-  getBroadcasting(cb: Function) {
+  getPlayers(): Observable<any> {
+    let url = `${this.url}broadcaster/${this.ssid}/players`;
+    return this.get(url);
+  }
+
+  getBroadcasting(): Observable<any> {
     let url = `${this.url}broadcaster/${this.ssid}/broadcasting`;
-    this.get(url, cb);
+    return this.get(url);
   }
 
   private handleError(error: any) {

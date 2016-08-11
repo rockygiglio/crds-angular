@@ -28,11 +28,11 @@ export class VideoJSComponent implements AfterViewInit {
 
   ngAfterViewInit() {
 
-    this.streamspot.getBroadcaster((data: any) => {
+    this.streamspot.getBroadcaster().subscribe( response => {
 
-      if ( data.broadcaster !== undefined ) {
+      if ( response.success === true && response.data.broadcaster !== undefined ) {
 
-        var broadcaster = data.broadcaster;
+        var broadcaster = response.data.broadcaster;
         this.url = broadcaster.live_src.cdn_hls;
 
         var defaultPlayer;
@@ -91,7 +91,7 @@ export class VideoJSComponent implements AfterViewInit {
 
       }
       else {
-        console.log('Failed to get broadcaster from API');
+        console.log('StreamSpot API Failure!');
       }
 
     });
