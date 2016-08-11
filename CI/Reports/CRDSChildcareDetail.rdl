@@ -41,7 +41,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>report_CRDS_Childcare_Summary</CommandText>
+        <CommandText>report_CRDS_Childcare_Detail</CommandText>
       </Query>
       <Fields>
         <Field Name="Group_Name">
@@ -50,23 +50,31 @@
         </Field>
         <Field Name="EventDate">
           <DataField>EventDate</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="StartTime">
           <DataField>StartTime</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="EndTime">
           <DataField>EndTime</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Age">
           <DataField>Age</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="ID__Of_RSVP">
-          <DataField>Total RSVP</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="GroupMemberName">
+          <DataField>GroupMemberName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ChildName">
+          <DataField>ChildName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RSVP_Status">
+          <DataField>RSVP Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -91,10 +99,16 @@
                   <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.77083in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.7723in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.05208in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -247,14 +261,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox9">
+                        <Textbox Name="Textbox11">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Age</Value>
+                                  <Value>Group Member Name</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -266,7 +280,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox9</rd:DefaultName>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>#7292cc</Color>
@@ -283,14 +297,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox11">
+                        <Textbox Name="Textbox1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total RSVP</Value>
+                                  <Value>Child Name</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -302,7 +316,81 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox11</rd:DefaultName>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#7292cc</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#4c68a2</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Age</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#7292cc</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#4c68a2</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>RSVP Status</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>#7292cc</Color>
@@ -459,6 +547,72 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="ID__Of_RSVP">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!GroupMemberName.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <Color>#4d4d4d</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ID__Of_RSVP</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#e5e5e5</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ChildName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ChildName.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <Color>#4d4d4d</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ChildName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#e5e5e5</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Age">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -473,7 +627,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Age</rd:DefaultName>
@@ -492,14 +648,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="ID__Of_RSVP">
+                        <Textbox Name="RSVP_Status">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ID__Of_RSVP.Value</Value>
+                                  <Value>=Fields!RSVP_Status.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -509,7 +665,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>ID__Of_RSVP</rd:DefaultName>
+                          <rd:DefaultName>RSVP_Status</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>#e5e5e5</Color>
@@ -535,6 +691,8 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -548,9 +706,9 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet1</DataSetName>
-            <Top>1.0875in</Top>
+            <Top>1.17083in</Top>
             <Height>0.5in</Height>
-            <Width>6.5in</Width>
+            <Width>10.09521in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -564,7 +722,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Childcare Summary</Value>
+                    <Value>Childcare Detail</Value>
                     <Style>
                       <FontFamily>Verdana</FontFamily>
                       <FontSize>20pt</FontSize>
@@ -579,6 +737,38 @@
             <Height>0.4in</Height>
             <Width>5.5in</Width>
             <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Site:</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox4</rd:DefaultName>
+            <Top>0.46944in</Top>
+            <Left>0.625in</Left>
+            <Height>0.25in</Height>
+            <Width>0.375in</Width>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -604,11 +794,42 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>congregationid</rd:DefaultName>
-            <Top>0.43125in</Top>
-            <Left>0.87722in</Left>
+            <Top>0.46944in</Top>
+            <Left>1.02778in</Left>
             <Height>0.25in</Height>
-            <Width>2.19917in</Width>
-            <ZIndex>2</ZIndex>
+            <Width>1.6875in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox10">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Timeframe:</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox10</rd:DefaultName>
+            <Top>0.78889in</Top>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -646,74 +867,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>startdate</rd:DefaultName>
-            <Top>0.75069in</Top>
-            <Left>0.87722in</Left>
+            <Top>0.78889in</Top>
+            <Left>1.02778in</Left>
             <Height>0.25in</Height>
-            <Width>2.625in</Width>
-            <ZIndex>3</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox6">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Site:</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox6</rd:DefaultName>
-            <Top>0.43125in</Top>
-            <Left>0.49875in</Left>
-            <Height>0.25in</Height>
-            <Width>0.36458in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox8">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Timeframe:</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox8</rd:DefaultName>
-            <Top>0.75069in</Top>
-            <Left>0.10292in</Left>
-            <Height>0.25in</Height>
-            <Width>0.76042in</Width>
+            <Width>1.875in</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -733,7 +890,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>8.83208in</Width>
+      <Width>10.09521in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -850,6 +1007,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/reportserver</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ab1bca6e-fde2-4ac0-b72f-1779fa63e59e</rd:ReportID>
 </Report>
