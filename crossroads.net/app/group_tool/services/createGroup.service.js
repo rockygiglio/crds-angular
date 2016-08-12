@@ -518,8 +518,6 @@ export default class CreateGroupService {
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
     }
 
-    //******************************************************************
-
     mapFromSmallGroupAbout(smallGroup) {
         this.model.group.availableOnline = smallGroup.availableOnline;
         this.model.groupId = smallGroup.groupId;
@@ -566,8 +564,6 @@ export default class CreateGroupService {
 
     }
 
-
-
     mapFromSmallGroupMeetingPlace(smallGroup) {
         if (smallGroup.address != null && smallGroup.address != undefined) {
             this.model.group.meeting.address = {
@@ -596,10 +592,8 @@ export default class CreateGroupService {
         this.model.categories = categories;
     }
 
-    //*********************************************************************************
     mapFromSmallGroup(smallGroup) {
         this.mapFromSmallGroupAbout(smallGroup);
-        //this.mapFromSmallGroupType(smallGroup);
         this.mapFromSmallGroupSingleAttributes(smallGroup);
         this.mapFromSmallGroupMultipleAttributes(smallGroup);
         this.mapFromSmallGroupMeetingDay(smallGroup);
@@ -748,7 +742,6 @@ export default class CreateGroupService {
     }
 
     mapToSmallGroupCategory(smallGroup) {
-        var ids = []
         //set every category that the group came in with to selected = false if this is a load and
         //let the database worry about whether or not what we've added is new.
         if (this.originalAttributeTypes != null || this.originalAttributeTypes != undefined) {
@@ -757,6 +750,7 @@ export default class CreateGroupService {
             });
         }
 
+        var ids = [];
         _.forEach(this.model.categories, (category) => {
             ids.push(
                 {
@@ -784,10 +778,13 @@ export default class CreateGroupService {
             "attributes": ids
         };
         smallGroup.mapCategories(categoriesJson);
+<<<<<<< HEAD
         Object.assign(smallGroup.attributeTypes, smallGroup.attributeTypes, categoriesJson);
+=======
+        smallGroup.attributeTypes = Object.assign({}, smallGroup.attributeTypes, categoriesJson);
+>>>>>>> af92b57fa9f36d21f5089a24f7b267cb651a158d
     }
 
-    //*********************************************************************
     mapToSmallGroup() {
         let smallGroup = new SmallGroup();
         this.mapToSmallGroupAbout(smallGroup);
@@ -816,7 +813,6 @@ export default class CreateGroupService {
 
         return smallGroup;
     }
-    //*********************************************************************
 
     convertAttributeTypes(list) {
         var results = {};
