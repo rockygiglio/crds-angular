@@ -65,6 +65,17 @@ describe('Group Tool Group Service', () => {
       fixture.mapToSmallGroupType(smallGroup);
       expect(smallGroup.groupType.attributeId).toEqual(model.group.typeId);
     });
-  });
+
+    it('selected group type mapped correctly on create', () => {
+      let GROUP_TYPE_ATTRIBUTE_TYPE_ID = 73;
+      fixture.originalSingleAttributes = null;
+      smallGroup.groupType = {attributeId: 7009, name: 'Women only (don\'t be a creeper, dude).'}
+      
+      fixture.mapToSmallGroupSingleAttributes(smallGroup);
+      let singleAttribute[GROUP_TYPE_ATTRIBUTE_TYPE_ID] = smallGroup.singleAttribute;
+      
+      expect(singleAttribute[GROUP_TYPE_ATTRIBUTE_TYPE_ID].attributeId).toEqual(smallGroup.groupType.attributeId);
+    });
+  });  
 
 });
