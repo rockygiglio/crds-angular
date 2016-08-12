@@ -38,10 +38,6 @@ namespace Crossroads.ChildcareGroupUpdates
             const int eventTypeId = 243;
             const int defaultMinistryId = 2;
 
-            const int defaultMaximumAge = 10;
-            const int defaultMinimumParticipants = 25;
-            const int defaultTargetSize = 100;
-
             try
             {
                 ////////////////////////////////////////////////////////////////////////
@@ -83,6 +79,17 @@ namespace Crossroads.ChildcareGroupUpdates
                 ////////////////////////////////////////////////////////////////////////
                 // Update the childcare events that are orphans (Use defaults)
                 ////////////////////////////////////////////////////////////////////////
+
+                //get default values 10,25,100
+                var maxAgeObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareMaxAge", "").FirstOrDefault()?["Value"];
+                int defaultMaximumAge = maxAgeObject != null ? Convert.ToInt32(maxAgeObject) : 10;
+
+                var minParticipantsObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareMinParticipants", "").FirstOrDefault()?["Value"]; 
+                int defaultMinimumParticipants = minParticipantsObject != null ? Convert.ToInt32(minParticipantsObject) : 25;
+
+                var targetSizeObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareTargetSize", "").FirstOrDefault()?["Value"]; 
+                int defaultTargetSize = targetSizeObject != null ? Convert.ToInt32(targetSizeObject) : 100;
+
                 Log.Info("Updating orphan Childcare events.");
                 var orphanresults = mpRestRepository.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpOrphanEventsMissingGroups>("api_crds_GetOrphanChildcareEvents", new Dictionary<string, object>());
                 var orphaneventList = orphanresults.FirstOrDefault() ?? new List<MpOrphanEventsMissingGroups>();
