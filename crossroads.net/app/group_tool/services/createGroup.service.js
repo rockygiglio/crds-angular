@@ -520,22 +520,22 @@ export default class CreateGroupService {
 
     //******************************************************************
 
-    mapFromSmallGroupMeetingAbout(smallGroup) {
-        this.model.group.availableOnline = groupData.availableOnline;
+    mapFromSmallGroupAbout(smallGroup) {
+        this.model.group.availableOnline = smallGroup.availableOnline;
         this.model.groupId = smallGroup.groupId;
         this.model.group.groupName = smallGroup.groupName;
         this.model.group.groupDescription = smallGroup.groupDescription;
-        this.model.group.startDate = moment(groupData.startDate).format('MM/DD/YYYY');
+        this.model.group.startDate = moment(smallGroup.startDate).format('MM/DD/YYYY');
     }
 
 
     mapFromSmallGroupSingleAttributes(smallGroup) {
-        this.model.group.typeId = groupData.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+        this.model.group.typeId = smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
     }
 
     mapFromSmallGroupMultipleAttributes(smallGroup) {
         var ageRangeIds = [];
-        _.forEach(groupData.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
+        _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.AGE_RANGE_ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
             if (value.selected)
                 ageRangeIds.push(value.attributeId)
         });
@@ -551,7 +551,7 @@ export default class CreateGroupService {
 
     mapFromSmallGroupMeetingDay(smallGroup) {
         this.model.group.meeting.day = smallGroup.meetingDayId;
-        groupData.meetingDayId == null || smallGroup.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
+        smallGroup.meetingDayId == null || smallGroup.meetingDayId == undefined ? this.model.specificDay = false : this.model.specificDay = true;
     }
 
     mapFromSmallGroupMeetingTime(smallGroup) {
@@ -598,14 +598,14 @@ export default class CreateGroupService {
 
     //*********************************************************************************
     mapFromSmallGroup(smallGroup) {
-        mapFromSmallGroupAbout(smallGroup);
-        mapFromSmallGroupType(smallGroup);
-        mapFromSmallGroupSingleAttributes(smallGroup);
-        mapFromSmallGroupMultipleAttributes(smallGroup);
-        mapFromSmallGroupMeetingDay(smallGroup);
-        mapFromSmallGroupMeetingTime(smallGroup);
-        mapFromSmallGroupMeetingPlace(smallGroup);
-        mapFromSmallGroupCategory(smallGroup);
+        this.mapFromSmallGroupAbout(smallGroup);
+        //this.mapFromSmallGroupType(smallGroup);
+        this.mapFromSmallGroupSingleAttributes(smallGroup);
+        this.mapFromSmallGroupMultipleAttributes(smallGroup);
+        this.mapFromSmallGroupMeetingDay(smallGroup);
+        this.mapFromSmallGroupMeetingTime(smallGroup);
+        this.mapFromSmallGroupMeetingPlace(smallGroup);
+        this.mapFromSmallGroupCategory(smallGroup);
     }
 
     mapToSmallGroupAbout(smallGroup) {
