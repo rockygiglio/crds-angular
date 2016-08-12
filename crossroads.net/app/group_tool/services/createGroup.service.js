@@ -778,11 +778,8 @@ export default class CreateGroupService {
             "attributes": ids
         };
         smallGroup.mapCategories(categoriesJson);
-<<<<<<< HEAD
         Object.assign(smallGroup.attributeTypes, smallGroup.attributeTypes, categoriesJson);
-=======
         smallGroup.attributeTypes = Object.assign({}, smallGroup.attributeTypes, categoriesJson);
->>>>>>> af92b57fa9f36d21f5089a24f7b267cb651a158d
     }
 
     mapToSmallGroup() {
