@@ -133,6 +133,7 @@ namespace crds_angular.Services
                 YoungestAgeAllowed = campaign.YoungestAgeAllowed,
                 RegistrationEnd = campaign.RegistrationEnd,
                 RegistrationStart = campaign.RegistrationStart,
+                RegistrationDeposit = campaign.RegistrationDeposit,
                 AgeExceptions = campaign.AgeExceptions
             };
         }

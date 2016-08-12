@@ -39,6 +39,7 @@ export default class CreateGroupService {
         this.profileData = {};
         this.originalAttributeTypes = null;
         this.originalSingleAttributes = null;
+        this.primaryContact = null;
     }
 
     setEditModel(groupData, profileData){
@@ -721,13 +722,6 @@ export default class CreateGroupService {
         smallGroup.congregationId = this.model.profile.congregationId;
         smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
         smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.participants = [new Participant({
-            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            , nickName: this.model.profile.nickName
-            , lastName: this.model.profile.lastName
-            , contactId: parseInt(this.session.exists('userId'))
-        }
-        )];
 
     //groupMeetingPlace
         if (!this.model.group.meeting.online){
