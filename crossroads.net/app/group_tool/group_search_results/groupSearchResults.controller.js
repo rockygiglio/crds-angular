@@ -60,8 +60,4 @@ export default class GroupSearchResultsController {
   submit() {
     this.doSearch(this.search.query, this.search.location);
   }
-
-  openMap(group) {
-    console.log('Open Map');
-  }
 }

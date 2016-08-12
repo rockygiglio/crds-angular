@@ -105,7 +105,7 @@
                   <Width>1.7723in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.6875in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.05208in</Width>
@@ -708,7 +708,7 @@
             <DataSetName>DataSet1</DataSetName>
             <Top>1.17083in</Top>
             <Height>0.5in</Height>
-            <Width>10.09521in</Width>
+            <Width>9.78271in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -883,14 +883,14 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>6.3125in</Height>
+        <Height>7in</Height>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Body>
-      <Width>10.09521in</Width>
+      <Width>10in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -935,10 +935,12 @@
             </Border>
           </Style>
         </PageFooter>
-        <LeftMargin>1in</LeftMargin>
-        <RightMargin>1in</RightMargin>
-        <TopMargin>1in</TopMargin>
-        <BottomMargin>1in</BottomMargin>
+        <PageHeight>8.5in</PageHeight>
+        <PageWidth>11in</PageWidth>
+        <LeftMargin>0.5in</LeftMargin>
+        <RightMargin>0.5in</RightMargin>
+        <TopMargin>0.5in</TopMargin>
+        <BottomMargin>0.5in</BottomMargin>
         <Style />
       </Page>
     </ReportSection>
@@ -1006,6 +1008,7 @@
       <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ab1bca6e-fde2-4ac0-b72f-1779fa63e59e</rd:ReportID>
