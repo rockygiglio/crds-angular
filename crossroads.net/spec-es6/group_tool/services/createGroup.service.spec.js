@@ -61,7 +61,7 @@ describe('Group Tool Group Service', () => {
       ];
       let model ={group: {'typeId':7009}};
       fixture.model = model;
-      
+
       fixture.mapToSmallGroupType(smallGroup);
       expect(smallGroup.groupType.attributeId).toEqual(model.group.typeId);
     });
@@ -70,15 +70,61 @@ describe('Group Tool Group Service', () => {
       let GROUP_TYPE_ATTRIBUTE_TYPE_ID = 73;
       fixture.originalSingleAttributes = null;
       smallGroup.groupType = {attributeId: 7009, name: 'Women only (don\'t be a creeper, dude).'}
-      
+
       fixture.mapToSmallGroupSingleAttributes(smallGroup);
-      
+
       expect(7009).toEqual(smallGroup.groupType.attributeId);
     });
-  });  
+  });
 
-  // describe('mapToSmallGroupSingleAttributes) function', () => {
-  //   it('singleAttribute')
-  // });
+  describe('mapToSmallGroupMultipleAttributes() function', () => {
+    it('age ranges are mapped correctly', () => {
+      fixture.ageRangeLookup = [
+        { 'attributeId': 111, 'name': '20s' },
+        { 'attributeId': 222, 'name': '30s' },
+        { 'attributeId': 333, 'name': '40s' },
+        { 'attributeId': 444, 'name': '50s' },
+      ];
+      let model ={groupAgeRangeIds: {selectedRange:111}};
+      fixture.model = model;
+
+      fixture.mapToSmallGroupMultipleAttributes(smallGroup);
+      expect(111).toEqual(model.groupAgeRangeIds.selectedRange);
+    });
+  });
+
+  describe('mapToSmallGroupCategory() function', () => {
+    it('categories are mapped correctly', () => {
+      let model = {categories: [
+          {value:123, detail: 'My interest'},
+        ]
+      };
+      fixture.model = model;
+//JQuery issue - import??
+      //fixture.mapToSmallGroupCategory(smallGroup);
+
+    });
+  });
+
+  describe('mapFromSmallGroupMultipleAttributes() function', () => {
+    it('age ranges mapped correctly from small group to object', () => {
+    //   fixture.ageRangeLookup = [
+    //     { 'attributeId': 111, 'name': '20s' },
+    //     { 'attributeId': 222, 'name': '30s' },
+    //     { 'attributeId': 333, 'name': '40s' },
+    //     { 'attributeId': 444, 'name': '50s' },
+    //   ];
+    //   let model ={groupAgeRangeIds: {selectedRange:111}};
+    //   fixture.model = model;
+
+    //   fixture.mapToSmallGroupMultipleAttributes(smallGroup);
+    //   expect(111).toEqual(model.groupAgeRangeIds.selectedRange);
+     });
+  });
+
+  describe('mapFromSmallGroupCategory() function', () => {
+    it('', () => {
+    });
+  });
 
 });
