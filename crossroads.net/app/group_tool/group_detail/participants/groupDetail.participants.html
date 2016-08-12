@@ -4,13 +4,15 @@
 <div
   ng-show='groupDetailParticipants.ready'
   ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
-  <div class='row push-top'>
-    <group-detail-participant-card class="col-xs-12 col-sm-6 col-lg-4 push-bottom"
-      ng-repeat='participant in groupDetailParticipants.data'
-      delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
-      participant='participant'
-      edit='groupDetailParticipants.isEditView()'>
-    </group-detail-participant-card>
+  <div class='group-detail-participant-list row push-top'>
+    <div ng-repeat='participant in groupDetailParticipants.data' class="group-detail-participant-item col-xs-12 col-sm-6 col-lg-4 push-bottom">
+      <group-detail-participant-card
+                                     delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+                                     role-action='groupDetailParticipants.beginChangeParticipantRole(participant)'
+                                     participant='participant'
+                                     edit='groupDetailParticipants.isEditView()'>
+      </group-detail-participant-card>
+    </div>
   </div>
   <div class='row'>&nbsp;</div>
 
@@ -52,4 +54,12 @@
     submit-action='groupDetailParticipants.messageParticipants(message)'
     processing='groupDetailParticipants.processing'/>
   />
+</div>
+
+<!-- Change Participant Role -->
+<div ng-if="groupDetailParticipants.isRoleView()">
+  <change-participant-role
+    participant="groupDetailParticipants.roleParticipant"
+    cancel-action="groupDetailParticipants.finishChangeParticipantRole()"
+    submit-action="groupDetailParticipants.finishChangeParticipantRole()"></change-participant-role>
 </div>
