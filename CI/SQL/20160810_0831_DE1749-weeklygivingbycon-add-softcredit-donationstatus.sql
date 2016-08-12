@@ -32,11 +32,7 @@ BEGIN
 SET nocount ON;
 
 
---SET DATEFIRST 1; --Sets the First Day of the week to Monday
---SET @startdate = DATEADD(dd, DATEDIFF(dd, 0, @startdate),0);
---SET @enddate   =  DATEADD(mi,1439, (DATEADD(dd, DATEDIFF(dd, 0, @enddate),0)));
 
---Per Finance - change is needed to capture millisecond data on donations
 SET DATEFIRST 1;
 SET @startdate = DATEADD(dd, DATEDIFF(dd, 0, @startdate),0);
 SET @enddate   =  DATEADD(ms,86399998, (DATEADD(dd, DATEDIFF(dd, 0, @enddate),0)))
@@ -86,8 +82,7 @@ INSERT INTO #TMPTOTS
 	WHERE don.donation_date BETWEEN @startdate AND @enddate
 	AND dd.program_id IN (SELECT Item FROM dbo.dp_Split(@programid, ','))
 	AND dd.congregation_id IN (SELECT Item FROM dbo.dp_Split(@congregationid, ','))
-	AND don.donation_status_id IN (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
-	ORDER BY DATEADD(DAY, 7 - DATEPART(WEEKDAY, don.donation_date), CAST(don.donation_date AS DATE)), con.congregation_name desc
+	AND don.donation_status_id IN (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','));
 	
 	UPDATE g
 	 SET g.congregation_name = con.congregation_name
