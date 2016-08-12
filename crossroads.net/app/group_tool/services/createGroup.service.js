@@ -784,7 +784,7 @@ export default class CreateGroupService {
             "attributes": ids
         };
         smallGroup.mapCategories(categoriesJson);
-        smallGroup.attributeTypes = $.extend({}, smallGroup.attributeTypes, categoriesJson);
+        Object.assign(smallGroup.attributeTypes, smallGroup.attributeTypes, categoriesJson);
     }
 
     //*********************************************************************
