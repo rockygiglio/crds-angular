@@ -265,6 +265,7 @@ streaming {
         
         &:after {
           content: ", ";
+          margin-left: -4px;
         }
         &:last-child:after {
           content: "";
