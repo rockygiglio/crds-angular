@@ -9,3 +9,4 @@ export default angular.
 
 import groupDetailParticipantCard from './participant_card';
 import messageParticipants from './message_participants';
+import changeParticipantRole from './change_participant_role';
