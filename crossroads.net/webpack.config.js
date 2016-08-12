@@ -59,7 +59,10 @@ module.exports = {
             path.resolve(__dirname, 'app'),
             path.resolve(__dirname, 'node_modules/angular-stripe')
           ],
-          exclude: [/streamspotAnalytics\.js$/],
+          exclude: [
+            /streamspotAnalytics\.js$/,
+            /videojs5-hlsjs-source-handler\.min\.js$/
+          ],
           loader: 'ng-annotate!babel-loader'
         },
         {
@@ -99,7 +102,7 @@ module.exports = {
     ],
     noParse: [
         path.join(__dirname, "node_modules", "video.js","dist","video.js"),
-        /videojs-contrib-hls/
+        /videojs5-hlsjs-source-handler\.min\.js/
     ]
   },
   plugins: [

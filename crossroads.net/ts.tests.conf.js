@@ -31,7 +31,7 @@ module.exports = function (config) {
                 ],
                 noParse: [
                     path.join(__dirname, "node_modules", "video.js","dist","video.js"),
-                    /videojs-contrib-hls/
+                    /videojs5-hlsjs-source-handler\.min\.js/
                 ]
             },
             plugins: [

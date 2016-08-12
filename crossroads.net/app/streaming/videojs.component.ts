@@ -1,13 +1,14 @@
-import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 var videojs = require('video.js/dist/video');
 
 declare var window: any;
+declare var Hls: any;
 window.videojs = videojs;
 
 require('./vendor/streamspotAnalytics');
-require('videojs-contrib-hls/dist/videojs-contrib-hls');
+var HlsTest = require('./vendor/videojs5-hlsjs-source-handler.min');
 
 @Component({
   selector: 'videojs',
@@ -24,7 +25,7 @@ export class VideoJSComponent implements AfterViewInit {
   poster: string;
   visible: boolean = false;
 
-  constructor(private streamspot: StreamspotService, private _el:ElementRef) {}
+  constructor(private streamspot: StreamspotService) {}
 
   ngAfterViewInit() {
 
@@ -50,11 +51,18 @@ export class VideoJSComponent implements AfterViewInit {
 
         this.poster = defaultPlayer.bgLink;
         this.player = window.videojs(this.id, {
-          "techOrder": ["html5", "flash"],
+          "techOrder": ["html5"],
           "fluid": true,
           "poster" : this.poster,
-          "preload": 'auto'
+          "preload": 'auto',
+          "html5": {
+            "hlsjsConfig": {
+              "debug": true
+            }
+          }
         });
+
+        console.log(HlsTest);
 
         // create play handler (analytics)
         this.player.on('play', () => {
@@ -79,8 +87,9 @@ export class VideoJSComponent implements AfterViewInit {
             }
           ]);
 
+          this.visible = true;
+
           this.player.ready(() => {
-            this.visible = true;
             this.player.play();
           });
         }
