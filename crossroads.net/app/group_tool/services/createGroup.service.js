@@ -528,7 +528,13 @@ export default class CreateGroupService {
 
 
     mapFromSmallGroupSingleAttributes(smallGroup) {
-        this.model.group.typeId = smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId;
+       if (smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute != null &&
+        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== undefined) {
+
+            this.model.group.typeId = smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId
+
+        }
+        
     }
 
     mapFromSmallGroupMultipleAttributes(smallGroup) {
