@@ -19,6 +19,9 @@ GO
 ALTER PROCEDURE [dbo].[api_crds_GetOrphanChildcareEvents]
 AS
 BEGIN
+		DECLARE @ChildcareEventTypeId INT = 243
+		DECLARE @ChildcareGroupTypeId INT = 27
+
 		DECLARE @ChildcareEvents TABLE
 		(
 			EventID INT
@@ -27,8 +30,7 @@ BEGIN
 		INSERT INTO @ChildcareEvents
 		SELECT e.Event_ID 
 		FROM events e
-		JOIN event_types et ON et.event_type_id = e.event_type_id
-		WHERE et.Event_Type = 'Childcare'
+		WHERE e.Event_Type_ID = @ChildcareEventTypeId
 
 		DECLARE @ChildcareGroups TABLE
 		(
@@ -38,15 +40,13 @@ BEGIN
 		INSERT INTO @ChildcareGroups
 		SELECT g.group_id
 		FROM groups g
-		JOIN group_types gt ON gt.group_type_id = g.Group_Type_ID
-		WHERE gt.Group_Type = 'Childcare'
+		WHERE g.Group_Type_ID = @ChildcareGroupTypeId
 
 		SELECT DISTINCT EventID AS Event_ID FROM @ChildcareEvents
 		EXCEPT
 		SELECT eg.Event_ID FROM event_groups eg
 		JOIN events e ON e.event_id = eg.Event_ID
-		JOIN Event_Types et ON et.event_type_id = e.event_type_id
-		WHERE et.Event_Type = 'Childcare'
+		WHERE e.Event_Type_ID = @ChildcareEventTypeId
 		AND   eg.Event_ID IN (SELECT EventID FROM @ChildcareEvents)
 		AND   eg.Group_ID IN (SELECT GroupID FROM @ChildcareGroups)
 
