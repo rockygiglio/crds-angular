@@ -34,9 +34,11 @@ namespace Crossroads.ChildcareGroupUpdates
             var mpRestRepository = container.Resolve<MinistryPlatformRestRepository>();
 
             // use childcare grouptype and eventtype
-            const int groupTypeId = 27;
-            const int eventTypeId = 243;
-            const int defaultMinistryId = 2;
+            var groupTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareGroupTypeId"]);
+            var eventTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareEventTypeId"]);
+            var defaultMinistryId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareDefaultMinistryId"]);
+
+            var configSettingsPageId = Convert.ToInt32(ConfigurationManager.AppSettings["ConfigurationSettingsPageId"]);
 
             try
             {
@@ -81,14 +83,14 @@ namespace Crossroads.ChildcareGroupUpdates
                 ////////////////////////////////////////////////////////////////////////
 
                 //get default values 10,25,100
-                var maxAgeObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareMaxAge", "").FirstOrDefault()?["Value"];
-                int defaultMaximumAge = maxAgeObject != null ? Convert.ToInt32(maxAgeObject) : 10;
+                var maxAgeObject = MinistryPlatformService.GetRecordsDict(configSettingsPageId, apiToken, ",ChildcareMaxAge", string.Empty).FirstOrDefault()?["Value"];
+                var defaultMaximumAge = maxAgeObject != null ? Convert.ToInt32(maxAgeObject) : 10;
 
-                var minParticipantsObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareMinParticipants", "").FirstOrDefault()?["Value"]; 
-                int defaultMinimumParticipants = minParticipantsObject != null ? Convert.ToInt32(minParticipantsObject) : 25;
+                var minParticipantsObject = MinistryPlatformService.GetRecordsDict(configSettingsPageId, apiToken, ",ChildcareMinParticipants", string.Empty).FirstOrDefault()?["Value"]; 
+                var defaultMinimumParticipants = minParticipantsObject != null ? Convert.ToInt32(minParticipantsObject) : 25;
 
-                var targetSizeObject = MinistryPlatformService.GetRecordsDict(420, apiToken, ",ChildcareTargetSize", "").FirstOrDefault()?["Value"]; 
-                int defaultTargetSize = targetSizeObject != null ? Convert.ToInt32(targetSizeObject) : 100;
+                var targetSizeObject = MinistryPlatformService.GetRecordsDict(configSettingsPageId, apiToken, ",ChildcareTargetSize", string.Empty).FirstOrDefault()?["Value"]; 
+                var defaultTargetSize = targetSizeObject != null ? Convert.ToInt32(targetSizeObject) : 100;
 
                 Log.Info("Updating orphan Childcare events.");
                 var orphanresults = mpRestRepository.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpOrphanEventsMissingGroups>("api_crds_GetOrphanChildcareEvents", new Dictionary<string, object>());

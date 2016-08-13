@@ -10,7 +10,7 @@ GO
 -- Create date: 8/11/2016
 -- Description:	Find Childcare Events with no childcare group
 -- ===============================================================
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[api_crds_GetOrphanChildcareEvents]') AND type in (N'P', N'PC'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[api_crds_GetOrphanChildcareEvents]') AND TYPE IN (N'P', N'PC'))
 BEGIN
 	EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[api_crds_GetOrphanChildcareEvents] AS'
 END
@@ -21,34 +21,34 @@ AS
 BEGIN
 		DECLARE @ChildcareEvents TABLE
 		(
-			EventID int
+			EventID INT
 		)
 
 		INSERT INTO @ChildcareEvents
 		SELECT e.Event_ID 
-		from events e
-		join event_types et on et.event_type_id = e.event_type_id
-		where et.Event_Type = 'Childcare'
+		FROM events e
+		JOIN event_types et ON et.event_type_id = e.event_type_id
+		WHERE et.Event_Type = 'Childcare'
 
 		DECLARE @ChildcareGroups TABLE
 		(
-			GroupId int
+			GroupId INT
 		)
 
-		insert into @ChildcareGroups
-		select g.group_id
-		from groups g
-		join group_types gt on gt.group_type_id = g.Group_Type_ID
-		where gt.Group_Type = 'Childcare'
+		INSERT INTO @ChildcareGroups
+		SELECT g.group_id
+		FROM groups g
+		JOIN group_types gt ON gt.group_type_id = g.Group_Type_ID
+		WHERE gt.Group_Type = 'Childcare'
 
-		select distinct EventID as Event_ID from @ChildcareEvents
+		SELECT DISTINCT EventID AS Event_ID FROM @ChildcareEvents
 		EXCEPT
-		select eg.Event_ID from event_groups eg
-		join events e on e.event_id = eg.Event_ID
-		join Event_Types et on et.event_type_id = e.event_type_id
-		where et.Event_Type = 'Childcare'
-		and   eg.Event_ID in (select EventID from @ChildcareEvents)
-		and   eg.Group_ID in (select GroupID from @ChildcareGroups)
+		SELECT eg.Event_ID FROM event_groups eg
+		JOIN events e ON e.event_id = eg.Event_ID
+		JOIN Event_Types et ON et.event_type_id = e.event_type_id
+		WHERE et.Event_Type = 'Childcare'
+		AND   eg.Event_ID IN (SELECT EventID FROM @ChildcareEvents)
+		AND   eg.Group_ID IN (SELECT GroupID FROM @ChildcareGroups)
 
 END 
 GO
