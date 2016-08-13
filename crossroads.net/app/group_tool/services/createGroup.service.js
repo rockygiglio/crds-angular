@@ -636,12 +636,17 @@ export default class CreateGroupService {
 
     mapToSmallGroupSingleAttributes(smallGroup) {
         smallGroup.singleAttributes = {};
-        if (this.originalSingleAttributes != undefined && this.originalSingleAttributes != null) {
+        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined){
             smallGroup.singleAttributes = this.originalSingleAttributes;
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute  = smallGroup.groupType;
+
+        } else {
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
+                "attribute": {
+                    "attributeId": smallGroup.groupType.attributeId
+                }
+            }
         }
-        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = smallGroup.groupType;
-
-
     }
 
     mapToSmallGroupMultipleAttributes(smallGroup) {
