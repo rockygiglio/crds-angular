@@ -167,7 +167,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       url: '/groups/search',
       template: '<group-search></group-search>',
       data: {
-        isProtected: true,
         meta: {
           title: 'Find a Group',
           description: ''
@@ -189,7 +188,6 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       },
       template: '<group-search-results></group-search-results>',
       data: {
-        isProtected: true,
         meta: {
           title: 'Search Results',
           description: ''

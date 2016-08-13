@@ -11,4 +11,9 @@ export default class GroupDetailParticipantCardController {
   invokeDeleteAction(participant) {
     this.deleteAction({participant: participant});
   }
+
+  invokeRoleAction(participant) {
+    console.debug("Invoke Role Action");
+    this.roleAction({participant: participant});
+  }
 }

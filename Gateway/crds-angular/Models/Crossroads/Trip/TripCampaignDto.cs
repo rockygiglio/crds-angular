@@ -24,6 +24,9 @@ namespace crds_angular.Models.Crossroads.Trip
         [JsonProperty(PropertyName = "registrationStart")]
         public DateTime RegistrationStart { get; set; }
 
+        [JsonProperty(PropertyName = "registrationDeposit")]
+        public string RegistrationDeposit { get; set; }
+
         [JsonProperty(PropertyName = "registrationEnd")]
         public DateTime RegistrationEnd { get; set; }
 
