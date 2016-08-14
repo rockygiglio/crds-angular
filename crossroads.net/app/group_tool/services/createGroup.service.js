@@ -551,6 +551,7 @@ export default class CreateGroupService {
         }
 
         this.model.groupAgeRangeIds = ageRangeIds;
+        this.log.debug(this.model.groupAgeRangeIds);
     }
 
     mapFromSmallGroupMeetingDay(smallGroup) {
@@ -789,8 +790,12 @@ export default class CreateGroupService {
             "attributes": ids
         };
         smallGroup.mapCategories(categoriesJson);
+        this.log.debug('categoriesJson object');
+        this.log.debug(categoriesJson);
         Object.assign(smallGroup.attributeTypes, smallGroup.attributeTypes, categoriesJson);
-        smallGroup.attributeTypes = Object.assign({}, smallGroup.attributeTypes, categoriesJson);
+        this.log.debug('smallGroup.attributeTypes object');
+
+        this.log.debug(smallGroup.attributeTypes);
     }
 
     mapToSmallGroup() {

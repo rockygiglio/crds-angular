@@ -50,6 +50,10 @@ describe('Group Tool Group Service', () => {
     httpBackend.verifyNoOutstandingRequest();
   });
 
+  // afterEach(function () {
+  //   console.log(log.debug.logs); //do it here to output for every test...
+  // });
+
   describe('mapToSmallGroupType() function', () => {
     it('group types are mapped correctly', () => {
 
@@ -59,7 +63,7 @@ describe('Group Tool Group Service', () => {
         { 'attributeId': 7009, 'name': 'Women only (don\'t be a creeper, dude).' },
         { 'attributeId': 7010, 'name': 'Couples (married, engaged, etc.).' },
       ];
-      let model ={group: {'typeId':7009}};
+      let model = { group: { 'typeId': 7009 } };
       fixture.model = model;
 
       fixture.mapToSmallGroupType(smallGroup);
@@ -69,7 +73,7 @@ describe('Group Tool Group Service', () => {
     it('selected group type mapped correctly on save', () => {
       let GROUP_TYPE_ATTRIBUTE_TYPE_ID = 73;
       fixture.originalSingleAttributes = null;
-      smallGroup.groupType = {attributeId: 7009, name: 'Women only (don\'t be a creeper, dude).'}
+      smallGroup.groupType = { attributeId: 7009, name: 'Women only (don\'t be a creeper, dude).' }
 
       fixture.mapToSmallGroupSingleAttributes(smallGroup);
 
@@ -85,7 +89,7 @@ describe('Group Tool Group Service', () => {
         { 'attributeId': 333, 'name': '40s' },
         { 'attributeId': 444, 'name': '50s' },
       ];
-      let model ={groupAgeRangeIds: {selectedRange:111}};
+      let model = { groupAgeRangeIds: { selectedRange: 111 } };
       fixture.model = model;
 
       fixture.mapToSmallGroupMultipleAttributes(smallGroup);
@@ -95,35 +99,48 @@ describe('Group Tool Group Service', () => {
 
   describe('mapToSmallGroupCategory() function', () => {
     it('categories are mapped correctly', () => {
-      let model = {categories: [
-          {value:123, detail: 'My interest'},
+      let model = {
+        categories: [
+          { value: 123, detail: 'My interest' },
         ]
       };
+      smallGroup.attributeTypes = {};
       fixture.model = model;
-//JQuery issue - import??
-      //fixture.mapToSmallGroupCategory(smallGroup);
-
+      fixture.mapToSmallGroupCategory(smallGroup);
+      expect(123, smallGroup.categories[0].categoryId, 'categories not mapped correctely');
     });
   });
 
   describe('mapFromSmallGroupMultipleAttributes() function', () => {
     it('age ranges mapped correctly from small group to object', () => {
-    //   fixture.ageRangeLookup = [
-    //     { 'attributeId': 111, 'name': '20s' },
-    //     { 'attributeId': 222, 'name': '30s' },
-    //     { 'attributeId': 333, 'name': '40s' },
-    //     { 'attributeId': 444, 'name': '50s' },
-    //   ];
-    //   let model ={groupAgeRangeIds: {selectedRange:111}};
-    //   fixture.model = model;
+      smallGroup.attributeTypes = {
+        91: {
+          attributeTypeId: 91,
+          attributes: [
+            { 'attributeId': 111, 'name': '20s', selected: false },
+            { 'attributeId': 222, 'name': '30s', selected: false },
+            { 'attributeId': 333, 'name': '40s', selected: true },
+            { 'attributeId': 444, 'name': '50s', selected: false },
+          ]
+        }
+      };
 
-    //   fixture.mapToSmallGroupMultipleAttributes(smallGroup);
-    //   expect(111).toEqual(model.groupAgeRangeIds.selectedRange);
-     });
+      fixture.mapFromSmallGroupMultipleAttributes(smallGroup);
+      expect(333).toEqual(fixture.model.groupAgeRangeIds[0]);
+    });
   });
 
   describe('mapFromSmallGroupCategory() function', () => {
-    it('', () => {
+    it('categories are mapped correctly', () => {
+      smallGroup.attributeTypes
+        = {
+          90: {
+            attributeTypeId: 90,
+            attributes: [{ attributeId: 123, name: 'My interest', selected: true },]
+          }
+        };
+      fixture.mapFromSmallGroupCategory(smallGroup);
+      expect(123, fixture.model.categories[0].value, 'categories not mapped correctely');
     });
   });
 
