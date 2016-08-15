@@ -41,6 +41,10 @@
 
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
+  <div ng-show='groupSearchResults.ready'>
+    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
+  </div>
+
   <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
