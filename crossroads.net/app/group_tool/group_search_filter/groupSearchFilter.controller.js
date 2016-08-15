@@ -1,105 +1,65 @@
 
 export default class GroupSearchResultsController {
-    /*@ngInject*/
-    constructor(NgTableParams, GroupService, $state) {
-        this.groupService = GroupService;
+  /*@ngInject*/
+  constructor(GroupService) {
+    this.groupService = GroupService;
+    this.ageRanges = [];
+  }
 
-        //this.search = null;
-        //this.processing = false;
-        //this.state = $state;
-        //this.ready = false;
-        //this.results = [];
-        //
-        //this.showLocationInput = false;
-        //this.searchedWithLocation = false;
-        //
-        //this.ageRangeFilter = null;
-        //
-        //this.tableParams = new NgTableParams({}, {});
-        this.ageRanges = [];
+  $onInit() {
+    this.loadAgeRanges();
+  }
+
+  $onChanges(allChanges) {
+    this.searchResults = allChanges.searchResults.currentValue;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let settings = {
+      dataset: this.searchResults.filter((r) => {
+        // TODO When additional filters are added, call their functions here
+        return this.ageRangeFilter(r);
+      })
+    };
+    angular.extend(this.tableParams.settings(), settings);
+    this.tableParams.reload();
+  }
+
+  // TODO - This is probably not very efficient, might need to optimize with large result sets
+  ageRangeFilter(searchResult) {    
+    let selectedAgeRanges = this.ageRanges.filter((a) => {
+      return a.selected === true;
+    }).map((a) => {
+      return a.attributeId;
+    });
+
+    if(selectedAgeRanges.length === 0) {
+      return true;
     }
 
-    $onInit() {
+    let filteredResults = searchResult.ageRange.filter((a) => {
+      return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
+    });
 
+    return filteredResults !== undefined && filteredResults.length > 0;
+  }
 
-        this.loadAgeRanges();
+  loadAgeRanges() {
+    this.groupService.getAgeRanges().then(
+      (data) => {
+        this.ageRanges = data.attributes;
 
-
-        //this.search = {
-        //    query: this.state.params.query,
-        //    location: this.state.params.location
-        //};
-        //this.doSearch(this.state.params.query, this.state.params.location);
-    }
-
-    clickedButton() {
-        var x = this.filterParams;
-        var y = this.ageRanges;
-
-        //this.filterParams.filter =
-
-        debugger;
-    }
-
-    loadAgeRanges() {
-        this.groupService.getAgeRanges().then(
-            (data) => {
-                this.ageRanges = data;
-
-                for(var i = 0; i < this.ageRanges.attributes.length; i++)
-                {
-                    this.ageRanges.attributes[i].selected = false;
-                }
-
-                debugger;
-            },
-            (err) => {
-                // TODO what happens on error? (could be 404/no results, or other error)
-            }
-        ).finally(
-            () => {
-
-        })
-    }
-
-    //doSearch(query, location) {
-    //    this.showLocationInput = false;
-    //    this.searchedWithLocation = location && location.length > 0;
-    //    this.ready = false;
-    //    this.results = [];
-    //    this.groupService.search(query, location).then(
-    //        (data) => {
-    //            this.results = data;
-    //        },
-    //        (err) => {
-    //            // TODO what happens on error? (could be 404/no results, or other error)
-    //        }
-    //    ).finally(
-    //        () => {
-    //            // TODO Need to figure out pagination, etc
-    //
-    //            // This resets the ngTable count so we see all the results and sets sorting appropriately
-    //            let parms = {
-    //                count: this.results.length
-    //            };
-    //            parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
-    //
-    //            // This resets the dataset so ngTable properly renders the new search results
-    //            let settings = {
-    //                dataset: this.results
-    //            };
-    //            this.tableParams.settings(settings);
-    //            this.tableParams.parameters(parms);
-    //            this.ready = true;
-    //        }
-    //    );
-    //}
-    //
-    //submit() {
-    //    this.doSearch(this.search.query, this.search.location);
-    //}
-    //
-    //openMap(group) {
-    //    console.log('Open Map');
-    //}
+        for(let i = 0; i < this.ageRanges.length; i++)
+        {
+          this.ageRanges[i].selected = false;
+        }
+      },
+      (err) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }
+    ).finally(
+      () => {
+    });
+  }
 }

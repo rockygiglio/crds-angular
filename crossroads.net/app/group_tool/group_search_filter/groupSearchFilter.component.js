@@ -7,7 +7,8 @@ export default function GroupSearchFilterComponent() {
     let groupSearchFilterComponent = {
         restrict: 'E',
         bindings: {
-            filterParams: '<'
+            tableParams: '<',
+            searchResults: '<'
         },
         templateUrl: 'group_search_filter/groupSearchFilter.html',
         controller: controller,
