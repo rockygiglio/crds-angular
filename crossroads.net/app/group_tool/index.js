@@ -22,6 +22,7 @@ export default angular.
   ;
 
 import myGroups from './my_groups';
+import confirmRequest from './confirm_request';
 import createGroup from './create_group';
 import groupDetail from './group_detail';
 import groupMessage from './group_message';
