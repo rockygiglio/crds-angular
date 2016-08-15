@@ -19,10 +19,10 @@ export default class GroupSearchResultsController {
 
   $onInit() {
     this.search = {
-      query: this.state.params.query || 'tallent',
+      query: this.state.params.query,
       location: this.state.params.location
     };
-    this.doSearch(this.state.params.query || 'tallent', this.state.params.location);
+    this.doSearch(this.state.params.query, this.state.params.location);
   }
 
   doSearch(query, location) {
