@@ -5,7 +5,25 @@ export default class ConfirmRequestController {
   }
 
   cancel() {
-    this.modalInstance.dismiss();
+    if(!this.processing) {
+      this.modalInstance.dismiss();
+    }
+  }
+
+  requestToJoin() {
+    if(!this.processing) {
+      this.emailLeader = false;
+    }
+  }
+
+  emailGroupLeader() {
+    if(!this.processing) {
+      this.emailLeader = true;
+    }
+  }
+
+  sendEmail() {
+    this.processing = true;
   }
 
   submit() {
