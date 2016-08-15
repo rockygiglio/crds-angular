@@ -13,11 +13,11 @@
       <dd>
         <!-- TODO - remove class "checkbox-inline" when we add a 2nd filter -->
         <div class="checkbox push-right" ng-repeat="ageRange in groupSearchFilter.ageRanges">
-          <label for="ageRange-{{ageRange-attributeId}}">
+          <label for="ageRange-{{ageRange.attributeId}}">
             <input ng-model="ageRange.selected"
                    type="checkbox"
                    ng-value="ageRange.attributeId"
-                   id="ageRange-{{ageRange-attributeId}}"/>
+                   id="ageRange-{{ageRange.attributeId}}"/>
             {{ageRange.name}}
           </label>
         </div>
