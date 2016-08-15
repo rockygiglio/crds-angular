@@ -1,0 +1,21 @@
+group-search-filter {
+  @media (min-width: $screen-md) {
+    dt {
+      float: left;
+      width: 100px;
+    }
+
+    dd {
+      margin-left: 125px;
+    }
+  }
+
+  .search-filter-tag {
+    border-radius: 10px;
+
+    svg {
+      width: 10px;
+      margin-left: 5px;
+    }
+  }
+}
