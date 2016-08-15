@@ -41,8 +41,8 @@
 
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
-  <div >
-    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results" ng-show='groupSearchResults.ready' />
+  <div ng-show='groupSearchResults.ready'>
+    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
   </div>
 
   <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
