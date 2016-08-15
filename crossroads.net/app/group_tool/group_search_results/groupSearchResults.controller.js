@@ -1,8 +1,9 @@
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state) {
+  constructor(NgTableParams, GroupService, $state, $modal) {
     this.groupService = GroupService;
+    this.$modal = $modal;
 
     this.search = null;
     this.processing = false;
@@ -18,10 +19,10 @@ export default class GroupSearchResultsController {
 
   $onInit() {
     this.search = {
-      query: this.state.params.query,
+      query: this.state.params.query || 'tallent',
       location: this.state.params.location
     };
-    this.doSearch(this.state.params.query, this.state.params.location);
+    this.doSearch(this.state.params.query || 'tallent', this.state.params.location);
   }
 
   doSearch(query, location) {
@@ -59,5 +60,23 @@ export default class GroupSearchResultsController {
 
   submit() {
     this.doSearch(this.search.query, this.search.location);
+  }
+
+  requestToJoin(group) {
+    console.debug("Request to Join", group);
+    var modalInstance = this.$modal.open({
+      template: '<confirm-request group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
+      controller: function(group, $modalInstance) {
+        this.group = group;
+        this.modalInstance = $modalInstance;
+      },
+      controllerAs: 'confirmRequestModal',
+      size: 'lg',
+      resolve: {
+        group: function () {
+          return group;
+        }
+      }
+    });
   }
 }
