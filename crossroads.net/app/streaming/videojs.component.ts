@@ -1,14 +1,10 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
-var videojs = require('video.js/dist/video');
-
 declare var window: any;
-declare var Hls: any;
-window.videojs = videojs;
-
+window.videojs = require('video.js/dist/video');
 require('./vendor/streamspotAnalytics');
-var HlsTest = require('./vendor/videojs5-hlsjs-source-handler.min');
+require('./vendor/videojs5-hlsjs-source-handler.min');
 
 @Component({
   selector: 'videojs',
@@ -17,12 +13,8 @@ var HlsTest = require('./vendor/videojs5-hlsjs-source-handler.min');
 
 export class VideoJSComponent implements AfterViewInit {
 
-  player: any;
-  url: string;
   id: string = "videojs-player";
-  width: number = 320;
-  height: number = 190;
-  poster: string;
+  player: any;
   visible: boolean = false;
 
   constructor(private streamspot: StreamspotService) {}
@@ -34,40 +26,40 @@ export class VideoJSComponent implements AfterViewInit {
       if ( response.success === true && response.data.broadcaster !== undefined ) {
 
         var broadcaster = response.data.broadcaster;
-        this.url = broadcaster.live_src.cdn_hls;
 
-        var defaultPlayer;
-        for (var i = 0; i < broadcaster.players.length; i++) {
-          if ( broadcaster.players[i].default === true ) {
-            defaultPlayer = broadcaster.players[i];
-            break;
-          }
-        }
-
-        if ( defaultPlayer === undefined ) {
+        if ( broadcaster.players === undefined || broadcaster.players.length === 0 ) {
           console.log('Error getting player from broadcast.');
           return;
         }
 
-        this.poster = defaultPlayer.bgLink;
+        var defaultPlayer;
+        broadcaster.players.forEach(element => {
+          if ( element.default === true ) {
+            defaultPlayer = element;
+            return false;
+          }
+        });
+
+        if ( defaultPlayer === undefined ) {
+          defaultPlayer = broadcaster.players[0];
+        }
+
         this.player = window.videojs(this.id, {
           "techOrder": ["html5"],
           "fluid": true,
-          "poster" : this.poster,
+          "poster" : defaultPlayer.bgLink,
           "preload": 'auto',
           "html5": {
             "hlsjsConfig": {
-              "debug": true
+              "debug": false
             }
           }
         });
 
-        console.log(HlsTest);
-
         // create play handler (analytics)
         this.player.on('play', () => {
           window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
-          window.SSTracker.start(this.url, true, this.streamspot.ssid);
+          window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
         });
 
         // create stop handler (analytics)
@@ -83,7 +75,7 @@ export class VideoJSComponent implements AfterViewInit {
           this.player.src([
             {
               "type": "application/x-mpegURL",
-              "src": this.url
+              "src": broadcaster.live_src.cdn_hls
             }
           ]);
 
@@ -92,6 +84,7 @@ export class VideoJSComponent implements AfterViewInit {
           this.player.ready(() => {
             this.player.play();
           });
+          
         }
         else {
           console.log('No broadcast available.');
