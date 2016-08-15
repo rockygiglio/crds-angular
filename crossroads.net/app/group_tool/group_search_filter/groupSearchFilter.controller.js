@@ -65,6 +65,11 @@ export default class GroupSearchResultsController {
       this.applyFilters();
     };
 
+    // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
+    if(!searchResult.ageRange || !Array.isArray(searchResult.ageRange)) {
+      return false;
+    }
+    
     let filteredResults = searchResult.ageRange.filter((a) => {
       return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
     });
