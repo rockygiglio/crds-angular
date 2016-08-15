@@ -278,8 +278,16 @@ a.underline,
     padding-left: $line-height-computed / 2;
 }
 
+.soft-quarter {
+    padding: $line-height-computed / 4;
+}
+
 .soft-quarter-left {
     padding-left: $line-height-computed / 4;
+}
+
+.soft-quarter-bottom {
+    padding-bottom: $line-height-computed / 4;
 }
 
 .soft-half-ends {
@@ -548,6 +556,10 @@ a.underline,
 
 .no-borders {
   border: 0px !important;
+}
+
+.border-bottom {
+  border-bottom: 1px solid $gray-lighter;
 }
 
 .pull-right {

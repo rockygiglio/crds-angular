@@ -46,6 +46,7 @@ namespace MinistryPlatform.Translation.Repositories
                         YoungestAgeAllowed = result.ToInt("Youngest_Age_Allowed"),
                         RegistrationEnd = result.ToDate("Registration_End"),
                         RegistrationStart = result.ToDate("Registration_Start"),
+                        RegistrationDeposit = result.ToString("Registration_Deposit"),
                         AgeExceptions = exceptions,
                         EventId = result.ToInt("Event_ID")
                     };
