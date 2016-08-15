@@ -34,8 +34,8 @@ namespace Crossroads.ChildcareGroupUpdates
             var mpRestRepository = container.Resolve<MinistryPlatformRestRepository>();
 
             // use childcare grouptype and eventtype
-            var groupTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareGroupTypeId"]);
-            var eventTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareEventTypeId"]);
+            var groupTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareGroupType"]);
+            var eventTypeId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareEventType"]);
             var defaultMinistryId = Convert.ToInt32(ConfigurationManager.AppSettings["ChildcareDefaultMinistryId"]);
 
             var configSettingsPageId = Convert.ToInt32(ConfigurationManager.AppSettings["ConfigurationSettingsPageId"]);
