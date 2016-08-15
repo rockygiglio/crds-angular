@@ -22,7 +22,6 @@ var moment = require('moment');
   selector: 'current-series',
   directives: [DynamicContentNg2Component, ScheduleComponent],
   templateUrl: './current-series.ng2component.html',
-  providers: [CMSDataService],
   pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
 })
 
@@ -37,23 +36,26 @@ export class CurrentSeriesComponent {
   currentSeriesTags: string[];
   currentSeriesTrailer: string;
   
-  constructor(private cmsDataService: CMSDataService) {
-
-   }
+  constructor(private cmsDataService: any) {
+  }
   
   ngOnInit() {
     this.cmsDataService.getCurrentSeries()
                                      .subscribe((cs) => {
-                                       this.currentSeries = cs
-                                       this.currentSeriesTitle = cs.title
-                                       this.currentSeriesDescription = cs.description
-                                       this.currentSeriesPicture = cs.image.filename
-                                       this.currentSeriesStartDate = cs.startDate
-                                       this.currentSeriesEndDate = cs.endDate
-                                       this.currentSeriesRunningDates = this.getRunningDates()
-                                       this.currentSeriesTags = this.getTagsArray(cs)
-                                       this.currentSeriesTrailer = cs.trailerLink
+                                       this.parseData(cs);
                                      })
+  }
+
+  parseData(cs:any) {
+    this.currentSeries = cs
+    this.currentSeriesTitle = cs.title
+    this.currentSeriesDescription = cs.description
+    //this.currentSeriesPicture = cs.image.filename
+    this.currentSeriesStartDate = cs.startDate
+    this.currentSeriesEndDate = cs.endDate
+    this.currentSeriesRunningDates = this.getRunningDates()
+    //this.currentSeriesTags = this.getTagsArray(cs)
+    this.currentSeriesTrailer = cs.trailerLink
   }
 
   private getRunningDates() {

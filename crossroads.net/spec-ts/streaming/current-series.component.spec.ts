@@ -1,42 +1,62 @@
-/* tslint:disable:no-unused-variable */
-import { CurrentSeriesComponent } from '../../app/streaming/current-series.component'
-import { CMSDataService } from '../../core/services/CMSData.service'
-import { Observable } from 'rxjs/Rx'
-import { inject, fakeAsync } from '@angular/core/testing'
+class MockCMSDataService {
+    public series: {
+        title: 'Hello World',
+        description: 'This is my hello world test',
+        picture: 'hello_world.jpg',
+        startDate: '2016-08-01',
+        endDate: '2016-08-30',
+        trailerLink: 'https://www.youtube.com'
+    }
 
-class MockCMSDataService extends CMSDataService {
-    constructor() {
-        super(null);
-    }    
     getCurrentSeries() {
-        return Observable.of([
-            {
-                title: "Foobar",
-                description: "This is my foobar description",
-                image: { filename: 'hello_world.jpg'},
-                startDate: '2016-08-01',
-                endDate: '2016-08-30',
-                trailerLink: 'https://www.foobar.com/trailer'
-            }
-        ]);
+        return this.series;
     }
 }
 
-fdescribe('Component: Streaming', () => {
-    let cmsService: CMSDataService;
-    let component: CurrentSeriesComponent;
+import { Observable } from 'rxjs'
+import { provide } from '@angular/core'
+import {
+    async,
+    inject,
+    beforeEach,
+    addProviders,
+    describe,
+    expect,
+    it
+} from '@angular/core/testing';
 
-    beforeEach(() => {
-        cmsService = new MockCMSDataService();
-        component = new CurrentSeriesComponent(cmsService);
-    })
+import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
 
-    it('should create an instance of CurrentSeriesComponent', () => {
-        expect(component).toBeTruthy();
-    });
+import { CurrentSeriesComponent } from '../../app/streaming/current-series.component'
+import { CMSDataService } from '../../core/services/cmsData.service'
 
-    it('should have a title', () => {
-        component.ngOnInit();
-        expect(component.currentSeriesTitle).toEqual('BazShiz');        
-    })
+describe('Component: Current Series', () => {
+    beforeEach(() => 
+        addProviders([{provide: CMSDataService, useClass: MockCMSDataService}])
+    );
+
+    it('upon initializing, sets values to its properties', () => {
+        let dataService = new MockCMSDataService();
+        let csComponent = new CurrentSeriesComponent(dataService);
+
+        let cs = {
+            title: 'zzzz'
+        }
+
+        csComponent.parseData(dataService.getCurrentSeries());
+        expect(csComponent.currentSeriesTitle).toBe('Hello World');
+    }
+        // async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+        //     tcb.createAsync(CurrentSeriesComponent).then(fixture => {
+        //         fixture.componentInstance.ngOnInit();
+
+        //         fixture.whenStable().then(() => {
+        //             fixture.detectChanges();
+        //             let compiled = fixture.debugElement.nativeElement;
+        //             expect(compiled.querySelector('h2')).toHaveText('Foobar');
+        //         });
+        //     });
+        // }))
+    );
 });
+//comment
