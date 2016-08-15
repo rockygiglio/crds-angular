@@ -1,47 +1,47 @@
-<div class="row" ng-if='groupSearchFilter.expanded'>
-  <hr>
-  <div class='row'>
-    <div class='col-sm-1'><strong>Filters</strong></div>
-    <div class='col-sm-9'></div>
-    <div class='col-sm-2'><a ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</button></div>
-  </div>
-  <div class='row'>
-    <div class='col-sm-12' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html' />
-  </div>
-  <div class='row'>
-    <div class="col-sm-8 col-sm-offset-2">
-      <p>Age Range</p>
-      <div class="checkbox" ng-repeat="ageRange in groupSearchFilter.ageRanges">
-        <label for="ageRange-{{ageRange-attributeId}}">
-                    <input ng-model="ageRange.selected"
-                          type="checkbox"
-                          ng-value="ageRange.attributeId"
-                          id="ageRange-{{ageRange-attributeId}}" />
-                    {{ageRange.name}}
-                </label>
-      </div>
-    </div>
-    <div class='col-sm-2'></div>
-  </div>
-  <div class='row'>
-    <div class='col-sm-12'>
-      <button type='button' class='btn btn-standard' ng-click="groupSearchFilter.closeFilters()">Cancel</button>
-      <button type='button' class='btn btn-primary' ng-click="groupSearchFilter.applyFilters()">Update Filter</button>
-    </div>
-  </div>
-</div>
+<div ng-if="groupSearchFilter.expanded" class="border-ends push-ends soft-half-top">
+  <h4 class="inline">Filters</h4>
+  <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 
-<div class='row' ng-if='!groupSearchFilter.expanded'>
-  <div class='col-sm-10'>
-    <div type='button' class='btn btn-primary' ng-click="groupSearchFilter.openFilters()">Filters</div>
-    <div type='button' class='btn btn-standard' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
+  <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
+
+  <!-- TODO - remove class "form-inline" when we add a 2nd filter -->
+  <form role="form" class="form-inline">
+    <dl class="push-half-ends">
+      <dt>
+        Age Range
+      </dt>
+      <dd>
+        <!-- TODO - remove class "checkbox-inline" when we add a 2nd filter -->
+        <div class="checkbox push-right" ng-repeat="ageRange in groupSearchFilter.ageRanges">
+          <label for="ageRange-{{ageRange.attributeId}}">
+            <input ng-model="ageRange.selected"
+                   type="checkbox"
+                   ng-value="ageRange.attributeId"
+                   id="ageRange-{{ageRange.attributeId}}"/>
+            {{ageRange.name}}
+          </label>
+        </div>
+      </dd>
+    </dl>
+    <div class="text-right push-half-bottom">
+      <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
+              ng-click="groupSearchFilter.closeFilters()">Cancel
+      </button>
+      <button type='button' class='btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'
+              ng-click="groupSearchFilter.applyFilters()">Update Filter
+      </button>
+    </div>
+  </form>
+</div>
+<div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
+  <button type="button" class="btn btn-primary btn-sm btn-block-mobile" ng-click="groupSearchFilter.openFilters()">Filters</button>
+  <div class="inline hidden-xs">
+    <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
       {{name}}
       <svg viewBox="0 0 32 32" class="icon icon-close">
-	      <use xlink:href="#close"></use>
+        <use xlink:href="#close"></use>
       </svg>
-    </div>
-  </div>
-  <div class='col-sm-2'>
-      <a ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</button>
+    </button>
+    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
   </div>
 </div>

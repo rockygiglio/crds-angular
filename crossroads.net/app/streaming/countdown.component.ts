@@ -11,7 +11,7 @@ declare var _: any;
 @Component({
   selector: 'countdown',
   template: `
-    <div class="upcoming">
+    <div class="upcoming animated fadeIn">
       <div *ngIf="isCountdown" class="countdown">
         <i>Join the live stream in...</i>
         <ul class="list-inline">
