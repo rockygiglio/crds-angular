@@ -30,15 +30,15 @@ describe('Component: Current Series', () => {
     );
 
     it('property values are set after component initializes', () => {
-        let dataService = new MockCMSDataService();
-        let response = dataService.getCurrentSeries();
-        let csComponent = new CurrentSeriesComponent(dataService);
+            let dataService = new MockCMSDataService();
+            let response = dataService.getCurrentSeries();
+            let csComponent = new CurrentSeriesComponent(dataService);
 
-        console.log(response);
-        csComponent.parseData(response);
-        response.subscribe((series) => {
-            expect(series.title).toBe('Bazshiz');
-        })
-    }
+            console.log(response);
+            csComponent.parseData(response);
+            response.subscribe((series) => {
+                expect(series.title).toBe('Bazshiz');
+            })
+        }
     );
 });
