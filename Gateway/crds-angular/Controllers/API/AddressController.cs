@@ -6,7 +6,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 
-namespace crds_angular.Controllers
+namespace crds_angular.Controllers.API
 {
     public class AddressController : ApiController
     {

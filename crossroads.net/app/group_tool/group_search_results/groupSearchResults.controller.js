@@ -1,9 +1,13 @@
 
+import Address from '../model/address';
+
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state, $modal) {
+  constructor(NgTableParams, GroupService, $state, $modal, $rootScope, AddressValidationService) {
     this.groupService = GroupService;
     this.$modal = $modal;
+    this.rootScope = $rootScope;
+    this.addressValidationService = AddressValidationService;
 
     this.search = null;
     this.processing = false;
@@ -58,12 +62,31 @@ export default class GroupSearchResultsController {
     );
   }
 
-  submit() {
-    this.doSearch(this.search.query, this.search.location);
+  submit(form) {
+    let valid = true;
+    if(form) {
+      this.processing = true;
+      valid = false;
+      this.addressValidationService.validateAddressString(this.search.location).then((data) => {
+        let address = new Address(data);
+        this.search.location = address.toSearchString();
+        valid = true;
+      }, (err) => {
+        valid = false;
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolSearchInvalidAddressGrowler);
+      }).finally(() => {
+        this.processing = false;
+        form.location.$setValidity('pattern', valid);
+        if(valid) {
+          this.doSearch(this.search.query, this.search.location);
+        }
+      });
+    } else {
+      this.doSearch(this.search.query, this.search.location);
+    }
   }
 
   requestToJoin(group) {
-    console.debug("Request to Join", group);
     var modalInstance = this.$modal.open({
       template: '<confirm-request group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
       controller: function(group, $modalInstance) {

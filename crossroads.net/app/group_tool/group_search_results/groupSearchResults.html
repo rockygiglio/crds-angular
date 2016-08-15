@@ -21,16 +21,22 @@
         <a ng-click="groupSearchResults.showLocationInput = true">Find Groups Near You</a>
       </div>
       <div ng-show="groupSearchResults.showLocationInput">
-        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit()">
-          <label for="location">{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
-          <div class="group-location-input-wrapper">
-            <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}">
-            <button type="submit" class="btn btn-primary">
-              <span ng-show="!groupSearchResults.searchedWithLocation">Save</span>
-              <span ng-show="groupSearchResults.searchedWithLocation">Update</span>
-            </button>
-            <button type="button" class="btn btn-standard" ng-click="groupSearchResults.showLocationInput = false">Cancel</button>
-          </div>
+        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit(groupLocationForm)" ng-class='{"has-error": groupLocationForm.$submitted && groupLocationForm.location.$invalid}'>
+            <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
+            <div class="group-location-input-wrapper">
+              <input name="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
+              <!--<ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
+                <ng-messages-include src="on-pause-messages"></ng-messages-include>
+              </ng-messages>-->
+              <loading-button
+                input-type='submit'
+                normal-text='{{!groupSearchResults.searchedWithLocation ? "Save" : "Update"}}'
+                loading-text='{{!groupSearchResults.searchedWithLocation ? "Saving..." : "Updating..."}}'
+                loading='groupSearchResults.processing'
+                loading-class='disabled'
+                input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+              <button type="button" class="btn btn-standard" ng-click="groupSearchResults.showLocationInput = false">Cancel</button>
+            </div>
         </form>
       </div>
       <div ng-show="!groupSearchResults.showLocationInput && groupSearchResults.search.location.length > 0" class="group-location-toggle">
