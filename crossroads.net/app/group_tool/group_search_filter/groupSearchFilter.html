@@ -1,10 +1,8 @@
-<div ng-if="groupSearchFilter.expanded" class="border-ends push-top push-bottom">
+<div ng-if="groupSearchFilter.expanded" class="border-ends push-ends soft-half-top">
   <h4 class="inline">Filters</h4>
   <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 
-  <div class='row'>
-    <div class='col-sm-12' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
-  </div>
+  <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
   <!-- TODO - remove class "form-inline" when we add a 2nd filter -->
   <form role="form" class="form-inline">
@@ -37,11 +35,11 @@
 </div>
 <div ng-if="!groupSearchFilter.expanded" class="push-ends">
   <button type="button" class="btn btn-primary btn-sm" ng-click="groupSearchFilter.openFilters()">Filters</button>
-  <div type='button' class='btn btn-standard' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
+  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
     {{name}}
     <svg viewBox="0 0 32 32" class="icon icon-close">
       <use xlink:href="#close"></use>
     </svg>
-  </div>
+  </button>
   <a class="push-half-left" ng-click="">Clear Filters</a>
 </div>
