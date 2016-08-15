@@ -399,6 +399,7 @@ namespace crds_angular.Services
                 detail.MeetingDayId = g.MeetingDayId;
                 detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
                 detail.StartDate = g.StartDate;
+                detail.Participants = (g.Participants.Count > 0) ? g.Participants.Select(p => Mapper.Map<MpGroupParticipant, GroupParticipantDTO>(p)).ToList() : null;
 
                 if (events != null)
                 {
