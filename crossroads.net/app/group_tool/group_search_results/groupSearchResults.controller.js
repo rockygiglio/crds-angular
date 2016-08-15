@@ -44,7 +44,7 @@ export default class GroupSearchResultsController {
         let parms = {
           count: this.results.length
         };
-        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
+        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { meetingDay: 'asc' };
 
         // This resets the dataset so ngTable properly renders the new search results
         let settings = {
@@ -59,9 +59,5 @@ export default class GroupSearchResultsController {
 
   submit() {
     this.doSearch(this.search.query, this.search.location);
-  }
-
-  openMap(group) {
-    console.log('Open Map');
   }
 }
