@@ -3,8 +3,10 @@ export default class GroupEmailController {
   /*@ngInject*/
   constructor($rootScope) {
     this.rootScope = $rootScope
+    
     this.allowSubject = (this.allowSubject === undefined) ? false : this.allowSubject;
-    this.header = (this.header === undefined) ? 'Email' : this.header;
+    this.process = (this.process === undefined) ? true : this.process;
+    this.header = (this.header === undefined) ? '' : this.header;
   }
 
   submit(form, message) {
@@ -19,12 +21,8 @@ export default class GroupEmailController {
   }
 
   cancel(message) {
-    if(this.canCancel()) {
+    if(this.process) {
       this.cancelAction({message: message});
     }
-  }
-
-  canCancel() {
-    return this.cancelAction !== undefined;
   }
 }

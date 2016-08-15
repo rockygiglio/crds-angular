@@ -40,7 +40,7 @@
 
       <div class='row'>&nbsp;</div>
 
-      <div class='row'>
+      <div class='row' ng-if='groupEmail.process'>
         <div class='col-md-12'>
           <p class='text-center'>
             <loading-button
@@ -49,8 +49,7 @@
                     loading='groupEmail.processing'
                     loading-class='disabled'
                     input-classes='btn btn-standard'
-                    ng-click='groupEmail.cancel(groupEmail.message)'
-                    ng-if='groupEmail.canCancel()'></loading-button>
+                    ng-click='groupEmail.cancel(groupEmail.message)'></loading-button>
             <loading-button
                     input-type='submit'
                     normal-text='Send'

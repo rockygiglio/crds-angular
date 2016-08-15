@@ -12,7 +12,8 @@ export default function GroupEmailComponent() {
       submitAction: '&',
       header: '@',
       allowSubject: '<',
-      processing: '<'
+      processing: '<',
+      process: '<'
     },
     restrict: 'E',
     templateUrl: 'group_email/groupEmail.html',

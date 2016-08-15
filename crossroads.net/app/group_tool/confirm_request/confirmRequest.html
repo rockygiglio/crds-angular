@@ -24,7 +24,11 @@
     <h3 class="modal-title">Email </h3>
   </div>
   <div class="modal-body">
-    hi
+    <group-email
+      message='confirmRequest.groupMessage'
+      processing='confirmRequest.processing'
+      process='false'
+      allow-subject='false'/>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-standard btn-block-mobile mobile-push-half-bottom" ng-click="confirmRequest.cancel()">Back to Search Results</button>
