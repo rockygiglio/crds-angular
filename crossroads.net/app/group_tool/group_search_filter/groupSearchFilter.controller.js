@@ -4,8 +4,8 @@ export default class GroupSearchResultsController {
   constructor(GroupService) {
     this.groupService = GroupService;
     this.ageRanges = [];
-    this.expanded = false;
-    this.currentFilters = {};
+
+    this.showFilters = true;
   }
 
   $onInit() {
@@ -28,28 +28,8 @@ export default class GroupSearchResultsController {
     this.tableParams.reload();
   }
 
-  clearFilters() {
-    // TODO When additional filters are added, call their clear functions here
-    this.clearAgeRangeFilter();
-
-    this.applyFilters();
-  }
-
-  openFilters() {
-    this.expanded = true;
-  }
-
-  closeFilters() {
-    this.expanded = false;
-  }
-
-  hasFilters() {
-    return Object.keys(this.currentFilters).length > 0;
-  }
-
   // TODO - This is probably not very efficient, might need to optimize with large result sets
-  ageRangeFilter(searchResult) {
-    delete this.currentFilters['Age Range'];    
+  ageRangeFilter(searchResult) {    
     let selectedAgeRanges = this.ageRanges.filter((a) => {
       return a.selected === true;
     }).map((a) => {
@@ -60,13 +40,6 @@ export default class GroupSearchResultsController {
       return true;
     }
 
-    // TODO This seems like a hack - not sure why I can't just use 'this' in the function
-    let controllerReference = this;
-    this.currentFilters['Age Range'] = function() {
-      controllerReference.clearAgeRangeFilter();
-      controllerReference.applyFilters();
-    };
-
     let filteredResults = searchResult.ageRange.filter((a) => {
       return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
     });
@@ -74,20 +47,15 @@ export default class GroupSearchResultsController {
     return filteredResults !== undefined && filteredResults.length > 0;
   }
 
-  clearAgeRangeFilter() {
-    for(let i = 0; i < this.ageRanges.length; i++)
-    {
-      this.ageRanges[i].selected = false;
-    }
-    delete this.currentFilters['Age Range'];    
-  }
-
   loadAgeRanges() {
     this.groupService.getAgeRanges().then(
       (data) => {
         this.ageRanges = data.attributes;
 
-        this.clearAgeRangeFilter();
+        for(let i = 0; i < this.ageRanges.length; i++)
+        {
+          this.ageRanges[i].selected = false;
+        }
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
