@@ -9,21 +9,15 @@ class MockCMSDataService {
     }
 
     getCurrentSeries() {
-        return this.series;
+        return Observable.of(this.series);
     }
 }
 
 import { Observable } from 'rxjs'
 import { provide } from '@angular/core'
-import {
-    async,
-    inject,
-    beforeEach,
-    addProviders,
-    describe,
-    expect,
-    it
-} from '@angular/core/testing';
+import { async, inject, beforeEach,
+         addProviders, describe, expect,
+         it } from '@angular/core/testing';
 
 import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
 
@@ -35,28 +29,16 @@ describe('Component: Current Series', () => {
         addProviders([{provide: CMSDataService, useClass: MockCMSDataService}])
     );
 
-    it('upon initializing, sets values to its properties', () => {
+    it('property values are set after component initializes', () => {
         let dataService = new MockCMSDataService();
+        let response = dataService.getCurrentSeries();
         let csComponent = new CurrentSeriesComponent(dataService);
 
-        let cs = {
-            title: 'zzzz'
-        }
-
-        csComponent.parseData(dataService.getCurrentSeries());
-        expect(csComponent.currentSeriesTitle).toBe('Hello World');
+        console.log(response);
+        csComponent.parseData(response);
+        response.subscribe((series) => {
+            expect(series.title).toBe('Bazshiz');
+        })
     }
-        // async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-        //     tcb.createAsync(CurrentSeriesComponent).then(fixture => {
-        //         fixture.componentInstance.ngOnInit();
-
-        //         fixture.whenStable().then(() => {
-        //             fixture.detectChanges();
-        //             let compiled = fixture.debugElement.nativeElement;
-        //             expect(compiled.querySelector('h2')).toHaveText('Foobar');
-        //         });
-        //     });
-        // }))
     );
 });
-//comment
