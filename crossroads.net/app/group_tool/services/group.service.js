@@ -25,7 +25,7 @@ export default class GroupService {
     return this.profile.Personal.get().$promise;
   }
 
-  getGroupData(groupId) {
+  getGroupData(groupId) { 
     return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
                            get({groupId: groupId}).$promise;
   }

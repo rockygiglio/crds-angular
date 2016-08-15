@@ -6,12 +6,16 @@
 }
 
 .group-detail-participant-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  @media (min-width: $screen-md) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
   .group-detail-participant-item {
-    flex: 1 1 auto;
+    @media (min-width: $screen-md) {
+      flex: 1 1 auto;
+    }
   }
 }
 
