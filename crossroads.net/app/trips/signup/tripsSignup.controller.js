@@ -68,6 +68,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.signupService = TripsSignupService;
     vm.skillsSelected = skillsSelected;
     vm.spiritualSelected = spiritualSelected;
+    vm.submitting = false;
     vm.tripName = vm.campaign.name;
     vm.underAge = underAge;
     vm.validateProfile = validateProfile;
@@ -200,6 +201,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     function handleSubmit(form) {
       $log.debug('handleSubmit start');
+      vm.submitting = true;
       if (form !== null) {
         form.$setSubmitted(true);
         if (form.$valid) {
@@ -207,6 +209,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
           saveData();
         } else {
           $log.debug('form INVALID');
+          vm.submitting = false;
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
       } else {

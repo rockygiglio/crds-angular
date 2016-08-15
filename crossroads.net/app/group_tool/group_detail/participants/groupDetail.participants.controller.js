@@ -87,6 +87,14 @@ export default class GroupDetailParticipantsController {
     return this.currentView === 'Email';
   }
 
+  setRoleView() {
+    this.currentView = 'Role';
+  }
+
+  isRoleView() {
+    return this.currentView === 'Role';
+  }
+
   beginRemoveParticipant(participant) {
     this.deleteParticipant = participant;
     this.deleteParticipant.message = '';
@@ -120,6 +128,17 @@ export default class GroupDetailParticipantsController {
     }).finally(() => {
       this.processing = false;
     });
+  }
+
+  beginChangeParticipantRole(participant) {
+    this.roleParticipant = participant;
+    this.roleParticipant.message = '';
+    this.setRoleView();
+  }
+
+  finishChangeParticipantRole() {
+    this.roleParticipant = undefined;
+    this.setEditView();
   }
 
   beginMessageParticipants() {

@@ -25,7 +25,7 @@ export default class GroupService {
     return this.profile.Personal.get().$promise;
   }
 
-  getGroupData(groupId) {
+  getGroupData(groupId) { 
     return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
                            get({groupId: groupId}).$promise;
   }
@@ -37,6 +37,10 @@ export default class GroupService {
 
   getStates() {
     return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
+  }
+
+  getCountries() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/countries').query().$promise;
   }
 
   getSites() {
@@ -179,8 +183,7 @@ export default class GroupService {
     let promise = this.resource(`${__API_ENDPOINT__}api/group`)
                           .save({}, smallGroup).$promise;
     return promise.then((data) => {
-        this.saveParticipant(smallGroup.participants, data.groupId);
-        this.saveProfile(smallGroup.profile);
+        return data;
       }, (err) => {
         throw err;
       });
@@ -201,6 +204,7 @@ export default class GroupService {
                           .save({groupId: groupId}, participants).$promise;
 
       return promise.then((data) => {
+        return data;
       }, (err) => {
         throw err;
       });
@@ -211,6 +215,7 @@ export default class GroupService {
                           .save({}, profile).$promise;
 
       return promise.then((data) => {
+        return data;
       }, (err) => {
         throw err;
       });

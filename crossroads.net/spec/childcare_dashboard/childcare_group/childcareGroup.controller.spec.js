@@ -44,7 +44,7 @@ describe('Childcare Group Component Controller', () => {
 
     controller = new ChildcareDashboardGroupController(rootScope, scope, modal, childcareDashboardService);
     controller.communityGroup = {eligibleChildren: [] };
-
+    controller.$onInit();
     spyOn(rootScope, '$emit').and.callThrough();
 
   }));

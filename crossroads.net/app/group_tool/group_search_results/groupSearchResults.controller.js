@@ -1,8 +1,9 @@
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state) {
+  constructor(NgTableParams, GroupService, $state, $modal) {
     this.groupService = GroupService;
+    this.$modal = $modal;
 
     this.search = null;
     this.processing = false;
@@ -44,7 +45,7 @@ export default class GroupSearchResultsController {
         let parms = {
           count: this.results.length
         };
-        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { groupName: 'asc' };
+        parms.sorting = this.searchedWithLocation ? { proximity: 'asc' } : { meetingDay: 'asc' };
 
         // This resets the dataset so ngTable properly renders the new search results
         let settings = {
@@ -61,7 +62,21 @@ export default class GroupSearchResultsController {
     this.doSearch(this.search.query, this.search.location);
   }
 
-  openMap(group) {
-    console.log('Open Map');
+  requestToJoin(group) {
+    console.debug("Request to Join", group);
+    var modalInstance = this.$modal.open({
+      template: '<confirm-request group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
+      controller: function(group, $modalInstance) {
+        this.group = group;
+        this.modalInstance = $modalInstance;
+      },
+      controllerAs: 'confirmRequestModal',
+      size: 'lg',
+      resolve: {
+        group: function () {
+          return group;
+        }
+      }
+    });
   }
 }

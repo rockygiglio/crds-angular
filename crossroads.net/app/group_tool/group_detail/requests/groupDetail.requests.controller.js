@@ -5,7 +5,7 @@ import GroupInvitation from '../../model/groupInvitation';
 export default class GroupDetailRequestsController {
   
   /*@ngInject*/
-  constructor(GroupService, $state, $rootScope, $log) {
+  constructor(GroupService, $state, $stateParams, $rootScope, $log) {
     this.groupService = GroupService;
     this.state = $state;
     this.rootScope = $rootScope;
@@ -14,7 +14,7 @@ export default class GroupDetailRequestsController {
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
-    this.currentView = 'List';
+    this.currentView = $stateParams.view || 'List';
     this.invited = [];
     this.inquired = [];
 
@@ -124,5 +124,17 @@ export default class GroupDetailRequestsController {
 
   denyView() {
     return this.currentView === 'Deny';
+  }
+
+  hasRequests() {
+    return this.inquired && this.inquired.length > 0;
+  }
+
+  hasInvites() {
+    return this.invited && this.invited.length > 0;
+  }
+
+  hasRequestsOrInvites() {
+    return this.hasRequests() || this.hasInvites();
   }
 }

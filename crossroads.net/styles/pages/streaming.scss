@@ -9,6 +9,29 @@ $streaming-blue: #0795E3;
 
 // ----------------------------------------- ###
 
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before{
+      display: block;
+      content: " ";
+      width: 100%;
+      padding-top: ($height / $width) * 100%;
+  }
+
+  > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+  }
+}
+
+.sixteen-nine {
+  overflow: hidden;
+  @include aspect-ratio(16,9);  
+}
+
 @mixin crds-make-condensed {
   font-family: $streaming-font-extra_cond;
   font-size: 170%;
@@ -34,6 +57,7 @@ streaming {
   > .wrapper {
     @include make-row();
     @include clearfix();
+    overflow-x: hidden;
   }
 
   .fixed-header {
@@ -220,6 +244,7 @@ streaming {
         padding: 0.4em 1em;
         background: #D3DFE6;
         color: $gray;
+        position: absolute;
 
         @media (min-width: $screen-sm-min) {
           margin-left: 8em;
@@ -228,6 +253,7 @@ streaming {
       .img-responsive {
         margin: 0 auto;
       }
+
     }
     article {
       @media (min-width: $screen-md-min) {
@@ -342,14 +368,39 @@ streaming {
       }
     }
 
+
     figcaption {
       font-family: $streaming-font-extra_cond;
       font-size: 210%;
+      top: -0.85em;
+    }
+
+    section {
+      top: -1em;
     }
 
     figure > a {
       display: block;
       width: 100%;
+      margin-bottom: 2%; 
+    }
+
+    @media (max-width: $screen-xs-max) { 
+      figcaption {
+        top: -1.15em;
+      }
+
+      figure > a {
+        margin-bottom: 2%;
+      }
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      figure > a {
+        margin-bottom: 2%;
+      }
+      figcaption {
+        top: -0.95em;
+      }
     }
 
     .view-all-mobile {
@@ -640,8 +691,14 @@ streaming {
     }
   }
 
+  .control-container {
+    background: #252526;
+    padding: 10px 0;
+  }
+
   .pushdown-container {
     background: #252526;
+
     .pull-right {
       color: #FFF;
       display: block;

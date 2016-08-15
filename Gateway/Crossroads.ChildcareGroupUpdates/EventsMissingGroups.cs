@@ -12,4 +12,11 @@ namespace Crossroads.ChildcareGroupUpdates
         [JsonProperty(PropertyName = "Group_ID")]
         public int GroupId;
     }
+
+    [MpRestApiTable(Name = "OrphanEventsMissingGroups")]
+    public class MpOrphanEventsMissingGroups
+    {
+        [JsonProperty(PropertyName = "Event_ID")]
+        public int EventId;
+    }
 }
