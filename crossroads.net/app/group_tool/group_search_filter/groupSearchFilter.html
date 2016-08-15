@@ -33,13 +33,15 @@
     </div>
   </form>
 </div>
-<div ng-if="!groupSearchFilter.expanded" class="push-ends">
-  <button type="button" class="btn btn-primary btn-sm" ng-click="groupSearchFilter.openFilters()">Filters</button>
-  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
-    {{name}}
-    <svg viewBox="0 0 32 32" class="icon icon-close">
-      <use xlink:href="#close"></use>
-    </svg>
-  </button>
-  <a class="push-half-left" ng-click="">Clear Filters</a>
+<div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
+  <button type="button" class="btn btn-primary btn-sm btn-block-mobile" ng-click="groupSearchFilter.openFilters()">Filters</button>
+  <div class="inline hidden-xs">
+    <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
+      {{name}}
+      <svg viewBox="0 0 32 32" class="icon icon-close">
+        <use xlink:href="#close"></use>
+      </svg>
+    </button>
+    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
+  </div>
 </div>
