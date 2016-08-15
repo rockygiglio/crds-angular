@@ -1,11 +1,10 @@
 
 export default class EndGroupController {
   /*@ngInject*/
-  constructor(GroupService, $state, $log, $cookies, $rootScope) {
+  constructor(GroupService, $state, $log, $rootScope) {
     this.groupService = GroupService;
     this.state = $state;
     this.log = $log;
-    this.cookies = $cookies;
     this.rootScope = $rootScope;
 
     this.ready = false;
@@ -58,18 +57,18 @@ export default class EndGroupController {
 
   getFields() {
     return [{
-                key: 'reasonEndedId',
-                type: 'formlyBuilderRadioDesc',
-                    templateOptions: {
-                        label: 'Why are you ending the group?',
-                        required: true,
-                        inline: false,
-                        valueProp: 'dp_RecordID',
-                        labelProp: 'dp_RecordName',
-                        descProp: 'Description',
-                        options: this.endedReasonsList
-                    }
-                  }]
+      key: 'reasonEndedId',
+      type: 'formlyBuilderRadioDesc',
+      templateOptions: {
+        label: 'Why are you ending the group?',
+        required: true,
+        inline: false,
+        valueProp: 'dp_RecordID',
+        labelProp: 'dp_RecordName',
+        descProp: 'Description',
+        options: this.endedReasonsList
+      }
+    }]
   }
 
 }
