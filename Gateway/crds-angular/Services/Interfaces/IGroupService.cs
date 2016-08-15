@@ -48,5 +48,7 @@ namespace crds_angular.Services.Interfaces
         GroupDTO UpdateGroup(GroupDTO @group);
 
         void EndDateGroup(int groupId);
+
+        void UpdateGroupParticipant(GroupParticipantDTO participant);
     }
 }
