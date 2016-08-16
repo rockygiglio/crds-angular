@@ -85,7 +85,8 @@ module.exports = function(config) {
         ],
         noParse: [
             path.join(__dirname, "node_modules", "video.js","dist","video.js"),
-            /videojs5-hlsjs-source-handler\.min\.js/
+            /videojs5-hlsjs-source-handler\.min\.js/,
+            path.join(__dirname, "node_modules", "videojs-chromecast","dist","videojs-chromecast.js")
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
