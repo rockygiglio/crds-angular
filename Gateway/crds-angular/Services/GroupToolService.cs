@@ -383,7 +383,7 @@ namespace crds_angular.Services
             var email = new MpCommunication
             {
                 EmailBody = message.Body,
-                EmailSubject = string.Format("{0}: {1}", group.GroupName, message.Subject),
+                EmailSubject = string.Format("Crossroads Group {0}: {1}", group.GroupName, message.Subject),
                 AuthorUserId = _defaultAuthorUserId,
                 DomainId = _domainId,
                 FromContact = fromContact,
