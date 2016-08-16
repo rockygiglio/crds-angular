@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
 import { ContentCardComponent } from './content-card.component'
+import { VideoJSComponent } from './videojs.component';
 
 // core imports
 import { CMSDataService } from '../../core/services/CMSData.service'
@@ -15,7 +16,7 @@ var WOW = require('wow.js/dist/wow.min.js');
   selector: 'live-stream',
   templateUrl: './video.ng2component.html',
   providers: [CMSDataService],
-  directives: [StreamspotIframeComponent, ContentCardComponent]
+  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent]
 })
 
 export class VideoComponent {

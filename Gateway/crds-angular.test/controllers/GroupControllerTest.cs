@@ -557,7 +557,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldEditGroupSuccessfully()
+        public void ShouldEditGroupSuccessfully()
         {
             var group = new GroupDTO()
             {
@@ -577,7 +577,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldNotEditGroup()
+        public void ShouldNotEditGroup()
         {
             Exception ex = new Exception();
 
@@ -590,6 +590,40 @@ namespace crds_angular.test.controllers
 
             IHttpActionResult result = _fixture.EditGroup(group);
             _groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
+
+        [Test]
+        public void ShouldEndGroupSuccessfully()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            string token = "1234frd32";
+
+            _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
+
+            IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
+
+            _groupToolServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkResult), result);
+
+        }
+
+        [Test]
+        public void ShouldNotEndGroup()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            string token = "1234frd32";
+            Exception ex = new Exception();
+
+            _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
+
+            IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
+
+            _groupToolServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
         }

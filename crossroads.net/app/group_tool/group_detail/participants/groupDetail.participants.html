@@ -48,11 +48,12 @@
 
 <!-- Email participants -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isEmailView()'>
-  <message-participants
+  <group-email
     message='groupDetailParticipants.groupMessage'
     cancel-action='groupDetailParticipants.cancelMessageParticipants(message)'
     submit-action='groupDetailParticipants.messageParticipants(message)'
-    processing='groupDetailParticipants.processing'/>
+    processing='groupDetailParticipants.processing'
+    header='Email Group'/>
   />
 </div>
 

@@ -562,6 +562,20 @@ a.underline,
   border-bottom: 1px solid $gray-lighter;
 }
 
+.border-top {
+  border-top: 1px solid $gray-lighter;
+}
+
+.border-sides {
+  border-left: 1px solid $gray-lighter;
+  border-right: 1px solid $gray-lighter;
+}
+
+.border-ends {
+  border-top: 1px solid $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+}
+
 .pull-right {
   &.btn {
     margin-left: 5px;
