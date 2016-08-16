@@ -37,12 +37,12 @@ BEGIN
 
 	DECLARE @GroupID int;
 	DECLARE @ParticipantID int;
-	DECLARE @DonorID int = 0;
 	DECLARE @EventID int;
 	DECLARE @DestinationID int;
 	DECLARE @FundraisingGoal money;
 	DECLARE @GroupRoleID int = 16;
-	DECLARE @Current_Event_ID int
+	DECLARE @Current_Event_ID int;
+	DECLARE @Pledge_ID int;
 
 	DECLARE @EVENTS TABLE (
 		EventID int
@@ -58,7 +58,7 @@ BEGIN
 	JOIN  [dbo].[Event_Groups] ev on ev.Event_ID = pg.Event_ID
 	WHERE [Pledge_Campaign_ID] = @PledgeCampaignID;
 
-	SELECT @ParticipantID = Participant_Record, @DonorID = Donor_Record FROM Contacts WHERE Contact_ID = @ContactID;
+	SELECT @ParticipantID = Participant_Record FROM Contacts WHERE Contact_ID = @ContactID;
 	-- END PLEDGE CAMPAIGN DETAILS
 
 	-- CREATE GROUP PARTICIPANT RECORD IF IT DOESN'T EXIST
@@ -67,7 +67,6 @@ BEGIN
 				   AND [Group_ID] = @GroupID
 				   AND ( [End_Date] is null OR [End_Date] >= GETDATE()))
 	BEGIN
-		PRINT 'Adding as a group participant'
 		INSERT INTO [dbo].[Group_Participants] (
 			Group_ID,
 			Participant_ID,
@@ -81,12 +80,12 @@ BEGIN
 			1,
 			GETDATE()
 		)
-	END
+	END	
 	-- END GROUP PARTICIPANT
 
 	
 	-- CREATE PLEDGE RECORD IF IT DOESN'T EXIST
-	EXECUTE api_crds_CreatePledge @ContactID, @PledgeCampaignID
+	EXECUTE api_crds_CreatePledge @ContactID = @ContactID, @PledgeCampaignID = @PledgeCampaignID, @PledgeID = @Pledge_ID OUT
 	-- END PLEDGE
 
 	-- ADD AS EVENT PARTICIPANT FOR EACH GROUP EVENT
@@ -104,7 +103,6 @@ BEGIN
 					WHERE [Participant_ID] = @ParticipantID 
 					AND [Event_ID] = @CURRENT_EVENT_ID)				
 		BEGIN
-			PRINT 'Not a participant of the event yet';
 			INSERT INTO [dbo].[Event_Participants] (
 				[Event_ID],
 				[Participant_ID],

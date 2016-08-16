@@ -22,7 +22,8 @@ GO
 ALTER PROCEDURE [dbo].[api_crds_CreatePledge]
 	-- Add the parameters for the stored procedure here
 	@ContactID int,
-	@PledgeCampaignID int
+	@PledgeCampaignID int,
+	@PledgeId int OUT
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -30,7 +31,6 @@ BEGIN
 	SET NOCOUNT ON;
 
 	DECLARE @DonorID int = 0;
-	DECLARE @PledgeID int;
 	DECLARE @FundraisingGoal money;
 
 	SELECT TOP 1 @FundraisingGoal = [Fundraising_Goal]
@@ -42,7 +42,6 @@ BEGIN
 	-- CREATE DONOR RECORD IF IT DOESN'T EXIST
 	IF NOT EXISTS ( SELECT 1 WHERE @DonorID > 0 )
 	BEGIN
-		PRINT 'Donor does not exist yet...';
 		INSERT INTO [dbo].[Donors] (
 			Contact_ID,
 			Statement_Frequency_ID,
@@ -67,7 +66,6 @@ BEGIN
 				   WHERE [Pledge_Campaign_ID] = @PledgeCampaignID 
 				   AND [Donor_ID] = @DonorID AND ps.Pledge_Status != N'Discontinued')
 	BEGIN
-		PRINT 'Pledge does not exist yet';
 		INSERT INTO [dbo].[Pledges] (
 			[Donor_ID],
 			[Pledge_Campaign_ID],
@@ -97,7 +95,7 @@ BEGIN
 				   AND [Donor_ID] = @DonorID AND ps.Pledge_Status != N'Discontinued'
 	END
 	-- END PLEDGE
-	SELECT @PledgeID, @DonorID
+	-- SELECT @PledgeID, @DonorID
 END
 
 GO

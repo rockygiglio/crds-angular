@@ -47,8 +47,6 @@ BEGIN
 	FETCH NEXT FROM MC INTO @CURRENT_DOCUMENT_ID;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		PRINT 'in loop'
-		PRINT @CURRENT_DOCUMENT_ID
 		IF NOT EXISTS (SELECT 1 FROM [dbo].[cr_EventParticipant_Documents] 
 					   WHERE Event_Participant_ID = @EventParticipant_ID
 					   AND Document_ID = @CURRENT_DOCUMENT_ID)
@@ -66,9 +64,7 @@ BEGIN
 			)
 		END
 		FETCH NEXT FROM MC INTO @CURRENT_DOCUMENT_ID;
-		PRINT 'logic done'
 	END
-	PRINT 'closing cursor'
 	CLOSE MC;
 	DEALLOCATE MC;
 END
