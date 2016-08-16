@@ -1,10 +1,10 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
-var videojs = require('video.js/dist/video');
 declare var window: any;
-window.videojs = videojs;
-require('videojs-contrib-hls/dist/videojs-contrib-hls');
+window.videojs = require('video.js/dist/video');
+require('./vendor/streamspotAnalytics');
+require('./vendor/videojs5-hlsjs-source-handler.min');
 
 @Component({
   selector: 'videojs',
@@ -13,78 +13,91 @@ require('videojs-contrib-hls/dist/videojs-contrib-hls');
 
 export class VideoJSComponent implements AfterViewInit {
 
-  player: any;
-  nonPublicUrl: string = "//limelight1.streamspot.com/dvr/smil:crossr30e3.smil/playlist.m3u8";
-  productionUrl: string = "//limelight1.streamspot.com/url/smil:crossr4915.smil/playlist.m3u8";
-  testUrl: string = "//qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
-  url: string = "";
   id: string = "videojs-player";
-  width: number = 640;
-  height: number = 380;
-  poster: string = "//d2i0qcc2ysg3s9.cloudfront.net/crossr4915_0333c740_spark_titlepng_resized.png";
-  visible: boolean = true;
+  player: any;
+  visible: boolean = false;
 
   constructor(private streamspot: StreamspotService) {}
 
   ngAfterViewInit() {
-    this.url = this.productionUrl;
 
-    // set up video
-    this.player = window.videojs(this.id, {
-      "techOrder": ["flash", "html5"],
-      "fluid": true
-    });
+    this.streamspot.getBroadcaster().subscribe( response => {
 
-    this.streamspot.getBroadcasting((data: any) => {
-      let isBroadcasting: boolean = data.isBroadcasting;
-      if ( !isBroadcasting ) {
-        window.location.href = '/live';
+      if ( response.success === true && response.data.broadcaster !== undefined ) {
+
+        var broadcaster = response.data.broadcaster;
+
+        if ( broadcaster.players === undefined || broadcaster.players.length === 0 ) {
+          console.log('Error getting player from broadcast.');
+          return;
+        }
+
+        var defaultPlayer;
+        broadcaster.players.forEach(element => {
+          if ( element.default === true ) {
+            defaultPlayer = element;
+            return false;
+          }
+        });
+
+        if ( defaultPlayer === undefined ) {
+          defaultPlayer = broadcaster.players[0];
+        }
+
+        this.player = window.videojs(this.id, {
+          "techOrder": ["html5"],
+          "fluid": true,
+          "poster" : defaultPlayer.bgLink,
+          "preload": 'auto',
+          "html5": {
+            "hlsjsConfig": {
+              "debug": false
+            }
+          }
+        });
+
+        // create play handler (analytics)
+        this.player.on('play', () => {
+          window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
+          window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
+        });
+
+        // create stop handler (analytics)
+        this.player.on('pause', () => {
+          if(window.SSTracker){
+            window.SSTracker.stop();
+            window.SSTracker = null;
+          }
+        });
+            
+        if ( broadcaster.isBroadcasting === true ) {
+    
+          this.player.src([
+            {
+              "type": "application/x-mpegURL",
+              "src": broadcaster.live_src.cdn_hls
+            }
+          ]);
+
+          this.visible = true;
+
+          this.player.ready(() => {
+            this.player.play();
+          });
+          
+        }
+        else {
+          console.log('No broadcast available.');
+          window.location.href = '/live';
+        }
+
       }
-
-      // set player source
-      this.player.src({
-        "type": "application/x-mpegURL",
-        "src": this.url
-      });
-
-      this.player.play();
+      else {
+        console.log('StreamSpot API Failure!');
+      }
 
     });
 
   }
 
-  /*
-
-  All videojs callbacks:
-
-  loadstart
-  waiting
-  canplay
-  canplaythrough
-  playing
-  ended
-  seeking
-  seeked
-  play
-  firstplay
-  pause
-  progress
-  durationchange
-  fullscreenchange
-  error
-  suspend
-  abort
-  emptied
-  stalled
-  loadedmetadata
-  loadeddata
-  timeupdate
-  ratechange
-  volumechange
-  texttrackchange
-  loadedmetadata
-  posterchange
-  textdata
-
-  */
 }
