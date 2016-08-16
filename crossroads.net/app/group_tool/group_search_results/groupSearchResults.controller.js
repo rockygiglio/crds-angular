@@ -109,16 +109,20 @@ export default class GroupSearchResultsController {
     }
   }
 
-  requestToJoin(group) {
+  requestToJoinOrEmailGroupLeader(group, email=false) {
     var modalInstance = this.$modal.open({
-      template: '<confirm-request group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
-      controller: function(group, $modalInstance) {
+      template: '<confirm-request email-leader="confirmRequestModal.emailLeader" group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
+      controller: function(group, emailLeader, $modalInstance) {
         this.group = group;
+        this.emailLeader = emailLeader;
         this.modalInstance = $modalInstance;
       },
       controllerAs: 'confirmRequestModal',
       size: 'lg',
       resolve: {
+        emailLeader: function () {
+          return email;
+        },
         group: function () {
           return group;
         }

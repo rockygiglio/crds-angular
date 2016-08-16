@@ -86,6 +86,9 @@ namespace crds_angular.Controllers.API
                 case "childcarelocations":
                     ret = _lookupRepository.ChildcareLocations(token);
                     break;
+                case "groupreasonended":
+                    ret = _lookupRepository.GroupReasonEnded(token);
+                    break;
                 default:
                     break;
             }
@@ -96,6 +99,7 @@ namespace crds_angular.Controllers.API
             return Ok(ret);
 
         }
+
         /// <summary>
         /// Get lookup values for genders
         /// </summary>

@@ -25,7 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
         private readonly int _groupsSubGroupsPageId = 299;
-
+        private const string ApiToken = "ABC";
         [SetUp]
         public void SetUp()
         {
@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             return new Dictionary<string, object>
             {
-                {"token", "ABC"},
+                {"token", ApiToken},
                 {"exp", "123"}
             };
         }
@@ -272,6 +272,73 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var result = _fixture.checkIfUserInGroup(participantId, groupParticipants);
             Assert.AreEqual(result, true);
+        }
+
+        [Test]
+        public void EndDateGroup()
+        {
+            const int groupId = 1;
+            const int reasonEndedId = 1;
+            DateTime endDate = DateTime.Now;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["End_Date"].Equals(endDate) && d["Reason_Ended"].Equals(reasonEndedId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, endDate, reasonEndedId);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        public void EndDateGroupWithoutDate()
+        {
+            const int groupId = 1;
+            const int reasonEndedId = 1;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["Reason_Ended"].Equals(reasonEndedId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, reasonEndedId:reasonEndedId);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        [Test]
+        public void EndDateGroupWithoutReason()
+        {
+            const int groupId = 1;
+            DateTime endDate = DateTime.Now;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["End_Date"].Equals(endDate)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, endDate:endDate);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        [Test]
+        public void EndDateGroupWithoutReasonOrDate()
+        {
+            const int groupId = 1;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId);
+
+            _ministryPlatformRestService.VerifyAll();
         }
 
         [Test]
