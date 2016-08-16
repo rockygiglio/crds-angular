@@ -42,7 +42,7 @@
       </header>
 
       <div class="row">
-        <past-weekends *ngFor="let event of pastWeekends; let i = index" [event]="event" [key]="i" ></past-weekends>
+        <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
       <a href="/media" class="btn btn-primary btn-block-mobile view-all-mobile">View All Past Weekends</a>
