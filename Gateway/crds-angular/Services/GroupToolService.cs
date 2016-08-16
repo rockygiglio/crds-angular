@@ -438,5 +438,32 @@ namespace crds_angular.Services
 
             return groups;
         }
+
+        public void SubmitInquiry(string token, int groupId, Inquiry inquiry)
+        {
+            var active = true;
+
+            // check to see if the inquiry is going against a group where a person is already a member or has an outstanding request to join
+            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == inquiry.ContactId && (r.Placed == null || r.Placed == true));
+            var participants = _groupRepository.GetGroupParticipants(groupId, active).Where(r => r.ContactId == inquiry.ContactId);
+
+            if (requestsForContact.Any() || participants.Any())
+            {
+                throw new ExistingRequestException("User is already member or has request");
+            }
+
+            MpInquiry mpInquiry = new MpInquiry
+            {
+                ContactId = inquiry.ContactId,
+                GroupId = inquiry.GroupId,
+                EmailAddress = inquiry.EmailAddress,
+                PhoneNumber = inquiry.PhoneNumber,
+                FirstName = inquiry.FirstName,
+                LastName = inquiry.LastName,
+                RequestDate = inquiry.RequestDate
+            };
+
+            _groupRepository.CreateGroupInquiry(mpInquiry);
+        }
     }
 }

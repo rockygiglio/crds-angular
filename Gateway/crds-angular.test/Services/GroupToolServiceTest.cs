@@ -40,9 +40,9 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             _communicationRepository = new Mock<MPServices.ICommunicationRepository>(MockBehavior.Strict);
-            _groupToolRepository = new Mock<MPServices.IGroupToolRepository>(MockBehavior.Strict);
+            _groupToolRepository = new Mock<MPServices.IGroupToolRepository>();
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _groupRepository = new Mock<MPServices.IGroupRepository>(MockBehavior.Strict);
+            _groupRepository = new Mock<MPServices.IGroupRepository>();
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
@@ -859,6 +859,117 @@ namespace crds_angular.test.Services
             {
                 Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
             }
+        }
+
+        [Test]
+        public void TestCreateGroupInquiryValid()
+        {
+            var token = "123ABC";
+            var groupId = 123;
+            var syncedTime = System.DateTime.Now;
+            var active = true;
+
+            var inquiry = new Inquiry
+            {
+                ContactId = 1234567,
+                EmailAddress = "test@test.com",
+                FirstName = "Test",
+                GroupId = 123,
+                InquiryId = 123,
+                LastName = "Test",
+                PhoneNumber = "555-555-5555",
+                Placed = null,
+                RequestDate = syncedTime
+            };
+
+            List<MpInquiry> mpInquiries = new List<MpInquiry>();
+
+            _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
+
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+
+            _fixture.SubmitInquiry(token, groupId, inquiry);
+            _groupRepository.VerifyAll();
+            _groupToolRepository.VerifyAll();
+            
+        }
+
+        [Test]
+        public void TestCreateGroupInquiryInvalid()
+        {
+            var token = "123ABC";
+            var groupId = 123;
+            var syncedTime = System.DateTime.Now;
+            var active = true;
+
+            var inquiry = new Inquiry
+            {
+                ContactId = 1234567,
+                EmailAddress = "test@test.com",
+                FirstName = "Test",
+                GroupId = 123,
+                InquiryId = 123,
+                LastName = "Test",
+                PhoneNumber = "555-555-5555",
+                Placed = null,
+                RequestDate = syncedTime
+            };
+
+
+            List<MpInquiry> mpInquiries = new List<MpInquiry>();
+
+            var mpInquiry = new MpInquiry
+            {
+                ContactId = 1234567,
+                EmailAddress = "test@test.com",
+                FirstName = "Test",
+                GroupId = 123,
+                InquiryId = 123,
+                LastName = "Test",
+                PhoneNumber = "555-555-5555",
+                Placed = null,
+                RequestDate = syncedTime
+            };
+
+            mpInquiries.Add(mpInquiry);
+
+            _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
+
+            var participant = new MpGroupParticipant
+            {
+                Congregation = "Oakley",
+                ContactId = 1234567,
+                Email = "test@test.com",
+                GroupParticipantId = 7654321,
+                GroupRoleId = 33,
+                LastName = "TestLast",
+                GroupRoleTitle = "Participant",
+                NickName = "TestFirst",
+                ParticipantId = 2222222,
+                StartDate = syncedTime
+            };
+
+            participants.Add(participant);
+
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+
+            try
+            {
+                _fixture.SubmitInquiry(token, groupId, inquiry);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ExistingRequestException e)
+            {
+                Assert.AreSame(typeof(ExistingRequestException), e.GetType());
+            }
+
+            _groupRepository.VerifyAll();
+            _groupToolRepository.VerifyAll();
+
         }
     }
 }
