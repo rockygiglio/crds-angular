@@ -607,7 +607,7 @@ namespace crds_angular.test.controllers
 
             _groupToolServiceMock.VerifyAll();
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<Boolean>), result);
+            Assert.IsInstanceOf(typeof(OkResult), result);
 
         }
 
