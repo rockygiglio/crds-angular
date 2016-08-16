@@ -211,6 +211,34 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Send an email message to all leaders of a Group
+        /// </summary>
+        /// <param name="groupTypeId">An integer identifying the type of group.</param>
+        /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
+        [RequiresAuthorization]
+        [Route("api/grouptool/{groupId}/{groupTypeId}/leadermessage")]
+        public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, [FromUri()] int groupTypeId, GroupMessageDTO message)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SendAllGroupLeadersEmail(token, groupId, groupTypeId, message);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return (IHttpActionResult)NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending a Leader email to groupID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Send an email message to all members of a Group
         /// Requires the user to be a leader of the Group
         /// Will return a 404 if the user is not a Leader of the group

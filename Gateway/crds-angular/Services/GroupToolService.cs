@@ -345,6 +345,45 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendAllGroupLeadersEmail(string token, int groupId, int groupTypeId, GroupMessageDTO message)
+        {
+            var requestor = _participantRepository.GetParticipantRecord(token);
+            var group = _groupService.GetGroupDetails(groupId);
+
+            var fromContact = new MpContact
+            {
+                ContactId = 1519180,
+                EmailAddress = "updates@crossroads.net"
+            };
+
+            var replyToContact = new MpContact
+            {
+                ContactId = requestor.ContactId,
+                EmailAddress = requestor.EmailAddress
+            };
+
+            var leaders = @group.Participants.
+                Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).
+                Select(groupParticipant => new MpContact
+                {
+                    ContactId = groupParticipant.ContactId,
+                    EmailAddress = groupParticipant.Email
+                }).ToList();
+
+            var email = new MpCommunication
+            {
+                EmailBody = message.Body,
+                EmailSubject = string.Format("{0}: {1}", group.GroupName, message.Subject),
+                AuthorUserId = 5,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyToContact,
+                ToContacts = leaders
+            };
+
+            _communicationRepository.SendMessage(email);
+        }
+
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
