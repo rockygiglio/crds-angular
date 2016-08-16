@@ -109,6 +109,18 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestTripParticipantProcedure()
+        {
+            Console.WriteLine("TestTripParticipantProcedure");
+            var fields = new Dictionary<string, object>
+            {
+                {"@PledgeCampaignID", 10000000},
+                {"@ContactID", 2186211 }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).PostStoredProc("api_crds_Add_As_TripParticipant", fields);
+            Console.WriteLine("Results\t" + results.ToString());
+        }
+        [Test]
         public void TestSearchAllPaymentTypes()
         {
             Console.WriteLine("TestSearchAllPaymentTypes");
