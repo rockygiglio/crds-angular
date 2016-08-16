@@ -3,6 +3,7 @@ import { StreamspotService } from './streamspot.service';
 
 declare var window: any;
 declare var chrome: any;
+declare var ga: any;
 
 window.videojs = require('video.js/dist/video');
 
@@ -64,6 +65,9 @@ export class VideoJSComponent implements AfterViewInit {
         this.player.on('play', () => {
           window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
           window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
+          if ( ga !== undefined ) {
+            ga('send', 'event', 'Streaming', 'Play', 'Live Stream Play', 1);
+          }
         });
 
         // create stop handler (analytics)
@@ -71,6 +75,9 @@ export class VideoJSComponent implements AfterViewInit {
           if(window.SSTracker){
             window.SSTracker.stop();
             window.SSTracker = null;
+          }
+          if ( ga !== undefined ) {
+            ga('send', 'event', 'Streaming', 'Pause', 'Live Stream Pause', 0);
           }
         });
             
