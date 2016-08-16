@@ -33,7 +33,7 @@ export class CMSDataService {
     }
     
     getXMostRecentMessages(limit:number) {
-        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?date__sort=DESC&__limit[]=${limit}`))
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?date__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`))
                         .map(rsp => {return rsp.json().messages});
     }
     
