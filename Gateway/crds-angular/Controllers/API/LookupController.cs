@@ -112,6 +112,17 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Get lookup values for group ended reasons
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [Route("api/lookup/groupreasonended")]
+        [HttpGet]
+        public IHttpActionResult LookupGroupReasonEnded()
+        {
+            return Lookup("groupreasonended");
+        }
+
+        /// <summary>
         /// Get lookup values for crossroads sites
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
