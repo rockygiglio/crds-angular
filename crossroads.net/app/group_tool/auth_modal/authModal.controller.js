@@ -9,6 +9,7 @@ export default class AuthModalController {
     this.registerTitle = options.registerTitle;
     this.loginContentBlockId = options.loginContentBlockId;
     this.registerContentBlockId = options.registerContentBlockId;
+    this.cancelButton = options.cancelButton || 'Cancel';
 
     // Target modal options for the originally requested modal
     this.modal = options.modal;
@@ -57,5 +58,9 @@ export default class AuthModalController {
   // Get the content block id for the current view
   contentBlockId() {
     return this.registerView ? this.registerContentBlockId : this.loginContentBlockId;
+  }
+
+  cancel() {
+    this.$modalInstance.dismiss();
   }
 }

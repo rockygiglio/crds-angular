@@ -9,3 +9,6 @@
   <login-form ng-if="!authModal.registerView" login-callback='authModal.authCallback' register-callback='authModal.showRegister'></login-form>
   <register-form ng-if="authModal.registerView" login-callback='authModal.showLogin' register-callback='authModal.authCallback'></register-form>
 </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-standard" ng-click="authModal.cancel()">{{authModal.cancelButton}}</button>
+</div>

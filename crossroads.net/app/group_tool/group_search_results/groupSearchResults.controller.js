@@ -87,6 +87,7 @@ export default class GroupSearchResultsController {
       loginContentBlockId: 'groupToolAuthModalLoginText',
       registerTitle: 'Register',
       registerContentBlockId: 'groupToolAuthModalRegisterText',
+      cancelButton: 'Back to Search Results',
       modal: modalOptions
     });
   }
