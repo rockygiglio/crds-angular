@@ -95,7 +95,6 @@ BEGIN
 				   AND [Donor_ID] = @DonorID AND ps.Pledge_Status != N'Discontinued'
 	END
 	-- END PLEDGE
-	-- SELECT @PledgeID, @DonorID
 END
 
 GO
