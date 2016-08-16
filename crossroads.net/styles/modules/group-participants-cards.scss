@@ -5,7 +5,27 @@
   -webkit-filter: grayscale(100%);
 }
 
+.group-detail-participant-list {
+  @media (min-width: $screen-md) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .group-detail-participant-item {
+    @media (min-width: $screen-md) {
+      flex: 1 1 auto;
+    }
+  }
+}
+
 group-detail-participant-card {
+  .group-participant {
+    min-height: 75px;
+    height: 100%;
+    border-bottom: 1px solid $gray-lighter;
+  }
+
   .group-participant-image {
     float: left;
     width: 55px;
@@ -14,12 +34,5 @@ group-detail-participant-card {
 
   .group-participant-data {
     margin-left: 70px;
-  }
-
-  svg {
-    margin-top: 15px;
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
   }
 }

@@ -2,9 +2,10 @@
 import { Component } from '@angular/core';
 
 // streaming
-import { CurrentSeriesComponent } from './current-series.component'
-import { ScheduleComponent } from './schedule.component';
 import { CountdownComponent } from './countdown.component';
+import { CurrentSeriesComponent } from './current-series.component'
+import { PastWeekendsComponent } from './past-weekends.component'
+import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
@@ -31,7 +32,7 @@ declare var _: any;
   selector: 'streaming',
   directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent,
                SocialSharingComponent, PageScroll, StickyHeaderDirective,
-               CurrentSeriesComponent],
+               PastWeekendsComponent, CurrentSeriesComponent],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
   pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
@@ -40,7 +41,7 @@ declare var _: any;
 export class StreamingComponent {
   inProgress: boolean = false;
   currentSeries: any;
-  mostRecent: any = [];
+  pastWeekends: any = [];
 
   constructor(private streamspotService: StreamspotService, private cmsDataService: CMSDataService) {
 
@@ -56,34 +57,15 @@ export class StreamingComponent {
       this.inProgress = inProgress;
     });
 
-    this.cmsDataService
-        // only 4 are displayed, however, there is an invalid message on contentint that no one can seem to find,
-        //   so grabing an extra message and then filtering out the bad message in the view
-        .getXMostRecentMessages(5)
-        .subscribe((mostRecent) => {
-          this.mostRecent = mostRecent;
-
-          _.each(mostRecent, (event, key) => {
-            if (typeof event.series !== "undefined") {
-              event.delay = key * 100;
-
-              event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
-              if (typeof event.messageVideo.still !== 'undefined') {
-                event.image = event.messageVideo.still.filename
-              } 
-              event.imageSrc = event.image.replace(/https*:/, '')
-
-              this.cmsDataService.getSeries(`id=${event.series}`)
-                .subscribe((series) => {
-                  event.seriesTitle = series.length > 0 ? _.first(series).title : 'Message';
-                })
-              }
-          })
-        })
 
     new WOW({
       offset: 100,
       mobile: false
     }).init();
+
+    this.cmsDataService
+        .getXMostRecentMessages(4)
+        .subscribe((pastWeekends) => this.pastWeekends = pastWeekends);
   }
+
 }

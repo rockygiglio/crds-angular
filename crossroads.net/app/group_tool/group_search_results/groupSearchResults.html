@@ -41,6 +41,10 @@
 
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
+  <div ng-show='groupSearchResults.ready'>
+    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
+  </div>
+
   <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
@@ -51,14 +55,15 @@
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
       <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Zip Code'" sortable="'address.zip'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a ng-if="group.address.zip">{{group.address.zip}}</a></td>
+      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.address.zip">Map</a></td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
         <group-detail-about data="group" for-search="true"></group-detail-about>
         <div class="text-right push-half-bottom soft-half-right">
           <button type="button" class="btn btn-secondary" ng-click="group.expanded = false">Close</button>
-          <button type="button" class="btn btn-primary">Request to Join</button>
+          <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Email Group Leader</button>
+          <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
         </div>
       </td>
     </tr>
@@ -78,7 +83,8 @@
     <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
       <group-detail-about data="group" for-search="true"></group-detail-about>
       <div class="soft-half">
-        <button type="button" class="btn btn-primary btn-block">Request to Join</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+        <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Email Group Leader</button>
         <button type="button" class="btn btn-secondary btn-block" ng-click="group.expanded = false">Close</button>
       </div>
     </div>

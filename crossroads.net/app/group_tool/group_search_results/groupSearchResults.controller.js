@@ -1,8 +1,9 @@
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state) {
+  constructor(NgTableParams, GroupService, $state, $modal) {
     this.groupService = GroupService;
+    this.$modal = $modal;
 
     this.search = null;
     this.processing = false;
@@ -61,7 +62,25 @@ export default class GroupSearchResultsController {
     this.doSearch(this.search.query, this.search.location);
   }
 
-  openMap(group) {
-    console.log('Open Map');
+  requestToJoinOrEmailGroupLeader(group, email=false) {
+    console.debug("Request to Join", group);
+    var modalInstance = this.$modal.open({
+      template: '<confirm-request email-leader="confirmRequestModal.emailLeader" group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
+      controller: function(group, emailLeader, $modalInstance) {
+        this.group = group;
+        this.emailLeader = emailLeader;
+        this.modalInstance = $modalInstance;
+      },
+      controllerAs: 'confirmRequestModal',
+      size: 'lg',
+      resolve: {
+        emailLeader: function () {
+          return email;
+        },
+        group: function () {
+          return group;
+        }
+      }
+    });
   }
 }

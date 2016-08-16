@@ -1,0 +1,45 @@
+<div ng-if="!confirmRequest.emailLeader">
+  <div class="modal-header">
+    <h3 class="modal-title">Confirm Request</h3>
+  </div>
+  <div class="modal-body">
+    <group-detail-about data="confirmRequest.group"></group-detail-about>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-standard btn-block-mobile mobile-push-half-bottom" ng-click="confirmRequest.cancel()">Back to Search Results</button>
+    <button type="button" class="btn btn-secondary btn-block-mobile mobile-push-half-bottom" ng-click="confirmRequest.emailGroupLeader()">Email Group Leader</button>
+    <loading-button
+      ng-click="confirmRequest.submit()"
+      input-type='button'
+      normal-text='Send Request'
+      loading-text='Sending...'
+      loading='confirmRequest.processing'
+      loading-class='disabled'
+      input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+  </div>
+</div>
+
+<div ng-if="confirmRequest.emailLeader">
+  <div class="modal-header">
+    <h3 class="modal-title">Email </h3>
+  </div>
+  <div class="modal-body">
+    <group-email
+      message='confirmRequest.groupMessage'
+      processing='confirmRequest.processing'
+      process='false'
+      allow-subject='false'/>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-standard btn-block-mobile mobile-push-half-bottom" ng-click="confirmRequest.cancel()">Back to Search Results</button>
+    <button type="button" class="btn btn-secondary btn-block-mobile mobile-push-half-bottom" ng-click="confirmRequest.requestToJoin()">Request to Join</button>
+    <loading-button
+      ng-click="confirmRequest.sendEmail()"
+      input-type='button'
+      normal-text='Send Email'
+      loading-text='Sending...'
+      loading='confirmRequest.processing'
+      loading-class='disabled'
+      input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+  </div>
+</div>
