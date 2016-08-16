@@ -41,6 +41,10 @@
 
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
+  <div ng-show='groupSearchResults.ready'>
+    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
+  </div>
+
   <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
@@ -58,7 +62,7 @@
         <group-detail-about data="group" for-search="true"></group-detail-about>
         <div class="text-right push-half-bottom soft-half-right">
           <button type="button" class="btn btn-secondary" ng-click="group.expanded = false">Close</button>
-          <button type="button" class="btn btn-primary">Request to Join</button>
+          <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoin(group)">Request to Join</button>
         </div>
       </td>
     </tr>
@@ -78,7 +82,7 @@
     <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
       <group-detail-about data="group" for-search="true"></group-detail-about>
       <div class="soft-half">
-        <button type="button" class="btn btn-primary btn-block">Request to Join</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoin(group)">Request to Join</button>
         <button type="button" class="btn btn-secondary btn-block" ng-click="group.expanded = false">Close</button>
       </div>
     </div>
