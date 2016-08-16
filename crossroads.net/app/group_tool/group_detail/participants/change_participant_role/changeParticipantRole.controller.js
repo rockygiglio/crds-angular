@@ -1,5 +1,6 @@
 export default class ChangeParticipantRoleController {
   constructor() {
+    let participant = this.participant;
     this.processing = false;
   }
 
@@ -14,27 +15,27 @@ export default class ChangeParticipantRoleController {
   }
 
   isParticipant() {
-    return true;
+    return ! (this.participant.isLeader() && this.participant.isApprentice());
   }
 
   isLeader() {
-    return false;
+    return this.participant.isLeader();
   }
 
   isApprentice() {
-    return false;
+    return this.participant.isApprentice();
   }
 
   leaderDisabled() {
-    return true;
+    return false;
   }
 
   apprenticeDisabled() {
-    return true;
+    return false;
   }
 
   warningLeaderMax() {
-    return true;
+    return false;
   }
 
   warningLeaderApproval() {
@@ -42,7 +43,7 @@ export default class ChangeParticipantRoleController {
   }
 
   warningApprenticeMax() {
-    return true;
+    return false;
   }
 
   cancel() {
