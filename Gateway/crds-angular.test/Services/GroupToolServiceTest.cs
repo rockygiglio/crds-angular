@@ -906,7 +906,8 @@ namespace crds_angular.test.Services
                                 && c.ReplyToContact.ContactId == DefaultEmailContactId
                                 && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
                                 && c.AuthorUserId == 5
-                                //&& c.ToContacts == to
+                                && c.ToContacts[0].ContactId == participant.ContactId
+                                && c.ToContacts[0].EmailAddress == participant.Email
                                 && c.TemplateId == GroupEndedParticipantEmailTemplate
                                 && c.MergeData["Participant_Name"].Equals("nickname")
                                 && c.MergeData["Group_Tool_Url"].Equals(url)
