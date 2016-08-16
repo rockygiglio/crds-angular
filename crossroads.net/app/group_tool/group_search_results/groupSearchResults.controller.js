@@ -3,11 +3,12 @@ import Address from '../model/address';
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state, $modal, $rootScope, AddressValidationService) {
+  constructor(NgTableParams, GroupService, $state, $modal, $rootScope, AddressValidationService, $location) {
     this.groupService = GroupService;
     this.$modal = $modal;
     this.rootScope = $rootScope;
     this.addressValidationService = AddressValidationService;
+    this.locationService = $location;
 
     this.search = null;
     this.processing = false;
@@ -30,8 +31,18 @@ export default class GroupSearchResultsController {
   }
 
   doSearch(query, location) {
-    this.showLocationInput = false;
     this.searchedWithLocation = location && location.length > 0;
+
+    let queryString = {};
+    if(this.searchedWithLocation) {
+      queryString.location = location;
+    }
+    if(query && query.length > 0) {
+      queryString.query = query;
+    }
+    this.locationService.search(queryString);
+
+    this.showLocationInput = false;
     this.ready = false;
     this.results = [];
     this.groupService.search(query, location).then(
@@ -62,17 +73,29 @@ export default class GroupSearchResultsController {
     );
   }
 
+  showLocationForm(form) {
+    form.location.$rollbackViewValue();
+    this.showLocationInput = true;
+  }
+
+  hideLocationForm(form) {
+    if(form.location.$invalid) {
+      this.search.location = '';
+      form.location.$setValidity('pattern', true);
+    }
+    form.location.$rollbackViewValue();
+    this.showLocationInput = false;
+  }
+
   submit(form) {
-    let valid = true;
-    if(form) {
+    if(form && this.search.location && this.search.location.length > 0) {
       this.processing = true;
-      valid = false;
+      let valid = false;
       this.addressValidationService.validateAddressString(this.search.location).then((data) => {
         let address = new Address(data);
         this.search.location = address.toSearchString();
         valid = true;
       }, (err) => {
-        valid = false;
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolSearchInvalidAddressGrowler);
       }).finally(() => {
         this.processing = false;
