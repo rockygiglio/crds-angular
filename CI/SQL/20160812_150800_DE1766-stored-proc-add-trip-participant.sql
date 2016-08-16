@@ -84,54 +84,9 @@ BEGIN
 	END
 	-- END GROUP PARTICIPANT
 
-	-- CREATE DONOR RECORD IF IT DOESN'T EXIST
-	IF NOT EXISTS ( SELECT 1 WHERE @DonorID > 0 )
-	BEGIN
-		PRINT 'Donor does not exist yet...';
-		INSERT INTO [dbo].[Donors] (
-			Contact_ID,
-			Statement_Frequency_ID,
-			Statement_Type_ID,
-			Statement_Method_ID,
-			Setup_Date,
-			Domain_ID
-		) VALUES (
-			@ContactID,
-			1,
-			1,
-			2,
-			GETDATE(),
-			1
-		)
-		SELECT @DonorID = @@IDENTITY; 
-	END
-
+	
 	-- CREATE PLEDGE RECORD IF IT DOESN'T EXIST
-	IF NOT EXISTS (SELECT 1 FROM [dbo].[Pledges] 
-				   WHERE [Pledge_Campaign_ID] = @PledgeCampaignID 
-				   AND [Donor_ID] = @DonorID)
-	BEGIN
-		PRINT 'Pledge does not exist yet';
-		INSERT INTO [dbo].[Pledges] (
-			[Donor_ID],
-			[Pledge_Campaign_ID],
-			[Pledge_Status_ID],
-			[Total_Pledge],
-			[Installments_Planned],
-			[Installments_Per_Year],
-			[First_Installment_Date],
-			[Domain_ID]
-		) VALUES (
-			@DonorID,
-			@PledgeCampaignID,
-			1,
-			@FundraisingGoal,
-			0,
-			0,
-			GETDATE(),
-			1
-		)	
-	END
+	EXECUTE api_crds_CreatePledge @ContactID, @PledgeCampaignID
 	-- END PLEDGE
 
 	-- ADD AS EVENT PARTICIPANT FOR EACH GROUP EVENT

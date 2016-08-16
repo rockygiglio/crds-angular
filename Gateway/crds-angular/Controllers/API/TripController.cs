@@ -17,10 +17,10 @@ namespace crds_angular.Controllers.API
         private readonly ITripService _tripService;
         private readonly IPersonService _personService;
 
-        public TripController(ITripService tripService, IPersonService persionService)
+        public TripController(ITripService tripService, IPersonService personService)
         {
             _tripService = tripService;
-            _personService = persionService;
+            _personService = personService;
         }
 
         [AcceptVerbs("GET")]
