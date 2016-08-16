@@ -255,6 +255,27 @@ streaming {
       }
 
     }
+    .topic-list {
+      padding: 0;
+      list-style: none;
+      margin: 0 0 1.5em;
+
+      li {
+        display: inline;
+        
+        &:after {
+          content: ", ";
+          margin-left: -4px;
+        }
+        &:last-child:after {
+          content: "";
+        }
+        a {
+          font-size: 87%;
+          text-transform: lowercase;
+        }
+      }
+    }
     article {
       @media (min-width: $screen-md-min) {
         @include make-md-column(5);
@@ -277,6 +298,10 @@ streaming {
 
       p {
         margin: 0 0 1.5em;
+
+        &.small {
+          margin: 0;
+        }
       }
 
       .lead {
