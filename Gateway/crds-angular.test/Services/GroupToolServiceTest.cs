@@ -34,7 +34,7 @@ namespace crds_angular.test.Services
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
         private const int GroupEndedParticipantEmailTemplate = 88876;
         private const int DomainId = 321;
-        private const string BaseUrl = "localhost:3000";
+        private const string BaseUrl = "test.com";
         private const int DefaultEmailContactId = 876;
         [SetUp]
         public void SetUp()
@@ -892,24 +892,27 @@ namespace crds_angular.test.Services
             _communicationRepository.Setup(mocked => mocked.GetEmailFromContactId(It.IsAny<int>())).Returns(fromEmailAddress);
             var to = new List<MpContact>();
             to.Add(new MpContact() {ContactId = participant.ContactId, EmailAddress = participant.Email});
+            var url = @"https://" + BaseUrl + "/groups/search";
             _communicationRepository.Setup(
                 mocked =>
                     mocked.SendMessage(
                         It.Is<MpCommunication>(
                             c =>
-                                c.DomainId == DomainId &&
-                                c.EmailBody.Equals(template.Body) &&
-                                c.EmailSubject.Equals(template.Subject) &&
-                                c.FromContact.ContactId == DefaultEmailContactId &&
-                                c.FromContact.EmailAddress.Equals(fromEmailAddress) &&
-                                c.ReplyToContact.ContactId == DefaultEmailContactId &&
-                                c.ReplyToContact.EmailAddress.Equals(fromEmailAddress) &&
-                                c.AuthorUserId == 5 &&
-                                c.ToContacts == to &&
-                                c.TemplateId == GroupEndedParticipantEmailTemplate &&
-                                c.MergeData["Participant_Name"].Equals("nickname") &&
-                                c.MergeData["Group_Tool_Url"].Equals(@"https://" + BaseUrl + "/groups/search")),
-                        false));
+                                c.DomainId == DomainId
+                                && c.EmailBody.Equals(template.Body)
+                                && c.EmailSubject.Equals(template.Subject)
+                                && c.FromContact.ContactId == DefaultEmailContactId
+                                && c.FromContact.EmailAddress.Equals(fromEmailAddress)
+                                && c.ReplyToContact.ContactId == DefaultEmailContactId
+                                && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
+                                && c.AuthorUserId == 5
+                                //&& c.ToContacts == to
+                                && c.TemplateId == GroupEndedParticipantEmailTemplate
+                                && c.MergeData["Participant_Name"].Equals("nickname")
+                                && c.MergeData["Group_Tool_Url"].Equals(url)
+                        ),
+                    false)
+            ).Returns(5);
 
             _fixture.SendGroupEndedParticipantEmail(participant);
             _communicationRepository.VerifyAll();
