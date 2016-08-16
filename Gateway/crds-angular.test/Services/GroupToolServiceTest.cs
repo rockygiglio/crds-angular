@@ -32,8 +32,10 @@ namespace crds_angular.test.Services
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
+        private const int GroupEndedParticipantEmailTemplate = 88876;
         private const int DomainId = 321;
-
+        private const string BaseUrl = "test.com";
+        private const int DefaultEmailContactId = 876;
         [SetUp]
         public void SetUp()
         {
@@ -53,6 +55,11 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupRoleLeader);
             configuration.Setup(mocked => mocked.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId")).Returns(RemoveParticipantFromGroupEmailTemplateId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
+            configuration.Setup(mocked => mocked.GetConfigValue("BaseURL")).Returns(BaseUrl);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultContactEmailId")).Returns(DefaultEmailContactId);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GroupEndedParticipantEmailTemplate")).Returns(GroupEndedParticipantEmailTemplate);
+
+
 
             _fixture = new GroupToolService(_groupToolRepository.Object,
                                             _groupRepository.Object,
@@ -306,7 +313,8 @@ namespace crds_angular.test.Services
             };
 
             _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(participant);
-            _groupRepository.Setup(mocked => mocked.addParticipantToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<DateTime>(), null, false, null)).Returns(1);
+            _groupRepository.Setup(
+                mocked => mocked.addParticipantToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<DateTime>(), null, false, null)).Returns(1);
             _invitationRepositor.Setup(mocked => mocked.MarkInvitationAsUsed(It.IsAny<string>())).Verifiable();
 
             _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, true);
@@ -411,7 +419,7 @@ namespace crds_angular.test.Services
                 Assert.AreSame(typeof(GroupParticipantRemovalException), e.GetType());
                 Assert.AreSame(ex, e.InnerException);
             }
-            
+
             _communicationRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
             _groupService.VerifyAll();
@@ -640,7 +648,7 @@ namespace crds_angular.test.Services
             _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(me);
             _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(groups);
             _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>())).Returns(getMpInvations());
-            var invitations =  _fixture.GetInvitations(sourceId, invitationTypeId, token);
+            var invitations = _fixture.GetInvitations(sourceId, invitationTypeId, token);
 
             Assert.AreEqual(4, invitations.Count);
 
@@ -672,7 +680,7 @@ namespace crds_angular.test.Services
                     RequestDate = new DateTime(2016, 7, 5)
                 }
 
-            );
+                );
 
             invitations.Add(
                 new MpInvitation
@@ -684,7 +692,7 @@ namespace crds_angular.test.Services
                     RequestDate = new DateTime(2016, 7, 4)
                 }
 
-            );
+                );
 
             invitations.Add(
                 new MpInvitation
@@ -696,7 +704,7 @@ namespace crds_angular.test.Services
                     RequestDate = new DateTime(2016, 7, 3)
                 }
 
-            );
+                );
 
 
             return invitations;
@@ -722,16 +730,16 @@ namespace crds_angular.test.Services
             var dto = new List<Inquiry>();
 
             dto.Add(new Inquiry
-                {
-                    InquiryId = 178,
-                    GroupId = 199846,
-                    EmailAddress = "test@jk.com",
-                    PhoneNumber = "444-111-2111",
-                    FirstName = "Joe",
-                    LastName = "Smith",
-                    RequestDate = new DateTime(2004, 3, 12),
-                    Placed = true,
-                });
+            {
+                InquiryId = 178,
+                GroupId = 199846,
+                EmailAddress = "test@jk.com",
+                PhoneNumber = "444-111-2111",
+                FirstName = "Joe",
+                LastName = "Smith",
+                RequestDate = new DateTime(2004, 3, 12),
+                Placed = true,
+            });
 
             var groups = new List<GroupDTO>
             {
@@ -772,7 +780,7 @@ namespace crds_angular.test.Services
             _groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>())).Returns(mpResults);
 
             var inquiries = _fixture.GetInquiries(groupId, token);
-            
+
             Assert.AreEqual(1, inquiries.Count);
             Assert.AreEqual(dto[0].InquiryId, inquiries[0].InquiryId);
             Assert.AreEqual(dto[0].GroupId, inquiries[0].GroupId);
@@ -823,7 +831,7 @@ namespace crds_angular.test.Services
         public void TestSearchGroupsNoKeywordsNothingFound()
         {
             const int groupTypeId = 1;
-            var keywords = new[] { "kw1", "kw2" };
+            var keywords = new[] {"kw1", "kw2"};
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null)).Returns(new List<MpGroupSearchResultDto>());
             var results = _fixture.SearchGroups(groupTypeId);
             _groupToolRepository.VerifyAll();
@@ -834,7 +842,7 @@ namespace crds_angular.test.Services
         public void TestSearchGroups()
         {
             const int groupTypeId = 1;
-            var keywords = new[] { "kw1", "kw2" };
+            var keywords = new[] {"kw1", "kw2"};
             var searchResults = new List<MpGroupSearchResultDto>
             {
                 new MpGroupSearchResultDto
@@ -859,6 +867,56 @@ namespace crds_angular.test.Services
             {
                 Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
             }
+        }
+
+        [Test]
+        public void TestSendGroupEndedEmailToParticipant()
+        {
+            string fromEmailAddress = "from@email.com";
+            var participant = new GroupParticipantDTO()
+            {
+                NickName = "nickname",
+                Email = "email@email.com",
+                ContactId = 123,
+            };
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 876,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+            _communicationRepository.Setup(mocked => mocked.GetEmailFromContactId(It.IsAny<int>())).Returns(fromEmailAddress);
+            var to = new List<MpContact>();
+            to.Add(new MpContact() {ContactId = participant.ContactId, EmailAddress = participant.Email});
+            var url = @"https://" + BaseUrl + "/groups/search";
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.Is<MpCommunication>(
+                            c =>
+                                c.DomainId == DomainId
+                                && c.EmailBody.Equals(template.Body)
+                                && c.EmailSubject.Equals(template.Subject)
+                                && c.FromContact.ContactId == DefaultEmailContactId
+                                && c.FromContact.EmailAddress.Equals(fromEmailAddress)
+                                && c.ReplyToContact.ContactId == DefaultEmailContactId
+                                && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
+                                && c.AuthorUserId == 5
+                                && c.ToContacts[0].ContactId == participant.ContactId
+                                && c.ToContacts[0].EmailAddress == participant.Email
+                                && c.TemplateId == GroupEndedParticipantEmailTemplate
+                                && c.MergeData["Participant_Name"].Equals("nickname")
+                                && c.MergeData["Group_Tool_Url"].Equals(url)
+                        ),
+                    false)
+            ).Returns(5);
+
+            _fixture.SendGroupEndedParticipantEmail(participant);
+            _communicationRepository.VerifyAll();
         }
     }
 }
