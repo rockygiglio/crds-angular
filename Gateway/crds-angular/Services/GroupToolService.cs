@@ -25,9 +25,10 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
 
+        private readonly int _defaultGroupContactEmailId;
+        private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
-
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -62,6 +63,8 @@ namespace crds_angular.Services
             _invitationRepository = invitationRepository;
             _addressProximityService = addressProximityService;
 
+            _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
+            _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
@@ -352,8 +355,8 @@ namespace crds_angular.Services
 
             var fromContact = new MpContact
             {
-                ContactId = 1519180,
-                EmailAddress = "updates@crossroads.net"
+                ContactId = _defaultGroupContactEmailId,
+                EmailAddress = "groups@crossroads.net"
             };
 
             var replyToContact = new MpContact
@@ -374,7 +377,7 @@ namespace crds_angular.Services
             {
                 EmailBody = message.Body,
                 EmailSubject = string.Format("{0}: {1}", group.GroupName, message.Subject),
-                AuthorUserId = 5,
+                AuthorUserId = _defaultAuthorUserId,
                 DomainId = _domainId,
                 FromContact = fromContact,
                 ReplyToContact = replyToContact,
