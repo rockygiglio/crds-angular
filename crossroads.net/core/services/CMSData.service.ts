@@ -9,16 +9,41 @@ export class CMSDataService {
     constructor(private http: Http) { }
     
     getCurrentSeries() {
-        let todaysDate = new Date().toISOString().slice(0, 10);
-        let currentSeriesAPIAddress = `api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit[]=1`
-        let obs = this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress))
-                                        .map(rsp => rsp.json().series[0]);
-        return this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress))
-                                        .map(this.responseHasContent)
-                                        .flatMap( x => {
-                                            return x ? obs : this.getNearestSeries()
-                                        });
+
+        let todaysDate = new Date();
+        let todaysDateString = todaysDate.toISOString().slice(0, 10);
+
+        let currentSeriesAPIAddress = `api/series?endDate__GreaterThanOrEqual=${todaysDateString}&endDate__sort=ASC&startDate__sort=ASC`
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + currentSeriesAPIAddress)).map((rsp) => {
+
+            let currentSeries;
+            let allActiveSeries = rsp.json().series;
+
+            for ( let i = 0; i < allActiveSeries.length; i++ ) {
+                if (new Date(allActiveSeries[i].startDate).getTime() <= todaysDate.getTime()) {
+                    currentSeries = allActiveSeries[i];
+                    break;
+                }
+            }
+
+            if ( currentSeries === undefined ) {
+                allActiveSeries.sort(this.dateSortMethod);
+                currentSeries = allActiveSeries[0];
+            }
+
+            return currentSeries;
+
+        });
     }
+
+    private dateSortMethod(a,b) {
+        if (new Date(a.startDate).getTime() < new Date(b.startDate).getTime())
+            return -1;
+        if (new Date(b.startDate).getTime() > new Date(a.startDate).getTime())
+            return 1;
+        return 0;
+    }
+    
 
     private responseHasContent(resp) {
         var obj = resp.json();

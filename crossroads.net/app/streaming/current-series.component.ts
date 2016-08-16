@@ -41,20 +41,20 @@ export class CurrentSeriesComponent {
   
   ngOnInit() {
     this.cmsDataService.getCurrentSeries()
-                                     .subscribe((cs) => {
-                                       this.parseData(cs);
-                                     })
+      .subscribe((cs) => {
+        this.parseData(cs);
+      })
   }
 
   parseData(cs:any) {
     this.currentSeries = cs
     this.currentSeriesTitle = cs.title
     this.currentSeriesDescription = cs.description
-    //this.currentSeriesPicture = cs.image.filename
+    this.currentSeriesPicture = cs.image.filename
     this.currentSeriesStartDate = cs.startDate
     this.currentSeriesEndDate = cs.endDate
     this.currentSeriesRunningDates = this.getRunningDates()
-    //this.currentSeriesTags = this.getTagsArray(cs)
+    this.currentSeriesTags = this.getTagsArray(cs)
     this.currentSeriesTrailer = cs.trailerLink
   }
 
