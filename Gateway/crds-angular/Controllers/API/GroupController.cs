@@ -70,7 +70,13 @@ namespace crds_angular.Controllers.API
             });
         }
 
-
+        /// <summary>
+        /// Ends a group and emails all participants to let them know
+        /// it is over
+        /// </summary>
+        /// <param name="groupId">The id of a group</param>
+        /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
+        /// <returns>Http Result</returns>
         [AcceptVerbs("POST")]
         [RequiresAuthorization]
         [HttpPost]
