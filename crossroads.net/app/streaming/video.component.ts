@@ -30,7 +30,8 @@ export class VideoComponent {
         .getDigitalProgram()
         .subscribe((data) => {
           data.forEach((feature, i, data) => {
-            if (feature.status.toLowerCase() !== 'draft') {
+            // null status indicates a published feature
+            if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
               if (feature.section.toLowerCase() === 'today') {
                 feature.delay = i * 100
                 feature.url = '';
