@@ -282,22 +282,22 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [Route("api/grouptool/group/{groupId:int}/submitinquiry")]
         [HttpPost]
-        public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId, Inquiry inquiry)
+        public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupToolService.SubmitInquiry(token, groupId, inquiry);
+                    _groupToolService.SubmitInquiry(token, groupId);
                     return Ok();
                 }
-                catch (NotGroupLeaderException)
+                catch (ExistingRequestException)
                 {
                     return Conflict();
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto(string.Format("Error when creating inquiry: {0}, for group {1}", inquiry, groupId), ex);
+                    var apiError = new ApiErrorDto(string.Format("Error when creating inquiry for group {0}", groupId), ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

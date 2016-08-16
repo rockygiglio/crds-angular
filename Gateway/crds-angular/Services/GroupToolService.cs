@@ -24,6 +24,7 @@ namespace crds_angular.Services
         private readonly IContentBlockService _contentBlockService;
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
+        private readonly IContactRepository _contactRepository;
 
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
@@ -50,7 +51,8 @@ namespace crds_angular.Services
                            IContentBlockService contentBlockService,
                            IConfigurationWrapper configurationWrapper, 
                            IInvitationRepository invitationRepository,
-                           IAddressProximityService addressProximityService)
+                           IAddressProximityService addressProximityService,
+                           IContactRepository contactRepository)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -61,6 +63,7 @@ namespace crds_angular.Services
             _contentBlockService = contentBlockService;
             _invitationRepository = invitationRepository;
             _addressProximityService = addressProximityService;
+            _contactRepository = contactRepository;
 
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
@@ -438,14 +441,16 @@ namespace crds_angular.Services
 
             return groups;
         }
-
-        public void SubmitInquiry(string token, int groupId, Inquiry inquiry)
+        
+        public void SubmitInquiry(string token, int groupId)
         {
             var active = true;
+            var participant = _participantRepository.GetParticipantRecord(token);
+            var contact = _contactRepository.GetContactById(participant.ContactId);
 
             // check to see if the inquiry is going against a group where a person is already a member or has an outstanding request to join
-            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == inquiry.ContactId && (r.Placed == null || r.Placed == true));
-            var participants = _groupRepository.GetGroupParticipants(groupId, active).Where(r => r.ContactId == inquiry.ContactId);
+            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && (r.Placed == null || r.Placed == true));
+            var participants = _groupRepository.GetGroupParticipants(groupId, active).Where(r => r.ContactId == participant.ContactId);
 
             if (requestsForContact.Any() || participants.Any())
             {
@@ -454,13 +459,13 @@ namespace crds_angular.Services
 
             MpInquiry mpInquiry = new MpInquiry
             {
-                ContactId = inquiry.ContactId,
-                GroupId = inquiry.GroupId,
-                EmailAddress = inquiry.EmailAddress,
-                PhoneNumber = inquiry.PhoneNumber,
-                FirstName = inquiry.FirstName,
-                LastName = inquiry.LastName,
-                RequestDate = inquiry.RequestDate
+                ContactId = participant.ContactId,
+                GroupId = groupId,
+                EmailAddress = participant.EmailAddress,
+                PhoneNumber = contact.Home_Phone,
+                FirstName = contact.Nickname,
+                LastName = contact.Last_Name,
+                RequestDate = System.DateTime.Now
             };
 
             _groupRepository.CreateGroupInquiry(mpInquiry);

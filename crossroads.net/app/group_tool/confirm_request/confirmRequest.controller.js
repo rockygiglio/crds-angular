@@ -3,9 +3,10 @@ import GroupMessage from '../model/groupMessage';
 
 export default class ConfirmRequestController {
   /*@ngInject*/
-  constructor($rootScope, MessageService) {
+  constructor($rootScope, MessageService, GroupService) {
     this.rootScope = $rootScope;
     this.messageService = MessageService;
+    this.groupService = GroupService;
 
     this.processing = false;
     this.emailLeader = (this.emailLeader === undefined) ? false : this.emailLeader;
@@ -27,6 +28,26 @@ export default class ConfirmRequestController {
     if(!this.processing) {
       this.emailLeader = false;
     }
+  }
+
+  sendJoinRequest() {
+    this.processing = true;
+    debugger;
+
+    this.groupService.submitJoinRequest(this.group.groupId).then(
+        () => {
+          //this.groupMessage = undefined;
+          this.modalInstance.dismiss();
+          debugger;
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+        },
+        (error) => {
+          debugger;
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+        }
+    ).finally(() => {
+      this.processing = false;
+    });
   }
 
   emailGroupLeader() {
@@ -59,6 +80,7 @@ export default class ConfirmRequestController {
 
   submit() {
     this.processing = true;
+    this.sendJoinRequest();
 
     // TODO - Remove timeout faking submission for loading-button
     window.setTimeout(() => {
