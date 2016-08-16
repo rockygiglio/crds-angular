@@ -3,7 +3,8 @@ import GroupMessage from '../model/groupMessage';
 
 export default class ConfirmRequestController {
   /*@ngInject*/
-  constructor(MessageService) {
+  constructor($rootScope, MessageService) {
+    this.rootScope = $rootScope;
     this.messageService = MessageService;
 
     this.processing = false;
@@ -42,7 +43,7 @@ export default class ConfirmRequestController {
   sendEmail() {
     this.processing = true;
 
-    this.messageService.sendGroupMessage(this.groupId, this.groupMessage).then(
+    this.messageService.sendLeaderMessage(this.groupMessage).then(
         () => {
           this.groupMessage = undefined;
           this.modalInstance.dismiss();
