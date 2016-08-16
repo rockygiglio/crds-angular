@@ -39,12 +39,23 @@ export default class AuthModalController {
 
   }
 
-  // Get the title for the current view
+  // Is there a title for the current view?
   hasTitle() {
     return ( this.registerView && this.registerTitle ) || ( !this.registerView && this.loginTitle );
   }
 
+  // Get the title text for the current view
   title() {
     return this.registerView ? this.registerTitle : this.loginTitle;
+  }
+
+  // Is there a content block id for the current view?
+  hasContentBlock() {
+    return ( this.registerView && this.registerContentBlockId ) || ( !this.registerView && this.loginContentBlockId );
+  }
+
+  // Get the content block id for the current view
+  contentBlockId() {
+    return this.registerView ? this.registerContentBlockId : this.loginContentBlockId;
   }
 }
