@@ -775,13 +775,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
                                                                       token,
-                                                                      string.Format(",,,{0},\"{1}\"",
+                                                                      string.Format(",,,{0},{1}",
                                                                                     groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
-                                                                                    groupTypeId));
+                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", groupTypeId)));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();

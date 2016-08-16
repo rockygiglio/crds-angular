@@ -599,12 +599,13 @@ namespace crds_angular.test.controllers
         {
             var groupId = 9876;
             var groupReasonEndedId = 1;
+            string token = "1234frd32";
 
-            _groupServiceMock.Setup(mocked => mocked.EndDateGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
+            _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
 
             IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
 
-            _groupServiceMock.VerifyAll();
+            _groupToolServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<Boolean>), result);
 
@@ -615,13 +616,14 @@ namespace crds_angular.test.controllers
         {
             var groupId = 9876;
             var groupReasonEndedId = 1;
+            string token = "1234frd32";
             Exception ex = new Exception();
 
-            _groupServiceMock.Setup(mocked => mocked.EndDateGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
+            _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
 
             IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
 
-            _groupServiceMock.VerifyAll();
+            _groupToolServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
         }

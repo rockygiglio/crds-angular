@@ -81,7 +81,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupService.EndDateGroup(groupId, groupReasonEndedId);
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
                     return Ok();
                 } 
                 catch (Exception e)

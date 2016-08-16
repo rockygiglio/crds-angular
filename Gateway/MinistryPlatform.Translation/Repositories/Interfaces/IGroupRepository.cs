@@ -50,7 +50,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken);
         void endDateGroupParticipant(int participantId, int groupId, DateTime? endDate = null);
         void UpdateGroupInquiry(int groupId, int inquiryId, bool approved);
-        List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null);
+        List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null);
 
         void EndDateGroup(int groupId, DateTime? endDate, int? reasonEndedId);
 
