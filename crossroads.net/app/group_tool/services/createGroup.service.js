@@ -524,6 +524,7 @@ export default class CreateGroupService {
         this.model.group.groupName = smallGroup.groupName;
         this.model.group.groupDescription = smallGroup.groupDescription;
         this.model.group.startDate = moment(smallGroup.startDate).format('MM/DD/YYYY');
+        this.model.group.participants = _.map(smallGroup.Participants, (data) => {return new Participant(data)});
     }
 
 
@@ -617,6 +618,8 @@ export default class CreateGroupService {
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
+        if(this.model.group.participants == null || this.model.group.participants == undefined)
+        {
         smallGroup.participants = [new Participant({
             groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
             , nickName: this.model.profile.nickName
@@ -624,6 +627,11 @@ export default class CreateGroupService {
             , email: this.model.profile.emailAddress
             , contactId: parseInt(this.session.exists('userId'))
         })];
+        }
+        else
+        {
+            smallGroup.participants = this.model.group.participants;
+        }
         smallGroup.profile = new Profile(this.model.profile);
         smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
     }
