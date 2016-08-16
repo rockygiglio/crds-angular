@@ -36,7 +36,7 @@ export class CurrentSeriesComponent {
   currentSeriesTags: string[];
   currentSeriesTrailer: string;
   
-  constructor(private cmsDataService: any) {
+  constructor(private cmsDataService: CMSDataService) {
   }
   
   ngOnInit() {

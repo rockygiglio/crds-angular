@@ -53,23 +53,19 @@ describe('Component: Current Series', () => {
                         })
                     )
                     );
-
                 });
-
                 service = c;
             }
         )
     );
 
     it('property values are set after component initializes', () => {
-
         service.getCurrentSeries().subscribe(rsp => {
-
             let currentSeries = new CurrentSeriesComponent(service);
+            
             currentSeries.ngOnInit();
-
             expect(currentSeries.currentSeriesTitle).toBe('Hello World');
-
+            expect(currentSeries.currentSeriesDescription).toBe('This is my hello world test');
         });
     }
     );
