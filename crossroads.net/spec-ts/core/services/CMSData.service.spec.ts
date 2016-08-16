@@ -78,10 +78,11 @@ describe('Service: CMSData', () => {
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
         backend.connections.subscribe((connection: MockConnection) => {
+          let todaysDate = new Date().toISOString().slice(0, 10)
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `${__CMS_ENDPOINT__}api/messages?date__sort=DESC&SeriesID__GreaterThan=0&__limit%5B%5D=4`);
+            `${__CMS_ENDPOINT__}api/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&SeriesID__GreaterThan=0&__limit[]=4`);
         });
 
         service.getXMostRecentMessages(4);
