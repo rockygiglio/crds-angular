@@ -24,6 +24,5 @@ export class ContentCardComponent implements OnInit{
     if (typeof this.content.delay === 'undefined' || isNaN(this.content.delay)) {
       this.content.delay = 0;
     }
-    console.log(this.content);
   }
 }

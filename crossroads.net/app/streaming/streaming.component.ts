@@ -54,10 +54,10 @@ export class StreamingComponent {
       this.inProgress = inProgress;
     });
 
-    // new WOW({
-    //   offset: 100,
-    //   mobile: false
-    // }).init();
+    new WOW({
+      offset: 100,
+      mobile: false
+    }).init();
 
     this.cmsDataService
         .getXMostRecentMessages(4)
@@ -71,10 +71,9 @@ export class StreamingComponent {
               event.delay = i * 100;
               event.subtitle = event.title
               event.title = '';
-              event.content = event.description
               event.url = `/message/${event.id}/${slugPipe.transform(event.title)}`
               event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
-              
+
               if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
                 event.image = event.messageVideo.still.filename
               } 

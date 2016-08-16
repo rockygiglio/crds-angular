@@ -8,7 +8,7 @@
     </figcaption>
   </figure>
   <section>
-    <h3>{{ content.subtitle }}</h3>
-    <p>{{ content.content | htmlToPlainText | truncate: 38 }}</p>
+    <h3 *ngIf="content.subtitle">{{ content.subtitle | truncate: 38 }}</h3>
+    <p>{{ content.description | htmlToPlainText }}</p>
   </section>
 </article>
