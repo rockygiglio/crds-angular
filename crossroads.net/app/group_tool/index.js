@@ -31,3 +31,4 @@ import editGroup from './edit_group';
 import groupSearchResults from './group_search_results';
 import groupInvitation from './group_invitation';
 import filterResults from './group_search_filter';
+import groupEmail from './group_email';

@@ -1,15 +1,15 @@
 
 import constants from 'crds-constants';
-import MessageParticipantsController from '../../../../../app/group_tool/group_detail/participants/message_participants/messageParticipants.controller';
+import GroupEmailController from '../../../app/group_tool/group_email/groupEmail.controller';
 
-describe('MessageParticipantsController', () => {
+describe('GroupEmailController', () => {
     let fixture,
         rootScope;
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
     beforeEach(inject(function($injector) {
-        fixture = new MessageParticipantsController();
+        fixture = new GroupEmailController();
         fixture.form = {};
         fixture.form.$valid = true;
         rootScope = $injector.get('$rootScope');
