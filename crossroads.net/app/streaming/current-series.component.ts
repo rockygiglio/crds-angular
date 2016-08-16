@@ -11,18 +11,15 @@ import { ScheduleComponent } from './schedule.component'
 // pipes
 import { ReplaceNonAlphaNumericPipe } from '../media/pipes/replace-non-alpha-numeric.pipe';
 import { HtmlToPlainTextPipe } from '../../core/pipes/html-to-plain-text.pipe';
-import { TruncatePipe } from '../../core/pipes/truncate.pipe';
 
 var WOW = require('wow.js/dist/wow.min.js');
-var $:any = require('jquery');
-declare var _: any;
 var moment = require('moment');
 
 @Component({
   selector: 'current-series',
   directives: [DynamicContentNg2Component, ScheduleComponent],
   templateUrl: './current-series.ng2component.html',
-  pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
+  pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe]
 })
 
 export class CurrentSeriesComponent {
@@ -46,7 +43,7 @@ export class CurrentSeriesComponent {
       })
   }
 
-  parseData(cs:any) {
+  private parseData(cs:any) {
     this.currentSeries = cs
     this.currentSeriesTitle = cs.title
     this.currentSeriesDescription = cs.description
