@@ -1001,22 +1001,20 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(groupResp);
         }
 
-        //[Test]
-        //public void UpdateParticipantShouldCallRepository()
-        //{
-        //    var participant = new GroupParticipantDTO()
-        //    {
-        //        GroupParticipantId = 1,
-        //        GroupRoleId = 22,
-        //        GroupRoleTitle = "Group Leader"
-        //    };
+        [Test]
+        public void ShouldCallRepositoryUpdateParticipant()
+        {
+            var participant = new GroupParticipantDTO()
+            {
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
 
-        //    var partList = new List<GroupParticipantDTO>();
-        //    partList.Add(participant);
+            groupService.Setup(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()));
+            fixture.UpdateGroupParticipant(participant);
+            groupService.Verify();
 
-        //    groupService.Setup(mocked => mocked.UpdateGroupParticipant());
-        //    fixture.UpdateGroupParticipant(participant);
-
-        //}
+        }
     }
 }
