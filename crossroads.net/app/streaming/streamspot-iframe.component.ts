@@ -14,7 +14,7 @@ export class StreamspotIframeComponent {
     this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
 
       if ( inProgress === false ) {
-        window.location.href = '/live';
+        // window.location.href = '/live';
       }
       
     });

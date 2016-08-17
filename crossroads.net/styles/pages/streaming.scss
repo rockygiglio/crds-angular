@@ -551,29 +551,23 @@ streaming {
   padding: 0 0 5em;
   color: #FFF;
 
-  header {
-    margin-bottom: 2em;
-  }
-
   content-card {
-    margin: 2em 0;
+
+    @media only screen and (max-width:  $screen-md-min - 1){
+      @include make-sm-column(6);
+      &:nth-child(2n+1) {
+        clear: left;
+      }
+    }
+    @media only screen and (min-width:  $screen-md-min){
+      @include make-md-column(6);
+    }
 
     &, h3 {
       color: $gray;
     }
     a {
       cursor: default;
-    }
-    article {
-      @media only screen and (max-width:  $screen-md-min - 1){
-        @include make-sm-column(6);
-        &:nth-child(2n+1) {
-          clear: left;
-        }
-      }
-      @media only screen and (min-width:  $screen-md-min){
-        @include make-md-column(6);
-      }
     }
 
     figure {
@@ -676,38 +670,18 @@ streaming {
       @include make-sm-column(6);
     }
     .participate {
-      @include make-sm-column(4);
+      @include make-sm-column(5);
       @include make-sm-column-offset(1);
     }
   }
 
-  .related {
+  .digital-program {
     background: #252526;
+    padding-bottom: 15px;
 
-    // a {
-    //   display: block;
-    //   width: 100%;
-    //   color: #FFF;
-    //   &:hover {
-    //     color: darken(#FFF, 20%);
-    //   }
-    // }
-    // figure {
-    //   @include make-xs-column(6);
-    //   margin-bottom: 2em;
-    //   position: relative;
-    //   figcaption {
-    //     @include crds-make-condensed();
-    //     font-size: 200%;
-    //     letter-spacing: normal;
-
-    //     @media (min-width: $screen-sm-min) {
-    //       position: absolute;
-    //       bottom: 0.75em;
-    //       left: 1em;
-    //     }
-    //   }
-    // }
+    header {
+      @include make-md-column(12);
+    }
 
     .gradient {
       position: relative;
@@ -729,6 +703,9 @@ streaming {
   }
 
   .participate {
+    .promo {
+      @include make-md-column(12);
+    }
     @media (min-width: $screen-md-min) {
       figure {
         @include make-md-column(4);
@@ -737,8 +714,16 @@ streaming {
           width: 100%;
         }
       }
-      article {
+      section {
         @include make-md-column(8);
+      }
+    }
+
+    .promo {
+      &:last-child {
+        hr {
+          display: none;
+        }
       }
     }
 
@@ -755,6 +740,9 @@ streaming {
     hr {
       margin-top: 0;
       border-color: darken($gray, 10%);
+      clear: both;
+
+      
     }
     figure {
       margin-bottom: 1em;

@@ -24,6 +24,7 @@ export class VideoComponent {
   displayCounter: boolean = true;
   countSubmit: boolean = false;
   dontMiss: Array<any> = [];
+  promos: Array<any> = [];
 
   constructor(private cmsDataService: CMSDataService) {
     this.cmsDataService
@@ -32,25 +33,26 @@ export class VideoComponent {
           data.forEach((feature, i, data) => {
             // null status indicates a published feature
             if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
+              feature.delay = i * 100
+              feature.url = '';
+
+              if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
+                feature.image = feature.image.filename;
+              } else {
+                feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
+              }
               if (feature.section.toLowerCase() === 'today') {
-                feature.delay = i * 100
-                feature.url = '';
-
-                if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
-                  feature.image = feature.image.filename;
-                } else {
-                  feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
-                }
-
                 this.dontMiss.push(feature)
+              } else if (feature.section.toLowerCase() === 'promo') {
+                this.promos.push(feature);
               }
             }
           })
         });
     
-    new WOW({
-      mobile: false
-    }).init();
+    // new WOW({
+    //   mobile: false
+    // }).init();
   }
 
   increaseCount() {
