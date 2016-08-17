@@ -189,6 +189,7 @@ class RequestChildcareController {
   }
 
   onStartDateChange(startDate) {
+    this.startDate = startDate;
     this.runDateGenerator = true;
     this.filteredTimes = this.preferredTimes.filter((time) => {
       if (time.End_Date === null) { return true; }
@@ -215,7 +216,7 @@ class RequestChildcareController {
     });
     context.choosenGroup = { dp_RecordID: d.GroupId,  dp_RecordName: d.GroupName };
     context.choosenFrequency = d.Frequency;
-    context.notes = d.DecisionNotes;
+    context.notes = d.Notes;
 
     context.preferredTimes.$promise.then(() => {
       context.choosenPreferredTime = _.find(context.filteredTimes, (c) => {

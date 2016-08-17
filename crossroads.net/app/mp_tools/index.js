@@ -24,9 +24,6 @@
   // The Check Batch Processor Tool
   require('./check_batch_processor');
 
-  // The Trip Participant Tool
-  require('./trip_participants');
-
   // The Trip Private Invitation Tool
   require('./trip_private_invite');
 

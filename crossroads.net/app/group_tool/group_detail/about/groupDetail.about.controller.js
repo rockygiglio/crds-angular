@@ -14,6 +14,7 @@ export default class GroupDetailAboutController {
     this.isLeader = false;
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
+    this.forSearch = (this.forSearch === undefined || this.forSearch === null) ? false : this.forSearch;
   }
 
   $onInit() {
@@ -53,16 +54,18 @@ export default class GroupDetailAboutController {
 
   //this is not efficient, gets called every time the digest cycle runs
   getAddress() {
-    if (this.ready){
-      if (this.data.address != null || this.data.address != undefined){
-        if (this.state.current.name == "grouptool.edit.preview" || this.state.current.name == "grouptool.create.preview" || !this.userInGroup()){
-          return this.data.address.getZip()
-        } else {
-          return this.data.address.toString()
-        }
-      } else {
-        return 'Online'
-      }
+    if(!this.ready) {
+      return undefined;
+    }
+
+    if(!this.data.hasAddress()) {
+      return 'Online';
+    }
+
+    if (!this.userInGroup()) {
+      return `${this.data.address.city}, ${this.data.address.state} ${this.data.address.zip}`;
+    } else {
+      return this.data.address.toString();
     }
   }
 
@@ -80,5 +83,13 @@ export default class GroupDetailAboutController {
       return this.data.participantInGroup(this.cookies.get("userId"));
     }
     return false;
+  }
+
+  goToEdit() {
+    this.state.go('grouptool.edit', {groupId: this.state.params.groupId});
+  }
+
+  goToEnd() {
+    this.state.go('grouptool.end-group', {groupId: this.state.params.groupId});
   }
 }

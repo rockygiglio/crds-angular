@@ -1,21 +1,24 @@
 <preloader full-screen='false' ng-show='!groupDetailParticipants.ready'> </preloader>
 
 <!-- List or Edit participants -->
-<div class='container-fluid' 
+<div
   ng-show='groupDetailParticipants.ready'
   ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
-  <div class='row'>
-    <div class='col-md-12 group-participants'>
-      <group-detail-participant-card 
-        ng-repeat='participant in groupDetailParticipants.data'
-        delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
-        participant='participant'
-        edit='groupDetailParticipants.isEditView()'>
+  <div class='group-detail-participant-list row push-top'>
+    <div ng-repeat='participant in groupDetailParticipants.data' class="group-detail-participant-item col-xs-12 col-sm-6 col-lg-4 push-bottom">
+      <group-detail-participant-card
+                                     delete-action='groupDetailParticipants.beginRemoveParticipant(participant)'
+                                     role-action='groupDetailParticipants.beginChangeParticipantRole(participant)'
+                                     participant='participant'
+                                     edit='groupDetailParticipants.isEditView()'>
       </group-detail-participant-card>
     </div>
   </div>
   <div class='row'>&nbsp;</div>
-  <div class='row'>
+
+  <div ng-if="groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
+
+  <div ng-if="groupDetailParticipants.data.length > 1" class='row'>
     <div class='col-md-12'>
       <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
         <a type='button' class='btn btn-primary' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
@@ -45,10 +48,19 @@
 
 <!-- Email participants -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isEmailView()'>
-  <message-participants
+  <group-email
     message='groupDetailParticipants.groupMessage'
     cancel-action='groupDetailParticipants.cancelMessageParticipants(message)'
     submit-action='groupDetailParticipants.messageParticipants(message)'
-    processing='groupDetailParticipants.processing'/>
+    processing='groupDetailParticipants.processing'
+    header='Email Group'/>
   />
+</div>
+
+<!-- Change Participant Role -->
+<div ng-if="groupDetailParticipants.isRoleView()">
+  <change-participant-role
+    participant="groupDetailParticipants.roleParticipant"
+    cancel-action="groupDetailParticipants.finishChangeParticipantRole()"
+    submit-action="groupDetailParticipants.finishChangeParticipantRole()"></change-participant-role>
 </div>

@@ -9,6 +9,7 @@ describe('GroupDetailRequestsController', () => {
       state,
       rootScope,
       log,
+      stateParams,
       qApi;
 
   var mockProfile;
@@ -26,6 +27,7 @@ describe('GroupDetailRequestsController', () => {
     rootScope = $injector.get('$rootScope');
     log = $injector.get('$log');
     qApi = $injector.get('$q');
+    stateParams = $injector.get('$stateParams');
 
     rootScope.MESSAGES = {
       generalError: 'general error',
@@ -37,7 +39,7 @@ describe('GroupDetailRequestsController', () => {
       groupId: 123
     };
 
-    fixture = new GroupDetailRequestsController(groupService, state, rootScope, log);
+    fixture = new GroupDetailRequestsController(groupService, state, stateParams, rootScope, log);
   }));
 
   describe('the constructor', () => {
@@ -338,6 +340,52 @@ describe('GroupDetailRequestsController', () => {
 
         expect(groupService.approveDenyInquiry).toHaveBeenCalledWith(fixture.groupId, false, inquires[0]);
         expect(rootScope.$emit).toHaveBeenCalledWith('notify', rootScope.MESSAGES.groupToolDenyInquiryFailureGrowler);
+      });
+    });
+
+    describe('Request and invite method', () => {
+      it('hasRequests() should be false with no requests', () => {
+        fixture.inquired = [];
+        expect(fixture.hasRequests()).toBeFalsy();
+      });
+
+      it('hasRequests() should be true with some requests', () => {
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequests()).toBeTruthy();
+      });
+
+      it('hasInvites() should be false with no invites', () => {
+        fixture.invited = [];
+        expect(fixture.hasInvites()).toBeFalsy();
+      });
+
+      it('hasInvites() should be true with some invites', () => {
+        fixture.invited = [ {} ];
+        expect(fixture.hasInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be false with no requests or invites', () => {
+        fixture.invited = [];
+        fixture.inquired = [];
+        expect(fixture.hasRequestsOrInvites()).toBeFalsy();
+      });
+
+      it('hasRequestsOrInvites() should be true with no requests but some invites', () => {
+        fixture.invited = [ {} ];
+        fixture.inquired = [];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be true with no invites but some requests', () => {
+        fixture.invited = [ ];
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
+      });
+
+      it('hasRequestsOrInvites() should be true with requests and invites', () => {
+        fixture.invited = [ {} ];
+        fixture.inquired = [ {} ];
+        expect(fixture.hasRequestsOrInvites()).toBeTruthy();
       });
     });
   });

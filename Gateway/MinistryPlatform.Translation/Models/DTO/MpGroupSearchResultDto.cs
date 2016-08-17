@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -84,19 +85,28 @@ namespace MinistryPlatform.Translation.Models.DTO
             {
                 return;
             }
-            var attributes = JsonConvert.DeserializeObject<List<MpObjectAttribute>>(_unmappedData["MultiSelectAttributes"].Value<string>());
-            foreach (var a in attributes)
+
+            try
             {
-                if (!AttributeTypes.ContainsKey(a.AttributeTypeId))
+                var attributes = JsonConvert.DeserializeObject<List<MpObjectAttribute>>(_unmappedData["MultiSelectAttributes"].Value<string>());
+                foreach (var a in attributes)
                 {
-                    AttributeTypes.Add(a.AttributeTypeId, new MpObjectAttributeType
+                    if (!AttributeTypes.ContainsKey(a.AttributeTypeId))
                     {
-                        AttributeTypeId = a.AttributeTypeId,
-                        Name = a.AttributeTypeName
-                    });
+                        AttributeTypes.Add(a.AttributeTypeId, new MpObjectAttributeType
+                        {
+                            AttributeTypeId = a.AttributeTypeId,
+                            Name = a.AttributeTypeName
+                        });
+                    }
+                    a.Selected = true;
+                    AttributeTypes[a.AttributeTypeId].Attributes.Add(a);
                 }
-                a.Selected = true;
-                AttributeTypes[a.AttributeTypeId].Attributes.Add(a);
+            }
+            catch (Exception)
+            {
+                // we are intentionally suppressing error on parsing group attributes so the user will continue to see valid results -
+                // consider refactoring to add logging for bad group data post-MVP
             }
         }
 

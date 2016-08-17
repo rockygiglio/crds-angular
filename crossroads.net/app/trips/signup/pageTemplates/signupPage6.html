@@ -202,7 +202,12 @@
         </div>
       </div>
 
-      <button ng-click='tripsSignup.handleSubmit(tripsSignup.tripAppPage6)' class="btn btn-primary pull-right">Submit Application</button>
+      <button ng-click='tripsSignup.handleSubmit(tripsSignup.tripAppPage6)'
+              class="btn btn-primary pull-right"
+              ng-disabled="tripsSignup.submitting" >
+              <span ng-if="tripsSignup.submitting"> Submitting Application... </span>
+              <span ng-if="!tripsSignup.submitting"> Submit Application </span>
+      </button>
     </ng-form>
   </div>
 </div><!--/row-->
