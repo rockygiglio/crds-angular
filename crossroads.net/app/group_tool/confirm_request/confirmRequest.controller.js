@@ -40,7 +40,13 @@ export default class ConfirmRequestController {
     }
   }
 
-  sendEmail() {
+  sendEmail(form) {
+    // Validate the form - if ok, then invoke the submit callback
+    if(!form.$valid) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      return;
+    }
+
     this.processing = true;
 
     this.messageService.sendLeaderMessage(this.groupMessage).then(
