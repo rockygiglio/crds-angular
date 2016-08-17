@@ -6,6 +6,7 @@ export default function ConfirmRequestComponent() {
 
   let confirmRequestComponent = {
     bindings: {
+      emailLeader: '<',
       group: '<',
       modalInstance: '<'
     },

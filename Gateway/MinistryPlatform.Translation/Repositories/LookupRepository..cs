@@ -77,6 +77,12 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformServiceImpl.GetLookupRecords(_configurationWrapper.GetConfigIntValue("WorkTeams"), token);
         }
 
+        public List<Dictionary<string, object>> GroupReasonEnded(string token)
+        {
+            token = ApiLogonIfNotAuthenticated(token);
+            return _ministryPlatformServiceImpl.GetRecordsDict(AppSettings("GroupEndedLookup"), token);
+        }
+
         public IEnumerable<T> GetList<T>(string token)
         {
             if (typeof (T) == typeof (MpWorkTeams))

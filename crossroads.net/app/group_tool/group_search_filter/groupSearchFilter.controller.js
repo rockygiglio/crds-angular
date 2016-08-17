@@ -49,7 +49,7 @@ export default class GroupSearchResultsController {
 
   // TODO - This is probably not very efficient, might need to optimize with large result sets
   ageRangeFilter(searchResult) {
-    delete this.currentFilters['Age Range'];    
+    delete this.currentFilters['Age Range'];
     let selectedAgeRanges = this.ageRanges.filter((a) => {
       return a.selected === true;
     }).map((a) => {
@@ -65,6 +65,11 @@ export default class GroupSearchResultsController {
       this.applyFilters();
     };
 
+    // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
+    if(!searchResult.ageRange || !Array.isArray(searchResult.ageRange)) {
+      return false;
+    }
+    
     let filteredResults = searchResult.ageRange.filter((a) => {
       return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
     });
@@ -77,7 +82,7 @@ export default class GroupSearchResultsController {
     {
       this.ageRanges[i].selected = false;
     }
-    delete this.currentFilters['Age Range'];    
+    delete this.currentFilters['Age Range'];
   }
 
   loadAgeRanges() {
@@ -92,6 +97,6 @@ export default class GroupSearchResultsController {
       }
     ).finally(
       () => {
-    });
+      });
   }
 }

@@ -73,12 +73,8 @@
 
     </div>
   </div>
-
-  <div class='row push-top' ng-if='groupDetailAbout.isLeader'>
-    <div class='col-md-12'>
-      <p class='text-right'><button type='button' ng-click='groupDetailAbout.goToEdit()' class='btn btn-primary btn-block-mobile'>Edit</button></p>
-    </div>
+  <div class='push-top text-right' ng-if='groupDetailAbout.isLeader'>
+      <button type='button' ng-click="groupDetailAbout.goToEnd()" class='push-half-bottom btn btn-standard btn-block-mobile'>End Group</button>
+      <button type='button' ng-click='groupDetailAbout.goToEdit()' class='push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
   </div>
-
-
 </div>

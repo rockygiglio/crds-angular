@@ -71,6 +71,34 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Ends a group and emails all participants to let them know
+        /// it is over
+        /// </summary>
+        /// <param name="groupId">The id of a group</param>
+        /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
+        /// <returns>Http Result</returns>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [HttpPost]
+        [Route("api/group/{groupId:int}/end")]
+        public IHttpActionResult EndGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                    return Ok();
+                } 
+                catch (Exception e)
+                {
+                    _logger.Error("Could not end group", e);
+                    return BadRequest();
+                }
+            });
+        }
+
+        /// <summary>
         /// Edit a group for the authenticated user.
         /// </summary>
         /// <param name="group">The data required to edit the group, GroupDTO</param>
