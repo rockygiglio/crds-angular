@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
@@ -824,6 +822,45 @@ namespace crds_angular.test.Services
             _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
+            _communicationRepository.VerifyAll();
+        }
+
+        [Test]
+        public void TestSendAllGroupLeadersEmail()
+        {
+            string token = "123ABC";
+
+            var groupParticipantDTO = new Participant
+            {
+                ContactId = 123,
+                EmailAddress = "test@test.com",
+                ParticipantId = 456
+            };
+
+            var message = new GroupMessageDTO
+            {
+                Body = "hi my name is",
+                Subject = "I need help"
+            };
+
+            var group = new GroupDTO();
+            group.GroupId = 1231;
+            group.GroupName = "Test Group";
+            group.Participants = new List<GroupParticipantDTO>
+            {
+                new GroupParticipantDTO
+                {
+                    ContactId = 123,
+                    GroupRoleId = 22,
+                    ParticipantId = 456
+                }
+            };
+
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
+            _participantRepository.Setup(m => m.GetParticipantRecord(It.IsAny<string>())).Returns(groupParticipantDTO);
+            _groupService.Setup(m => m.GetGroupDetails(It.IsAny<int>())).Returns(group);
+
+            _fixture.SendAllGroupLeadersEmail(token, 1, message);
             _communicationRepository.VerifyAll();
         }
 
