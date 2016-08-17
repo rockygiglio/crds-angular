@@ -1,49 +1,38 @@
 import CONSTANTS from '../../../../constants';
 
 export default class ChangeParticipantRoleController {
-  constructor(GroupService) {
+  constructor(GroupService, $anchorScroll, $rootScope) {
     this.groupService = GroupService;
-    let participant = this.participant;
+    this.groupRoles = CONSTANTS.GROUP.ROLES;
     this.processing = false;
+    this.anchorScroll = $anchorScroll;
+    this.rootScope = $rootScope;
   }
 
   submit() {
     this.processing = true;
-    if (this.isParticipant()){
-      this.setParticipantRole();
-    }
-    else if (this.isLeader()){
-      this.setLeaderRole();
-    }
-    else if (this.isApprentice()) {
-      this.setApprenticeRole();
-    }
-    var promise = this.groupService.updateParticipant(this.participant)
-      .then((data) => {
-        this.processing = false;
-        this.state.go('grouptool.mygroups');
-      });
-  }
 
-  setParticipantRole() {
-    this.participant.groupRoleId = CONSTANTS.GROUP.ROLES.MEMBER;
+      var promise = this.groupService.updateParticipant(this.participant)
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        },
+        (data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }).finally(() => {
+          this.processing = false;
+          this.cancel();
+        });
+
   }
 
   isParticipant() {
-    return this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.MEMBER;
-  }
-
-  setLeaderRole() {
-    this.participant.groupRoleId = CONSTANTS.GROUP.ROLES.LEADER;
+    return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.MEMBER);
   }
 
   isLeader() {
     return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER);
   }
 
-  setApprenticeRole() {
-    this.participant.groupRoleId = CONSTANTS.GROUP.ROLES.APPRENTICE;
-  }
   isApprentice() {
     return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE);
   }
@@ -71,5 +60,6 @@ export default class ChangeParticipantRoleController {
   cancel() {
     // Invoke the parent callback function
     this.cancelAction();
+    this.anchorScroll();
   }
 }
