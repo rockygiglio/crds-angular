@@ -24,6 +24,8 @@ export default class GroupSearchResultsController {
         return this.ageRangeFilter(r);
       })
     };
+
+    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
