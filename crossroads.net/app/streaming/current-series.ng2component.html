@@ -5,7 +5,7 @@
     </figure>
 
     <main id="series" class="container">
-      <article class="wow fadeInUp">
+      <article class="wow fadeInUp" [hidden]="!visible">
         <h2>{{currentSeriesTitle}} <small>{{ currentSeriesRunningDates}} </small></h2>
         <p class="lead">{{currentSeriesDescription | htmlToPlainText}}</p>
         <p class="small">Topics covered:</p>

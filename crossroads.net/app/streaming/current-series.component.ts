@@ -23,15 +23,16 @@ var moment = require('moment');
 })
 
 export class CurrentSeriesComponent {
-  currentSeries: any;
-  currentSeriesTitle: string;
-  currentSeriesPicture: string;
-  currentSeriesDescription: string;
-  currentSeriesRunningDates: string;
-  currentSeriesStartDate: string;
-  currentSeriesEndDate: string;
-  currentSeriesTags: string[];
-  currentSeriesTrailer: string;
+
+  currentSeriesTitle: string = '';
+  currentSeriesPicture: string = '';
+  currentSeriesDescription: string = '';
+  currentSeriesRunningDates: string = '';
+  currentSeriesStartDate: string = '';
+  currentSeriesEndDate: string = '';
+  currentSeriesTags: string[] = [''];
+  currentSeriesTrailer: string = '';
+  visible: boolean = false;
   
   constructor(private cmsDataService: CMSDataService) {
   }
@@ -44,29 +45,40 @@ export class CurrentSeriesComponent {
   }
 
   private parseData(cs:any) {
-    this.currentSeries = cs
-    this.currentSeriesTitle = cs.title
-    this.currentSeriesDescription = cs.description
-    this.currentSeriesPicture = cs.image.filename
-    this.currentSeriesStartDate = cs.startDate
-    this.currentSeriesEndDate = cs.endDate
-    this.currentSeriesRunningDates = this.getRunningDates()
-    this.currentSeriesTags = this.getTagsArray(cs)
-    this.currentSeriesTrailer = cs.trailerLink
+
+    if ( cs === undefined ) {
+      return;
+    }
+
+    this.currentSeriesTitle = cs.title;
+    this.currentSeriesDescription = cs.description;
+    this.currentSeriesStartDate = cs.startDate;
+    this.currentSeriesEndDate = cs.endDate;
+    this.currentSeriesTrailer = cs.trailerLink;
+    this.setRunningDates();
+    this.setTagsArray(cs);
+
+    if ( cs.image !== undefined ) {
+      try {
+        this.currentSeriesPicture = cs.image.filename;
+      }
+      finally {}
+    }
+    
+    this.visible = true;
   }
 
-  private getRunningDates() {
+  private setRunningDates() {
     let momentStartDate = moment(this.currentSeriesStartDate).format("MMMM Do");
     let momentEndDate = moment(this.currentSeriesEndDate).format("MMMM Do");
-    return `RUNS: ${momentStartDate} - ${momentEndDate}`
+    this.currentSeriesRunningDates = `RUNS: ${momentStartDate} - ${momentEndDate}`;
   }
 
-  private getTagsArray(currentSeries): string[] {
-    let tagsArray = currentSeries.tags.map(this.getTagTitle)
-    return tagsArray
+  private setTagsArray(currentSeries) {
+    this.currentSeriesTags = currentSeries.tags.map(this.getTagTitle);
   }
 
   private getTagTitle(tag) {
-    return tag.title
+    return tag.title;
   }
 }
