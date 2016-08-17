@@ -58,5 +58,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders);
         int UpdateGroup(MpGroup mpGroup);
         int UpdateGroupParticipant(List<MpGroupParticipant> participants);
+        void CreateGroupInquiry(MpInquiry inquiry);
     }
 }

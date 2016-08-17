@@ -24,11 +24,13 @@ namespace crds_angular.Services
         private readonly IContentBlockService _contentBlockService;
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
+        private readonly IContactRepository _contactRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
 
+        private readonly int _defaultGroupContactEmailId;
+        private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
-
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -54,7 +56,8 @@ namespace crds_angular.Services
                            IContentBlockService contentBlockService,
                            IConfigurationWrapper configurationWrapper, 
                            IInvitationRepository invitationRepository,
-                           IAddressProximityService addressProximityService)
+                           IAddressProximityService addressProximityService,
+                           IContactRepository contactRepository)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -65,7 +68,10 @@ namespace crds_angular.Services
             _contentBlockService = contentBlockService;
             _invitationRepository = invitationRepository;
             _addressProximityService = addressProximityService;
+            _contactRepository = contactRepository;
 
+            _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
+            _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
@@ -352,6 +358,45 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message)
+        {
+            var requestor = _participantRepository.GetParticipantRecord(token);
+            var group = _groupService.GetGroupDetails(groupId);
+
+            var fromContact = new MpContact
+            {
+                ContactId = _defaultGroupContactEmailId,
+                EmailAddress = "groups@crossroads.net"
+            };
+
+            var replyToContact = new MpContact
+            {
+                ContactId = requestor.ContactId,
+                EmailAddress = requestor.EmailAddress
+            };
+
+            var leaders = @group.Participants.
+                Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).
+                Select(groupParticipant => new MpContact
+                {
+                    ContactId = groupParticipant.ContactId,
+                    EmailAddress = groupParticipant.Email
+                }).ToList();
+
+            var email = new MpCommunication
+            {
+                EmailBody = message.Body,
+                EmailSubject = string.Format("Crossroads Group {0}: {1}", group.GroupName, message.Subject),
+                AuthorUserId = _defaultAuthorUserId,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyToContact,
+                ToContacts = leaders
+            };
+
+            _communicationRepository.SendMessage(email);
+        }
+
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
@@ -494,6 +539,35 @@ namespace crds_angular.Services
             }
 
             return groups;
+        }
+        
+        public void SubmitInquiry(string token, int groupId)
+        {
+            var active = true;
+            var participant = _participantRepository.GetParticipantRecord(token);
+            var contact = _contactRepository.GetContactById(participant.ContactId);
+
+            // check to see if the inquiry is going against a group where a person is already a member or has an outstanding request to join
+            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && (r.Placed == null || r.Placed == true));
+            var participants = _groupRepository.GetGroupParticipants(groupId, active).Where(r => r.ContactId == participant.ContactId);
+
+            if (requestsForContact.Any() || participants.Any())
+            {
+                throw new ExistingRequestException("User is already member or has request");
+            }
+
+            MpInquiry mpInquiry = new MpInquiry
+            {
+                ContactId = participant.ContactId,
+                GroupId = groupId,
+                EmailAddress = participant.EmailAddress,
+                PhoneNumber = contact.Home_Phone,
+                FirstName = contact.Nickname,
+                LastName = contact.Last_Name,
+                RequestDate = System.DateTime.Now
+            };
+
+            _groupRepository.CreateGroupInquiry(mpInquiry);
         }
     }
 }

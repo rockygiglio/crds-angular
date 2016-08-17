@@ -27,4 +27,9 @@ namespace crds_angular.Exceptions
     {
         public NotGroupLeaderException(string message) : base(message) { StatusCode = HttpStatusCode.Forbidden; }
     }
+
+    public class ExistingRequestException : GroupParticipantRemovalException
+    {
+        public ExistingRequestException(string message) : base(message) { StatusCode = HttpStatusCode.Conflict; }
+    }
 }

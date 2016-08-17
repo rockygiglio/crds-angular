@@ -937,5 +937,37 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("Updated group " + retValue);
             return (retValue);
         }
+
+        public void CreateGroupInquiry(MpInquiry inquiry)
+        {
+            var values = new Dictionary<string, object>
+            {
+                {"Contact_ID", inquiry.ContactId},
+                {"Group_ID", inquiry.GroupId},
+                {"Email", inquiry.EmailAddress},
+                {"Phone", inquiry.PhoneNumber},
+                {"First_Name", inquiry.FirstName},
+                {"Last_Name", inquiry.LastName},
+                {"Inquiry_Date", System.DateTime.Now}
+            };
+
+            WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.CreateSubRecord(_configurationWrapper.GetConfigIntValue("GroupInquiresSubPage"),
+                                                            inquiry.GroupId,
+                                                            values,
+                                                            token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error creating group inquiry: " + e.Message);
+                }
+            });
+        }
+
+       
     }
 }
