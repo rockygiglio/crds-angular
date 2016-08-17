@@ -577,29 +577,26 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void ShouldNotEditGroup()
+        public void ShouldCallServiceUpdateParticipant()
         {
-            Exception ex = new Exception();
-
-            var group = new GroupDTO()
+            var participant = new GroupParticipantDTO()
             {
-                GroupName = "This will work"
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
             };
 
-            _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
-
-            IHttpActionResult result = _fixture.EditGroup(group);
-            _groupServiceMock.VerifyAll();
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+            _groupServiceMock.Setup(x => x.UpdateGroupParticipant(It.IsAny<GroupParticipantDTO>()));
+            _fixture.UpdateParticipant(participant);
+            _groupServiceMock.Verify();
         }
 
-        [Test]
+        public void ShouldEndGroupSuccessfully()
         {
             var groupId = 9876;
             var groupReasonEndedId = 1;
             string token = "1234frd32";
-            var participant = new GroupParticipantDTO()
+
             _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
 
             IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
@@ -612,13 +609,17 @@ namespace crds_angular.test.controllers
 
         [Test]
         public void ShouldNotEndGroup()
-            {
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            string token = "1234frd32";
             Exception ex = new Exception();
-            };
+
             _groupToolServiceMock.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
-            _groupServiceMock.Setup(x => x.UpdateGroupParticipant(It.IsAny<GroupParticipantDTO>()));
+
             IHttpActionResult result = _fixture.EndGroup(groupId, groupReasonEndedId);
-            _fixture.UpdateParticipant(participant);
+
+            _groupToolServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
         }
