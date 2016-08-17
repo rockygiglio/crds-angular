@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions;
@@ -10,16 +11,24 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using Crossroads.Utilities.Interfaces;
+using log4net;
 
 namespace crds_angular.Controllers.API
 {
     public class GroupToolController : MPAuth
     {
-        private readonly Services.Interfaces.IGroupToolService _groupToolService;        
+        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly Services.Interfaces.IGroupToolService _groupToolService;
+        private readonly int _defaultGroupTypeId;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
-        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService)
+        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
+            IConfigurationWrapper configurationWrapper)
         {
             _groupToolService = groupToolService;
+            _configurationWrapper = configurationWrapper;
+            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
         }
 
         [AcceptVerbs("POST")]
@@ -79,6 +88,35 @@ namespace crds_angular.Controllers.API
                 {
                     var apiError = new ApiErrorDto("GetInquires Failed", exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Ends a group and emails all participants to let them know
+        /// it is over
+        /// </summary>
+        /// <param name="groupId">The id of a group</param>
+        /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
+        /// <returns>Http Result</returns>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [HttpPost]
+        [Route("api/grouptool/{groupId:int}/endsmallgroup")]
+        public IHttpActionResult EndSmallGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not end group", e);
+                    return BadRequest();
                 }
             });
         }

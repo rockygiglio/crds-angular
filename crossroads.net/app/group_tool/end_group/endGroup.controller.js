@@ -44,7 +44,7 @@ export default class EndGroupController {
   }
 
   endGroup() {
-    this.saving = false;
+    this.saving = true;
     this.successfulSave = false;
     if (this.endGroupForm.$valid) {
       try {
@@ -64,6 +64,7 @@ export default class EndGroupController {
       }
     }
     else {
+      this.saving = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
   }
