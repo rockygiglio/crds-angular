@@ -569,7 +569,7 @@ streaming {
 
 .live-stream {
   display: block;
-  background: #101010;
+  background: #000;
   background-size: cover;
   width: 100%;
   min-height: 100vh;
@@ -578,6 +578,105 @@ streaming {
 
   header {
     margin-bottom: 2em;
+  }
+
+  content-card {
+    margin: 2em 0;
+
+    &, h3 {
+      color: $gray;
+    }
+    a {
+      cursor: default;
+    }
+    article {
+      @media only screen and (max-width:  $screen-md-min - 1){
+        @include make-sm-column(6);
+        &:nth-child(2n+1) {
+          clear: left;
+        }
+      }
+      @media only screen and (min-width:  $screen-md-min){
+        @include make-md-column(6);
+      }
+    }
+
+    figure {
+      background-color: #fff;
+    }
+
+    section {
+      background-color: #fff;
+      padding-bottom: 25px;
+    }
+
+    header {
+      border-top: 1px solid lighten($gray, 50%);
+
+      h2 {
+        color: lighten($gray, 50%);
+        margin: 0;
+        font-size: 200%;
+        margin: 0.75em 0;
+      }
+      .view-all-desktop {
+        font-size: 80%;
+        margin-top: 3em;
+        display: none;
+        @media only screen and (min-width:  $screen-sm-min){
+          display: block;
+        }
+      }
+    }
+
+
+    figcaption {
+      font-family: $streaming-font-extra_cond;
+      font-size: 210%;
+      top: -0.85em;
+    }
+
+    section {
+      top: -1em;
+    }
+
+    figure > a {
+      display: block;
+      width: 100%;
+      margin-bottom: 2%; 
+    }
+
+    @media (max-width: $screen-xs-max) { 
+      figcaption {
+        top: -1.15em;
+      }
+
+      figure > a {
+        margin-bottom: 2%;
+      }
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      figure > a {
+        margin-bottom: 2%;
+      }
+      figcaption {
+        top: -0.95em;
+      }
+    }
+
+    .view-all-mobile {
+      @media only screen and (min-width:  $screen-sm-min){
+        display: none;
+      }
+    }
+
+    .container {
+      padding: 0;
+      @media (min-width: $screen-sm-min) {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+    }
   }
 
   h2 {
@@ -599,7 +698,7 @@ streaming {
 
   @media (min-width: $screen-sm) {
     .related {
-      @include make-sm-column(7);
+      @include make-sm-column(6);
     }
     .participate {
       @include make-sm-column(4);
@@ -608,30 +707,32 @@ streaming {
   }
 
   .related {
-    a {
-      display: block;
-      width: 100%;
-      color: #FFF;
-      &:hover {
-        color: darken(#FFF, 20%);
-      }
-    }
-    figure {
-      @include make-xs-column(6);
-      margin-bottom: 2em;
-      position: relative;
-      figcaption {
-        @include crds-make-condensed();
-        font-size: 200%;
-        letter-spacing: normal;
+    background: #252526;
 
-        @media (min-width: $screen-sm-min) {
-          position: absolute;
-          bottom: 0.75em;
-          left: 1em;
-        }
-      }
-    }
+    // a {
+    //   display: block;
+    //   width: 100%;
+    //   color: #FFF;
+    //   &:hover {
+    //     color: darken(#FFF, 20%);
+    //   }
+    // }
+    // figure {
+    //   @include make-xs-column(6);
+    //   margin-bottom: 2em;
+    //   position: relative;
+    //   figcaption {
+    //     @include crds-make-condensed();
+    //     font-size: 200%;
+    //     letter-spacing: normal;
+
+    //     @media (min-width: $screen-sm-min) {
+    //       position: absolute;
+    //       bottom: 0.75em;
+    //       left: 1em;
+    //     }
+    //   }
+    // }
 
     .gradient {
       position: relative;
