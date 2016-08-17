@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 declare var window: any;
@@ -16,7 +16,7 @@ require('videojs-chromecast/dist/videojs-chromecast');
   templateUrl: './videojs.ng2component.html'
 })
 
-export class VideoJSComponent implements AfterViewInit {
+export class VideoJSComponent implements AfterViewInit, OnDestroy {
 
   id: string = "videojs-player";
   player: any;
@@ -24,6 +24,10 @@ export class VideoJSComponent implements AfterViewInit {
   debug: boolean = false;
 
   constructor(private streamspot: StreamspotService) {}
+
+  ngOnDestroy() {
+    this.player.dispose();
+  }
 
   ngAfterViewInit() {
 
