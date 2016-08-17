@@ -64,8 +64,8 @@ describe('Component: Current Series', () => {
             let currentSeries = new CurrentSeriesComponent(service);
             
             currentSeries.ngOnInit();
-            expect(currentSeries.currentSeriesTitle).toBe('Hello World');
-            expect(currentSeries.currentSeriesDescription).toBe('This is my hello world test');
+            expect(currentSeries.title).toBe('Hello World');
+            expect(currentSeries.description).toBe('This is my hello world test');
         });
     }
     );
