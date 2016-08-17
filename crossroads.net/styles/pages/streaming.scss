@@ -774,8 +774,13 @@ streaming {
   .vjs-current-time,
   .vjs-duration,
   .vjs-time-divider {
-    display: block;
+    display: none;
     order: 5;
+    width: auto;
+  }
+
+  .vjs-live-control {
+    flex: none;
     width: auto;
   }
 
@@ -796,7 +801,7 @@ streaming {
   }
 
   .vjs-volume-menu-button {
-    order: 6;
+    order: 1;
   }
 
   .vjs-chromecast-button,
