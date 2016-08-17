@@ -98,9 +98,5 @@
     </div>
   </div>
 
-  <div ng-show='groupSearchResults.ready && groupSearchResults.results == 0' class="row">
-    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3 text-center">
-      <div dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html" class="alert alert-warning"></div>
-    </div>
-  </div>
+  <div ng-show='groupSearchResults.ready && groupSearchResults.results == 0' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
 </div>
