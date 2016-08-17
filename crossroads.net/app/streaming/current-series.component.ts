@@ -24,44 +24,43 @@ var moment = require('moment');
 
 export class CurrentSeriesComponent {
 
-  currentSeriesTitle: string = '';
-  currentSeriesPicture: string = '';
-  currentSeriesDescription: string = '';
-  currentSeriesRunningDates: string = '';
-  currentSeriesStartDate: string = '';
-  currentSeriesEndDate: string = '';
-  currentSeriesTags: string[] = [''];
-  currentSeriesTrailer: string = '';
+  title: string = '';
+  picture: string = '';
+  description: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  runningDates: string = '';
+  tags: string[] = [''];
+  trailer: string = '';
   visible: boolean = false;
   
   constructor(private cmsDataService: CMSDataService) {
   }
   
   ngOnInit() {
-    this.cmsDataService.getCurrentSeries()
-      .subscribe((cs) => {
-        this.parseData(cs);
-      })
+    this.cmsDataService.getCurrentSeries().subscribe((response) => {
+      this.parseData(response);
+    })
   }
 
-  private parseData(cs:any) {
+  private parseData(response:any) {
 
-    if ( cs === undefined ) {
+    if ( response === undefined ) {
       return;
     }
 
-    this.currentSeriesTitle = cs.title;
-    this.currentSeriesDescription = cs.description;
-    this.currentSeriesStartDate = cs.startDate;
-    this.currentSeriesEndDate = cs.endDate;
-    this.currentSeriesTrailer = cs.trailerLink;
+    this.title = response.title;
+    this.description = response.description;
+    this.startDate = response.startDate;
+    this.endDate = response.endDate;
+    this.trailer = response.trailerLink;
 
-    this.setRunningDates();
-    this.setTagsArray(cs);
+    this.setRunningDates(response);
+    this.setTagsArray(response);
 
-    if ( cs.image !== undefined ) {
+    if ( response.image !== undefined ) {
       try {
-        this.currentSeriesPicture = cs.image.filename;
+        this.picture = response.image.filename;
       }
       catch(exception) {
         console.log('No image file provided for current series.');
@@ -71,17 +70,14 @@ export class CurrentSeriesComponent {
     this.visible = true;
   }
 
-  private setRunningDates() {
-    let momentStartDate = moment(this.currentSeriesStartDate).format("MMMM Do");
-    let momentEndDate = moment(this.currentSeriesEndDate).format("MMMM Do");
-    this.currentSeriesRunningDates = `RUNS: ${momentStartDate} - ${momentEndDate}`;
+  private setRunningDates(response) {
+    let mStartDate = moment(response.startDate).format("MMMM Do");
+    let mEndDate = moment(response.endDate).format("MMMM Do");
+    this.runningDates = `${mEndDate} - ${mStartDate}`;
   }
 
-  private setTagsArray(currentSeries) {
-    this.currentSeriesTags = currentSeries.tags.map(this.getTagTitle);
+  private setTagsArray(response) {
+    this.tags = response.tags.map(tag => tag.title);
   }
 
-  private getTagTitle(tag) {
-    return tag.title;
-  }
 }
