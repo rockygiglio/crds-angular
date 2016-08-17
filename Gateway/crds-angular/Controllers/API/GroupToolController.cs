@@ -211,6 +211,34 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Send an email message to all leaders of a Group
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
+        /// <param name="message">A Group Message DTO that holds the subject and body of the email</param>
+        [RequiresAuthorization]
+        [Route("api/grouptool/{groupId}/leadermessage")]
+        public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, GroupMessageDTO message)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SendAllGroupLeadersEmail(token, groupId, message);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return (IHttpActionResult)NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending a Leader email to groupID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Send an email message to all members of a Group
         /// Requires the user to be a leader of the Group
         /// Will return a 404 if the user is not a Leader of the group
@@ -268,6 +296,36 @@ namespace crds_angular.Controllers.API
                 catch (Exception exception)
                 {
                     var apiError = new ApiErrorDto("Get if leader Failed", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Create a group inquiry (typically to join a small group)
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group</param>
+        /// <param name="inquiry">The inquiry object submitted by a client.</param>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [Route("api/grouptool/group/{groupId:int}/submitinquiry")]
+        [HttpPost]
+        public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SubmitInquiry(token, groupId);
+                    return Ok();
+                }
+                catch (ExistingRequestException)
+                {
+                    return Conflict();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when creating inquiry for group {0}", groupId), ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

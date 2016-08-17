@@ -285,4 +285,9 @@ export default class GroupService {
           throw err;
         });
   }
+
+  submitJoinRequest(groupId) {
+      return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+          .save({groupId: groupId},{}).$promise;
+  }
 }
