@@ -497,7 +497,8 @@ namespace crds_angular.Services
                 MergeData = mergeData,
                 ReplyToContact = from,
                 TemplateId = _groupEndedParticipantEmailTemplate,
-                ToContacts = to
+                ToContacts = to,
+                StartDate = DateTime.Now
             };
             _communicationRepository.SendMessage(groupEnded, false);
         }
