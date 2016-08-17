@@ -22,7 +22,7 @@
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-disabled="changeParticipantRole.leaderDisabled()">
+          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-disabled="changeParticipantRole.leaderDisabled() || changeParticipantRole.warningLeaderMax()">
           Leader
 
           <!-- groupToolChangeRoleWarningLeaderMax -->

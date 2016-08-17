@@ -46,6 +46,10 @@ export default class ChangeParticipantRoleController {
   }
 
   warningLeaderMax() {
+    //TODO remove hard coded 5
+    if (this.rootScope.countLeaders >= 5){
+      return true;
+    }
     return false;
   }
 

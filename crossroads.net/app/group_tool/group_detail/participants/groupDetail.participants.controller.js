@@ -17,6 +17,7 @@ export default class GroupDetailParticipantsController {
     this.processing = false;
     this.isLeader = false;
     this.data = [];
+    this.countLeaders = 0;
 
     this.setListView();
   }
@@ -36,7 +37,19 @@ export default class GroupDetailParticipantsController {
     })
   }
 
+ getLeaderCount() {
+    if (!this.data) {
+      return 0;
+    }
+    return this.data.filter(function (val) {
+      //TODO inject constants
+      //return val === CONSTANTS.GROUP.ROLES.LEADER;
+      return val.groupRoleId === 22;
+    }).length;
+  }
+
   loadGroupParticipants() {
+    //look for existing smallGroup object if already hit mygroups
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
       this.data = data.slice().sort((a, b) => {
         return(a.compareTo(b));
@@ -47,6 +60,8 @@ export default class GroupDetailParticipantsController {
       }, this);
 
       this.ready = true;
+      this.countLeaders = this.getLeaderCount();
+      this.rootScope.countLeaders = this.countLeaders;
     },
     (err) => {
       this.log.error(`Unable to get group participants: ${err.status} - ${err.statusText}`);
