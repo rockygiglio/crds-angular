@@ -55,6 +55,7 @@ export class CurrentSeriesComponent {
     this.currentSeriesStartDate = cs.startDate;
     this.currentSeriesEndDate = cs.endDate;
     this.currentSeriesTrailer = cs.trailerLink;
+    
     this.setRunningDates();
     this.setTagsArray(cs);
 
@@ -62,7 +63,9 @@ export class CurrentSeriesComponent {
       try {
         this.currentSeriesPicture = cs.image.filename;
       }
-      finally {}
+      finally {
+        console.log('No image file provided for current series.');
+      }
     }
     
     this.visible = true;
