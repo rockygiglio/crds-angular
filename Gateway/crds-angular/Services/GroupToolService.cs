@@ -27,9 +27,10 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
 
+        private readonly int _defaultGroupContactEmailId;
+        private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
-
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
@@ -69,6 +70,8 @@ namespace crds_angular.Services
             _addressProximityService = addressProximityService;
             _contactRepository = contactRepository;
 
+            _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
+            _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
@@ -353,6 +356,45 @@ namespace crds_angular.Services
             {
                 throw new GroupParticipantRemovalException(string.Format("Could not accept = {0} from group {1}", accept, groupId), e);
             }
+        }
+
+        public void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message)
+        {
+            var requestor = _participantRepository.GetParticipantRecord(token);
+            var group = _groupService.GetGroupDetails(groupId);
+
+            var fromContact = new MpContact
+            {
+                ContactId = _defaultGroupContactEmailId,
+                EmailAddress = "groups@crossroads.net"
+            };
+
+            var replyToContact = new MpContact
+            {
+                ContactId = requestor.ContactId,
+                EmailAddress = requestor.EmailAddress
+            };
+
+            var leaders = @group.Participants.
+                Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).
+                Select(groupParticipant => new MpContact
+                {
+                    ContactId = groupParticipant.ContactId,
+                    EmailAddress = groupParticipant.Email
+                }).ToList();
+
+            var email = new MpCommunication
+            {
+                EmailBody = message.Body,
+                EmailSubject = string.Format("Crossroads Group {0}: {1}", group.GroupName, message.Subject),
+                AuthorUserId = _defaultAuthorUserId,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyToContact,
+                ToContacts = leaders
+            };
+
+            _communicationRepository.SendMessage(email);
         }
 
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
