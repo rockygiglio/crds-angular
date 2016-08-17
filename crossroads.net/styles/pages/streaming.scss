@@ -255,6 +255,27 @@ streaming {
       }
 
     }
+    .topic-list {
+      padding: 0;
+      list-style: none;
+      margin: 0 0 1.5em;
+
+      li {
+        display: inline;
+        
+        &:after {
+          content: ", ";
+          margin-left: -4px;
+        }
+        &:last-child:after {
+          content: "";
+        }
+        a {
+          font-size: 87%;
+          text-transform: lowercase;
+        }
+      }
+    }
     article {
       @media (min-width: $screen-md-min) {
         @include make-md-column(5);
@@ -277,6 +298,10 @@ streaming {
 
       p {
         margin: 0 0 1.5em;
+
+        &.small {
+          margin: 0;
+        }
       }
 
       .lead {
@@ -821,3 +846,92 @@ streaming {
     }
   }
 } // .live-stream
+
+
+
+.vjs-crds-skin {
+  overflow: hidden;
+
+  .vjs-control-bar {
+    background: transparent;
+  }
+
+  .vjs-progress-holder {
+    background-color: #4B4A51;
+  }
+
+  .vjs-load-progress {
+    background-color: #878A95;
+  }
+
+  .vjs-play-progress {
+    background-color: $streaming-blue;
+  }
+
+  .vjs-remaining-time {
+    display: none;
+  }
+
+  .vjs-current-time,
+  .vjs-duration,
+  .vjs-time-divider {
+    display: block;
+    order: 5;
+    width: auto;
+  }
+
+  .vjs-current-time {
+    padding-right: 0;
+  }
+
+  .vjs-duration {
+    padding-left: 0;
+  }
+
+  .vjs-time-divider {
+    margin: 0;
+  }
+
+  .vjs-current-time {
+    margin-left: 1em;
+  }
+
+  .vjs-volume-menu-button {
+    order: 6;
+  }
+
+  .vjs-chromecast-button,
+  .vjs-fullscreen-control {
+    order: 7;
+    flex: none;
+    position: absolute;
+    right: 0;
+  }
+
+  .vjs-chromecast-button {
+    right: 5.5em;
+  }
+
+  .vjs-fullscreen-control {
+    font-size: 120%;
+    margin-top: -0.35em;
+  }
+
+  .vjs-play-control {
+    flex: none;
+    align-self: center;
+    font-size: 250%;
+    margin-top: -3.2em;
+    width: 2em;
+  }
+
+  .vjs-progress-control {
+    flex: none;
+    position: absolute;
+    width: 100%;
+    bottom: 2em;
+    padding-right: 6em;
+    left: 5.35em;
+  }
+
+} // .vjs-crds-skin
