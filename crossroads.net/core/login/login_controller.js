@@ -29,7 +29,6 @@
     User,
     ImageService) {
 
-    $log.debug('Inside Login controller');
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
