@@ -14,7 +14,7 @@
             <a href="/search?q={{tag | replaceNonAlphaNumeric }}">{{tag}}</a>
           </li>
         </ul>
-        <p><a href={{currentSeriesTrailer}} class="btn btn-primary">Watch Trailer</a></p>
+        <p><a href={{currentSeriesTrailer}} *ngIf="currentSeriesTrailer" class="btn btn-primary">Watch Trailer</a></p>
       </article>
       <aside id="schedule">
         <schedule class="wow fadeInUp"></schedule>
