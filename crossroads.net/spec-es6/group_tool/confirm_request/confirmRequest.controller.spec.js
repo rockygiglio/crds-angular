@@ -5,47 +5,29 @@ import GroupMessage from '../../../app/group_tool/model/groupMessage';
 
 
 describe('ConfirmRequestController', () => {
-<<<<<<< HEAD
     let fixture,
         mockProfile,
         rootScope,
         messageService,
         groupService,
         qApi;
-=======
-  let fixture,
-      rootScope,
-      messageService,
-      qApi;
->>>>>>> origin/development
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-<<<<<<< HEAD
-    beforeEach(angular.mock.module(($provide)=> {
-        mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
-        $provide.value('Profile', mockProfile);
-    }));
-
-    beforeEach(inject(function($injector) {
-        messageService = $injector.get('MessageService');
-        groupService = $injector.get('GroupService');
-        rootScope = $injector.get('$rootScope');
-        qApi = $injector.get('$q');
-
-        fixture = new ConfirmRequestController(rootScope, messageService, groupService);
-        fixture.group = {groupId: 1}
-    }));
-=======
-  beforeEach(inject(function($injector) {
-    messageService = $injector.get('MessageService');
-    rootScope = $injector.get('$rootScope');
-    qApi = $injector.get('$q');
-
-    fixture = new ConfirmRequestController(rootScope, messageService);
-    fixture.group = {groupId: 1}
+  beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
   }));
->>>>>>> origin/development
+
+  beforeEach(inject(function($injector) {
+      messageService = $injector.get('MessageService');
+      groupService = $injector.get('GroupService');
+      rootScope = $injector.get('$rootScope');
+      qApi = $injector.get('$q');
+
+      fixture = new ConfirmRequestController(rootScope, messageService, groupService);
+      fixture.group = {groupId: 1}
+  }));
 
   describe('$onInit() function', () => {
     it('when emailLeader should create a groupMessage', () =>{
@@ -96,32 +78,28 @@ describe('ConfirmRequestController', () => {
       fixture.sendEmail(form);
       expect(messageService.sendLeaderMessage).toHaveBeenCalledWith(fixture.groupMessage);
     });
-<<<<<<< HEAD
+  })
 
-    describe('submitRequest() function', () => {
-        beforeEach(() => {
-            fixture.processing = false;
-            fixture.emailLeader = false;
-        });
-
-        it('should invoke submitJoinRequest', () => {
-            fixture.group.groupId = 123;
-            let deferred = qApi.defer();
-            let success = {
-                status: 200,
-            };
-            deferred.resolve(success);
-
-            spyOn(groupService, 'submitJoinRequest').and.callFake(function(submitJoinRequest) {
-                return(deferred.promise);
-            });
-
-            fixture.sendJoinRequest();
-            expect(groupService.submitJoinRequest).toHaveBeenCalledWith(fixture.group.groupId);
-        });
+  describe('submitRequest() function', () => {
+    beforeEach(() => {
+        fixture.processing = false;
+        fixture.emailLeader = false;
     });
-});
-=======
+
+    it('should invoke submitJoinRequest', () => {
+        fixture.group.groupId = 123;
+        let deferred = qApi.defer();
+        let success = {
+            status: 200,
+        };
+        deferred.resolve(success);
+
+        spyOn(groupService, 'submitJoinRequest').and.callFake(function(submitJoinRequest) {
+            return(deferred.promise);
+        });
+
+        fixture.sendJoinRequest();
+        expect(groupService.submitJoinRequest).toHaveBeenCalledWith(fixture.group.groupId);
+    });
   });
 });
->>>>>>> origin/development
