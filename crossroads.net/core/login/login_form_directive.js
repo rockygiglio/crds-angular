@@ -23,6 +23,19 @@
           scope.credentials.username = $rootScope.email;
         }
 
+        // If the parent template of this <login-form> needs to receive a callback after a successful
+        // login, instead of the default action
+        if (attrs.loginCallback) {
+          scope.loginCallback = scope.$eval(attrs.loginCallback);
+        }
+
+        // If the parent template of this <login-form> needs to receive a callback when Register link is clicked
+        // instead of the default ui-sref="register" routing
+        if (attrs.registerCallback) {
+          scope.registerCallback = scope.$eval(attrs.registerCallback);
+          scope.showRegisterCallback = true;
+        }
+
         if (attrs.registerUrl) {
           scope.registerUrl = attrs.registerUrl;
           scope.showRegister = true;

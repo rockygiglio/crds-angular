@@ -82,7 +82,7 @@ namespace MinistryPlatform.Translation.Repositories
             _authToken.Value = null;
             response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
 
-            return (int)response.ResponseStatus;
+            return (int) response.StatusCode;
         }
 
         private static string FormatStoredProcBody(Dictionary<string, object> parameters)

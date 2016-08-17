@@ -2,9 +2,13 @@ import { Component, AfterViewInit } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 declare var window: any;
+declare var chrome: any;
+
 window.videojs = require('video.js/dist/video');
+
 require('./vendor/streamspotAnalytics');
 require('./vendor/videojs5-hlsjs-source-handler.min');
+require('videojs-chromecast/dist/videojs-chromecast');
 
 @Component({
   selector: 'videojs',
@@ -82,7 +86,9 @@ export class VideoJSComponent implements AfterViewInit {
           this.visible = true;
 
           this.player.ready(() => {
+
             this.player.play();
+
           });
           
         }
