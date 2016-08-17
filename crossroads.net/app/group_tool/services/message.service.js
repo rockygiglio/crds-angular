@@ -14,7 +14,7 @@ export default class MessageService {
     }
 
     sendLeaderMessage(message) {
-        return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/:groupTypeId/leadermessage').save({groupId: message.groupId,
-            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}, message).$promise;
+        return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/leadermessage').
+          save({groupId: message.groupId}, message).$promise;
     }
 }
