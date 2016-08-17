@@ -355,7 +355,7 @@ namespace crds_angular.Services
             }
         }
 
-        public void SendAllGroupLeadersEmail(string token, int groupId, int groupTypeId, GroupMessageDTO message)
+        public void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message)
         {
             var requestor = _participantRepository.GetParticipantRecord(token);
             var group = _groupService.GetGroupDetails(groupId);
