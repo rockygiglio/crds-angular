@@ -6,7 +6,6 @@
  
 
     function UserService($resource, $log) {
-        $log.debug("Inside Users factory");
         var User = $resource(__API_ENDPOINT__ + 'api/user');
         var newuser = new User();
         return newuser;

@@ -79,6 +79,7 @@
       <p><span> or </span></p>
     </div>
     <!---To Do: ui-sref needs update to work in give flow. Shouldn't exscape give flow -->
-    <p class="text-center"><a class="link-secondary" ui-sref="login">Already have an account? Login</a></p>
+    <p ng-if="!register.showLoginCallback" class="text-center"><a class="link-secondary" ui-sref="login">Already have an account? Login</a></p>
+    <p ng-if="register.showLoginCallback" class="text-center"><a class="link-secondary" ng-click="register.loginCallback()">Already have an account? Login</a></p>
   </div>
 </div><!--/row-->

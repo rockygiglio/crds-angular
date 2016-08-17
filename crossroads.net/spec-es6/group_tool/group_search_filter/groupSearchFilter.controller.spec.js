@@ -173,6 +173,16 @@ describe('GroupSearchFilter', () => {
         expect(fixture.ageRangeFilter(searchResult)).toBeFalsy();
         expect(fixture.currentFilters['Age Range']).toBeDefined();
       });
+
+      it('should return false if the search result does not contain an age range', () => {
+        fixture.ageRanges = [
+          { selected: false, attributeId: 123 },
+          { selected: true, attributeId: 456 }
+        ];
+        let searchResult = { };
+        expect(fixture.ageRangeFilter(searchResult)).toBeFalsy();
+        expect(fixture.currentFilters['Age Range']).toBeDefined();
+      });
     });
 
     describe('clearAgeRangeFilter', () => {

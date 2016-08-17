@@ -42,17 +42,19 @@
     email-template-text="groupToolRemoveParticipantEmailTemplateText"
     cancel-action="groupDetailParticipants.cancelRemoveParticipant(person)"
     submit-action="groupDetailParticipants.removeParticipant(person)"
+    email-message-required="true"
     processing="groupDetailParticipants.processing"
     ></group-message>
 </div>
 
 <!-- Email participants -->
 <div class='container-fluid' ng-if='groupDetailParticipants.isEmailView()'>
-  <message-participants
+  <group-email
     message='groupDetailParticipants.groupMessage'
     cancel-action='groupDetailParticipants.cancelMessageParticipants(message)'
     submit-action='groupDetailParticipants.messageParticipants(message)'
-    processing='groupDetailParticipants.processing'/>
+    processing='groupDetailParticipants.processing'
+    header='Email Group'/>
   />
 </div>
 

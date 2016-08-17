@@ -62,13 +62,16 @@ export default class GroupSearchResultsController {
       return true;
     }
 
-    // TODO This seems like a hack - not sure why I can't just use 'this' in the function
-    let controllerReference = this;
-    this.currentFilters['Age Range'] = function() {
-      controllerReference.clearAgeRangeFilter();
-      controllerReference.applyFilters();
+    this.currentFilters['Age Range'] = () => {
+      this.clearAgeRangeFilter();
+      this.applyFilters();
     };
 
+    // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
+    if(!searchResult.ageRange || !Array.isArray(searchResult.ageRange)) {
+      return false;
+    }
+    
     let filteredResults = searchResult.ageRange.filter((a) => {
       return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
     });

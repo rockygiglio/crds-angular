@@ -25,7 +25,7 @@ export default class GroupService {
     return this.profile.Personal.get().$promise;
   }
 
-  getGroupData(groupId) {
+  getGroupData(groupId) { 
     return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
                            get({groupId: groupId}).$promise;
   }
@@ -33,6 +33,10 @@ export default class GroupService {
   getGroupGenderMixType() {
     return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
+  }
+
+  getEndedReasons() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/groupreasonended').query().$promise;
   }
 
   getStates() {
@@ -126,6 +130,16 @@ export default class GroupService {
                             removalMessage: participant.message
                           }).$promise;
 
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
+  endGroup(groupId, groupReasonEndedId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/end`)
+                          .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
     return promise.then((data) => {
         return data;
       }, (err) => {
