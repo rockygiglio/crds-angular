@@ -76,7 +76,7 @@ export class CurrentSeriesComponent {
     let mEndDate = moment(response.endDate);
 
     if ( mStartDate.isValid() && mEndDate.isValid() ) {
-      this.runningDates = `RUNS: ${mEndDate.format(formatString)} - ${mStartDate.format(formatString)}`;
+      this.runningDates = `RUNS: ${mStartDate.format(formatString)} - ${mEndDate.format(formatString)}`;
     }
   }
 

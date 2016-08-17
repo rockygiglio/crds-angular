@@ -38,7 +38,7 @@ describe('Component: Current Series', () => {
                                     endDate: '2016-08-30',
                                     trailerLink: 'https://www.youtube.com',
                                     image: {
-                                        filename: 'c:/stupifile.jpg'
+                                        filename: 'c:/stupidfile.jpg'
                                     },
                                     tags: [
                                         {
@@ -61,11 +61,19 @@ describe('Component: Current Series', () => {
 
     it('property values are set after component initializes', () => {
         service.getCurrentSeries().subscribe(rsp => {
+
             let currentSeries = new CurrentSeriesComponent(service);
             
             currentSeries.ngOnInit();
+
             expect(currentSeries.title).toBe('Hello World');
+
             expect(currentSeries.description).toBe('This is my hello world test');
+
+            expect(currentSeries.runningDates).toBe('RUNS: August 1st - August 30th');
+
+            expect(currentSeries.tags).toEqual(['some tag title 1','some tag title 2']);
+
         });
     }
     );
