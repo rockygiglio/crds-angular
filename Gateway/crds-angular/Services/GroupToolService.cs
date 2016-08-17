@@ -25,6 +25,7 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
         private readonly IContactRepository _contactRepository;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
         private readonly int _defaultGroupRoleId;
         private readonly int _defaultGroupTypeId;
@@ -32,6 +33,9 @@ namespace crds_angular.Services
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
+        private readonly int _groupEndedParticipantEmailTemplate;
+        private readonly int _defaultEmailContactId;
+        private readonly string _baseUrl;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -72,6 +76,9 @@ namespace crds_angular.Services
                _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
+            _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
+            _defaultEmailContactId = Convert.ToInt32(configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -201,7 +208,7 @@ namespace crds_angular.Services
             };
             _communicationRepository.SendMessage(email);
         }
-
+        
         public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
         {
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
@@ -401,6 +408,56 @@ namespace crds_angular.Services
             {
                 throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
             }
+        }
+
+        public void EndGroup(int groupId, int reasonEndedId)
+        {
+            //get all participants before we end the group so they are not endDated and still
+            //available from this call.
+            var participants = _groupService.GetGroupParticipants(groupId, true);
+            _groupService.EndDateGroup(groupId, reasonEndedId);
+            foreach (var participant in participants)
+            {
+                SendGroupEndedParticipantEmail(participant);
+            }
+        }
+
+        public void SendGroupEndedParticipantEmail(GroupParticipantDTO participant)
+        {
+            var emailTemplate = _communicationRepository.GetTemplate(_groupEndedParticipantEmailTemplate);
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Participant_Name", participant.NickName},
+                {"Group_Tool_Url",  @"https://" + _baseUrl + "/groups/search"}
+            };
+
+            var domainId = Convert.ToInt32(_domainId);
+            var from = new MpContact()
+            {
+                ContactId = _defaultEmailContactId,
+                EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultEmailContactId)
+            };
+
+            var to = new List<MpContact>();
+            to.Add(new MpContact()
+            {
+                ContactId = participant.ContactId,
+                EmailAddress = participant.Email
+            });
+
+            var groupEnded = new MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = 5,
+                DomainId = domainId,
+                FromContact = from,
+                MergeData = mergeData,
+                ReplyToContact = from,
+                TemplateId = _groupEndedParticipantEmailTemplate,
+                ToContacts = to
+            };
+            _communicationRepository.SendMessage(groupEnded, false);
         }
 
         public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)

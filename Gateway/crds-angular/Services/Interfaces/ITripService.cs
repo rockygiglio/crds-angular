@@ -10,8 +10,7 @@ namespace crds_angular.Services.Interfaces
         MyTripsDto GetMyTrips(string token);
         List<TripParticipantDto> Search(string search);
         TripCampaignDto GetTripCampaign(int pledgeCampaignId);
-        List<FamilyMemberTripDto> GetFamilyMembers(int pledgeId, string token);
-        List<int> SaveParticipants(SaveTripParticipantsDto dto);
+        List<FamilyMemberTripDto> GetFamilyMembers(int pledgeId, string token);       
         int GeneratePrivateInvite(PrivateInviteDto dto, string token);
         bool ValidatePrivateInvite(int pledgeCampaignId, string guid, string token);
         int SaveApplication(TripApplicationDto dto);

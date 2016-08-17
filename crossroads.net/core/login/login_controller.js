@@ -29,7 +29,6 @@
     User,
     ImageService) {
 
-    $log.debug('Inside Login controller');
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
@@ -105,9 +104,11 @@
             },
 
            500);
+          } else if ($scope.loginCallback) {
+            $scope.loginCallback();
           }
 
-          $scope.loginFailed = false;
+            $scope.loginFailed = false;
           $rootScope.showLoginButton = false;
           $scope.navlogin.$setPristine();
         },

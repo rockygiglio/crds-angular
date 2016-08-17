@@ -32,18 +32,19 @@ export default class ConfirmRequestController {
 
   sendJoinRequest() {
     this.processing = true;
-    debugger;
 
     this.groupService.submitJoinRequest(this.group.groupId).then(
         () => {
-          //this.groupMessage = undefined;
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRequestSuccess);
           this.modalInstance.dismiss();
-          debugger;
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
         },
         (error) => {
-          debugger;
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+          if (error.status === 409) {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRequestFailure);
+            this.modalInstance.dismiss();
+          } else {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.failedResponse);
+          }
         }
     ).finally(() => {
       this.processing = false;

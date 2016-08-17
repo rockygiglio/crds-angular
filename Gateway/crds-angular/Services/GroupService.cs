@@ -529,9 +529,9 @@ namespace crds_angular.Services
             }
         }
 
-        public void EndDateGroup(int groupId)
+        public void EndDateGroup(int groupId, int? reasonEndedId)
         {
-            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now, reasonEndedId);
         }
 
         public Participant GetParticipantRecord(string token) 

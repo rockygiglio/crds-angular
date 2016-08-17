@@ -28,5 +28,7 @@ namespace crds_angular.Services.Interfaces
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
         List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null);
         void SubmitInquiry(string token, int groupId);
+        void EndGroup(int groupId, int reasonEndedId);
+        void SendGroupEndedParticipantEmail(GroupParticipantDTO participant);
     }
 }

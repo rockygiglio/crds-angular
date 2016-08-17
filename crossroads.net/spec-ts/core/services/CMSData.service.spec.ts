@@ -51,7 +51,7 @@ describe('Service: CMSData', () => {
           
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `${__CMS_ENDPOINT__}api/series?startDate__LessThanOrEqual=${todaysDate}&endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC&__limit%5B%5D=1`);
+            `${__CMS_ENDPOINT__}api/series?endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC`);
         });
 
         service.getCurrentSeries();

@@ -22,6 +22,7 @@ export default angular.
   ;
 
 import myGroups from './my_groups';
+import authModal from './auth_modal';
 import confirmRequest from './confirm_request';
 import createGroup from './create_group';
 import groupDetail from './group_detail';
@@ -30,5 +31,6 @@ import groupSearch from './group_search';
 import editGroup from './edit_group';
 import groupSearchResults from './group_search_results';
 import groupInvitation from './group_invitation';
+import endGroup from './end_group';
 import filterResults from './group_search_filter';
 import groupEmail from './group_email';

@@ -33,7 +33,6 @@ export class PastWeekendsComponent implements OnInit{
   ngOnInit() {
     
     if (typeof this.event.series !== "undefined") {
-      console.log(this.event);
       this.event.delay = this.key * 100;
 
       this.event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
