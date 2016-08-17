@@ -3,9 +3,9 @@ import Address from '../model/address';
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state, $modal, $rootScope, AddressValidationService, $location) {
+  constructor(NgTableParams, GroupService, $state, AuthModalService, $rootScope, AddressValidationService, $location) {
     this.groupService = GroupService;
-    this.$modal = $modal;
+    this.authModalService = AuthModalService;
     this.rootScope = $rootScope;
     this.addressValidationService = AddressValidationService;
     this.locationService = $location;
@@ -110,7 +110,7 @@ export default class GroupSearchResultsController {
   }
 
   requestToJoinOrEmailGroupLeader(group, email=false) {
-    var modalInstance = this.$modal.open({
+    let modalOptions = {
       template: '<confirm-request email-leader="confirmRequestModal.emailLeader" group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
       controller: function(group, emailLeader, $modalInstance) {
         this.group = group;
@@ -127,6 +127,15 @@ export default class GroupSearchResultsController {
           return group;
         }
       }
+    };
+
+    var modalInstance = this.authModalService.open({
+      loginTitle: 'Sign In',
+      loginContentBlockId: 'groupToolAuthModalLoginText',
+      registerTitle: 'Register',
+      registerContentBlockId: 'groupToolAuthModalRegisterText',
+      cancelButton: 'Back to Search Results',
+      modal: modalOptions
     });
   }
 }

@@ -104,9 +104,11 @@
             },
 
            500);
+          } else if ($scope.loginCallback) {
+            $scope.loginCallback();
           }
 
-          $scope.loginFailed = false;
+            $scope.loginFailed = false;
           $rootScope.showLoginButton = false;
           $scope.navlogin.$setPristine();
         },
