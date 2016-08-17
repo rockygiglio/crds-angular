@@ -43,9 +43,9 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             _communicationRepository = new Mock<MPServices.ICommunicationRepository>(MockBehavior.Strict);
-            _groupToolRepository = new Mock<MPServices.IGroupToolRepository>();
+            _groupToolRepository = new Mock<MPServices.IGroupToolRepository>(MockBehavior.Strict);
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _groupRepository = new Mock<MPServices.IGroupRepository>();
+            _groupRepository = new Mock<MPServices.IGroupRepository>(MockBehavior.Strict);
             _participantRepository = new Mock<MPServices.IParticipantRepository>(MockBehavior.Strict);
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
@@ -931,7 +931,8 @@ namespace crds_angular.test.Services
 
             Participant contactParticipant = new Participant
             {
-                ContactId = 1234567
+                ContactId = 1234567,
+                EmailAddress = "test@test.com"
             };
 
             _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(contactParticipant);
@@ -946,19 +947,6 @@ namespace crds_angular.test.Services
 
             _contactRepository.Setup(mocked => mocked.GetContactById(1234567)).Returns(mpMyContact);
 
-            var inquiry = new Inquiry
-            {
-                ContactId = 1234567,
-                EmailAddress = "test@test.com",
-                FirstName = "Test",
-                GroupId = 123,
-                InquiryId = 123,
-                LastName = "Test",
-                PhoneNumber = "555-555-5555",
-                Placed = null,
-                RequestDate = syncedTime
-            };
-
             List<MpInquiry> mpInquiries = new List<MpInquiry>();
 
             _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
@@ -966,6 +954,8 @@ namespace crds_angular.test.Services
             List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
 
             _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+
+            _groupRepository.Setup(mocked => mocked.CreateGroupInquiry(It.IsAny<MpInquiry>()));
 
             _fixture.SubmitInquiry(token, groupId);
             _groupRepository.VerifyAll();
