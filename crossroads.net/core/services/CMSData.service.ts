@@ -26,7 +26,10 @@ export class CMSDataService {
                 }
             })
 
-            if ( currentSeries === undefined ) { currentSeries = allActiveSeries.sort(this.dateSortMethod)[0]; }
+            if ( currentSeries === undefined ) {
+                allActiveSeries.sort(this.dateSortMethod);
+                currentSeries = allActiveSeries[0];
+            }
 
             return currentSeries;
 
@@ -35,9 +38,9 @@ export class CMSDataService {
 
     private dateSortMethod(a,b) {
         if (new Date(a.startDate).getTime() < new Date(b.startDate).getTime())
-            return 1;
-        if (new Date(b.startDate).getTime() > new Date(a.startDate).getTime())
             return -1;
+        if (new Date(a.startDate).getTime() > new Date(b.startDate).getTime())
+            return 1;
         return 0;
     }
     

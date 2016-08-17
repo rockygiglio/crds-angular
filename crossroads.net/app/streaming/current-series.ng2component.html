@@ -1,7 +1,7 @@
 <section class="current-series">
     <figure class="container text-center wow fadeIn">
       <img src="{{currentSeriesPicture}}">
-      <figcaption>Current Series</figcaption>
+      <figcaption [hidden]="!visible">Current Series</figcaption>
     </figure>
 
     <main id="series" class="container">
