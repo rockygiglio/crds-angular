@@ -15,10 +15,10 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
-                                       int participantId,
-                                       bool isGroupParticipantId,
+                                       int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
+                                       Participant toParticipant = null,
                                        string subjectTemplateContentBlockTitle = null,
                                        string emailTemplateContentBlockTitle = null,
                                        string message = null,
