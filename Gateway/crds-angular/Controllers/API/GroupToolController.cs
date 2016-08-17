@@ -300,5 +300,35 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        /// <summary>
+        /// Create a group inquiry (typically to join a small group)
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group</param>
+        /// <param name="inquiry">The inquiry object submitted by a client.</param>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [Route("api/grouptool/group/{groupId:int}/submitinquiry")]
+        [HttpPost]
+        public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SubmitInquiry(token, groupId);
+                    return Ok();
+                }
+                catch (ExistingRequestException)
+                {
+                    return Conflict();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when creating inquiry for group {0}", groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }

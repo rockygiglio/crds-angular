@@ -27,6 +27,7 @@ namespace crds_angular.test.Services
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<MPServices.IInvitationRepository> _invitationRepositor;
         private Mock<IAddressProximityService> _addressProximityService;
+        private Mock<MPServices.IContactRepository> _contactRepository;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -47,6 +48,7 @@ namespace crds_angular.test.Services
             _contentBlockService = new Mock<IContentBlockService>(MockBehavior.Strict);
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
             _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
+            _contactRepository = new Mock<MPServices.IContactRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -67,7 +69,8 @@ namespace crds_angular.test.Services
                                             _contentBlockService.Object,
                                             configuration.Object,
                                             _invitationRepositor.Object,
-                                            _addressProximityService.Object);
+                                            _addressProximityService.Object,
+                                            _contactRepository.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -955,5 +958,125 @@ namespace crds_angular.test.Services
             _fixture.SendGroupEndedParticipantEmail(participant);
             _communicationRepository.VerifyAll();
         }
-    }
+        [Test]
+        public void TestCreateGroupInquiryValid()
+        {
+            var token = "123ABC";
+            var groupId = 123;
+            var syncedTime = System.DateTime.Now;
+            var active = true;
+
+            Participant contactParticipant = new Participant
+            {
+                ContactId = 1234567,
+                EmailAddress = "test@test.com"
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(contactParticipant);
+
+            MpMyContact mpMyContact = new MpMyContact
+            {
+                Contact_ID = 1234567,
+                Last_Name = "Test",
+                Nickname = "Test",
+                Home_Phone = "555-555-5555"
+            };
+
+            _contactRepository.Setup(mocked => mocked.GetContactById(1234567)).Returns(mpMyContact);
+
+            List<MpInquiry> mpInquiries = new List<MpInquiry>();
+
+            _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
+
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+
+            _groupRepository.Setup(mocked => mocked.CreateGroupInquiry(It.IsAny<MpInquiry>()));
+
+            _fixture.SubmitInquiry(token, groupId);
+            _groupRepository.VerifyAll();
+            _groupToolRepository.VerifyAll();
+            
+        }
+
+        [Test]
+        public void TestCreateGroupInquiryInvalid()
+        {
+            var token = "123ABC";
+            var groupId = 123;
+            var syncedTime = System.DateTime.Now;
+            var active = true;
+
+            Participant contactParticipant = new Participant
+            {
+                ContactId = 1234567
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(contactParticipant);
+
+            MpMyContact mpMyContact = new MpMyContact
+            {
+                Contact_ID = 1234567,
+                Last_Name = "Test",
+                Nickname = "Test",
+                Home_Phone = "555-555-5555"
+            };
+
+            _contactRepository.Setup(mocked => mocked.GetContactById(1234567)).Returns(mpMyContact);
+
+            List<MpInquiry> mpInquiries = new List<MpInquiry>();
+
+            var mpInquiry = new MpInquiry
+            {
+                ContactId = 1234567,
+                EmailAddress = "test@test.com",
+                FirstName = "Test",
+                GroupId = 123,
+                InquiryId = 123,
+                LastName = "Test",
+                PhoneNumber = "555-555-5555",
+                Placed = null,
+                RequestDate = syncedTime
+            };
+
+            mpInquiries.Add(mpInquiry);
+
+            _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
+
+            var participant = new MpGroupParticipant
+            {
+                Congregation = "Oakley",
+                ContactId = 1234567,
+                Email = "test@test.com",
+                GroupParticipantId = 7654321,
+                GroupRoleId = 33,
+                LastName = "TestLast",
+                GroupRoleTitle = "Participant",
+                NickName = "TestFirst",
+                ParticipantId = 2222222,
+                StartDate = syncedTime
+            };
+
+            participants.Add(participant);
+
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+
+            try
+            {
+                _fixture.SubmitInquiry(token, groupId);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (ExistingRequestException e)
+            {
+                Assert.AreSame(typeof(ExistingRequestException), e.GetType());
+            }
+
+            _groupRepository.VerifyAll();
+            _groupToolRepository.VerifyAll();
+
+        } 
+   }
 }

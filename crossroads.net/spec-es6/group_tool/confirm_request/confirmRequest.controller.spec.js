@@ -5,20 +5,28 @@ import GroupMessage from '../../../app/group_tool/model/groupMessage';
 
 
 describe('ConfirmRequestController', () => {
-  let fixture,
-      rootScope,
-      messageService,
-      qApi;
+    let fixture,
+        mockProfile,
+        rootScope,
+        messageService,
+        groupService,
+        qApi;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-  beforeEach(inject(function($injector) {
-    messageService = $injector.get('MessageService');
-    rootScope = $injector.get('$rootScope');
-    qApi = $injector.get('$q');
+  beforeEach(angular.mock.module(($provide)=> {
+      mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
+      $provide.value('Profile', mockProfile);
+  }));
 
-    fixture = new ConfirmRequestController(rootScope, messageService);
-    fixture.group = {groupId: 1}
+  beforeEach(inject(function($injector) {
+      messageService = $injector.get('MessageService');
+      groupService = $injector.get('GroupService');
+      rootScope = $injector.get('$rootScope');
+      qApi = $injector.get('$q');
+
+      fixture = new ConfirmRequestController(rootScope, messageService, groupService);
+      fixture.group = {groupId: 1}
   }));
 
   describe('$onInit() function', () => {
@@ -69,6 +77,29 @@ describe('ConfirmRequestController', () => {
 
       fixture.sendEmail(form);
       expect(messageService.sendLeaderMessage).toHaveBeenCalledWith(fixture.groupMessage);
+    });
+  })
+
+  describe('submitRequest() function', () => {
+    beforeEach(() => {
+        fixture.processing = false;
+        fixture.emailLeader = false;
+    });
+
+    it('should invoke submitJoinRequest', () => {
+        fixture.group.groupId = 123;
+        let deferred = qApi.defer();
+        let success = {
+            status: 200,
+        };
+        deferred.resolve(success);
+
+        spyOn(groupService, 'submitJoinRequest').and.callFake(function(submitJoinRequest) {
+            return(deferred.promise);
+        });
+
+        fixture.sendJoinRequest();
+        expect(groupService.submitJoinRequest).toHaveBeenCalledWith(fixture.group.groupId);
     });
   });
 });
