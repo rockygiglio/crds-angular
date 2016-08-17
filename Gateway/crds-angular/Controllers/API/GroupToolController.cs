@@ -213,17 +213,17 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Send an email message to all leaders of a Group
         /// </summary>
-        /// <param name="groupTypeId">An integer identifying the type of group.</param>
         /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
+        /// <param name="message">A Group Message DTO that holds the subject and body of the email</param>
         [RequiresAuthorization]
-        [Route("api/grouptool/{groupId}/{groupTypeId}/leadermessage")]
-        public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, [FromUri()] int groupTypeId, GroupMessageDTO message)
+        [Route("api/grouptool/{groupId}/leadermessage")]
+        public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, GroupMessageDTO message)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupToolService.SendAllGroupLeadersEmail(token, groupId, groupTypeId, message);
+                    _groupToolService.SendAllGroupLeadersEmail(token, groupId, message);
                     return Ok();
                 }
                 catch (InvalidOperationException)
