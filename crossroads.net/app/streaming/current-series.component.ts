@@ -71,9 +71,13 @@ export class CurrentSeriesComponent {
   }
 
   private setRunningDates(response) {
-    let mStartDate = moment(response.startDate).format("MMMM Do");
-    let mEndDate = moment(response.endDate).format("MMMM Do");
-    this.runningDates = `${mEndDate} - ${mStartDate}`;
+    let formatString = 'MMMM Do';
+    let mStartDate = moment(response.startDate);
+    let mEndDate = moment(response.endDate);
+
+    if ( mStartDate.isValid() && mEndDate.isValid() ) {
+      this.runningDates = `RUNS: ${mEndDate.format(formatString)} - ${mStartDate.format(formatString)}`;
+    }
   }
 
   private setTagsArray(response) {
