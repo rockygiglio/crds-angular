@@ -43,6 +43,8 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       $stateParams) {
 
     var vm = this;
+    var now = new Date();
+
     vm.ageLimitReached = true;
     vm.buttonText = 'Next';
     vm.campaign = Campaign;
@@ -76,6 +78,11 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.phoneFormat = vm.validation.phoneFormat();
     vm.viewReady = false;
     vm.whyPlaceholder = '';
+    vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    vm.maxPassportExpireDate = new Date(now.getFullYear() + 150, now.getMonth(), now.getDate());
+    vm.minPassportExpireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    vm.openPassportExpireDatePicker = openPassportExpireDatePicker;
+    
 
     $rootScope.$on('$stateChangeStart', stateChangeStart);
     $scope.$on('$viewContentLoaded', stateChangeSuccess);
@@ -169,6 +176,12 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       }
 
       return ageRestriction;
+    }
+
+    function openPassportExpireDatePicker($event) {
+        $event.preventDefault();
+       $event.stopPropagation();
+       vm.passportExpireDateOpen = true;
     }
 
     function frequentFlyerChanged(flyer) {

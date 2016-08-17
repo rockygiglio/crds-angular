@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Models
 {
@@ -18,5 +19,6 @@ namespace MinistryPlatform.Translation.Models
         public List<MpContact> ToContacts { get; set; } 
         public int TemplateId { get; set; }
         public Dictionary<string, object> MergeData { get; set; }
+        public DateTime StartDate { get; set; }
     }
 }

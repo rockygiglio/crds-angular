@@ -223,6 +223,7 @@
     <Compile Include="Services\ChildcareServiceTest.cs" />
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
+    <Compile Include="Services\EmailCommunicationTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
     <Compile Include="Services\GatewayLookupServiceTest.cs" />
     <Compile Include="Services\GoogleMapsAddressProximityServiceTest.cs" />
