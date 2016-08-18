@@ -96,6 +96,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         private int AddCommunication(MpCommunication communication, string token, int communicationStatus)
         {
+            if(communication.StartDate == default(DateTime))
+                communication.StartDate = DateTime.Now;
+            
             var dictionary = new Dictionary<string, object>
             {
                 {"Subject", communication.EmailSubject},
