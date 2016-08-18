@@ -32,7 +32,7 @@
               <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
             </div>
           </div>
-          <div class='row push-quarter-bottom' ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation)'>
+          <div class='row push-quarter-bottom' ng-if='groupDetailAbout.isLeader'>
             <div class='group-detail-label col-sm-4'><strong>Visibility</strong></div>
             <div class='col-sm-8'>{{groupDetailAbout.data.visibility()}}</div>
           </div>
@@ -73,8 +73,14 @@
 
     </div>
   </div>
-  <div class='push-top text-right' ng-if='groupDetailAbout.isLeader'>
-      <button type='button' ng-click="groupDetailAbout.goToEnd()" class='push-half-bottom btn btn-standard btn-block-mobile'>End Group</button>
-      <button type='button' ng-click='groupDetailAbout.goToEdit()' class='push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
+  <div class='push-top text-center sm-text-right' ng-if='groupDetailAbout.showFooter'>
+    <button type='button' ng-if='groupDetailAbout.isLeader' ng-click="groupDetailAbout.goToEnd()" class='push-half-bottom btn btn-standard btn-block-mobile'>End Group</button>
+    <button type='button' ng-if='groupDetailAbout.isLeader' ng-click='groupDetailAbout.goToEdit()' class='push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
+    <a ui-sref="grouptool.mygroups" class="sm-pull-left">
+      <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+        <use xlink:href="#arrow-circle-o-left"></use>
+      </svg>
+      Back to My Groups
+    </a>
   </div>
 </div>

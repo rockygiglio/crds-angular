@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -132,6 +134,56 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var parsed = _fixture.ParseTemplateBody("This is [Key1] and [Key2]", mergeData);
             Assert.AreEqual("This is Value1 and ", parsed);
+        }
+
+        [Test]
+        public void TestSendMessageWithDate()
+        {
+            MpCommunication comm = new MpCommunication()
+            {
+                AuthorUserId = 1,
+                DomainId = 2,
+                EmailBody = "body",
+                EmailSubject = "subject",
+                FromContact = new MpContact(),
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = new MpContact(),
+                StartDate = new DateTime(2017, 1, 1),
+                TemplateId = 123,
+                ToContacts = new List<MpContact>()
+            };
+            var spiedDict = new Dictionary<string, object>();
+            _ministryPlatformService.Setup(mock => mock.CreateRecord(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(),false))
+                .Callback<int, Dictionary<string, object>, string, bool>((id, dict, token, bl) => spiedDict = dict);
+            _ministryPlatformService.Setup(mock => mock.CreateSubRecord(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Returns(1);
+            _fixture.SendMessage(comm);
+            Assert.AreEqual(comm.StartDate, spiedDict["Start_Date"]);
+
+        }
+
+        [Test]
+        public void TestSendMessageWithoutDate()
+        {
+            MpCommunication comm = new MpCommunication()
+            {
+                AuthorUserId = 1,
+                DomainId = 2,
+                EmailBody = "body",
+                EmailSubject = "subject",
+                FromContact = new MpContact(),
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = new MpContact(),
+                TemplateId = 123,
+                ToContacts = new List<MpContact>()
+            };
+            var spiedDict = new Dictionary<string, object>();
+            _ministryPlatformService.Setup(mock => mock.CreateRecord(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Callback<int, Dictionary<string, object>, string, bool>((id, dict, token, bl) => spiedDict = dict);
+            _ministryPlatformService.Setup(mock => mock.CreateSubRecord(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Returns(1);
+            _fixture.SendMessage(comm);
+            Assert.AreEqual(DateTime.Now, spiedDict["Start_Date"]);
         }
     }
 }

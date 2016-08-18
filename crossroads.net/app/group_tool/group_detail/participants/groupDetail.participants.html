@@ -16,17 +16,21 @@
   </div>
   <div class='row'>&nbsp;</div>
 
-  <div ng-if="groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
+  <div ng-if="groupDetailParticipants.isListView() && groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
 
-  <div ng-if="groupDetailParticipants.data.length > 1" class='row'>
-    <div class='col-md-12'>
-      <p class='text-center' ng-if='groupDetailParticipants.isListView()'>
-        <a type='button' class='btn btn-primary' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
-      </p>
-      <p class='text-center' ng-if='groupDetailParticipants.isEditView()'>
-        <a type='button' class='btn btn-primary' href='#' ng-click='groupDetailParticipants.setListView()' ng-if='groupDetailParticipants.isLeader'>Cancel</a>
-      </p>
+  <div class="text-center sm-text-right">
+    <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView()'>
+      <a type='button' class='btn btn-standard btn-block-mobile push-half-bottom' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
+      <a type='button' class='btn btn-primary btn-block-mobile push-half-bottom' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
+      <a ui-sref="grouptool.mygroups" class="sm-pull-left">
+        <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+          <use xlink:href="#arrow-circle-o-left"></use>
+        </svg>
+        Back to My Groups
+      </a>
+    </div>
+    <div ng-if='groupDetailParticipants.isEditView()' class="inline">
+      <a type='button' class='btn btn-primary btn-block-mobile push-half-bottom' href='#' ng-click='groupDetailParticipants.setListView()' ng-if='groupDetailParticipants.isLeader'>Cancel</a>
     </div>
   </div>
 </div>

@@ -5,14 +5,14 @@
   <form ng-submit="endGroup.endGroup()" novalidate name="endGroup.endGroupForm">
     <formly-form model="endGroup.model" fields="endGroup.fields" form="endGroup.endGroupForm"
       options="createGroup.options" ng-cloak>
-      <div class="col-md-12 push-top text-center">
-        <button type="submit" class="btn btn-standard" ng-click="endGroup.cancel()">Cancel</button>
+      <div class="col-md-12 push-top text-center sm-text-right">
+        <button type="submit" class="btn btn-standard btn-block-mobile mobile-push-half-bottom" ng-click="endGroup.cancel()">Cancel</button>
         <loading-button
             normal-text='Submit'
             loading-text='Ending...'
             loading='endGroup.saving'
             loading-class='disabled'
-            input-classes='btn btn-primary submit-button'
+            input-classes='btn btn-primary submit-button btn-block-mobile mobile-push-half-bottom'
             type="submit"
             ng-click='endGroup.submit()'></loading-button>
       </div>
