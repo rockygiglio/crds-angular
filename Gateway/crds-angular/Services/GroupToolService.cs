@@ -10,6 +10,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace crds_angular.Services
 {
@@ -25,7 +26,6 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
         private readonly IContactRepository _contactRepository;
-        private readonly IConfigurationWrapper _configurationWrapper;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -76,7 +76,7 @@ namespace crds_angular.Services
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
 
-               _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+            _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
@@ -96,7 +96,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception retrieving invitations for SourceID = {0}, InvitationTypeID = {1}.", sourceId, invitationTypeId);
+                var message = $"Exception retrieving invitations for SourceID = {sourceId}, InvitationTypeID = {invitationTypeId}.";
                 _logger.Error(message, e);
                 throw;
             }
@@ -115,7 +115,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception retrieving inquiries for group id = {0}.", groupId);
+                var message = $"Exception retrieving inquiries for group id = {groupId}.";
                 _logger.Error(message, e);
                 throw;
             }
@@ -134,9 +134,9 @@ namespace crds_angular.Services
                 {
                     SendGroupParticipantEmail(groupId,
                                               groupParticipantId,
-                                              true,
                                               myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
+                                              null,
                                               GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
@@ -144,7 +144,7 @@ namespace crds_angular.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.Warn(string.Format("Could not send email to group participant {0} notifying of removal from group {1}", groupParticipantId, groupId), e);
+                    _logger.Warn($"Could not send email to group participant {groupParticipantId} notifying of removal from group {groupId}", e);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -154,14 +154,30 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                throw new GroupParticipantRemovalException(string.Format("Could not remove group participant {0} from group {1}", groupParticipantId, groupId), e);
+                throw new GroupParticipantRemovalException($"Could not remove group participant {groupParticipantId} from group {groupId}", e);
             }
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int participantId, bool groupParticpantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
+        public void SendGroupParticipantEmail(int groupId,
+                                       int? toGroupParticipantId,
+                                       GroupDTO group,
+                                       int emailTemplateId,
+                                       Participant toParticipant = null,
+                                       string subjectTemplateContentBlockTitle = null,
+                                       string emailTemplateContentBlockTitle = null,
+                                       string message = null,
+                                       Participant fromParticipant = null)
         {
-            var participant = groupParticpantId ? group.Participants.Find(p => p.GroupParticipantId == participantId) : group.Participants.Find(p => p.ParticipantId == participantId);
+            var participant = toParticipant == null
+                ? group.Participants.Find(p => p.GroupParticipantId == toGroupParticipantId)
+                : new GroupParticipantDTO
+                {
+                    ContactId = toParticipant.ContactId,
+                    Email = toParticipant.EmailAddress,
+                    NickName = toParticipant.PreferredName,
+                    ParticipantId = toParticipant.ParticipantId
+                };
 
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
             var fromContact = new MpContact
@@ -171,7 +187,7 @@ namespace crds_angular.Services
             };
             var replyTo = new MpContact
             {
-                ContactId = fromParticipant == null ? emailTemplate.ReplyToContactId : fromParticipant.ContactId,
+                ContactId = fromParticipant?.ContactId ?? emailTemplate.ReplyToContactId,
                 EmailAddress = fromParticipant == null ? emailTemplate.ReplyToEmailAddress : fromParticipant.EmailAddress
             };
 
@@ -184,12 +200,10 @@ namespace crds_angular.Services
                     }
                 };
 
-            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content;
+            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
-            mergeData["Email_Template_Text"] = emailTemplateText;
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
-            mergeData["Subject_Template_Text"] = subjectTemplateText;
             mergeData["Group_Name"] = group.GroupName;
             mergeData["Group_Description"] = group.GroupDescription;
             if (fromParticipant != null)
@@ -197,6 +211,13 @@ namespace crds_angular.Services
                 mergeData["From_Display_Name"] = fromParticipant.DisplayName;
                 mergeData["From_Preferred_Name"] = fromParticipant.PreferredName;
             }
+
+            // Since the templates are coming from content blocks, they may have replacement tokens in them as well.
+            // These will not get replaced with merge data in _communicationRepository.SendMessage(), (it doesn't doubly
+            // replace) so we'll parse them here before adding them to the merge data.
+            mergeData["Subject_Template_Text"] = _communicationRepository.ParseTemplateBody(Regex.Replace(subjectTemplateText, "<.*?>", string.Empty), mergeData);
+            mergeData["Email_Template_Text"] = _communicationRepository.ParseTemplateBody(emailTemplateText, mergeData);
+
             var email = new MpCommunication
             {
                 EmailBody = emailTemplate.Body,
@@ -219,7 +240,7 @@ namespace crds_angular.Services
 
             if (group == null)
             {
-                throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for user", groupId));
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for user");
             }
 
             var groupParticipants = group.Participants;
@@ -228,7 +249,7 @@ namespace crds_angular.Services
             if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
                 groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
             {
-                throw new NotGroupLeaderException(string.Format("User is not a leader of group {0}", groupId));
+                throw new NotGroupLeaderException($"User is not a leader of group {groupId}");
             }
 
             return new MyGroup
@@ -260,7 +281,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                throw new GroupParticipantRemovalException(string.Format("Could not add Inquirier {0} from group {1}", inquiry.InquiryId, groupId), e);
+                throw new GroupParticipantRemovalException($"Could not add Inquirier {inquiry.InquiryId} from group {groupId}", e);
             }
         }
 
@@ -271,7 +292,6 @@ namespace crds_angular.Services
 
             try
             {
-                //TODO:: Update template id
                 SendApproveDenyInquiryEmail(
                     true,
                     groupId,
@@ -284,7 +304,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 
@@ -294,7 +314,6 @@ namespace crds_angular.Services
 
             try
             {
-                //TODO:: Update template id
                 SendApproveDenyInquiryEmail(
                     false,
                     groupId,
@@ -307,7 +326,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn(string.Format("Could not send email to Inquirier {0} notifying of being approved to group {1}", inquiry.InquiryId, groupId), e);
+                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 
@@ -319,10 +338,10 @@ namespace crds_angular.Services
                 var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
                 SendGroupParticipantEmail(groupId,
-                                          participant.ParticipantId,
-                                          false,
+                                          null,
                                           group,
                                           emailTemplateId,
+                                          participant,
                                           subject,
                                           emailTemplateContentBlockTitle,
                                           message,
@@ -330,7 +349,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn(string.Format("Could not send email to Inquirer {0} notifying for group {1}", inquiry.InquiryId, groupId), e);
+                _logger.Warn($"Could not send email to Inquirer {inquiry.InquiryId} notifying for group {groupId}", e);
             }
         }
 
@@ -354,7 +373,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                throw new GroupParticipantRemovalException(string.Format("Could not accept = {0} from group {1}", accept, groupId), e);
+                throw new GroupParticipantRemovalException($"Could not accept = {accept} from group {groupId}", e);
             }
         }
 
@@ -386,7 +405,7 @@ namespace crds_angular.Services
             var email = new MpCommunication
             {
                 EmailBody = message.Body,
-                EmailSubject = string.Format("Crossroads Group {0}: {1}", group.GroupName, message.Subject),
+                EmailSubject = $"Crossroads Group {@group.GroupName}: {message.Subject}",
                 AuthorUserId = _defaultAuthorUserId,
                 DomainId = _domainId,
                 FromContact = fromContact,
@@ -439,16 +458,16 @@ namespace crds_angular.Services
         {
             if (groups == null || !groups.Any())
             {
-                throw new GroupNotFoundForParticipantException(string.Format("Could not find group {0} for groupParticipant {1}", groupId, groupParticipantId));
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for groupParticipant {groupParticipantId}");
             }
 
-            var groupParticipants = groups.FirstOrDefault().Participants;
+            var groupParticipants = groups.First().Participants;
             var me = _participantRepository.GetParticipantRecord(token);
 
             if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
                 groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
             {
-                throw new NotGroupLeaderException(string.Format("Group participant {0} is not a leader of group {1}", groupParticipantId, groupId));
+                throw new NotGroupLeaderException($"Group participant {groupParticipantId} is not a leader of group {groupId}");
             }
         }
 
@@ -456,6 +475,7 @@ namespace crds_angular.Services
         {
             //get all participants before we end the group so they are not endDated and still
             //available from this call.
+            // ReSharper disable once RedundantArgumentDefaultValue
             var participants = _groupService.GetGroupParticipants(groupId, true);
             _groupService.EndDateGroup(groupId, reasonEndedId);
             foreach (var participant in participants)
@@ -474,18 +494,20 @@ namespace crds_angular.Services
             };
 
             var domainId = Convert.ToInt32(_domainId);
-            var from = new MpContact()
+            var from = new MpContact
             {
                 ContactId = _defaultEmailContactId,
                 EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultEmailContactId)
             };
 
-            var to = new List<MpContact>();
-            to.Add(new MpContact()
+            var to = new List<MpContact>
             {
-                ContactId = participant.ContactId,
-                EmailAddress = participant.Email
-            });
+                new MpContact
+                {
+                    ContactId = participant.ContactId,
+                    EmailAddress = participant.Email
+                }
+            };
 
             var groupEnded = new MpCommunication
             {
@@ -500,6 +522,7 @@ namespace crds_angular.Services
                 ToContacts = to,
                 StartDate = DateTime.Now
             };
+            // ReSharper disable once RedundantArgumentDefaultValue
             _communicationRepository.SendMessage(groupEnded, false);
         }
 
@@ -544,20 +567,19 @@ namespace crds_angular.Services
         
         public void SubmitInquiry(string token, int groupId)
         {
-            var active = true;
             var participant = _participantRepository.GetParticipantRecord(token);
             var contact = _contactRepository.GetContactById(participant.ContactId);
 
             // check to see if the inquiry is going against a group where a person is already a member or has an outstanding request to join
             var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && (r.Placed == null || r.Placed == true));
-            var participants = _groupRepository.GetGroupParticipants(groupId, active).Where(r => r.ContactId == participant.ContactId);
+            var participants = _groupRepository.GetGroupParticipants(groupId, true).Where(r => r.ContactId == participant.ContactId);
 
             if (requestsForContact.Any() || participants.Any())
             {
                 throw new ExistingRequestException("User is already member or has request");
             }
 
-            MpInquiry mpInquiry = new MpInquiry
+            var mpInquiry = new MpInquiry
             {
                 ContactId = participant.ContactId,
                 GroupId = groupId,
@@ -565,7 +587,7 @@ namespace crds_angular.Services
                 PhoneNumber = contact.Home_Phone,
                 FirstName = contact.Nickname,
                 LastName = contact.Last_Name,
-                RequestDate = System.DateTime.Now
+                RequestDate = DateTime.Now
             };
 
             _groupRepository.CreateGroupInquiry(mpInquiry);
