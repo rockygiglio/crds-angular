@@ -118,8 +118,8 @@ namespace crds_angular.Controllers.API
         [Route("api/lookup/groupreasonended")]
         [HttpGet]
         public IHttpActionResult LookupGroupReasonEnded()
-        {
-            return Lookup("groupreasonended");
+        {        
+            return LookupValues("groupreasonended","");
         }
 
         /// <summary>

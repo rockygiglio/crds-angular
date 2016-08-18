@@ -1,20 +1,20 @@
 <section class="current-series">
     <figure class="container text-center wow fadeIn">
-      <img src="{{currentSeriesPicture}}">
-      <figcaption>Current Series</figcaption>
+      <img src="{{picture}}" class="img-responsive">
+      <figcaption [hidden]="!visible">Current Series</figcaption>
     </figure>
 
     <main id="series" class="container">
-      <article class="wow fadeInUp">
-        <h2>{{currentSeriesTitle}} <small>{{ currentSeriesRunningDates}} </small></h2>
-        <p class="lead">{{currentSeriesDescription | htmlToPlainText}}</p>
+      <article class="wow fadeInUp" [hidden]="!visible">
+        <h2>{{title}} <small>{{ runningDates}} </small></h2>
+        <p class="lead">{{description | htmlToPlainText}}</p>
         <p class="small">Topics covered:</p>
         <ul class="topic-list">
-          <li *ngFor="let tag of currentSeriesTags">
+          <li *ngFor="let tag of tags">
             <a href="/search?q={{tag | replaceNonAlphaNumeric }}">{{tag}}</a>
           </li>
         </ul>
-        <p><a href={{currentSeriesTrailer}} class="btn btn-primary">Watch Trailer</a></p>
+        <p><a href={{trailer}} *ngIf="trailer" class="btn btn-primary">Watch Trailer</a></p>
       </article>
       <aside id="schedule">
         <schedule class="wow fadeInUp"></schedule>

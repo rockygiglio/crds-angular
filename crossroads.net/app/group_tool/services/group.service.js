@@ -139,7 +139,7 @@ export default class GroupService {
   }
 
   endGroup(groupId, groupReasonEndedId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/end`)
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
                           .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
     return promise.then((data) => {
         return data;
@@ -295,5 +295,10 @@ export default class GroupService {
     }, (err) => {
       throw err;
     });
+  }
+
+  submitJoinRequest(groupId) {
+      return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+          .save({groupId: groupId},{}).$promise;
   }
 }

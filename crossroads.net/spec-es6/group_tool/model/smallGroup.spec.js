@@ -291,8 +291,27 @@ describe('Group Tool SmallGroup', () => {
 
   describe('getGroupCardWhenField', () => {
     it('should return a group location string for display', () => {
-      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30:00, Every Week');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30 pm, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingTime = "19:30:00";
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 7:30 pm, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingTime = "4:30:00";
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 4:30 am, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingDay = undefined;
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Flexible Meeting Time');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingDay = null;
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Flexible Meeting Time');
     }); 
   });  
-
 });

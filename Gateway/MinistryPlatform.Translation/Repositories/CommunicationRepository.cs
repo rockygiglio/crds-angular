@@ -101,7 +101,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Subject", communication.EmailSubject},
                 {"Body", communication.EmailBody},
                 {"Author_User_Id", communication.AuthorUserId},
-                {"Start_Date", DateTime.Now},
+                {"Start_Date", communication.StartDate},
                 {"From_Contact", communication.FromContact.ContactId},
                 {"Reply_to_Contact", communication.ReplyToContact.ContactId},
                 {"Communication_Status_ID", communicationStatus}
