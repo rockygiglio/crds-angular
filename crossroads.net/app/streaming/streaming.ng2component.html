@@ -1,7 +1,7 @@
 <div class="wrapper" stickyHeader>
   <section class="navbar-section" >
-    <div class="container wow fadeIn">
-      <pageScroll href="#series" class="btn see-schedule">
+    <div class="container animated fadeIn">
+      <pageScroll href="#schedule" class="btn see-schedule">
         See Schedule
         <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
           <use xlink:href="#arrow-down9"></use>
@@ -18,21 +18,7 @@
     </div>
   </section>
 
-  <section class="current-series">
-    <figure class="container text-center wow fadeIn">
-      <dynamic-content-ng2 title="streamingLandingCurrentSeriesImage"></dynamic-content-ng2>
-      <figcaption>Current Series</figcaption>
-    </figure>
-
-    <main id="series" class="container">
-      <article class="wow fadeInUp">
-        <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
-      </article>
-      <aside id="schedule">
-        <schedule class="wow fadeInUp"></schedule>
-      </aside>
-    </main>
-  </section>
+  <current-series></current-series>
 
   <section class="past-weekends">
     <div class="container">
@@ -42,21 +28,7 @@
       </header>
 
       <div class="row">
-        <article class="crds-card wow fadeInUp">
-          <dynamic-content-ng2 title="streamingLandingPastWeekend1"></dynamic-content-ng2>
-        </article>
-
-        <article class="crds-card wow fadeInUp" data-wow-delay="100ms">
-          <dynamic-content-ng2 title="streamingLandingPastWeekend2"></dynamic-content-ng2>
-        </article>
-
-        <article class="crds-card wow fadeInUp" data-wow-delay="200ms">
-          <dynamic-content-ng2 title="streamingLandingPastWeekend3"></dynamic-content-ng2>
-        </article>
-
-        <article class="crds-card wow fadeInUp" data-wow-delay="300ms">
-          <dynamic-content-ng2 title="streamingLandingPastWeekend4"></dynamic-content-ng2>
-        </article>
+        <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
       <a href="/media" class="btn btn-primary btn-block-mobile view-all-mobile">View All Past Weekends</a>

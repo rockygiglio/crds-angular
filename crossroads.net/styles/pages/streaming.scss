@@ -9,6 +9,29 @@ $streaming-blue: #0795E3;
 
 // ----------------------------------------- ###
 
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before{
+      display: block;
+      content: " ";
+      width: 100%;
+      padding-top: ($height / $width) * 100%;
+  }
+
+  > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+  }
+}
+
+.sixteen-nine {
+  overflow: hidden;
+  @include aspect-ratio(16,9);  
+}
+
 @mixin crds-make-condensed {
   font-family: $streaming-font-extra_cond;
   font-size: 170%;
@@ -34,6 +57,7 @@ streaming {
   > .wrapper {
     @include make-row();
     @include clearfix();
+    overflow-x: hidden;
   }
 
   .fixed-header {
@@ -220,6 +244,7 @@ streaming {
         padding: 0.4em 1em;
         background: #D3DFE6;
         color: $gray;
+        position: absolute;
 
         @media (min-width: $screen-sm-min) {
           margin-left: 8em;
@@ -227,6 +252,28 @@ streaming {
       }
       .img-responsive {
         margin: 0 auto;
+      }
+
+    }
+    .topic-list {
+      padding: 0;
+      list-style: none;
+      margin: 0 0 1.5em;
+
+      li {
+        display: inline;
+        
+        &:after {
+          content: ", ";
+          margin-left: -4px;
+        }
+        &:last-child:after {
+          content: "";
+        }
+        a {
+          font-size: 87%;
+          text-transform: lowercase;
+        }
       }
     }
     article {
@@ -251,6 +298,10 @@ streaming {
 
       p {
         margin: 0 0 1.5em;
+
+        &.small {
+          margin: 0;
+        }
       }
 
       .lead {
@@ -342,14 +393,41 @@ streaming {
       }
     }
 
+
     figcaption {
       font-family: $streaming-font-extra_cond;
       font-size: 210%;
+      top: -0.85em;
+    }
+
+    section {
+      top: -1em;
     }
 
     figure > a {
       display: block;
       width: 100%;
+      margin-bottom: 2%; 
+    }
+
+    @media (max-width: $screen-xs-max) { 
+      figcaption {
+        top: -1.15em;
+      }
+
+      figure > a {
+        margin-bottom: 2%;
+      }
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      figure > a {
+        margin-bottom: 2%;
+        margin-left: 2%;
+        margin-right: 2%;
+      }
+      figcaption {
+        top: -0.95em;
+      }
     }
 
     .view-all-mobile {
@@ -493,15 +571,112 @@ streaming {
 
 .live-stream {
   display: block;
-  background: #101010;
+  background: #000;
   background-size: cover;
   width: 100%;
   min-height: 100vh;
   padding: 0 0 5em;
   color: #FFF;
 
-  header {
-    margin-bottom: 2em;
+  content-card {
+
+    @media only screen and (max-width:  $screen-md-min - 1){
+      @include make-sm-column(12);
+      &:nth-child(2n+1) {
+        clear: left;
+      }
+    }
+    @media only screen and (min-width:  $screen-md-min){
+      @include make-md-column(6);
+    }
+
+    &, h3 {
+      color: $gray;
+    }
+    a {
+      cursor: default;
+    }
+
+    figure {
+      background-color: #fff;
+    }
+
+    section {
+      background-color: #fff;
+      padding-bottom: 25px;
+    }
+
+    header {
+      border-top: 1px solid lighten($gray, 50%);
+
+      h2 {
+        color: lighten($gray, 50%);
+        margin: 0;
+        font-size: 200%;
+        margin: 0.75em 0;
+      }
+      .view-all-desktop {
+        font-size: 80%;
+        margin-top: 3em;
+        display: none;
+        @media only screen and (min-width:  $screen-sm-min){
+          display: block;
+        }
+      }
+    }
+
+
+    figcaption {
+      font-family: $streaming-font-extra_cond;
+      font-size: 210%;
+      top: -0.85em;
+    }
+
+    section {
+      top: -1em;
+    }
+
+    figure > a {
+      display: block;
+      width: 100%;
+      margin-bottom: 2%; 
+    }
+
+    @media (max-width: $screen-xs-max) { 
+      figcaption {
+        top: -1.15em;
+      }
+
+      figure > a {
+        margin-bottom: 2%;
+        margin-left: 2%;
+        margin-right: 2%;
+      }
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      figure > a {
+        margin-bottom: 2%;
+        margin-left: 2%;
+        margin-right: 2%;
+      }
+      figcaption {
+        top: -0.95em;
+      }
+    }
+
+    .view-all-mobile {
+      @media only screen and (min-width:  $screen-sm-min){
+        display: none;
+      }
+    }
+
+    .container {
+      padding: 0;
+      @media (min-width: $screen-sm-min) {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+    }
   }
 
   h2 {
@@ -523,38 +698,20 @@ streaming {
 
   @media (min-width: $screen-sm) {
     .related {
-      @include make-sm-column(7);
+      @include make-sm-column(6);
     }
     .participate {
-      @include make-sm-column(4);
+      @include make-sm-column(5);
       @include make-sm-column-offset(1);
     }
   }
 
-  .related {
-    a {
-      display: block;
-      width: 100%;
-      color: #FFF;
-      &:hover {
-        color: darken(#FFF, 20%);
-      }
-    }
-    figure {
-      @include make-xs-column(6);
-      margin-bottom: 2em;
-      position: relative;
-      figcaption {
-        @include crds-make-condensed();
-        font-size: 200%;
-        letter-spacing: normal;
+  .digital-program {
+    background: #252526;
+    padding-bottom: 15px;
 
-        @media (min-width: $screen-sm-min) {
-          position: absolute;
-          bottom: 0.75em;
-          left: 1em;
-        }
-      }
+    header {
+      @include make-md-column(12);
     }
 
     .gradient {
@@ -577,6 +734,9 @@ streaming {
   }
 
   .participate {
+    .promo {
+      @include make-md-column(12);
+    }
     @media (min-width: $screen-md-min) {
       figure {
         @include make-md-column(4);
@@ -585,8 +745,16 @@ streaming {
           width: 100%;
         }
       }
-      article {
+      section {
         @include make-md-column(8);
+      }
+    }
+
+    .promo {
+      &:last-child {
+        hr {
+          display: none;
+        }
       }
     }
 
@@ -603,6 +771,9 @@ streaming {
     hr {
       margin-top: 0;
       border-color: darken($gray, 10%);
+      clear: both;
+
+      
     }
     figure {
       margin-bottom: 1em;
@@ -640,8 +811,14 @@ streaming {
     }
   }
 
+  .control-container {
+    background: #252526;
+    padding: 10px 0;
+  }
+
   .pushdown-container {
     background: #252526;
+
     .pull-right {
       color: #FFF;
       display: block;
@@ -663,3 +840,97 @@ streaming {
     }
   }
 } // .live-stream
+
+
+
+.vjs-crds-skin {
+  overflow: hidden;
+
+  .vjs-control-bar {
+    background: transparent;
+  }
+
+  .vjs-progress-holder {
+    background-color: #4B4A51;
+  }
+
+  .vjs-load-progress {
+    background-color: #878A95;
+  }
+
+  .vjs-play-progress {
+    background-color: $streaming-blue;
+  }
+
+  .vjs-remaining-time {
+    display: none;
+  }
+
+  .vjs-current-time,
+  .vjs-duration,
+  .vjs-time-divider {
+    display: none;
+    order: 5;
+    width: auto;
+  }
+
+  .vjs-live-control {
+    flex: none;
+    width: auto;
+  }
+
+  .vjs-current-time {
+    padding-right: 0;
+  }
+
+  .vjs-duration {
+    padding-left: 0;
+  }
+
+  .vjs-time-divider {
+    margin: 0;
+  }
+
+  .vjs-current-time {
+    margin-left: 1em;
+  }
+
+  .vjs-volume-menu-button {
+    order: 1;
+  }
+
+  .vjs-chromecast-button,
+  .vjs-fullscreen-control {
+    order: 7;
+    flex: none;
+    position: absolute;
+    right: 0;
+  }
+
+  .vjs-chromecast-button {
+    right: 5.5em;
+  }
+
+  .vjs-fullscreen-control {
+    font-size: 120%;
+    margin-top: -0.35em;
+  }
+
+  .vjs-play-control {
+    flex: none;
+    align-self: center;
+    font-size: 250%;
+    margin-top: -3.2em;
+    width: 2em;
+  }
+
+  .vjs-progress-control {
+    flex: none;
+    position: absolute;
+    width: 100%;
+    bottom: 2em;
+    padding-right: 6em;
+    left: 5.35em;
+  }
+
+} // .vjs-crds-skin

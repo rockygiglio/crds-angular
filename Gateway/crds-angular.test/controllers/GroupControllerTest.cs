@@ -30,6 +30,7 @@ namespace crds_angular.test.controllers
         private Mock<IParticipantRepository> _participantServiceMock;
         private Mock<crds_angular.Services.Interfaces.IAddressService> _addressServiceMock;        
         private Mock<IGroupSearchService> _groupSearchServiceMock;
+        private Mock<IGroupToolService> _groupToolServiceMock;
         private string _authType;
         private string _authToken;
 
@@ -41,8 +42,9 @@ namespace crds_angular.test.controllers
             _participantServiceMock = new Mock<IParticipantRepository>();
             _addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
             _groupSearchServiceMock = new Mock<IGroupSearchService>();
+            _groupToolServiceMock = new Mock<IGroupToolService>();
 
-            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object);
+            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
@@ -555,7 +557,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldEditGroupSuccessfully()
+        public void ShouldEditGroupSuccessfully()
         {
             var group = new GroupDTO()
             {
@@ -575,7 +577,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldNotEditGroup()
+        public void ShouldNotEditGroup()
         {
             Exception ex = new Exception();
 

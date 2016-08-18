@@ -1,7 +1,7 @@
 
 import SmallGroup from '../../../app/group_tool/model/smallGroup';
 
-describe('Group Tool SmallGroup', () => {
+describe('Group Tool SmallGroup', () => { 
 
   let smallGroup,
     mockJson;
@@ -223,6 +223,60 @@ describe('Group Tool SmallGroup', () => {
     });
   });
 
+  describe('hasAddress()', () => {
+    it('should return true if address components are set', () => {
+      let group = new SmallGroup({address: {
+        addressLine1: 'line1',
+        city: 'the city',
+        state: 'the state',
+        zip: 'the zip'
+      }});
+      expect(group.hasAddress()).toBeTruthy();
+    });
+
+    it('should return false if addressLine1 is missing', () => {
+      let group = new SmallGroup({address: {
+        city: 'the city',
+        state: 'the state',
+        zip: 'the zip'
+      }});
+      expect(group.hasAddress()).toBeFalsy();
+    });
+
+    it('should return false if city is missing', () => {
+      let group = new SmallGroup({address: {
+        addressLine1: 'line1',
+        state: 'the state',
+        zip: 'the zip'
+      }});
+      expect(group.hasAddress()).toBeFalsy();
+    });
+
+    it('should return false if state is missing', () => {
+      let group = new SmallGroup({address: {
+        addressLine1: 'line1',
+        city: 'the city',
+        zip: 'the zip'
+      }});
+      expect(group.hasAddress()).toBeFalsy();
+    });
+
+    it('should return false if zip is missing', () => {
+      let group = new SmallGroup({address: {
+        addressLine1: 'line1',
+        city: 'the city',
+        state: 'the state'
+      }});
+      expect(group.hasAddress()).toBeFalsy();
+    });
+
+    it('should return false if address is missing', () => {
+      let group = new SmallGroup();
+      group.address = undefined;
+      expect(group.hasAddress()).toBeFalsy();
+    });
+  });
+
   describe('categoriesToString()', () => {
     it('is Interest / Boxing, Men\'s / Father\'s', () => {
       expect(smallGroup.categoriesToString()).toEqual('Interest / Boxing, Men\'s / Father\'s');
@@ -235,4 +289,29 @@ describe('Group Tool SmallGroup', () => {
     });
   });
 
+  describe('getGroupCardWhenField', () => {
+    it('should return a group location string for display', () => {
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30 pm, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingTime = "19:30:00";
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 7:30 pm, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingTime = "4:30:00";
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 4:30 am, Every Week');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingDay = undefined;
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Flexible Meeting Time');
+    }); 
+
+    it('should return a group location string for display', () => {
+      smallGroup.meetingDay = null;
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Flexible Meeting Time');
+    }); 
+  });  
 });

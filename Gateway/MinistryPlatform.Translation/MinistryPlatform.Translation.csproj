@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Repositories\Interfaces\ITripRepository.cs" />
     <Compile Include="Models\Childcare\MpChildcareCancelledNotification.cs" />
     <Compile Include="Models\Childcare\MpChildcareDashboard.cs" />
     <Compile Include="Models\Childcare\MPRspvd.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
     <Compile Include="Models\MpMessageTemplate.cs" />
     <Compile Include="Models\MpInvitation.cs" />
+    <Compile Include="Models\MpRestAttribute.cs" />
     <Compile Include="Models\MpTripRecord.cs" />
     <Compile Include="Models\MpObjectAttributeType.cs" />
     <Compile Include="Models\MpUser.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Repositories\SelectionRepository.cs" />
     <Compile Include="Repositories\SkillsRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\TripRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />
     <Compile Include="Utils\MPFormatConversion.cs" />

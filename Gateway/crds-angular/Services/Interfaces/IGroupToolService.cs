@@ -15,10 +15,10 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
-                                       int participantId,
-                                       bool isGroupParticipantId,
+                                       int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
+                                       Participant toParticipant = null,
                                        string subjectTemplateContentBlockTitle = null,
                                        string emailTemplateContentBlockTitle = null,
                                        string message = null,
@@ -26,6 +26,10 @@ namespace crds_angular.Services.Interfaces
 
         MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId);
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
+        void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message);
         List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null);
+        void SubmitInquiry(string token, int groupId);
+        void EndGroup(int groupId, int reasonEndedId);
+        void SendGroupEndedParticipantEmail(GroupParticipantDTO participant);
     }
 }

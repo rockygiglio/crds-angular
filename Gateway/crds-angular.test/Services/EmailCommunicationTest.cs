@@ -11,6 +11,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using crds_angular.Models.Crossroads;
 using MinistryPlatform.Translation.Models;
+using Newtonsoft.Json;
 
 namespace crds_angular.test.Services
 {
@@ -31,6 +32,7 @@ namespace crds_angular.test.Services
             _personService = new Mock<IPersonService>();
             _contactService = new Mock<IContactRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
+            _configurationWrapper.Setup(mock => mock.GetConfigIntValue("DefaultContactEmailId")).Returns(5);
             fixture = new EmailCommunication(_communicationService.Object, _personService.Object, _contactService.Object, _configurationWrapper.Object);
         }
 
@@ -54,6 +56,13 @@ namespace crds_angular.test.Services
                 ReplyToContactId = 5,
                 ReplyToEmailAddress = "replyto@test.com."
             };
+
+            MpContact expectedContact = new MpContact()
+            {
+                ContactId = emailData.ToContactId.Value,
+                EmailAddress = "user@test.com"
+            };
+
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(template.ReplyToContactId)).Returns(template.ReplyToEmailAddress);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(emailData.ToContactId.Value)).Returns("user@test.com");
@@ -61,16 +70,15 @@ namespace crds_angular.test.Services
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactIdByEmail(emailData.emailAddress)).Returns(0);
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
-            try
-            {
-                fixture.SendEmail(emailData, null);
-                _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Unexpected exception was thrown");
-            }
+            var spiedComm = new MpCommunication();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false))
+                .Callback<MpCommunication, bool>((comm, token) => spiedComm = comm);
+
+            
+            fixture.SendEmail(emailData, null);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+            Assert.AreEqual(JsonConvert.SerializeObject(expectedContact),JsonConvert.SerializeObject(spiedComm.ToContacts[0]));
+
         }
 
         [Test]
@@ -93,22 +101,27 @@ namespace crds_angular.test.Services
                 ReplyToContactId = 5,
                 ReplyToEmailAddress = "replyto@test.com."
             };
+
+            MpContact expectedContact = new MpContact()
+            {
+                ContactId = 10,
+                EmailAddress = emailData.emailAddress
+            };
+
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(template.ReplyToContactId)).Returns(template.ReplyToEmailAddress);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(template.FromContactId)).Returns(template.FromEmailAddress);
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactIdByEmail(emailData.emailAddress)).Returns(10);
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
-            try
-            {
-                fixture.SendEmail(emailData, null);
-                _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Unexpected exception was thrown");
-            }
+            var spiedComm = new MpCommunication();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false))
+                .Callback<MpCommunication, bool>((comm, token) => spiedComm = comm);
+            
+            fixture.SendEmail(emailData, null);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+            Assert.AreEqual(JsonConvert.SerializeObject(expectedContact), JsonConvert.SerializeObject(spiedComm.ToContacts[0]));
+
         }
 
         [Test]
@@ -131,22 +144,27 @@ namespace crds_angular.test.Services
                 ReplyToContactId = 5,
                 ReplyToEmailAddress = "replyto@test.com."
             };
+
+            MpContact expectedContact = new MpContact()
+            {
+                ContactId = 5,
+                EmailAddress = emailData.emailAddress
+            };
+
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(template.ReplyToContactId)).Returns(template.ReplyToEmailAddress);
             _communicationService.Setup(mocked => mocked.GetEmailFromContactId(template.FromContactId)).Returns(template.FromEmailAddress);
             _communicationService.Setup(mocked => mocked.GetTemplate(emailData.TemplateId)).Returns(template);
             _contactService.Setup(mocked => mocked.GetContactIdByEmail(emailData.emailAddress)).Returns(0);
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
-            try
-            {
-                fixture.SendEmail(emailData, null);
-                _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Unexpected exception was thrown");
-            }
+            var spiedComm = new MpCommunication();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false))
+                .Callback<MpCommunication, bool>((comm, token) => spiedComm = comm);
+
+            fixture.SendEmail(emailData, null);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+            Assert.AreEqual(JsonConvert.SerializeObject(expectedContact), JsonConvert.SerializeObject(spiedComm.ToContacts[0])); ;
+
         }
     }
 }

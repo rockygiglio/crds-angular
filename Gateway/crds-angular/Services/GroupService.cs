@@ -51,6 +51,7 @@ namespace crds_angular.Services
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
+        private readonly int _GroupRoleLeader;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -92,6 +93,7 @@ namespace crds_angular.Services
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
+            _GroupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -112,6 +114,11 @@ namespace crds_angular.Services
                 //save group attributes
                 var configuration = MpObjectAttributeConfigurationFactory.Group();            
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+
+                if (group.MinorAgeGroupsAdded)
+                {
+                    _mpGroupService.SendNewStudentMinistryGroupAlertEmail((List<MpGroupParticipant>) mpGroup.Participants);
+                }
             }
             catch (Exception e)
             {
@@ -392,6 +399,7 @@ namespace crds_angular.Services
                 detail.MeetingDayId = g.MeetingDayId;
                 detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
                 detail.StartDate = g.StartDate;
+                detail.Participants = (g.Participants.Count > 0) ? g.Participants.Select(p => Mapper.Map<MpGroupParticipant, GroupParticipantDTO>(p)).ToList() : null;
 
                 if (events != null)
                 {
@@ -521,9 +529,9 @@ namespace crds_angular.Services
             }
         }
 
-        public void EndDateGroup(int groupId)
+        public void EndDateGroup(int groupId, int? reasonEndedId)
         {
-            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now, reasonEndedId);
         }
 
         public Participant GetParticipantRecord(string token) 
@@ -652,7 +660,8 @@ namespace crds_angular.Services
                 var mpGroup = Mapper.Map<MpGroup>(group);
                 _mpGroupService.UpdateGroup(mpGroup);
 
-                List<GroupParticipantDTO> groupParticipants = GetGroupParticipants(group.GroupId, true);
+                List<MpGroupParticipant> groupParticipants = _mpGroupService.GetGroupParticipants(group.GroupId, true);
+
                 if (groupParticipants.Count(participant => participant.StartDate < group.StartDate) > 0)
                 {
                     UpdateGroupParticipantStartDate(groupParticipants.Where(part => part.StartDate < group.StartDate).ToList(), group.StartDate);
@@ -668,6 +677,12 @@ namespace crds_angular.Services
 
                 var configuration = MpObjectAttributeConfigurationFactory.Group();
                 _objectAttributeService.SaveObjectAttributes(group.GroupId, group.AttributeTypes, group.SingleAttributes, configuration);
+
+                if (group.MinorAgeGroupsAdded)
+                {
+                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
+                    _mpGroupService.SendNewStudentMinistryGroupAlertEmail(leaders);
+                }
             }
             catch (Exception e)
             {
@@ -679,16 +694,14 @@ namespace crds_angular.Services
             return group;
         }
 
-        private void UpdateGroupParticipantStartDate(List<GroupParticipantDTO> participants, DateTime groupStartDate)
+        private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
-            var mpParticipants = Mapper.Map<List<MpGroupParticipant>>(participants);
-
-            foreach (var part in mpParticipants)
+            foreach (var part in participants)
             {
                 part.StartDate = groupStartDate;
             }
 
-            _mpGroupService.UpdateGroupParticipant(mpParticipants);
+            _mpGroupService.UpdateGroupParticipant(participants);
         }
 
     }

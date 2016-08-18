@@ -14,6 +14,8 @@
             </button>
           </span>
         </div>
+        <!-- TODO - This is a hack to get the UI to look right when error on the location input. Someone with CSS skillz would need to do this the right way. -->
+        <p ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">&nbsp;</p>
       </form>
     </div>
     <div class="group-location-tool col-sm-6 col-sm-offset-1 push-half-bottom">
@@ -21,50 +23,61 @@
         <a ng-click="groupSearchResults.showLocationInput = true">Find Groups Near You</a>
       </div>
       <div ng-show="groupSearchResults.showLocationInput">
-        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit()">
-          <label for="location">{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
-          <div class="group-location-input-wrapper">
-            <input id="location" ng-model="groupSearchResults.search.location" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}">
-            <button type="submit" class="btn btn-primary">
-              <span ng-show="!groupSearchResults.searchedWithLocation">Save</span>
-              <span ng-show="groupSearchResults.searchedWithLocation">Update</span>
-            </button>
-            <button type="button" class="btn btn-standard" ng-click="groupSearchResults.showLocationInput = false">Cancel</button>
-          </div>
+        <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit(groupLocationForm)" ng-class='{"has-error": groupLocationForm.$submitted && groupLocationForm.location.$invalid}'>
+            <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
+            <div class="group-location-input-wrapper">
+              <input name="location" ng-model="groupSearchResults.search.location" ng-model-options="{ updateOn: 'submit' }" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
+              <loading-button
+                input-type='submit'
+                normal-text='{{!groupSearchResults.searchedWithLocation ? "Save" : "Update"}}'
+                loading-text='{{!groupSearchResults.searchedWithLocation ? "Saving..." : "Updating..."}}'
+                loading='groupSearchResults.processing'
+                loading-class='disabled'
+                input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+              <button type="button" class="btn btn-standard" ng-click="groupSearchResults.hideLocationForm(groupLocationForm)">Cancel</button>
+            </div>
+            <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
+              <ng-messages-include src="on-pause-messages"></ng-messages-include>
+            </ng-messages>
         </form>
       </div>
       <div ng-show="!groupSearchResults.showLocationInput && groupSearchResults.search.location.length > 0" class="group-location-toggle">
-        <label>Groups Near:</label> <a ng-click="groupSearchResults.showLocationInput = true">{{groupSearchResults.search.location}}</a>
+        <label>Groups Near:</label> <a ng-click="groupSearchResults.showLocationForm(groupLocationForm)">{{groupSearchResults.search.location}}</a>
       </div>
     </div>
   </div>
 
   <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
-  <table ng-show='groupSearchResults.ready' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
-    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+  <div ng-show='groupSearchResults.ready'>
+    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
+  </div>
+
+  <table ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
+    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
       <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
       <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
-      <td data-title="'Leader Site'" sortable="'congregationName'" class="group-site">{{group.congregationName}}</td>
+      <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
       <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Zip Code'" sortable="'address.zip'" class="group-location text-center" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()"><a ng-if="group.address.zip">{{group.address.zip}}</a></td>
+      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a></td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
-        <group-detail-about data="group"></group-detail-about>
+        <group-detail-about data="group" for-search="true"></group-detail-about>
         <div class="text-right push-half-bottom soft-half-right">
-          <button type="button" class="btn btn-secondary" ng-click="group.expanded = false">Close</button>
-          <button type="button" class="btn btn-primary">Request to Join</button>
+          <button type="button" class="btn btn-standard-dark" ng-click="group.expanded = false">Close</button>
+          <button type="button" class="btn btn-secondary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+          <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
         </div>
       </td>
     </tr>
   </table>
 
-  <div ng-show='groupSearchResults.ready' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
+  <div ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
     <div ng-repeat-start="group in groupSearchResults.results"
          class="group-result push-half-bottom soft-half-bottom"
          ng-click="group.expanded = !group.expanded">
@@ -76,11 +89,14 @@
       <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
     </div>
     <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
-      <group-detail-about data="group"></group-detail-about>
+      <group-detail-about data="group" for-search="true"></group-detail-about>
       <div class="soft-half">
-        <button type="button" class="btn btn-primary btn-block">Request to Join</button>
-        <button type="button" class="btn btn-secondary btn-block" ng-click="group.expanded = false">Close</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+        <button type="button" class="btn btn-secondary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+        <button type="button" class="btn btn-standard-dark btn-block" ng-click="group.expanded = false">Close</button>
       </div>
     </div>
   </div>
+
+  <div ng-show='groupSearchResults.ready && groupSearchResults.results == 0' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
 </div>

@@ -6,94 +6,45 @@
       <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
     </div></div>
   </div>
-
+  <div class="control-container ">
+    <div class="container">
+      <a href="/live" class="btn btn-standard-dark">Go Back</a>
+    </div>
+  </div>
   <div class="dark-bg">
     <section class="wow fadeIn">
       <div class="container">
-        <streamspot-iframe></streamspot-iframe>
+        <videojs></videojs>
       </div>
     </section>
   </div>
 
+  <div class="container">
+    <div class="row">
+      <section class="related digital-program" *ngIf="dontMiss.length > 0">
+          <header class="clearfix">
+            <h2>don't miss</h2>
+          </header>
 
-  <!--div class="container">
-
-      <section class="related">
-        <header>
-          <h2>don't miss</h2>
-        </header>
-
-        <div class="row">
-          <figure class="wow fadeInUp" data-wow-delay="100ms">
-            <a href="#" class="gradient"><img data-src="//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive imgix-fluid" /></a>
-            <figcaption><a href="#">Meals to Go</a></figcaption>
-          </figure>
-
-          <figure class="wow fadeInUp" data-wow-delay="200ms">
-            <a href="#" class="gradient"><img data-src="//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive imgix-fluid" /></a>
-            <figcaption><a href="#">Prison Ministry</a></figcaption>
-          </figure>
-
-          <figure class="wow fadeInUp" data-wow-delay="300ms">
-            <a href="#" class="gradient"><img data-src="//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive imgix-fluid" /></a>
-            <figcaption><a href="#">The Super Bowl of Preaching</a></figcaption>
-          </figure>
-
-          <figure class="wow fadeInUp" data-wow-delay="400ms">
-            <a href="#" class="gradient"><img data-src="//crds-cms-uploads.imgix.net/content/images/streaming--series-week2.jpg" alt="" class="img-responsive imgix-fluid" /></a>
-            <figcaption><a href="#">Audition for Awaited</a></figcaption>
-          </figure>
-        </div>
+          <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
 
       </section>
-
-      <section class="participate">
-        <header>
+      <section class="participate digital-program" *ngIf="promos.length > 0">
+        <header class="clearfix">
           <h2>be the church</h2>
         </header>
-
-        <div class="wow fadeInUp" data-wow-delay="500ms">
-          <hr>
-
+        
+        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of promos">
           <figure class="wow fadeIn" data-wow-delay="">
-            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
+            <img src="{{promo.image}}" alt="" class="img-responsive" />
           </figure>
-
-          <article>
-            <h3>Give</h3>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-            <p><a href="#" class="btn btn-sm btn-primary">Give</a></p>
-          </article>
-        </div>
-
-        <div class="wow fadeInUp" data-wow-delay="500ms">
-          &nbsp;<hr>
-
-          <figure>
-            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
-          </figure>
-
-          <article>
-            <h3>Group Up</h3>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
-            <p><a href="#" class="btn btn-sm btn-primary">Join a Group</a></p>
-          </article>
-        </div>
-
-        <div class="wow fadeInUp" data-wow-delay="500ms">
-          &nbsp;<hr>
-
-          <figure>
-            <img src="//placehold.it/120x80" alt="" class="img-responsive" />
-          </figure>
-
-          <article>
-            <h3>Go Trips</h3>
-            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p><a href="#" class="btn btn-sm btn-primary">Learn More</a></p>
-          </article>
-        </div>
-
+          <section>
+            <h3>{{ promo.title }}</h3>
+            <div [innerHTML]="promo.description"></div>
+          </section>
+          <hr>
+        </article>
       </section>
-  </div-->
+    </div>
+  </div>
 </div>
