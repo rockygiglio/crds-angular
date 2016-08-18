@@ -32,7 +32,7 @@
               <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
             </div>
           </div>
-          <div class='row push-quarter-bottom' ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation)'>
+          <div class='row push-quarter-bottom' ng-if='groupDetailAbout.isLeader'>
             <div class='group-detail-label col-sm-4'><strong>Visibility</strong></div>
             <div class='col-sm-8'>{{groupDetailAbout.data.visibility()}}</div>
           </div>
