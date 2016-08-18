@@ -33,7 +33,7 @@ namespace crds_angular.Controllers.API
             eventQueueName = configurationWrapper.GetConfigValue("ScheduledJobsQueueName");
             streamReminderTemplateId = configurationWrapper.GetConfigIntValue("StreamReminderTemplate");
             _messageQueue = messageQueue;
-            //_messageQueue = new MessageQueueImpl(messageQueueFactory.CreateQueue(eventQueueName, QueueAccessMode.Send));
+            _messageQueue.CreateQueue(eventQueueName, QueueAccessMode.Send);
             //messageQueue = messageQueueFactory.CreateQueue(eventQueueName, QueueAccessMode.Send);
             _messageFactory = messageFactory;
         }

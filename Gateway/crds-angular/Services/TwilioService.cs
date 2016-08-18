@@ -1,25 +1,35 @@
-﻿using crds_angular.Services.Interfaces;
+﻿using System;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using log4net;
 using Twilio;
 
 namespace crds_angular.Services
 {
     public class TwilioService : ITextCommunicationService
     {
-        private readonly string _accountSid;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(TwilioService));
+
+        private readonly string _fromPhoneNumber;
         private readonly TwilioRestClient _twilio;
 
         public TwilioService(IConfigurationWrapper configurationWrapper)
         {
-            var configurationWrapper1 = configurationWrapper;
-            _accountSid = configurationWrapper1.GetConfigValue("TwilioAccountSid");
-            var authToken = configurationWrapper1.GetConfigValue("TwilioAuthToken");
-            _twilio = new TwilioRestClient(_accountSid, authToken);
+            var accountSid = configurationWrapper.GetConfigValue("TwilioAccountSid");
+            var authToken = configurationWrapper.GetConfigValue("TwilioAuthToken");
+            _fromPhoneNumber = configurationWrapper.GetConfigValue("TwilioFromPhoneNumber");
+            _twilio = new TwilioRestClient(accountSid, authToken);
         }
 
         public void SendTextMessage(string toPhoneNumber, string body)
         {
-            var message = _twilio.SendMessage(_accountSid, toPhoneNumber, body);
+            _logger.Debug("Sending text message to "+ toPhoneNumber);
+            var message = _twilio.SendMessage(_fromPhoneNumber, toPhoneNumber, body);
+            if (message.RestException != null)
+            {
+                _logger.Error(message.RestException.Message);
+            }
+            
         }
     }
 }

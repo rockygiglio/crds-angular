@@ -10,11 +10,12 @@ namespace Crossroads.Utilities.Messaging
 {
     public class MessageQueueImpl : IMessageQueue
     {
-        private readonly MessageQueue _messageQueue;
+        private readonly IMessageQueueFactory _messageQueueFactory;
+        private MessageQueue _messageQueue;
 
-        public MessageQueueImpl(MessageQueue messageQueue)
+        public MessageQueueImpl(IMessageQueueFactory messageQueueFactory)
         {
-            _messageQueue = messageQueue;
+            _messageQueueFactory = messageQueueFactory;
         }
         public void Send(object message, MessageQueueTransactionType type)
         {
@@ -23,16 +24,8 @@ namespace Crossroads.Utilities.Messaging
 
         public MessageQueue CreateQueue(string queueName, QueueAccessMode accessMode, IMessageFormatter formatter = null)
         {
-            var queue = new MessageQueue(queueName, accessMode)
-            {
-                Formatter = formatter ?? new JsonMessageFormatter(),
-                MessageReadPropertyFilter = new MessagePropertyFilter
-                {
-                    ArrivedTime = true,
-                    Body = true
-                }
-            };
-            return (queue);
+            _messageQueue = _messageQueueFactory.CreateQueue(queueName, accessMode, formatter);
+            return _messageQueue;
         }
 
         public bool Exists(string path)
@@ -42,7 +35,8 @@ namespace Crossroads.Utilities.Messaging
 
         public MessageQueue Create(string path)
         {
-            return MessageQueue.Create(path);
+            _messageQueue = MessageQueue.Create(path);
+            return _messageQueue;
         }
     }
 }
