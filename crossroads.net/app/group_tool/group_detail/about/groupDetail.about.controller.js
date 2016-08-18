@@ -12,6 +12,7 @@ export default class GroupDetailAboutController {
     this.ready = false;
     this.error = false;
     this.isLeader = false;
+    this.showFooter = false;
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
     this.forSearch = (this.forSearch === undefined || this.forSearch === null) ? false : this.forSearch;
@@ -20,7 +21,8 @@ export default class GroupDetailAboutController {
   $onInit() {
     this.groupId = this.state.params.groupId || this.data.groupId;
 
-    if (this.state.params.groupId !== undefined && this.state.params.groupId !== null) {
+    this.showFooter = this.state.params.groupId !== undefined && this.state.params.groupId !== null;
+    if (this.showFooter) {
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
         this.setGroupImageUrl();
