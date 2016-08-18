@@ -58,6 +58,10 @@ export default class ChangeParticipantRoleController {
   }
 
   warningApprenticeMax() {
+    //TODO remove hard coded 5
+    if (this.rootScope.countApprentice >= 5){
+      return true;
+    }
     return false;
   }
 

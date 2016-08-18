@@ -18,6 +18,7 @@ export default class GroupDetailParticipantsController {
     this.isLeader = false;
     this.data = [];
     this.countLeaders = 0;
+    this.countApprentice = 0;
 
     this.setListView();
   }
@@ -35,6 +36,17 @@ export default class GroupDetailParticipantsController {
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
     })
+  }
+
+ getApprenticeCount() {
+    if (!this.data) {
+      return 0;
+    }
+    return this.data.filter(function (val) {
+      //TODO inject constants
+      //return val === CONSTANTS.GROUP.ROLES.APPRENTICE;
+      return val.groupRoleId === 66;
+    }).length;
   }
 
  getLeaderCount() {
@@ -58,10 +70,13 @@ export default class GroupDetailParticipantsController {
         participant.me = participant.participantId === this.myParticipantId;
         participant.imageUrl = `${this.imageService.ProfileImageBaseURL}${participant.contactId}`;
       }, this);
-
+debugger;
       this.ready = true;
+      //TODO move off of rootScope
       this.countLeaders = this.getLeaderCount();
       this.rootScope.countLeaders = this.countLeaders;
+      this.countApprentice = this.getApprenticeCount();
+      this.rootScope.countApprentice = this.countApprentice;
     },
     (err) => {
       this.log.error(`Unable to get group participants: ${err.status} - ${err.statusText}`);
