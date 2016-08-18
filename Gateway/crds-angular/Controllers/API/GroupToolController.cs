@@ -98,7 +98,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="groupId">The id of a group</param>
         /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
-        /// <returns>Http Result</returns>       
+        /// <returns>Http Result</returns>
+        [AcceptVerbs("POST")]
         [RequiresAuthorization]
         [HttpPost]
         [Route("api/grouptool/{groupId:int}/endsmallgroup")]
@@ -114,7 +115,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    _logger.Error("Could not end group", e);
+                    _logger.Error("Could not end group: " + groupId, e);
                     return BadRequest();
                 }
             });
@@ -321,18 +322,21 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
-
-                    //Will return group if they are a group leader
                     return Ok(group);
                 }
-                catch(NotGroupLeaderException)
+                catch (GroupNotFoundForParticipantException exception)
+                {
+                    var apiError = new ApiErrorDto("User is not in GroupId: " + groupId, exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (NotGroupLeaderException)
                 {
                     //Will return empty group if they are not a group leader
                     return Ok(new MyGroup());
                 }
                 catch (Exception exception)
                 {
-                    var apiError = new ApiErrorDto("Get if leader Failed", exception);
+                    var apiError = new ApiErrorDto("Error while verify Group Leader of GroupId: " + groupId, exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
