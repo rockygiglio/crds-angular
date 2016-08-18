@@ -253,6 +253,7 @@
     <Compile Include="Models\Crossroads\GoVolunteer\OrganizationTest.cs" />
     <Compile Include="Models\Json\RestHttpActionResultTest.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Processors\SendTextMessageJobTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\MPAuthTest.cs" />
     <Compile Include="Services\AccountServiceTest.cs" />
