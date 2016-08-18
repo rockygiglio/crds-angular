@@ -16,7 +16,7 @@
   </div>
   <div class='row'>&nbsp;</div>
 
-  <div ng-if="groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
+  <div ng-if="groupDetailParticipants.isListView() && groupDetailParticipants.isLeader" dynamic-content="$root.MESSAGES.groupToolDetailParticipantsHelpText.content | html" class="text-center"></div>
 
   <div ng-if="groupDetailParticipants.data.length > 1" class="text-center sm-text-right">
     <div ng-if='groupDetailParticipants.isListView()' class="inline">
