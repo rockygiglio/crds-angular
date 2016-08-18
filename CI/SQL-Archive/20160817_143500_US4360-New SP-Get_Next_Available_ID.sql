@@ -28,10 +28,9 @@ AS
 BEGIN
 	DECLARE @tablePK     NVARCHAR(50),	 					  
 			@sql         NVARCHAR(4000),
-			@tableId     NVARCHAR(50),
+			@tableId     INT,
 			@counts      INT,
-			@high		 INT,
-			@low 		 INT, 
+			@high		 INT,			
 			@IdCnt       INT = 1			 
 	
 	WHILE @IdCnt < 99
@@ -40,19 +39,19 @@ BEGIN
 		SELECT @tableId = low_range, @high = high_range FROM  Range_Tracker 
 						WHERE mp_table_name = @tableName;
 
-		IF NULLIF(@tableId, '') IS NULL	
+		IF @tableId IS NULL	
 		BEGIN
 			RAISERROR('Invalid table name', 16, 1)
 			RETURN 	
 		END
 				
-		IF @high <= (CAST(@tableId AS decimal(10,0)))
+		IF @high <= @tableId
 		BEGIN
 			RAISERROR('No Values are available.  Contact Prod Support', 16, 1)
 			RETURN 	
 		END
 
-		IF @high - (CAST(@tableId AS decimal(10,0))) < 10
+		IF (@high - @tableId) < 10
 		BEGIN
 			RAISERROR('Need more values.  Contact Prod Support', 08, 1)
 		END		
@@ -63,7 +62,7 @@ BEGIN
 		
 		SELECT @sql =
 			N' SELECT @cnt=COUNT(*) FROM MinistryPlatform.dbo.' + quotename(@tableName) +
-			N' WHERE ' + @tablePK + ' = ' +  @tableId 
+			N' WHERE ' + @tablePK + ' = ' +  (CAST(@tableId AS NVARCHAR(50)))
 			
 		EXEC sp_executesql @sql, N' @cnt int OUTPUT', @cnt=@counts OUTPUT   
 	
