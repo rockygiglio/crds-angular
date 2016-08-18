@@ -235,27 +235,24 @@ namespace crds_angular.Services
         
         public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
         {
-            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
-            var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
+            var groupParticipant = _groupRepository.GetAuthenticatedUserParticipationByGroupID(token, groupId);
 
-            if (group == null)
-            {
+            if (groupParticipant == null)
                 throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for user");
-            }
 
-            var groupParticipants = group.Participants;
-            var me = _participantRepository.GetParticipantRecord(token);
-
-            if (groupParticipants?.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
-            {
+            if (groupParticipant.GroupRoleId != _groupRoleLeaderId)
                 throw new NotGroupLeaderException($"User is not a leader of group {groupId}");
-            }
 
-            return new MyGroup
+            return new MyGroup()
             {
-                Group = group,
-                Me = me
+                Group = new GroupDTO()
+                {
+                    GroupId = groupId
+                },
+                Me = new Participant()
+                {
+                    ParticipantId = groupParticipant.ParticipantId
+                }
             };
         }
 
