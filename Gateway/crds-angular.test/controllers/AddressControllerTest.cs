@@ -12,12 +12,12 @@ namespace crds_angular.test.controllers
     public class AddressControllerTest
     {
         private AddressController _fixture;
-        private Mock<IAddressProximityService> _addressProximityService;
+        private Mock<IAddressGeocodingService> _addressGeocodingService;
         [SetUp]
         public void SetUp()
         {
-            _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
-            _fixture = new AddressController(_addressProximityService.Object);
+            _addressGeocodingService = new Mock<IAddressGeocodingService>(MockBehavior.Strict);
+            _fixture = new AddressController(_addressGeocodingService.Object);
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace crds_angular.test.controllers
         {
             const string address = "Valid address";
             var addressDto = new AddressDTO();
-            _addressProximityService.Setup(mocked => mocked.ValidateAddress(address)).Returns(addressDto);
+            _addressGeocodingService.Setup(mocked => mocked.ValidateAddress(address)).Returns(addressDto);
 
             var result = _fixture.ValidateAddress(address);
             Assert.IsNotNull(result);
@@ -39,12 +39,12 @@ namespace crds_angular.test.controllers
         {
             const string address = "Invalid address";
             var ex = new InvalidAddressException();
-            _addressProximityService.Setup(mocked => mocked.ValidateAddress(address)).Throws(ex);
+            _addressGeocodingService.Setup(mocked => mocked.ValidateAddress(address)).Throws(ex);
 
             var result = _fixture.ValidateAddress(address);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ResponseMessageResult>(result);
-            var responseMessageResult = (ResponseMessageResult) result;
+            var responseMessageResult = (ResponseMessageResult)result;
             Assert.AreEqual(HttpStatusCode.NotFound, responseMessageResult.Response.StatusCode);
         }
 
@@ -57,7 +57,7 @@ namespace crds_angular.test.controllers
                 PostalCode = "12345"
             };
             var addressDto = new AddressDTO();
-            _addressProximityService.Setup(mocked => mocked.ValidateAddress(address.ToString())).Returns(addressDto);
+            _addressGeocodingService.Setup(mocked => mocked.ValidateAddress(address.ToString())).Returns(addressDto);
 
             var result = _fixture.ValidateAddress(address);
             Assert.IsNotNull(result);
@@ -75,7 +75,7 @@ namespace crds_angular.test.controllers
                 PostalCode = "12345"
             };
             var ex = new InvalidAddressException();
-            _addressProximityService.Setup(mocked => mocked.ValidateAddress(address.ToString())).Throws(ex);
+            _addressGeocodingService.Setup(mocked => mocked.ValidateAddress(address.ToString())).Throws(ex);
 
             var result = _fixture.ValidateAddress(address);
             Assert.IsNotNull(result);

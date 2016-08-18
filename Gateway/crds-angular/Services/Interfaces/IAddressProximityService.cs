@@ -8,8 +8,7 @@ namespace crds_angular.Services.Interfaces
     {
         GeoCoordinate GetGeoCoordinates(string address);
         GeoCoordinate GetGeoCoordinates(AddressDTO address);
-        AddressDTO ValidateAddress(string address);
-        AddressDTO ValidateAddress(AddressDTO address);
         List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses);
+        List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses);
     }
 }
