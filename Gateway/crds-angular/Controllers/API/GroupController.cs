@@ -85,7 +85,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, 1, group.GroupId);
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, @group.GroupId);
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
                         _addressService.FindOrCreateAddress(group.Address);
