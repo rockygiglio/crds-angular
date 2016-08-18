@@ -15,21 +15,17 @@ export class StickyHeaderDirective {
   handleScrollEvent(e) {
     let header = document.getElementById('countdown');
     let intro  = document.getElementById('intro');
-    let fixed  = this.el.classList.contains('fixed-header')
     let offset = this.el.getBoundingClientRect().top;
-    // console.log(`offset: ${window.pageYOffset}, rect: ${this.el.getBoundingClientRect().top}`);
     
-    if (offset <= 0 && !fixed) {
-      console.log('adding')
+    if (offset <= 0) {
       this.el.classList.add('fixed-header');
       header.classList.add('animated');
-      header.classList.add('fadeInTop');
+      header.classList.add('slideInDown');
       intro.style.marginTop = header.offsetHeight.toString();
-    } else if (offset > 0 && fixed) {
-      console.log('removing')
+    } else {
       this.el.classList.remove('fixed-header');
       header.classList.remove('animated');
-      header.classList.remove('fadeInTop');
+      header.classList.remove('slideInDown');
       intro.style.marginTop = '';
     }
   }
