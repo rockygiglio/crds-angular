@@ -1,12 +1,13 @@
 import CONSTANTS from '../../../../constants';
 
 export default class ChangeParticipantRoleController {
-  constructor(GroupService, $anchorScroll, $rootScope) {
+  constructor(GroupService, $anchorScroll, $rootScope, GroupDetailService) {
     this.groupService = GroupService;
     this.groupRoles = CONSTANTS.GROUP.ROLES;
     this.processing = false;
     this.anchorScroll = $anchorScroll;
     this.rootScope = $rootScope;
+    this.groupDetailService = GroupDetailService;
   }
 
   submit() {
@@ -22,7 +23,6 @@ export default class ChangeParticipantRoleController {
           this.processing = false;
           this.cancel();
         });
-
   }
 
   isParticipant() {
@@ -37,27 +37,39 @@ export default class ChangeParticipantRoleController {
     return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE);
   }
 
-  leaderDisabled() {
-    return false;
-  }
 
-  apprenticeDisabled() {
-    return false;
+  leaderDisabled() {
+    return !this.participant.isApprovedLeader;
   }
 
   warningLeaderMax() {
-    if (this.rootScope.countLeaders >= CONSTANTS.GROUP.MAX_LEADERS){
+    let countLeaders = 0;
+    if (!this.groupDetailService.participants) {
+      countLeaders = 0;
+    }
+    else {
+      countLeaders = this.groupDetailService.participants.filter(function (val) {
+        return val.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
+      }).length;
+    }
+
+    if (countLeaders >= CONSTANTS.GROUP.MAX_LEADERS){
       return true;
     }
     return false;
   }
 
-  warningLeaderApproval() {
-    return false;
-  }
-
   warningApprenticeMax() {
-    if (this.rootScope.countApprentice >= CONSTANTS.GROUP.MAX_APPRENTICE){
+    let countApprentices = 0;
+    if (!this.groupDetailService.participants) {
+      countApprentices = 0;
+    }
+    else {
+      countApprentices = this.groupDetailService.participants.filter(function (val) {
+        return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
+      }).length;
+    }
+    if (this.groupDetailService.countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE){
       return true;
     }
     return false;

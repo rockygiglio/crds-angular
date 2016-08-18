@@ -479,7 +479,6 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("Getting participants for group " + groupId);
             List<Dictionary<string, object>> participants;
 
-            //TODO add approvedSmallGroupLeader to GroupsParticipantsSubPageId and CurrentGroupsParticipantsSubPage in MP
             if (activeGroups)
             {
                 participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
@@ -499,8 +498,6 @@ namespace MinistryPlatform.Translation.Repositories
                     {
                         var parti = new MpGroupParticipant
                         {
-                            //TODO Add approvedSmallGroupLeader
-                            //And have to add to objects and mapper
                             ContactId = p.ToInt("Contact_ID"),
                             ParticipantId = p.ToInt("Participant_ID"),
                             IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),

@@ -29,7 +29,7 @@
           <div ng-if="changeParticipantRole.warningLeaderMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderMax.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
 
           <!-- groupToolChangeRoleWarningLeaderApproval -->
-          <div ng-if="changeParticipantRole.warningLeaderApproval()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderApproval.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
+          <div ng-if="changeParticipantRole.leaderDisabled()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderApproval.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
 
           <!-- groupToolChangeRoleLeaderDescription -->
           <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleLeaderDescription.content | html"></div>

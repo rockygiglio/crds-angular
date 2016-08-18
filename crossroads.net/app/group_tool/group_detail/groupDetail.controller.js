@@ -32,21 +32,23 @@ export default class GroupDetailController {
       this.ready = true;
     });
 
-    //this handles all the browser navigation and sets the correct selected tab on 
+    //this handles all the browser navigation and sets the correct selected tab on
     //browser back and forward
     this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
-        if (toState.name == 'grouptool.detail' && 
-          (fromState.name.startsWith('grouptool.detail.about') || 
-          fromState.name.startsWith('grouptool.detail.participants') || 
+        if (toState.name == 'grouptool.detail' &&
+          (fromState.name.startsWith('grouptool.detail.about') ||
+          fromState.name.startsWith('grouptool.detail.participants') ||
           fromState.name.startsWith('grouptool.detail.requests'))){
             event.preventDefault();
             this.state.go('grouptool.mygroups');
-        } else if (toState.name.startsWith('grouptool.detail.about') || 
-          toState.name.startsWith('grouptool.detail.participants') || 
+        } else if (toState.name.startsWith('grouptool.detail.about') ||
+          toState.name.startsWith('grouptool.detail.participants') ||
           toState.name.startsWith('grouptool.detail.requests')) {
           this.tabs.forEach(function (tab) {
             tab.active = toState.name === tab.route;
           });
+        } else {
+          // else if for participant_role or add to the ORs above, then else to clear out?
         }
     });
 

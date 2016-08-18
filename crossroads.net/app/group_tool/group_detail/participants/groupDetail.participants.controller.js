@@ -3,7 +3,7 @@ import CONSTANTS from '../../../constants';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService) {
+  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService, GroupDetailService) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
@@ -11,6 +11,7 @@ export default class GroupDetailParticipantsController {
     this.participantService = ParticipantService;
     this.rootScope = $rootScope;
     this.messageService = MessageService;
+    this.groupDetailService = GroupDetailService;
 
     this.groupId = this.state.params.groupId;
     this.ready = false;
@@ -18,8 +19,6 @@ export default class GroupDetailParticipantsController {
     this.processing = false;
     this.isLeader = false;
     this.data = [];
-    this.countLeaders = 0;
-    this.countApprentice = 0;
 
     this.setListView();
   }
@@ -39,25 +38,6 @@ export default class GroupDetailParticipantsController {
     })
   }
 
- getApprenticeCount() {
-    if (!this.data) {
-      return 0;
-    }
-    return this.data.filter(function (val) {
-      return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
-    }).length;
-  }
-
- getLeaderCount() {
-    if (!this.data) {
-      return 0;
-    }
-    return this.data.filter(function (val) {
-
-      return val.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
-    }).length;
-  }
-
   loadGroupParticipants() {
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
       this.data = data.slice().sort((a, b) => {
@@ -68,12 +48,7 @@ export default class GroupDetailParticipantsController {
         participant.imageUrl = `${this.imageService.ProfileImageBaseURL}${participant.contactId}`;
       }, this);
       this.ready = true;
-
-//TODO move off of rootScope
-      this.countLeaders = this.getLeaderCount();
-      this.rootScope.countLeaders = this.countLeaders;
-      this.countApprentice = this.getApprenticeCount();
-      this.rootScope.countApprentice = this.countApprentice;
+      this.groupDetailService.participants = data;
     },
     (err) => {
       this.log.error(`Unable to get group participants: ${err.status} - ${err.statusText}`);
