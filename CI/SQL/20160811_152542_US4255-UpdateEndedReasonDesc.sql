@@ -2,11 +2,12 @@ USE [MinistryPlatform]
 GO
 
 UPDATE [dbo].[Group_Ended_Reasons] 
-SET Description = '(We recently split off in new directions and saw solid growth within our group.)',
-Group_Ended_Reason = 'We''re branching out'
+SET Description = '(We''ve seen solid growth, so we''re splitting off to start new groups.)',
+Group_Ended_Reason = 'We''re branching out.'
 WHERE Group_Ended_Reason_ID = 1;
 
-UPDATE [dbo].[Group_Ended_Reasons] SET Description = '(We didn''t intentionally multiply, or have a fight and break up. It was just time to move on.)'
+UPDATE [dbo].[Group_Ended_Reasons] SET Description = '(We''re not fighting, breaking up or splitting off into new groups. It''s just time to move on.)',
+Group_Ended_Reason = 'We had a good run.'
 WHERE Group_Ended_Reason_ID = 2;
 
 UPDATE [dbo].[Group_Ended_Reasons] SET Description = '(It wasn''t a good fit, so we''re starting over. No biggie...it happens.)'
