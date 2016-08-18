@@ -11,7 +11,6 @@ namespace crds_angular.Services
     public class AddressService : IAddressService
     {
         private readonly MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository _mpAddressService;
-        //private readonly IAddressProximityService _addressProximityService;
         private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (AddressService));
 

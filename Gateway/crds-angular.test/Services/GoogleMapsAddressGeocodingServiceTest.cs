@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using crds_angular.Exceptions;
+﻿using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services;
-using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Services;
 using GoogleMapsAPI.NET.API.Client;
 using NUnit.Framework;
@@ -16,7 +14,6 @@ namespace crds_angular.test.Services
     public class GoogleMapsAddressGeocodingServiceTest
     {
         private GoogleMapsAddressGeocodingService _fixture;
-        //private IAddressGeocodingService _addressGeocodingService; // TODO: Replace with mock when updating these tests
         private MapsAPIClient _mapsApiClient;
 
         [SetUp]

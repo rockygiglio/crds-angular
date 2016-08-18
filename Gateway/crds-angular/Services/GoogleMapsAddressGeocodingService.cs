@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
-using System.Web;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using GoogleMapsAPI.NET.API.Client.Interfaces;
 using GoogleMapsAPI.NET.API.Geocoding.Components;
 using GoogleMapsAPI.NET.API.Places.Enums;
-using Microsoft.Owin.Security.Provider;
 
 namespace crds_angular.Services
 {
