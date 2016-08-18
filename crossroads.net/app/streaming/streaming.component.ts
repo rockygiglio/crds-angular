@@ -1,5 +1,5 @@
 // angular imports
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
@@ -17,6 +17,7 @@ import { CMSDataService } from '../../core/services/CMSData.service';
 // Third-party
 import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
 import { PageScrollConfig } from '../ng2-page-scroll/ng2-page-scroll-config';
+import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 // pipes
 import { ReplaceNonAlphaNumericPipe } from '../media/pipes/replace-non-alpha-numeric.pipe';
@@ -26,11 +27,13 @@ import { TruncatePipe } from '../../core/pipes/truncate.pipe';
 
 var WOW = require('wow.js/dist/wow.min.js');
 var $:any = require('jquery');
+var bootstrap:any = require('bootstrap');
 declare var _: any;
 
 @Component({
   selector: 'streaming',
   directives: [
+    MODAL_DIRECTIVES,
     DynamicContentNg2Component, 
     ScheduleComponent, 
     CountdownComponent,
@@ -50,6 +53,8 @@ declare var _: any;
 })
 
 export class StreamingComponent {
+  @ViewChild('myModal')
+  modal: ModalComponent;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
@@ -100,6 +105,14 @@ export class StreamingComponent {
               }
           })
         });
+  }
+
+  close() {
+      this.modal.close();
+  }
+
+  open() {
+      this.modal.open();
   }
 
 }
