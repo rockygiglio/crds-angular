@@ -557,7 +557,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldEditGroupSuccessfully()
+        public void ShouldEditGroupSuccessfully()
         {
             var group = new GroupDTO()
             {
@@ -577,7 +577,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldNotEditGroup()
+        public void ShouldNotEditGroup()
         {
             Exception ex = new Exception();
 

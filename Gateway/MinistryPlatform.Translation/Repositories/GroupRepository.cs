@@ -153,7 +153,7 @@ namespace MinistryPlatform.Translation.Repositories
             ministryPlatformService.UpdateSubRecord(_configurationWrapper.GetConfigIntValue("GroupsParticipants"), dictionary, apiToken);
         }
 
-        public void EndDateGroup(int groupId, DateTime? endDate)
+        public void EndDateGroup(int groupId, DateTime? endDate = null, int? reasonEndedId = null)
         {
             var apiToken = ApiLogin();
             var fields = new Dictionary<string, object>
@@ -161,7 +161,11 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Group_ID", groupId },
                 {"End_Date", endDate ?? DateTime.Now }
             };
-            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields );
+
+            if (reasonEndedId != null) 
+                fields.Add("Reason_Ended", reasonEndedId);
+
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Groups", groupId, fields);
         }
 
         public void UpdateGroupInquiry(int groupId, int inquiryId, bool approved)
@@ -771,13 +775,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int groupTypeId, int? groupId = null)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
                                                                       token,
-                                                                      string.Format(",,,{0},\"{1}\"",
+                                                                      string.Format(",,,{0},{1}",
                                                                                     groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
-                                                                                    groupTypeId));
+                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", groupTypeId)));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
@@ -933,5 +937,37 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("Updated group " + retValue);
             return (retValue);
         }
+
+        public void CreateGroupInquiry(MpInquiry inquiry)
+        {
+            var values = new Dictionary<string, object>
+            {
+                {"Contact_ID", inquiry.ContactId},
+                {"Group_ID", inquiry.GroupId},
+                {"Email", inquiry.EmailAddress},
+                {"Phone", inquiry.PhoneNumber},
+                {"First_Name", inquiry.FirstName},
+                {"Last_Name", inquiry.LastName},
+                {"Inquiry_Date", System.DateTime.Now}
+            };
+
+            WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    ministryPlatformService.CreateSubRecord(_configurationWrapper.GetConfigIntValue("GroupInquiresSubPage"),
+                                                            inquiry.GroupId,
+                                                            values,
+                                                            token);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Error creating group inquiry: " + e.Message);
+                }
+            });
+        }
+
+       
     }
 }

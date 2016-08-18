@@ -25,7 +25,7 @@ export default class GroupService {
     return this.profile.Personal.get().$promise;
   }
 
-  getGroupData(groupId) {
+  getGroupData(groupId) { 
     return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
                            get({groupId: groupId}).$promise;
   }
@@ -33,6 +33,10 @@ export default class GroupService {
   getGroupGenderMixType() {
     return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
                           get({attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE}).$promise;
+  }
+
+  getEndedReasons() {
+    return this.resource(__API_ENDPOINT__ + 'api/lookup/groupreasonended').query().$promise;
   }
 
   getStates() {
@@ -133,6 +137,16 @@ export default class GroupService {
       });
   }
 
+  endGroup(groupId, groupReasonEndedId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
+                          .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
+    return promise.then((data) => {
+        return data;
+      }, (err) => {
+        throw err;
+      });
+  }
+
   approveDenyInquiry(groupId, approve, inquiry) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
                            save({groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve}, inquiry).$promise;
@@ -183,8 +197,7 @@ export default class GroupService {
     let promise = this.resource(`${__API_ENDPOINT__}api/group`)
                           .save({}, smallGroup).$promise;
     return promise.then((data) => {
-        this.saveParticipant(smallGroup.participants, data.groupId);
-        this.saveProfile(smallGroup.profile);
+        return data;
       }, (err) => {
         throw err;
       });
@@ -205,6 +218,7 @@ export default class GroupService {
                           .save({groupId: groupId}, participants).$promise;
 
       return promise.then((data) => {
+        return data;
       }, (err) => {
         throw err;
       });
@@ -215,6 +229,7 @@ export default class GroupService {
                           .save({}, profile).$promise;
 
       return promise.then((data) => {
+        return data;
       }, (err) => {
         throw err;
       });
@@ -269,5 +284,10 @@ export default class GroupService {
         (err) => {
           throw err;
         });
+  }
+
+  submitJoinRequest(groupId) {
+      return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+          .save({groupId: groupId},{}).$promise;
   }
 }

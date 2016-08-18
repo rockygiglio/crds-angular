@@ -35,13 +35,14 @@
         </form>
     </div>
 
-    <div ng-if="showRegister" class="row">
+    <div ng-if="showRegister || showRegisterCallback" class="row">
       <div class="col-xs-12">
         <hr>
         <div class="text-center or-divider">
           <p><span> or </span></p>
         </div>
-        <p class="text-center"><a class="link-secondary" ui-sref="{{registerUrl}}" >Register an account</a></p>
+        <p ng-if="showRegister" class="text-center"><a class="link-secondary" ui-sref="{{registerUrl}}" >Register an account</a></p>
+        <p ng-if="showRegisterCallback" class="text-center"><a class="link-secondary" ng-click="registerCallback()" >Register an account</a></p>
       </div>
     </div><!--/row-->
     <div ng-if="!modal" class="row">

@@ -1,6 +1,7 @@
 
 import constants from 'crds-constants';
 import GroupDetailAboutController from '../../../../app/group_tool/group_detail/about/groupDetail.about.controller';
+import SmallGroup from '../../../../app/group_tool/model/smallGroup';
 
 describe('GroupDetailAboutController', () => {
     let fixture,
@@ -143,5 +144,63 @@ describe('GroupDetailAboutController', () => {
           expect(fixture.ready).toBeTruthy();
           expect(fixture.error).toBeTruthy();
         });
+    });
+
+    describe('getAddress() function', () => {
+      beforeEach(() => {
+        fixture.ready = true;
+      });
+
+      it('should return undefined when controller is not ready', () => {
+        fixture.ready = false;
+        let group = new SmallGroup({address: {
+          addressLine1: 'line 1',
+          city: 'The City',
+          state: 'The State',
+          zip: 'The Zip'
+        }});
+        fixture.data = group;
+
+        expect(fixture.getAddress()).not.toBeDefined();
+      });
+
+      it('should return "Online" when group has no address', () => {
+        let group = new SmallGroup();
+        fixture.data = group;
+
+        expect(fixture.getAddress()).toEqual('Online');
+      });
+
+      it('should return "City, State Zip" when group has address and user not in group', () => {
+        let group = new SmallGroup({address: {
+          addressLine1: 'line 1',
+          city: 'The City',
+          state: 'The State',
+          zip: 'The Zip'
+        }});
+        fixture.data = group;
+
+        spyOn(fixture, 'userInGroup').and.callFake(() => {
+          return false;
+        });
+
+        expect(fixture.getAddress()).toEqual('The City, The State The Zip');
+      });
+
+      it('should return address.toString() when group has address and user is in group', () => {
+        let group = new SmallGroup({address: {
+          addressLine1: 'The Line 1',
+          city: 'The City',
+          state: 'The State',
+          zip: 'The Zip'
+        }});
+        fixture.data = group;
+
+        spyOn(fixture, 'userInGroup').and.callFake(() => {
+          return true;
+        });
+
+        expect(fixture.getAddress()).toEqual(group.address.toString());
+      });
     });
 });

@@ -8,7 +8,8 @@ export default function GroupDetailParticipantCardComponent() {
     bindings: {
       participant: '<',
       edit: '<',
-      deleteAction: '&'
+      deleteAction: '&',
+      roleAction: '&'
     },
     restrict: 'E',
     templateUrl: 'participant_card/groupDetail.participant.card.html',

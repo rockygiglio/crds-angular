@@ -3,6 +3,8 @@ import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 declare var __STREAMSPOT_API_KEY__: string;
+declare var __STREAMSPOT_SSID__: string;
+declare var __STREAMSPOT_ENDPOINT__: string;
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -14,12 +16,11 @@ var _ = require('lodash');
 @Injectable()
 export class StreamspotService {
 
-  private url    = 'https://api.streamspot.com/';  // URL to web api
-  private apiKey = __STREAMSPOT_API_KEY__;
-  private id     = 'crossr4915'
-  private headers = new Headers({
+  url: string = __STREAMSPOT_ENDPOINT__;
+  ssid: string = __STREAMSPOT_SSID__;
+  headers: Headers = new Headers({
     'Content-Type': 'application/json',
-    'x-API-Key': this.apiKey
+    'x-API-Key': __STREAMSPOT_API_KEY__
   });
 
   public isBroadcasting: EventEmitter<any> = new EventEmitter();
@@ -56,7 +57,7 @@ export class StreamspotService {
   }
 
   getEvents(): Promise<Event[]> {
-    let url = `${this.url}broadcaster/${this.id}/events`;
+    let url = `${this.url}broadcaster/${this.ssid}/events`;
     // let url = 'http://localhost:8080/app/streaming/data/events.json'
 
     return this.http
@@ -85,31 +86,28 @@ export class StreamspotService {
     })
   }
 
-  get(url: string, cb: Function = (data: any) => {}) {
-    this.http.get(url, { headers: this.headers })
-    .subscribe(
-      data => {
-        if ( cb !== undefined ) {
-          cb(data.json().data);
-        }
-      },
-      err => this.handleError(err.json().message)
-    );
+  get(url: string): Observable<any> {
+    return this.http.get(url, { headers: this.headers }).map(response => response.json());
   }
 
-  getBroadcaster(cb: Function) {
-    let url = `${this.url}broadcaster/${this.id}`;
-    this.get(url, cb);
+  getBroadcaster(): Observable<any> {
+    let url = `${this.url}broadcaster/${this.ssid}?players=true`;
+    return this.get(url);
   }
 
-  getBroadcasting(cb: Function) {
-    let url = `${this.url}broadcaster/${this.id}/broadcasting`;
-    this.get(url, cb);
+  getPlayers(): Observable<any> {
+    let url = `${this.url}broadcaster/${this.ssid}/players`;
+    return this.get(url);
+  }
+
+  getBroadcasting(): Observable<any> {
+    let url = `${this.url}broadcaster/${this.ssid}/broadcasting`;
+    return this.get(url);
   }
 
   private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    console.error('An error occurred');
+    return Promise.reject(error);
   }
 
 }
