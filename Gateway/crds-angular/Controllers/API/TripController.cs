@@ -17,10 +17,10 @@ namespace crds_angular.Controllers.API
         private readonly ITripService _tripService;
         private readonly IPersonService _personService;
 
-        public TripController(ITripService tripService, IPersonService persionService)
+        public TripController(ITripService tripService, IPersonService personService)
         {
             _tripService = tripService;
-            _personService = persionService;
+            _personService = personService;
         }
 
         [AcceptVerbs("GET")]
@@ -108,30 +108,6 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
-        }
-
-        [AcceptVerbs("POST")]
-        [Route("api/trip/participants")]
-        public IHttpActionResult SaveParticipants([FromBody] SaveTripParticipantsDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-                var dataError = new ApiErrorDto("Trip-SaveParticipants Data Invalid", new InvalidOperationException("Invalid SaveParticipants Data" + errors));
-                throw new HttpResponseException(dataError.HttpResponseMessage);
-            }
-
-
-            try
-            {
-                _tripService.SaveParticipants(dto);
-                return Ok();
-            }
-            catch (Exception exception)
-            {
-                var apiError = new ApiErrorDto("SaveParticipants Failed", exception);
-                throw new HttpResponseException(apiError.HttpResponseMessage);
-            }
         }
 
         [AcceptVerbs("GET")]

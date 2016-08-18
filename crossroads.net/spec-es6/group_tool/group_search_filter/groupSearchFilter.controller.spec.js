@@ -104,8 +104,12 @@ describe('GroupSearchFilter', () => {
     
     it('closeFilters should set expanded to false', () => {
       fixture.expanded = true;
-      fixture.closeFilters();
+      let form = {
+        $rollbackViewValue: jasmine.createSpy('$rollbackViewValue')
+      };
+      fixture.closeFilters(form);
 
+      expect(form.$rollbackViewValue).toHaveBeenCalled();
       expect(fixture.expanded).toBeFalsy();
     });
 

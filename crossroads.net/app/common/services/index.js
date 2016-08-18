@@ -8,6 +8,7 @@
     .factory('Room', require('./room.service'))
     .factory('LookupService', require('./lookup.service'))
     .service('ZipcodeService', require('./zipcode.service'))
+    .service('AddressValidationService', require('./addressValidation.service'))
     ;
 
 })();

@@ -2,16 +2,17 @@
 import { Component } from '@angular/core';
 
 // streaming
-import { ContentCardComponent } from './content-card.component'
-import { ScheduleComponent } from './schedule.component';
+import { ContentCardComponent } from './content-card.component';
 import { CountdownComponent } from './countdown.component';
+import { CurrentSeriesComponent } from './current-series.component';
+import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 
 // CRDS core
-import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
-import { CMSDataService } from '../../core/services/CMSData.service'
+import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
+import { CMSDataService } from '../../core/services/CMSData.service';
 
 // Third-party
 import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
@@ -29,10 +30,23 @@ declare var _: any;
 
 @Component({
   selector: 'streaming',
-  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective, ContentCardComponent],
+  directives: [
+    DynamicContentNg2Component, 
+    ScheduleComponent, 
+    CountdownComponent,
+    SocialSharingComponent, 
+    PageScroll, 
+    StickyHeaderDirective,
+    ContentCardComponent, 
+    CurrentSeriesComponent
+  ],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
-  pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
+  pipes: [
+    ReplaceNonAlphaNumericPipe, 
+    HtmlToPlainTextPipe, 
+    TruncatePipe 
+  ]
 })
 
 export class StreamingComponent {

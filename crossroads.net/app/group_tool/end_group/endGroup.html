@@ -6,8 +6,15 @@
     <formly-form model="endGroup.model" fields="endGroup.fields" form="endGroup.endGroupForm"
       options="createGroup.options" ng-cloak>
       <div class="col-md-12 push-top text-center">
-        <button type="submit" class="btn btn-primary" ng-click="endGroup.cancel()">Cancel</button>
-        <button type="submit" class="btn btn-primary submit-button" ng-click='endGroup.submit()'>Submit</button>
+        <button type="submit" class="btn btn-standard" ng-click="endGroup.cancel()">Cancel</button>
+        <loading-button
+            normal-text='Submit'
+            loading-text='Ending...'
+            loading='endGroup.saving'
+            loading-class='disabled'
+            input-classes='btn btn-primary submit-button'
+            type="submit"
+            ng-click='endGroup.submit()'></loading-button>
       </div>
   </form>
 </div>

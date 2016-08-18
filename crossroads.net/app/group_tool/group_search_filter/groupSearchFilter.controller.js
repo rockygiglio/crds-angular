@@ -24,6 +24,8 @@ export default class GroupSearchResultsController {
         return this.ageRangeFilter(r);
       })
     };
+
+    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
@@ -39,7 +41,11 @@ export default class GroupSearchResultsController {
     this.expanded = true;
   }
 
-  closeFilters() {
+  closeFilters(filterForm) {
+    // Reset all filters that are not in sync with the model. This handles the case 
+    // where someone changes filter values but does not click "Update Filters". 
+    filterForm.$rollbackViewValue();
+
     this.expanded = false;
   }
 

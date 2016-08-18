@@ -113,5 +113,61 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result[0]);
             Assert.AreEqual(13.3, (double)result[0], .009);
         }
+
+        [Test]
+        [Category("IntegrationTests")]
+        public void TestValidateAddressString()
+        {
+            const string address = "3500 Madison Rd, Cincinnati, OH 45209, USA";
+
+            var result = _fixture.ValidateAddress(address);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(39.15946159999999, result.Latitude, .009);
+            Assert.AreEqual(-84.42336390000003, result.Longitude, .009);
+        }
+
+        [Test]
+        [Category("IntegrationTests")]
+        [ExpectedException(typeof(InvalidAddressException))]
+        public void TestValidateAddressStringInvalidAddress()
+        {
+            const string address = "1234 testy mctestface, test, yy 99999-9999";
+
+            _fixture.ValidateAddress(address);
+        }
+
+        [Test]
+        [Category("IntegrationTests")]
+        public void TestValidateAddressObject()
+        {
+            var address = new AddressDTO
+            {
+                AddressLine1 = "3500 Madison Rd",
+                City = "Cincinnati",
+                State = "OH",
+                PostalCode = "45209"
+            };
+
+            var result = _fixture.ValidateAddress(address);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(39.15946159999999, result.Latitude, .009);
+            Assert.AreEqual(-84.42336390000003, result.Longitude, .009);
+        }
+
+        [Test]
+        [Category("IntegrationTests")]
+        [ExpectedException(typeof(InvalidAddressException))]
+        public void TestValidateAddressObjectInvalidAddress()
+        {
+            var address = new AddressDTO
+            {
+                AddressLine1 = "1234 testy mctestface",
+                City = "test",
+                State = "yy",
+                PostalCode = "99999-9999"
+            };
+
+            _fixture.ValidateAddress(address);
+        }
     }
 }

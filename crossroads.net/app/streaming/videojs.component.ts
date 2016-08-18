@@ -1,23 +1,33 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 declare var window: any;
+declare var chrome: any;
+declare var ga: any;
+
 window.videojs = require('video.js/dist/video');
+
 require('./vendor/streamspotAnalytics');
 require('./vendor/videojs5-hlsjs-source-handler.min');
+require('videojs-chromecast/dist/videojs-chromecast');
 
 @Component({
   selector: 'videojs',
   templateUrl: './videojs.ng2component.html'
 })
 
-export class VideoJSComponent implements AfterViewInit {
+export class VideoJSComponent implements AfterViewInit, OnDestroy {
 
   id: string = "videojs-player";
   player: any;
   visible: boolean = false;
+  debug: boolean = false;
 
   constructor(private streamspot: StreamspotService) {}
+
+  ngOnDestroy() {
+    this.player.dispose();
+  }
 
   ngAfterViewInit() {
 
@@ -49,6 +59,7 @@ export class VideoJSComponent implements AfterViewInit {
           "fluid": true,
           "poster" : defaultPlayer.bgLink,
           "preload": 'auto',
+          "controls": true,
           "html5": {
             "hlsjsConfig": {
               "debug": false
@@ -60,6 +71,10 @@ export class VideoJSComponent implements AfterViewInit {
         this.player.on('play', () => {
           window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
           window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
+          if ( ga !== undefined ) {
+            ga('send', 'event', 'Streaming', 'Play', 'Live Stream Play');
+            console.log('Video played.');
+          }
         });
 
         // create stop handler (analytics)
@@ -68,23 +83,14 @@ export class VideoJSComponent implements AfterViewInit {
             window.SSTracker.stop();
             window.SSTracker = null;
           }
+          if ( ga !== undefined ) {
+            ga('send', 'event', 'Streaming', 'Pause', 'Live Stream Pause');
+            console.log('Video paused.');
+          }
         });
             
-        if ( broadcaster.isBroadcasting === true ) {
-    
-          this.player.src([
-            {
-              "type": "application/x-mpegURL",
-              "src": broadcaster.live_src.cdn_hls
-            }
-          ]);
-
-          this.visible = true;
-
-          this.player.ready(() => {
-            this.player.play();
-          });
-          
+        if ( broadcaster.isBroadcasting === true || this.debug ) {
+          this.playerInit(broadcaster);
         }
         else {
           console.log('No broadcast available.');
@@ -98,6 +104,20 @@ export class VideoJSComponent implements AfterViewInit {
 
     });
 
+  }
+
+  playerInit(broadcaster) {
+    let src = this.debug ? "http://vjs.zencdn.net/v/oceans.mp4" : broadcaster.live_src.cdn_hls;
+    let type = this.debug ? "video/mp4" : "application/x-mpegURL";
+
+    this.player.src([
+      {
+        "type": type,
+        "src": src
+      }
+    ]);
+    this.visible = true;
+    this.player.ready(() => this.player.play());
   }
 
 }
