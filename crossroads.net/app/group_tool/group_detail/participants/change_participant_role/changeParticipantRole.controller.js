@@ -69,7 +69,7 @@ export default class ChangeParticipantRoleController {
         return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
       }).length;
     }
-    if (this.groupDetailService.countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE){
+    if (countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE){
       return true;
     }
     return false;

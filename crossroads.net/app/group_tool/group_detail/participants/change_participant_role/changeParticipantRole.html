@@ -1,4 +1,4 @@
-<form ng-submit='changeParticipantRole.submit()'>
+<form ng-submit='changeParticipantRole.submit()' name="changeParticipantForm">
   <div class='row'>
     <div class='col-md-6 col-md-offset-3'>
 
@@ -13,7 +13,7 @@
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsParticipant" ng-value="changeParticipantRole.groupRoles.MEMBER" ng-model="changeParticipantRole.participant.groupRoleId">
+          <input type="radio" name="roleOptions" id="roleOptionsParticipant" ng-value="changeParticipantRole.groupRoles.MEMBER" ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }">
           Participant
           <!-- groupToolChangeRoleParticipantDescription -->
           <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleParticipantDescription.content | html"></div>
@@ -22,7 +22,7 @@
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-disabled="changeParticipantRole.leaderDisabled() || changeParticipantRole.warningLeaderMax()">
+          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.leaderDisabled() || changeParticipantRole.warningLeaderMax()">
           Leader
 
           <!-- groupToolChangeRoleWarningLeaderMax -->
@@ -38,7 +38,7 @@
 
       <div class="radio">
         <label>
-          <input type="radio" name="roleOptions" id="roleOptionsApprentice" ng-value="changeParticipantRole.groupRoles.APPRENTICE"  ng-model="changeParticipantRole.participant.groupRoleId">
+          <input type="radio" name="roleOptions" id="roleOptionsApprentice" ng-value="changeParticipantRole.groupRoles.APPRENTICE"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.warningApprenticeMax()">
           Apprentice
 
           <!-- groupToolChangeRoleWarningApprenticeMax -->
