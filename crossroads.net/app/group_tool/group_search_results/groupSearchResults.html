@@ -54,7 +54,7 @@
   </div>
 
   <table ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
-    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
       <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
