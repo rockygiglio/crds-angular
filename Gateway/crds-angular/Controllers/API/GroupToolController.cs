@@ -98,8 +98,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="groupId">The id of a group</param>
         /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
-        /// <returns>Http Result</returns>
-        [AcceptVerbs("POST")]
+        /// <returns>Http Result</returns>       
         [RequiresAuthorization]
         [HttpPost]
         [Route("api/grouptool/{groupId:int}/endsmallgroup")]
