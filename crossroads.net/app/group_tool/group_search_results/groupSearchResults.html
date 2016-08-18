@@ -54,7 +54,7 @@
   </div>
 
   <table ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
-    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = !group.expanded">
+    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
       <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
@@ -63,7 +63,7 @@
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
       <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.address.zip">Map</a></td>
+      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a></td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">

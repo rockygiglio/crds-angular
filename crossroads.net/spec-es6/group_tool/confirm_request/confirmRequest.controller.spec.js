@@ -26,7 +26,7 @@ describe('ConfirmRequestController', () => {
       qApi = $injector.get('$q');
 
       fixture = new ConfirmRequestController(rootScope, messageService, groupService);
-      fixture.group = {groupId: 1}
+      fixture.group = {groupId: 1};
   }));
 
   describe('$onInit() function', () => {

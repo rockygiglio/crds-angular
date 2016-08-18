@@ -10,6 +10,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace crds_angular.Services
 {
@@ -138,9 +139,9 @@ namespace crds_angular.Services
                 {
                     SendGroupParticipantEmail(groupId,
                                               groupParticipantId,
-                                              true,
                                               myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
+                                              null,
                                               GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
@@ -163,9 +164,25 @@ namespace crds_angular.Services
 
         }
 
-        public void SendGroupParticipantEmail(int groupId, int participantId, bool groupParticpantId, GroupDTO group, int emailTemplateId, string subjectTemplateContentBlockTitle = null, string emailTemplateContentBlockTitle = null, string message = null, Participant fromParticipant = null)
+        public void SendGroupParticipantEmail(int groupId,
+                                       int? toGroupParticipantId,
+                                       GroupDTO group,
+                                       int emailTemplateId,
+                                       Participant toParticipant = null,
+                                       string subjectTemplateContentBlockTitle = null,
+                                       string emailTemplateContentBlockTitle = null,
+                                       string message = null,
+                                       Participant fromParticipant = null)
         {
-            var participant = groupParticpantId ? group.Participants.Find(p => p.GroupParticipantId == participantId) : group.Participants.Find(p => p.ParticipantId == participantId);
+            var participant = toParticipant == null
+                ? group.Participants.Find(p => p.GroupParticipantId == toGroupParticipantId)
+                : new GroupParticipantDTO
+                {
+                    ContactId = toParticipant.ContactId,
+                    Email = toParticipant.EmailAddress,
+                    NickName = toParticipant.PreferredName,
+                    ParticipantId = toParticipant.ParticipantId
+                };
 
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
             var fromContact = new MpContact
@@ -175,7 +192,7 @@ namespace crds_angular.Services
             };
             var replyTo = new MpContact
             {
-                ContactId = fromParticipant == null ? emailTemplate.ReplyToContactId : fromParticipant.ContactId,
+                ContactId = fromParticipant?.ContactId ?? emailTemplate.ReplyToContactId,
                 EmailAddress = fromParticipant == null ? emailTemplate.ReplyToEmailAddress : fromParticipant.EmailAddress
             };
 
@@ -188,12 +205,10 @@ namespace crds_angular.Services
                     }
                 };
 
-            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content;
+            var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle) ? string.Empty : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
-            mergeData["Email_Template_Text"] = emailTemplateText;
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
-            mergeData["Subject_Template_Text"] = subjectTemplateText;
             mergeData["Group_Name"] = group.GroupName;
             mergeData["Group_Description"] = group.GroupDescription;
             if (fromParticipant != null)
@@ -201,6 +216,13 @@ namespace crds_angular.Services
                 mergeData["From_Display_Name"] = fromParticipant.DisplayName;
                 mergeData["From_Preferred_Name"] = fromParticipant.PreferredName;
             }
+
+            // Since the templates are coming from content blocks, they may have replacement tokens in them as well.
+            // These will not get replaced with merge data in _communicationRepository.SendMessage(), (it doesn't doubly
+            // replace) so we'll parse them here before adding them to the merge data.
+            mergeData["Subject_Template_Text"] = _communicationRepository.ParseTemplateBody(Regex.Replace(subjectTemplateText, "<.*?>", string.Empty), mergeData);
+            mergeData["Email_Template_Text"] = _communicationRepository.ParseTemplateBody(emailTemplateText, mergeData);
+
             var email = new MpCommunication
             {
                 EmailBody = emailTemplate.Body,
@@ -275,7 +297,6 @@ namespace crds_angular.Services
 
             try
             {
-                //TODO:: Update template id
                 SendApproveDenyInquiryEmail(
                     true,
                     groupId,
@@ -298,7 +319,6 @@ namespace crds_angular.Services
 
             try
             {
-                //TODO:: Update template id
                 SendApproveDenyInquiryEmail(
                     false,
                     groupId,
@@ -323,10 +343,10 @@ namespace crds_angular.Services
                 var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
                 SendGroupParticipantEmail(groupId,
-                                          participant.ParticipantId,
-                                          false,
+                                          null,
                                           group,
                                           emailTemplateId,
+                                          participant,
                                           subject,
                                           emailTemplateContentBlockTitle,
                                           message,
@@ -479,18 +499,20 @@ namespace crds_angular.Services
             };
 
             var domainId = Convert.ToInt32(_domainId);
-            var from = new MpContact()
+            var from = new MpContact
             {
                 ContactId = _defaultEmailContactId,
                 EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultEmailContactId)
             };
 
-            var to = new List<MpContact>();
-            to.Add(new MpContact()
+            var to = new List<MpContact>
             {
-                ContactId = participant.ContactId,
-                EmailAddress = participant.Email
-            });
+                new MpContact
+                {
+                    ContactId = participant.ContactId,
+                    EmailAddress = participant.Email
+                }
+            };
 
             var groupEnded = new MpCommunication
             {
@@ -574,7 +596,7 @@ namespace crds_angular.Services
                 throw new ExistingRequestException("User is already member or has request");
             }
 
-            MpInquiry mpInquiry = new MpInquiry
+            var mpInquiry = new MpInquiry
             {
                 ContactId = participant.ContactId,
                 GroupId = groupId,

@@ -22,16 +22,17 @@ END
 GO
 
 ALTER PROCEDURE [dbo].[Get_Next_Available_ID]
-       @tableName  NVARCHAR(50) 	 
+       @tableName   NVARCHAR(50),	  
+	     @description NVARCHAR(50) 	 
  
 AS
 BEGIN
 	DECLARE @tablePK     NVARCHAR(50),	 					  
-			@sql         NVARCHAR(4000),
-			@tableId     INT,
-			@counts      INT,
-			@high		 INT,			
-			@IdCnt       INT = 1			 
+		    	@sql         NVARCHAR(4000),
+		    	@tableId     INT,
+		    	@counts      INT,
+		    	@high			   INT,			
+		    	@IdCnt       INT = 1			 
 	
 	WHILE @IdCnt < 99
 	BEGIN
@@ -73,7 +74,19 @@ BEGIN
 		IF @counts = 0 
 		BEGIN
 			SET @IdCnt = 100			
-			SELECT @tableId AS Assigned_ID		
+			SELECT @tableId AS Assigned_ID	
+		
+			INSERT INTO Logging
+				(user_name
+			    ,mp_table_name
+			  	,id_assigned
+			    ,usage_description)
+			 VALUES
+			    ((select SUSER_SNAME())
+			    ,@tableName
+			   	,@tableId
+			    ,@description)
+			
 			RETURN
 		 END
 	END

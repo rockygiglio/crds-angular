@@ -5,7 +5,7 @@
   <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
   <!-- TODO - remove class "form-inline" when we add a 2nd filter -->
-  <form role="form" class="form-inline">
+  <form role="form" class="form-inline" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
     <dl class="push-half-ends">
       <dt>
         Age Range
@@ -16,6 +16,7 @@
           <div class="checkbox col-lg-4 col-sm-6" ng-repeat="ageRange in groupSearchFilter.ageRanges">
             <label for="ageRange-{{ageRange.attributeId}}">
               <input ng-model="ageRange.selected"
+                     ng-model-options="{ updateOn: 'submit' }"
                      type="checkbox"
                      ng-value="ageRange.attributeId"
                      id="ageRange-{{ageRange.attributeId}}"/>
@@ -27,11 +28,9 @@
     </dl>
     <div class="text-right push-half-bottom">
       <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
-              ng-click="groupSearchFilter.closeFilters()">Cancel
+              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
       </button>
-      <button type='button' class='btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'
-              ng-click="groupSearchFilter.applyFilters()">Update Filters
-      </button>
+      <button type='submit' class='btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'>Update Filters</button>
     </div>
   </form>
 </div>
