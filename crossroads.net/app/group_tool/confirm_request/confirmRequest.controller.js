@@ -89,9 +89,6 @@ export default class ConfirmRequestController {
     this.processing = true;
     this.sendJoinRequest();
 
-    // TODO - Remove timeout faking submission for loading-button
-    window.setTimeout(() => {
-      this.modalInstance.dismiss();
-    }, 2000);
+    this.modalInstance.dismiss();
   }
 }
