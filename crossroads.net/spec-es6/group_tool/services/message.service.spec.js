@@ -39,7 +39,7 @@ describe('Group Tool Message Service', () => {
     });
 
     it('it works', () => {
-      httpBackend.expectPOST(`${endpoint}/grouptool/${message.groupId}/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/leadermessage`, message).
+      httpBackend.expectPOST(`${endpoint}/grouptool/${message.groupId}/leadermessage`, message).
                   respond(200, {});
 
       var promise = fixture.sendLeaderMessage(message);

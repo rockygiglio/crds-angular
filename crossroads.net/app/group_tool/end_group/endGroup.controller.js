@@ -17,13 +17,25 @@ export default class EndGroupController {
   }
 
   $onInit() {
-    this.groupId = this.state.params.groupId || this.data.groupId;
-
-    this.groupService.getEndedReasons().then((data) => {
-      this.ready = true;
-      this.endedReasonsList = _.sortBy(data, function (records) { return records.dp_RecordID; });
-      this.fields = this.getFields();
-    });
+    var promise = this.groupService.getIsLeader(this.state.params.groupId)
+      .then((data) => {
+        if (data == true) {
+          this.leader = true;
+          this.ready = true;
+          return this.groupService.getEndedReasons();
+        } else {
+          this.state.go("grouptool.mygroups");
+        }
+      },
+      (err) => {
+        this.log.error(`Logged-in user can not end group, is not a leader: ${err.status} - ${err.statusText}`);
+        this.state.go("grouptool.mygroups");
+      })
+      .then((data) => {
+        this.groupId = this.state.params.groupId || this.data.groupId;
+        this.endedReasonsList = _.sortBy(data, function (records) { return records.dp_RecordID; });
+        this.fields = this.getFields();
+      });
   }
 
   cancel() {
@@ -31,7 +43,7 @@ export default class EndGroupController {
   }
 
   endGroup() {
-    this.saving = false;
+    this.saving = true;
     this.successfulSave = false;
     if (this.endGroupForm.$valid) {
       try {
@@ -51,6 +63,7 @@ export default class EndGroupController {
       }
     }
     else {
+      this.saving = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
   }

@@ -8,12 +8,7 @@ export default function GroupEmailComponent() {
   let groupEmailComponent = {
     bindings: {
       message: '<',
-      cancelAction: '&',
-      submitAction: '&',
       header: '@',
-      allowSubject: '<',
-      processing: '<',
-      process: '<'
     },
     restrict: 'E',
     templateUrl: 'group_email/groupEmail.html',

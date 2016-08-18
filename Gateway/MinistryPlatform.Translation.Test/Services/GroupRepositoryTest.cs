@@ -206,6 +206,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact_ID", i + 10},
                     {"Group_Role_ID", 42},
                     {"Role_Title", "Boss"},
+                    {"Approved_Small_Group_Leader", true },
                     {"Last_Name", "Anderson"},
                     {"Nickname", "Neo"},
                     {"Email", "Neo@fun.com"},
