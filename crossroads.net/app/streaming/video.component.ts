@@ -34,7 +34,7 @@ export class VideoComponent {
             // null status indicates a published feature
             if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
               feature.delay = i * 100
-              feature.url = '';
+              feature.url = 'javascript:;';
 
               if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
                 feature.image = feature.image.filename;
@@ -50,9 +50,9 @@ export class VideoComponent {
           })
         });
     
-    // new WOW({
-    //   mobile: false
-    // }).init();
+    new WOW({
+      mobile: false
+    }).init();
   }
 
   increaseCount() {

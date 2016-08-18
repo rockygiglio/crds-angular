@@ -88,7 +88,7 @@ export class VideoJSComponent implements AfterViewInit {
         }
         else {
           console.log('No broadcast available.');
-          // window.location.href = '/live';
+          window.location.href = '/live';
         }
 
       }
