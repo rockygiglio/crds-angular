@@ -6,11 +6,8 @@ export default class ChangeParticipantRoleController {
   submit() {
     this.processing = true;
 
-    // TODO: Mock-up only, remove for implementation
-    window.setTimeout(() => {
-      // Invoke the parent callback function
-      this.submitAction();
-    }, 2000);
+    // Invoke the parent callback function
+    this.submitAction();
   }
 
   isParticipant() {
