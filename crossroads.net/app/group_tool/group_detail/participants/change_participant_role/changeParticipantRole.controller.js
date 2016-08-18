@@ -46,8 +46,7 @@ export default class ChangeParticipantRoleController {
   }
 
   warningLeaderMax() {
-    //TODO remove hard coded 5
-    if (this.rootScope.countLeaders >= 5){
+    if (this.rootScope.countLeaders >= CONSTANTS.GROUP.MAX_LEADERS){
       return true;
     }
     return false;
@@ -58,8 +57,7 @@ export default class ChangeParticipantRoleController {
   }
 
   warningApprenticeMax() {
-    //TODO remove hard coded 5
-    if (this.rootScope.countApprentice >= 5){
+    if (this.rootScope.countApprentice >= CONSTANTS.GROUP.MAX_APPRENTICE){
       return true;
     }
     return false;

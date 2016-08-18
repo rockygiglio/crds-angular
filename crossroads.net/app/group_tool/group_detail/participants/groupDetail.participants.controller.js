@@ -1,4 +1,5 @@
 import GroupMessage from '../../model/groupMessage';
+import CONSTANTS from '../../../constants';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
@@ -43,9 +44,7 @@ export default class GroupDetailParticipantsController {
       return 0;
     }
     return this.data.filter(function (val) {
-      //TODO inject constants
-      //return val === CONSTANTS.GROUP.ROLES.APPRENTICE;
-      return val.groupRoleId === 66;
+      return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
     }).length;
   }
 
@@ -54,14 +53,12 @@ export default class GroupDetailParticipantsController {
       return 0;
     }
     return this.data.filter(function (val) {
-      //TODO inject constants
-      //return val === CONSTANTS.GROUP.ROLES.LEADER;
-      return val.groupRoleId === 22;
+
+      return val.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
     }).length;
   }
 
   loadGroupParticipants() {
-    //look for existing smallGroup object if already hit mygroups
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
       this.data = data.slice().sort((a, b) => {
         return(a.compareTo(b));
@@ -70,9 +67,9 @@ export default class GroupDetailParticipantsController {
         participant.me = participant.participantId === this.myParticipantId;
         participant.imageUrl = `${this.imageService.ProfileImageBaseURL}${participant.contactId}`;
       }, this);
-debugger;
       this.ready = true;
-      //TODO move off of rootScope
+
+//TODO move off of rootScope
       this.countLeaders = this.getLeaderCount();
       this.rootScope.countLeaders = this.countLeaders;
       this.countApprentice = this.getApprenticeCount();
