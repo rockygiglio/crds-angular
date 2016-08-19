@@ -10,16 +10,12 @@ export default class ConfirmRequestController {
 
     this.processing = false;
     this.emailLeader = (this.emailLeader === undefined) ? false : this.emailLeader;
-
-    this.multipleLeaders = false;
   }
 
   $onInit() {
     if(this.emailLeader){
       this.emailGroupLeader();
     }
-
-    this.multipleLeaders = this.group.leaders().length > 1;
   }
 
   cancel() {
@@ -53,10 +49,6 @@ export default class ConfirmRequestController {
     ).finally(() => {
       this.processing = false;
     });
-  }
-
-  leaderDisplayName(participant) {
-    return this.multipleLeaders ? participant.nickName : participant.displayName();
   }
 
   emailGroupLeader() {
