@@ -3,7 +3,7 @@ GO
 
 DECLARE @ContactID int = 768371;
 DECLARE @TemplateID int = 264567;
-DECLARE @Body VARCHAR(max) = '<div style="font-family: Verdana; font-size: 12px;"><p>Hi there! </p><p><strong>Reminder:</strong> [Event_Date] [Event_Start_Time] Crossroads service is now live. <p><p><a href="https://[BaseUrl]/live/stream">Join us at crossroads.net/live.</a> </p><p>We''re glad you''re here,</br> -Crossroads</br></p></div></div>';
+DECLARE @Body VARCHAR(max) = '<div style="font-family: Verdana; font-size: 12px;"><p>Hi there! </p><p><strong>Reminder:</strong> [Event_Date] [Event_Start_Time] Crossroads service is now live. <p><p><a href="https://[BaseUrl]/live/stream">Join us at crossroads.net/live.</a> </p><p>We''re glad you''re here,</br> -Crossroads</br></p></div>';
 DECLARE @Subject VARCHAR(max) = 'Crossroads Live stream is starting';
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[Contacts] WHERE [Contact_ID] = @ContactID)
