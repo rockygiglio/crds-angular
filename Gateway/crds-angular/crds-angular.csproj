@@ -355,13 +355,16 @@
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
-    <Compile Include="Services\GoogleMapsAddressProximityService.cs" />
+    <Compile Include="Services\GeocodeCalculationAddressProximityService.cs" />
+    <Compile Include="Services\GoogleMapsAddressGeocodingService.cs" />
+    <Compile Include="Services\GoogleMapsDistanceMatrixAddressProximityService.cs" />
     <Compile Include="Services\GroupConnectorService.cs" />
     <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GoVolunteerService.cs" />
     <Compile Include="Services\GoSkillsService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
+    <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\InvitationService.cs" />

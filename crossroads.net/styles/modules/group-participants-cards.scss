@@ -10,11 +10,15 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .group-detail-participant-item {
     @media (min-width: $screen-md) {
-      flex: 1 1 auto;
+      flex: none;
+
+      // Safari is wrapping when it shouldn't, reduce the right margin by -1px to fix
+      margin-right: -1px;
     }
   }
 }

@@ -1,49 +1,85 @@
+import CONSTANTS from '../../../../constants';
+
 export default class ChangeParticipantRoleController {
-  constructor() {
+  constructor(GroupService, $anchorScroll, $rootScope, GroupDetailService) {
+    this.groupService = GroupService;
+    this.groupRoles = CONSTANTS.GROUP.ROLES;
     this.processing = false;
+    this.anchorScroll = $anchorScroll;
+    this.rootScope = $rootScope;
+    this.groupDetailService = GroupDetailService;
   }
 
   submit() {
     this.processing = true;
-
+    var promise = this.groupService.updateParticipant(this.participant)
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+      },
+      (data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }).finally(() => {
+        this.processing = false;
+        this.cancel();
+      });
     // Invoke the parent callback function
     this.submitAction();
   }
 
   isParticipant() {
-    return true;
+    return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.MEMBER);
   }
 
   isLeader() {
-    return false;
+    return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER);
   }
 
   isApprentice() {
-    return false;
+    return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE);
   }
+
 
   leaderDisabled() {
-    return true;
-  }
-
-  apprenticeDisabled() {
-    return true;
+    return !this.participant.isApprovedLeader;
   }
 
   warningLeaderMax() {
-    return true;
-  }
+    let countLeaders = 0;
+    if (!this.groupDetailService.participants) {
+      countLeaders = 0;
+    }
+    else {
+      countLeaders = this.groupDetailService.participants.filter(function (val) {
+        return val.groupRoleId === CONSTANTS.GROUP.ROLES.LEADER;
+      }).length;
+    }
 
-  warningLeaderApproval() {
+    if (countLeaders >= CONSTANTS.GROUP.MAX_LEADERS) {
+      return true;
+    }
     return false;
   }
 
   warningApprenticeMax() {
-    return true;
+    let countApprentices = 0;
+    if (!this.groupDetailService.participants) {
+      countApprentices = 0;
+    }
+    else {
+      countApprentices = this.groupDetailService.participants.filter(function (val) {
+        return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
+      }).length;
+    }
+    if (countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE) {
+      return true;
+    }
+    return false;
   }
 
-  cancel() {
+  cancel(changeParticipantForm) {
     // Invoke the parent callback function
+    changeParticipantForm.$rollbackViewValue();
     this.cancelAction();
+    this.anchorScroll();
   }
 }

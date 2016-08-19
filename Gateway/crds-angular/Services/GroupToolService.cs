@@ -26,6 +26,7 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
         private readonly IContactRepository _contactRepository;
+        private readonly IAddressProximityService _addressMatrixService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -37,6 +38,7 @@ namespace crds_angular.Services
         private readonly int _groupEndedParticipantEmailTemplate;
         private readonly int _defaultEmailContactId;
         private readonly string _baseUrl;
+        private readonly int _addressMatrixSearchDepth;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -57,7 +59,8 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper, 
                            IInvitationRepository invitationRepository,
                            IAddressProximityService addressProximityService,
-                           IContactRepository contactRepository)
+                           IContactRepository contactRepository,
+                           IAddressProximityService addressMatrixService)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -69,6 +72,7 @@ namespace crds_angular.Services
             _invitationRepository = invitationRepository;
             _addressProximityService = addressProximityService;
             _contactRepository = contactRepository;
+            _addressMatrixService = addressMatrixService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -82,6 +86,7 @@ namespace crds_angular.Services
             _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
             _defaultEmailContactId = Convert.ToInt32(configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
+            _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -89,7 +94,7 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
-                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, sourceId);
+                VerifyCurrentUserIsGroupLeader(token, sourceId);
 
                 var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
@@ -108,7 +113,7 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
-                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+                VerifyCurrentUserIsGroupLeader(token, groupId);
 
                 var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
@@ -126,7 +131,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -233,7 +238,30 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
         
-        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
+        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId)
+        {
+            var groupParticipant = _groupRepository.GetAuthenticatedUserParticipationByGroupID(token, groupId);
+
+            if (groupParticipant == null)
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for user");
+
+            if (groupParticipant.GroupRoleId != _groupRoleLeaderId)
+                throw new NotGroupLeaderException($"User is not a leader of group {groupId}");
+
+            return new MyGroup()
+            {
+                Group = new GroupDTO()
+                {
+                    GroupId = groupId
+                },
+                Me = new Participant()
+                {
+                    ParticipantId = groupParticipant.ParticipantId
+                }
+            };
+        }
+
+        public MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId)
         {
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
             var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
@@ -263,7 +291,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
 
                 if (approve)
                 {
@@ -496,8 +524,8 @@ namespace crds_angular.Services
             var domainId = Convert.ToInt32(_domainId);
             var from = new MpContact
             {
-                ContactId = _defaultEmailContactId,
-                EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultEmailContactId)
+                ContactId = _defaultGroupContactEmailId,
+                EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultGroupContactEmailId)
             };
 
             var to = new List<MpContact>
@@ -547,10 +575,22 @@ namespace crds_angular.Services
 
             try
             {
+                // first call is for all results
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
                 for (var i = 0; i < groups.Count; i++)
                 {
                     groups[i].Proximity = proximities[i];
+                }
+
+                // order by closest n raw results, then get driving directions
+                groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
+
+                var closestGroups = groups.Take(_addressMatrixSearchDepth).ToList();
+                var drivingProximities = _addressMatrixService.GetProximity(location, closestGroups.Select(g => g.Address).ToList());
+
+                for (var i = 0; i < closestGroups.Count; i++)
+                {
+                    groups[i].Proximity = drivingProximities[i];
                 }
             }
             catch (InvalidAddressException e)

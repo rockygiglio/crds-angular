@@ -6,7 +6,7 @@ export default function ChangeParticipantRoleComponent() {
 
   let changeParticipantRoleComponent = {
     bindings: {
-      participant: '<',
+      participant: '=',
       cancelAction: '&',
       submitAction: '&'
     },

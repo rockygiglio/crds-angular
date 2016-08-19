@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
@@ -11,12 +9,10 @@ using GoogleMapsAPI.NET.API.Places.Enums;
 
 namespace crds_angular.Services
 {
-    public class GoogleMapsAddressProximityService : IAddressProximityService
+    public class GoogleMapsAddressGeocodingService : IAddressGeocodingService
     {
-        private const double MetersPerMile = 1609.344;
-
         private readonly IMapsAPIClient _mapsApiClient;
-        public GoogleMapsAddressProximityService(IMapsAPIClient mapsApiClient)
+        public GoogleMapsAddressGeocodingService(IMapsAPIClient mapsApiClient)
         {
             _mapsApiClient = mapsApiClient;
         }
@@ -74,23 +70,6 @@ namespace crds_angular.Services
         private static string GetAddressComponent(List<Address> components, PlaceResultTypeEnum type)
         {
             return components.Find(a => a.Types.Contains(type))?.ShortName;
-        }
-
-        public List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses)
-        {
-            var originCoords = GetGeoCoordinates(originAddress);
-
-            return destinationAddresses.Select(a => CalculateProximity(originCoords, a)).ToList();
-        }
-
-        private static decimal? CalculateProximity(GeoCoordinate origin, AddressDTO destination)
-        {
-            if (origin == null || destination.Longitude == null || destination.Latitude == null)
-            {
-                return null;
-            }
-
-            return ((decimal)Math.Round(origin.GetDistanceTo(new GeoCoordinate(destination.Latitude.Value, destination.Longitude.Value))/MetersPerMile*10))/10;
         }
     }
 }
