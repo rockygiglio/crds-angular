@@ -26,6 +26,7 @@ namespace crds_angular.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAddressProximityService _addressProximityService;
         private readonly IContactRepository _contactRepository;
+        private readonly IAddressProximityService _addressMatrixService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -37,6 +38,7 @@ namespace crds_angular.Services
         private readonly int _groupEndedParticipantEmailTemplate;
         private readonly int _defaultEmailContactId;
         private readonly string _baseUrl;
+        private readonly int _addressMatrixSearchDepth;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -57,7 +59,8 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper, 
                            IInvitationRepository invitationRepository,
                            IAddressProximityService addressProximityService,
-                           IContactRepository contactRepository)
+                           IContactRepository contactRepository,
+                           IAddressProximityService addressMatrixService)
         {
 
             _groupToolRepository = groupToolRepository;
@@ -69,6 +72,7 @@ namespace crds_angular.Services
             _invitationRepository = invitationRepository;
             _addressProximityService = addressProximityService;
             _contactRepository = contactRepository;
+            _addressMatrixService = addressMatrixService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -82,6 +86,7 @@ namespace crds_angular.Services
             _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
             _defaultEmailContactId = Convert.ToInt32(configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
+            _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -570,10 +575,22 @@ namespace crds_angular.Services
 
             try
             {
+                // first call is for all results
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
                 for (var i = 0; i < groups.Count; i++)
                 {
                     groups[i].Proximity = proximities[i];
+                }
+
+                // order by closest n raw results, then get driving directions
+                groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
+
+                var closestGroups = groups.Take(_addressMatrixSearchDepth).ToList();
+                var drivingProximities = _addressMatrixService.GetProximity(location, closestGroups.Select(g => g.Address).ToList());
+
+                for (var i = 0; i < closestGroups.Count; i++)
+                {
+                    groups[i].Proximity = drivingProximities[i];
                 }
             }
             catch (InvalidAddressException e)

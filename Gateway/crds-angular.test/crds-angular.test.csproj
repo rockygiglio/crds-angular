@@ -226,7 +226,8 @@
     <Compile Include="Services\EmailCommunicationTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
     <Compile Include="Services\GatewayLookupServiceTest.cs" />
-    <Compile Include="Services\GoogleMapsAddressProximityServiceTest.cs" />
+    <Compile Include="Services\GoogleMapsAddressGeocodingServiceTest.cs" />
+    <Compile Include="Services\GoogleMapsDistanceMatrixAddressProximityServiceTest.cs" />
     <Compile Include="Services\GoSkillsServiceTest.cs" />
     <Compile Include="Services\GoVolunteerServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />
