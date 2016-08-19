@@ -3,6 +3,7 @@ import CONSTANTS from 'crds-constants';
 import ParticipantService from './services/participant.service';
 import GroupService from './services/group.service';
 import CreateGroupService from './services/createGroup.service';
+import GroupDetailService from './services/groupDetail.service';
 import groupToolRouter from './groupTool.routes';
 import groupToolFormlyBuilderConfig from './groupTool.formlyConfig';
 import './formlyWrappers/createGroupWrapper.html';
@@ -18,7 +19,8 @@ export default angular.
   service('ParticipantService', ParticipantService).
   service('GroupService', GroupService).
   service('CreateGroupService', CreateGroupService).
-  service('MessageService', MessageService)
+  service('MessageService', MessageService).
+  service('GroupDetailService', GroupDetailService)
   ;
 
 import myGroups from './my_groups';

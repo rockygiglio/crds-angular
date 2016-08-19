@@ -694,6 +694,14 @@ namespace crds_angular.Services
             return group;
         }
 
+        public void UpdateGroupParticipant(GroupParticipantDTO participant)
+        {
+            var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
+            List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+            part.Add(mpParticipant);
+            _mpGroupService.UpdateGroupParticipant(part);
+        }
+
         private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
             foreach (var part in participants)
@@ -703,6 +711,5 @@ namespace crds_angular.Services
 
             _mpGroupService.UpdateGroupParticipant(participants);
         }
-
     }
 }
