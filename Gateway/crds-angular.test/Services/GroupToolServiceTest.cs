@@ -39,6 +39,7 @@ namespace crds_angular.test.Services
         private const string BaseUrl = "test.com";
         private const int DefaultEmailContactId = 876;
         private const int AddressMatrixSearchDepth = 2;
+        private const int DefaultGroupContactId = 999;
 
         [SetUp]
         public void SetUp()
@@ -65,6 +66,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultContactEmailId")).Returns(DefaultEmailContactId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupEndedParticipantEmailTemplate")).Returns(GroupEndedParticipantEmailTemplate);
             configuration.Setup(mocked => mocked.GetConfigIntValue("AddressMatrixSearchDepth")).Returns(AddressMatrixSearchDepth);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(DefaultGroupContactId);
 
 
 
@@ -1107,9 +1109,9 @@ namespace crds_angular.test.Services
                                 c.DomainId == DomainId
                                 && c.EmailBody.Equals(template.Body)
                                 && c.EmailSubject.Equals(template.Subject)
-                                && c.FromContact.ContactId == DefaultEmailContactId
+                                && c.FromContact.ContactId == DefaultGroupContactId
                                 && c.FromContact.EmailAddress.Equals(fromEmailAddress)
-                                && c.ReplyToContact.ContactId == DefaultEmailContactId
+                                && c.ReplyToContact.ContactId == DefaultGroupContactId
                                 && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
                                 && c.AuthorUserId == 5
                                 && c.ToContacts[0].ContactId == participant.ContactId
