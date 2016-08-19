@@ -524,8 +524,8 @@ namespace crds_angular.Services
             var domainId = Convert.ToInt32(_domainId);
             var from = new MpContact
             {
-                ContactId = _defaultEmailContactId,
-                EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultEmailContactId)
+                ContactId = _defaultGroupContactEmailId,
+                EmailAddress = _communicationRepository.GetEmailFromContactId(_defaultGroupContactEmailId)
             };
 
             var to = new List<MpContact>
