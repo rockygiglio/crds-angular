@@ -80,7 +80,7 @@
   <div ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
     <div ng-repeat-start="group in groupSearchResults.results"
          class="group-result push-half-bottom soft-half-bottom"
-         ng-click="group.expanded = !group.expanded">
+         ng-click="group.expanded = true" ng-if="!group.expanded">
       <div class="row">
         <strong class="col-xs-10">{{group.groupName}}</strong>
         <div class="col-xs-2 pointer" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()">Map</div>
