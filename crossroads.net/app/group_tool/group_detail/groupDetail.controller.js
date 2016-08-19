@@ -47,9 +47,7 @@ export default class GroupDetailController {
           this.tabs.forEach(function (tab) {
             tab.active = toState.name === tab.route;
           });
-        } else {
-//TODO Do we need else if for participant_role or add to the ORs above, then else to clear out?
-        }
+        } 
     });
 
   }
