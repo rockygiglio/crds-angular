@@ -12,12 +12,13 @@ export default class GroupSearchResultsController {
   }
 
   $onInit() {
-    this.loadAgeRanges();
-
     this.allFilters = [
+      // TODO - When new filters are implemented, add them here
       this.buildAgeRangeFilter(),
       this.buildKidsWelcomeFilter()
     ];
+
+    this.loadAgeRanges();
   }
 
   $onChanges(allChanges) {
@@ -62,9 +63,17 @@ export default class GroupSearchResultsController {
     this.expanded = false;
   }
 
-  clearFilter(f) {
-    f.clear();
+  clearFilter(filter) {
+    filter.clear();
     this.applyFilters();
+  }
+
+  clearFilterByName(filterName) {
+    let filter = this.allFilters.find((f) => { return f.getName() === filterName; });
+    if(filter === undefined) {
+      return;
+    }
+    this.clearFilter(filter);
   }
 
   getCurrentFilters() {
@@ -131,7 +140,7 @@ export default class GroupSearchResultsController {
     this.groupService.getAgeRanges().then(
       (data) => {
         this.ageRanges = data.attributes;
-        this.clearFilter(this.allFilters.find((f) => { return f.getName() === 'Age Range'; }));
+        this.clearFilterByName('Age Range');
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
