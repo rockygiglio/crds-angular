@@ -107,12 +107,7 @@ export class StreamingComponent {
         });
   }
 
-  close() {
-      this.modal.close();
+  watchNowClicked(event) {
+    this.modal.open();
   }
-
-  open() {
-      this.modal.open();
-  }
-
 }

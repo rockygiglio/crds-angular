@@ -7,7 +7,7 @@
           <use xlink:href="#arrow-down9"></use>
         </svg>
       </pageScroll>
-      <countdown></countdown>
+      <countdown (watchNowClick)="modal.open()"></countdown>
     </div>
   </section>
 
@@ -45,17 +45,7 @@
       </div>
     </div>
   </section>
-<button type="button" class="btn btn-default" (click)="modal.open()">Open me!</button>
 
-<modal #modal>
-    <modal-header [show-close]="true">
-        <h4 class="modal-title">I'm a modal!</h4>
-    </modal-header>
-    <modal-body>
-        Hello World!
-    </modal-body>
-    <modal-footer [show-default-buttons]="true"></modal-footer>
-</modal>
   <section class="community imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-map.jpg?w=1&fit=crop">
     <div class="wow fadeInUp">
       <dynamic-content-ng2 title="streamingLandingCommunity"></dynamic-content-ng2>
@@ -85,3 +75,10 @@
     </div>
   </section>
 </div>
+<modal class="watch-now" #modal>
+    <modal-header [show-close]="true">
+    </modal-header>
+    <modal-body>
+      <iframe src="/live/stream" frameborder="0"></iframe>
+    </modal-body>
+</modal>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Event } from './event';
@@ -25,7 +25,7 @@ declare var _: any;
         </ul>
       </div>
       <div *ngIf="isBroadcasting" class="in-progress">
-        <i>Live stream in progress...</i> <a href="/live/stream" class="btn btn-sm">Watch Now</a>
+        <i>Live stream in progress...</i> <a (click)="watchNow($event)" class="btn btn-sm">Watch Now</a>
       </div>
     </div>
   `,
@@ -36,10 +36,12 @@ export class CountdownComponent implements OnInit {
   event:            Event     = null;
   countdown:        Countdown = new Countdown;
   isCountdown:      boolean   = false;
-  isBroadcasting:   boolean   = false;
-  displayCountdown: boolean   = false
+  isBroadcasting:   boolean   = true;
+  displayCountdown: boolean   = true
   intervalId:       any;
   subscriber:       any;
+
+  @Output() watchNowClick = new EventEmitter();
 
   constructor(private streamspotService: StreamspotService) { }
 
@@ -71,6 +73,10 @@ export class CountdownComponent implements OnInit {
     this.countdown.minutes = this.pad(duration.minutes());
     this.countdown.seconds = this.pad(duration.seconds());
     this.displayCountdown  = true;
+  }
+
+  watchNow(event) {
+    this.watchNowClick.emit({});
   }
 
 }
