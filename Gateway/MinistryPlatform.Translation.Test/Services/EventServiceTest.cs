@@ -292,29 +292,28 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldGetEventGroupsForEvent()
         {
+            var eventId = 983274;
+            var token = "wesadf";
+
             var eventGroupPageViewId = _configWrapper.Object.GetConfigIntValue("GroupsByEventId");
+            var searchString = string.Format("\"{0}\",", eventId);
+            var eventGroups = GetMockedEventGroups(new System.Random(DateTime.Now.Millisecond).Next(10));
 
-            Prop.ForAll<string, int>((token, eventId) =>
+            _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(eventGroups);
+            var result = _fixture.GetEventGroupsForEvent(eventId, token);
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(eventGroups.Count, result.Count);
+            for (var i = 0; i < eventGroups.Count; i++)
             {
-                var searchString = string.Format("\"{0}\",", eventId);
-                var eventGroups = GetMockedEventGroups(new System.Random(DateTime.Now.Millisecond).Next(10));
-
-                _ministryPlatformService.Setup(m => m.GetPageViewRecords(eventGroupPageViewId, token, searchString, "", 0)).Returns(eventGroups);
-                var result = _fixture.GetEventGroupsForEvent(eventId, token);
-                _ministryPlatformService.VerifyAll();
-
-                Assert.IsNotNull(result);
-                Assert.AreEqual(eventGroups.Count, result.Count);
-                for (var i = 0; i < eventGroups.Count; i++)
-                {
-                    Assert.AreEqual(eventGroups[i]["Event_Group_ID"], result[i].EventGroupId);
-                    Assert.AreEqual(eventGroups[i]["Event_ID"], result[i].EventId);
-                    Assert.AreEqual(eventGroups[i]["Group_ID"], result[i].GroupId);
-                    Assert.AreEqual(eventGroups[i]["Room_ID"], result[i].RoomId);
-                    Assert.AreEqual(eventGroups[i]["Closed"], result[i].Closed);
-                    Assert.AreEqual(eventGroups[i]["Event_Room_ID"], result[i].EventRoomId);
-                }
-            }).QuickCheckThrowOnFailure();
+                Assert.AreEqual(eventGroups[i]["Event_Group_ID"], result[i].EventGroupId);
+                Assert.AreEqual(eventGroups[i]["Event_ID"], result[i].EventId);
+                Assert.AreEqual(eventGroups[i]["Group_ID"], result[i].GroupId);
+                Assert.AreEqual(eventGroups[i]["Room_ID"], result[i].RoomId);
+                Assert.AreEqual(eventGroups[i]["Closed"], result[i].Closed);
+                Assert.AreEqual(eventGroups[i]["Event_Room_ID"], result[i].EventRoomId);
+            }
         }
 
         [Test]

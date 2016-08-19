@@ -478,6 +478,7 @@ namespace MinistryPlatform.Translation.Repositories
             var groupParticipants = new List<MpGroupParticipant>();
             logger.Debug("Getting participants for group " + groupId);
             List<Dictionary<string, object>> participants;
+
             if (activeGroups)
             {
                 participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
@@ -499,6 +500,7 @@ namespace MinistryPlatform.Translation.Repositories
                         {
                             ContactId = p.ToInt("Contact_ID"),
                             ParticipantId = p.ToInt("Participant_ID"),
+                            IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),
                             GroupParticipantId = p.ToInt("dp_RecordID"),
                             GroupRoleId = p.ToInt("Group_Role_ID"),
                             GroupRoleTitle = p.ToString("Role_Title"),
@@ -966,6 +968,25 @@ namespace MinistryPlatform.Translation.Repositories
                     throw new ApplicationException("Error creating group inquiry: " + e.Message);
                 }
             });
+        }
+
+        public MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId)
+        {
+            var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
+                                                                      token,
+                                                                      $",,,{groupId}");
+
+            if (groupDetails == null || groupDetails.Count == 0)
+                return null;
+
+            var record = groupDetails[0];
+
+            return new MpGroupParticipant()
+            {
+                GroupRoleId = record.ToInt("Group_Role_ID"),
+                GroupParticipantId = record.ToInt("Group_Participant_ID"),
+                ParticipantId = record.ToInt("Participant_ID")
+            };
         }
 
        
