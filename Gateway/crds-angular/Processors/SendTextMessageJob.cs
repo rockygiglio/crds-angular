@@ -1,8 +1,8 @@
 ﻿
 using System.Text.RegularExpressions;
-using System.Web.UI;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Quartz;
@@ -26,8 +26,7 @@ namespace crds_angular.Processors
             TextCommunicationDto dto = (TextCommunicationDto)dataMap.Get("dto");
             MpMessageTemplate template = _communicationService.GetTemplate(dto.TemplateId);
             string htmlBody =_communicationService.ParseTemplateBody(template.Body, dto.MergeData);
-            Regex regex = new Regex("<[^>]*>");
-            string textBody = regex.Replace(htmlBody, "");
+            string textBody = HtmlHelper.StripHTML(htmlBody);
             _textCommunicationService.SendTextMessage(dto.ToPhoneNumber, textBody);
         }
     }

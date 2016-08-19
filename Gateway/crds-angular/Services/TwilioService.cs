@@ -8,7 +8,7 @@ namespace crds_angular.Services
 {
     public class TwilioService : ITextCommunicationService
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(TwilioService));
+        public ILog _logger = LogManager.GetLogger(typeof(TwilioService));
 
         private readonly string _fromPhoneNumber;
         private readonly TwilioRestClient _twilio;
@@ -30,6 +30,11 @@ namespace crds_angular.Services
                 _logger.Error(message.RestException.Message);
             }
             
+        }
+
+        public void SetLogger(ILog logger)
+        {
+            _logger = logger;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using crds_angular.Models.Crossroads;
 using crds_angular.Processors;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -70,7 +71,8 @@ namespace crds_angular.test.Processors
             _communicationRepository.Setup(mock => mock.ParseTemplateBody(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()))
                 .Returns(mockParsedTemplate);
 
-            var s = "Hi there!Welcome to the word up Crossroads service. Click here to join us:  https://localhost/live/streamWe're glad you're here,-Crossroads";
+            var expectedBody = HtmlHelper.StripHTML(mockParsedTemplate);
+
             var spiedBody = "";
             var spiedPhone = "";
             _textCommunicationService.Setup(mock => mock.SendTextMessage(It.IsAny<string>(), It.IsAny<string>()))
@@ -81,7 +83,7 @@ namespace crds_angular.test.Processors
                 });
             _fixture.Execute(_mockJobExecutionContext.Object);
             Assert.AreEqual(dto.ToPhoneNumber,spiedPhone);
-            Assert.AreEqual(s, spiedBody);
+            Assert.AreEqual(expectedBody, spiedBody);
 
         }
     }
