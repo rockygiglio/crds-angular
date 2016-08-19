@@ -577,6 +577,24 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
+        public void ShouldNotEditGroup()
+        {
+            Exception ex = new Exception();
+
+            var group = new GroupDTO()
+            {
+                GroupName = "This will work"
+            };
+
+            _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
+
+            IHttpActionResult result = _fixture.EditGroup(group);
+            _groupServiceMock.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
+
+        [Test]
         public void ShouldCallServiceUpdateParticipant()
         {
             var participant = new GroupParticipantDTO()
