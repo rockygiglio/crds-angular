@@ -48,7 +48,7 @@ export default class GroupDetailController {
             tab.active = toState.name === tab.route;
           });
         } else {
-          // else if for participant_role or add to the ORs above, then else to clear out?
+//TODO Do we need else if for participant_role or add to the ORs above, then else to clear out?
         }
     });
 
