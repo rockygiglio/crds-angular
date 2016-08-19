@@ -13,16 +13,16 @@ export default class ChangeParticipantRoleController {
   submit() {
     this.processing = true;
 
-      var promise = this.groupService.updateParticipant(this.participant)
-        .then((data) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-        },
-        (data) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-        }).finally(() => {
-          this.processing = false;
-          this.cancel();
-        });
+    var promise = this.groupService.updateParticipant(this.participant)
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+      },
+      (data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }).finally(() => {
+        this.processing = false;
+        this.cancel();
+      });
   }
 
   isParticipant() {
@@ -53,7 +53,7 @@ export default class ChangeParticipantRoleController {
       }).length;
     }
 
-    if (countLeaders >= CONSTANTS.GROUP.MAX_LEADERS){
+    if (countLeaders >= CONSTANTS.GROUP.MAX_LEADERS) {
       return true;
     }
     return false;
@@ -69,14 +69,15 @@ export default class ChangeParticipantRoleController {
         return val.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE;
       }).length;
     }
-    if (countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE){
+    if (countApprentices >= CONSTANTS.GROUP.MAX_APPRENTICE) {
       return true;
     }
     return false;
   }
 
-  cancel() {
+  cancel(changeParticipantForm) {
     // Invoke the parent callback function
+    changeParticipantForm.$rollbackViewValue();
     this.cancelAction();
     this.anchorScroll();
   }
