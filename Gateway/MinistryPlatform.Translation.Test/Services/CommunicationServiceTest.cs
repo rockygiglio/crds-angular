@@ -183,7 +183,12 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mock => mock.CreateSubRecord(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
                 .Returns(1);
             _fixture.SendMessage(comm);
-            Assert.AreEqual(DateTime.Now, spiedDict["Start_Date"]);
+
+            // Verify that the dictionary contains a Start_Date, that it is a DateTime, 
+            // and that is reasonably close to DateTime.Now
+            Assert.IsTrue(spiedDict.ContainsKey("Start_Date"));
+            Assert.IsInstanceOf<DateTime>(spiedDict["Start_Date"]);
+            Assert.IsTrue(DateTime.Now.Subtract((DateTime)spiedDict["Start_Date"]).TotalSeconds < 30);
         }
     }
 }

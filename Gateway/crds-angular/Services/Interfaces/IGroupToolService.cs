@@ -24,12 +24,13 @@ namespace crds_angular.Services.Interfaces
                                        string message = null,
                                        Participant fromParticipant = null);
 
-        MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId);
+        MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId);
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
         void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message);
         List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null);
         void SubmitInquiry(string token, int groupId);
         void EndGroup(int groupId, int reasonEndedId);
         void SendGroupEndedParticipantEmail(GroupParticipantDTO participant);
+        MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId);
     }
 }

@@ -109,7 +109,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
                     _groupToolService.EndGroup(groupId, groupReasonEndedId);
                     return Ok();
                 }
@@ -321,7 +321,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
                     return Ok(group);
                 }
                 catch (GroupNotFoundForParticipantException exception)
