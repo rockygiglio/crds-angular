@@ -67,9 +67,7 @@ streaming {
       left: 0;
       right: 0;
       top: 0;
-    }
-    .intro {
-      margin-top: 66px;
+      -webkit-overflow-scrolling: touch;
     }
   }
 
@@ -85,9 +83,18 @@ streaming {
       min-height: 66px;
     }
 
-    countdown {
-      display: inline;
+    #conuntdown-header {
+      -webkit-animation-duration: 1.5s;
+         -moz-animation-duration: 1.5s;
+          -ms-animation-duration: 1.5s;
+           -o-animation-duration: 1.5s;
+              animation-duration: 1.5s;
+
+      countdown {
+        display: inline;
+      }
     }
+
 
     .container {
       @include clearfix();
