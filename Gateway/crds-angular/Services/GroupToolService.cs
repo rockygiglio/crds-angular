@@ -89,7 +89,7 @@ namespace crds_angular.Services
             var invitations = new List<Invitation>();
             try
             {
-                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, sourceId);
+                VerifyCurrentUserIsGroupLeader(token, sourceId);
 
                 var mpInvitations = _groupToolRepository.GetInvitations(sourceId, invitationTypeId);
                 mpInvitations.ForEach(x => invitations.Add(Mapper.Map<Invitation>(x)));
@@ -108,7 +108,7 @@ namespace crds_angular.Services
             var requests = new List<Inquiry>();
             try
             {
-                VerifyCurrentUserIsGroupLeader(token, _defaultGroupTypeId, groupId);
+                VerifyCurrentUserIsGroupLeader(token, groupId);
 
                 var mpRequests = _groupToolRepository.GetInquiries(groupId);
                 mpRequests.ForEach(x => requests.Add(Mapper.Map<Inquiry>(x)));
@@ -126,7 +126,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -233,7 +233,30 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
         
-        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupTypeId, int groupId)
+        public MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId)
+        {
+            var groupParticipant = _groupRepository.GetAuthenticatedUserParticipationByGroupID(token, groupId);
+
+            if (groupParticipant == null)
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for user");
+
+            if (groupParticipant.GroupRoleId != _groupRoleLeaderId)
+                throw new NotGroupLeaderException($"User is not a leader of group {groupId}");
+
+            return new MyGroup()
+            {
+                Group = new GroupDTO()
+                {
+                    GroupId = groupId
+                },
+                Me = new Participant()
+                {
+                    ParticipantId = groupParticipant.ParticipantId
+                }
+            };
+        }
+
+        public MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId)
         {
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
             var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
@@ -263,7 +286,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
 
                 if (approve)
                 {
