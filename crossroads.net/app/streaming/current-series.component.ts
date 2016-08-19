@@ -53,19 +53,17 @@ export class CurrentSeriesComponent {
     this.description = response.description;
     this.startDate = response.startDate;
     this.endDate = response.endDate;
-    this.trailer = response.trailerLink;
+
+    if ( response.trailerLink !== undefined ) {
+      this.trailer = response.trailerLink;
+    }
+
+    if ( response.image !== undefined ) {
+      this.picture = response.image.filename;
+    }
 
     this.setRunningDates(response);
     this.setTagsArray(response);
-
-    if ( response.image !== undefined ) {
-      try {
-        this.picture = response.image.filename;
-      }
-      catch(exception) {
-        console.log('No image file provided for current series.');
-      }
-    }
     
     this.visible = true;
   }
@@ -81,7 +79,9 @@ export class CurrentSeriesComponent {
   }
 
   private setTagsArray(response) {
-    this.tags = response.tags.map(tag => tag.title);
+    if ( response.tags !== undefined && response.tags.length > 0 ) {
+      this.tags = response.tags.map(tag => tag.title);
+    }
   }
 
 }

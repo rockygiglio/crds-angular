@@ -970,6 +970,25 @@ namespace MinistryPlatform.Translation.Repositories
             });
         }
 
+        public MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId)
+        {
+            var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
+                                                                      token,
+                                                                      $",,,{groupId}");
+
+            if (groupDetails == null || groupDetails.Count == 0)
+                return null;
+
+            var record = groupDetails[0];
+
+            return new MpGroupParticipant()
+            {
+                GroupRoleId = record.ToInt("Group_Role_ID"),
+                GroupParticipantId = record.ToInt("Group_Participant_ID"),
+                ParticipantId = record.ToInt("Participant_ID")
+            };
+        }
+
        
     }
 }

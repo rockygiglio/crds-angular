@@ -72,7 +72,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
           window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
           if ( ga !== undefined ) {
-            ga('send', 'event', 'Streaming', 'Play', 'Live Stream Play', 1);
+            ga('send', 'event', 'Streaming', 'Play', 'Live Stream Play');
+            console.log('Video played.');
           }
         });
 
@@ -83,7 +84,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
             window.SSTracker = null;
           }
           if ( ga !== undefined ) {
-            ga('send', 'event', 'Streaming', 'Pause', 'Live Stream Pause', 0);
+            ga('send', 'event', 'Streaming', 'Pause', 'Live Stream Pause');
+            console.log('Video paused.');
           }
         });
             

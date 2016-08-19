@@ -19,20 +19,32 @@
     </section>
   </div>
 
-
   <div class="container">
+    <div class="row">
+      <section class="related digital-program" *ngIf="dontMiss.length > 0">
+          <header class="clearfix">
+            <h2>don't miss</h2>
+          </header>
 
-      <section class="related" *ngIf="dontMiss.length > 0">
-        <header>
-          <h2>don't miss</h2>
-        </header>
-
-        <div class="row">
           <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
-        </div>
 
       </section>
-
-      
+      <section class="participate digital-program" *ngIf="promos.length > 0">
+        <header class="clearfix">
+          <h2>be the church</h2>
+        </header>
+        
+        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of promos">
+          <figure class="wow fadeIn" data-wow-delay="">
+            <img src="{{promo.image}}" alt="" class="img-responsive" />
+          </figure>
+          <section>
+            <h3>{{ promo.title }}</h3>
+            <div [innerHTML]="promo.description"></div>
+          </section>
+          <hr>
+        </article>
+      </section>
+    </div>
   </div>
 </div>

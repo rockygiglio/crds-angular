@@ -25,6 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
         private readonly int _groupsSubGroupsPageId = 299;
+        private readonly int _myGroupParticipationPageId = 563;
         private const string ApiToken = "ABC";
         [SetUp]
         public void SetUp()
@@ -750,6 +751,44 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.UpdateGroup(existingGroup);
             Assert.AreEqual(1, result);
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationByGroupIdFindsGroup()
+        {
+            var values = new Dictionary<string, object>()
+            {
+                {"Participant_ID", 123},
+                {"Group_Participant_ID", 555 },
+                {"Group_Role_ID", 978 },
+                {"Something_Else", "A string" }
+            };
+
+            const int groupId = 43221;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>() {values});
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.ParticipantId, 123);
+            
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationNoGroupsFound()
+        {
+            const int groupId = 123;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>());
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+            _ministryPlatformService.VerifyAll();
+            Assert.IsNull(result);
         }
     }
 }

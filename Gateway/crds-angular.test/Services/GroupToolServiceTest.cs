@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
@@ -28,6 +30,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IInvitationRepository> _invitationRepositor;
         private Mock<IAddressProximityService> _addressProximityService;
         private Mock<MPServices.IContactRepository> _contactRepository;
+        private Mock<IAddressProximityService> _addressMatrixService;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -35,6 +38,8 @@ namespace crds_angular.test.Services
         private const int DomainId = 321;
         private const string BaseUrl = "test.com";
         private const int DefaultEmailContactId = 876;
+        private const int AddressMatrixSearchDepth = 2;
+
         [SetUp]
         public void SetUp()
         {
@@ -49,6 +54,7 @@ namespace crds_angular.test.Services
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
             _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
             _contactRepository = new Mock<MPServices.IContactRepository>();
+            _addressMatrixService = new Mock<IAddressProximityService>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -58,6 +64,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigValue("BaseURL")).Returns(BaseUrl);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultContactEmailId")).Returns(DefaultEmailContactId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupEndedParticipantEmailTemplate")).Returns(GroupEndedParticipantEmailTemplate);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("AddressMatrixSearchDepth")).Returns(AddressMatrixSearchDepth);
 
 
 
@@ -70,19 +77,41 @@ namespace crds_angular.test.Services
                                             configuration.Object,
                                             _invitationRepositor.Object,
                                             _addressProximityService.Object,
-                                            _contactRepository.Object);
+                                            _contactRepository.Object,
+                                            _addressMatrixService.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestVerifyCurrentUserIsGroupLeaderGroupNotFound()
         {
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
-            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+            _groupRepository.Setup(mocked => mocked.GetAuthenticatedUserParticipationByGroupID("abc", 1)).Returns((MpGroupParticipant) null);
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 2);
         }
 
         [Test]
         [ExpectedException(typeof(NotGroupLeaderException))]
         public void TestVerifyCurrentUserIsGroupLeaderNotGroupLeader()
+        {
+            var myGroupParticipant = new MpGroupParticipant()
+            {
+                ParticipantId = 123,
+                GroupParticipantId = 321,
+                GroupRoleId = 8
+            };
+            _groupRepository.Setup(mocked => mocked.GetAuthenticatedUserParticipationByGroupID("abc", 1)).Returns(myGroupParticipant);
+            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1);
+        }
+
+        [ExpectedException(typeof(GroupNotFoundForParticipantException))]
+        public void TestGetMyGroupInfoGroupNotFound()
+        {
+            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
+            _fixture.GetMyGroupInfo("abc", 1, 2);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotGroupLeaderException))]
+        public void TestGetMyGroupInfoNotGroupLeader()
         {
             const int myParticipantId = 952;
             var myParticipant = new Participant
@@ -106,11 +135,33 @@ namespace crds_angular.test.Services
                 }
             };
             _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+            _fixture.GetMyGroupInfo("abc", 1, 2);
         }
 
         [Test]
         public void TestVerifyCurrentUserIsGroupLeader()
+        {
+            var myGroupParticipant = new MpGroupParticipant()
+            {
+                GroupParticipantId = 5432,
+                ParticipantId = 4242,
+                GroupRoleId = GroupRoleLeader
+            };
+
+            const int groupId = 2;
+
+            _groupRepository.Setup(mocked => mocked.GetAuthenticatedUserParticipationByGroupID("abc", 2)).Returns(myGroupParticipant);
+
+            var result = _fixture.VerifyCurrentUserIsGroupLeader("abc", groupId);
+            _groupRepository.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(myGroupParticipant.ParticipantId, result.Me.ParticipantId);
+            Assert.AreEqual(groupId, result.Group.GroupId);
+        }
+
+        [Test]
+        public void TestGetMyGroupInfoIsGroupLeader()
         {
             const int myParticipantId = 952;
             var myParticipant = new Participant
@@ -134,7 +185,7 @@ namespace crds_angular.test.Services
                 }
             };
             _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            var result = _fixture.VerifyCurrentUserIsGroupLeader("abc", 1, 2);
+            var result = _fixture.GetMyGroupInfo("abc",1, 2);
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
 
@@ -209,6 +260,8 @@ namespace crds_angular.test.Services
                     mocked.SendMessage(
                         It.IsAny<MpCommunication>(),
                         false)).Returns(5);
+
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(string.Empty);
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
@@ -287,6 +340,8 @@ namespace crds_angular.test.Services
                     mocked.SendMessage(
                         It.IsAny<MpCommunication>(),
                         false)).Returns(5);
+
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(string.Empty);
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
@@ -514,6 +569,8 @@ namespace crds_angular.test.Services
             };
             _communicationRepository.Setup(mocked => mocked.GetTemplate(templateId)).Returns(template);
 
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(string.Empty, It.IsAny<Dictionary<string, object>>())).Returns(string.Empty);
+
             _communicationRepository.Setup(
                 mocked =>
                     mocked.SendMessage(
@@ -527,13 +584,13 @@ namespace crds_angular.test.Services
                                 c.MergeData["Group_Description"].Equals(group.GroupDescription)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, false, group, templateId);
+            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
 
         [Test]
-        public void TestSendGroupParticipantEmail()
+        public void TestSendGroupParticipantEmailToGroupParticipantId()
         {
             const int groupId = 222;
             const int myParticipantId = 952;
@@ -589,6 +646,8 @@ namespace crds_angular.test.Services
                 PreferredName = "preferred name"
             };
 
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(content.Content, It.IsAny<Dictionary<string, object>>())).Returns(content.Content);
+
             _communicationRepository.Setup(
                 mocked =>
                     mocked.SendMessage(
@@ -603,7 +662,100 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeParticipantId, false, group, templateId, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId, null, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
+            _communicationRepository.VerifyAll();
+            _contentBlockService.VerifyAll();
+        }
+
+        [Test]
+        public void TestSendGroupParticipantEmailToGroupParticipant()
+        {
+            const int groupId = 222;
+            const int myParticipantId = 952;
+            const int removeParticipantId = 3;
+            const int removeGroupParticipantId = 13;
+            const int templateId = 765;
+
+            var group = new GroupDTO
+            {
+                GroupName = "group name",
+                GroupDescription = "group description",
+                Participants = new List<GroupParticipantDTO>
+                {
+                    new GroupParticipantDTO
+                    {
+                        ParticipantId = myParticipantId,
+                        GroupRoleId = GroupRoleLeader
+                    },
+                    new GroupParticipantDTO
+                    {
+                        ParticipantId = removeParticipantId + 1,
+                        GroupParticipantId = removeGroupParticipantId + 1,
+                        NickName = "nickname",
+                        ContactId = 91,
+                        Email = "80"
+                    }
+                }
+            };
+
+            var toGroupParticipant = new Participant
+            {
+                ParticipantId = removeParticipantId,
+                PreferredName = "preferred",
+                EmailAddress = "email"
+            };
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 99,
+                FromEmailAddress = "88",
+                ReplyToContactId = 77,
+                ReplyToEmailAddress = "66",
+                Subject = "55"
+            };
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(templateId)).Returns(template);
+
+            const string subjectContentBlockTitle = "subject";
+            var subjectContent = new ContentBlock
+            {
+                Content = "<p>subject content</p>"
+            };
+            _contentBlockService.Setup(mocked => mocked[subjectContentBlockTitle]).Returns(subjectContent);
+
+            const string bodyContentBlockTitle = "body";
+            var bodyContent = new ContentBlock
+            {
+                Content = "body content"
+            };
+            _contentBlockService.Setup(mocked => mocked[bodyContentBlockTitle]).Returns(bodyContent);
+
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody("subject content", It.IsAny<Dictionary<string, object>>())).Returns("subject content parsed");
+            _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(bodyContent.Content, It.IsAny<Dictionary<string, object>>())).Returns($"{bodyContent.Content} parsed");
+
+            var fromParticipant = new Participant
+            {
+                ContactId = 456,
+                EmailAddress = "email",
+                DisplayName = "display name",
+                PreferredName = "preferred name"
+            };
+
+            _communicationRepository.Setup(
+                mocked =>
+                    mocked.SendMessage(
+                        It.Is<MpCommunication>(
+                            c =>
+                                c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                                c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                                c.ReplyToContact.ContactId == fromParticipant.ContactId && c.ReplyToContact.EmailAddress.Equals(fromParticipant.EmailAddress) &&
+                                c.MergeData["NickName"].Equals("preferred") && c.MergeData["Email_Template_Text"].Equals($"{bodyContent.Content} parsed") && c.MergeData["Subject_Template_Text"].Equals("subject content parsed") &&
+                                c.MergeData["Email_Custom_Message"].Equals("message") && c.MergeData["Group_Name"].Equals(group.GroupName) &&
+                                c.MergeData["Group_Description"].Equals(group.GroupDescription) && c.MergeData["From_Display_Name"].Equals(fromParticipant.DisplayName) &&
+                                c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
+                        false)).Returns(5);
+
+            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId, toGroupParticipant, subjectContentBlockTitle, bodyContentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
@@ -615,45 +767,12 @@ namespace crds_angular.test.Services
             var invitationTypeId = 1;
             var token = "dude";
 
-            var groups = new List<GroupDTO>
-            {
-                new GroupDTO()
-                {
-                    GroupName = "group name",
-                    GroupDescription = "group description",
-                    Participants = new List<GroupParticipantDTO>
-                    {
-                        new GroupParticipantDTO
-                        {
-                            ParticipantId = 123,
-                            GroupRoleId = GroupRoleLeader
-                        },
-                        new GroupParticipantDTO
-                        {
-                            ParticipantId = 12132133,
-                            GroupParticipantId = 12411,
-                            NickName = "nickname",
-                            ContactId = 90,
-                            Email = "80"
-                        }
-                    },
-                }
-            };
-
-            var me = new Participant
-            {
-                ParticipantId = 123,
-                ContactId = 90,
-            };
-
-            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(me);
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(groups);
+            _groupRepository.Setup(m => m.GetAuthenticatedUserParticipationByGroupID("dude", sourceId))
+                .Returns(new MpGroupParticipant() {GroupParticipantId = 32, ParticipantId = 4, GroupRoleId = GroupRoleLeader});
             _groupToolRepository.Setup(m => m.GetInvitations(It.IsAny<int>(), It.IsAny<int>())).Returns(getMpInvations());
             var invitations = _fixture.GetInvitations(sourceId, invitationTypeId, token);
 
             Assert.AreEqual(4, invitations.Count);
-
-
         }
 
         private List<MpInvitation> getMpInvations()
@@ -742,42 +861,12 @@ namespace crds_angular.test.Services
                 Placed = true,
             });
 
-            var groups = new List<GroupDTO>
-            {
-                new GroupDTO()
-                {
-                    GroupName = "group name",
-                    GroupDescription = "group description",
-                    Participants = new List<GroupParticipantDTO>
-                    {
-                        new GroupParticipantDTO
-                        {
-                            ParticipantId = 123,
-                            GroupRoleId = GroupRoleLeader
-                        },
-                        new GroupParticipantDTO
-                        {
-                            ParticipantId = 12132133,
-                            GroupParticipantId = 12411,
-                            NickName = "nickname",
-                            ContactId = 90,
-                            Email = "80"
-                        }
-                    },
-                }
-            };
-
-            var me = new Participant
-            {
-                ParticipantId = 123,
-                ContactId = 90,
-            };
 
             var groupId = 1;
             var token = "dude";
 
-            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(me);
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(groups);
+            _groupRepository.Setup(mocked => mocked.GetAuthenticatedUserParticipationByGroupID("dude", groupId))
+                .Returns(new MpGroupParticipant() {GroupParticipantId = 37362, GroupRoleId = GroupRoleLeader, ParticipantId = 23});
             _groupToolRepository.Setup(m => m.GetInquiries(It.IsAny<int>())).Returns(mpResults);
 
             var inquiries = _fixture.GetInquiries(groupId, token);
@@ -906,6 +995,83 @@ namespace crds_angular.test.Services
             foreach (var expected in searchResults)
             {
                 Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
+            }
+        }
+
+        public void TestSearchGroupsWithLocation()
+        {
+            const int groupTypeId = 1;
+            var searchResults = new List<MpGroupSearchResultDto>
+            {
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 123,
+                    Name = "group 1",
+                    GroupType = 1231,
+                    Address = new MpAddress
+                    {
+                        Address_Line_1 = "line1",
+                        City = "city",
+                        State = "state",
+                        Postal_Code = "12301",
+                        Latitude = 1,
+                        Longitude = 2
+                    }
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 456,
+                    Name = "group 2",
+                    GroupType = 4564,
+                    Address = new MpAddress()
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 789,
+                    Name = "group 3",
+                    GroupType = 7897,
+                    Address = new MpAddress
+                    {
+                        Address_Line_1 = "line1",
+                        City = "city",
+                        State = "state",
+                        Postal_Code = "78901",
+                        Latitude = 3,
+                        Longitude = 4
+                    }
+                }
+            };
+
+            var groups = searchResults.Select(Mapper.Map<GroupDTO>).ToList();
+            const string location = "loc loc loc";
+            var geoResults = new List<decimal?> { null, 9, 3 };
+            var distanceMatrixResults = new List<decimal?> { 2, 5 };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>())).Returns(searchResults);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).ToList())).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).Skip(1).Take(AddressMatrixSearchDepth).Reverse().ToList()))
+                .Returns(distanceMatrixResults);
+
+            var results = _fixture.SearchGroups(groupTypeId, null, location);
+            _groupToolRepository.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(searchResults.Count, results.Count);
+
+            var expectedOrder = new List<MpGroupSearchResultDto>
+            {
+                searchResults[2],
+                searchResults[1],
+                searchResults[0]
+            };
+
+            var expectedDistances = new decimal?[]
+            {
+                2, 5, null
+            };
+
+            for (var i = 0; i < expectedOrder.Count; i++)
+            {
+                Assert.AreEqual(expectedOrder[i].GroupId, results[i].GroupId);
+                Assert.AreEqual(expectedDistances[i], results[i].Proximity);
             }
         }
 

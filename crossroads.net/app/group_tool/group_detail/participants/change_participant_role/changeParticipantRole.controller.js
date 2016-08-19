@@ -12,7 +12,6 @@ export default class ChangeParticipantRoleController {
 
   submit() {
     this.processing = true;
-
     var promise = this.groupService.updateParticipant(this.participant)
       .then((data) => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
@@ -23,6 +22,8 @@ export default class ChangeParticipantRoleController {
         this.processing = false;
         this.cancel();
       });
+    // Invoke the parent callback function
+    this.submitAction();
   }
 
   isParticipant() {
