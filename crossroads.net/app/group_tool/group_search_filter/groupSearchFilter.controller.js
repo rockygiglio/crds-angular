@@ -1,15 +1,23 @@
 
+import {SearchFilter, SearchFilterBuilder} from './searchFilter'; 
+
 export default class GroupSearchResultsController {
   /*@ngInject*/
   constructor(GroupService) {
     this.groupService = GroupService;
     this.ageRanges = [];
+    this.kidsWelcome = undefined;
     this.expanded = false;
-    this.currentFilters = {};
+    this.allFilters = [];
   }
 
   $onInit() {
     this.loadAgeRanges();
+
+    this.allFilters = [
+      this.buildAgeRangeFilter(),
+      this.buildKidsWelcomeFilter()
+    ];
   }
 
   $onChanges(allChanges) {
@@ -20,8 +28,12 @@ export default class GroupSearchResultsController {
   applyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
-        // TODO When additional filters are added, call their functions here
-        return this.ageRangeFilter(r);
+        for (let i = 0; i < this.allFilters.length; i++) {
+          if(!this.allFilters[i].matches(r)) {
+            return false;
+          }
+        }
+        return true;
       })
     };
 
@@ -31,8 +43,9 @@ export default class GroupSearchResultsController {
   }
 
   clearFilters() {
-    // TODO When additional filters are added, call their clear functions here
-    this.clearAgeRangeFilter();
+    this.allFilters.forEach(function(f) {
+      f.clear();
+    }, this);
 
     this.applyFilters();
   }
@@ -49,54 +62,76 @@ export default class GroupSearchResultsController {
     this.expanded = false;
   }
 
+  clearFilter(f) {
+    f.clear();
+    this.applyFilters();
+  }
+
+  getCurrentFilters() {
+    return this.allFilters.filter((f) => f.isActive());
+  }
+
   hasFilters() {
-    return Object.keys(this.currentFilters).length > 0;
+    return this.allFilters.find((f) => f.isActive()) !== undefined;
   }
 
-  // TODO - This is probably not very efficient, might need to optimize with large result sets
-  ageRangeFilter(searchResult) {
-    delete this.currentFilters['Age Range'];
-    let selectedAgeRanges = this.ageRanges.filter((a) => {
-      return a.selected === true;
-    }).map((a) => {
-      return a.attributeId;
-    });
+  buildAgeRangeFilter() {
+    return new SearchFilterBuilder()
+      .withFilterName('Age Range')
+      .withMatchingFunction((result) => {
+        let selectedAgeRanges = this.ageRanges.filter((a) => {
+          return a.selected === true;
+        }).map((a) => {
+          return a.attributeId;
+        });
 
-    if(selectedAgeRanges.length === 0) {
-      return true;
-    }
+        if(selectedAgeRanges.length === 0) {
+          return true;
+        }
 
-    this.currentFilters['Age Range'] = () => {
-      this.clearAgeRangeFilter();
-      this.applyFilters();
-    };
+        // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
+        if(!result.ageRange || !Array.isArray(result.ageRange)) {
+          return false;
+        }
+        
+        let filteredResults = result.ageRange.filter((a) => {
+          return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
+        });
 
-    // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
-    if(!searchResult.ageRange || !Array.isArray(searchResult.ageRange)) {
-      return false;
-    }
-    
-    let filteredResults = searchResult.ageRange.filter((a) => {
-      return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
-    });
-
-    return filteredResults !== undefined && filteredResults.length > 0;
+        return filteredResults !== undefined && filteredResults.length > 0;
+      })
+      .withResetFunction(() => {
+        for(let i = 0; i < this.ageRanges.length; i++)
+        {
+          this.ageRanges[i].selected = false;
+        }
+      })
+      .withActiveFunction(() => {
+        return this.ageRanges.find((i) => { return i.selected === true; }) !== undefined;
+      })
+      .getSearchFilter();
   }
 
-  clearAgeRangeFilter() {
-    for(let i = 0; i < this.ageRanges.length; i++)
-    {
-      this.ageRanges[i].selected = false;
-    }
-    delete this.currentFilters['Age Range'];
+  buildKidsWelcomeFilter() {
+    return new SearchFilterBuilder()
+      .withFilterName('Kids Welcome')
+      .withMatchingFunction((result) => {
+        return result.kidsWelcome !== undefined && result.kidsWelcome === this.kidsWelcome;
+      })
+      .withResetFunction(() => {
+        this.kidsWelcome = undefined;
+      })
+      .withActiveFunction(() => {
+        return this.kidsWelcome !== undefined;
+      })
+      .getSearchFilter();
   }
 
   loadAgeRanges() {
     this.groupService.getAgeRanges().then(
       (data) => {
         this.ageRanges = data.attributes;
-
-        this.clearAgeRangeFilter();
+        this.clearFilter(this.allFilters.find((f) => { return f.getName() === 'Age Range'; }));
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)

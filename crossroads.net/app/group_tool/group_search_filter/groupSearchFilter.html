@@ -26,6 +26,40 @@
         </div>
       </dd>
     </dl>
+    <dl class="push-half-ends">
+      <dt>
+        Kids Welcome
+      </dt>
+      <dd>
+        <div class="row">
+           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter -->
+          <div class='radio-group'>
+            <div class="radio col-lg-4 col-sm-6">
+              <label for="kidsWelcomeYes">
+                <input ng-model="groupSearchFilter.kidsWelcome"
+                      ng-model-options="{ updateOn: 'submit' }"
+                      type="radio"
+                      ng-value="true"
+                      name="kidsWelcome"
+                      id="kidsWelcomeYes"/>
+                Yes
+              </label>
+            </div>
+            <div class="radio col-lg-4 col-sm-6">
+              <label for="kidsWelcomeNo">
+                <input ng-model="groupSearchFilter.kidsWelcome"
+                      ng-model-options="{ updateOn: 'submit' }"
+                      type="radio"
+                      ng-value="false"
+                      name="kidsWelcome"
+                      id="kidsWelcomeNo"/>
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+      </dd>
+    </dl>
     <div class="text-right push-half-bottom">
       <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
               ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
@@ -36,8 +70,8 @@
 </div>
 <div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
   <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
-  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
-    {{name}}
+  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='f in groupSearchFilter.getCurrentFilters()' ng-click='groupSearchFilter.clearFilter(f)'>
+    {{f.getName()}}
     <svg viewBox="0 0 32 32" class="icon icon-close">
       <use xlink:href="#close"></use>
     </svg>
