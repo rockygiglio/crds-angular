@@ -41,7 +41,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Schedule a text message to a specific contactId/number at a specific time
         /// </summary>
-        [Route("api/scheduletext")]
+        [Route("api/sendTextMessageReminder")]
         public IHttpActionResult PostReminder(TextCommunicationDto textCommunicationData)
         {
             if (textCommunicationData == null || !ModelState.IsValid)
