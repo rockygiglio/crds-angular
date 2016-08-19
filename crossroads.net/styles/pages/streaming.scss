@@ -252,6 +252,7 @@ streaming {
         background: #D3DFE6;
         color: $gray;
         position: absolute;
+        word-wrap: break-word;
 
         @media (min-width: $screen-sm-min) {
           margin-left: 8em;
@@ -405,6 +406,8 @@ streaming {
       font-family: $streaming-font-extra_cond;
       font-size: 210%;
       top: -0.85em;
+      word-wrap: break-word;
+      
     }
 
     section {
@@ -491,6 +494,8 @@ streaming {
         font-size: 70%;
         font-weight: 600;
         margin-top: 0.3em;
+        word-wrap: break-word;
+        
 
         span {
           font-weight: normal;
@@ -636,7 +641,9 @@ streaming {
     figcaption {
       font-family: $streaming-font-extra_cond;
       font-size: 210%;
-      top: -0.85em;
+      top: -0.5em;
+      word-wrap: break-word;
+      
     }
 
     section {
