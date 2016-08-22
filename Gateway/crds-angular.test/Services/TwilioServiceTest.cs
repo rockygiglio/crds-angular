@@ -1,4 +1,5 @@
-﻿using crds_angular.Services;
+﻿using System;
+using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using Moq;
@@ -10,35 +11,33 @@ namespace crds_angular.test.Services
     public class TwilioServiceTest
     {
         private TwilioService _fixture;
-        private Mock<IConfigurationWrapper> _configurationWrapper;
+        private Mock<ILog> _mockLogger;
 
         [SetUp]
         public void Setup()
         {
-            _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _configurationWrapper.Setup(mock => mock.GetConfigValue("TwilioAccountSid")).Returns("AC051651a7abfd7ec5209ad22273a24390");
-            _configurationWrapper.Setup(mock => mock.GetConfigValue("TwilioAuthToken")).Returns("4995535b191fe6e7dd3578c10e4c7976");
-            _configurationWrapper.Setup(mock => mock.GetConfigValue("TwilioFromPhoneNumber")).Returns("+15005550006");
-
-            _fixture = new TwilioService(_configurationWrapper.Object);
+            Environment.SetEnvironmentVariable("TWILIO_ACCOUNT_SID",Environment.GetEnvironmentVariable("TWILIO_TEST_ACCOUNT_SID"));
+            Environment.SetEnvironmentVariable("TWILIO_AUTH_TOKEN", Environment.GetEnvironmentVariable("TWILIO_TEST_AUTH_TOKEN"));
+            Environment.SetEnvironmentVariable("TWILIO_FROM_PHONE_NUMBER", "+15005550006");
+            _fixture = new TwilioService();
+            _mockLogger = new Mock<ILog>();
+            _fixture.SetLogger(_mockLogger.Object);
         }
 
         [Test]
         public void TestTextSucceeds()
         {
-            Mock<ILog> mockLogger = new Mock<ILog>();
-            _fixture.SetLogger(mockLogger.Object);
+            _mockLogger.Setup(mock => mock.Error(It.IsAny<string>())).Verifiable();
             _fixture.SendTextMessage("+15005550006", "Hi");
-            mockLogger.Verify(mock => mock.Error(It.IsAny<string>()), Times.Never);
+            _mockLogger.Verify(mock => mock.Error(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
         public void TestTextFails()
         {
-            Mock<ILog> mockLogger = new Mock<ILog>();
-            _fixture.SetLogger(mockLogger.Object);
+            _mockLogger.Setup(mock => mock.Error(It.IsAny<string>())).Verifiable();
             _fixture.SendTextMessage("+15005550001", "Hi");
-            mockLogger.Verify(mock => mock.Error(It.IsAny<string>()), Times.Once);
+            _mockLogger.Verify(mock => mock.Error(It.IsAny<string>()), Times.Once);
         }
     }
 }

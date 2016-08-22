@@ -13,11 +13,11 @@ namespace crds_angular.Services
         private readonly string _fromPhoneNumber;
         private readonly TwilioRestClient _twilio;
 
-        public TwilioService(IConfigurationWrapper configurationWrapper)
+        public TwilioService()
         {
-            var accountSid = configurationWrapper.GetConfigValue("TwilioAccountSid");
-            var authToken = configurationWrapper.GetConfigValue("TwilioAuthToken");
-            _fromPhoneNumber = configurationWrapper.GetConfigValue("TwilioFromPhoneNumber");
+            var accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+            var authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+            _fromPhoneNumber = Environment.GetEnvironmentVariable("TWILIO_FROM_PHONE_NUMBER");
             _twilio = new TwilioRestClient(accountSid, authToken);
         }
 
