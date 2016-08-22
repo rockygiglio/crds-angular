@@ -33,8 +33,11 @@ namespace crds_angular.test.Services
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
+        private Mock<IProgramRepository> _programRepository;
         private Mock<IApiUserRepository> _apiUserReposity;
         private Mock<ITripRepository> _tripRepository;
+        private Mock<IDonorRepository> _mpDonorRepositoryMock;
+
         private TripService _fixture;
 
         [SetUp]
@@ -54,8 +57,10 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _personService = new Mock<IPersonService>();
             _serveService = new Mock<IServeService>();
+            _programRepository = new Mock<IProgramRepository>();
             _tripRepository = new Mock<ITripRepository>();
             _apiUserReposity = new Mock<IApiUserRepository>();
+            _mpDonorRepositoryMock = new Mock<IDonorRepository>();
 
             _fixture = new TripService(_eventParticipantService.Object,
                                        _donationService.Object,
@@ -71,8 +76,10 @@ namespace crds_angular.test.Services
                                        _configurationWrapper.Object,
                                        _personService.Object,
                                        _serveService.Object,
+                                       _programRepository.Object,
                                        _apiUserReposity.Object,
-                                       _tripRepository.Object);
+                                       _tripRepository.Object,
+                                       _mpDonorRepositoryMock.Object);
         }
 
         [Test]

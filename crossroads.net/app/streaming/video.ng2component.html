@@ -39,7 +39,7 @@
             <img src="{{promo.image}}" alt="" class="img-responsive" />
           </figure>
           <section>
-            <h3>{{ promo.title }}</h3>
+            <h3>{{ promo.title | truncate: 38 }}</h3>
             <div [innerHTML]="promo.description"></div>
           </section>
           <hr>
