@@ -23,17 +23,17 @@ namespace crds_angular.Controllers.API
         private readonly IMessageQueue _messageQueue;
         private readonly IMessageFactory _messageFactory;
         private readonly ITextCommunicationService _textCommunicationService;
-        private string eventQueueName;
-        private int streamReminderTemplateId;
+        private readonly string _eventQueueName;
+        private readonly int _streamReminderTemplateId;
 
         public TextCommunicationController(ITextCommunicationService textCommunicationService, IConfigurationWrapper configurationWrapper,
             IMessageQueueFactory messageQueueFactory = null, IMessageFactory messageFactory = null, IMessageQueue messageQueue = null)
         {
             _textCommunicationService = textCommunicationService;
-            eventQueueName = configurationWrapper.GetConfigValue("ScheduledJobsQueueName");
-            streamReminderTemplateId = configurationWrapper.GetConfigIntValue("StreamReminderTemplate");
+            _eventQueueName = configurationWrapper.GetConfigValue("ScheduledJobsQueueName");
+            _streamReminderTemplateId = configurationWrapper.GetConfigIntValue("StreamReminderTemplate");
             _messageQueue = messageQueue;
-            _messageQueue.CreateQueue(eventQueueName, QueueAccessMode.Send);
+            _messageQueue.CreateQueue(_eventQueueName, QueueAccessMode.Send);
             //messageQueue = messageQueueFactory.CreateQueue(eventQueueName, QueueAccessMode.Send);
             _messageFactory = messageFactory;
         }
@@ -58,7 +58,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 // Hardcode template ID for now to mitigate misuse risk
-                textCommunicationData.TemplateId = streamReminderTemplateId;
+                textCommunicationData.TemplateId = _streamReminderTemplateId;
 
                 ScheduledJob scheduledJob = new ScheduledJob();
                 scheduledJob.StartDateTime = textCommunicationData.StartDate.Value;
@@ -67,9 +67,9 @@ namespace crds_angular.Controllers.API
 
                 var message = _messageFactory.CreateMessage(scheduledJob);
 
-                if (!_messageQueue.Exists(eventQueueName))
+                if (!_messageQueue.Exists(_eventQueueName))
                 {
-                    _messageQueue.CreateQueue(eventQueueName, QueueAccessMode.Send);
+                    _messageQueue.CreateQueue(_eventQueueName, QueueAccessMode.Send);
                 }
 
                 _messageQueue.Send(message, MessageQueueTransactionType.None);
