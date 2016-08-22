@@ -27,8 +27,7 @@ export default class MyGroupsController {
       this.ready = true;
     },
     (err) => {
-      this.errorMsg = `Unable to get my groups: ${err.status} - ${err.statusText}`
-      console.log(this.errorMsg);
+      this.errorMsg = `Unable to get my groups: ${err.status} - ${err.statusText}`;
       this.error = true;
       this.ready = true;
     });

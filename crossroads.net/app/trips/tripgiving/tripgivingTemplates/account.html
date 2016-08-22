@@ -7,7 +7,7 @@
         class="btn btn-default" 
         role="button" 
         ng-click="tripGiving.giveFlow.goToLogin()">
-        Login
+        Sign In
       </a>
       <a type="button" 
         class="btn btn-default active" 
@@ -58,6 +58,7 @@
 	    <bank-credit-card-details
         dto='tripGiving.dto'
         set-valid-card='setValidCard'
+        bank-info-submitted='tripGiving.dto.bankinfoSubmitted'
         set-valid-cvc='setValidCvc'
         account-state-name='tripGiving.account' >
       </bank-credit-card-details>

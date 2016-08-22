@@ -41,12 +41,34 @@
 
         <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportExpire') }">
           <label for="passport-expire" class="control-label required">When does your passport expire?</label>
-          <input ng-model="signupStep.person.passportExpiration" type="text" class="form-control" name="passportExpire" id="passport-expire" validate-date="MM/DD/YYYY" required ng-model-options="{updateOn: 'blur'}" placeholder="mm/dd/yyyy" />
-          <ng-messages for="tripsSignup.tripAppPage6.passportExpire.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportExpire')">
-            <span ng-message="required">
-              <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          <span class="input-group datepicker">
+            <input ng-model="signupStep.person.passportExpiration" 
+                 type="text" 
+                 class="form-control" 
+                 name="passportExpire" id="passport-expire" 
+                 placeholder="mm/dd/yyyy"
+                 datepicker-popup="MM/dd/yyyy"
+                 is-open='tripsSignup.passportExpireDateOpen'
+                 show-button-bar='false'
+                 max-date={{tripsSignup.maxPassportExpireDate}}
+                 min-date={{tripsSignup.minPassportExpireDate}}
+                 init-date=tripsSignup.initDate
+                 ng-required="true"
+                 datepicker-validator
+                 required/>
+            <span class="input-group-btn">
+             <button type="button" class="btn btn-default" ng-click="tripsSignup.openPassportExpireDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
+          </span>
+          <ng-messages for="tripsSignup.tripAppPage6.passportExpire.$error" 
+                       ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportExpire')">
+            <span ng-message="required">
+               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+             </span>
             <span ng-message="invalidDate">
+              <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
+            </span>
+            <span ng-message="minDate">
               <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
             </span>
           </ng-messages>
@@ -205,8 +227,8 @@
       <button ng-click='tripsSignup.handleSubmit(tripsSignup.tripAppPage6)'
               class="btn btn-primary pull-right"
               ng-disabled="tripsSignup.submitting" >
-              <span ng-if="tripsSignup.submitting"> Submitting Application... </span>
-              <span ng-if="!tripsSignup.submitting"> Submit Application </span>
+              <span ng-if="tripsSignup.submitting"> Next ... </span>
+              <span ng-if="!tripsSignup.submitting"> Next </span>
       </button>
     </ng-form>
   </div>

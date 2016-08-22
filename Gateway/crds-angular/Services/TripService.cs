@@ -6,11 +6,9 @@ using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
-using Crossroads.Utilities.Services;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
 using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
@@ -24,11 +22,9 @@ namespace crds_angular.Services
         private readonly IDonationRepository _donationService;
         private readonly IGroupRepository _groupService;
         private readonly IFormSubmissionRepository _formSubmissionService;
-        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository _mpEventService;
-        private readonly IDonorRepository _mpDonorService;
+        private readonly IEventRepository _mpEventService;
         private readonly IPledgeRepository _mpPledgeService;
         private readonly ICampaignRepository _campaignService;
-        private readonly IParticipantRepository _participantService;
         private readonly IPrivateInviteRepository _privateInviteService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
@@ -36,15 +32,18 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IPersonService _personService;
         private readonly IServeService _serveService;
-        private readonly IDestinationRepository _destinationService;
+        private readonly IProgramRepository _programRepository;
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly ITripRepository _tripRepository;
+        private readonly IDonorRepository _mpDonorService;
+
         private readonly ILog _logger = LogManager.GetLogger(typeof (TripService));
 
         public TripService(IEventParticipantRepository eventParticipant,
                            IDonationRepository donationService,
                            IGroupRepository groupService,
                            IFormSubmissionRepository formSubmissionService,
-                           MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository eventService,
-                           IDonorRepository donorService,
+                           IEventRepository eventService,
                            IPledgeRepository pledgeService,
                            ICampaignRepository campaignService,
                            IPrivateInviteRepository privateInviteService,
@@ -54,15 +53,16 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
-                           IDestinationRepository destinationService,
-                           IParticipantRepository participantService)
+                           IProgramRepository programRepository,
+                           IApiUserRepository apiUserRepository,
+                           ITripRepository tripRepository,
+                           IDonorRepository mpDonorService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
             _groupService = groupService;
             _formSubmissionService = formSubmissionService;
             _mpEventService = eventService;
-            _mpDonorService = donorService;
             _mpPledgeService = pledgeService;
             _campaignService = campaignService;
             _privateInviteService = privateInviteService;
@@ -72,8 +72,10 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _personService = personService;
             _serveService = serveService;
-            _destinationService = destinationService;
-            _participantService = participantService;
+            _programRepository = programRepository;
+            _apiUserRepository = apiUserRepository;
+            _tripRepository = tripRepository;
+            _mpDonorService = mpDonorService;
         }
 
         public List<TripGroupDto> GetGroupsByEventId(int eventId)
@@ -133,6 +135,7 @@ namespace crds_angular.Services
                 YoungestAgeAllowed = campaign.YoungestAgeAllowed,
                 RegistrationEnd = campaign.RegistrationEnd,
                 RegistrationStart = campaign.RegistrationStart,
+                RegistrationDeposit = campaign.RegistrationDeposit,
                 AgeExceptions = campaign.AgeExceptions
             };
         }
@@ -372,112 +375,38 @@ namespace crds_angular.Services
             return myTrips;
         }
 
-        public void CreateTripParticipant(int contactId, int pledgeCampaignId)
+        public TripParticipantPledgeDto CreateTripParticipant(int contactId, int pledgeCampaignId)
         {
-            var tripRecords = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId);
-            Participant participant = _participantService.GetParticipant(contactId);
-            MpContactDonor tripDonor = _mpDonorService.GetContactDonor(contactId);       
-
-            var tripApplicantRecord = new TripApplicant
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
+            var token = _apiUserRepository.GetToken();
+            var added = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
+            if (!added)
             {
-                ContactId = contactId,
-                ParticipantId = participant.ParticipantId,
-                DonorId = tripDonor.DonorId
-            };
-
-            var tripApplicants = new List<TripApplicant>();
-            tripApplicants.Add(tripApplicantRecord);
-
-            foreach (var tripRecord in tripRecords)
-            {
-                var campaign = new PledgeCampaign
-                {
-                    DestinationId = tripRecord.CampaignDestinationId,
-                    FundraisingGoal = tripRecord.CampaignFundRaisingGoal,
-                    PledgeCampaignId = pledgeCampaignId
-                };
-                var tripParticipantRecord = new SaveTripParticipantsDto
-                {
-                    Applicants = tripApplicants,
-                    Campaign = campaign,
-                    GroupId = tripRecord.GroupId
-                };
-                SaveParticipants(tripParticipantRecord);
+                throw new Exception("Unable to add as a participant on the trip");
             }
+            return tripParticipantPledgeInfo;
         }
 
-        public List<int> SaveParticipants(SaveTripParticipantsDto dto)
+        public TripParticipantPledgeDto GetCampaignPledgeInfo(int contactId, int pledgeCampaignId)
         {
-            var groupParticipants = new List<int>();
-            var groupStartDate = DateTime.Now;
-            const int groupRoleId = 16; // wondering if eventually this will become user input?
-            var events = _groupService.getAllEventsForGroup(dto.GroupId);
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
 
-            foreach (var applicant in dto.Applicants)
-            {
-                if (_groupService.ParticipantGroupMember(dto.GroupId, applicant.ParticipantId))
-                {
-                    continue;
-                }
-                var groupParticipantId = AddGroupParticipant(dto.GroupId, groupRoleId, groupStartDate, events, applicant);
-                if (groupParticipantId != 0)
-                {
-                    groupParticipants.Add(groupParticipantId);
-                }
-                CreatePledge(dto, applicant);
-                EventRegistration(events, applicant, dto.Campaign.DestinationId);
-            }
+            var tripRecord = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId).FirstOrDefault();
+            var tripDonor = _mpDonorService.GetContactDonor(contactId);
+            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
 
-            return groupParticipants;
+            tripParticipantPledgeInfo.PledgeAmount = tripRecord != null ? (int)tripRecord.CampaignFundRaisingGoal : 0;
+            tripParticipantPledgeInfo.CampaignNickname = campaign.Nickname;
+            tripParticipantPledgeInfo.CampaignName = campaign.Name;
+            tripParticipantPledgeInfo.Deposit = tripRecord != null ? (int)tripRecord.RegistrationDeposit : 0;
+            tripParticipantPledgeInfo.DonorId = tripDonor.DonorId;
+            tripParticipantPledgeInfo.ProgramId = campaign.ProgramId;
+            tripParticipantPledgeInfo.ProgramName = _programRepository.GetProgramById(tripParticipantPledgeInfo.ProgramId).Name;
+
+            return tripParticipantPledgeInfo;
         }
 
-        private int AddGroupParticipant(int groupId, int groupRoleId, DateTime groupStartDate, IList<MpEvent> events, TripApplicant applicant)
-        {
-            if (_groupService.ParticipantGroupMember(groupId, applicant.ParticipantId))
-            {
-                return 0;
-            }
-            var groupParticipantId = _groupService.addParticipantToGroup(applicant.ParticipantId, groupId, groupRoleId, false, groupStartDate);
-            return groupParticipantId;
-        }
-
-        private void SendTripParticipantSuccess(int contactId, IList<MpEvent> events)
-        {
-            var htmlTable = FormatParticipantEventTable(events).Build();
-
-            var mergeData = new Dictionary<string, object> {{"Html_Table", htmlTable}};
-            SendMessage("TripParticipantSuccessTemplate", contactId, mergeData);
-        }
-
-        private HtmlElement FormatParticipantEventTable(IEnumerable<MpEvent> events)
-        {
-            var tableAttrs = new Dictionary<string, string>()
-            {
-                {"width", "100%"},
-                {"border", "1"},
-                {"cellspacing", "0"},
-                {"cellpadding", "5"}
-            };
-
-            var cellAttrs = new Dictionary<string, string>()
-            {
-                {"align", "center"}
-            };
-
-            var rows = events.Select(e => new HtmlElement("tr")
-                                         .Append(new HtmlElement("td", cellAttrs, e.EventTitle))
-                                         .Append(new HtmlElement("td", cellAttrs, e.Congregation))
-                                         .Append(new HtmlElement("td", cellAttrs, e.EventStartDate.ToString("g")))).ToList();
-
-            var headerLabels = new List<string> {"Event", "Location", "Date"};
-            var headers = new HtmlElement("tr", headerLabels.Select(el => new HtmlElement("th", el)).ToList());
-
-            return new HtmlElement("table", tableAttrs)
-                .Append(headers)
-                .Append(rows);
-        }
-
-        public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
+public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
         {
             var invite = _privateInviteService.Create(dto.PledgeCampaignId, dto.EmailAddress, dto.RecipientName, token);
             var communication = PrivateInviteCommunication(invite);
@@ -517,37 +446,6 @@ namespace crds_angular.Services
                 {"BaseUrl", _configurationWrapper.GetConfigValue("BaseUrl")}
             };
             return mergeData;
-        }
-
-        private void CreatePledge(SaveTripParticipantsDto dto, TripApplicant applicant)
-        {
-            int donorId;
-            var addPledge = true;
-
-            if (applicant.DonorId != null && applicant.DonorId != 0)
-            {
-                donorId = (int) applicant.DonorId;
-                addPledge = !_mpPledgeService.DonorHasPledge(dto.Campaign.PledgeCampaignId, donorId);
-            }
-            else
-            {
-                donorId = _mpDonorService.CreateDonorRecord(applicant.ContactId, null, DateTime.Now);
-            }
-
-            if (addPledge)
-            {
-                _mpPledgeService.CreatePledge(donorId, dto.Campaign.PledgeCampaignId, dto.Campaign.FundraisingGoal);
-            }
-        }
-
-        private void EventRegistration(IEnumerable<MpEvent> events, TripApplicant applicant, int destinationId)
-        {
-            var destinationDocuments = _destinationService.DocumentsForDestination(destinationId);
-            foreach (var e in events)
-            {
-                var eventParticipantId=_mpEventService.SafeRegisterParticipant(e.EventId, applicant.ParticipantId);
-                _eventParticipantService.AddDocumentsToTripParticipant(destinationDocuments, eventParticipantId);
-            }
         }
 
         public bool ValidatePrivateInvite(int pledgeCampaignId, string guid, string token)

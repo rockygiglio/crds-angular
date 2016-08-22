@@ -48,7 +48,6 @@ describe('CreateGroupPreviewController', () => {
       return {};
       });
 
-      fixture.$onInit();
       fixture.save();
       expect(fixture.groupService.saveCreateGroupForm).toHaveBeenCalledWith(fixture.groupData);
     })
@@ -68,7 +67,6 @@ describe('CreateGroupPreviewController', () => {
         return {};
       });
 
-      fixture.$onInit();
       fixture.saveEdits();
       expect(fixture.groupService.saveEditGroupForm).toHaveBeenCalledWith(fixture.groupData);
     })

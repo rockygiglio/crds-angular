@@ -278,8 +278,16 @@ a.underline,
     padding-left: $line-height-computed / 2;
 }
 
+.soft-quarter {
+    padding: $line-height-computed / 4;
+}
+
 .soft-quarter-left {
     padding-left: $line-height-computed / 4;
+}
+
+.soft-quarter-bottom {
+    padding-bottom: $line-height-computed / 4;
 }
 
 .soft-half-ends {
@@ -550,6 +558,24 @@ a.underline,
   border: 0px !important;
 }
 
+.border-bottom {
+  border-bottom: 1px solid $gray-lighter;
+}
+
+.border-top {
+  border-top: 1px solid $gray-lighter;
+}
+
+.border-sides {
+  border-left: 1px solid $gray-lighter;
+  border-right: 1px solid $gray-lighter;
+}
+
+.border-ends {
+  border-top: 1px solid $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+}
+
 .pull-right {
   &.btn {
     margin-left: 5px;
@@ -565,6 +591,10 @@ a.underline,
 .square-corners {
   border-radius: 0;
 }
+
+//
+// Bootstrap size based pull-left and pull-right
+//
 
 @media (min-width: $screen-lg-min) {
   .lg-pull-right {
@@ -599,6 +629,47 @@ a.underline,
   }
   .sm-pull-left {
     float: left;
+  }
+}
+
+
+//
+// Bootstrap size based text-left, text-center and text-right
+//
+
+@media (min-width: $screen-lg-min) {
+  .lg-text-left {
+    text-align: left;
+  }
+  .lg-text-center {
+    text-align: center;
+  }
+  .lg-text-right {
+    text-align: right;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .md-text-left {
+    text-align: left;
+  }
+  .md-text-center {
+    text-align: center;
+  }
+  .md-text-right {
+    text-align: right;
+  }
+}
+
+@media (min-width: $screen-sm-min) {
+  .sm-text-left {
+    text-align: left;
+  }
+  .sm-text-center {
+    text-align: center;
+  }
+  .sm-text-right {
+    text-align: right;
   }
 }
 

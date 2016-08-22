@@ -16,7 +16,9 @@ namespace MinistryPlatform.Translation.Models
         public int YoungestAgeAllowed { get; set; }
         public DateTime RegistrationStart { get; set; }
         public DateTime RegistrationEnd { get; set; }
+        public string RegistrationDeposit { get; set; }
         public List<int> AgeExceptions { get; set; }
         public int EventId { get; set; }
+        public int ProgramId { get; set; }
     }
 }

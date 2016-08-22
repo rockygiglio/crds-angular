@@ -29,10 +29,10 @@
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Leaders</strong></div>
             <div class='col-sm-8'>
-              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='!$last'>,&nbsp;</span></span>
+              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
             </div>
           </div>
-          <div class='row push-quarter-bottom' ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation)'>
+          <div class='row push-quarter-bottom' ng-if='groupDetailAbout.isLeader'>
             <div class='group-detail-label col-sm-4'><strong>Visibility</strong></div>
             <div class='col-sm-8'>{{groupDetailAbout.data.visibility()}}</div>
           </div>
@@ -45,17 +45,16 @@
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Where</strong></div>
-            <div class="col-sm-8">{{groupDetailAbout.getAddress()}}</div>
-            <!--<div ng-if='(groupDetailAbout.userInGroup() || groupDetailAbout.forInvitation) && groupDetailAbout.groupExists() '>-->
-              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.toString()}}</div>-->
-            <!--</div>-->
-            <!--<div ng-if='(!groupDetailAbout.userInGroup() && !groupDetailAbout.forInvitation)'>-->
-              <!--<div  class='col-sm-8'>{{groupDetailAbout.data.address.getZip()}}</div>-->
-            <!--</div>-->
+            <div class="col-sm-8" ng-if='groupDetailAbout.forSearch && groupDetailAbout.data.hasAddress()'>
+              <a href="https://maps.google.com/maps?f=q&q={{groupDetailAbout.data.address.zip}}" target="_new">{{groupDetailAbout.getAddress()}}
+                  <span ng-if='groupDetailAbout.data.proximity !== undefined && groupDetailAbout.data.proximity !== null'>({{groupDetailAbout.data.proximity}} mi)</span>
+              </a>
+            </div>
+            <div class="col-sm-8" ng-if='!groupDetailAbout.forSearch || !groupDetailAbout.data.hasAddress()'>{{groupDetailAbout.getAddress()}}</div>
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>When</strong></div>
-            <div class='col-sm-8'>{{groupDetailAbout.data.meetingTimeFrequency}}</div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.getGroupCardWhenField()}}</div>
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Kids Welcome</strong></div>
@@ -68,18 +67,20 @@
       <div class='row hidden-xs'>&nbsp;</div>
 
       <div class="row">
-        <div class='col-sm-2'><strong>Description</strong></div>
-        <div class='col-sm-10'>{{groupDetailAbout.data.groupDescription}}</div>
+        <div class='col-md-2'><strong>Description</strong></div>
+        <div class='col-md-10'>{{groupDetailAbout.data.groupDescription}}</div>
       </div>
 
     </div>
   </div>
-
-  <div class='row push-top' ng-if='groupDetailAbout.isLeader'>
-    <div class='col-md-12'>
-      <p class='text-right'><button type='button' ng-click='groupDetailAbout.goToEdit()' class='btn btn-primary btn-block-mobile'>Edit</button></p>
-    </div>
+  <div class='push-top text-center sm-text-right' ng-if='groupDetailAbout.showFooter'>
+    <button type='button' ng-if='groupDetailAbout.isLeader' ng-click="groupDetailAbout.goToEnd()" class='push-half-bottom btn btn-standard btn-block-mobile'>End Group</button>
+    <button type='button' ng-if='groupDetailAbout.isLeader' ng-click='groupDetailAbout.goToEdit()' class='push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
+    <a ui-sref="grouptool.mygroups" class="sm-pull-left">
+      <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+        <use xlink:href="#arrow-circle-o-left"></use>
+      </svg>
+      Back to My Groups
+    </a>
   </div>
-
-
 </div>

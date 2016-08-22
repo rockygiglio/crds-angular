@@ -19,7 +19,7 @@ export default class SmallGroup {
   createSubObjects(jsonObject) {
     this.address = (jsonObject.address === undefined || jsonObject.address === null) ? null : new Address(jsonObject.address);
     this.participants = [];
-    if (jsonObject.Participants != undefined && jsonObject.Participants != null) {
+    if (jsonObject.Participants !== undefined && jsonObject.Participants != null) {
       this.participants =
         jsonObject.Participants.map((particpant) => {
           return new Participant(particpant);
@@ -105,8 +105,17 @@ export default class SmallGroup {
     }
   }
 
+  hasAddress() {
+    return this.address !== undefined && 
+            this.address !== null &&
+            _.get(this.address, 'addressLine1', null) !== null &&
+            _.get(this.address, 'city', null) !== null &&
+            _.get(this.address, 'state', null) !== null &&
+            _.get(this.address, 'zip', null) !== null;
+  }
+
   meetingLocation() {
-    if (this.address === null || this.address === undefined) {
+    if (!this.hasAddress()) {
       return 'Online';
     }
 
@@ -154,7 +163,7 @@ export default class SmallGroup {
   getGroupCardWhenField() {
     let meetingDayStr = 'Flexible Meeting Time';
     if (this.meetingDay !== undefined && this.meetingDay !== null) {
-      meetingDayStr = this.meetingDay + '\'s at ' + this.meetingTime + ', ' + this.meetingFrequencyText;
+      meetingDayStr = this.meetingDay + '\'s at ' + new moment(this.meetingTime, 'HH:mm:ss').format('h:mm a') + ', ' + this.meetingFrequencyText;
     }
     return meetingDayStr;
   }

@@ -162,6 +162,25 @@
     });
 
     formlyConfigProvider.setType({
+      name: 'formlyBuilderRadioDesc',
+      template: require('./templates/formlyBuilder-radioDescription.html'),
+      wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
+      defaultOptions: {
+        noFormControl: false
+      },
+      apiCheck: check => ({
+        templateOptions: {
+          options: check.arrayOf(check.object),
+          labelProp: check.string.optional,
+          valueProp: check.string.optional,
+          descProp: check.string.optional,
+          inline: check.bool.optional,
+        }
+      })
+    });
+
+
+    formlyConfigProvider.setType({
       name: 'formlyBuilderSelect',
       template: '<select class="form-control" ng-model="model[options.key]"></select>',
       wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],

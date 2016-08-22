@@ -31,7 +31,7 @@
     vm.registerShow = false;
     vm.showRegisterButton = true;
     vm.validation = Validation;
-   
+
     function register() {
       vm.showRegisterButton = false;
 
@@ -86,7 +86,9 @@
 
       vm.newuser = {};
       $timeout(function() {
-        if (Session.hasRedirectionInfo()) {
+        if (vm.registerCallback) {
+          vm.registerCallback();
+        } else if (Session.hasRedirectionInfo()) {
           var url = Session.exists('redirectUrl');
           var params = Session.exists('params');
           Session.removeRedirectRoute();
@@ -96,7 +98,7 @@
             $state.go(url, JSON.parse(params));
           }
         } else {
-          $state.go('content', {link:'/nextstep'});
+          $state.go('content', {link:'/getstarted'});
         }
       }, 500);
     }

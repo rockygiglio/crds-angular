@@ -557,7 +557,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldEditGroupSuccessfully()
+        public void ShouldEditGroupSuccessfully()
         {
             var group = new GroupDTO()
             {
@@ -577,7 +577,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void shouldNotEditGroup()
+        public void ShouldNotEditGroup()
         {
             Exception ex = new Exception();
 
@@ -592,6 +592,21 @@ namespace crds_angular.test.controllers
             _groupServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
+
+        [Test]
+        public void ShouldCallServiceUpdateParticipant()
+        {
+            var participant = new GroupParticipantDTO()
+            {
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
+
+            _groupServiceMock.Setup(x => x.UpdateGroupParticipant(It.IsAny<GroupParticipantDTO>()));
+            _fixture.UpdateParticipant(participant);
+            _groupServiceMock.Verify();
         }
     }
 }

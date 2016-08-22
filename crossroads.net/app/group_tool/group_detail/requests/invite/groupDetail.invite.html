@@ -41,19 +41,15 @@
 
         <div class='row'>&nbsp;</div>
 
-        <div class='row'>
-          <div class='col-md-12'>
-            <p class='text-center'>
-              <button type='button' class='btn btn-standard' ng-click='groupDetailInvite.cancel()'>Cancel</button>
-              <loading-button 
-                input-type='submit'
-                normal-text='Send'
-                loading-text='Sending...'
-                loading='groupDetailInvite.processing'
-                loading-class='disabled'
-                input-classes='btn btn-primary'/>
-            </p>
-          </div>
+        <div class='text-center sm-text-right'>
+          <button type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' ng-click='groupDetailInvite.cancel()'>Cancel</button>
+          <loading-button
+            input-type='submit'
+            normal-text='Send'
+            loading-text='Sending...'
+            loading='groupDetailInvite.processing'
+            loading-class='disabled'
+            input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'/>
         </div>
       </div>
     </div>
