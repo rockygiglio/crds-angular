@@ -34,7 +34,6 @@ namespace crds_angular.Controllers.API
             _streamReminderTemplateId = configurationWrapper.GetConfigIntValue("StreamReminderTemplate");
             _messageQueue = messageQueue;
             _messageQueue.CreateQueue(_eventQueueName, QueueAccessMode.Send);
-            //messageQueue = messageQueueFactory.CreateQueue(eventQueueName, QueueAccessMode.Send);
             _messageFactory = messageFactory;
         }
 
