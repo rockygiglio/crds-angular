@@ -7,7 +7,7 @@
           <use xlink:href="#arrow-down9"></use>
         </svg>
       </pageScroll>
-      <countdown (watchNowClick)="modal.open()"></countdown>
+      <countdown (watchNowClick)="watchNowClicked()"></countdown>
     </div>
   </section>
 
@@ -75,10 +75,10 @@
     </div>
   </section>
 </div>
-<modal class="watch-now" #modal>
-    <modal-header [show-close]="true">
-    </modal-header>
-    <modal-body>
-      <iframe src="/live/stream" frameborder="0"></iframe>
-    </modal-body>
+<modal class="watch-now" #modal (onOpen)="modalOpen()" (onClose)="modalClose()" (onDismiss)="modalDismiss()">
+  <modal-header [show-close]="true">
+  </modal-header>
+  <modal-body>
+    <div id="watch-now-source" #target></div>
+  </modal-body>
 </modal>

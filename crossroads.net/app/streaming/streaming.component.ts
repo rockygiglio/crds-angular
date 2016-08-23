@@ -1,5 +1,5 @@
 // angular imports
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, DynamicComponentLoader, ViewContainerRef } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
@@ -9,6 +9,7 @@ import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
+import { VideoComponent } from './video.component';
 
 // CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
@@ -41,10 +42,11 @@ declare var _: any;
     PageScroll, 
     StickyHeaderDirective,
     ContentCardComponent, 
-    CurrentSeriesComponent
+    CurrentSeriesComponent,
+    VideoComponent
   ],
   templateUrl: './streaming.ng2component.html',
-  providers: [CMSDataService],
+  providers: [CMSDataService, VideoComponent],
   pipes: [
     ReplaceNonAlphaNumericPipe, 
     HtmlToPlainTextPipe, 
@@ -53,13 +55,17 @@ declare var _: any;
 })
 
 export class StreamingComponent {
-  @ViewChild('myModal')
+  @ViewChild('target', {read: ViewContainerRef}) target;
+  @ViewChild('modal')
   modal: ModalComponent;
+  dclComponent: any;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
 
-  constructor(private streamspotService: StreamspotService, private cmsDataService: CMSDataService) {
+  constructor(private streamspotService: StreamspotService, 
+              private cmsDataService: CMSDataService,
+              private dcl:DynamicComponentLoader) {
 
     PageScrollConfig.defaultScrollOffset = -10;
     PageScrollConfig.defaultEasingFunction = (t:number, b:number, c:number, d:number):number => {
@@ -109,5 +115,25 @@ export class StreamingComponent {
 
   watchNowClicked(event) {
     this.modal.open();
+    this.dclComponent = this.dcl.loadNextToLocation(VideoComponent, this.target)
+    .then(ref => {
+      console.log(ref);
+    });
+    console.log('watchNowClicked -- openning')
   }
+
+  modalOpen() {
+    console.log('modal openned')
+  }
+
+  modalClose() {
+    console.log('modal closed');
+    this.dclComponent.destroy();
+  }
+
+  modalDismiss() {
+    console.log('modal dismissed')
+    this.dclComponent.destroy();
+  }
+
 }
