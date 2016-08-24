@@ -100,8 +100,7 @@ namespace MinistryPlatform.Translation.Repositories
                 "Pledge_Status_ID_Table.Pledge_Status",
                 "Pledges.Total_Pledge"
             };
-            var blah = _ministryPlatformRestRepository.UsingAuthenticationToken(authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=" + contactId + " AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + pledgeCampaignId + " AND Pledge_Status_ID_Table.Pledge_Status_ID=1", columnList);
-            return blah.FirstOrDefault();
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=" + contactId + " AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + pledgeCampaignId + " AND Pledge_Status_ID_Table.Pledge_Status_ID=1", columnList).FirstOrDefault();
         }
 
         public int GetDonorForPledge(int pledgeId)
