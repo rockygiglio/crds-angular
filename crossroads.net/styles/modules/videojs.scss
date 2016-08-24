@@ -81,3 +81,111 @@
 .vjs-tech-chromecast .casting-overlay .casting-information .casting-description small {
     font-size:11px
 }
+
+.vjs-crds-skin {
+  overflow: hidden;
+
+  .vjs-control-bar {
+    background: transparent;
+  }
+
+  .vjs-progress-holder {
+    background-color: #4B4A51;
+  }
+
+  .vjs-load-progress {
+    background-color: #878A95;
+  }
+
+  .vjs-play-progress {
+    background-color: #0795E3;
+  }
+
+  .vjs-remaining-time {
+    display: none;
+  }
+
+  .vjs-current-time,
+  .vjs-duration,
+  .vjs-time-divider {
+    display: none;
+    order: 5;
+    width: auto;
+  }
+
+  .vjs-live-control {
+    flex: none;
+    width: auto;
+  }
+
+  .vjs-current-time {
+    padding-right: 0;
+  }
+
+  .vjs-duration {
+    padding-left: 0;
+  }
+
+  .vjs-time-divider {
+    margin: 0;
+  }
+
+  .vjs-current-time {
+    margin-left: 1em;
+  }
+
+  .vjs-volume-menu-button {
+    order: 1;
+  }
+
+  .vjs-chromecast-button,
+  .vjs-fullscreen-control {
+    order: 7;
+    flex: none;
+    position: absolute;
+    right: 0;
+  }
+
+  .vjs-chromecast-button {
+    right: 5.5em;
+  }
+
+  .vjs-fullscreen-control {
+    font-size: 120%;
+    margin-top: -0.35em;
+  }
+
+  .vjs-play-control {
+    flex: none;
+    align-self: center;
+    font-size: 250%;
+    margin-top: -3.2em;
+    width: 2em;
+  }
+
+  .vjs-progress-control {
+    flex: none;
+    position: absolute;
+    width: 100%;
+    bottom: 2em;
+    padding-right: 6em;
+    left: 5.35em;
+  }
+
+  &.vjs-crds-streaming {
+
+    .vjs-progress-holder {
+      display: none;
+    }
+
+    .vjs-play-control {
+      margin-top: -1.9em;
+    }
+
+    .vjs-control-bar {
+      bottom: 1em;
+    }
+
+  }
+
+} // .vjs-crds-skin

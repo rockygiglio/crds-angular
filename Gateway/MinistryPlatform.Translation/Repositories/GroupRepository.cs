@@ -478,6 +478,7 @@ namespace MinistryPlatform.Translation.Repositories
             var groupParticipants = new List<MpGroupParticipant>();
             logger.Debug("Getting participants for group " + groupId);
             List<Dictionary<string, object>> participants;
+
             if (activeGroups)
             {
                 participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
@@ -499,6 +500,7 @@ namespace MinistryPlatform.Translation.Repositories
                         {
                             ContactId = p.ToInt("Contact_ID"),
                             ParticipantId = p.ToInt("Participant_ID"),
+                            IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),
                             GroupParticipantId = p.ToInt("dp_RecordID"),
                             GroupRoleId = p.ToInt("Group_Role_ID"),
                             GroupRoleTitle = p.ToString("Role_Title"),

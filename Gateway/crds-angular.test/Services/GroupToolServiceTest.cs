@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
@@ -28,6 +30,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IInvitationRepository> _invitationRepositor;
         private Mock<IAddressProximityService> _addressProximityService;
         private Mock<MPServices.IContactRepository> _contactRepository;
+        private Mock<IAddressProximityService> _addressMatrixService;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -35,6 +38,9 @@ namespace crds_angular.test.Services
         private const int DomainId = 321;
         private const string BaseUrl = "test.com";
         private const int DefaultEmailContactId = 876;
+        private const int AddressMatrixSearchDepth = 2;
+        private const int DefaultGroupContactId = 999;
+
         [SetUp]
         public void SetUp()
         {
@@ -49,6 +55,7 @@ namespace crds_angular.test.Services
             _invitationRepositor = new Mock<MPServices.IInvitationRepository>(MockBehavior.Strict);
             _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
             _contactRepository = new Mock<MPServices.IContactRepository>();
+            _addressMatrixService = new Mock<IAddressProximityService>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -58,6 +65,8 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigValue("BaseURL")).Returns(BaseUrl);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultContactEmailId")).Returns(DefaultEmailContactId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupEndedParticipantEmailTemplate")).Returns(GroupEndedParticipantEmailTemplate);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("AddressMatrixSearchDepth")).Returns(AddressMatrixSearchDepth);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(DefaultGroupContactId);
 
 
 
@@ -70,7 +79,8 @@ namespace crds_angular.test.Services
                                             configuration.Object,
                                             _invitationRepositor.Object,
                                             _addressProximityService.Object,
-                                            _contactRepository.Object);
+                                            _contactRepository.Object,
+                                            _addressMatrixService.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -990,6 +1000,83 @@ namespace crds_angular.test.Services
             }
         }
 
+        public void TestSearchGroupsWithLocation()
+        {
+            const int groupTypeId = 1;
+            var searchResults = new List<MpGroupSearchResultDto>
+            {
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 123,
+                    Name = "group 1",
+                    GroupType = 1231,
+                    Address = new MpAddress
+                    {
+                        Address_Line_1 = "line1",
+                        City = "city",
+                        State = "state",
+                        Postal_Code = "12301",
+                        Latitude = 1,
+                        Longitude = 2
+                    }
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 456,
+                    Name = "group 2",
+                    GroupType = 4564,
+                    Address = new MpAddress()
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 789,
+                    Name = "group 3",
+                    GroupType = 7897,
+                    Address = new MpAddress
+                    {
+                        Address_Line_1 = "line1",
+                        City = "city",
+                        State = "state",
+                        Postal_Code = "78901",
+                        Latitude = 3,
+                        Longitude = 4
+                    }
+                }
+            };
+
+            var groups = searchResults.Select(Mapper.Map<GroupDTO>).ToList();
+            const string location = "loc loc loc";
+            var geoResults = new List<decimal?> { null, 9, 3 };
+            var distanceMatrixResults = new List<decimal?> { 2, 5 };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>())).Returns(searchResults);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).ToList())).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).Skip(1).Take(AddressMatrixSearchDepth).Reverse().ToList()))
+                .Returns(distanceMatrixResults);
+
+            var results = _fixture.SearchGroups(groupTypeId, null, location);
+            _groupToolRepository.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(searchResults.Count, results.Count);
+
+            var expectedOrder = new List<MpGroupSearchResultDto>
+            {
+                searchResults[2],
+                searchResults[1],
+                searchResults[0]
+            };
+
+            var expectedDistances = new decimal?[]
+            {
+                2, 5, null
+            };
+
+            for (var i = 0; i < expectedOrder.Count; i++)
+            {
+                Assert.AreEqual(expectedOrder[i].GroupId, results[i].GroupId);
+                Assert.AreEqual(expectedDistances[i], results[i].Proximity);
+            }
+        }
+
         [Test]
         public void TestSendGroupEndedEmailToParticipant()
         {
@@ -1022,9 +1109,9 @@ namespace crds_angular.test.Services
                                 c.DomainId == DomainId
                                 && c.EmailBody.Equals(template.Body)
                                 && c.EmailSubject.Equals(template.Subject)
-                                && c.FromContact.ContactId == DefaultEmailContactId
+                                && c.FromContact.ContactId == DefaultGroupContactId
                                 && c.FromContact.EmailAddress.Equals(fromEmailAddress)
-                                && c.ReplyToContact.ContactId == DefaultEmailContactId
+                                && c.ReplyToContact.ContactId == DefaultGroupContactId
                                 && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
                                 && c.AuthorUserId == 5
                                 && c.ToContacts[0].ContactId == participant.ContactId

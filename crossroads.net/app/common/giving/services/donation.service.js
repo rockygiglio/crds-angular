@@ -10,10 +10,11 @@
     'PaymentService',
     'GiveFlow',
     '$state',
-    'CC_BRAND_CODES'
+    'CC_BRAND_CODES',
+    '$q'
   ];
 
-  function DonationService($rootScope, Session, GiveTransferService, PaymentService, GiveFlow, $state, CC_BRAND_CODES) {
+  function DonationService($rootScope, Session, GiveTransferService, PaymentService, GiveFlow, $state, CC_BRAND_CODES, $q) {
     var donationService = {
       bank: {},
       card: {},
@@ -71,12 +72,19 @@
         donationService.createCard();
         PaymentService.createDonorWithCard(donationService.card, GiveTransferService.email)
           .then(function(donor) {
+            if (GiveTransferService.isTripDeposit) {
+              GiveTransferService.donor.donorId = donor.id;
+              GiveTransferService.campaign.pledgeDonorId = donor.id
+            }
             donationService.donate(pgram, GiveTransferService.campaign);
           }, PaymentService.stripeErrorHandler);
       } else if (GiveTransferService.view === 'bank') {
         donationService.createBank();
         PaymentService.createDonorWithBankAcct(donationService.bank, GiveTransferService.email)
           .then(function(donor) {
+            if (GiveTransferService.isTripDeposit) {
+              GiveTransferService.campaign.pledgeDonorId = donor.id;
+            }
             donationService.donate(pgram, GiveTransferService.campaign);
           }, PaymentService.stripeErrorHandler);
       }
@@ -142,7 +150,7 @@
       return PaymentService.queryRecurringGifts(impersonateDonorId);
     }
 
-    function confirmDonation(programsInput) {
+    function confirmDonation(programsInput, successful) {
       if (!Session.isActive()) {
         $state.go(GiveFlow.login);
       }
@@ -150,13 +158,16 @@
       GiveTransferService.processing = true;
       try {
         var pgram;
-        if (programsInput !== undefined) {
+        if (programsInput) {
           pgram = _.find(programsInput, { ProgramId: GiveTransferService.program.ProgramId });
         } else {
           pgram = GiveTransferService.program;
         }
 
-        donationService.donate(pgram, GiveTransferService.campaign,  function(confirmation) {
+        donationService.donate(pgram, GiveTransferService.campaign, function(confirmation) {
+          if (successful !== undefined) {
+            successful(confirmation);
+          }
           console.log('successfully donated');
         }, function(error) {
 
@@ -165,6 +176,7 @@
           }
         });
       } catch (DonationException) {
+        GiveTransferService.processing = false;
         $rootScope.$emit('notify', $rootScope.MESSAGES.failedResponse);
       }
     }
@@ -330,6 +342,7 @@
     }
 
     function transitionForLoggedInUserBasedOnExistingDonor(event, toState) {
+      var deferred = $q.defer();
       if (toState.name === GiveFlow.account && Session.isActive() && !GiveTransferService.donorError) {
         GiveTransferService.processing = true;
         event.preventDefault();
@@ -341,14 +354,14 @@
             GiveTransferService.brand = CC_BRAND_CODES[donor.default_source.credit_card.brand];
             GiveTransferService.view = 'cc';
           } else {
-            GiveTransferService.accountHolderName = donor.default_source.bank_account.account_holder_name;
-            GiveTransferService.accountHolderType = donor.default_source.bank_account.account_holder_type;
+            GiveTransferService.accountHolderName = donor.default_source.bank_account.accountHolderName;
+            GiveTransferService.accountHolderType = donor.default_source.bank_account.accountHolderType;
             GiveTransferService.last4 = donor.default_source.bank_account.last4;
             GiveTransferService.brand = '#library';
             GiveTransferService.view = 'bank';
           }
-
           $state.go(GiveFlow.confirm);
+          deferred.resolve();
         },
 
         function(error) {
@@ -357,11 +370,16 @@
           if (error && error.httpStatusCode === 404) {
             GiveTransferService.donorError = true;
             $state.go(GiveFlow.account);
+            deferred.resolve();
           } else {
             PaymentService.stripeErrorHandler(error);
+            deferred.reject();
           }
         });
+      } else {
+        deferred.resolve();
       }
+      return deferred.promise;
     }
 
     function updateDonorAndDonate(donorId, programsInput) {

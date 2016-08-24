@@ -9,6 +9,8 @@ import { VideoJSComponent } from './videojs.component';
 // core imports
 import { CMSDataService } from '../../core/services/CMSData.service'
 
+// pipes
+import { TruncatePipe } from '../../core/pipes/truncate.pipe';
 
 var WOW = require('wow.js/dist/wow.min.js');
 
@@ -16,7 +18,8 @@ var WOW = require('wow.js/dist/wow.min.js');
   selector: 'live-stream',
   templateUrl: './video.ng2component.html',
   providers: [CMSDataService],
-  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent]
+  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent],
+  pipes: [TruncatePipe]
 })
 
 export class VideoComponent {

@@ -1,9 +1,8 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Inject } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
 
 declare var window: any;
 declare var chrome: any;
-declare var ga: any;
 
 window.videojs = require('video.js/dist/video');
 
@@ -22,8 +21,13 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
   player: any;
   visible: boolean = false;
   debug: boolean = false;
+  angulartics: any;
 
-  constructor(private streamspot: StreamspotService) {}
+  constructor(
+    private streamspot: StreamspotService, 
+    @Inject('$analytics') angularticsService) {
+    this.angulartics = angularticsService;
+  }
 
   ngOnDestroy() {
     this.player.dispose();
@@ -71,8 +75,11 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
         this.player.on('play', () => {
           window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
           window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
-          if ( ga !== undefined ) {
-            ga('send', 'event', 'Streaming', 'Play', 'Live Stream Play');
+          if ( this.angulartics !== undefined ) {
+            this.angulartics.eventTrack('Play', {
+              category: 'Streaming',
+              label: 'Live Streaming Play'
+            });
             console.log('Video played.');
           }
         });
@@ -83,8 +90,11 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
             window.SSTracker.stop();
             window.SSTracker = null;
           }
-          if ( ga !== undefined ) {
-            ga('send', 'event', 'Streaming', 'Pause', 'Live Stream Pause');
+          if ( this.angulartics !== undefined ) {
+            this.angulartics.eventTrack('Pause', {
+              category: 'Streaming',
+              label: 'Live Streaming Pause'
+            });
             console.log('Video paused.');
           }
         });
