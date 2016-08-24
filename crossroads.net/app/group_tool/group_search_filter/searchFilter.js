@@ -1,10 +1,9 @@
 
 export default class SearchFilter {
-  constructor(filterName, matchingFunction, resetFunction, activeFunction) {
+  constructor(filterName, filterValues, matchingFunction) {
     this.filterName = filterName;
+    this.filterValues = filterValues;
     this.matchingFunction = matchingFunction;
-    this.resetFunction = resetFunction;
-    this.activeFunction = activeFunction;
   }
 
   getName() {
@@ -19,11 +18,14 @@ export default class SearchFilter {
   }
 
   isActive() {
-    return this.activeFunction();
+    return this.filterValues.find((i) => { return i.selected === true; }) !== undefined;
   }
 
   clear() {
-    this.resetFunction();
+    for(let i = 0; i < this.filterValues.length; i++)
+    {
+      this.filterValues[i].selected = false;
+    }
   }
 
   compareTo(other) {
@@ -34,13 +36,17 @@ export default class SearchFilter {
 export class SearchFilterBuilder {
   constructor() {
     this.filterName = undefined;
+    this.filterValues = undefined;
     this.matchingFunction = () => { return false; };
-    this.resetFunction = () => { return; };
-    this.activeFunction = () => { return false; };
   }
 
   withFilterName(filterName) {
     this.filterName = filterName;
+    return this;
+  }
+
+  withFilterValues(filterValues) {
+    this.filterValues = filterValues;
     return this;
   }
 
@@ -49,17 +55,7 @@ export class SearchFilterBuilder {
     return this;
   }
 
-  withResetFunction(f) {
-    this.resetFunction = f;
-    return this;
-  }
-
-  withActiveFunction(f) {
-    this.activeFunction = f;
-    return this;
-  }
-
   getSearchFilter() {
-    return new SearchFilter(this.filterName, this.matchingFunction, this.resetFunction, this.activeFunction);
+    return new SearchFilter(this.filterName, this.filterValues, this.matchingFunction);
   }
 }

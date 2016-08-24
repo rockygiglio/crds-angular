@@ -4,7 +4,7 @@
 
   <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
-  <!-- TODO - remove class "form-inline" when we add a 2nd filter -->
+  <!-- TODO - remove class "form-inline" when we add a 2nd filter (Jim K - I tried removing, it broke the layout, so I'll leave it to smarter people to fix it) -->
   <form role="form" class="form-inline" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
     <dl class="push-half-ends">
       <dt>
@@ -12,7 +12,7 @@
       </dt>
       <dd>
         <div class="row">
-           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter -->
+           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
           <div class="checkbox col-lg-4 col-sm-6" ng-repeat="ageRange in groupSearchFilter.ageRanges">
             <label for="ageRange-{{ageRange.attributeId}}">
               <input ng-model="ageRange.selected"
@@ -32,30 +32,15 @@
       </dt>
       <dd>
         <div class="row">
-           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter -->
-          <div class='radio-group'>
-            <div class="radio col-lg-4 col-sm-6">
-              <label for="kidsWelcomeYes">
-                <input ng-model="groupSearchFilter.kidsWelcome"
-                      ng-model-options="{ updateOn: 'submit' }"
-                      type="radio"
-                      ng-value="true"
-                      name="kidsWelcome"
-                      id="kidsWelcomeYes"/>
-                Yes
-              </label>
-            </div>
-            <div class="radio col-lg-4 col-sm-6">
-              <label for="kidsWelcomeNo">
-                <input ng-model="groupSearchFilter.kidsWelcome"
-                      ng-model-options="{ updateOn: 'submit' }"
-                      type="radio"
-                      ng-value="false"
-                      name="kidsWelcome"
-                      id="kidsWelcomeNo"/>
-                No
-              </label>
-            </div>
+          <div class="checkbox col-lg-4 col-sm-6" ng-repeat="kids in groupSearchFilter.kidsWelcome">
+            <label for="kids-{{kids.value}}">
+              <input ng-model="kids.selected"
+                     ng-model-options="{ updateOn: 'submit' }"
+                     type="checkbox"
+                     ng-value="kids.value"
+                     id="kids-{{kids.value}}"/>
+              {{kids.name}}
+            </label>
           </div>
         </div>
       </dd>
