@@ -172,25 +172,9 @@ namespace crds_angular.test.Services
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
 
-            var mockPledge = new MpPledge
-            {
-                CampaignName = "Kernel Panic",
-                DonorId = 1234,
-                PledgeTotal = 1000000,
-                CampaignEndDate = DateTime.Today.AddDays(30),
-                CampaignStartDate = DateTime.Today,
-                CampaignTypeId = 4,
-                CampaignTypeName = "Band Tour Fund",
-                PledgeCampaignId = pledgeCampaignId,
-                PledgeDonations = 15.00M,
-                PledgeId = 42,
-                PledgeStatus = "Active",
-                PledgeStatusId = 1
-            };
-
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
             _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(true);
-            _pledgeService.Setup(m => m.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId)).Returns(mockPledge);
+            _pledgeService.Setup(m => m.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId)).Returns(mockPledgeCampaign());
             _fixture.CreateTripParticipant(contactId, pledgeCampaignId);
 
             _apiUserReposity.VerifyAll();
