@@ -306,7 +306,7 @@ describe('Group Tool SmallGroup', () => {
 
     it('should return every month', () => {
       smallGroup.meetingFrequencyText = 'Every month';
-      expect(smallgroup.getGroupCardWhenField()).toEqual('Friday\'s at 4:30 am, Every month');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 4:30 am, Every month');
     });
 
     it('should return a group location string for display', () => {
