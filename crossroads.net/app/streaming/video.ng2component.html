@@ -36,10 +36,10 @@
         
         <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of promos">
           <figure class="wow fadeIn" data-wow-delay="">
-            <img src="{{promo.image}}" alt="" class="img-responsive" />
+            <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
           </figure>
           <section>
-            <h3>{{ promo.title | truncate: 38 }}</h3>
+            <h3 title="{{ promo.title }}">{{ promo.title | truncate: 38 }}</h3>
             <div [innerHTML]="promo.description"></div>
           </section>
           <hr>
