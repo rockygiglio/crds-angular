@@ -1,4 +1,4 @@
-<form ng-submit='groupMessage.submit()'>
+<form name='groupMessageForm' ng-submit='groupMessage.submit(groupMessageForm)' novalidate>
   <div class='row'>
     <div class='col-md-6 col-md-offset-3'>
 
@@ -22,9 +22,12 @@
 
       <div class='row'>
         <div class='col-md-12'>
-          <div class='form-group'>
-            <label for='emailMessage' class='wide-label'>Your Message (Optional)</label>
-            <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupMessage.person.message'></textarea>
+          <div class='form-group' ng-class='{"has-error": groupMessageForm.$submitted && groupMessageForm.emailMessage.$invalid}'>
+            <label for='emailMessage' class='control-label wide-label' ng-class='{"required": groupMessage.emailMessageRequired}'>{{ groupMessage.emailMessageLabel }}</label>
+            <textarea type='textarea' rows='8' class='form-control' name='emailMessage' ng-model='groupMessage.person.message' ng-required='groupMessage.emailMessageRequired'></textarea>
+            <ng-messages for="groupMessageForm.emailMessage.$error" ng-if="groupMessageForm.$submitted && groupMessageForm.emailMessage.$invalid">
+              <ng-messages-include src="on-submit-messages"></ng-messages-include>
+            </ng-messages>
           </div>
         </div>
       </div>
@@ -33,15 +36,15 @@
       
       <div class='row'>
         <div class='col-md-12'>
-          <p class='text-center'>
-            <a type='button' class='btn btn-standard' href='#' ng-click='groupMessage.cancel()'>Cancel</a>
+          <p class='text-center sm-text-right'>
+            <a type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' href='#' ng-click='groupMessage.cancel()'>Cancel</a>
             <loading-button 
               input-type='submit'
               normal-text='{{ groupMessage.normalLoadingText }}'
               loading-text='{{ groupMessage.loadingLoadingText }}'
               loading='groupMessage.processing'
               loading-class='disabled'
-              input-classes='btn btn-primary'/>
+              input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'/>
           </p>
         </div>
       </div>

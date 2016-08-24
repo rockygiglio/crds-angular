@@ -12,7 +12,14 @@
       reset: reset,
       TripApplication: $resource(__API_ENDPOINT__ + 'api/trip-application'),
       CreateTripParticipant: $resource(__API_ENDPOINT__+ 'api/trip-participant'),
-      thankYouMessage: '',
+      CampaignInfo: $resource(__API_ENDPOINT__ + 'api/trip-application/:contactId/:campaignId'),
+      donorId: null,
+      programId: null,
+      programName: null,
+      pledgeAmount: null,
+      depositAmount: null,
+      progressLabel: null,
+      applicationValid: false
     };
 
     function activate() {

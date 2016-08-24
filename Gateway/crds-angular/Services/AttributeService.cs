@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
@@ -77,9 +78,9 @@ namespace crds_angular.Services
         public List<MpAttribute> CreateMissingAttributes(List<MpAttribute> attributes, int attributeType)
         {
 
-            var attributesToSearch = attributes.Select(a => $"(Attribute_Name='{a.Name}' AND Attribute_Category_Id={a.CategoryId})");
+            var attributesToSearch = attributes.Select(a => $"(Attribute_Name='{a.Name.Replace("'", "''")}' AND Attribute_Category_Id={a.CategoryId})");
 
-            string searchFilter = $"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")";
+            string searchFilter = WebUtility.UrlEncode($"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")")?.Replace("+", "%20");
 
             var foundNames = _ministryPlatformRestRepository.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpRestAttribute>(searchFilter, "Attribute_ID, Attribute_Name, ATTRIBUTE_CATEGORY_ID");
 

@@ -8,9 +8,14 @@ namespace MinistryPlatform.Translation.Models
     {
         [JsonProperty(PropertyName = "Destination_ID")]
         public int CampaignDestinationId { get; set; }
+
         [JsonProperty(PropertyName = "Fundraising_Goal")]
         public decimal CampaignFundRaisingGoal { get; set; }
+
         [JsonProperty(PropertyName = "Group_ID")]
         public int GroupId { get; set; }
+
+        [JsonProperty(PropertyName = "Registration_Deposit")]
+        public decimal RegistrationDeposit { get; set; }
     }
 }

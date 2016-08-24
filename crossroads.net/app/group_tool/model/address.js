@@ -16,6 +16,19 @@ export default class Address {
     return `${this.addressLine1}, ${this.addressLine2}, ${this.city} ${this.state}, ${this.zip}`;
   }
 
+  toSearchString() {
+    let components = [
+      this.addressLine1,
+      this.addressLine2,
+      this.city,
+      this.state,
+      this.zip
+    ];
+    return components.filter((c) => {
+      return c && c.trim().length > 0;
+    }).join(', ');
+  }
+
   getZip() {
     if (this.zip === null){
       return 'Online';

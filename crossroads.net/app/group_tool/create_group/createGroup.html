@@ -3,8 +3,8 @@
   <div dynamic-content="$root.MESSAGES.groupToolCreateGroupHeading.content | html"></div>
   <form ng-submit="createGroup.previewGroup()" novalidate name="createGroup.createGroupForm">
     <formly-form model="createGroup.createGroupService.model" fields="createGroup.fields" form="createGroup.createGroupForm" options="createGroup.options" ng-cloak>
-      <div class="col-md-12 push-top text-center">
-        <button type="submit" class="btn btn-primary submit-button">Preview Group</button>
+      <div class="col-md-12 push-top text-center sm-text-right">
+        <button type="submit" class="btn btn-primary btn-block-mobile submit-button">Preview Group</button>
       </div>
     </formly-form>
   </form>

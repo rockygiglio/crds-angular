@@ -14,7 +14,7 @@
     </div>
 
     <div ng-show='!tripsSignup.pageHasErrors && tripsSignup.viewReady'> <!-- Content if there is no Page Error -->
-      <signup-progress total-steps='tripsSignup.numberOfPages' current-step='tripsSignup.signupService.pageId' progress-label='tripsSignup.progressLabel'> </signup-progress>
+      <signup-progress total-steps='tripsSignup.numberOfPages' current-step='tripsSignup.signupService.pageId' progress-label='tripsSignup.signupService.progressLabel'> </signup-progress>
 
       <!-- our nested state views will be injected here -->
       <form name="tripsSignup.tpForm" id="tripsSignup.signup-form" ng-submit="processForm()" novalidate>

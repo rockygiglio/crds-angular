@@ -15,6 +15,8 @@ export default function GroupMessageComponent() {
       subHeaderText: '@',
       contactText: '@',
       emailTemplateText: '@',
+      emailMessageLabel: '@',
+      emailMessageRequired: '@',
       cancelAction: '&',
       submitAction: '&',
       processing: '<',

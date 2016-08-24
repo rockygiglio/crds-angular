@@ -189,6 +189,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="controllers\AddressControllerTest.cs" />
     <Compile Include="controllers\CheckScannerControllerTest.cs" />
     <Compile Include="controllers\DonationControllerTest.cs" />
     <Compile Include="controllers\DonorControllerTest.cs" />
@@ -222,9 +223,11 @@
     <Compile Include="Services\ChildcareServiceTest.cs" />
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
+    <Compile Include="Services\EmailCommunicationTest.cs" />
     <Compile Include="Services\EzScanCheckScannerServiceTest.cs" />
     <Compile Include="Services\GatewayLookupServiceTest.cs" />
-    <Compile Include="Services\GoogleMapsAddressProximityServiceTest.cs" />
+    <Compile Include="Services\GoogleMapsAddressGeocodingServiceTest.cs" />
+    <Compile Include="Services\GoogleMapsDistanceMatrixAddressProximityServiceTest.cs" />
     <Compile Include="Services\GoSkillsServiceTest.cs" />
     <Compile Include="Services\GoVolunteerServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />

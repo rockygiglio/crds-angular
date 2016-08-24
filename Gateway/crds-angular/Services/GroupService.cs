@@ -399,6 +399,7 @@ namespace crds_angular.Services
                 detail.MeetingDayId = g.MeetingDayId;
                 detail.Address = Mapper.Map<MpAddress, AddressDTO>(g.Address);
                 detail.StartDate = g.StartDate;
+                detail.Participants = (g.Participants.Count > 0) ? g.Participants.Select(p => Mapper.Map<MpGroupParticipant, GroupParticipantDTO>(p)).ToList() : null;
 
                 if (events != null)
                 {
@@ -528,9 +529,9 @@ namespace crds_angular.Services
             }
         }
 
-        public void EndDateGroup(int groupId)
+        public void EndDateGroup(int groupId, int? reasonEndedId)
         {
-            _mpGroupService.EndDateGroup(groupId, DateTime.Now);
+            _mpGroupService.EndDateGroup(groupId, DateTime.Now, reasonEndedId);
         }
 
         public Participant GetParticipantRecord(string token) 
@@ -693,6 +694,14 @@ namespace crds_angular.Services
             return group;
         }
 
+        public void UpdateGroupParticipant(GroupParticipantDTO participant)
+        {
+            var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
+            List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+            part.Add(mpParticipant);
+            _mpGroupService.UpdateGroupParticipant(part);
+        }
+
         private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
             foreach (var part in participants)
@@ -702,6 +711,5 @@ namespace crds_angular.Services
 
             _mpGroupService.UpdateGroupParticipant(participants);
         }
-
     }
 }
