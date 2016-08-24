@@ -81,6 +81,11 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        //public MpPledge GetPledgeByCampaignAndContact(int pledgeCampaignId, int contactId)
+        //{
+            
+        //}
+
         public int GetDonorForPledge(int pledgeId)
         {
             var record = _ministryPlatformService.GetRecordDict(_pledgePageId, pledgeId, ApiLogin());
