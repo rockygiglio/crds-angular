@@ -25,7 +25,6 @@ class TripDeposit {
       thankYou: 'tripdeposit.thanks'
     });
 
-    this.giveTransferService.isTripDeposit = true;
     this.giveTransferService.initialized = true;
     this.session.removeRedirectRoute();
   }
