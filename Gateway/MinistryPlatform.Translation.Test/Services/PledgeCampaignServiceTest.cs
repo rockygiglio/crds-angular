@@ -12,6 +12,7 @@ namespace MinistryPlatform.Translation.Test.Services
     public class PledgeCampaignServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private IPledgeRepository _fixture;
@@ -22,6 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int mockPledgesPageId = 9876;
 
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
@@ -31,7 +33,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("Pledges")).Returns(mockPledgesPageId);
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("MyHouseholdPledges")).Returns(525);
 
-            _fixture = new PledgeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new PledgeRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]

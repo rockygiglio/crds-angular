@@ -11,14 +11,16 @@ namespace MinistryPlatform.Translation.Repositories
     public class PledgeRepository : BaseRepository, IPledgeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
         private readonly int _pledgePageId;
         private readonly int _myHouseholdPledges;
 
-        public PledgeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public PledgeRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
 
             _pledgePageId = configurationWrapper.GetConfigIntValue("Pledges");
             _myHouseholdPledges = configurationWrapper.GetConfigIntValue("MyHouseholdPledges");
@@ -81,10 +83,12 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        //public MpPledge GetPledgeByCampaignAndContact(int pledgeCampaignId, int contactId)
-        //{
-            
-        //}
+        public MpPledge GetPledgeByCampaignAndContact(int pledgeCampaignId, int contactId)
+        {
+            var authToken = ApiLogin();
+            var columnList = new List<string> {"Pledges.Pledge_ID", "Donor_ID_Table.Donor_ID","Pledge_Campaign_ID_Table.Pledge_Campaign_ID","Pledge_Campaign_ID_Table.Campaign_Name","Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID","Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type","Pledge_Campaign_ID_Table.Start_Date","Pledge_Campaign_ID_Table.End_Date","Pledge_Status_ID_Table.Pledge_Status_ID","Pledge_Status_ID_Table.Pledge_Status","Pledges.Total_Pledge","Donor_ID_Table_Contact_ID_Table.Contact_ID" };
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=2186211 AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=10000000", columnList).FirstOrDefault();
+        }
 
         public int GetDonorForPledge(int pledgeId)
         {
