@@ -55,10 +55,10 @@ declare var _: any;
 })
 
 export class StreamingComponent {
-  @ViewChild('target', {read: ViewContainerRef}) target;
+  @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
   @ViewChild('modal')
   modal: ModalComponent;
-  dclComponent: any;
+  videoRef: any;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
@@ -115,9 +115,9 @@ export class StreamingComponent {
 
   watchNowClicked(event) {
     this.modal.open();
-    this.dclComponent = this.dcl.loadNextToLocation(VideoComponent, this.target)
+    this.dcl.loadNextToLocation(VideoComponent, this.videoTarget)
     .then(ref => {
-      console.log(ref);
+      this.videoRef = ref
     });
     console.log('watchNowClicked -- openning')
   }
@@ -128,12 +128,12 @@ export class StreamingComponent {
 
   modalClose() {
     console.log('modal closed');
-    this.dclComponent.destroy();
+    this.videoRef.destroy();
   }
 
   modalDismiss() {
     console.log('modal dismissed')
-    this.dclComponent.destroy();
+    this.videoRef.destroy();
   }
 
 }
