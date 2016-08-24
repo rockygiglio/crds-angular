@@ -8,9 +8,13 @@ export default class ChangeParticipantRoleController {
     this.anchorScroll = $anchorScroll;
     this.rootScope = $rootScope;
     this.groupDetailService = GroupDetailService;
+    this.currentRole = this.participant.groupRoleId;
   }
 
   submit() {
+    if (this.currentRole === this.participant.groupRoleId){
+      return;
+    }
     this.processing = true;
     var promise = this.groupService.updateParticipant(this.participant)
       .then((data) => {

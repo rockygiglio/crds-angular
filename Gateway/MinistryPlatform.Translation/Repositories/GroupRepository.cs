@@ -35,6 +35,8 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
         private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
+        private readonly int GroupHasMiddleSchoolStudents = Convert.ToInt32(AppSettings("GroupHasMiddleSchoolStudents"));
+        private readonly int GroupHasHighSchoolStudents = Convert.ToInt32(AppSettings("GroupHasHighSchoolStudents"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -989,6 +991,13 @@ namespace MinistryPlatform.Translation.Repositories
             };
         }
 
-       
+        public bool ParticipantGroupHasStudents(string token, int groupParticipantId)
+        {
+            var groups = GetGroupsForParticipant(token, groupParticipantId);
+            return false;
+        }
+
+
+
     }
 }

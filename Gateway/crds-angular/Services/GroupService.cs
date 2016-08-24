@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
@@ -694,12 +695,16 @@ namespace crds_angular.Services
             return group;
         }
 
-        public void UpdateGroupParticipant(GroupParticipantDTO participant)
+        public void UpdateGroupParticipantRole(string token, GroupParticipantDTO participant)
         {
             var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
             List<MpGroupParticipant> part = new List<MpGroupParticipant>();
             part.Add(mpParticipant);
             _mpGroupService.UpdateGroupParticipant(part);
+            if (participant.GroupRoleId == _GroupRoleLeader && _mpGroupService.ParticipantGroupHasStudents(token, mpParticipant.GroupParticipantId));
+            {
+                _mpGroupService.SendNewStudentMinistryGroupAlertEmail(part);
+            }
         }
 
         private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)

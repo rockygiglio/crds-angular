@@ -1012,7 +1012,7 @@ namespace crds_angular.test.Services
             };
 
             groupService.Setup(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()));
-            fixture.UpdateGroupParticipant(participant);
+            fixture.UpdateGroupParticipantRole(It.IsAny<string>(),participant);
             groupService.Verify();
 
         }
