@@ -157,6 +157,22 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestSearchPledgesByContactAndCampaign()
+        {
+            Console.WriteLine("TestSearchPledgesByContactAndCampaign");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=2186211 AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=10000000",
+                "Pledges.Pledge_ID,Donor_ID_Table.Donor_ID,Pledge_Campaign_ID_Table.Pledge_Campaign_ID,Pledge_Campaign_ID_Table.Campaign_Name,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type,Pledge_Campaign_ID_Table.Start_Date,Pledge_Campaign_ID_Table.End_Date,Pledge_Status_ID_Table.Pledge_Status_ID,Pledge_Status_ID_Table.Pledge_Status,Pledges.Total_Pledge,Donor_ID_Table_Contact_ID_Table.Contact_ID");
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("CampaignName:\t{0}", p.CampaignName);
+                Console.WriteLine("DonorId:\t{0}", p.DonorId);
+                Console.WriteLine("PledgeId:\t{0}", p.PledgeId);
+                Console.WriteLine("PledgeDonations:\t{0}", p.PledgeDonations);
+            }
+        }
+
+        [Test]
         public void TestGetPaymentType()
         {
             Console.WriteLine("TestGetPaymentType");
