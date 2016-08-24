@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -124,6 +125,67 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(records[1]["End_Date"], record[1].CampaignEndDate);
             Assert.AreEqual(records[1]["Pledge_Campaign_Type_ID"], record[1].CampaignTypeId);
             Assert.AreEqual(records[1]["Campaign_Type"], record[1].CampaignTypeName);
+        }
+
+        [Test]
+        public void ShouldGetPledgeByCampaignAndContact()
+        {
+            const int mockCampaign = 1;
+            const int mockContact = 10;
+
+            var mockColumns = new List<string>
+            {
+                "Pledges.Pledge_ID",
+                "Donor_ID_Table.Donor_ID",
+                "Pledge_Campaign_ID_Table.Pledge_Campaign_ID",
+                "Pledge_Campaign_ID_Table.Campaign_Name",
+                "Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID",
+                "Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type",
+                "Pledge_Campaign_ID_Table.Start_Date",
+                "Pledge_Campaign_ID_Table.End_Date",
+                "Pledge_Status_ID_Table.Pledge_Status_ID",
+                "Pledge_Status_ID_Table.Pledge_Status",
+                "Pledges.Total_Pledge"
+            };
+
+            var mockPledge = new MpPledge
+            {
+                CampaignName = "Kernel Panic",
+                DonorId = 1234,
+                PledgeTotal = 1000000,
+                CampaignEndDate = DateTime.Today.AddDays(30),
+                CampaignStartDate = DateTime.Today,
+                CampaignTypeId = 4,
+                CampaignTypeName = "Band Tour Fund",
+                PledgeCampaignId = 567,
+                PledgeDonations = 15.00M,
+                PledgeId = 42,
+                PledgeStatus = "Active",
+                PledgeStatusId = 1
+            };
+            var mockPledges = new List<MpPledge> {mockPledge};
+
+            _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(
+                mocked =>
+                    mocked.Search<MpPledge>(
+                        "Donor_ID_Table_Contact_ID_Table.Contact_ID=" + mockContact + " AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + mockCampaign +
+                        " AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
+                        mockColumns)).Returns(mockPledges);
+
+            var record =_fixture.GetPledgeByCampaignAndContact(mockCampaign, mockContact);
+            Assert.AreEqual(mockPledge.CampaignName, record.CampaignName);
+            Assert.AreEqual(mockPledge.DonorId, record.DonorId);
+            Assert.AreEqual(mockPledge.PledgeTotal, record.PledgeTotal);
+            Assert.AreEqual(mockPledge.CampaignEndDate, record.CampaignEndDate);
+            Assert.AreEqual(mockPledge.CampaignStartDate, record.CampaignStartDate);
+            Assert.AreEqual(mockPledge.CampaignTypeId, record.CampaignTypeId);
+            Assert.AreEqual(mockPledge.CampaignTypeName, record.CampaignTypeName);
+            Assert.AreEqual(mockPledge.PledgeCampaignId, record.PledgeCampaignId);
+            Assert.AreEqual(mockPledge.PledgeDonations, record.PledgeDonations);
+            Assert.AreEqual(mockPledge.PledgeId, record.PledgeId);
+            Assert.AreEqual(mockPledge.PledgeStatus, record.PledgeStatus);
+            Assert.AreEqual(mockPledge.PledgeStatusId, record.PledgeStatusId);
         }
     }
 }
