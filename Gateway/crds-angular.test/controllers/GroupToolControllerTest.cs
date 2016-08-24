@@ -9,6 +9,8 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
 
@@ -19,6 +21,7 @@ namespace crds_angular.test.controllers
         private GroupToolController _fixture;
 
         private Mock<IGroupToolService> _groupToolService;
+        private Mock<IConfigurationWrapper> _configurationWrapper;
         private const string AuthType = "abc";
         private const string AuthToken = "123";
         private readonly string _auth = string.Format("{0} {1}", AuthType, AuthToken);
@@ -27,8 +30,11 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
-            _fixture = new GroupToolController(_groupToolService.Object);
+            _configurationWrapper = new Mock<IConfigurationWrapper>();
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupTypeSmallId")).Returns(1);
+            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
+
         }
 
         [Test]
@@ -144,7 +150,7 @@ namespace crds_angular.test.controllers
             _groupToolService.VerifyAll();
         }
 
-	[Test]
+	    [Test]
         public void TestPostGroupMessage()
         {
             _groupToolService.Setup(mocked => mocked.SendAllGroupParticipantsEmail(_auth, 123, 1, "subject", "message"));
@@ -209,5 +215,55 @@ namespace crds_angular.test.controllers
             Assert.AreSame(searchResults, restResult.Content);
         }
 
+        [Test]
+        public void ShouldEndGroupSuccessfully()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            string token = "abc 123";
+         
+            _groupToolService.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Verifiable();
+            _groupToolService.Setup(mocked => mocked.VerifyCurrentUserIsGroupLeader(token, groupId)).Returns(new MyGroup());
+
+            IHttpActionResult result = _fixture.EndSmallGroup(groupId, groupReasonEndedId);
+
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkResult), result);
+
+        }
+
+        [Test]
+        public void ShouldNotEndGroup()
+        {
+            var groupId = 9876;
+            var groupReasonEndedId = 1;
+            string token = "1234frd32";
+            Exception ex = new Exception();
+
+            _groupToolService.Setup(mocked => mocked.EndGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.VerifyCurrentUserIsGroupLeader(It.IsAny<string>(), It.IsAny<int>())).Returns(new MyGroup());
+            IHttpActionResult result = _fixture.EndSmallGroup(groupId, groupReasonEndedId);
+
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
+
+        [Test]
+        public void ShouldNotEndGroupNotALeader()
+        {
+            var groupId = 1234;
+            var groupReasonEndedId = 1;
+            string token = "abc 123";
+
+            _groupToolService.Setup(mocked => mocked.VerifyCurrentUserIsGroupLeader(It.IsAny<string>(), It.IsAny<int>())).Throws(new NotGroupLeaderException("User is not a leader"));
+
+            IHttpActionResult result = _fixture.EndSmallGroup(groupId, groupReasonEndedId);
+
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
     }
 }

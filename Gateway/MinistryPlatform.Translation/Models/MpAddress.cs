@@ -10,5 +10,7 @@
         public string Postal_Code { get; set; }
         public string Foreign_Country { get; set; }
         public string County { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
     }
 }

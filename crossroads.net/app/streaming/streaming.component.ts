@@ -2,15 +2,17 @@
 import { Component } from '@angular/core';
 
 // streaming
-import { ScheduleComponent } from './schedule.component';
+import { ContentCardComponent } from './content-card.component';
 import { CountdownComponent } from './countdown.component';
+import { CurrentSeriesComponent } from './current-series.component';
+import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 
 // CRDS core
-import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component'
-import { CMSDataService } from '../../core/services/CMSData.service'
+import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
+import { CMSDataService } from '../../core/services/CMSData.service';
 
 // Third-party
 import { PageScroll } from '../ng2-page-scroll/ng2-page-scroll.component';
@@ -28,16 +30,29 @@ declare var _: any;
 
 @Component({
   selector: 'streaming',
-  directives: [DynamicContentNg2Component, ScheduleComponent, CountdownComponent, SocialSharingComponent, PageScroll, StickyHeaderDirective],
+  directives: [
+    DynamicContentNg2Component, 
+    ScheduleComponent, 
+    CountdownComponent,
+    SocialSharingComponent, 
+    PageScroll, 
+    StickyHeaderDirective,
+    ContentCardComponent, 
+    CurrentSeriesComponent
+  ],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
-  pipes: [ReplaceNonAlphaNumericPipe, HtmlToPlainTextPipe, TruncatePipe ]
+  pipes: [
+    ReplaceNonAlphaNumericPipe, 
+    HtmlToPlainTextPipe, 
+    TruncatePipe 
+  ]
 })
 
 export class StreamingComponent {
   inProgress: boolean = false;
   currentSeries: any;
-  mostRecent: any = [];
+  pastWeekends: any = [];
 
   constructor(private streamspotService: StreamspotService, private cmsDataService: CMSDataService) {
 
@@ -53,34 +68,38 @@ export class StreamingComponent {
       this.inProgress = inProgress;
     });
 
+    new WOW({
+      offset: 100,
+      mobile: false
+    }).init();
+
     this.cmsDataService
-        // only 4 are displayed, however, there is an invalid message on contentint that no one can seem to find,
-        //   so grabing an extra message and then filtering out the bad message in the view
-        .getXMostRecentMessages(5)
-        .subscribe((mostRecent) => {
-          this.mostRecent = mostRecent;
+        .getXMostRecentMessages(4)
+        .subscribe((pastWeekends) => {
+          this.pastWeekends = pastWeekends;
 
-          _.each(mostRecent, (event, key) => {
+          this.pastWeekends.forEach((event, i, pastWeekends) => {
             if (typeof event.series !== "undefined") {
-              event.wowDelay = key * 100;
+              let slugPipe = new ReplaceNonAlphaNumericPipe();
 
+              event.delay = i * 100;
+              event.subtitle = event.title
+              event.title = '';
+              event.url = `/message/${event.id}/${slugPipe.transform(event.title)}`
               event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
-              if (typeof event.messageVideo.still !== 'undefined') {
+
+              if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
                 event.image = event.messageVideo.still.filename
               } 
               event.imageSrc = event.image.replace(/https*:/, '')
 
               this.cmsDataService.getSeries(`id=${event.series}`)
                 .subscribe((series) => {
-                  event.seriesTitle = series.length > 0 ? _.first(series).title : 'Message';
+                  event.title = series.length > 0 ? _.first(series).title : 'Message';
                 })
               }
           })
-        })
-
-    new WOW({
-      offset: 100,
-      mobile: false
-    }).init();
+        });
   }
+
 }

@@ -43,6 +43,8 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       $stateParams) {
 
     var vm = this;
+    var now = new Date();
+
     vm.ageLimitReached = true;
     vm.buttonText = 'Next';
     vm.campaign = Campaign;
@@ -56,6 +58,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.isNica = isNica;
     vm.isNola = isNola;
     vm.isSouthAfrica = isSouthAfrica;
+    vm.loading = false;
     vm.numberOfPages = 0;
     vm.pageHasErrors = true;
     vm.passportInvalidContent = passportInvalidContent;
@@ -68,6 +71,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.signupService = TripsSignupService;
     vm.skillsSelected = skillsSelected;
     vm.spiritualSelected = spiritualSelected;
+    vm.submitting = false;
     vm.tripName = vm.campaign.name;
     vm.underAge = underAge;
     vm.validateProfile = validateProfile;
@@ -75,6 +79,11 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.phoneFormat = vm.validation.phoneFormat();
     vm.viewReady = false;
     vm.whyPlaceholder = '';
+    vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    vm.maxPassportExpireDate = new Date(now.getFullYear() + 150, now.getMonth(), now.getDate());
+    vm.minPassportExpireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    vm.openPassportExpireDatePicker = openPassportExpireDatePicker;
+    
 
     $rootScope.$on('$stateChangeStart', stateChangeStart);
     $scope.$on('$viewContentLoaded', stateChangeSuccess);
@@ -104,7 +113,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
       TripsSignupService.profileData = { person:  Person };
       vm.profileData = TripsSignupService.profileData;
-      vm.progressLabel = progressLabel();
+      vm.signupService.progressLabel = vm.profileData.person.nickName + ' ' + vm.profileData.person.lastName;
       if (TripsSignupService.campaign === undefined) {
         TripsSignupService.campaign = Campaign;
       }
@@ -113,22 +122,22 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
       switch (vm.destination) {
         case 'NOLA':
-          vm.numberOfPages = 5;
-          TripsSignupService.thankYouMessage = $rootScope.MESSAGES.NOLASignUpThankYou.content;
+          vm.numberOfPages = 6;
+          vm.signupService.numberOfPages = 6;
           break;
         case 'South Africa':
-          vm.numberOfPages = 6;
-          TripsSignupService.thankYouMessage = $rootScope.MESSAGES.SouthAfricaSignUpThankYou.content;
+          vm.numberOfPages = 7;
+          vm.signupService.numberOfPages = 7;
           break;
         case 'India':
-          vm.numberOfPages = 6;
+          vm.numberOfPages = 7;
+          vm.signupService.numberOfPages = 7;
           vm.whyPlaceholder = 'Please be specific. ' +
             'In instances where we have a limited number of spots, we strongly consider responses to this question.';
-          TripsSignupService.thankYouMessage = $rootScope.MESSAGES.IndiaSignUpThankYou.content;
           break;
         case 'Nicaragua':
-          vm.numberOfPages = 6;
-          TripsSignupService.thankYouMessage = $rootScope.MESSAGES.NicaraguaSignUpThankYou.content;
+          vm.numberOfPages = 7;
+          vm.signupService.numberOfPages = 7;
           break;
       }
 
@@ -170,6 +179,12 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       return ageRestriction;
     }
 
+    function openPassportExpireDatePicker($event) {
+        $event.preventDefault();
+       $event.stopPropagation();
+       vm.passportExpireDateOpen = true;
+    }
+
     function frequentFlyerChanged(flyer) {
       if (!_.isEmpty(flyer.notes)) {
         flyer.selected = true;
@@ -199,19 +214,28 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function handleSubmit(form) {
-      $log.debug('handleSubmit start');
+      vm.submitting = true;
       if (form !== null) {
         form.$setSubmitted(true);
         if (form.$valid) {
-          $log.debug('form valid');
-          saveData();
+          vm.signupService.applicationValid = true;
+          saveProfile();
         } else {
-          $log.debug('form INVALID');
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          saveError();
+          return;
         }
       } else {
-        saveData();
+        saveProfile();
       }
+      $state.go('tripdeposit',
+                    {campaignId: vm.signupService.campaign.id, contactId: $stateParams.contactId});
+
+    }
+
+    function saveError() {
+      vm.submitting = false;
+      $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+      return;
     }
 
     function isIndia() {
@@ -317,10 +341,6 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       return message;
     }
 
-    function progressLabel() {
-      return vm.profileData.person.nickName + ' ' + vm.profileData.person.lastName;
-    }
-
     function registrationNotOpen() {
       return $q(function(resolve, reject) {
         var regStart = moment(vm.campaign.registrationStart);
@@ -355,7 +375,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       return true;
     }
 
-    function saveData() {
+    function saveProfile(success, err) {
        _.forEach(vm.signupService.person.attributeTypes[attributeTypes.FREQUENT_FLYERS].attributes, function(flyer) {
         if(flyer.notes) {
           flyer.selected = true;
@@ -363,39 +383,12 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       });
 
       vm.profileData.person.$save(function() {
-        $log.debug('person save successful');
+        if (success) { success(); }
       }, function() {
-
-        $log.debug('person save unsuccessful');
+        if (err) { err(); }
       });
 
-      var application = new vm.signupService.TripApplication();
-      application.contactId = vm.signupService.person.contactId;
-      application.pledgeCampaignId = vm.signupService.campaign.id;
-      application.pageTwo = vm.signupService.page2;
-      application.pageThree = vm.signupService.page3;
-      application.pageFour = vm.signupService.page4;
-      application.pageFive = vm.signupService.page5;
-      application.pageSix = vm.signupService.page6;
-      application.inviteGUID = $stateParams.invite;
-      application.$save(function() {
-        $log.debug('trip application save successful');
-        _.each(vm.signupService.familyMembers, function(f) {
-          if (f.contactId === vm.signupService.contactId) {
-            f.signedUp = true;
-            f.signedUpDate = new Date();
-          }
-        });
-
-        vm.signupService.pageId = 'thanks';
-        vm.tpForm.$setPristine();
-        $state.go('tripsignup.application.thankyou');
-      }, function() {
-        $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-        $log.debug('trip application save unsuccessful');
-      });
-
-          }
+    }
 
     function showFrequentFlyer(airline) {
       if (airline.attributeId === attributes.SOUTHAFRICA_FREQUENT_FLYER) {
@@ -459,7 +452,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
         return;
       }
 
-      if (!toState.name.startsWith('tripsignup.application.')) {
+      if (!toState.name.startsWith('tripsignup.application.') && !toState.name.startsWith('tripdeposit')) {
         if (vm.tpForm) {
           if (vm.tpForm.$dirty) {
             if (!$window.confirm('Are you sure you want to leave this page?')) {

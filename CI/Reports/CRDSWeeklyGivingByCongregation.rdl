@@ -59,6 +59,9 @@ order by program_name</CommandText>
           <QueryParameter Name="programid">
             <Value>=join(Parameters!programid.Value,",")</Value>
           </QueryParameter>
+          <QueryParameter Name="donationstatusid">
+            <Value>=join(Parameters!donationstatusid.Value,",")</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Weekly_Giving_By_Congregation</CommandText>
@@ -75,6 +78,22 @@ order by program_name</CommandText>
         <Field Name="WeekEnding">
           <DataField>WeekEnding</DataField>
           <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Donation_Status">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>select donation_status_id, donation_status from dbo.Donation_Statuses</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="donation_status_id">
+          <DataField>donation_status_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="donation_status">
+          <DataField>donation_status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -636,6 +655,18 @@ order by program_name</CommandText>
           <DataSetName>Programs</DataSetName>
           <ValueField>program_id</ValueField>
           <LabelField>program_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="donationstatusid">
+      <DataType>String</DataType>
+      <Prompt>Donation Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Donation_Status</DataSetName>
+          <ValueField>donation_status_id</ValueField>
+          <LabelField>donation_status</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>

@@ -25,7 +25,8 @@ namespace MinistryPlatform.Translation.Test.Services
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
         private readonly int _groupsSubGroupsPageId = 299;
-
+        private readonly int _myGroupParticipationPageId = 563;
+        private const string ApiToken = "ABC";
         [SetUp]
         public void SetUp()
         {
@@ -48,7 +49,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             return new Dictionary<string, object>
             {
-                {"token", "ABC"},
+                {"token", ApiToken},
                 {"exp", "123"}
             };
         }
@@ -206,6 +207,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact_ID", i + 10},
                     {"Group_Role_ID", 42},
                     {"Role_Title", "Boss"},
+                    {"Approved_Small_Group_Leader", true },
                     {"Last_Name", "Anderson"},
                     {"Nickname", "Neo"},
                     {"Email", "Neo@fun.com"},
@@ -272,6 +274,73 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var result = _fixture.checkIfUserInGroup(participantId, groupParticipants);
             Assert.AreEqual(result, true);
+        }
+
+        [Test]
+        public void EndDateGroup()
+        {
+            const int groupId = 1;
+            const int reasonEndedId = 1;
+            DateTime endDate = DateTime.Now;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["End_Date"].Equals(endDate) && d["Reason_Ended"].Equals(reasonEndedId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, endDate, reasonEndedId);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        public void EndDateGroupWithoutDate()
+        {
+            const int groupId = 1;
+            const int reasonEndedId = 1;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["Reason_Ended"].Equals(reasonEndedId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, reasonEndedId:reasonEndedId);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        [Test]
+        public void EndDateGroupWithoutReason()
+        {
+            const int groupId = 1;
+            DateTime endDate = DateTime.Now;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId) && d["End_Date"].Equals(endDate)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId, endDate:endDate);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        [Test]
+        public void EndDateGroupWithoutReasonOrDate()
+        {
+            const int groupId = 1;
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+
+            _ministryPlatformRestService.Setup(
+                m => m.UpdateRecord("Groups", groupId, It.Is<Dictionary<string, object>>(
+                                               d => d["Group_ID"].Equals(groupId)))).Verifiable();
+
+            _fixture.EndDateGroup(groupId);
+
+            _ministryPlatformRestService.VerifyAll();
         }
 
         [Test]
@@ -480,7 +549,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"End_Date", "2018-02-11"},
                     {"Meeting_Day_ID", 5},
                     {"Meeting_Day", "Monday" },
-                    {"Meeting_Time", "180000"},
+                    {"Meeting_Time", "06:00:00"},
                     {"Meeting_Frequency", "Monday's at 6:00 PM, Every Other Week" },
                     {"Available_Online", false},
                     {"Maximum_Age", 10 },
@@ -509,7 +578,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"End_Date", "2020-01-01"},
                     {"Meeting_Day_ID", 4},
                     {"Meeting_Day", "Wednesday" },
-                    {"Meeting_Time", "140000"},
+                    {"Meeting_Time", "14:00:00"},
                     {"Meeting_Frequency", "Wednesday's at 2:00 PM, Every Other Week" },
                     {"Available_Online", true},
                     {"Maximum_Age", 10},
@@ -548,7 +617,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 WaitList = false,
                 ChildCareAvailable = false,
                 MeetingDayId = 2,
-                MeetingTime = "18000",
+                MeetingTime = "15:15:00",
                 GroupRoleId = 16,
                 MinimumAge = 0,
                 MinimumParticipants = 8,
@@ -575,7 +644,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Offsite_Meeting_Address", 43567 },
                 {"Group_Is_Full", false },
                 {"Available_Online", true },
-                {"Meeting_Time", "18000" },
+                {"Meeting_Time", "15:15:00" },
                 {"Meeting_Day_Id", 2},
                 {"Domain_ID", 1 },
                 {"Child_Care_Available", false },
@@ -665,7 +734,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 WaitList = false,
                 ChildCareAvailable = false,
                 MeetingDayId = 2,
-                MeetingTime = "18000",
+                MeetingTime = "15:15:00",
                 GroupRoleId = 16,
                 MinimumAge = 0,
                 MinimumParticipants = 8,
@@ -682,6 +751,44 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.UpdateGroup(existingGroup);
             Assert.AreEqual(1, result);
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationByGroupIdFindsGroup()
+        {
+            var values = new Dictionary<string, object>()
+            {
+                {"Participant_ID", 123},
+                {"Group_Participant_ID", 555 },
+                {"Group_Role_ID", 978 },
+                {"Something_Else", "A string" }
+            };
+
+            const int groupId = 43221;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>() {values});
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.ParticipantId, 123);
+            
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationNoGroupsFound()
+        {
+            const int groupId = 123;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>());
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+            _ministryPlatformService.VerifyAll();
+            Assert.IsNull(result);
         }
     }
 }

@@ -16,54 +16,73 @@ export default class CreateGroupPreviewController {
     this.saving = false;
   }
 
-  $onInit() {
-    this.groupData = this.createGroupService.mapToSmallGroup();
+$onInit() { 
+   this.groupData = this.createGroupService.mapToSmallGroup();
+   this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
+   this.stateChangeWatcher = this.rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+           if (!toState.name.startsWith('grouptool.edit') && !toState.name.startsWith('grouptool.create'))
+           {
+               this.createGroupService.reset();
+               this.stateChangeWatcher();
+               return;
+           }
+       });
+ }
 
-    this.edit = this.groupData.groupId == null || this.groupData.groupId == undefined ? false : true;
+
+
+save() {
+  this.saving = true;
+  this.successfulSave = false;
+  try {
+    var promise = this.groupService.saveCreateGroupForm(this.groupData)
+      .then((data) => {
+        return this.groupService.saveParticipant(this.groupData.participants, data.groupId);
+      })
+      .then((data) => {
+        return this.groupService.saveProfile(this.groupData.profile);
+      })
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolCreateGroupSuccess);
+        this.saving = false;
+        this.successfulSave = true;
+        this.createGroupService.reset();
+        this.state.go('grouptool.mygroups')
+      })
   }
-
-  save() {
-    this.saving = true;
+  catch (error) {
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+    this.saving = false;
     this.successfulSave = false;
-    try {
-      var promise = this.groupService.saveCreateGroupForm(this.groupData)
-        .then( (data) => {
-          this.saving = false;
-          this.successfulSave = true;
-          this.createGroupService.resolved = false;
-          this.state.go('grouptool.mygroups')
-        })
-    }
-    catch (error) {
-      this.saving = false;
-      this.successfulSave = false;
-      throw (error);
-    }
-
+    throw (error);
   }
 
-  saveEdits() {
-    this.saving = true;
+}
+
+saveEdits() {
+  this.saving = true;
+  this.successfulSave = false;
+  try {
+    var promise = this.groupService.saveEditGroupForm(this.groupData)
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolEditGroupSuccess);
+        this.saving = false;
+        this.successfulSave = true;
+        this.createGroupService.reset();
+        this.state.go('grouptool.mygroups')
+      })
+  }
+  catch (error) {
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+    this.saving = false;
     this.successfulSave = false;
-    try {
-      var promise = this.groupService.saveEditGroupForm(this.groupData)
-        .then( (data) => {
-          this.saving = false;
-          this.successfulSave = true;
-          this.createGroupService.resolved = false;
-          this.state.go('grouptool.mygroups')
-        })
-    }
-    catch (error) {
-      this.saving = false;
-      this.successfulSave = false;
-      throw (error);
-    }
-
+    throw (error);
   }
 
-  submit() {
-    this.edit ? this.saveEdits() : this.save();
-  }
+}
+
+submit() {
+  this.edit ? this.saveEdits() : this.save();
+}
 
 }

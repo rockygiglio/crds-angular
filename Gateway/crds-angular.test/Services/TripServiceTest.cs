@@ -10,11 +10,9 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
-using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using ICampaignRepository = MinistryPlatform.Translation.Repositories.Interfaces.ICampaignRepository;
-using IParticipantRepository = MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository;
 
 namespace crds_angular.test.Services
 {
@@ -26,7 +24,6 @@ namespace crds_angular.test.Services
         private Mock<IGroupRepository> _groupService;
         private Mock<IFormSubmissionRepository> _formSubmissionService;
         private Mock<IEventRepository> _eventService;
-        private Mock<IDonorRepository> _donorService;
         private Mock<IPledgeRepository> _pledgeService;
         private Mock<ICampaignRepository> _campaignService;
         private Mock<IPrivateInviteRepository> _privateInviteService;
@@ -36,8 +33,11 @@ namespace crds_angular.test.Services
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IPersonService> _personService;
         private Mock<IServeService> _serveService;
-        private Mock<IDestinationRepository> _destinationService;
-        private Mock<IParticipantRepository> _participantService;
+        private Mock<IProgramRepository> _programRepository;
+        private Mock<IApiUserRepository> _apiUserReposity;
+        private Mock<ITripRepository> _tripRepository;
+        private Mock<IDonorRepository> _mpDonorRepositoryMock;
+
         private TripService _fixture;
 
         [SetUp]
@@ -48,7 +48,6 @@ namespace crds_angular.test.Services
             _groupService = new Mock<IGroupRepository>();
             _formSubmissionService = new Mock<IFormSubmissionRepository>();
             _eventService = new Mock<IEventRepository>();
-            _donorService = new Mock<IDonorRepository>();
             _pledgeService = new Mock<IPledgeRepository>();
             _campaignService = new Mock<ICampaignRepository>();
             _privateInviteService = new Mock<IPrivateInviteRepository>();
@@ -58,15 +57,16 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _personService = new Mock<IPersonService>();
             _serveService = new Mock<IServeService>();
-            _destinationService = new Mock<IDestinationRepository>();
-            _participantService = new Mock<IParticipantRepository>();
+            _programRepository = new Mock<IProgramRepository>();
+            _tripRepository = new Mock<ITripRepository>();
+            _apiUserReposity = new Mock<IApiUserRepository>();
+            _mpDonorRepositoryMock = new Mock<IDonorRepository>();
 
             _fixture = new TripService(_eventParticipantService.Object,
                                        _donationService.Object,
                                        _groupService.Object,
                                        _formSubmissionService.Object,
                                        _eventService.Object,
-                                       _donorService.Object,
                                        _pledgeService.Object,
                                        _campaignService.Object,
                                        _privateInviteService.Object,
@@ -76,8 +76,10 @@ namespace crds_angular.test.Services
                                        _configurationWrapper.Object,
                                        _personService.Object,
                                        _serveService.Object,
-                                       _destinationService.Object,
-                                       _participantService.Object);
+                                       _programRepository.Object,
+                                       _apiUserReposity.Object,
+                                       _tripRepository.Object,
+                                       _mpDonorRepositoryMock.Object);
         }
 
         [Test]
@@ -161,6 +163,38 @@ namespace crds_angular.test.Services
 
             Assert.IsNotNull(myTrips);
             Assert.AreEqual(0, myTrips.MyTrips[0].FundraisingDaysLeft);
+        }
+
+        [Test]
+        public void CreateTripParticipant()
+        {
+            const int contactId = 3123;
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(true);
+            _fixture.CreateTripParticipant(contactId, pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+           _tripRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ThrowExceptionWhenCreateParticipantFails()
+        {
+            const int contactId = 3123;
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(false);
+            Assert.Throws<Exception>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
         }
 
         private MpPledge mockPledgeCampaign()

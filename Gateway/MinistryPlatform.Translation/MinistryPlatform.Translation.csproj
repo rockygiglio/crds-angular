@@ -67,9 +67,9 @@
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Repositories\Interfaces\ITripRepository.cs" />
     <Compile Include="Models\Childcare\MpChildcareCancelledNotification.cs" />
     <Compile Include="Models\Childcare\MpChildcareDashboard.cs" />
     <Compile Include="Models\Childcare\MPRspvd.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Models\Lookups\MpWorkTeams.cs" />
     <Compile Include="Models\MpMessageTemplate.cs" />
     <Compile Include="Models\MpInvitation.cs" />
+    <Compile Include="Models\MpRestAttribute.cs" />
     <Compile Include="Models\MpTripRecord.cs" />
     <Compile Include="Models\MpObjectAttributeType.cs" />
     <Compile Include="Models\MpUser.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Repositories\SelectionRepository.cs" />
     <Compile Include="Repositories\SkillsRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\TripRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />
     <Compile Include="Utils\MPFormatConversion.cs" />

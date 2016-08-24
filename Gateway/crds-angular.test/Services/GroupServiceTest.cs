@@ -43,6 +43,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IUserRepository> _userRespository;
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
         private Mock<IAttributeService> _attributeService;
+        private const int DomainId = 66;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -838,6 +839,182 @@ namespace crds_angular.test.Services
 
             _groupService.VerifyAll();
             Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void shouldUpdateGroupThatHasMinors()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 145,
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinorAgeGroupsAdded = true
+            };
+
+            List<MpGroupParticipant> participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    Email = "DukeNukem@compuserv.net",
+                    ContactId = 12,
+                    GroupParticipantId = 13,
+                    GroupRoleId = 22,
+                    GroupRoleTitle = "Member",
+                    LastName = "Nukem",
+                    NickName = "Duke",
+                    ParticipantId = 11,
+                    StartDate = start
+                }
+            };
+
+            groupService.Setup(mocked => mocked.GetGroupParticipants(group.GroupId, true)).Returns(participants);
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 12,
+                FromEmailAddress = "me@here.com",
+                ReplyToContactId = 34,
+                ReplyToEmailAddress = "you@there.com",
+                Subject = "subject"
+            };
+
+            const string toEmail = "studentministry@crossroads.net";
+
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationService.Setup(
+               mocked =>
+                   mocked.SendMessage(
+                       It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                               c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                               c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
+                               c.MergeData["Leaders"].ToString().Equals($"<ul> <li>Name: {participants[0].NickName} {participants[0].LastName}  Email: {participants[0].Email} </li></ul>")),
+                       false)).Returns(77);
+
+            groupService.Setup(mocked => mocked.UpdateGroup(It.IsAny<MpGroup>())).Returns(14);
+            this._objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>()))
+                .Returns(new ObjectAllAttributesDTO());
+
+            var groupResp = fixture.UpdateGroup(group);
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void shouldSendEmailIfCreatingMinorGroup()
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddYears(2);
+
+            var group = new GroupDTO()
+            {
+                GroupName = "New Testing Group",
+                GroupDescription = "The best group ever created for testing stuff and things",
+                GroupId = 0,
+                GroupTypeId = 19,
+                MinistryId = 8,
+                CongregationId = 1,
+                StartDate = start,
+                EndDate = end,
+                GroupFullInd = false,
+                AvailableOnline = true,
+                RemainingCapacity = 8,
+                WaitListInd = false,
+                ChildCareAvailable = false,
+                MeetingDayId = 2,
+                MeetingTime = "18000",
+                GroupRoleId = 16,
+                MinorAgeGroupsAdded = true,
+                Participants = new List<GroupParticipantDTO>()
+                {
+                    new GroupParticipantDTO()
+                    {
+                        ParticipantId = 1,
+                        GroupRoleId = 22,
+                        GroupParticipantId = 2,
+                        Email = "groupymcgroupface@gmail.com",
+                        StartDate = DateTime.Now,
+                        ContactId = 1,
+                        NickName = "GroupMan",
+                        LastName = "Jones",
+                        GroupRoleTitle = "Leader"
+                    }
+                }
+    
+            };
+
+            var template = new MpMessageTemplate
+            {
+                Body = "body",
+                FromContactId = 12,
+                FromEmailAddress = "me@here.com",
+                ReplyToContactId = 34,
+                ReplyToEmailAddress = "you@there.com",
+                Subject = "subject"
+            };
+
+            const string toEmail = "studentministry@crossroads.net";
+
+            _communicationService.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
+
+            _communicationService.Setup(
+               mocked =>
+                   mocked.SendMessage(
+                       It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
+                               c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
+                               c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
+                               c.MergeData["Leaders"].ToString().Equals($"<ul> <li>Name: {group.Participants[0].NickName} {group.Participants[0].LastName}  Email: {group.Participants[0].Email} </li></ul>")),
+                       false)).Returns(77);
+
+            groupService.Setup(mocked => mocked.CreateGroup(It.IsAny<MpGroup>())).Returns(14);
+            this._objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>()))
+                .Returns(new ObjectAllAttributesDTO());
+
+            var groupResp = fixture.CreateGroup(group);
+
+            _groupService.VerifyAll();
+            Assert.IsNotNull(groupResp);
+        }
+
+        [Test]
+        public void ShouldCallRepositoryUpdateParticipant()
+        {
+            var participant = new GroupParticipantDTO()
+            {
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
+
+            groupService.Setup(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()));
+            fixture.UpdateGroupParticipant(participant);
+            groupService.Verify();
+
         }
     }
 }

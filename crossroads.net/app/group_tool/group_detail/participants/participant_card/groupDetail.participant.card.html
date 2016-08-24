@@ -1,31 +1,23 @@
 <div class='group-participant'>
-  <div class='row'>
-      <div class='col-md-3'>
-        <img class='img-responsive imgix-fluid group-participant-image' ng-src='{{groupDetailParticipantCard.participant.imageUrl}}' err-src='{{groupDetailParticipantCard.defaultProfileImageUrl}}'>
+  <img class='img-responsive imgix-fluid group-participant-image' ng-src='{{groupDetailParticipantCard.participant.imageUrl}}' err-src='{{groupDetailParticipantCard.defaultProfileImageUrl}}'>
+  <div class="group-participant-data">
+    <div>
+      <span class='group-participant-name'>
+        {{groupDetailParticipantCard.participant.displayName()}}
+      </span>
+      <span class='label label-standard label-sm push-half-left' ng-show='{{groupDetailParticipantCard.participant.isLeader()}}'>Leader</span>
+      <span class='label label-standard label-sm push-half-left' ng-show='{{groupDetailParticipantCard.participant.isApprentice()}}'>Apprentice</span>
+    </div>
+    <div>
+      <span class='group-participant-name'>
+        {{groupDetailParticipantCard.participant.email}}
+      </span>
+    </div>
+    <div class="push-half-top push-bottom">
+      <div ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit'>
+        <button type="button" class="btn btn-standard btn-sm" ng-click='groupDetailParticipantCard.invokeDeleteAction(groupDetailParticipantCard.participant)'>Remove</button>
+        <button type="button" class="btn btn-primary btn-sm" ng-click='groupDetailParticipantCard.invokeRoleAction(groupDetailParticipantCard.participant)'>Change Role</button>
       </div>
-      <div class='col-md-7'>
-        <div class='row'>
-          <div class='col-md-12'>
-            <span class='group-participant-name'>
-              {{groupDetailParticipantCard.participant.displayName()}}
-            </span>
-            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.isLeader()'> (Leader)</span>
-            <span class='group-participant-leader' ng-if='groupDetailParticipantCard.participant.isApprentice()'> (Apprentice)</span>
-            <br>
-          </div>
-        </div>
-        <div class='row'>
-          <div class='col-md-12'>
-            <span class='group-participant-name'>
-              {{groupDetailParticipantCard.participant.email}}
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class='col-md-2'>
-        <svg-icon icon='close'
-          ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit'
-          ng-click='groupDetailParticipantCard.invokeDeleteAction(groupDetailParticipantCard.participant)'/>
-      </div>
+    </div>
   </div>
 </div>

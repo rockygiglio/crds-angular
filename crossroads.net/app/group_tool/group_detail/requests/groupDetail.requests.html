@@ -1,69 +1,112 @@
-<preloader full-screen='false' ng-if="!groupDetailRequests.ready"> </preloader>
+<preloader full-screen='false' ng-if="!groupDetailRequests.ready && groupDetailRequests.listView()"> </preloader>
 
 <div ng-if='groupDetailRequests.listView() && groupDetailRequests.ready'>
-  <div class="table-responsive">
-    <table class="table group-requests-list">
-      <thead>
-        <th class='col-md-1'></th>
-        <th class='col-md-2'>Name</th>
-        <th class='col-md-2'>Request Type</th>
-        <th class='col-md-2'>Email Address</th>
-        <th class='col-md-2'>Request Date</th>
-        <th class='col-md-3'></th>
-      </thead>
-      <tbody>
-        <tr ng-repeat='inquiry in groupDetailRequests.inquired track by $index'>
-          <td>
-            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{inquiry.imageUrl}}' err-src='{{inquiry.defaultProfileImageUrl}}'>
-          </td>
-          <td>
-            {{inquiry.recipientName()}}
-          </td>
-          <td>
-            Requested to Join
-          </td>
-          <td>
-            {{inquiry.emailAddress}}
-          </td>
-          <td>
-            {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
-          </td>
-          <td>
-            <button type='button' class='btn btn-standard' ng-click="groupDetailRequests.deny(inquiry)">Deny</button>
-            <button type='button' class='btn btn-primary' ng-click="groupDetailRequests.approve(inquiry)">Approve</button>
-          </td>
-        </tr>
-        <tr ng-repeat='invite in groupDetailRequests.invited track by $index'>
-          <td>
-            <img class='img-responsive imgix-fluid requestor-image' ng-src='{{invite.imageUrl}}'>
-          </td>
-          <td>
-            {{invite.recipientName}}
-          </td>
-          <td>
-            Invite Sent
-          </td>
-          <td>
-            {{invite.emailAddress}}
-          </td>
-          <td>
-            {{invite.requestDate | date: 'MM/dd/yyyy'}}
-          </td>
-          <td>
-            &nbsp;
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Invite text and button for Mobile -->
+  <div class="hidden-sm hidden-md hidden-lg">
+    <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
+      <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
+      </div>
+    </div>
+
+    <p class='text-center'><button type='button' class='btn btn-primary btn-block-mobile' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
+
+    <h4 class="group-detail-title-mobile push-top soft-half-bottom">Requests</h4>
   </div>
-  <div class='row'>&nbsp;</div>
-  <div class='container-fluid'>
-    <div class='row'>
-      <div class='col-sm-12'>
-        <p class='text-center'><button type='button' class='btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
+
+  <!-- Requests Table -->
+  <div ng-if="groupDetailRequests.hasRequestsOrInvites()" class="push-bottom">
+    <!-- Header Row -->
+    <div class="group-request-header row hidden-xs push-top soft-half-bottom">
+      <div class="col-sm-10 col-md-9">
+        <div class="group-request-data row">
+          <div class="col-sm-3">
+            Name
+          </div>
+          <div class="col-sm-3">
+            Request Type
+          </div>
+          <div class="col-sm-3">
+            Email Address
+          </div>
+          <div class="col-sm-3">
+            Request Date
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inquiries -->
+    <div ng-repeat='inquiry in groupDetailRequests.inquired track by $index' class="group-request-row row soft-half-top soft-half-bottom">
+      <div class="col-sm-10 col-md-9">
+        <img class='img-responsive imgix-fluid group-request-image' ng-src='{{inquiry.imageUrl}}' err-src='{{inquiry.defaultProfileImageUrl}}'>
+        <div class="group-request-data row">
+          <div class="col-sm-3 ellipsis">
+            {{inquiry.recipientName()}}
+          </div>
+          <div class="col-sm-3 ellipsis">
+            Requested to Join
+          </div>
+          <div class="col-sm-3 ellipsis">
+            {{inquiry.emailAddress}}
+          </div>
+          <div class="col-sm-3 ellipsis">
+            {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-3">
+        <div class="row group-request-buttons">
+          <div class="col-xs-6 col-sm-12 col-md-6">
+            <button type='button' class='btn btn-standard btn-block push-quarter-bottom' ng-click="groupDetailRequests.deny(inquiry)">Deny</button>
+          </div>
+          <div class="col-xs-6 col-sm-12 col-md-6">
+            <button type='button' class='btn btn-primary btn-block push-quarter-bottom' ng-click="groupDetailRequests.approve(inquiry)">Approve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invites -->
+    <div ng-repeat='invite in groupDetailRequests.invited track by $index' class="group-request-row row soft-half-top soft-half-bottom">
+      <div class="col-sm-10 col-md-9">
+        <img class='img-responsive imgix-fluid group-request-image' ng-src='{{invite.imageUrl}}'>
+        <div class="group-request-data row">
+          <div class="col-sm-3 ellipsis">
+            {{invite.recipientName}}
+          </div>
+          <div class="col-sm-3 ellipsis">
+            Invite Sent
+          </div>
+          <div class="col-sm-3 ellipsis">
+            {{invite.emailAddress}}
+          </div>
+          <div class="col-sm-3 ellipsis">
+            {{invite.requestDate | date: 'MM/dd/yyyy'}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Invite text and button for Desktop -->
+  <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="hidden-xs row push-bottom push-top">
+    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+      <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
+    </div>
+  </div>
+
+  <div class="text-center sm-text-right">
+    <button type='button' class='hidden-xs btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button>
+    <a ui-sref="grouptool.mygroups" class="sm-pull-left mobile-push-half-top">
+      <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+        <use xlink:href="#arrow-circle-o-left"></use>
+      </svg>
+      Back to My Groups
+    </a>
+  </div>
+
 </div>
 
 <div class='container-fluid' ng-if='groupDetailRequests.approveView()'>
@@ -88,6 +131,7 @@
     email-template-text="groupToolDenyInquiryEmailTemplateText"
     cancel-action="groupDetailRequests.cancel(person)"
     submit-action="groupDetailRequests.submitDeny(person)"
+    email-message-required="true"
     processing="groupDetailRequests.processing"
     ></group-message>
 </div>

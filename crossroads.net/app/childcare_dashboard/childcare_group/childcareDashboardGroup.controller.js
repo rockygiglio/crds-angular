@@ -8,11 +8,14 @@ class ChildcareDashboardGroupController {
     this.modal = $modal;
     this.root = $rootScope;
     this.childcareService = ChildcareDashboardService;
+  }
+
+  $onInit() {
     if(this.isEventClosed()) {
-      this.message = $rootScope.MESSAGES.childcareEventClosed.content;
+      this.message = this.root.MESSAGES.childcareEventClosed.content;
     }
     if(!this.hasEligibleChildren()) {
-      this.message = $rootScope.MESSAGES.noEligibleChildren.content;
+      this.message = this.root.MESSAGES.noEligibleChildren.content;
     }
   }
 

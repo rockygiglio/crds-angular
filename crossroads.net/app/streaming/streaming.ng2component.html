@@ -1,7 +1,7 @@
-<div class="wrapper" stickyHeader>
-  <section class="navbar-section" >
-    <div class="container wow fadeIn">
-      <pageScroll href="#series" class="btn see-schedule">
+<div class="wrapper" id="wrapper" stickyHeader>
+  <section id="countdown" class="navbar-section" >
+    <div class="container animated fadeIn">
+      <pageScroll href="#schedule" class="btn see-schedule">
         See Schedule
         <svg viewBox="0 0 32 32" class="icon icon-arrow-down9">
           <use xlink:href="#arrow-down9"></use>
@@ -11,28 +11,14 @@
     </div>
   </section>
 
-  <section class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
     <div class="wow fadeInUp">
       <dynamic-content-ng2 title="streamingLandingIntro"></dynamic-content-ng2>
       <p *ngIf="inProgress" class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
     </div>
   </section>
 
-  <section class="current-series">
-    <figure class="container text-center wow fadeIn">
-      <dynamic-content-ng2 title="streamingLandingCurrentSeriesImage"></dynamic-content-ng2>
-      <figcaption>Current Series</figcaption>
-    </figure>
-
-    <main id="series" class="container">
-      <article class="wow fadeInUp">
-        <dynamic-content-ng2 title="streamingLandingCurrentSeries"></dynamic-content-ng2>
-      </article>
-      <aside id="schedule">
-        <schedule class="wow fadeInUp"></schedule>
-      </aside>
-    </main>
-  </section>
+  <current-series></current-series>
 
   <section class="past-weekends">
     <div class="container">
@@ -42,22 +28,7 @@
       </header>
 
       <div class="row">
-        <div *ngFor="let event of mostRecent; let i = index" >
-          <article class="crds-card wow fadeInUp" [attr.data-wow-delay]="event.wowDelay" *ngIf="event.series">
-            <figure>
-              <a class="sixteen-nine" href="/message/{{ event.id }}/{{ event.title | replaceNonAlphaNumeric }}">
-                <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="event.imageSrc" src="{{ event.image }}" title="{{ event.seriesTitle }}">
-              </a>
-              <figcaption>
-                <a href="/message/{{ event.id }}/{{ event.title | replaceNonAlphaNumeric }}" *ngIf="event.seriesTitle">{{ event.seriesTitle }}</a>
-              </figcaption>
-            </figure>
-            <section>
-              <h3>{{ event.title }}</h3>
-              <p>{{ event.description | htmlToPlainText | truncate: 38 }}</p>
-            </section>
-          </article>
-        </div>
+        <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
       <a href="/media" class="btn btn-primary btn-block-mobile view-all-mobile">View All Past Weekends</a>

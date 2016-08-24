@@ -163,6 +163,7 @@
         }
 
         formlyValidationMessages.addStringMessage('required', 'This field is required');
+        formlyValidationMessages.addStringMessage('requiredCategories', 'All fields where the category is checked are required');
         formlyValidationMessages.addTemplateOptionValueMessage('maxlength', 'maxlength', '', 'is the maximum length', 'Too long');
         formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
 
@@ -200,7 +201,7 @@
                     change: setModel
                 };
 
-                // initialrize the checkboxes check property
+                // initialize the checkboxes check property
                 $scope.$watch('model', function modelWatcher(newModelValue) {
                     var modelValue, valueProp;
                     if (Object.keys(newModelValue).length) {
@@ -211,8 +212,23 @@
                                 valueProp = to.valueProp || 'value';
                                 for (var index = 0; index < newOptionsValues.length; index++) {
                                     //$scope.multiCheckboxCombo.checked[index] = modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
-                                    $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { return item.value == newOptionsValues[index][valueProp] }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
+                                    // $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { 
+                                    //     return item.value == newOptionsValues[index][valueProp] 
+                                    // }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
+                                    var item = _.find(modelValue, (item) => { 
+                                        return item.value == newOptionsValues[index][valueProp] 
+                                    })
+
+                                    if (item != null || item != undefined){
+                                        $scope.multiCheckboxCombo.detail[index] = item.detail;
+                                        $scope.multiCheckboxCombo.checked[index] = true;
+                                    } else {
+                                        $scope.multiCheckboxCombo.detail[index] = '';
+                                        $scope.multiCheckboxCombo.checked[index] = false;
+                                    } 
                                 }
+
+
                             }
                         });
                     }
@@ -240,10 +256,10 @@
                         valid = detailValid && checkValid;
                         if (angular.isArray($scope.fc)){
                             angular.forEach($scope.fc, function(item, key) {
-                                item.$setValidity('required', valid)
+                                item.$setValidity('requiredCategories', valid)
                             }, this);
                         }else {
-                            $scope.fc.$setValidity('required', valid);
+                            $scope.fc.$setValidity('requiredCategories', valid);
                         }
                     }
                 }
