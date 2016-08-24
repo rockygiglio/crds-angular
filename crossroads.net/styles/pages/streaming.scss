@@ -235,6 +235,23 @@ streaming {
 
   .current-series {
 
+    .embeded {
+      display: none;
+    }
+
+    /* Medium devices (desktops, 992px and up) */
+    @media (min-width: $screen-md-min) {
+      .embeded {
+        display: inline-block;
+      }
+
+      .link {
+        display: none;
+      }
+    }
+
+
+
     figure {
       margin-top: 1em;
       margin-bottom: 1.75em;

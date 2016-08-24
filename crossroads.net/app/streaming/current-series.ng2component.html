@@ -14,10 +14,19 @@
             <a href="/search?q={{tag | replaceNonAlphaNumeric }}">{{tag}}</a>
           </li>
         </ul>
-        <p><a href={{trailer}} *ngIf="trailer" class="btn btn-primary">Watch Trailer</a></p>
+        <p>
+          <a class="btn btn-primary embeded" (click)="modal.open('lg')">Watch Trailer</a>
+          <a href="{{ trailer }}" class="btn btn-primary link">Watch Trailer</a>  
+        </p>
       </article>
       <aside id="schedule">
         <schedule class="wow fadeInUp"></schedule>
       </aside>
     </main>
   </section>
+
+  <modal #modal >
+    <modal-body>
+        <iframe title="{{ title }}" id="youtube-player" width="868" height="434"></iframe>
+    </modal-body>
+  </modal>
