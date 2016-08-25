@@ -19,7 +19,8 @@
       pledgeAmount: null,
       depositAmount: null,
       progressLabel: null,
-      applicationValid: false
+      applicationValid: false,
+      isScholarshipped: false
     };
 
     function activate() {
