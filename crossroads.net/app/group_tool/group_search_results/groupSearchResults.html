@@ -53,6 +53,10 @@
     <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
   </div>
 
+  <!--
+    DESKTOP ONLY results
+    WARNING!!! If you make a change here, apply it to the mobile results list below
+    -->
   <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
@@ -83,13 +87,25 @@
     </tr>
   </table>
 
+  <!--
+    MOBILE ONLY results
+    WARNING!!! If you make a change here, apply it to the desktop results list above
+    -->
   <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
     <div ng-repeat-start="group in groupSearchResults.results"
          class="group-result push-half-bottom soft-half-bottom"
          ng-click="group.expanded = true" ng-if="!group.expanded">
       <div class="row">
-        <strong class="col-xs-10">{{group.groupName}}</strong>
-        <div class="col-xs-2 pointer" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()">Map</div>
+        <strong class="col-xs-9">{{group.groupName}}</strong>
+
+        <div ng-if="groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+          <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
+          <span ng-if="!group.hasAddress()">Online</span>
+        </div>
+        <div ng-if="!groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+          <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" >Map</a>
+          <span ng-if="!group.hasAddress()">Online</span>
+        </div>
       </div>
       <div>{{group.categories.join(', ')}}</div>
       <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
