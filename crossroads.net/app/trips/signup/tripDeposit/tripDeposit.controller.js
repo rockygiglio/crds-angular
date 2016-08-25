@@ -65,11 +65,17 @@ class TripDepositController {
       this.dto.reset();
       this.state.go('home');
     });
-
-    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams) => {
+    
+    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState) => {
       if (toState && !/^tripdeposit.*/.test(toState.name)) {
         return;
       }
+      if (fromState.name !== 'tripsignup.application.page' 
+          && fromState.name !== 'tripdeposit.confirm'
+          && toState.name === 'tripdeposit' ) {
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
+        return;
+      }  
       this.dto.processing = false;
       if ((!this.dto.initialized || toState.name === 'tripdeposit') &&
           toState.name !== this.giveFlow.thankYou) {
@@ -81,7 +87,7 @@ class TripDepositController {
         this.signupService.pageId = 'thanks';
         this.dto.initialized = false;
         this.window.onbeforeunload = null;
-      }
+      } 
     });
 
     this.rootScope.$on('$stateChangeError', (event, toState, toParams) => {
@@ -133,12 +139,13 @@ class TripDepositController {
       /*jshint unused:false */
       application.$save((data) => {
         this.tripDeposit.applicationSaved = true;
-          _.each(this.signupService.familyMembers, (f) => {
-            if (f.contactId === Number(this.stateParams.contactId)) {
-              f.signedUp = true;
-              f.signedUpDate = new Date();
-            }
-          });
+        _.each(this.signupService.familyMembers, (f) => {
+          if (f.contactId === Number(this.stateParams.contactId)) {
+            f.signedUp = true;
+            f.signedUpDate = new Date();
+          }
+        });
+        this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);
       }, () => {
         this.dto.processing = false;
