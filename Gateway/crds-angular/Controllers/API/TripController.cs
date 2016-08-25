@@ -7,7 +7,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using MinistryPlatform.Translation.Repositories.Interfaces;
+using crds_angular.Util;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 
 namespace crds_angular.Controllers.API
@@ -42,6 +42,29 @@ namespace crds_angular.Controllers.API
                 }
                 
             });         
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/trip/scholarship/{campaignId}/{contactId}")]
+        public IHttpActionResult ContactHasScholarship(int contactId, int campaignId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var scholarshipped = _tripService.HasScholarship(contactId, campaignId);
+                    if (scholarshipped)
+                    {
+                        return Ok();
+                    }
+                    return InternalServerError();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Check for scholarship", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         [AcceptVerbs("GET")]
