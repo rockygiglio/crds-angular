@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions;
@@ -10,16 +11,24 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using Crossroads.Utilities.Interfaces;
+using log4net;
 
 namespace crds_angular.Controllers.API
 {
     public class GroupToolController : MPAuth
     {
-        private readonly Services.Interfaces.IGroupToolService _groupToolService;        
+        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly Services.Interfaces.IGroupToolService _groupToolService;
+        private readonly int _defaultGroupTypeId;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
-        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService)
+        public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
+            IConfigurationWrapper configurationWrapper)
         {
             _groupToolService = groupToolService;
+            _configurationWrapper = configurationWrapper;
+            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
         }
 
         [AcceptVerbs("POST")]
@@ -79,6 +88,35 @@ namespace crds_angular.Controllers.API
                 {
                     var apiError = new ApiErrorDto("GetInquires Failed", exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Ends a group and emails all participants to let them know
+        /// it is over
+        /// </summary>
+        /// <param name="groupId">The id of a group</param>
+        /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
+        /// <returns>Http Result</returns>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [HttpPost]
+        [Route("api/grouptool/{groupId:int}/endsmallgroup")]
+        public IHttpActionResult EndSmallGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not end group: " + groupId, e);
+                    return BadRequest();
                 }
             });
         }
@@ -211,6 +249,34 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Send an email message to all leaders of a Group
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
+        /// <param name="message">A Group Message DTO that holds the subject and body of the email</param>
+        [RequiresAuthorization]
+        [Route("api/grouptool/{groupId}/leadermessage")]
+        public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, GroupMessageDTO message)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SendAllGroupLeadersEmail(token, groupId, message);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return (IHttpActionResult)NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending a Leader email to groupID " + groupId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Send an email message to all members of a Group
         /// Requires the user to be a leader of the Group
         /// Will return a 404 if the user is not a Leader of the group
@@ -255,19 +321,52 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupTypeId, groupId);
-
-                    //Will return group if they are a group leader
+                    var group = _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
                     return Ok(group);
                 }
-                catch(NotGroupLeaderException)
+                catch (GroupNotFoundForParticipantException exception)
+                {
+                    var apiError = new ApiErrorDto("User is not in GroupId: " + groupId, exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (NotGroupLeaderException)
                 {
                     //Will return empty group if they are not a group leader
                     return Ok(new MyGroup());
                 }
                 catch (Exception exception)
                 {
-                    var apiError = new ApiErrorDto("Get if leader Failed", exception);
+                    var apiError = new ApiErrorDto("Error while verify Group Leader of GroupId: " + groupId, exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Create a group inquiry (typically to join a small group)
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group</param>
+        /// <param name="inquiry">The inquiry object submitted by a client.</param>
+        [AcceptVerbs("POST")]
+        [RequiresAuthorization]
+        [Route("api/grouptool/group/{groupId:int}/submitinquiry")]
+        [HttpPost]
+        public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.SubmitInquiry(token, groupId);
+                    return Ok();
+                }
+                catch (ExistingRequestException)
+                {
+                    return Conflict();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when creating inquiry for group {0}", groupId), ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

@@ -31,11 +31,6 @@ module.exports = {
     stripe: 'Stripe',
     moment: 'moment'
   },
-  noParse: [
-      /node_modules[\/]video\.js[\/]/,
-      /node_modules[\/]videojs-contrib-hls[\/]/,
-      /node_modules[\/]moment[\/]/
-  ],
   context: __dirname,
   output: {
     path: './assets',
@@ -58,6 +53,10 @@ module.exports = {
               include: [
                 path.resolve(__dirname, 'app'),
                 path.resolve(__dirname, 'node_modules/angular-stripe')
+              ],
+              exclude: [
+                /streamspotAnalytics\.js$/,
+                /videojs5-hlsjs-source-handler\.min\.js$/
               ],
               loader: 'ng-annotate!babel-loader'
             },
@@ -95,6 +94,11 @@ module.exports = {
               test: /\.ng2component\.html$/,
               loader: 'raw-loader'
             }
+    ],
+    noParse: [
+        path.join(__dirname, "node_modules", "video.js","dist","video.js"),
+        /videojs5-hlsjs-source-handler\.min\.js/,
+        path.join(__dirname, "node_modules", "videojs-chromecast","dist","videojs-chromecast.js")
     ]
   },
   plugins: [

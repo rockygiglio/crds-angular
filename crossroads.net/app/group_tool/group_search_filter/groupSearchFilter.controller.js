@@ -1,15 +1,22 @@
 
+import {SearchFilterValue} from './filter_impl/searchFilter';
+import AgeRangeFilter from './filter_impl/ageRange.filter'; 
+import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
+import LocationFilter from './filter_impl/location.filter'; 
+import GroupTypeFilter from './filter_impl/groupType.filter'; 
+
 export default class GroupSearchResultsController {
   /*@ngInject*/
   constructor(GroupService) {
     this.groupService = GroupService;
     this.ageRanges = [];
+    this.groupTypes = [];
     this.expanded = false;
-    this.currentFilters = {};
+    this.allFilters = [];
   }
 
   $onInit() {
-    this.loadAgeRanges();
+    this.initializeFilters();
   }
 
   $onChanges(allChanges) {
@@ -17,75 +24,75 @@ export default class GroupSearchResultsController {
     this.applyFilters();
   }
 
+  initializeFilters() {
+    this.allFilters = [
+      // TODO - When new filters are implemented, add them here - they will display in the order specified in this array
+      new AgeRangeFilter('Age Range', this.ageRanges),
+      new GroupTypeFilter('Group Type', this.groupTypes),
+      new KidsWelcomeFilter('Kids Welcome'),
+      new LocationFilter('Location')
+    ];
+
+    this.loadAgeRanges();
+    this.loadGroupTypes();
+  }
+
   applyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
-        // TODO When additional filters are added, call their functions here
-        return this.ageRangeFilter(r);
+        for (let i = 0; i < this.allFilters.length; i++) {
+          if(!this.allFilters[i].matches(r)) {
+            return false;
+          }
+        }
+        return true;
       })
     };
+
+    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
 
   clearFilters() {
-    // TODO When additional filters are added, call their clear functions here
-    this.clearAgeRangeFilter();
+    this.allFilters.forEach(function(f) {
+      f.clear();
+    }, this);
 
     this.applyFilters();
+  }
+
+  clearFilter(filter) {
+    filter.clear();
+    this.applyFilters();
+  }
+
+  getCurrentFilters() {
+    return this.allFilters.filter((f) => f.isActive());
+  }
+
+  hasFilters() {
+    return this.allFilters.find((f) => f.isActive()) !== undefined;
   }
 
   openFilters() {
     this.expanded = true;
   }
 
-  closeFilters() {
+  closeFilters(filterForm) {
+    // Reset all filters that are not in sync with the model. This handles the case 
+    // where someone changes filter values but does not click "Update Filters". 
+    filterForm.$rollbackViewValue();
+
     this.expanded = false;
-  }
-
-  hasFilters() {
-    return Object.keys(this.currentFilters).length > 0;
-  }
-
-  // TODO - This is probably not very efficient, might need to optimize with large result sets
-  ageRangeFilter(searchResult) {
-    delete this.currentFilters['Age Range'];
-    let selectedAgeRanges = this.ageRanges.filter((a) => {
-      return a.selected === true;
-    }).map((a) => {
-      return a.attributeId;
-    });
-
-    if(selectedAgeRanges.length === 0) {
-      return true;
-    }
-
-    this.currentFilters['Age Range'] = () => {
-      this.clearAgeRangeFilter();
-      this.applyFilters();
-    };
-
-    let filteredResults = searchResult.ageRange.filter((a) => {
-      return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
-    });
-
-    return filteredResults !== undefined && filteredResults.length > 0;
-  }
-
-  clearAgeRangeFilter() {
-    for(let i = 0; i < this.ageRanges.length; i++)
-    {
-      this.ageRanges[i].selected = false;
-    }
-    delete this.currentFilters['Age Range'];
   }
 
   loadAgeRanges() {
     this.groupService.getAgeRanges().then(
       (data) => {
-        this.ageRanges = data.attributes;
-
-        this.clearAgeRangeFilter();
+        this.ageRanges.push.apply(this.ageRanges, data.attributes.map((a) => {
+          return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
@@ -94,4 +101,18 @@ export default class GroupSearchResultsController {
       () => {
       });
   }
+
+  loadGroupTypes() {
+    this.groupService.getGroupGenderMixType().then(
+      (data) => {
+        this.groupTypes.push.apply(this.groupTypes, data.attributes.map((a) => {
+          return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
+  }  
 }

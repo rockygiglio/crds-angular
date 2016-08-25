@@ -48,7 +48,8 @@ namespace MinistryPlatform.Translation.Repositories
                         RegistrationStart = result.ToDate("Registration_Start"),
                         RegistrationDeposit = result.ToString("Registration_Deposit"),
                         AgeExceptions = exceptions,
-                        EventId = result.ToInt("Event_ID")
+                        EventId = result.ToInt("Event_ID"),
+                        ProgramId = result.ToInt("Program_ID")
                     };
                     campaigns.Add(campaign);
                 }

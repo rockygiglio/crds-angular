@@ -16,7 +16,7 @@ namespace crds_angular.test.Services
 
         private AddressService _fixture;
         private Mock<MPServices.IAddressRepository> _mpAddressServiceMock;
-        private Mock<IAddressProximityService> _addressProximityService;
+        private Mock<IAddressGeocodingService> _addressGeocodingService;
 
         [SetUp]
         public void SetUp()
@@ -24,9 +24,9 @@ namespace crds_angular.test.Services
             AutoMapperConfig.RegisterMappings();
 
             _mpAddressServiceMock = new Mock<MPServices.IAddressRepository>(MockBehavior.Strict);
-            _addressProximityService = new Mock<IAddressProximityService>(MockBehavior.Strict);
+            _addressGeocodingService = new Mock<IAddressGeocodingService>(MockBehavior.Strict);
 
-            _fixture = new AddressService(_mpAddressServiceMock.Object, _addressProximityService.Object);            
+            _fixture = new AddressService(_mpAddressServiceMock.Object, _addressGeocodingService.Object);            
         }
 
         [Test]
@@ -88,14 +88,14 @@ namespace crds_angular.test.Services
 
             var coords = new GeoCoordinate(39.15946159999999, -84.42336390000003);
             _mpAddressServiceMock.Setup(mocked => mocked.FindMatches(It.IsAny<MpAddress>())).Returns(addressResults);
-            _addressProximityService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(coords);
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(coords);
             _mpAddressServiceMock.Setup(mocked => mocked.Update(It.IsAny<MpAddress>())).Returns(67890);
 
             _fixture.FindOrCreateAddress(address, true);
 
             _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<MpAddress>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Update(It.Is<MpAddress>(a => a.Latitude == coords.Latitude && a.Longitude == coords.Longitude)), Times.Once);
-            _addressProximityService.Verify(mocked => mocked.GetGeoCoordinates(address));
+            _addressGeocodingService.Verify(mocked => mocked.GetGeoCoordinates(address));
             Assert.AreEqual(address.AddressID, 67890);
             Assert.AreEqual(address.Latitude, coords.Latitude);
             Assert.AreEqual(address.Longitude, coords.Longitude);
@@ -133,7 +133,7 @@ namespace crds_angular.test.Services
 
             _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<MpAddress>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Update(It.IsAny<MpAddress>()), Times.Never);
-            _addressProximityService.Verify(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>()), Times.Never());
+            _addressGeocodingService.Verify(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>()), Times.Never());
             Assert.AreEqual(address.AddressID, 12345);
         }
 
@@ -178,14 +178,14 @@ namespace crds_angular.test.Services
             var coords = new GeoCoordinate(39.15946159999999, -84.42336390000003);
 
             _mpAddressServiceMock.Setup(mocked => mocked.FindMatches(It.IsAny<MpAddress>())).Returns(addressResults);
-            _addressProximityService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(coords);
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(coords);
             _mpAddressServiceMock.Setup(mocked => mocked.Create(It.IsAny<MpAddress>())).Returns(12345);
 
             _fixture.FindOrCreateAddress(address, true);
 
             _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<MpAddress>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Create(It.Is<MpAddress>(a => a.Latitude == coords.Latitude && a.Longitude == coords.Longitude)), Times.Once);
-            _addressProximityService.Verify(mocked => mocked.GetGeoCoordinates(address));
+            _addressGeocodingService.Verify(mocked => mocked.GetGeoCoordinates(address));
 
             Assert.AreEqual(address.AddressID, 12345);
             Assert.AreEqual(address.Latitude, coords.Latitude);
@@ -213,7 +213,7 @@ namespace crds_angular.test.Services
 
             _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<MpAddress>()), Times.Once);
             _mpAddressServiceMock.Verify(x => x.Create(It.IsAny<MpAddress>()), Times.Once);
-            _addressProximityService.Verify(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>()), Times.Never);
+            _addressGeocodingService.Verify(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>()), Times.Never);
 
             Assert.AreEqual(address.AddressID, 12345);
         }

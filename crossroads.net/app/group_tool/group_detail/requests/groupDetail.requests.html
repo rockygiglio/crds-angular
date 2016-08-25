@@ -91,14 +91,20 @@
   </div>
 
   <!-- Invite text and button for Desktop -->
-  <div class="hidden-xs">
-    <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="row push-bottom push-top">
-      <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-        <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
-      </div>
+  <div ng-if="!groupDetailRequests.hasRequestsOrInvites()" class="hidden-xs row push-bottom push-top">
+    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+      <p dynamic-content="$root.MESSAGES.groupToolDetailRequestsHelpText.content | html" class="text-center"></p>
     </div>
+  </div>
 
-    <p class='text-center'><button type='button' class='btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
+  <div class="text-center sm-text-right">
+    <button type='button' class='hidden-xs btn btn-primary' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button>
+    <a ui-sref="grouptool.mygroups" class="sm-pull-left mobile-push-half-top">
+      <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+        <use xlink:href="#arrow-circle-o-left"></use>
+      </svg>
+      Back to My Groups
+    </a>
   </div>
 
 </div>
@@ -125,6 +131,7 @@
     email-template-text="groupToolDenyInquiryEmailTemplateText"
     cancel-action="groupDetailRequests.cancel(person)"
     submit-action="groupDetailRequests.submitDeny(person)"
+    email-message-required="true"
     processing="groupDetailRequests.processing"
     ></group-message>
 </div>

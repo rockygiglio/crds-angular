@@ -1,0 +1,14 @@
+<article class="crds-card wow fadeInUp" [attr.data-wow-delay]="content.delay" >
+  <figure>
+    <a class="sixteen-nine" href="{{ content.url }}">
+      <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="content.imageSrc" src="{{ content.image }}" title="{{ content.title }}">
+    </a>
+    <figcaption>
+      <a href="{{ content.url }}" *ngIf="content.title" title="{{ content.title }}">{{ content.title | truncate: 38 }}</a>
+    </figcaption>
+  </figure>
+  <section>
+    <h3 *ngIf="content.subtitle">{{ content.subtitle | truncate: 38 }}</h3>
+    <p>{{ content.description | htmlToPlainText }}</p>
+  </section>
+</article>

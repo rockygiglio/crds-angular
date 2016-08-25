@@ -6,7 +6,6 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using FsCheck;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using Moq;
@@ -63,100 +62,76 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldSendEmailOnlyToVolunteer()
         {
-            Prop.ForAll<string, int>((token, sendMailResult) =>
-            {
-                const int templateId = 123456789;
-                const int fromContactId = 0987;                
-                var fromContact = TestHelpers.MyContact(fromContactId);
-                var registration = TestHelpers.RegistrationNoSpouse();
-                var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
-                var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
+            const int templateId = 123456789;
+            const int fromContactId = 0987;                
+            var fromContact = TestHelpers.MyContact(fromContactId);
+            var registration = TestHelpers.RegistrationNoSpouse();
+            var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
+            var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
 
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
-                _contactService.Setup(m => m.GetContactById(fromContactId)).Returns(fromContact);
-                _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
-                                                                              fromContactId,
-                                                                              fromContact.Email_Address,
-                                                                              fromContact.Contact_ID,
-                                                                              fromContact.Email_Address,
-                                                                              registration.Self.ContactId,
-                                                                              registration.Self.EmailAddress,
-                                                                              It.IsAny<Dictionary<string, object>>())).Returns(communication);
-                _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(sendMailResult);
-                var success = _fixture.SendMail(registration);
-                _commnuicationService.Verify();
-                if (sendMailResult > 0)
-                {
-                    Assert.IsTrue(success);
-                }
-                else
-                {
-                    Assert.IsFalse(success);
-                }                
-            }).QuickCheckThrowOnFailure();
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
+            _contactService.Setup(m => m.GetContactById(fromContactId)).Returns(fromContact);
+            _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
+                                                                            fromContactId,
+                                                                            fromContact.Email_Address,
+                                                                            fromContact.Contact_ID,
+                                                                            fromContact.Email_Address,
+                                                                            registration.Self.ContactId,
+                                                                            registration.Self.EmailAddress,
+                                                                            It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
+            var success = _fixture.SendMail(registration);
+            _commnuicationService.Verify();           
+            Assert.IsTrue(success);                            
         }
 
         [Test]
         public void ShouldSendEmailToVolunteerAndSpouse()
         {
-            Prop.ForAll<string, int>((token, sendMailResult) =>
-            {
-                const int templateId = 123456789;
-                const int spouseTemplateId = 98765432;
 
-                const int fromContactId = 0987;
-                var fromContact = TestHelpers.MyContact(fromContactId);
-                var registration = TestHelpers.RegistrationWithSpouse();
-                var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
-                var spouseFromRegistration = TestHelpers.ContactFromRegistrant(registration.Spouse);
+            const int templateId = 123456789;
+            const int spouseTemplateId = 98765432;
 
-                var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
-                var spouseCommunication = TestHelpers.Communication(fromContact, spouseFromRegistration, spouseTemplateId);
+            const int fromContactId = 0987;
+            var fromContact = TestHelpers.MyContact(fromContactId);
+            var registration = TestHelpers.RegistrationWithSpouse();
+            var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
+            var spouseFromRegistration = TestHelpers.ContactFromRegistrant(registration.Spouse);
 
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
+            var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
+            var spouseCommunication = TestHelpers.Communication(fromContact, spouseFromRegistration, spouseTemplateId);
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailTemplate")).Returns(templateId);
                 
 
-                _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
-                _contactService.Setup(m => m.GetContactById(fromContactId)).Returns(fromContact);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailFromContactId")).Returns(fromContactId);
+            _contactService.Setup(m => m.GetContactById(fromContactId)).Returns(fromContact);
 
-                _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
-                                                                              fromContactId,
-                                                                              fromContact.Email_Address,
-                                                                              fromContact.Contact_ID,
-                                                                              fromContact.Email_Address,
-                                                                              registration.Self.ContactId,
-                                                                              registration.Self.EmailAddress,
-                                                                              It.IsAny<Dictionary<string, object>>())).Returns(communication);
-
-                if (sendMailResult > 0)
-                {
-                    _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailSpouseTemplate")).Returns(spouseTemplateId);
-                    _commnuicationService.Setup(m => m.GetTemplateAsCommunication(spouseTemplateId,
-                                                                                  fromContactId,
-                                                                                  fromContact.Email_Address,
-                                                                                  fromContact.Contact_ID,
-                                                                                  fromContact.Email_Address,
-                                                                                  registration.Spouse.ContactId,
-                                                                                  registration.Spouse.EmailAddress,
-                                                                                  It.IsAny<Dictionary<string, object>>())).Returns(spouseCommunication);
-                    _commnuicationService.Setup(m => m.SendMessage(spouseCommunication, false)).Returns(1);
-                }
-                _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(sendMailResult);
+            _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
+                                                                            fromContactId,
+                                                                            fromContact.Email_Address,
+                                                                            fromContact.Contact_ID,
+                                                                            fromContact.Email_Address,
+                                                                            registration.Self.ContactId,
+                                                                            registration.Self.EmailAddress,
+                                                                            It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoVolunteerEmailSpouseTemplate")).Returns(spouseTemplateId);
+            _commnuicationService.Setup(m => m.GetTemplateAsCommunication(spouseTemplateId,
+                                                                            fromContactId,
+                                                                            fromContact.Email_Address,
+                                                                            fromContact.Contact_ID,
+                                                                            fromContact.Email_Address,
+                                                                            registration.Spouse.ContactId,
+                                                                            registration.Spouse.EmailAddress,
+                                                                            It.IsAny<Dictionary<string, object>>())).Returns(spouseCommunication);
+            _commnuicationService.Setup(m => m.SendMessage(spouseCommunication, false)).Returns(1);            
+            _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
                
                 
-                var success = _fixture.SendMail(registration);                
-                _configurationWrapper.VerifyAll();
-                _commnuicationService.VerifyAll();
-                if (sendMailResult > 0)
-                {
-                    Assert.IsTrue(success);
-                }
-                else
-                {
-                    Assert.IsFalse(success);
-                }
-            }).QuickCheckThrowOnFailure();
+            var success = _fixture.SendMail(registration);                
+            _configurationWrapper.VerifyAll();           
+            Assert.IsTrue(success);            
         }
 
         [Test]

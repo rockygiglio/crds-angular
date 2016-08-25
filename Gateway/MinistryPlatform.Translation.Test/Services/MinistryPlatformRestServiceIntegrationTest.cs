@@ -98,14 +98,28 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             Console.WriteLine("TestEndDateGroup");
             var groupId = 172501;
+            var reasonEnded = 1;
             var fields = new Dictionary<string, object>
             {
                 {"Group_ID", groupId },
-                {"End_Date", DateTime.Today}
+                {"End_Date", DateTime.Today},
+                {"Reason_Ended", reasonEnded}
             };
             _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Groups", groupId, fields);
         }
 
+        [Test]
+        public void TestTripParticipantProcedure()
+        {
+            Console.WriteLine("TestTripParticipantProcedure");
+            var fields = new Dictionary<string, object>
+            {
+                {"@PledgeCampaignID", 10000000},
+                {"@ContactID", 2186211 }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).PostStoredProc("api_crds_Add_As_TripParticipant", fields);
+            Console.WriteLine("Results\t" + results.ToString());
+        }
         [Test]
         public void TestSearchAllPaymentTypes()
         {
@@ -139,6 +153,22 @@ namespace MinistryPlatform.Translation.Test.Services
             foreach (var p in results)
             {
                 Console.WriteLine("Payment_Type\t{0}", p);
+            }
+        }
+
+        [Test]
+        public void TestSearchPledgesByContactAndCampaign()
+        {
+            Console.WriteLine("TestSearchPledgesByContactAndCampaign");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=2186211 AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=10000000 AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
+                "Pledges.Pledge_ID,Donor_ID_Table.Donor_ID,Pledge_Campaign_ID_Table.Pledge_Campaign_ID,Pledge_Campaign_ID_Table.Campaign_Name,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type,Pledge_Campaign_ID_Table.Start_Date,Pledge_Campaign_ID_Table.End_Date,Pledge_Status_ID_Table.Pledge_Status_ID,Pledge_Status_ID_Table.Pledge_Status,Pledges.Total_Pledge");
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("CampaignName:\t{0}", p.CampaignName);
+                Console.WriteLine("DonorId:\t{0}", p.DonorId);
+                Console.WriteLine("PledgeId:\t{0}", p.PledgeId);
+                Console.WriteLine("PledgeDonations:\t{0}", p.PledgeDonations);
             }
         }
 

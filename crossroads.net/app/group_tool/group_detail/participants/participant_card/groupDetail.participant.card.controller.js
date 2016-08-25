@@ -13,7 +13,6 @@ export default class GroupDetailParticipantCardController {
   }
 
   invokeRoleAction(participant) {
-    console.debug("Invoke Role Action");
     this.roleAction({participant: participant});
   }
 }
