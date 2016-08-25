@@ -20,6 +20,7 @@ export default class CreateGroupService {
         this.resolved = false;
         this.imageService = ImageService;
         this.primaryContact = null;
+        this.editGroupCongregationId = null;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -45,6 +46,8 @@ export default class CreateGroupService {
         this.originalAttributeTypes = null;
         this.originalSingleAttributes = null;
         this.primaryContact = null;
+        this.editGroupCongregationId = null;
+        this.primaryContactId = null;
     }
 
     setEditModel(groupData, profileData) {
@@ -541,6 +544,8 @@ export default class CreateGroupService {
         this.model.group.groupDescription = smallGroup.groupDescription;
         this.model.group.startDate = moment(smallGroup.startDate).format('MM/DD/YYYY');
         this.model.group.participants = _.map(smallGroup.Participants, (data) => { return new Participant(data) });
+        this.editGroupCongregationId = smallGroup.congregationId;
+        this.primaryContactId = smallGroup.contactId;
     }
 
 
@@ -626,7 +631,10 @@ export default class CreateGroupService {
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.congregationId = this.model.profile.congregationId;
+        
+        smallGroup.congregationId = (this.editGroupCongregationId !== null && this.primaryContactId === parseInt(this.session.exists('userId'))) 
+        ? this.model.profile.congregationId : this.editGroupCongregationId;
+
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
         smallGroup.groupName = this.model.group.groupName;
