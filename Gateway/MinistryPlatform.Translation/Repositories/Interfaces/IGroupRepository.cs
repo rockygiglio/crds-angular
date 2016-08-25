@@ -61,6 +61,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void CreateGroupInquiry(MpInquiry inquiry);
         MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
 
-        bool ParticipantGroupHasStudents(string token, int groupParticipantId);
+        bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId);
     }
 }

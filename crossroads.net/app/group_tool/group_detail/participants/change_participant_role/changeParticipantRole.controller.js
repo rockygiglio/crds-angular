@@ -2,7 +2,7 @@ import CONSTANTS from '../../../../constants';
 
 export default class ChangeParticipantRoleController {
   constructor(GroupService, $anchorScroll, $rootScope, GroupDetailService) {
-    this.groupService = GroupService;
+    this.groupService = GroupService; 
     this.groupRoles = CONSTANTS.GROUP.ROLES;
     this.processing = false;
     this.anchorScroll = $anchorScroll;

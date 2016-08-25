@@ -52,7 +52,7 @@ namespace crds_angular.Services
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
-        private readonly int _GroupRoleLeader;
+        private readonly int _groupRoleLeader;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -94,7 +94,7 @@ namespace crds_angular.Services
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
-            _GroupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -681,7 +681,7 @@ namespace crds_angular.Services
 
                 if (group.MinorAgeGroupsAdded)
                 {
-                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
+                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _groupRoleLeader).ToList();
                     _mpGroupService.SendNewStudentMinistryGroupAlertEmail(leaders);
                 }
             }
@@ -697,13 +697,24 @@ namespace crds_angular.Services
 
         public void UpdateGroupParticipantRole(string token, GroupParticipantDTO participant)
         {
-            var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
-            List<MpGroupParticipant> part = new List<MpGroupParticipant>();
-            part.Add(mpParticipant);
-            _mpGroupService.UpdateGroupParticipant(part);
-            if (participant.GroupRoleId == _GroupRoleLeader && _mpGroupService.ParticipantGroupHasStudents(token, mpParticipant.GroupParticipantId));
+            try
             {
-                _mpGroupService.SendNewStudentMinistryGroupAlertEmail(part);
+                var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
+                List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+                part.Add(mpParticipant);
+                _mpGroupService.UpdateGroupParticipant(part);
+                if (participant.GroupRoleId == _groupRoleLeader)
+                {
+                    if (_mpGroupService.ParticipantGroupHasStudents(token, mpParticipant.ParticipantId, mpParticipant.GroupParticipantId))
+                    {
+                        _mpGroupService.SendNewStudentMinistryGroupAlertEmail(part);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not update group participant {0}", participant.ParticipantId);
+                _logger.Error(message, e);
             }
         }
 
