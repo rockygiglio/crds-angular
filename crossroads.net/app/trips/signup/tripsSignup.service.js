@@ -3,9 +3,9 @@
 
   module.exports = TripsSignupService;
 
-  TripsSignupService.$inject = ['$resource', '$location', '$log'];
+  TripsSignupService.$inject = ['$resource', '$location', '$log', '$stateParams'];
 
-  function TripsSignupService($resource, $location, $log) {
+  function TripsSignupService($resource, $location, $log, $stateParams) {
     var signupService = {
       activate: activate,
       pages: [],
@@ -20,7 +20,8 @@
       depositAmount: null,
       progressLabel: null,
       applicationValid: false,
-      isScholarshipped: false
+      isScholarshipped: false,
+      saveApplication: saveApplication
     };
 
     function activate() {
@@ -138,6 +139,31 @@
         pastAbuseHistory: null,
         validPassport: null
       };
+    }
+
+    function saveApplication(success, error) {
+      var application = new signupService.TripApplication();
+      application.contactId = signupService.person.contactId;
+      application.pledgeCampaignId = signupService.campaign.id;
+      application.pageTwo = signupService.page2;
+      application.pageThree = signupService.page3;
+      application.pageFour = signupService.page4;
+      application.pageFive = signupService.page5;
+      application.pageSix = signupService.page6;
+      application.inviteGUID = $stateParams.invite;
+
+      /*jshint unused:false */
+      application.$save((data) => {
+          _.each(signupService.familyMembers, (f) => {
+            if (f.contactId === Number($stateParams.contactId)) {
+              f.signedUp = true;
+              f.signedUpDate = new Date();
+            }
+          });
+          success();
+        }, () => {
+        error();
+      });
     }
 
     return signupService;

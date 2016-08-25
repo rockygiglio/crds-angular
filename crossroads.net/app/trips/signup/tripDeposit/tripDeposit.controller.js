@@ -115,30 +115,13 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
-  saveApplication(shouldSubmitBank = "") {
+  saveApplication(shouldSubmitBank = '') {
     this.dto.processing = true;
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
     } else {
-      var application = new this.signupService.TripApplication();
-      application.contactId = this.signupService.person.contactId;
-      application.pledgeCampaignId = this.signupService.campaign.id;
-      application.pageTwo = this.signupService.page2;
-      application.pageThree = this.signupService.page3;
-      application.pageFour = this.signupService.page4;
-      application.pageFive = this.signupService.page5;
-      application.pageSix = this.signupService.page6;
-      application.inviteGUID = this.stateParams.invite;
-
-      /*jshint unused:false */
-      application.$save((data) => {
+      this.signupService.saveApplication(() => {
         this.tripDeposit.applicationSaved = true;
-          _.each(this.signupService.familyMembers, (f) => {
-            if (f.contactId === Number(this.stateParams.contactId)) {
-              f.signedUp = true;
-              f.signedUpDate = new Date();
-            }
-          });
         this.saveDeposit(shouldSubmitBank);
       }, () => {
         this.dto.processing = false;

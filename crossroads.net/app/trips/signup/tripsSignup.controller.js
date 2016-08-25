@@ -224,9 +224,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       }
       if (!TripsSignupService.isScholarshipped) {
         $state.go('tripdeposit',
-                      {campaignId: vm.signupService.campaign.id, contactId: $stateParams.contactId});
+                      { campaignId: vm.signupService.campaign.id,
+                        contactId: $stateParams.contactId });
       } else {
-        $state.go('tripsignup.application.thankyou');
+        vm.signupService.saveApplication(() => {
+          $state.go('tripsignup.application.thankyou');
+        }, () => {
+          saveError();
+        });
       }
     }
 
