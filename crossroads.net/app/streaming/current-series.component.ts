@@ -41,7 +41,7 @@ export class CurrentSeriesComponent {
   ngOnInit() {
     this.cmsDataService.getCurrentSeries().subscribe((response) => {
       this.parseData(response);
-      if (this.response == undefined) {
+      if (this.response === undefined) {
         this.cmsDataService.getLastSeries().subscribe((response) => {
           this.parseData(response);
         })
