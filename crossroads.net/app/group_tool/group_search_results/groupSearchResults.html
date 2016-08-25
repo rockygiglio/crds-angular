@@ -33,7 +33,7 @@
                 loading-text='{{!groupSearchResults.searchedWithLocation ? "Saving..." : "Updating..."}}'
                 loading='groupSearchResults.processing'
                 loading-class='disabled'
-                input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+                input-classes='btn btn-primary'></loading-button>
               <button type="button" class="btn btn-standard" ng-click="groupSearchResults.hideLocationForm(groupLocationForm)">Cancel</button>
             </div>
             <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
