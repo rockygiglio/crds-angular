@@ -9,24 +9,21 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 
 namespace crds_angular.Controllers.API
 {
     public class TripController : MPAuth
     {
         private readonly ITripService _tripService;
-        private readonly IPersonService _personService;
 
         public TripController(ITripService tripService, IPersonService personService)
         {
             _tripService = tripService;
-            _personService = personService;
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (List<FamilyMemberTripDto>))]
-        [System.Web.Http.Route("api/trip/{pledgeCampaignId}/family-members")]
+        [Route("api/trip/{pledgeCampaignId}/family-members")]
         public IHttpActionResult GetFamilyWithTripInfo(int pledgeCampaignId)
         {
             return Authorized(token =>
@@ -45,8 +42,8 @@ namespace crds_angular.Controllers.API
             });         
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.Route("api/trip/scholarship/{campaignId}/{contactId}")]
+        [AcceptVerbs("GET")]
+        [Route("api/trip/scholarship/{campaignId}/{contactId}")]
         public IHttpActionResult ContactHasScholarship(int contactId, int campaignId)
         {
             return Authorized(token =>
@@ -68,9 +65,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripFormResponseDto))]
-        [System.Web.Http.Route("api/trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
+        [Route("api/trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
         public IHttpActionResult TripFormResponses(int selectionId, int selectionCount, int recordId)
         {
             return Authorized(token =>
@@ -88,9 +85,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripCampaignDto))]
-        [System.Web.Http.Route("api/trip/campaign/{campaignId}")]
+        [Route("api/trip/campaign/{campaignId}")]
         public IHttpActionResult GetCampaigns(int campaignId)
         {
             return Authorized(token =>
@@ -108,8 +105,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.Route("api/trip/generate-private-invite")]
+        [AcceptVerbs("POST")]
+        [Route("api/trip/generate-private-invite")]
         public IHttpActionResult GeneratePrivateInvite([FromBody] PrivateInviteDto dto)
         {
             if (!ModelState.IsValid)
@@ -134,9 +131,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
-        [System.Web.Http.Route("api/trip/search/{query?}")]
+        [Route("api/trip/search/{query?}")]
         public IHttpActionResult Search(string query)
         {
             try
@@ -151,9 +148,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
-        [System.Web.Http.Route("api/trip/participant/{tripParticipantId}")]
+        [Route("api/trip/participant/{tripParticipantId}")]
         public IHttpActionResult TripParticipant(string tripParticipantId)
         {
             try
@@ -170,9 +167,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (MyTripsDto))]
-        [System.Web.Http.Route("api/trip/mytrips")]
+        [Route("api/trip/mytrips")]
         public IHttpActionResult MyTrips()
         {
             return Authorized(token =>
@@ -190,9 +187,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         [ResponseType(typeof (ValidatePrivateInviteDto))]
-        [System.Web.Http.Route("api/trip/validate-private-invite/{pledgeCampaignId}/{guid}")]
+        [Route("api/trip/validate-private-invite/{pledgeCampaignId}/{guid}")]
         public IHttpActionResult ValidatePrivateInvite(int pledgeCampaignId, string guid)
         {
             return Authorized(token =>
