@@ -17,6 +17,7 @@ using RestSharp;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
 using MinistryPlatform.Translation.Models;
+using RestSharp.Authenticators;
 
 namespace crds_angular.Services
 {

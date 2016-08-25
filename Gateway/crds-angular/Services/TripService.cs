@@ -384,6 +384,9 @@ namespace crds_angular.Services
             {
                 throw new Exception("Unable to add as a participant on the trip");
             }
+            var pledge = _mpPledgeService.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId);
+            tripParticipantPledgeInfo.CampaignName = pledge.CampaignName;
+            tripParticipantPledgeInfo.DonorId = pledge.DonorId;
             return tripParticipantPledgeInfo;
         }
 
