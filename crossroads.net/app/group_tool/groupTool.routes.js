@@ -206,5 +206,16 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.resources', {
+      parent: 'noSideBar',
+      url: '/groups/resources',
+      template: '<group-resources></group-resources>',
+      data: {
+        meta: {
+          title: 'Groups Resources',
+          description: ''
+        }
+      }
+    })
   ;
 }
