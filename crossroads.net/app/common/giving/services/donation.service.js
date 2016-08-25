@@ -224,6 +224,7 @@
            donationService.donate(pgram, GiveTransferService.campaign);
          }, PaymentService.stripeErrorHandler);
       } else {
+        GiveTransferService.processing = false;
         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       }
 
@@ -289,6 +290,7 @@
             donationService.createDonorAndDonate(programsInput);
           });
       } else {
+        GiveTransferService.processing = false;
         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       }
     }
@@ -306,6 +308,7 @@
       GiveTransferService.bankinfoSubmitted = true;
 
       if (GiveTransferService.amount === '') {
+        GiveTransferService.processing = false;
         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       } else {
         if (GiveTransferService.view === 'cc') {
