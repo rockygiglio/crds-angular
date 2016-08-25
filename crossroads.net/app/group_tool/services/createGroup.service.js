@@ -47,6 +47,7 @@ export default class CreateGroupService {
         this.originalSingleAttributes = null;
         this.primaryContact = null;
         this.editGroupCongregationId = null;
+        this.primaryContactId = null;
     }
 
     setEditModel(groupData, profileData) {
@@ -544,6 +545,7 @@ export default class CreateGroupService {
         this.model.group.startDate = moment(smallGroup.startDate).format('MM/DD/YYYY');
         this.model.group.participants = _.map(smallGroup.Participants, (data) => { return new Participant(data) });
         this.editGroupCongregationId = smallGroup.congregationId;
+        this.primaryContactId = smallGroup.contactId;
     }
 
 
@@ -629,10 +631,10 @@ export default class CreateGroupService {
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
-        debugger;
+        
+        smallGroup.congregationId = (this.editGroupCongregationId !== null && this.primaryContactId === parseInt(this.session.exists('userId'))) 
+        ? this.model.profile.congregationId : this.editGroupCongregationId;
 
-        smallGroup.congregationId = (this.editGroupCongregationId != null || this.editGroupCongregationId != undefined) ?
-            this.editGroupCongregationId : this.model.profile.congregationId;
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
         smallGroup.groupName = this.model.group.groupName;
