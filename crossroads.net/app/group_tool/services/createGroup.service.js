@@ -632,8 +632,15 @@ export default class CreateGroupService {
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
         
-        smallGroup.congregationId = (this.editGroupCongregationId !== null && this.primaryContactId === parseInt(this.session.exists('userId'))) 
-        ? this.model.profile.congregationId : this.editGroupCongregationId;
+        if(this.editGroupCongregationId == null )
+        {
+            smallGroup.congregationId = this.model.profile.congregationId;
+        }
+        else
+        {
+            smallGroup.congregationId = (this.primaryContactId === parseInt(this.session.exists('userId'))) 
+            ? this.model.profile.congregationId : this.editGroupCongregationId;
+        }
 
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
