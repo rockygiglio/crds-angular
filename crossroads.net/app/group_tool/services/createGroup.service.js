@@ -77,7 +77,7 @@ export default class CreateGroupService {
                 startDate: moment().format("MM/DD/YYYY"),
                 meeting: {
                     time: "1983-07-16T21:00:00.000Z"
-                }
+                },
             };
         }
         else {
@@ -86,7 +86,7 @@ export default class CreateGroupService {
             }
             this.model.startDate = moment().format("MM/DD/YYYY");
         }
-
+        this.model.group.availableOnline = null;
         this.model.specificDay = true;
     }
 
@@ -545,7 +545,7 @@ export default class CreateGroupService {
 
 
     mapFromSmallGroupSingleAttributes(smallGroup) {
-        if (smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute != null &&
+        if (smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== null &&
             smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== undefined) {
 
             this.model.group.typeId = smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId
@@ -632,7 +632,7 @@ export default class CreateGroupService {
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-        if (this.model.group.participants == null || this.model.group.participants == undefined) {
+        if (this.model.group.participants === null || this.model.group.participants === undefined) {
             smallGroup.participants = [new Participant({
                 groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
                 , nickName: this.model.profile.nickName
