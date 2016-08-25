@@ -39,6 +39,21 @@
           </div>
         </div>
 
+        <div class='row'>
+          <div class='col-md-12'>
+            <div class='form-group' ng-class='{"has-error": (invitationForm.$submitted || invitationForm.customMessage.$dirty) && invitationForm.customMessage.$invalid}'>
+              <label for='customMessage' class='control-label'>Your Custom Message</label>
+              <textarea type='text' rows='4' class='form-control' name='customMessage' ng-model='groupDetailInvite.invite.customMessage' ng-model-options='{ updateOn: "default blur", debounce: { "default": 500, "blur": 0 } }'></textarea>
+              <ng-messages for="invitationForm.customMessage.$error" ng-show="(invitationForm.$submitted || invitationForm.customMessage.$dirty) && invitationForm.customMessage.$invalid">
+                <ng-messages-include src="on-blur-messages"></ng-messages-include>
+              </ng-messages>
+              <ng-messages for="invitationForm.customMessage.$error" ng-if="(invitationForm.$submitted || invitationForm.customMessage.$dirty) && invitationForm.customMessage.$invalid">
+                <ng-messages-include src="on-submit-messages"></ng-messages-include>
+              </ng-messages>
+            </div>
+          </div>
+        </div>
+
         <div class='row'>&nbsp;</div>
 
         <div class='text-center sm-text-right'>
