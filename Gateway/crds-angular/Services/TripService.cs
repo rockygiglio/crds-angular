@@ -410,9 +410,9 @@ namespace crds_angular.Services
         {
             var campaign = _campaignService.GetPledgeCampaign(campaignId);
             var distributions = _donationService.GetMyTripDistributions(contactId);
-            var scholarshipDolars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
+            var scholarshipDollars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
             var pledgeTotal = distributions.FirstOrDefault(d => d.EventId == campaign.EventId)?.TotalPledge;
-            return scholarshipDolars == pledgeTotal;
+            return scholarshipDollars == pledgeTotal;
         }
 
         public int GeneratePrivateInvite(PrivateInviteDto dto, string token)

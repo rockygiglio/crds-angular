@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using crds_angular.Util;
-using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 
 namespace crds_angular.Controllers.API
 {
     public class TripController : MPAuth
     {
         private readonly ITripService _tripService;
-        private readonly IPersonService _personService;
 
         public TripController(ITripService tripService, IPersonService personService)
         {
             _tripService = tripService;
-            _personService = personService;
         }
 
         [AcceptVerbs("GET")]
@@ -57,7 +55,7 @@ namespace crds_angular.Controllers.API
                     {
                         return Ok();
                     }
-                    return InternalServerError();
+                    return new StatusCodeResult(HttpStatusCode.ExpectationFailed, this);
                 }
                 catch (Exception ex)
                 {

@@ -137,7 +137,7 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(m => m.GetMyTripDistributions(It.IsAny<int>())).Returns(MockTripDonationsResponse());
             _eventParticipantService.Setup(m => m.TripParticipants(It.IsAny<string>())).Returns(mockTripParticipants());
-            _pledgeService.Setup(m => m.GetPledgeByCampaignAndDonor(It.IsAny<int>(), It.IsAny<int>())).Returns(mockPledgeCampaign());
+            _pledgeService.Setup(m => m.GetPledgeByCampaignAndDonor(It.IsAny<int>(), It.IsAny<int>())).Returns(mockPledge());
             var myTrips = _fixture.GetMyTrips(token);
 
             _serveService.VerifyAll();
@@ -158,7 +158,7 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(m => m.GetMyTripDistributions(It.IsAny<int>())).Returns(MockFundingPastTripDonationsResponse());
             _eventParticipantService.Setup(m => m.TripParticipants(It.IsAny<string>())).Returns(mockTripParticipants());
-            _pledgeService.Setup(m => m.GetPledgeByCampaignAndDonor(It.IsAny<int>(), It.IsAny<int>())).Returns(mockPledgeCampaign());
+            _pledgeService.Setup(m => m.GetPledgeByCampaignAndDonor(It.IsAny<int>(), It.IsAny<int>())).Returns(mockPledge());
             var myTrips = _fixture.GetMyTrips(token);
 
             Assert.IsNotNull(myTrips);
@@ -171,7 +171,6 @@ namespace crds_angular.test.Services
             const int contactId = 3123;
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
-
 
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
             _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(true);
@@ -188,7 +187,6 @@ namespace crds_angular.test.Services
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
 
-
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
             _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(false);
             Assert.Throws<Exception>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
@@ -197,7 +195,33 @@ namespace crds_angular.test.Services
             _tripRepository.VerifyAll();
         }
 
-        private MpPledge mockPledgeCampaign()
+        [Test]
+        public void ShouldNotHaveScholarship()
+        {
+            const int contactId = 1234;
+            const int pledgeCampaignId = 9876;
+
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId)).Returns(mockPledgeCampaign());
+            _donationService.Setup(m => m.GetMyTripDistributions(contactId)).Returns(MockTripDonationsResponse());
+
+            var result = _fixture.HasScholarship(contactId, pledgeCampaignId);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void ShouldHaveScholarship()
+        {
+            const int contactId = 1234;
+            const int pledgeCampaignId = 9876;
+
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId)).Returns(mockPledgeCampaign());
+            _donationService.Setup(m => m.GetMyTripDistributions(contactId)).Returns(MockTripScholarshipDonationsResponse());
+
+            var result = _fixture.HasScholarship(contactId, pledgeCampaignId);
+            Assert.IsTrue(result);
+        }
+
+        private MpPledge mockPledge()
         {
             return new MpPledge
             {
@@ -213,6 +237,14 @@ namespace crds_angular.test.Services
                 PledgeStatus = "active",
                 PledgeStatusId = 1,
                 PledgeTotal = 100
+            };
+        }
+
+        private MpPledgeCampaign mockPledgeCampaign()
+        {
+            return new MpPledgeCampaign
+            {
+                EventId = 8
             };
         }
 
@@ -304,6 +336,31 @@ namespace crds_angular.test.Services
                     DonorEmail = "crdsusertest+johndonor@gmail.com",
                     DonationDate = DateTime.Today,
                     DonationAmount = 200
+                }
+            };
+        }
+
+        private List<MpTripDistribution> MockTripScholarshipDonationsResponse()
+        {
+            return new List<MpTripDistribution>
+            {
+                new MpTripDistribution
+                {
+                    ContactId = 1234,
+                    EventTypeId = 6,
+                    EventId = 8,
+                    EventTitle = "GO Someplace",
+                    EventStartDate = DateTime.Today,
+                    EventEndDate = DateTime.Today,
+                    TotalPledge = 1000,
+                    CampaignStartDate = DateTime.Today,
+                    CampaignEndDate = DateTime.Today,
+                    DonorNickname = "Crossroads",
+                    DonorFirstName = "Crossroads",
+                    DonorLastName = "Crossroads",
+                    DonorEmail = "crossroads@crossroads.net",
+                    DonationDate = DateTime.Today,
+                    DonationAmount = 1000
                 }
             };
         }
