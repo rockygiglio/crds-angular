@@ -62,8 +62,14 @@
       <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
-      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a></td>
+      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center">
+        <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
+        <span ng-if="!group.hasAddress()">Online</span>
+      </td>
+      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" >
+        <a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a>
+        <span ng-if="!group.hasAddress()">Online</span>
+      </td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
