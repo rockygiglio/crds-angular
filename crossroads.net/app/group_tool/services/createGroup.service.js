@@ -477,7 +477,7 @@ export default class CreateGroupService {
                     }]
                 },
                 expressionProperties: {
-                    "templateOptions.showAlert": "(model.group.availableOnline != undefined || model.group.availableOnline != null) ? !model.group.availableOnline : false"
+                    "templateOptions.showAlert": "(model.group.availableOnline !== null) ? !model.group.availableOnline : false"
                 }
             }]
         };
@@ -632,7 +632,7 @@ export default class CreateGroupService {
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-        if (this.model.group.participants === null || this.model.group.participants === undefined) {
+        if (this.model.group.participants == null) {
             smallGroup.participants = [new Participant({
                 groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
                 , nickName: this.model.profile.nickName
