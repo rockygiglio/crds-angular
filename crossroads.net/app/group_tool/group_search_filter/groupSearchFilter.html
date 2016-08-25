@@ -5,16 +5,13 @@
   <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
   <!-- TODO - remove class "form-inline" when we add a 2nd filter (Jim K - I tried removing, it broke the layout, so I'll leave it to smarter people to fix it) -->
-  <form role="form" class="form-inline" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
-
-    <dl class="push-half-ends" ng-repeat="filter in groupSearchFilter.allFilters">
-      <dt>
-        {{filter.getName()}}
-      </dt>
-      <dd>
-        <div class="row">
-           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
-          <div class="checkbox col-lg-4 col-sm-6" ng-repeat="value in filter.getValues()">
+  <form role="form" class="" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
+    <div class="row">
+      <div class="group-search-filter col-lg-4 col-md-6 col-sm-6 col-xs-12 push-bottom" ng-repeat="filter in groupSearchFilter.allFilters">
+        <strong>{{filter.getName()}}</strong>
+        <div class="inline">
+          <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
+          <div class="checkbox" ng-repeat="value in filter.getValues()">
             <label for="{{filter.getFilterName()}}-{{value.getValue()}}">
               <input ng-model="value.selected"
                      ng-model-options="{ updateOn: 'submit' }"
@@ -25,9 +22,8 @@
             </label>
           </div>
         </div>
-      </dd>
-    </dl>
-
+      </div>
+    </div>
     <div class="text-right push-half-bottom">
       <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
               ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
