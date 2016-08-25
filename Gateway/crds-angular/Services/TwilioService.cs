@@ -16,7 +16,7 @@ namespace crds_angular.Services
         public TwilioService(IConfigurationWrapper configurationWrapper)
         {
             var accountSid = configurationWrapper.GetConfigValue("TwilioAccountSid");
-            var authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+            var authToken = configurationWrapper.GetEnvironmentVarAsString("TWILIO_AUTH_TOKEN");
             _fromPhoneNumber = configurationWrapper.GetConfigValue("TwilioFromPhoneNumber");
             _twilio = new TwilioRestClient(accountSid, authToken);
         }

@@ -20,7 +20,7 @@ namespace crds_angular.test.Services
             _configurationMock = new Mock<IConfigurationWrapper>();
             _configurationMock.Setup(mock => mock.GetConfigValue("TwilioAccountSid")).Returns("AC051651a7abfd7ec5209ad22273a24390");
             _configurationMock.Setup(mock => mock.GetConfigValue("TwilioFromPhoneNumber")).Returns("+15005550006");
-            Environment.SetEnvironmentVariable("TWILIO_AUTH_TOKEN", Environment.GetEnvironmentVariable("TWILIO_TEST_AUTH_TOKEN"));
+            _configurationMock.Setup(mock => mock.GetEnvironmentVarAsString("TWILIO_AUTH_TOKEN")).Returns(Environment.GetEnvironmentVariable("TWILIO_TEST_AUTH_TOKEN"));
             _fixture = new TwilioService(_configurationMock.Object);
             _mockLogger = new Mock<ILog>();
             _fixture.SetLogger(_mockLogger.Object);

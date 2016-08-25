@@ -67,17 +67,10 @@ namespace crds_angular.test.controllers
                 .Callback<Object, MessageQueueTransactionType>(( obj, type) => spiedMsg = obj )
                 .Verifiable();
 
-            try
-            {
-                _fixture.PostReminder(textData);
-                _messageFactory.Verify(mock => mock.CreateMessage(It.IsAny<ScheduledJob>(), null), Times.Once());             
-                Assert.AreEqual(JsonConvert.SerializeObject(scheduledJob), JsonConvert.SerializeObject(spiedScheduledJob));
-                _messageQueue.Verify();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
+            _fixture.PostReminder(textData);
+            _messageFactory.Verify(mock => mock.CreateMessage(It.IsAny<ScheduledJob>(), null), Times.Once());             
+            Assert.AreEqual(JsonConvert.SerializeObject(scheduledJob), JsonConvert.SerializeObject(spiedScheduledJob));
+            _messageQueue.Verify();
 
         }
     }
