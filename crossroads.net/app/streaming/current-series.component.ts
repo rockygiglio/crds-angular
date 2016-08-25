@@ -37,6 +37,7 @@ export class CurrentSeriesComponent {
   trailer:      string   = '';
   visible:      boolean  = false;
   embed:        string   = '';
+  response:     any;
   
   constructor(private cmsDataService: CMSDataService) {
   }
@@ -44,7 +45,13 @@ export class CurrentSeriesComponent {
   ngOnInit() {
     this.cmsDataService.getCurrentSeries().subscribe((response) => {
       this.parseData(response);
+      if (this.response === undefined) {
+        this.cmsDataService.getLastSeries().subscribe((response) => {
+          this.parseData(response);
+        })
+      }
     })
+
   }
 
   private parseData(response:any) {
@@ -53,7 +60,8 @@ export class CurrentSeriesComponent {
       return;
     }
 
-    this.title       = response.title;
+    this.response = response;
+    this.title = response.title;
     this.description = response.description;
     this.startDate   = response.startDate;
     this.endDate     = response.endDate;

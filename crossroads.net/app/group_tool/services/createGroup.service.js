@@ -23,10 +23,13 @@ export default class CreateGroupService {
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
-        }, {
-                meetingFrequencyId: 2,
-                meetingFrequencyDesc: 'Every other week'
-            }];
+        },{
+            meetingFrequencyId: 2,
+            meetingFrequencyDesc: 'Every other week'
+        },{
+            meetingFrequencyId: 8,
+            meetingFrequencyDesc: 'Every month'
+        }];
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
         //this.countryLookup is added by the route resolve of the createGroupController.
@@ -733,7 +736,7 @@ export default class CreateGroupService {
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-            var freqObj = this.meetingFrequencyLookup[smallGroup.meetingFrequencyId - 1];
+            var freqObj = _.find(this.meetingFrequencyLookup, (data) => {return data.meetingFrequencyId == smallGroup.meetingFrequencyId;});
             if (freqObj !== undefined && freqObj !== null) {
                 smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
             }
