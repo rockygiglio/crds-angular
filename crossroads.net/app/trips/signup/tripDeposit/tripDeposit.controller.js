@@ -126,7 +126,7 @@ class TripDepositController {
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
     } else {
-      this.signupService.saveApplication(() => {
+      this.signupService.saveApplication((data) => {
         this.tripDeposit.applicationSaved = true;
         this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);

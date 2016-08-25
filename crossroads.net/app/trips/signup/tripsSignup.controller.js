@@ -60,6 +60,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
     vm.numberOfPages = 0;
+    vm.page6ButtonText = page6ButtonText();
     vm.pageHasErrors = true;
     vm.passportInvalidContent = passportInvalidContent;
     vm.privateInvite = $location.search()['invite'];
@@ -178,6 +179,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
         $event.preventDefault();
        $event.stopPropagation();
        vm.passportExpireDateOpen = true;
+    }
+
+    function page6ButtonText(){
+      if (TripsSignupService.isScholarshipped) {
+        return { normal: 'Submit Application', processing: 'Submitting...' };
+      }
+
+      return { normal: 'Next', processing: 'Next...' };
     }
 
     function frequentFlyerChanged(flyer) {

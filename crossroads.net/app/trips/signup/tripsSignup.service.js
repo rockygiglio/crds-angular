@@ -160,7 +160,7 @@
               f.signedUpDate = new Date();
             }
           });
-          success();
+          success(data);
         }, () => {
         error();
       });
