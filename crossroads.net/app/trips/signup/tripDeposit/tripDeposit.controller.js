@@ -139,12 +139,13 @@ class TripDepositController {
       /*jshint unused:false */
       application.$save((data) => {
         this.tripDeposit.applicationSaved = true;
-          _.each(this.signupService.familyMembers, (f) => {
-            if (f.contactId === Number(this.stateParams.contactId)) {
-              f.signedUp = true;
-              f.signedUpDate = new Date();
-            }
-          });
+        _.each(this.signupService.familyMembers, (f) => {
+          if (f.contactId === Number(this.stateParams.contactId)) {
+            f.signedUp = true;
+            f.signedUpDate = new Date();
+          }
+        });
+        this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);
       }, () => {
         this.dto.processing = false;
