@@ -1,5 +1,6 @@
 
-export default class SearchFilter {
+export class SearchFilter {
+  // Don't instantiate this class directly, subclass it for a specific filter
   constructor(filterName, filterValues, matchingFunction) {
     this.filterName = filterName;
     this.filterValues = filterValues;
@@ -8,6 +9,18 @@ export default class SearchFilter {
 
   getName() {
     return this.filterName;
+  }
+
+  getFilterName() {
+    return _.camelCase(this.getName());
+  }
+
+  getSelectedValues() {
+    return this.filterValues.filter((i) => { return i.selected === true; })
+  }
+
+  getValues() {
+    return this.filterValues;
   }
 
   matches(result) {
@@ -33,29 +46,22 @@ export default class SearchFilter {
   }
 }
 
-export class SearchFilterBuilder {
-  constructor() {
-    this.filterName = undefined;
-    this.filterValues = undefined;
-    this.matchingFunction = () => { return false; };
+export class SearchFilterValue {
+  constructor(name, value, selected) {
+    this.name = name;
+    this.value = value;
+    this.selected = selected;
   }
 
-  withFilterName(filterName) {
-    this.filterName = filterName;
-    return this;
+  getName() {
+    return this.name;
   }
 
-  withFilterValues(filterValues) {
-    this.filterValues = filterValues;
-    return this;
+  getValue() {
+    return this.value;
   }
 
-  withMatchingFunction(f) {
-    this.matchingFunction = f;
-    return this;
-  }
-
-  getSearchFilter() {
-    return new SearchFilter(this.filterName, this.filterValues, this.matchingFunction);
+  isSelected() {
+    return this.selected !== undefined && this.selected === true;
   }
 }

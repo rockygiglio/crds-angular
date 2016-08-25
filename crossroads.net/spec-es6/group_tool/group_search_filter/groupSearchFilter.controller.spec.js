@@ -1,6 +1,9 @@
 
 import constants from 'crds-constants';
 import GroupSearchFilter from '../../../app/group_tool/group_search_filter/groupSearchFilter.controller';
+import AgeRangeFilter from '../../../app/group_tool/group_search_filter/filter_impl/ageRange.filter';
+import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filter_impl/kidsWelcome.filter';
+import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 
 describe('GroupSearchFilter', () => {
   let fixture, groupService;
@@ -17,7 +20,6 @@ describe('GroupSearchFilter', () => {
   describe('the constructor', () => {
     it('should initialize properties', () => {
       expect(fixture.ageRanges).toEqual([]);
-      expect(fixture.kidsWelcome).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
     });
@@ -26,7 +28,6 @@ describe('GroupSearchFilter', () => {
   describe('$onInit function', () => {
     it('should load age ranges', () => {
       spyOn(fixture, 'initializeFilters').and.callFake(() => {});
-      spyOn(fixture, 'loadAgeRanges').and.callFake(() => {});
       fixture.$onInit();
       expect(fixture.initializeFilters).toHaveBeenCalled();
     });
@@ -51,21 +52,30 @@ describe('GroupSearchFilter', () => {
 
   describe('initializeFilters function', () => {
     it('should initialize all filters', () => {
-      let ageRangeFilter = { age: 1 };
-      let kidsWelcomeFilter = { kids: 1 };
-      spyOn(fixture, 'buildAgeRangeFilter').and.returnValue(ageRangeFilter);
-      spyOn(fixture, 'buildKidsWelcomeFilter').and.returnValue(kidsWelcomeFilter);
+      let ageRanges = [1, 2, 3];
       spyOn(fixture, 'loadAgeRanges').and.callFake(() => {});
-      spyOn(fixture, 'loadKidsWelcome').and.callFake(() => {});
 
       fixture.allFilters = [];
+      fixture.ageRanges = ageRanges;
+
       fixture.initializeFilters();
 
-      expect(fixture.buildAgeRangeFilter).toHaveBeenCalled();
-      expect(fixture.buildKidsWelcomeFilter).toHaveBeenCalled();
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.loadKidsWelcome).toHaveBeenCalled();
-      expect(fixture.allFilters).toEqual([ageRangeFilter, kidsWelcomeFilter]);
+      expect(fixture.allFilters.length).toEqual(3);
+      let i = 0;
+
+      let ageRangeFilter = fixture.allFilters[i++];
+      expect(ageRangeFilter instanceof AgeRangeFilter).toBeTruthy();
+      expect(ageRangeFilter.getName()).toEqual('Age Range');
+      expect(ageRangeFilter.getValues()).toBe(ageRanges);
+
+      let kidsWelcomeFilter = fixture.allFilters[i++];
+      expect(kidsWelcomeFilter instanceof KidsWelcomeFilter).toBeTruthy();
+      expect(kidsWelcomeFilter.getName()).toEqual('Kids Welcome');
+
+      let locationFilter = fixture.allFilters[i++];
+      expect(locationFilter instanceof LocationFilter).toBeTruthy();
+      expect(locationFilter.getName()).toEqual('Location');
     });
   });
 
@@ -188,112 +198,4 @@ describe('GroupSearchFilter', () => {
       }, this);
     });    
   });
-
-  describe('buildAgeRangeFilter function', () => {
-    it('should return true if no age range currently filtered', () => {
-      fixture.ageRanges = [
-        { selected: false }
-      ];
-      let searchResult = {
-        ageRange: [
-          { attributeId: 456 },
-          { attributeId: 789 }
-        ]
-      };
-
-      let filter = fixture.buildAgeRangeFilter();
-      expect(filter.matches(searchResult)).toBeTruthy();
-    });
-
-    it('should return true if the search result contains a filtered age range', () => {
-      fixture.ageRanges = [
-        { selected: false, attributeId: 123 },
-        { selected: true, attributeId: 456 }
-      ];
-      let searchResult = {
-        ageRange: [
-          { attributeId: 456 },
-          { attributeId: 789 }
-        ]
-      };
-      let filter = fixture.buildAgeRangeFilter();
-      expect(filter.matches(searchResult)).toBeTruthy();
-    });
-
-    it('should return false if the search result does not contain a filtered age range', () => {
-      fixture.ageRanges = [
-        { selected: false, attributeId: 123 },
-        { selected: true, attributeId: 456 }
-      ];
-      let searchResult = {
-        ageRange: [
-          { attributeId: 234 },
-          { attributeId: 567 }
-        ]
-      };
-      let filter = fixture.buildAgeRangeFilter();
-      expect(filter.matches(searchResult)).toBeFalsy();
-    });
-
-    it('should return false if the search result does not contain an age range', () => {
-      fixture.ageRanges = [
-        { selected: false, attributeId: 123 },
-        { selected: true, attributeId: 456 }
-      ];
-      let searchResult = { };
-      
-      let filter = fixture.buildAgeRangeFilter();
-      expect(filter.matches(searchResult)).toBeFalsy();
-    });
-  });
-
-  describe('buildKidsWelcomeFilter function', () => {
-    it('should return true if no kids welcome currently filtered', () => {
-      fixture.kidsWelcome = [
-        { selected: false }
-      ];
-      let searchResult = {
-        kidsWelcome: false
-      };
-
-      let filter = fixture.buildKidsWelcomeFilter();
-      expect(filter.matches(searchResult)).toBeTruthy();
-    });
-
-    it('should return true if the search result contains a filtered kids welcome', () => {
-      fixture.kidsWelcome = [
-        { selected: false, value: true },
-        { selected: true, value: false }
-      ];
-      let searchResult = {
-        kidsWelcome: false
-      };
-      let filter = fixture.buildKidsWelcomeFilter();
-      expect(filter.matches(searchResult)).toBeTruthy();
-    });
-
-    it('should return false if the search result does not contain a filtered kids welcome', () => {
-      fixture.kidsWelcome = [
-        { selected: false, value: true },
-        { selected: true, value: false }
-      ];
-      let searchResult = {
-        kidsWelcome: true
-      };
-
-      let filter = fixture.buildKidsWelcomeFilter();
-      expect(filter.matches(searchResult)).toBeFalsy();
-    });
-
-    it('should return false if the search result does not contain a kids welcome', () => {
-      fixture.kidsWelcome = [
-        { selected: false, value: true },
-        { selected: true, value: false }
-      ];
-      let searchResult = { };
-
-      let filter = fixture.buildKidsWelcomeFilter();
-      expect(filter.matches(searchResult)).toBeFalsy();
-    });
-  });  
 });
