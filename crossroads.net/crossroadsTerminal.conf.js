@@ -84,9 +84,9 @@ module.exports = function(config) {
           }
         ],
         noParse: [
-            path.join(__dirname, "node_modules", "video.js","dist","video.js"),
+            path.join(__dirname, 'node_modules', 'video.js','dist'),
             /videojs5-hlsjs-source-handler\.min\.js/,
-            path.join(__dirname, "node_modules", "videojs-chromecast","dist","videojs-chromecast.js")
+            path.join(__dirname, 'node_modules', 'videojs-chromecast','dist','videojs-chromecast.js')
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
@@ -127,7 +127,7 @@ module.exports = function(config) {
       require('karma-mocha-reporter'),
       require('karma-phantomjs-launcher'),
       require('karma-env-preprocessor'),
-      require('karma-sourcemap-loader'),
+      require('karma-sourcemap-loader')
     ]
   });
 };
