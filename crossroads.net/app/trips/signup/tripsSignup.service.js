@@ -45,6 +45,10 @@
         signupService.page6 = page6();
       }
 
+      if (signupService.depositInfo === undefined) {
+        signupService.depositInfo = depositInfo();
+      }
+
       setupProps();
     }
 
@@ -84,6 +88,15 @@
       signupService.page4 = page4();
       signupService.page5 = page5();
       signupService.page6 = page6();
+      signupService.depositInfo = depositInfo();
+    }
+
+    function depositInfo() {
+      return {
+        donationAmount: null,
+        donationDate: null,
+        paymentMethod: null
+      };
     }
 
     function page2() {

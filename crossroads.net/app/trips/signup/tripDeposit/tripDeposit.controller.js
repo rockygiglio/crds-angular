@@ -17,8 +17,6 @@ class TripDepositController {
     this.loadingDonor = false;
     this.window = $window;
     this.initialized = false;
-
-    
   }
 
   $onDestroy() {
@@ -115,6 +113,18 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
+  getPaymentType() {
+    if (this.dto.view === 'cc') {
+      return 'Credit Card';
+    }
+    else if (this.dto.view === 'bank') {
+      return 'Bank';
+    }
+    else{
+      return 'Unknown';
+    }
+  }
+
   saveApplication(shouldSubmitBank = "") {
     this.dto.processing = true;
     if (this.tripDeposit.applicationSaved) {
@@ -129,6 +139,10 @@ class TripDepositController {
       application.pageFive = this.signupService.page5;
       application.pageSix = this.signupService.page6;
       application.inviteGUID = this.stateParams.invite;
+      application.depositInformation = this.signupService.depositInfo;
+      application.depositInformation.donationAmount = this.signupService.depositAmount;
+      application.depositInformation.donationDate = moment(new Date()).format('l');
+      application.depositInformation.paymentMethod = this.getPaymentType();
 
       /*jshint unused:false */
       application.$save((data) => {

@@ -459,13 +459,14 @@ public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
             try
             {
                 UpdateChildSponsorship(dto);
-                var formResponse = new MpFormResponse();
-                formResponse.ContactId = dto.ContactId; //contact id of the person the application is for
-                formResponse.FormId = _configurationWrapper.GetConfigIntValue("TripApplicationFormId");
-                formResponse.PledgeCampaignId = dto.PledgeCampaignId;
-
-                formResponse.FormAnswers = new List<MpFormAnswer>(FormatFormAnswers(dto));
-
+                var formResponse = new MpFormResponse
+                {
+                    ContactId = dto.ContactId, //contact id of the person the application is for
+                    FormId = _configurationWrapper.GetConfigIntValue("TripApplicationFormId"),
+                    PledgeCampaignId = dto.PledgeCampaignId,
+                    FormAnswers = new List<MpFormAnswer>(FormatFormAnswers(dto))
+                };
+                
                 var formResponseId = _formSubmissionService.SubmitFormResponse(formResponse);
 
                 if (dto.InviteGUID != null)
@@ -473,11 +474,16 @@ public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
                     _privateInviteService.MarkAsUsed(dto.PledgeCampaignId, dto.InviteGUID);
                 }
 
+                // TODO after 4715 is merged use new method to decide which email to send
+
+                // participant with deposit of scholarshipped?
+                SendTripApplicantDonationComboMessage(dto);
+
                 SendTripApplicantSuccessMessage(dto.ContactId);
 
                 return formResponseId;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // send applicant message
                 SendApplicantErrorMessage(dto.ContactId);
@@ -505,6 +511,23 @@ public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
                                                                             toContact.Email_Address,
                                                                             mergeData);
             _communicationService.SendMessage(template);
+        }
+
+        private void SendTripApplicantDonationComboMessage(TripApplicationDto dto)
+        {
+            var pledgeCampaign = _campaignService.GetPledgeCampaign(dto.PledgeCampaignId);
+            var program = _programRepository.GetProgramById(pledgeCampaign.ProgramId);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Destination_Name", pledgeCampaign.Nickname },
+                {"Program_Name", program.Name},
+                {"Donation_Amount", dto.DepositInformation.DonationAmount ?? ""},
+                {"Donation_Date", dto.DepositInformation.DonationDate ?? ""},
+                {"Payment_Method", dto.DepositInformation.PaymentMethod }
+            };
+
+            SendMessage("TripAppAndDonationComboMessageTemplateId", dto.ContactId, mergeData);
         }
 
         private void SendTripApplicantSuccessMessage(int contactId)
