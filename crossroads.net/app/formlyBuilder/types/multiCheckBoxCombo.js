@@ -1,173 +1,7 @@
-(function () {
-    'use strict';
-    module.exports = formlyBuilderRun;
+export default ngModule => {
+    ngModule.run(addCheckboxType);
 
-    require('./templates/datepicker.html');
-
-    formlyBuilderRun.$inject = ['formlyConfig', 'formlyValidationMessages'];
-
-    function formlyBuilderRun(formlyConfig, formlyValidationMessages) {
-        var attributes = [
-            'date-disabled',
-            'custom-class',
-            'show-weeks',
-            'starting-day',
-            'init-date',
-            'min-mode',
-            'max-mode',
-            'format-day',
-            'format-month',
-            'format-year',
-            'format-day-header',
-            'format-day-title',
-            'format-month-title',
-            'year-range',
-            'shortcut-propagation',
-            'datepicker-popup',
-            'show-button-bar',
-            'current-text',
-            'clear-text',
-            'close-text',
-            'close-on-date-selection',
-            'datepicker-append-to-body'
-        ];
-
-        var bindings = [
-            'datepicker-mode',
-            'min-date',
-            'max-date'
-        ];
-
-        var ngModelAttrs = {};
-
-        angular.forEach(attributes, function (attr) {
-            ngModelAttrs[camelize(attr)] = { attribute: attr };
-        });
-
-        angular.forEach(bindings, function (binding) {
-            ngModelAttrs[camelize(binding)] = { bound: binding };
-        });
-
-        formlyConfig.setType({
-            name: 'datepicker',
-            templateUrl: 'templates/datepicker.html',
-            wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
-            defaultOptions: {
-                ngModelAttrs: ngModelAttrs,
-                templateOptions: {
-                    datepickerOptions: {
-                        format: 'MM/dd/yyyy',
-                        initDate: new Date()
-                    }
-                }
-            },
-            controller: ['$scope', function ($scope) {
-                $scope.datepicker = {};
-
-                $scope.datepicker.opened = false;
-
-                $scope.datepicker.open = function ($event) {
-                    $scope.datepicker.opened = !$scope.datepicker.opened;
-                };
-            }]
-        });
-
-        ngModelAttrs = {};
-
-        // attributes
-        angular.forEach([
-            'meridians',
-            'readonly-input',
-            'mousewheel',
-            'arrowkeys'
-        ], function (attr) {
-            ngModelAttrs[camelize(attr)] = { attribute: attr };
-        });
-
-        // bindings
-        angular.forEach([
-            'hour-step',
-            'minute-step',
-            'show-meridian'
-        ], function (binding) {
-            ngModelAttrs[camelize(binding)] = { bound: binding };
-        });
-
-        formlyConfig.setType({
-            name: 'timepicker',
-            template: '<timepicker ng-model="model[options.key]"></timepicker>',
-            wrapper: ['formlyBuilderLabel', 'formlyBuilderHasError'],
-            defaultOptions: {
-                ngModelAttrs: ngModelAttrs,
-                templateOptions: {
-                    datepickerOptions: {}
-                }
-            }
-        });
-
-        formlyConfig.setType({
-            name: 'boldcheckbox',
-            template: require('./templates/boldCheckbox.html'),
-            wrapper: ['formlyBuilderHasError'],
-            apiCheck: check => ({
-                templateOptions: {
-                    label: check.string
-                }
-            })
-        });
-        formlyConfig.setType({
-            name: 'zipcode',
-            defaultOptions: {
-                validators: {
-                    zipcode: {
-                        expression: function (value) {
-                            let regex = /^\d{5}$/;
-                            return regex.test(value);
-                        },
-                        message: "'Zip code does not appear to be valid.'"
-                    }
-                }
-            }
-        });
-
-        ngModelAttrs = {};
-
-        // bindings
-        angular.forEach([
-            'contact-id',
-            'wrapper-class',
-            'image-class'
-        ], function (binding) {
-            ngModelAttrs[camelize(binding)] = { bound: binding };
-        });
-
-        formlyConfig.setType({
-            name: 'profilePicture',
-            template: require('./templates/profilePicture.html'),
-            wrapper: ['formlyBuilderHasError'],
-            defaultOptions: {
-                ngModelAttrs: ngModelAttrs,
-                templateOptions: {}
-            }
-        });
-
-
-        function camelize(string) {
-            string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
-                return chr ? chr.toUpperCase() : '';
-            });
-            // Ensure 1st char is always lowercase
-            return string.replace(/^([A-Z])/, function (match, chr) {
-                return chr ? chr.toLowerCase() : '';
-            });
-        }
-
-        formlyValidationMessages.addStringMessage('required', 'This field is required');
-        formlyValidationMessages.addStringMessage('requiredCategories', 'All fields where the category is checked are required');
-        formlyValidationMessages.addTemplateOptionValueMessage('maxlength', 'maxlength', '', 'is the maximum length', 'Too long');
-        formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
-
-
+    function addCheckboxType(formlyConfig) {
         formlyConfig.setType({
             name: 'multiCheckBoxCombo',
             template: require('./templates/multiCheckBoxCombo.html'),
@@ -215,17 +49,17 @@
                                     // $scope.multiCheckboxCombo.checked[index] = _.findIndex(modelValue, (item) => { 
                                     //     return item.value == newOptionsValues[index][valueProp] 
                                     // }) !== -1;// modelValue.indexOf(newOptionsValues[index][valueProp]) !== -1;
-                                    var item = _.find(modelValue, (item) => { 
-                                        return item.value == newOptionsValues[index][valueProp] 
+                                    var item = _.find(modelValue, (item) => {
+                                        return item.value == newOptionsValues[index][valueProp]
                                     })
 
-                                    if (item != null || item != undefined){
+                                    if (item != null || item != undefined) {
                                         $scope.multiCheckboxCombo.detail[index] = item.detail;
                                         $scope.multiCheckboxCombo.checked[index] = true;
                                     } else {
                                         $scope.multiCheckboxCombo.detail[index] = '';
                                         $scope.multiCheckboxCombo.checked[index] = false;
-                                    } 
+                                    }
                                 }
 
 
@@ -254,11 +88,11 @@
                         //if checkbox is checked, detail is required
                         detailValid = areRequiredDetailsFilledOut();
                         valid = detailValid && checkValid;
-                        if (angular.isArray($scope.fc)){
-                            angular.forEach($scope.fc, function(item, key) {
+                        if (angular.isArray($scope.fc)) {
+                            angular.forEach($scope.fc, function (item, key) {
                                 item.$setValidity('requiredCategories', valid)
                             }, this);
-                        }else {
+                        } else {
                             $scope.fc.$setValidity('requiredCategories', valid);
                         }
                     }
@@ -276,11 +110,11 @@
                     // Must make sure we mark as touched because only the last checkbox due to a bug in angular.
 
                     //for each
-                    if (angular.isArray($scope.fc)){
-                        angular.forEach($scope.fc, function(item, key) {
+                    if (angular.isArray($scope.fc)) {
+                        angular.forEach($scope.fc, function (item, key) {
                             item.$setTouched()
                         }, this);
-                    }else {
+                    } else {
                         $scope.fc.$setTouched('required', valid);
                     }
                     checkValidity(true);
@@ -310,4 +144,5 @@
             }
         });
     }
-})();
+};
+

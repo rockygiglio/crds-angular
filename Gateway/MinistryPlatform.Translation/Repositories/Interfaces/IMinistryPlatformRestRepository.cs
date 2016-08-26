@@ -46,6 +46,15 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
         List<T> Search<T>(string searchString = null, string selectColumns = null);
 
+        /// <summary>
+        /// Get a list of records for a given type from MinistryPlatform.
+        /// </summary>
+        /// <typeparam name="T">The type of record to get.  This should correspond to an appropriately annotated model class, so that MP columns can be properly mapped (using NewtonSoft.Json) from MP to the model object.  The model class must also be annotated with the RestApiTable attribute, specifying the actual MP table name.</typeparam>
+        /// <param name="searchString">An "MP SQL" WHERE clause, for instance "Payment_Type_Id > 5 AND Payment_Type_Id &lt; 9".</param>
+        /// <param name="columns">Optionally specify which columns to retrieve from MP.  This is a comma-separated list of column names.</param>
+        /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
+        List<T> Search<T>(string searchString, List<string> columns);
+
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
 
         void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields);

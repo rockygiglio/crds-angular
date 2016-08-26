@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
-using System.Web;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -118,6 +116,16 @@ namespace MinistryPlatform.Translation.Repositories
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
 
             return content;
+        }
+
+        public List<T> Search<T>(string searchString, List<string> columns)
+        {
+            string selectColumns = null;
+            if (columns != null)
+            {
+                selectColumns = string.Join(",", columns);
+            }
+            return Search<T>(searchString, selectColumns);
         }
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
