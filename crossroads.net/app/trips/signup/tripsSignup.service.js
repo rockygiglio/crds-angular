@@ -46,30 +46,6 @@
       if (signupService.page6 === undefined) {
         signupService.page6 = page6();
       }
-
-      setupProps();
-    }
-
-    function setupProps() {
-      //relying on Pledge Campaign Nickname field feels very fragile, is there another way?
-      signupService.friendlyPageTitle = signupService.campaign.nickname;
-      switch (signupService.campaign.nickname) {
-        case 'NOLA':
-          signupService.numberOfPages = 5;
-          break;
-        case 'South Africa':
-          signupService.numberOfPages = 6;
-          break;
-        case 'India':
-          signupService.numberOfPages = 6;
-          signupService.whyPlaceholder = 'Please be specific. ' +
-            'In instances where we have a limited number of spots, we strongly consider responses to this question.';
-          break;
-        case 'Nicaragua':
-          signupService.numberOfPages = 6;
-          break;
-      }
-
     }
 
     function reset(campaign) {
