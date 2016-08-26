@@ -18,7 +18,6 @@ export default class GroupResourcesController {
     }, (/*err*/) => {
       this.categories = [];
     }).finally(() => {
-      this.categories = [];
       this.ready = true;
     });
   }
