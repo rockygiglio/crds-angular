@@ -95,22 +95,22 @@ describe('ChangeParticipantRoleController', () => {
         });
     });
 
-    // describe('submit', function () {
-    //     beforeEach(() => {  
-    //         SpyOn(groupService.updateParticipant).and.callFake(() => {});
-    //         SpyOn(groupService.submitAction).and.callFake(() => {});
-            
-    //     });
-    //     it('should return immediately if role not changed', function () {
-    //         fixture.currentRole = 16;
-    //         fixture.Participant.groupRoleId = 22;
-    //         fixture.submit(); 
-    //         expect(fixture.updateParticipant.not.toHaveBeenCalled());
-    //     });
-    //     it('should submit if role changed', function () {
+    describe('submit', function () {
+        beforeEach(() => {
+            SpyOn(groupService.updateParticipant).and.callFake(() => {});
+            //SpyOn(groupService.submitAction).and.callFake(() => {});
 
-    //     });
-    // });
+        });
+        it('should return immediately if role not changed', function () {
+            fixture.currentRole = 16;
+            fixture.Participant.groupRoleId = 22;
+            fixture.submit();
+            //expect(fixture.updateParticipant.not.toHaveBeenCalled());
+            expect(figroupService.updateParticipant.not.toHaveBeenCalled());
+        });
+        // it('should submit if role changed', function () {
+        // });
+    });
 
 
 });
