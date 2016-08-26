@@ -20,6 +20,7 @@ export default class CreateGroupService {
         this.resolved = false;
         this.imageService = ImageService;
         this.primaryContact = null;
+        this.editGroupCongregationId = null;
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
@@ -45,6 +46,8 @@ export default class CreateGroupService {
         this.originalAttributeTypes = null;
         this.originalSingleAttributes = null;
         this.primaryContact = null;
+        this.editGroupCongregationId = null;
+        this.primaryContactId = null;
     }
 
     setEditModel(groupData, profileData) {
@@ -77,7 +80,7 @@ export default class CreateGroupService {
                 startDate: moment().format("MM/DD/YYYY"),
                 meeting: {
                     time: "1983-07-16T21:00:00.000Z"
-                }
+                },
             };
         }
         else {
@@ -86,7 +89,7 @@ export default class CreateGroupService {
             }
             this.model.startDate = moment().format("MM/DD/YYYY");
         }
-
+        this.model.group.availableOnline = null;
         this.model.specificDay = true;
     }
 
@@ -400,11 +403,18 @@ export default class CreateGroupService {
             fieldGroup: [{
                 key: 'groupAgeRangeIds',
                 type: 'formlyBuilderMultiCheckbox',
+                wrapper: 'formlyBuilderShowAlert',
                 templateOptions: {
                     valueProp: 'attributeId',
                     required: true,
                     labelProp: 'name',
+                    sectionAlert: '$root.MESSAGES.groupToolStudentMinistryAlert.content',
+                    showAlert: false,
                     options: []
+                },
+                expressionProperties: {
+                    //Constants doesn't seem to work in expressionProperties
+                    "templateOptions.showAlert": "(model.groupAgeRangeIds.includes(7089) || model.groupAgeRangeIds.includes(7090)) || false"
                 },
                 controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getAgeRanges().then(function (response) {
@@ -454,17 +464,23 @@ export default class CreateGroupService {
             fieldGroup: [{
                 key: 'group.availableOnline',
                 type: 'formlyBuilderRadio',
+                wrapper: 'formlyBuilderShowAlert',
                 templateOptions: {
                     valueProp: 'accessId',
                     labelProp: 'accessLabel',
                     required: true,
+                    showAlert: false,
+                    sectionAlert: '$root.MESSAGES.groupToolPrivateGroupAlert.content',
                     options: [{
                         accessId: true,
                         accessLabel: 'Public (Your group will be viewable in search results for everyone to see.)'
-                    }, {
-                            accessId: false,
-                            accessLabel: 'Private (Your group will NOT be publically viewable in search results.)'
-                        }]
+                    },{
+                        accessId: false,
+                        accessLabel: 'Private (Your group will NOT be publically viewable in search results.)'
+                    }]
+                },
+                expressionProperties: {
+                    "templateOptions.showAlert": "(model.group.availableOnline !== null) ? !model.group.availableOnline : false"
                 }
             }]
         };
@@ -527,18 +543,18 @@ export default class CreateGroupService {
         this.model.group.groupName = smallGroup.groupName;
         this.model.group.groupDescription = smallGroup.groupDescription;
         this.model.group.startDate = moment(smallGroup.startDate).format('MM/DD/YYYY');
-        this.model.group.participants = _.map(smallGroup.Participants, (data) => {return new Participant(data)});
+        this.model.group.participants = _.map(smallGroup.Participants, (data) => { return new Participant(data) });
+        this.editGroupCongregationId = smallGroup.congregationId;
+        this.primaryContactId = smallGroup.contactId;
     }
 
 
     mapFromSmallGroupSingleAttributes(smallGroup) {
-       if (smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute != null &&
-        smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== undefined) {
+        if (smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== null &&
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute !== undefined) {
 
             this.model.group.typeId = smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute.attributeId
-
         }
-        
     }
 
     mapFromSmallGroupMultipleAttributes(smallGroup) {
@@ -615,24 +631,25 @@ export default class CreateGroupService {
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
-        smallGroup.congregationId = this.model.profile.congregationId;
+        
+        smallGroup.congregationId = (this.editGroupCongregationId !== null && this.primaryContactId === parseInt(this.session.exists('userId'))) 
+        ? this.model.profile.congregationId : this.editGroupCongregationId;
+
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
         smallGroup.groupName = this.model.group.groupName;
         smallGroup.groupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS;
         smallGroup.ministryId = CONSTANTS.MINISTRY.SPIRITUAL_GROWTH;
-        if(this.model.group.participants == null || this.model.group.participants == undefined)
-        {
-        smallGroup.participants = [new Participant({
-            groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
-            , nickName: this.model.profile.nickName
-            , lastName: this.model.profile.lastName
-            , email: this.model.profile.emailAddress
-            , contactId: parseInt(this.session.exists('userId'))
-        })];
+        if (this.model.group.participants == null) {
+            smallGroup.participants = [new Participant({
+                groupRoleId: CONSTANTS.GROUP.ROLES.LEADER
+                , nickName: this.model.profile.nickName
+                , lastName: this.model.profile.lastName
+                , email: this.model.profile.emailAddress
+                , contactId: parseInt(this.session.exists('userId'))
+            })];
         }
-        else
-        {
+        else {
             smallGroup.participants = this.model.group.participants;
         }
         smallGroup.profile = new Profile(this.model.profile);
@@ -648,9 +665,9 @@ export default class CreateGroupService {
 
     mapToSmallGroupSingleAttributes(smallGroup) {
         smallGroup.singleAttributes = {};
-        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined){
+        if (this.originalSingleAttributes != null || this.originalSingleAttributes != undefined) {
             smallGroup.singleAttributes = this.originalSingleAttributes;
-            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute  = smallGroup.groupType;
+            smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID].attribute = smallGroup.groupType;
 
         } else {
             smallGroup.singleAttributes[CONSTANTS.GROUP.GROUP_TYPE_ATTRIBUTE_TYPE_ID] = {
