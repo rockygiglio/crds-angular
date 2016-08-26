@@ -64,7 +64,7 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           "controls": true,
           "html5": {
             "hlsjsConfig": {
-              "debug": true
+              "debug": false
             }
           }
         });
