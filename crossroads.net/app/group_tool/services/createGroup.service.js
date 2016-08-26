@@ -632,7 +632,7 @@ export default class CreateGroupService {
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
         
-        smallGroup.congregationId = getCongregationId();
+        smallGroup.congregationId = this.getCongregationId();
 
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
@@ -655,7 +655,7 @@ export default class CreateGroupService {
         smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
     }
 
-    getCongregationId(){
+    getCongregationId() {
         
         if(this.editGroupCongregationId == null )
         {
