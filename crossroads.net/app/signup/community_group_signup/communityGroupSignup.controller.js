@@ -34,6 +34,7 @@
     vm.atLeastOneParticipant = false;
     vm.childCareEvents = undefined;
     vm.childCareAvailable = false;
+    vm.childCareNeeded = false;
     vm.childCareChange = childCareChange;
     vm.contactId = Session.exists('userId') !== undefined ? Session.exists('userId') : 0;
     vm.editProfile = editProfile;
@@ -74,6 +75,7 @@
 
             if(vm.childCareEvents !== undefined){
               vm.childCareAvailable = true;
+              vm.childCareNeeded = true;
             }
 
             if (!response.waitListInd) {
@@ -208,7 +210,7 @@
           if (array[i].newAdd !== undefined && array[i].newAdd !== '') {
             result.partId[result.partId.length] = {
               participantId: array[i].newAdd,
-              childCareNeeded: array[i].childCareNeeded,
+              childCareNeeded: vm.childCareNeeded,
               capacityNeeded: 0,
               sendConfirmationEmail: true
             };
@@ -217,7 +219,7 @@
       } else if (array.length === 1) {
         result.partId[0] = {
           participantId: array[0].participantId,
-          childCareNeeded: array[0].childCareNeeded,
+          childCareNeeded: vm.childCareNeeded,
           capacityNeeded: 0,
           sendConfirmationEmail: true
         };
