@@ -39,6 +39,8 @@
       }
 
       function goToApp(contactId) {
+        var campaign = scope.signupService.campaign;
+        scope.signupService.reset(campaign);
         scope.signupService.contactId = contactId;
         $state.go('tripsignup.application.page',
           {
