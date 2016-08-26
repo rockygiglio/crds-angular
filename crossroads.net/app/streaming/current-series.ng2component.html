@@ -14,7 +14,7 @@
             <a href="/search?q={{tag | replaceNonAlphaNumeric }}">{{tag}}</a>
           </li>
         </ul>
-        <p>
+        <p *ngIf="trailer">
           <a class="btn btn-primary embeded" (click)="modal.open('lg')">Watch Trailer</a>
           <a href="{{ trailer }}" class="btn btn-primary link">Watch Trailer</a>  
         </p>

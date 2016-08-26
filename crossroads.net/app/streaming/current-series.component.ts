@@ -66,7 +66,7 @@ export class CurrentSeriesComponent {
     this.startDate   = response.startDate;
     this.endDate     = response.endDate;
 
-    if ( response.trailerLink !== undefined ) {
+    if ( response.trailerLink !== null ) {
       this.trailer = response.trailerLink;
       let embed = this.trailer.split(/https*:\/\/www.youtube.com\/watch\?v=/);
       if (embed[1]) {
