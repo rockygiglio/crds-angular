@@ -632,15 +632,7 @@ export default class CreateGroupService {
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
         
-        if(this.editGroupCongregationId == null )
-        {
-            smallGroup.congregationId = this.model.profile.congregationId;
-        }
-        else
-        {
-            smallGroup.congregationId = (this.primaryContactId === parseInt(this.session.exists('userId'))) 
-            ? this.model.profile.congregationId : this.editGroupCongregationId;
-        }
+        smallGroup.congregationId = getCongregationId();
 
         smallGroup.groupDescription = this.model.group.groupDescription;
         smallGroup.groupId = this.model.groupId;
@@ -661,6 +653,19 @@ export default class CreateGroupService {
         }
         smallGroup.profile = new Profile(this.model.profile);
         smallGroup.startDate = moment(this.model.group.startDate).format('MM/DD/YYYY');
+    }
+
+    getCongregationId(){
+        
+        if(this.editGroupCongregationId == null )
+        {
+            return this.model.profile.congregationId;
+        }
+        else
+        {
+            return (this.primaryContactId === parseInt(this.session.exists('userId'))) 
+            ? this.model.profile.congregationId : this.editGroupCongregationId;
+        }
     }
 
     mapToSmallGroupType(smallGroup) {

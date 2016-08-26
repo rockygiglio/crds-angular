@@ -81,6 +81,47 @@ describe('Group Tool Group Service', () => {
     });
   });
 
+   describe('getCongregationId() function', () => {
+    it('editGroupCongregationId is null and congregationId is mapped correctly', () => {
+
+      let model = { profile: { 'congregationId': 0 } };
+      fixture.editGroupCongregationId = null;
+      fixture.model = model;
+
+      let returnId = fixture.getCongregationId();
+      expect(returnId).toEqual(model.profile.congregationId);
+    });
+
+    it('editGroupCongregationId is not null and user is leader and congregationId is mapped correctly', () => {
+
+      let model = { profile: { 'congregationId': 1 } };
+      fixture.editGroupCongregationId = 2;
+      fixture.model = model;
+      fixture.primaryContactId = 1234;
+      spyOn(fixture.session, 'exists').and.callFake(function(userId) {
+        return '1234';
+      });
+
+      let returnId = fixture.getCongregationId();
+      expect(returnId).toEqual(model.profile.congregationId);
+    });
+
+    it('editGroupCongregationId is not null and user is not leader and congregationId is mapped correctly', () => {
+
+      let model = { profile: { 'congregationId': 1 } };
+      let editGroupCongregationId = 2;
+      fixture.editGroupCongregationId = editGroupCongregationId;
+      fixture.model = model;
+      fixture.primaryContactId = 1234;
+      spyOn(fixture.session, 'exists').and.callFake(function(userId) {
+        return '2222';
+      });
+
+      let returnId = fixture.getCongregationId();
+      expect(returnId).toEqual(editGroupCongregationId);
+    });
+  });
+
   describe('mapToSmallGroupMultipleAttributes() function', () => {
     it('age ranges are mapped correctly', () => {
       fixture.ageRangeLookup = [
