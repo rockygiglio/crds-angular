@@ -1,5 +1,5 @@
 // angular imports
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
@@ -21,14 +21,18 @@ var WOW = require('wow.js/dist/wow.min.js');
 
 export class VideoComponent implements OnInit {
   @Input() inModal: boolean = false;
-  number_of_people: number = 2;
-  displayCounter: boolean = true;
-  countSubmit: boolean = false;
-  dontMiss: Array<any> = [];
-  promos: Array<any> = [];
+  @Output('close') _close = new EventEmitter();
+  number_of_people: number     = 2;
+  displayCounter:   boolean    = true;
+  countSubmit:      boolean    = false;
+  dontMiss:         Array<any> = [];
+  promos:           Array<any> = [];
+  redirectText:     string     = 'Go Back';
+
+  closeModal:       EventEmitter<any> = new EventEmitter();
 
   constructor(private cmsDataService: CMSDataService) {
-    console.log('VideoComponent -- constructor');
+    console.log('VideoComponent.constructor', this.inModal);
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -58,18 +62,31 @@ export class VideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('VideoComponent -- ngOnInit', this.inModal);
+    console.log('VideoComponent.ngOnInit', this.inModal);
+    if (this.inModal) {
+      this.redirectText = 'Close Modal';
+    }
   }
 
   increaseCount() {
     this.number_of_people++;
   }
+
   decreaseCount() {
     if(this.number_of_people > 1) {
       this.number_of_people--;
     }
   }
+
   submitCount() {
     this.countSubmit = true;
+  }
+
+  goBack() {
+    if (!this.inModal) {
+      window.location.href = '/live';
+    } else {
+      this._close.emit({});
+    }
   }
 }

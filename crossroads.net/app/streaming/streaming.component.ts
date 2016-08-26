@@ -58,7 +58,7 @@ export class StreamingComponent {
   @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
   @ViewChild('modal')
   modal: ModalComponent;
-  videoRef: any;
+  videoComponent: any;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
@@ -116,24 +116,22 @@ export class StreamingComponent {
   watchNowClicked(event) {
     this.modal.open();
     this.dcl.loadNextToLocation(VideoComponent, this.videoTarget)
-    .then(ref => {
-      this.videoRef = ref
+    .then(component => {
+      this.videoComponent = component
+      this.videoComponent.instance.inModal = true;
+      this.videoComponent.instance._close.subscribe((closeEvent) => {
+        this.modal.close();
+        this.modalClose();
+      });
     });
-    console.log('watchNowClicked -- openning')
-  }
-
-  modalOpen() {
-    console.log('modal openned')
   }
 
   modalClose() {
-    console.log('modal closed');
-    this.videoRef.destroy();
+    this.videoComponent.destroy();
   }
 
   modalDismiss() {
-    console.log('modal dismissed')
-    this.videoRef.destroy();
+    this.videoComponent.destroy();
   }
 
 }
