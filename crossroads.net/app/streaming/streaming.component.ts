@@ -84,14 +84,10 @@ export class StreamingComponent {
 
               event.delay = i * 100;
               event.subtitle = event.title
-              event.title = event.series.title;
-
-              if (event.sequence.length > 0) {
-                let index = _.findIndex(event.sequence, {id: event.id});
-                if (index >= 0) {
-                  event.title = `${event.title} #${index + 1}`;
-                }
+              if (event.number === 0) {
+                event.number++;
               }
+              event.title = `${event.series.title} #${event.number}`;
 
               event.url = `/message/${event.id}/${slugPipe.transform(event.title)}`
               event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
