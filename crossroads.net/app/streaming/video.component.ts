@@ -1,5 +1,5 @@
 // angular imports
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
@@ -19,7 +19,8 @@ var WOW = require('wow.js/dist/wow.min.js');
   directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent]
 })
 
-export class VideoComponent {
+export class VideoComponent implements OnInit {
+  @Input() inModal: boolean = false;
   number_of_people: number = 2;
   displayCounter: boolean = true;
   countSubmit: boolean = false;
@@ -27,6 +28,7 @@ export class VideoComponent {
   promos: Array<any> = [];
 
   constructor(private cmsDataService: CMSDataService) {
+    console.log('VideoComponent -- constructor');
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -53,6 +55,10 @@ export class VideoComponent {
     new WOW({
       mobile: false
     }).init();
+  }
+
+  ngOnInit() {
+    console.log('VideoComponent -- ngOnInit', this.inModal);
   }
 
   increaseCount() {
