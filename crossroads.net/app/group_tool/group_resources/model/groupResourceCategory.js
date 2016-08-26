@@ -25,6 +25,10 @@ export default class GroupResourceCategory {
       }
   }
 
+  hasResources() {
+    return this.resources.length > 0;
+  }
+
   getTitle() {
     return this.title;
   }

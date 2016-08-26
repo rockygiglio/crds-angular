@@ -4,17 +4,19 @@
 
 <preloader full-screen='false' ng-show='!groupResources.ready'> </preloader>
 
-<div ng-show="groupResources.ready">
+<div ng-show="groupResources.ready && !groupResources.hasData()" dynamic-content="$root.MESSAGES.groupToolResourcesNoResourcesFound.content | html"></div>
+
+<div ng-show="groupResources.ready && groupResources.hasData()">
   <div tabset="" class="group-resource-tabs" vertical="false" id="group-resource-tabs">
     <div heading="View All" tab="">
-      <div class="row" ng-repeat="category in groupResources.groupcats">
+      <div class="row" ng-repeat="category in groupResources.getCategories()">
         <div class="col-sm-12 text-left">
           <h3 class="group-category-title">{{category.getTitle()}}</h3>
           <p ng-bind-html="category.getDescription()" class="push-bottom"></p>
         </div>
         <div ng-repeat="resource in category.getResources()" class="col-sm-3 group-resource-item push-bottom soft-bottom"><a href="{{resource.getUrl()}}" target="_blank" ng-if="resource.hasUrl()"><span class="hidden">{{resource.getTitle()}}</span></a>
           <div class="resource-img-cont">
-            <div class="aspect-content"><img src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
+            <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
           <svg viewbox="0 0 32 32" class="icon icon-file-pdf icon-large pull-left" ng-if="resource.getType() === 'file-pdf'">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#file-pdf">&nbsp;</use>
@@ -35,14 +37,14 @@
                 </svg>
               </div>
               <div class="col-xs-10 col-sm-11 hard-left">
-                <div class="pull-left" ng-bind-html="category.footerContent()">&nbsp;</div>
+                <div class="pull-left" ng-bind-html="category.getFooterContent()">&nbsp;</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div ng-repeat="category in groupResources.groupcats" heading="{{category.getTitle()}}" active="category.active" tab="">
+    <div ng-repeat="category in groupResources.getCategories()" heading="{{category.getTitle()}}" active="category.active" tab="">
       <div class="row">
         <div class="col-sm-12 text-left">
           <h3 class="group-category-title">{{category.getTitle()}}</h3>
@@ -50,7 +52,7 @@
         </div>
         <div ng-repeat="resource in category.resources" class="col-sm-3 group-resource-item push-bottom soft-bottom"><a href="{{resource.getUrl()}}" target="_blank" ng-if="resource.hasUrl()"><span class="hidden">{{resource.getTitle()}}</span></a>
           <div class="resource-img-cont">
-            <div class="aspect-content"><img src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
+            <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
           <svg viewbox="0 0 32 32" class="icon icon-file-pdf icon-large pull-left" ng-if="resource.getType() === 'file-pdf'">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#file-pdf">&nbsp;</use>
