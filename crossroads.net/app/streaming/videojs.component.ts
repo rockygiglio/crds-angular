@@ -7,7 +7,7 @@ declare var chrome: any;
 window.videojs = require('video.js/dist/video');
 
 require('./vendor/streamspotAnalytics');
-require('./vendor/videojs5-hlsjs-source-handler');
+require('./vendor/videojs5-hlsjs-source-handler.min');
 require('videojs-chromecast/dist/videojs-chromecast');
 
 @Component({
@@ -60,7 +60,6 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           "techOrder": ["html5"],
           "fluid": true,
           "poster" : defaultPlayer.bgLink,
-          "preload": 'auto',
           "controls": true,
           "html5": {
             "hlsjsConfig": {
@@ -122,7 +121,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
         "src": src
       }
     ]);
-    
+    this.player.qualityPickerPlugin();
+    this.player.updateStyleEl_();
     this.visible = true;
     this.player.ready(() => this.player.play());
   }
