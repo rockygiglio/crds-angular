@@ -8,7 +8,6 @@ export default class ChangeParticipantRoleController {
     this.anchorScroll = $anchorScroll;
     this.rootScope = $rootScope;
     this.groupDetailService = GroupDetailService;
-    //this.currentRole = this.participant.groupRoleId;
   }
 
   $onInit() {
@@ -16,7 +15,6 @@ export default class ChangeParticipantRoleController {
   }
 
   submit() {
-    debugger;
     if (this.currentRole === this.participant.groupRoleId){
       return;
     }
