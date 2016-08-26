@@ -65,17 +65,26 @@ class TripDepositController {
       this.dto.reset();
       this.state.go('home');
     });
-    
-    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState) => {
+
+    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (toState && !/^tripdeposit.*/.test(toState.name)) {
         return;
       }
-      if (fromState.name !== 'tripsignup.application.page' 
-          && fromState.name !== 'tripdeposit.confirm'
-          && toState.name === 'tripdeposit' ) {
+      if (fromState.name === 'tripsignup.application.page' &&
+          toState.name === 'tripdeposit' &&
+          fromParams.stepId &&
+          Number(fromParams.stepId) < 5
+          ) {
+        event.preventDefault(); 
         this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
         return;
-      }  
+      }
+      if (fromState.name !== 'tripsignup.application.page' &&
+          fromState.name !== 'tripdeposit.confirm' &&
+            toState.name === 'tripdeposit' ) {
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
+        return;
+      }
       this.dto.processing = false;
       if ((!this.dto.initialized || toState.name === 'tripdeposit') &&
           toState.name !== this.giveFlow.thankYou) {

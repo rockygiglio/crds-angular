@@ -48,12 +48,12 @@
       }
     }
 
-    function reset(campaign) {
+    function reset(campaign, currentPage = 1) {
       signupService.campaign = campaign;
       signupService.ageLimitReached = false;
       signupService.contactId = '';
-      signupService.currentPage = 1;
-      signupService.numberOfPages = 0;
+      signupService.currentPage = currentPage;
+      //signupService.numberOfPages = 0;
       signupService.pageHasErrors = true;
       signupService.privateInvite = $location.search().invite;
 
@@ -136,6 +136,7 @@
               f.signedUpDate = new Date();
             }
           });
+          signupService.reset(signupService.campaign, 'thanks');
           success(data);
         }, () => {
         error();

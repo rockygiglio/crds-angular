@@ -78,7 +78,6 @@ describe('TripSignupService', () => {
     expect(signupService.campaign).toEqual(campaign);
     expect(signupService.ageLimitReached).toBeFalsy();
     expect(signupService.contactId).toBe('');
-    expect(signupService.numberOfPages).toBe(0);
     expect(signupService.pageHasErrors).toBe(true);
   });
 
