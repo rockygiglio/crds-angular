@@ -26,6 +26,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.create', {
       parent: 'noSideBar',
       url: '/groups/create',
+      params: {
+        cancelSref: null
+      },
       template: '<create-group></create-group>',
       resolve:{
         stateList: (CreateGroupService, GroupService) =>{

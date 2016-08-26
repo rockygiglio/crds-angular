@@ -3,7 +3,7 @@ import SmallGroup from '../model/smallGroup';
 
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $log, CreateGroupService, GroupService, $rootScope, $window) {
+    constructor(ParticipantService, $state, $stateParams, $log, CreateGroupService, GroupService, $rootScope, $window) {
         this.log = $log;
         this.state = $state;
         this.participantService = ParticipantService;
@@ -16,6 +16,10 @@ export default class CreateGroupController {
         this.createGroupForm = {};
         this.options = {};
         this.window = $window;
+
+        // If the state that called this component has a specific state route for the Cancel button set it now
+        // The cancel button will be hidden if there isn't a cancelSref
+        this.cancelSref = $stateParams.cancelSref;
     }
 
     $onInit() {
