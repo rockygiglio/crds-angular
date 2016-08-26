@@ -14,6 +14,10 @@ class MockStreamspotService extends StreamspotService {
   }
 }
 
+class MockAngularticsService {
+  constructor() {}
+}
+
 describe('Component: VideoJS', () => {
 
   beforeEach(() => {
@@ -24,7 +28,7 @@ describe('Component: VideoJS', () => {
   });
 
   it('should create the component with service successfully.', () => {
-    let component = new VideoJSComponent(new MockStreamspotService());
+    let component = new VideoJSComponent(new MockStreamspotService(), new MockAngularticsService());
     expect(component).toBeTruthy();
 
   });
