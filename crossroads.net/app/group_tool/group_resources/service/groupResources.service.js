@@ -28,11 +28,11 @@ export default class GroupResourcesService {
     });
 
     return deferred.promise;
-    // let promised = this.resource(`${__CMS_ENDPOINT__}/groupresources`).
+    // let promised = this.resource(`${__CMS_ENDPOINT__}/api/groupresourcecategories`).
     //   query().$promise;
 
     // return promised.then((data) => {
-    //   let resources = data.resources.category.map((resource) => {
+    //   let resources = data.groupresourcecategories.map((resource) => {
     //     return new GroupResourceCategory(resource);
     //   });
 

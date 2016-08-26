@@ -51,6 +51,10 @@ export default class GroupResource {
   }
 
   compareTo(other) {
+    if(other === undefined || other === null) {
+      return 1;
+    }
+
     if(this.getSortOrder() === undefined && other.getSortOrder() === undefined) {
       return 0;
     }

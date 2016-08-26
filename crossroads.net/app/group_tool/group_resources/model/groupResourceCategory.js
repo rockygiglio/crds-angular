@@ -19,14 +19,12 @@ export default class GroupResourceCategory {
       if(source.resources) {
         this.resources = source.resources.map((r) => {
           return new GroupResource(r);
+        }).sort((a, b) => {
+          return a.compareTo(b);
         });
       } else {
         this.resources = [];
       }
-  }
-
-  hasResources() {
-    return this.resources.length > 0;
   }
 
   getTitle() {
@@ -53,15 +51,19 @@ export default class GroupResourceCategory {
     return this.active === true;
   }
 
-  setActive(a) {
-    this.active = a;
-  }
-
   getResources() {
     return this.resources;
   }
 
+  hasResources() {
+    return this.resources.length > 0;
+  }
+
   compareTo(other) {
+    if(other === undefined || other === null) {
+      return 1;
+    }
+
     if(this.getSortOrder() === undefined && other.getSortOrder() === undefined) {
       return 0;
     }
@@ -75,6 +77,6 @@ export default class GroupResourceCategory {
     }
 
     let compare = this.getSortOrder() - other.getSortOrder();
-    return compare > 0 ? 1 : compare < 0 ? -1 : 0; 
+    return compare > 0 ? 1 : compare < 0 ? -1 : 0;
   }
 }

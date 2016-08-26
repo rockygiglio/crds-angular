@@ -9,11 +9,13 @@ export default class GroupResourcesController {
   }
 
   $onInit() {
-    this.groupResourcesService.getGroupResources().then((resources) => {
+    this.groupResourcesService.getGroupResources().then((categories) => {
       // Filter off any categories without resources - in case anyone wants to
       // add categories before they have resources ready for the category.
-      this.categories = resources.filter((cat) => {
+      this.categories = categories.filter((cat) => {
         return cat.hasResources() === true;
+      }).sort((a, b) => {
+        return a.compareTo(b);
       });
     }, (/*err*/) => {
       this.categories = [];
