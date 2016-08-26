@@ -1,6 +1,9 @@
 (function() {
   'use strict';
 
+  var moment = require('moment');
+  var formatDate = crds_utilities.formatDate;
+
   module.exports = CommunityGroupsController;
 
   CommunityGroupsController.$inject = [
@@ -29,6 +32,7 @@
     Session) {
 
     var vm = this;
+    var now = moment();
     vm.allSignedUp = allSignedUp;
     vm.alreadySignedUp = false;
     vm.atLeastOneParticipant = false;
@@ -70,7 +74,7 @@
             vm.response = response.SignUpFamilyMembers;
             vm.groupEvents = response.events;
             vm.childCareEvents = _.find(vm.groupEvents, function(i) {
-              return i.eventType === 'Childcare';
+              return (i.eventType === 'Childcare' && moment(i.startDate).isBefore(now));
             });
 
             if(vm.childCareEvents !== undefined){
