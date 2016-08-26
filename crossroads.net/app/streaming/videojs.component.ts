@@ -7,7 +7,7 @@ declare var chrome: any;
 window.videojs = require('video.js/dist/video');
 
 require('./vendor/streamspotAnalytics');
-require('./vendor/videojs5-hlsjs-source-handler.min');
+require('./vendor/videojs5-hlsjs-source-handler');
 require('videojs-chromecast/dist/videojs-chromecast');
 
 @Component({
@@ -23,10 +23,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
   debug: boolean = false;
   angulartics: any;
 
-  constructor(
-    private streamspot: StreamspotService, 
-    @Inject('$analytics') angularticsService) {
-    this.angulartics = angularticsService;
+  constructor( private streamspot: StreamspotService, @Inject('$analytics') angTicServ) {
+    this.angulartics = angTicServ;
   }
 
   ngOnDestroy() {
@@ -66,7 +64,7 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           "controls": true,
           "html5": {
             "hlsjsConfig": {
-              "debug": false
+              "debug": true
             }
           }
         });
@@ -80,13 +78,12 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
               category: 'Streaming',
               label: 'Live Streaming Play'
             });
-            console.log('Video played.');
           }
         });
 
         // create stop handler (analytics)
         this.player.on('pause', () => {
-          if(window.SSTracker){
+          if(window.SSTracker) {
             window.SSTracker.stop();
             window.SSTracker = null;
           }
@@ -95,7 +92,6 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
               category: 'Streaming',
               label: 'Live Streaming Pause'
             });
-            console.log('Video paused.');
           }
         });
             
@@ -126,6 +122,7 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
         "src": src
       }
     ]);
+    
     this.visible = true;
     this.player.ready(() => this.player.play());
   }
