@@ -1,0 +1,145 @@
+.crds-modal {
+
+  h2 {
+    font-family: $cr-streaming-font-extra-cond;
+    font-size: 210%;
+    font-weight: 600;
+  }
+
+  h2, h3 {
+    color: #FFF;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 135%;
+  }
+
+  modal-header {
+    text-align: center;
+    text-transform: uppercase;
+    color: #FFF;
+  }
+
+  ::-webkit-input-placeholder {
+    color: #FFF;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: #FFF;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: #FFF;
+  }
+
+  :-ms-input-placeholder {  
+    color: #FFF;
+  }
+
+  .form-control {
+    background: darken($cr-streaming-blue, 10);
+    border: none;
+    color: #FFF;
+    font-size: 90%;
+    padding: 1em;
+  }
+
+  .reminder-content > label {
+    text-transform: uppercase;
+    font-size: 85%;
+    margin-bottom: 0.5em; 
+  }
+
+  .btn {
+    border-radius: 4px;
+    font-size: 90%;
+    font-weight: 500;
+    &:focus, &.focus {
+      outline: none;
+    }
+    &.btn-set-reminder {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF);
+    }
+    &.btn-time-select {
+      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
+      &.active {
+        color: $cr-streaming-blue;
+        background: #FFF;
+        box-shadow: none;
+      } 
+    }
+  }
+
+
+  .form-control {
+    label {
+      text-transform: none;
+    }
+  }
+
+  .close {
+    font-size: 210%;
+    font-weight: 100;
+    color: #FFF;
+    opacity: 1;
+    line-height: 30%;
+  }
+
+  .modal-header,
+  .modal-footer {
+    border: none;
+  }
+
+  .modal-content {
+    @include clearfix;
+    border-radius: 0;
+    background: $cr-streaming-blue;
+    box-shadow: none;
+    border: none;
+    color: #FFF;
+  }
+
+  .reminder-content {
+    @include make-sm-column(5);
+    &.schedule {
+      @include make-sm-column-offset(1);
+      .btn {
+        margin: 0 0.35em 0.5em 0;
+      }
+    }
+    .btn-group {
+      margin: 1.5em 0;
+      .btn.active,
+      .btn:first-child {
+        border-right: none;
+      }
+    }
+  }
+
+  .modal-header {
+    padding-top: 2em;
+    .close {
+      margin-top: -16px;
+    }
+  }
+
+  .modal-footer {
+    clear: both;
+    text-align: center;
+    padding-bottom: 2.5em;
+    padding-top: 2em;
+  }
+
+  @media(min-width: $screen-md) {
+    .reminder-content {
+      &.schedule {
+        border-right: 1px solid lighten($cr-streaming-blue, 20);
+      }
+      &.contact {
+        padding-left: 3em;
+      }
+    }
+  }
+  
+}
