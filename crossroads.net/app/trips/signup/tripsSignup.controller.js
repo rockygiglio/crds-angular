@@ -60,6 +60,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
     vm.numberOfPages = 0;
+    vm.page6ButtonText = page6ButtonText();
     vm.pageHasErrors = true;
     vm.passportInvalidContent = passportInvalidContent;
     vm.privateInvite = $location.search()['invite'];
@@ -83,7 +84,6 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.maxPassportExpireDate = new Date(now.getFullYear() + 150, now.getMonth(), now.getDate());
     vm.minPassportExpireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     vm.openPassportExpireDatePicker = openPassportExpireDatePicker;
-    
 
     $rootScope.$on('$stateChangeStart', stateChangeStart);
     $scope.$on('$viewContentLoaded', stateChangeSuccess);
@@ -122,22 +122,18 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
       switch (vm.destination) {
         case 'NOLA':
-          vm.numberOfPages = 6;
-          vm.signupService.numberOfPages = 6;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 5 : 6;
           break;
         case 'South Africa':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           break;
         case 'India':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           vm.whyPlaceholder = 'Please be specific. ' +
             'In instances where we have a limited number of spots, we strongly consider responses to this question.';
           break;
         case 'Nicaragua':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           break;
       }
 
@@ -185,6 +181,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
        vm.passportExpireDateOpen = true;
     }
 
+    function page6ButtonText(){
+      if (TripsSignupService.isScholarshipped) {
+        return { normal: 'Submit Application', processing: 'Submitting...' };
+      }
+
+      return { normal: 'Next', processing: 'Next...' };
+    }
+
     function frequentFlyerChanged(flyer) {
       if (!_.isEmpty(flyer.notes)) {
         flyer.selected = true;
@@ -227,9 +231,17 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       } else {
         saveProfile();
       }
-      $state.go('tripdeposit',
-                    {campaignId: vm.signupService.campaign.id, contactId: $stateParams.contactId});
-
+      if (!TripsSignupService.isScholarshipped) {
+        $state.go('tripdeposit',
+                      { campaignId: vm.signupService.campaign.id,
+                        contactId: $stateParams.contactId });
+      } else {
+        vm.signupService.saveApplication(() => {
+          $state.go('tripsignup.application.thankyou');
+        }, () => {
+          saveError();
+        });
+      }
     }
 
     function saveError() {
