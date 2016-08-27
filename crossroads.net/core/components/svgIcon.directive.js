@@ -8,11 +8,12 @@
     return {
       restrict: 'E',
       scope: {
-        'icon': '@?icon'
+        'icon': '@?icon',
+        'classes': '@?classes'
       },
       link: function link(scope, el, attr){
-        el.append('<svg viewBox=\'0 0 32 32\' class=\'icon icon-' + 
-            scope.icon   +  
+        el.replaceWith('<svg viewBox=\'0 0 32 32\' class=\'icon icon-' + 
+            scope.icon + (scope.classes ? ' ' + scope.classes : '') +  
             '\'><use xlink:href=\'#' + 
             scope.icon + '\'></use> </svg>'); 
       }

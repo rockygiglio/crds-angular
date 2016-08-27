@@ -14,10 +14,10 @@ export default class GroupResourceCategory {
       this.title = source.title;
       this.description = source.description;
       this.footerContent = source.communitygroupcontent;
-      this.sortOrder = source.sortOrder;
-      this.active = source.active;
-      if(source.resources) {
-        this.resources = source.resources.map((r) => {
+      this.sortOrder = parseInt(source.sortOrder);
+      this.active = source.default;
+      if(source.groupResources) {
+        this.resources = source.groupResources.map((r) => {
           return new GroupResource(r);
         }).sort((a, b) => {
           return a.compareTo(b);

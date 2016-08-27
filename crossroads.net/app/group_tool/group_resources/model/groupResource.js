@@ -11,11 +11,22 @@ export default class GroupResource {
   _assignProperties(source) {
       this.title = source.title;
       this.tagline = source.tagline;
-      this.url = source.url;
+      this.type = source.resourceType;
       this.author = source.author;
-      this.image = source.img;
-      this.type = source.type;
-      this.sortOrder = source.sortOrder;
+      this.sortOrder = parseInt(source.sortOrder);
+      if(source.image && source.image.filename) {
+        this.image = source.image.filename;
+      } else {
+        this.image = undefined;
+      }
+
+      if(!this.isPdf()) {
+        this.url = source.url;
+      } else if(source.pdfFile && source.pdfFile.filename) {
+        this.url = source.pdfFile.filename;
+      } else {
+        this.url = undefined;
+      }
   }
 
   getTitle() {
@@ -44,6 +55,22 @@ export default class GroupResource {
 
   getType() {
     return this.type;
+  }
+
+  getIcon() {
+    return this.isPdf() ? 'file-pdf' : this.isBook() ? 'book' : 'file-text-o';
+  }
+
+  isPdf() {
+    return this.type === 'file-pdf';
+  }
+
+  isBook() {
+    return this.type === 'book';
+  }
+
+  isOther() {
+    return this.type === 'other';
   }
 
   getSortOrder() {

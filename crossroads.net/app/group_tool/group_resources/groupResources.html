@@ -18,12 +18,7 @@
           <div class="resource-img-cont">
             <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
-          <svg viewbox="0 0 32 32" class="icon icon-file-pdf icon-large pull-left" ng-if="resource.getType() === 'file-pdf'">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#file-pdf">&nbsp;</use>
-          </svg>
-          <svg viewbox="0 0 32 32" class="icon icon-book icon-large pull-left" ng-if="resource.getType() === 'book'">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#book">&nbsp;</use>
-          </svg>
+          <svg-icon icon='{{resource.getIcon()}}' classes='icon-large pull-left'></svg-icon>
           <h5 class="flush-bottom weight-semibold">{{resource.getTitle()}}</h5>
           <p class="flush-ends author"><em>by {{resource.getAuthor()}}</em></p>
           <p class="group-resource-tagline flush-ends">{{resource.getTagline()}}</p>
@@ -54,12 +49,7 @@
           <div class="resource-img-cont">
             <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
-          <svg viewbox="0 0 32 32" class="icon icon-file-pdf icon-large pull-left" ng-if="resource.getType() === 'file-pdf'">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#file-pdf">&nbsp;</use>
-          </svg>
-          <svg viewbox="0 0 32 32" class="icon icon-book icon-large pull-left" ng-if="resource.getType() === 'book'">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#book">&nbsp;</use>
-          </svg>
+          <svg-icon icon='{{resource.getIcon()}}' classes='icon-large pull-left'></svg-icon>
           <h5 class="flush-bottom weight-semibold">{{resource.getTitle()}}</h5>
           <p class="flush-ends author"><em>by {{resource.getAuthor()}}</em></p>
           <p class="group-resource-tagline flush-ends">{{resource.getTagline()}}</p>
