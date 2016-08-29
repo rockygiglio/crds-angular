@@ -817,25 +817,6 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("updated group: " + group.GroupId);
         }
 
-        /// <summary>
-        /// Returns list of small groups from the My groups > My Small Groups view. 
-        /// </summary>
-        /// <param name="userToken"></param>
-        /// <returns></returns>
-        public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
-        {
-            var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
-            var mpGroupList = groups.Select(MapRecordToMpGroup).ToList();
-
-            foreach (MpGroup group in mpGroupList)
-            {
-                group.Participants = LoadGroupParticipants(group.GroupId, userToken).Where(p => p.GroupRoleId == GroupLeaderRoleId).ToList();
-            }
-
-            return mpGroupList;
-
-        }
-
         public MpGroup GetSmallGroupDetailsById(int groupId)
         {
             var apiToken = ApiLogin();

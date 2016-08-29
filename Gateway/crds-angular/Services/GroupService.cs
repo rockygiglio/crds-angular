@@ -631,28 +631,6 @@ namespace crds_angular.Services
             }
         }
 
-        public List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token)
-        {
-            var smallGroups = _mpGroupService.GetSmallGroupsForAuthenticatedUser(token);
-            if (smallGroups == null)
-            {
-                return null;
-            }
-
-            var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
-            //var configuration = MpObjectAttributeConfigurationFactory.Group();
-            //var mpAttributes = _attributeRepository.GetAttributes(null);
-
-            //foreach (var group in groupDetail)
-            //{
-                //var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
-                //group.AttributeTypes = attributesTypes.MultiSelect;
-                //group.SingleAttributes = attributesTypes.SingleSelect;
-            //}
-
-            return groupDetail;
-        }
-
         public GroupDTO UpdateGroup(GroupDTO group)
         {
             try

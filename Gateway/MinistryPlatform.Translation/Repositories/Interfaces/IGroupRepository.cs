@@ -28,11 +28,13 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpGroupSignupRelationships> GetGroupSignupRelations(int groupType);
 
         bool ParticipantQualifiedServerGroupMember(int groupId, int participantId);
+
         bool ParticipantGroupMember(int groupId, int participantId);
 
         List<MpGroup> GetGroupsForEvent(int eventId);
 
         void SendCommunityGroupConfirmationEmail(int participantId, int groupId, bool waitlist, bool childcareNeeded);
+
         List<MpGroupParticipant> getEventParticipantsForGroup(int groupId, int eventId);
 
         IList<string> GetEventTypesForGroup(int groupId, string token = null);
@@ -47,18 +49,23 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         List<MpGroupSearchResult> GetSearchResults(int groupTypeId);
 
-        List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken);
         void endDateGroupParticipant(int participantId, int groupId, DateTime? endDate = null);
+
         void UpdateGroupInquiry(int groupId, int inquiryId, bool approved);
+
         List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null);
 
         void EndDateGroup(int groupId, DateTime? endDate, int? reasonEndedId);
 
         MpGroup GetSmallGroupDetailsById(int groupId);
+
         void SendNewStudentMinistryGroupAlertEmail(List<MpGroupParticipant> leaders);
+
         int UpdateGroup(MpGroup mpGroup);
         int UpdateGroupParticipant(List<MpGroupParticipant> participants);
+
         void CreateGroupInquiry(MpInquiry inquiry);
+
         MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
     }
 }
