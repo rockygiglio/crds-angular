@@ -33,6 +33,7 @@
 
     var vm = this;
     var now = moment();
+
     vm.allSignedUp = allSignedUp;
     vm.alreadySignedUp = false;
     vm.atLeastOneParticipant = false;
@@ -74,7 +75,7 @@
             vm.response = response.SignUpFamilyMembers;
             vm.groupEvents = response.events;
             vm.childCareEvents = _.find(vm.groupEvents, function(i) {
-              return (i.eventType === 'Childcare' && moment(i.startDate).isBefore(now));
+            return (i.eventType === 'Childcare' && moment(i.startDate).isAfter(now));
             });
 
             if(vm.childCareEvents !== undefined){
