@@ -19,5 +19,6 @@ namespace MinistryPlatform.Translation.Models
         public string RegistrationDeposit { get; set; }
         public List<int> AgeExceptions { get; set; }
         public int EventId { get; set; }
+        public int ProgramId { get; set; }
     }
 }

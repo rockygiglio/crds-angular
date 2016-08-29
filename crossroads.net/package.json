@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/crdschurch/crds-angular",
   "devDependencies": {
-    "angular-mocks": "~1.4.3",
+    "angular-mocks": "~1.5.5",
     "angular2-template-loader": "^0.4.0",
     "assets-webpack-plugin": "^2.2.0",
     "autoprefixer-loader": "^1.2.0",
@@ -150,7 +150,7 @@
     "video.js": "5.10.8",
     "videojs-chromecast": "^1.0.0",
     "wow.js": "^1.2.0",
-    "zone.js": "^0.6.12"
+    "zone.js": "0.6.12"
   },
   "browser": {
     "angular-aside": "./lib/angular-aside.js",

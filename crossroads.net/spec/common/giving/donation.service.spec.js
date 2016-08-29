@@ -39,6 +39,22 @@ describe('Common Giving Donation Service', function() {
       })
   );
 
+  it('should not allow credit card change if fields are empty', () => {
+    expect(() => { fixture.createCard(); }).toThrow(new Error('Unable to create credit card'));
+    // fake the valid form...
+    var form = { $valid: true };
+    fixture.processCreditCardChange(form);
+    expect(GiveTransferService.processing).toBe(false);
+  });
+
+  it('should not allow bank account change if fields are empty', () => {
+    expect(() => { fixture.createBank(); }).toThrow(new Error('Unable to create bank account'));
+    // fake the valid form...
+    var form = { $valid: true };
+    fixture.processBankAccountChange(form);
+    expect(GiveTransferService.processing).toBe(false);
+  });
+
   describe('function transitionForLoggedInUserBasedOnExistingDonor', function() {
     var event;
     var toState;

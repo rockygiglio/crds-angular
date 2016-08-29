@@ -33,7 +33,7 @@
                 loading-text='{{!groupSearchResults.searchedWithLocation ? "Saving..." : "Updating..."}}'
                 loading='groupSearchResults.processing'
                 loading-class='disabled'
-                input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+                input-classes='btn btn-primary'></loading-button>
               <button type="button" class="btn btn-standard" ng-click="groupSearchResults.hideLocationForm(groupLocationForm)">Cancel</button>
             </div>
             <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
@@ -53,7 +53,11 @@
     <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
   </div>
 
-  <table ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
+  <!--
+    DESKTOP ONLY results
+    WARNING!!! If you make a change here, apply it to the mobile results list below
+    -->
+  <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
@@ -62,8 +66,14 @@
       <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
       <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
       <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
-      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center"><span ng-if="group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span></td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" ><a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a></td>
+      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center">
+        <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
+        <span ng-if="!group.hasAddress()">Online</span>
+      </td>
+      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" >
+        <a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a>
+        <span ng-if="!group.hasAddress()">Online</span>
+      </td>
     </tr>
     <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
       <td colspan="8">
@@ -77,13 +87,25 @@
     </tr>
   </table>
 
-  <div ng-show='groupSearchResults.ready && groupSearchResults.results.length > 0' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
+  <!--
+    MOBILE ONLY results
+    WARNING!!! If you make a change here, apply it to the desktop results list above
+    -->
+  <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
     <div ng-repeat-start="group in groupSearchResults.results"
          class="group-result push-half-bottom soft-half-bottom"
-         ng-click="group.expanded = !group.expanded">
+         ng-click="group.expanded = true" ng-if="!group.expanded">
       <div class="row">
-        <strong class="col-xs-10">{{group.groupName}}</strong>
-        <div class="col-xs-2 pointer" ng-click="groupSearchResults.openMap(group); $event.stopPropagation()">Map</div>
+        <strong class="col-xs-9">{{group.groupName}}</strong>
+
+        <div ng-if="groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+          <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
+          <span ng-if="!group.hasAddress()">Online</span>
+        </div>
+        <div ng-if="!groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+          <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" >Map</a>
+          <span ng-if="!group.hasAddress()">Online</span>
+        </div>
       </div>
       <div>{{group.categories.join(', ')}}</div>
       <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
@@ -98,5 +120,5 @@
     </div>
   </div>
 
-  <div ng-show='groupSearchResults.ready && groupSearchResults.results == 0' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
+  <div ng-show='groupSearchResults.ready && !groupSearchResults.hasResults()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
 </div>

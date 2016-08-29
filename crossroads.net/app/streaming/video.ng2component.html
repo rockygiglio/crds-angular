@@ -29,17 +29,17 @@
           <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
 
       </section>
-      <section class="participate digital-program" *ngIf="promos.length > 0">
+      <section class="participate digital-program" *ngIf="beTheChurch.length > 0">
         <header class="clearfix">
           <h2>be the church</h2>
         </header>
         
-        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of promos">
+        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
           <figure class="wow fadeIn" data-wow-delay="">
-            <img src="{{promo.image}}" alt="" class="img-responsive" />
+            <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
           </figure>
           <section>
-            <h3>{{ promo.title }}</h3>
+            <h3 title="{{ promo.title }}">{{ promo.title | truncate: 38 }}</h3>
             <div [innerHTML]="promo.description"></div>
           </section>
           <hr>

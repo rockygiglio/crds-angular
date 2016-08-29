@@ -163,7 +163,7 @@ export default class SmallGroup {
   getGroupCardWhenField() {
     let meetingDayStr = 'Flexible Meeting Time';
     if (this.meetingDay !== undefined && this.meetingDay !== null) {
-      meetingDayStr = this.meetingDay + '\'s at ' + new moment(this.meetingTime, 'HH:mm:ss').format('h:mm a') + ', ' + this.meetingFrequencyText;
+      meetingDayStr = this.meetingDay + '\'s at ' + new moment(this.meetingTime, 'HH:mm:ss a').format('h:mm a') + ', ' + this.meetingFrequencyText;
     }
     return meetingDayStr;
   }

@@ -10,11 +10,11 @@ namespace crds_angular.Controllers.API
 {
     public class AddressController : ApiController
     {
-        private readonly IAddressProximityService _addressProximityService;
+        private readonly IAddressGeocodingService _addressGeocodingService;
 
-        public AddressController(IAddressProximityService addressProximityService)
+        public AddressController(IAddressGeocodingService addressGeocodingService)
         {
-            _addressProximityService = addressProximityService;
+            _addressGeocodingService = addressGeocodingService;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                return Ok(_addressProximityService.ValidateAddress(address));
+                return Ok(_addressGeocodingService.ValidateAddress(address));
             }
             catch (InvalidAddressException)
             {

@@ -32,8 +32,10 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IPersonService _personService;
         private readonly IServeService _serveService;
+        private readonly IProgramRepository _programRepository;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ITripRepository _tripRepository;
+        private readonly IDonorRepository _mpDonorService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (TripService));
 
@@ -51,8 +53,10 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
+                           IProgramRepository programRepository,
                            IApiUserRepository apiUserRepository,
-                           ITripRepository tripRepository)
+                           ITripRepository tripRepository,
+                           IDonorRepository mpDonorService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
@@ -68,8 +72,10 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _personService = personService;
             _serveService = serveService;
+            _programRepository = programRepository;
             _apiUserRepository = apiUserRepository;
             _tripRepository = tripRepository;
+            _mpDonorService = mpDonorService;
         }
 
         public List<TripGroupDto> GetGroupsByEventId(int eventId)
@@ -369,15 +375,47 @@ namespace crds_angular.Services
             return myTrips;
         }
 
-        public void CreateTripParticipant(int contactId, int pledgeCampaignId)
+        public TripParticipantPledgeDto CreateTripParticipant(int contactId, int pledgeCampaignId)
         {
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
             var token = _apiUserRepository.GetToken();
             var added = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
-
             if (!added)
             {
                 throw new Exception("Unable to add as a participant on the trip");
             }
+            var pledge = _mpPledgeService.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId);
+            tripParticipantPledgeInfo.CampaignName = pledge.CampaignName;
+            tripParticipantPledgeInfo.DonorId = pledge.DonorId;
+            return tripParticipantPledgeInfo;
+        }
+
+        public TripParticipantPledgeDto GetCampaignPledgeInfo(int contactId, int pledgeCampaignId)
+        {
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
+
+            var tripRecord = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId).FirstOrDefault();
+            var tripDonor = _mpDonorService.GetContactDonor(contactId);
+            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
+
+            tripParticipantPledgeInfo.PledgeAmount = tripRecord != null ? (int)tripRecord.CampaignFundRaisingGoal : 0;
+            tripParticipantPledgeInfo.CampaignNickname = campaign.Nickname;
+            tripParticipantPledgeInfo.CampaignName = campaign.Name;
+            tripParticipantPledgeInfo.Deposit = tripRecord != null ? (int)tripRecord.RegistrationDeposit : 0;
+            tripParticipantPledgeInfo.DonorId = tripDonor.DonorId;
+            tripParticipantPledgeInfo.ProgramId = campaign.ProgramId;
+            tripParticipantPledgeInfo.ProgramName = _programRepository.GetProgramById(tripParticipantPledgeInfo.ProgramId).Name;
+
+            return tripParticipantPledgeInfo;
+        }
+
+        public bool HasScholarship(int contactId, int campaignId)
+        {
+            var campaign = _campaignService.GetPledgeCampaign(campaignId);
+            var distributions = _donationService.GetMyTripDistributions(contactId);
+            var scholarshipDollars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
+            var pledgeTotal = distributions.FirstOrDefault(d => d.EventId == campaign.EventId)?.TotalPledge;
+            return scholarshipDollars == pledgeTotal;
         }
 
         public int GeneratePrivateInvite(PrivateInviteDto dto, string token)

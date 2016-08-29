@@ -21,10 +21,12 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<IAddressRepository> _addressRepository;
+        private Mock<IObjectAttributeRepository> _objectAttributeRepository;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
         private readonly int _groupsSubGroupsPageId = 299;
+        private readonly int _myGroupParticipationPageId = 563;
         private const string ApiToken = "ABC";
         [SetUp]
         public void SetUp()
@@ -37,7 +39,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
             _addressRepository = new Mock<IAddressRepository>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
+            _objectAttributeRepository = new Mock<IObjectAttributeRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object, _objectAttributeRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -206,6 +209,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact_ID", i + 10},
                     {"Group_Role_ID", 42},
                     {"Role_Title", "Boss"},
+                    {"Approved_Small_Group_Leader", true },
                     {"Last_Name", "Anderson"},
                     {"Nickname", "Neo"},
                     {"Email", "Neo@fun.com"},
@@ -749,6 +753,44 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.UpdateGroup(existingGroup);
             Assert.AreEqual(1, result);
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationByGroupIdFindsGroup()
+        {
+            var values = new Dictionary<string, object>()
+            {
+                {"Participant_ID", 123},
+                {"Group_Participant_ID", 555 },
+                {"Group_Role_ID", 978 },
+                {"Something_Else", "A string" }
+            };
+
+            const int groupId = 43221;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>() {values});
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.ParticipantId, 123);
+            
+        }
+
+        [Test]
+        public void GetAuthenticatedUserParticipationNoGroupsFound()
+        {
+            const int groupId = 123;
+
+            _ministryPlatformService.Setup(mock => mock.GetRecordsDict(_myGroupParticipationPageId, "abc", $",,,{groupId}", It.IsAny<string>()))
+                .Returns(new List<Dictionary<string, object>>());
+
+            var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
+            _ministryPlatformService.VerifyAll();
+            Assert.IsNull(result);
         }
     }
 }

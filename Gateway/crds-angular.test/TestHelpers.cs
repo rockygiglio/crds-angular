@@ -140,17 +140,17 @@ namespace crds_angular.test
             return new PreferredLaunchSite()
             {
                 Id = RandomInt(),
-                Name = Gen.Sample(1, 20, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                Name = "some name"
             };
         }
 
         public static List<ProjectPreference> ListOfProjectPreferences(int size = 3)
         {
-            return Enumerable.Range(0, size).Select(_ => new ProjectPreference()
+            return Enumerable.Range(0, size).Select( (curr) => new ProjectPreference()
             {
-                Id = RandomInt(),
-                Priority = RandomInt(),
-                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault
+                Id = curr + 1,
+                Priority = curr,
+                Name = "Awesome Name"
             }).ToList();
         }
 
@@ -159,21 +159,32 @@ namespace crds_angular.test
             var prepwork = new List<PrepWork>();
             if (registrant)
             {
-                prepwork.Add(new PrepWork() {Id = RandomInt(), Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault, Spouse = false});
+                prepwork.Add(
+                    new PrepWork()
+                    {
+                        Id = RandomInt(),
+                        Name = "Name McNameFace",
+                        Spouse = false
+                    });
             }
             if (spouse)
             {
-                prepwork.Add(new PrepWork() {Id = RandomInt(), Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault, Spouse = true});
+                prepwork.Add(new PrepWork()
+                {
+                    Id = RandomInt(),
+                    Name = "Spouse McSpouseFace",
+                    Spouse = true
+                });
             }
             return prepwork;
         } 
 
         public static List<Equipment> ListOfEquipment(int size = 2)
         {
-            return Enumerable.Range(0, size).Select(_ => new Equipment()
+            return Enumerable.Range(0, size).Select((curr) => new Equipment()
             {
-                Id = RandomInt(),
-                Notes = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault                
+                Id = curr + 1,
+                Notes = "blah blah blah"                
             }).ToList();
         }
 
@@ -210,13 +221,13 @@ namespace crds_angular.test
 
         public static List<GoSkills> ListOfGoSkills(int size = 10)
         {
-            return Enumerable.Range(0, size).Select(_ =>
+            return Enumerable.Range(0, size).Select((curr) =>
                 new GoSkills(
-                    Gen.Sample(10000, 10000, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
-                    Gen.Sample(100, 10000, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault,
-                    Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                    Gen.Sample(100, 100, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                    Gen.Sample(100, 2, Gen.OneOf(Arb.Generate<bool>())).HeadOrDefault
+                    curr + 1,
+                    curr + 1,
+                    $"{curr +1}",
+                    $"{curr + 1}",
+                    true
                     )
             ).ToList();                                          
         }
@@ -250,12 +261,12 @@ namespace crds_angular.test
         {
             var contact = new MpMyContact()
             {
-                Address_ID = RandomInt(),
-                Address_Line_1 = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                Age = RandomInt(),
-                City = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
-                Contact_ID = RandomInt(),
-                County = Gen.Sample(20, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                Address_ID = 12,
+                Address_Line_1 = "123 Sesme Street",
+                Age = 23,
+                City = "Cincinnati",
+                Contact_ID = 123445,
+                County = "USA"
             };
             if (contactId != 0)
             {

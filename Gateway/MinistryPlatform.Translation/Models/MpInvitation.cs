@@ -19,6 +19,8 @@ namespace MinistryPlatform.Translation.Models
         public int InvitationType { get; set; }
 
         public string InvitationGuid { get; set; }
+
+        public string CustomMessage { get; set; }
     }
 
 }

@@ -59,5 +59,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int UpdateGroup(MpGroup mpGroup);
         int UpdateGroupParticipant(List<MpGroupParticipant> participants);
         void CreateGroupInquiry(MpInquiry inquiry);
+        MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
+
+        bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId);
     }
 }

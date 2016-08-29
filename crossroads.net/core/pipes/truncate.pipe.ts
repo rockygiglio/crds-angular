@@ -15,13 +15,17 @@ export class TruncatePipe implements PipeTransform {
       length = 10;
     }
 
-    var ellipses = '…';
+    let ellipses = '…';
     if (text.length <= length || text.length - ellipses.length <= length) {
       return text;
     }
     else {
-      var shortString = text.substr(0, length);
-      return shortString.substr(0, Math.min(length, shortString.lastIndexOf(' ')))+ellipses;
+      let shortString = text.substr(0, length);
+      let splitIndex = shortString.lastIndexOf(' ');
+      if (splitIndex <= 0) {
+        splitIndex = length;
+      }
+      return shortString.substr(0, Math.min(length, splitIndex))+ellipses;
     }
   }
 }

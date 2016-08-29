@@ -2,6 +2,7 @@
 import constants from 'crds-constants';
 import ConfirmRequestController from '../../../app/group_tool/confirm_request/confirmRequest.controller';
 import GroupMessage from '../../../app/group_tool/model/groupMessage';
+import SmallGroup from '../../../app/group_tool/model/smallGroup';
 
 
 describe('ConfirmRequestController', () => {
@@ -26,12 +27,30 @@ describe('ConfirmRequestController', () => {
       qApi = $injector.get('$q');
 
       fixture = new ConfirmRequestController(rootScope, messageService, groupService);
-      fixture.group = {groupId: 1};
+      fixture.group = new SmallGroup(
+        {
+          'groupId': 1,
+          'Participants': [
+            {
+              'participantId': 7537153,
+              'contactId': 2562378,
+              'groupParticipantId': 14581869,
+              'nickName': 'Dustin',
+              'lastName': 'Kocher',
+              'groupRoleId': 22,
+              'groupRoleTitle': 'Leader',
+              'email': 'dtkocher@callibrity.com',
+              'attributeTypes': null,
+              'singleAttributes': null
+            },
+          ]
+        });
   }));
 
   describe('$onInit() function', () => {
     it('when emailLeader should create a groupMessage', () =>{
         fixture.emailLeader = true;
+
         fixture.$onInit();
 
         expect(fixture.groupMessage).toBeDefined();

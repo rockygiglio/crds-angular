@@ -23,10 +23,10 @@
 
             <!-- Lead a Group -->
             <div ng-class="{ 'col-md-6 col-sm-12': myGroups.groupsEven() }">
-              <div class="my-groups-static panel panel-default text-center pointer" ui-sref="grouptool.create">
+              <div class="my-groups-static panel panel-default text-center pointer" ui-sref="grouptool.create({ cancelSref: 'grouptool.mygroups' })">
                 <div class="my-groups-static-vert">
                   <div class="push-half-bottom">Lead a Group</div>
-                  <svg viewBox="0 0 32 32" class="icon plus4 text-primary">
+                  <svg viewBox="0 0 32 32" class="icon icon-xxxlarge plus4 text-primary">
                     <use xlink:href="#plus4"></use>
                   </svg>
                 </div>
@@ -35,11 +35,10 @@
 
             <!-- Find a Group -->
             <div ng-class="{ 'col-md-6 col-sm-12': myGroups.groupsEven() }">
-              <div class="my-groups-static panel panel-default text-center">
+              <div class="my-groups-static panel panel-default text-center pointer" ui-sref="grouptool.search">
                 <div class="my-groups-static-vert">
-                  <div>Find a Group</div>
-                  <div class="find-disabled">Available on Saturday, August 27</div>
-                  <svg viewBox="0 0 32 32" class="icon search3 find-disabled">
+                  <div class="push-half-bottom">Find a Group</div>
+                  <svg viewBox="0 0 32 32" class="icon icon-xxxlarge search3 text-primary">
                     <use xlink:href="#search3"></use>
                   </svg>
                 </div>

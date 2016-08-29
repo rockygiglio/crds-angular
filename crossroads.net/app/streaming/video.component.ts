@@ -9,6 +9,8 @@ import { VideoJSComponent } from './videojs.component';
 // core imports
 import { CMSDataService } from '../../core/services/CMSData.service'
 
+// pipes
+import { TruncatePipe } from '../../core/pipes/truncate.pipe';
 
 var WOW = require('wow.js/dist/wow.min.js');
 
@@ -16,7 +18,8 @@ var WOW = require('wow.js/dist/wow.min.js');
   selector: 'live-stream',
   templateUrl: './video.ng2component.html',
   providers: [CMSDataService],
-  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent]
+  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent],
+  pipes: [TruncatePipe]
 })
 
 export class VideoComponent implements OnInit {
@@ -26,7 +29,7 @@ export class VideoComponent implements OnInit {
   displayCounter:   boolean    = true;
   countSubmit:      boolean    = false;
   dontMiss:         Array<any> = [];
-  promos:           Array<any> = [];
+  beTheChurch:      Array<any> = [];
   redirectText:     string     = 'Go Back';
 
   closeModal:       EventEmitter<any> = new EventEmitter();
@@ -47,10 +50,10 @@ export class VideoComponent implements OnInit {
               } else {
                 feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
               }
-              if (feature.section.toLowerCase() === 'today') {
+              if (feature.section == 1 ) {
                 this.dontMiss.push(feature)
-              } else if (feature.section.toLowerCase() === 'promo') {
-                this.promos.push(feature);
+              } else if (feature.section == 2 ) {
+                this.beTheChurch.push(feature);
               }
             }
           })
