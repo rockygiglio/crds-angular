@@ -40,6 +40,7 @@ namespace crds_angular.test.Services
         private const int DefaultEmailContactId = 876;
         private const int AddressMatrixSearchDepth = 2;
         private const int DefaultGroupContactId = 999;
+        private const int RequestToJoinEmailTemplateId = 954;
 
         [SetUp]
         public void SetUp()
@@ -67,6 +68,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupEndedParticipantEmailTemplate")).Returns(GroupEndedParticipantEmailTemplate);
             configuration.Setup(mocked => mocked.GetConfigIntValue("AddressMatrixSearchDepth")).Returns(AddressMatrixSearchDepth);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(DefaultGroupContactId);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GroupRequestToJoinEmailTemplate")).Returns(RequestToJoinEmailTemplateId);
 
 
 
@@ -1165,8 +1167,33 @@ namespace crds_angular.test.Services
             List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
 
             _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+            _communicationRepository.Setup(mocked => mocked.GetTemplate(RequestToJoinEmailTemplateId)).Returns(new MpMessageTemplate()
+                                                                                                               {
+                                                                                                                   ReplyToEmailAddress = "replyto@crossroads.net",
+                                                                                                                   ReplyToContactId = 5,
+                                                                                                                   Body = "body",
+                                                                                                                   FromContactId = 7,
+                                                                                                                   Subject = "Subject",
+                                                                                                                   FromEmailAddress = "from@crossroads.net"
+                                                                                                               });
+
 
             _groupRepository.Setup(mocked => mocked.CreateGroupInquiry(It.IsAny<MpInquiry>()));
+            _groupService.Setup(mocked => mocked.GetGroupDetails(123)).Returns(new GroupDTO()
+                                                                               {
+                                                                                   GroupId = 1,
+                                                                                   Participants = new List<GroupParticipantDTO>()
+                                                                                   {
+                                                                                       new GroupParticipantDTO
+                                                                                       {
+                                                                                           ContactId = 42,
+                                                                                           NickName = "nickName",
+                                                                                           GroupRoleId = GroupRoleLeader
+                                                                                       }
+                                                                                   }
+                                                                               });
+
+            _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
             _fixture.SubmitInquiry(token, groupId);
             _groupRepository.VerifyAll();
@@ -1237,6 +1264,7 @@ namespace crds_angular.test.Services
             participants.Add(participant);
 
             _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+            
 
             try
             {
@@ -1247,6 +1275,8 @@ namespace crds_angular.test.Services
             {
                 Assert.AreSame(typeof(ExistingRequestException), e.GetType());
             }
+
+            
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
