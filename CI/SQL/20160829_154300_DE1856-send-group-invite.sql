@@ -1,8 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-DECLARE @TemplateID int = 2000
-
+DECLARE @TemplateID int = 261888
 DECLARE @Body VARCHAR(max) = '<div>' +
 							 	'<div style="font-family: Verdana; font-size: 12px;">' + 
 									'Hi [Recipient_Name]!' +
@@ -25,31 +24,10 @@ DECLARE @Body VARCHAR(max) = '<div>' +
 								 '<div style="font-family: Verdana; font-size: 12px;">' +
 								 	'<br />' +
 								 '</div>' +
-								 '<div>' +
-								 	'<div>' +
-										'<font face="Verdana">' +
-											'Here is a message from the group leader: ' +
-										'</font>' +
-									'</div>' +
-								 '</div>' +
-								 '<div style="font-family: Verdana; font-size: 12px;">' +
-								 	'<br />' +
-								 '</div>' +
-								 '<div>' +
-								 	'<div>' +
-										'<font face="Verdana">' +
-											'[Leader_Message]' +
-										'</font>' +
-									'</div>' +
-								 '</div>' +
-								 '<div style="font-family: Verdana; font-size: 12px;">' +
-								 	'<br />' +
-								 '</div>' +
 								 '<div style="font-family: Verdana; font-size: 12px;">' +
 								 	'Click here to accept: https://int.crossroads.net/groups/invitation/accept/[Invitation_GUID]' +
 								 '</div>' + 
 							 '</div>'
-
 DECLARE @Subject VARCHAR(max) = 'You''ve been invited to a Group'
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)
