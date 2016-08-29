@@ -486,13 +486,15 @@ namespace crds_angular.Services
                     _privateInviteService.MarkAsUsed(dto.PledgeCampaignId, dto.InviteGUID);
                 }
 
-                // TODO after 4715 is merged use new method to decide which email to send
-
-                // participant with deposit of scholarshipped?
-                SendTripApplicantDonationComboMessage(dto);
-
-                SendTripApplicantSuccessMessage(dto.ContactId);
-
+                if (HasScholarship(dto.ContactId, dto.PledgeCampaignId))
+                {
+                    SendTripApplicantSuccessMessage(dto.ContactId);
+                }
+                else
+                {
+                    SendTripApplicantDonationComboMessage(dto);
+                }
+                
                 return formResponseId;
             }
             catch (Exception)

@@ -30,5 +30,8 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty(PropertyName = "anonymous")]
         public bool Anonymous { get; set; }
+
+        [JsonProperty(PropertyName = "trip_deposit")]
+        public bool TripDeposit { get; set; }
     }
 }

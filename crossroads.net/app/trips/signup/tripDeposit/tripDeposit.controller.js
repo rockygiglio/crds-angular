@@ -104,8 +104,6 @@ class TripDepositController {
     this.initDefaultState();
   }
 
- 
-
   initDefaultState() {
 
     let program = {
@@ -128,25 +126,24 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
+  getPaymentType() {
+    if (this.dto.view === 'cc') {
+      return 'Credit Card';
+    }
+    else if (this.dto.view === 'bank') {
+      return 'Bank';
+    }
+    else {
+      return 'Unknown';
+    }
+  }
+
   saveApplication(shouldSubmitBank = '') {
     this.dto.processing = true;
+    this.signupService.paymentMethod = this.getPaymentType();
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
     } else {
-      var application = new this.signupService.TripApplication();
-      application.contactId = this.signupService.person.contactId;
-      application.pledgeCampaignId = this.signupService.campaign.id;
-      application.pageTwo = this.signupService.page2;
-      application.pageThree = this.signupService.page3;
-      application.pageFour = this.signupService.page4;
-      application.pageFive = this.signupService.page5;
-      application.pageSix = this.signupService.page6;
-      application.inviteGUID = this.stateParams.invite;
-      application.depositInformation = this.signupService.depositInfo;
-      application.depositInformation.donationAmount = this.signupService.depositAmount;
-      application.depositInformation.donationDate = moment(new Date()).format('l');
-      application.depositInformation.paymentMethod = this.getPaymentType();
-
       this.signupService.saveApplication((data) => {
         this.tripDeposit.applicationSaved = true;
         this.dto.campaign.pledgeDonorId = data.donorId;
