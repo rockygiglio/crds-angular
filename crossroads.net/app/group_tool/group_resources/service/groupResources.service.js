@@ -3,10 +3,9 @@ import GroupResourceCategory from '../model/groupResourceCategory';
 
 export default class GroupResourcesService {
   /*@ngInject*/
-  constructor($log, $resource, $q) {
+  constructor($log, $resource) {
     this.log = $log;
     this.resource = $resource;
-    this.qApi = $q;
   }
   
   getGroupResources() {
@@ -20,6 +19,7 @@ export default class GroupResourcesService {
 
       return resources;
     }, (err) => {
+      this.log.error(`Error getting group resources: ${err}`);
       throw err;
     });
   }
