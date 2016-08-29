@@ -18,7 +18,9 @@
           <div class="resource-img-cont">
             <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
-          <svg-icon icon='{{resource.getIcon()}}' classes='icon-large pull-left'></svg-icon>
+          <svg viewbox="0 0 32 32" class="icon icon-large pull-left" ng-class="'icon' + resource.getIcon()">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" ng-attr-xlink:href="{{'#' + resource.getIcon()}}">&nbsp;</use>
+          </svg>
           <h5 class="flush-bottom weight-semibold">{{resource.getTitle()}}</h5>
           <p class="flush-ends author"><em>by {{resource.getAuthor()}}</em></p>
           <p class="group-resource-tagline flush-ends">{{resource.getTagline()}}</p>
@@ -49,7 +51,9 @@
           <div class="resource-img-cont">
             <div class="aspect-content"><img ng-src="{{resource.getImage()}}" class="img-responsive" alt="" title="" /></div>
           </div>
-          <svg-icon icon='{{resource.getIcon()}}' classes='icon-large pull-left'></svg-icon>
+          <svg viewbox="0 0 32 32" class="icon icon-large pull-left" ng-class="'icon' + resource.getIcon()">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" ng-attr-xlink:href="{{'#' + resource.getIcon()}}" xlink:href="">&nbsp;</use>
+          </svg>
           <h5 class="flush-bottom weight-semibold">{{resource.getTitle()}}</h5>
           <p class="flush-ends author"><em>by {{resource.getAuthor()}}</em></p>
           <p class="group-resource-tagline flush-ends">{{resource.getTagline()}}</p>
