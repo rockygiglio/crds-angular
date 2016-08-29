@@ -71,7 +71,6 @@
     }
   }
 
-
   .form-control {
     label {
       text-transform: none;
@@ -102,6 +101,8 @@
 
   .reminder-content {
     @include make-sm-column(5);
+    margin-bottom: 2em;
+
     &.schedule {
       @include make-sm-column-offset(1);
       .btn {
@@ -128,7 +129,6 @@
     clear: both;
     text-align: center;
     padding-bottom: 2.5em;
-    padding-top: 2em;
   }
 
   @media(min-width: $screen-md) {
