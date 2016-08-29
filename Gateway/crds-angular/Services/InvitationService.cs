@@ -24,6 +24,7 @@ namespace crds_angular.Services
 
         private readonly int _groupInvitationType;
         private readonly int _groupInvitationEmailTemplate;
+        private readonly int _groupInvitationEmailTemplateCustom;
         private readonly int _tripInvitationType;
         private readonly int _tripInvitationEmailTemplate;
 
@@ -51,6 +52,7 @@ namespace crds_angular.Services
 
             _groupInvitationType = configuration.GetConfigIntValue("GroupInvitationType");
             _groupInvitationEmailTemplate = configuration.GetConfigIntValue("GroupInvitationEmailTemplate");
+            _groupInvitationEmailTemplateCustom = configuration.GetConfigIntValue("GroupInvitationEmailTemplateCustom");
             _tripInvitationType = configuration.GetConfigIntValue("TripInvitationType");
             _tripInvitationEmailTemplate = configuration.GetConfigIntValue("PrivateInviteTemplate");
 
@@ -148,7 +150,15 @@ namespace crds_angular.Services
             int emailTemplateId;
             if (invitation.InvitationType == _groupInvitationType)
             {
-                emailTemplateId = _groupInvitationEmailTemplate;
+                if (invitation.CustomMessage != null)
+                {
+                    emailTemplateId = _groupInvitationEmailTemplateCustom;
+                    mergeData.Add("Leader_Message", invitation.CustomMessage);
+                }
+                else
+                {
+                    emailTemplateId = _groupInvitationEmailTemplate;
+                }
                 mergeData.Add("Leader_Name", leaderContact.Nickname + " " + leaderContact.Last_Name);
                 mergeData.Add("Group_Name", groupName);
             } else if (invitation.InvitationType == _tripInvitationType)
