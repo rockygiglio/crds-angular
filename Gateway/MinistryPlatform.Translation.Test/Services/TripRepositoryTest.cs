@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -59,6 +60,18 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(false, returnVal);
             _ministryPlatformRest.VerifyAll();
+        }
+
+        public void ShouldReturnPledgesForCampaign()
+        {
+            var values = new Dictionary<string, object>
+            {
+                {"@PledgeCampaignID", 29876 }
+            };
+
+            
+
+            _ministryPlatformRest.Setup(m => m.Search<MpPledge>("", ""));
         }
 
     }

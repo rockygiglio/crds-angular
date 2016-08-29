@@ -121,12 +121,9 @@ namespace crds_angular.Services
 
         public TripCampaignDto GetTripCampaign(int pledgeCampaignId)
         {
-            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
-            if (campaign == null)
-            {
-                return null;
-            }
-            return new TripCampaignDto()
+            var token = _apiUserRepository.GetToken();
+            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId, token);
+            var response = new TripCampaignDto()
             {
                 Id = campaign.Id,
                 Name = campaign.Name,
@@ -136,8 +133,21 @@ namespace crds_angular.Services
                 RegistrationEnd = campaign.RegistrationEnd,
                 RegistrationStart = campaign.RegistrationStart,
                 RegistrationDeposit = campaign.RegistrationDeposit,
-                AgeExceptions = campaign.AgeExceptions
+                AgeExceptions = campaign.AgeExceptions,
+                IsFull = false
             };
+            var pledges = new List<MpPledge>();
+
+            if (campaign.MaximumRegistrants != null)
+            {
+                pledges = _mpPledgeService.GetPledgesByCampaign(pledgeCampaignId, token);               
+            }
+            if (campaign.MaximumRegistrants == null || campaign.MaximumRegistrants > pledges.Count)
+            {
+                return response;
+            }
+            response.IsFull = true;
+            return response;
         }
 
         private TripApplicantResponse GetTripAplicants(int selectionId, int selectionCount, int formResponseId)

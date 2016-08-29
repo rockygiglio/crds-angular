@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
     <Compile Include="Helpers\Conversions.cs" />
+    <Compile Include="Services\CampaignRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Services\OpportunityServiceTest.cs" />
     <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\ParticipantServiceTest.cs" />
-    <Compile Include="Services\PledgeCampaignServiceTest.cs" />
+    <Compile Include="Services\PledgeRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
     <Compile Include="Services\RoomServiceTest.cs" />

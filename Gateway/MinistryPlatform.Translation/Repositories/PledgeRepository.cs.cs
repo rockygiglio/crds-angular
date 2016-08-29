@@ -103,6 +103,28 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformRestRepository.UsingAuthenticationToken(authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=" + contactId + " AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + pledgeCampaignId + " AND Pledge_Status_ID_Table.Pledge_Status_ID=1", columnList).FirstOrDefault();
         }
 
+        public List<MpPledge> GetPledgesByCampaign(int pledgeCampaignId, string token)
+        {
+            var columnList = new List<string>
+            {
+                "Pledges.Pledge_ID",
+                "Donor_ID_Table.Donor_ID",
+                "Pledge_Campaign_ID_Table.Pledge_Campaign_ID",
+                "Pledge_Campaign_ID_Table.Campaign_Name",
+                "Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID",
+                "Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type",
+                "Pledge_Campaign_ID_Table.Start_Date",
+                "Pledge_Campaign_ID_Table.End_Date",
+                "Pledge_Status_ID_Table.Pledge_Status_ID",
+                "Pledge_Status_ID_Table.Pledge_Status",
+                "Pledges.Total_Pledge"
+            };
+
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(token)
+                .Search<MpPledge>("Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + pledgeCampaignId + " AND Pledge_Status_ID_Table.Pledge_Status_ID=1", columnList);
+        }
+
+
         public int GetDonorForPledge(int pledgeId)
         {
             var record = _ministryPlatformService.GetRecordDict(_pledgePageId, pledgeId, ApiLogin());
