@@ -110,6 +110,6 @@ export class StreamingComponent {
   }
 
   ngAfterViewInit() {
-    // this.modal.open('lg')
+    this.modal.open('lg')
   }
 }

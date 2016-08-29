@@ -1,4 +1,5 @@
 <modal id="reminderModal" #reminderModal class="crds-modal">
+  <form #form="ngForm" (ngSubmit)="submit()">
     <modal-header [show-close]="true">
       <h2>Live Stream Reminder</h2>
     </modal-header>
@@ -34,24 +35,23 @@
 
         <div class="btn-group btn-group-justified" data-toggle="buttons">
           <label class="btn btn-lg btn-time-select">
-            <input type="radio" name="options" autocomplete="off"> Text
+            <input type="radio" name="deliveryType" value="text" autocomplete="off" [(ngModel)]="model.deliveryType"> Text
           </label>
           <label class="btn btn-lg btn-time-select">
-            <input type="radio" name="options" autocomplete="off"> Email
+            <input type="radio" name="deliveryType" value="email" autocomplete="off" [(ngModel)]="model.deliveryType"> Email
           </label>
         </div>
 
         <div class="form-group">
-          <input name="telephone" type="tel" class="form-control" placeholder="Enter your phone number">
+          <input [(ngModel)]="model.phone" name="phone" type="tel" class="form-control" placeholder="Enter your phone number">
         </div>
-
         <div class="form-group">
-          <input name="email" type="email" class="form-control" placeholder="Enter your email address">
+          <input [(ngModel)]="model.email" name="email" type="email" class="form-control" placeholder="Enter your email address">
         </div>
       </div>
-  
     </modal-body>
     <modal-footer>
-      <button type="button" class="btn btn-set-reminder">Set Reminder</button>
+      <button type="submit" class="btn btn-set-reminder">Set Reminder</button>
     </modal-footer>
+  </form>
 </modal>
