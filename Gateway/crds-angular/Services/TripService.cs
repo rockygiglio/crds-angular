@@ -384,6 +384,9 @@ namespace crds_angular.Services
             {
                 throw new Exception("Unable to add as a participant on the trip");
             }
+            var pledge = _mpPledgeService.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId);
+            tripParticipantPledgeInfo.CampaignName = pledge.CampaignName;
+            tripParticipantPledgeInfo.DonorId = pledge.DonorId;
             return tripParticipantPledgeInfo;
         }
 
@@ -406,7 +409,16 @@ namespace crds_angular.Services
             return tripParticipantPledgeInfo;
         }
 
-public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
+        public bool HasScholarship(int contactId, int campaignId)
+        {
+            var campaign = _campaignService.GetPledgeCampaign(campaignId);
+            var distributions = _donationService.GetMyTripDistributions(contactId);
+            var scholarshipDollars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
+            var pledgeTotal = distributions.FirstOrDefault(d => d.EventId == campaign.EventId)?.TotalPledge;
+            return scholarshipDollars == pledgeTotal;
+        }
+
+        public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
         {
             var invite = _privateInviteService.Create(dto.PledgeCampaignId, dto.EmailAddress, dto.RecipientName, token);
             var communication = PrivateInviteCommunication(invite);

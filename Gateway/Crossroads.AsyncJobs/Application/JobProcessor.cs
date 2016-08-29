@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Web.Hosting;
+using Quartz;
 
 namespace Crossroads.AsyncJobs.Application
 {
     public class JobProcessor : IRegisteredObject
     {
         private readonly IQueueProcessor[] _queueProcessors;
+        private readonly IScheduler _scheduler;
         public bool IsRunning { get; private set; }
 
         private readonly object _lockObject = new object();
 
 
-        public JobProcessor(IQueueProcessor[] processors)
+        public JobProcessor(IQueueProcessor[] processors, IScheduler scheduler)
         {
             _queueProcessors = processors;
+            _scheduler = scheduler;
         }
 
         public void Start()
@@ -33,6 +36,8 @@ namespace Crossroads.AsyncJobs.Application
                 {
                     p.Start();
                 }
+
+                _scheduler.Start();
             }
         }
 
@@ -53,6 +58,7 @@ namespace Crossroads.AsyncJobs.Application
                     p.Pause();
                 }
 
+                _scheduler.Shutdown();
             }
         }
 

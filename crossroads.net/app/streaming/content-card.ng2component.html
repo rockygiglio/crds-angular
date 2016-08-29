@@ -4,7 +4,7 @@
       <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="content.imageSrc" src="{{ content.image }}" title="{{ content.title }}">
     </a>
     <figcaption>
-      <a href="{{ content.url }}" *ngIf="content.title">{{ content.title | truncate: 38 }}</a>
+      <a href="{{ content.url }}" *ngIf="content.title" title="{{ content.title }}">{{ content.title | truncate: 38 }}</a>
     </figcaption>
   </figure>
   <section>

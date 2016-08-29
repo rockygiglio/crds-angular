@@ -3,9 +3,9 @@
 
   module.exports = TripsSignupService;
 
-  TripsSignupService.$inject = ['$resource', '$location', '$log'];
+  TripsSignupService.$inject = ['$resource', '$location', '$log', '$stateParams'];
 
-  function TripsSignupService($resource, $location, $log) {
+  function TripsSignupService($resource, $location, $log, $stateParams) {
     var signupService = {
       activate: activate,
       pages: [],
@@ -19,7 +19,9 @@
       pledgeAmount: null,
       depositAmount: null,
       progressLabel: null,
-      applicationValid: false
+      applicationValid: false,
+      isScholarshipped: false,
+      saveApplication: saveApplication
     };
 
     function activate() {
@@ -52,34 +54,12 @@
       setupProps();
     }
 
-    function setupProps() {
-      //relying on Pledge Campaign Nickname field feels very fragile, is there another way?
-      signupService.friendlyPageTitle = signupService.campaign.nickname;
-      switch (signupService.campaign.nickname) {
-        case 'NOLA':
-          signupService.numberOfPages = 5;
-          break;
-        case 'South Africa':
-          signupService.numberOfPages = 6;
-          break;
-        case 'India':
-          signupService.numberOfPages = 6;
-          signupService.whyPlaceholder = 'Please be specific. ' +
-            'In instances where we have a limited number of spots, we strongly consider responses to this question.';
-          break;
-        case 'Nicaragua':
-          signupService.numberOfPages = 6;
-          break;
-      }
-
-    }
-
-    function reset(campaign) {
+    function reset(campaign, currentPage = 1) {
       signupService.campaign = campaign;
       signupService.ageLimitReached = false;
       signupService.contactId = '';
-      signupService.currentPage = 1;
-      signupService.numberOfPages = 0;
+      signupService.currentPage = currentPage;
+      //signupService.numberOfPages = 0;
       signupService.pageHasErrors = true;
       signupService.privateInvite = $location.search().invite;
 
@@ -150,6 +130,32 @@
         pastAbuseHistory: null,
         validPassport: null
       };
+    }
+
+    function saveApplication(success, error) {
+      var application = new signupService.TripApplication();
+      application.contactId = signupService.person.contactId;
+      application.pledgeCampaignId = signupService.campaign.id;
+      application.pageTwo = signupService.page2;
+      application.pageThree = signupService.page3;
+      application.pageFour = signupService.page4;
+      application.pageFive = signupService.page5;
+      application.pageSix = signupService.page6;
+      application.inviteGUID = $stateParams.invite;
+
+      /*jshint unused:false */
+      application.$save((data) => {
+          _.each(signupService.familyMembers, (f) => {
+            if (f.contactId === Number($stateParams.contactId)) {
+              f.signedUp = true;
+              f.signedUpDate = new Date();
+            }
+          });
+          signupService.reset(signupService.campaign, 'thanks');
+          success(data);
+        }, () => {
+        error();
+      });
     }
 
     return signupService;

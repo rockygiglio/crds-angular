@@ -23,7 +23,7 @@
 
             <!-- Lead a Group -->
             <div ng-class="{ 'col-md-6 col-sm-12': myGroups.groupsEven() }">
-              <div class="my-groups-static panel panel-default text-center pointer" ui-sref="grouptool.create">
+              <div class="my-groups-static panel panel-default text-center pointer" ui-sref="grouptool.create({ cancelSref: 'grouptool.mygroups' })">
                 <div class="my-groups-static-vert">
                   <div class="push-half-bottom">Lead a Group</div>
                   <svg viewBox="0 0 32 32" class="icon icon-xxxlarge plus4 text-primary">

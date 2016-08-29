@@ -64,8 +64,23 @@ class TripDepositController {
       this.state.go('home');
     });
 
-    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams) => {
+    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (toState && !/^tripdeposit.*/.test(toState.name)) {
+        return;
+      }
+      if (fromState.name === 'tripsignup.application.page' &&
+          toState.name === 'tripdeposit' &&
+          fromParams.stepId &&
+          Number(fromParams.stepId) < 5
+          ) {
+        event.preventDefault(); 
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
+        return;
+      }
+      if (fromState.name !== 'tripsignup.application.page' &&
+          fromState.name !== 'tripdeposit.confirm' &&
+            toState.name === 'tripdeposit' ) {
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
         return;
       }
       this.dto.processing = false;
@@ -79,7 +94,7 @@ class TripDepositController {
         this.signupService.pageId = 'thanks';
         this.dto.initialized = false;
         this.window.onbeforeunload = null;
-      }
+      } 
     });
 
     this.rootScope.$on('$stateChangeError', (event, toState, toParams) => {
@@ -113,19 +128,7 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
-  getPaymentType() {
-    if (this.dto.view === 'cc') {
-      return 'Credit Card';
-    }
-    else if (this.dto.view === 'bank') {
-      return 'Bank';
-    }
-    else{
-      return 'Unknown';
-    }
-  }
-
-  saveApplication(shouldSubmitBank = "") {
+  saveApplication(shouldSubmitBank = '') {
     this.dto.processing = true;
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
@@ -144,15 +147,9 @@ class TripDepositController {
       application.depositInformation.donationDate = moment(new Date()).format('l');
       application.depositInformation.paymentMethod = this.getPaymentType();
 
-      /*jshint unused:false */
-      application.$save((data) => {
+      this.signupService.saveApplication((data) => {
         this.tripDeposit.applicationSaved = true;
-          _.each(this.signupService.familyMembers, (f) => {
-            if (f.contactId === Number(this.stateParams.contactId)) {
-              f.signedUp = true;
-              f.signedUpDate = new Date();
-            }
-          });
+        this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);
       }, () => {
         this.dto.processing = false;

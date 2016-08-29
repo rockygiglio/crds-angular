@@ -27,7 +27,7 @@ export class VideoComponent {
   displayCounter: boolean = true;
   countSubmit: boolean = false;
   dontMiss: Array<any> = [];
-  promos: Array<any> = [];
+  beTheChurch: Array<any> = [];
 
   constructor(private cmsDataService: CMSDataService) {
     this.cmsDataService
@@ -44,10 +44,10 @@ export class VideoComponent {
               } else {
                 feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
               }
-              if (feature.section.toLowerCase() === 'today') {
+              if (feature.section == 1 ) {
                 this.dontMiss.push(feature)
-              } else if (feature.section.toLowerCase() === 'promo') {
-                this.promos.push(feature);
+              } else if (feature.section == 2 ) {
+                this.beTheChurch.push(feature);
               }
             }
           })
