@@ -13,13 +13,36 @@ group-search-results {
         text-align: right;
       }
     }
+  }
 
-    .group-location-input-wrapper {
-      display: flex;
-      margin: 0 -5px;
+  .group-location-input-wrapper {
+    .btn {
+      border-radius: 0;
+    }
 
-      &> * {
-        margin: 0 5px;
+    .group-location-input {
+      position: relative;
+
+      input {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        bottom: 2px;
+        width: calc(100% - 40px);
+        border: none;
+
+        &:focus {
+          border-color: #3b6e8f;
+          box-shadow: none;
+          //outline: none;
+        }
+      }
+
+      a {
+        position: absolute;
+        right: 9px;
+        z-index: 1;
+        color: $gray;
       }
     }
   }
@@ -67,6 +90,16 @@ group-search-results {
     .group-location {
       width: 80px;
     }
+  }
+
+  $group-detail-border-color: $gray-light;
+  .group-search-detail {
+    border-top: solid 3px $group-detail-border-color;
+    border-bottom: solid 3px $group-detail-border-color;
+  }
+
+  .table-hover > tbody > tr.group-search-detail:hover {
+    background-color: white;
   }
 
   // Disable ng-table sort header background-color
