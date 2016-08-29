@@ -641,6 +641,7 @@ namespace crds_angular.test.Services
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
         }
 
+            groupService.Setup(x => x.GetSmallGroupsForAuthenticatedUser(token)).Returns(newGroupList);
         public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
             var g = new MpGroup

@@ -42,8 +42,9 @@ export default class GroupInvitationController {
 
   accept() {
     this.processingAccept = true;
-
+debugger;
     this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, true).then(() => {
+      debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationSuccessGrowler);
       this.state.go('grouptool.mygroups');
     },

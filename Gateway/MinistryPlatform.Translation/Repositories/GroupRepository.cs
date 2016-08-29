@@ -6,6 +6,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -17,6 +18,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
         private readonly IAddressRepository _addressRepository;
+        private readonly IObjectAttributeRepository _objectAttributeRepository;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly int GroupsParticipantsPageId = Convert.ToInt32(AppSettings("GroupsParticipants"));
         private readonly int GroupsParticipantsSubPageId = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
@@ -35,6 +37,8 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
         private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
+        private readonly int GroupHasMiddleSchoolStudents = Convert.ToInt32(AppSettings("GroupHasMiddleSchoolStudents"));
+        private readonly int GroupHasHighSchoolStudents = Convert.ToInt32(AppSettings("GroupHasHighSchoolStudents"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -49,7 +53,8 @@ namespace MinistryPlatform.Translation.Repositories
                                ICommunicationRepository communicationService,
                                IContactRepository contactService,
                                IContentBlockService contentBlockService,
-                               IAddressRepository addressRepository)
+                               IAddressRepository addressRepository,
+                               IObjectAttributeRepository objectAttributeRepository)
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
@@ -59,6 +64,7 @@ namespace MinistryPlatform.Translation.Repositories
             _contactService = contactService;
             _contentBlockService = contentBlockService;
             _addressRepository = addressRepository;
+            _objectAttributeRepository = objectAttributeRepository;
         }
 
         public int CreateGroup(MpGroup group)
@@ -970,6 +976,24 @@ namespace MinistryPlatform.Translation.Repositories
             };
         }
 
-       
+        public bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId)
+        {
+            var groups = GetGroupsForParticipant(token, participantId);
+            var groupId = 0;
+            foreach (var group in groups)
+            {
+                var participants = LoadGroupParticipants(group.GroupId, token);
+                if (participants.Exists(x => x.GroupParticipantId == groupParticipantId))
+                {
+                    groupId = group.GroupId;
+                    break;
+                }
+            }
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var attributes = _objectAttributeRepository.GetCurrentObjectAttributes(token, groupId, configuration);
+            return  attributes.Find(x => x.AttributeId == GroupHasMiddleSchoolStudents
+                                        || x.AttributeId == GroupHasHighSchoolStudents) != null
+                                        ?true:false;
+        }
     }
 }
