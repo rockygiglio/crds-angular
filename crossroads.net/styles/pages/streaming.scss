@@ -47,6 +47,12 @@ streaming {
     @include make-row();
     @include clearfix();
     overflow-x: hidden;
+
+    .navbar-section .container {
+      display: flex;
+      justify-content: center;
+    }
+    
   }
 
   .fixed-header {
@@ -89,6 +95,13 @@ streaming {
       @include clearfix();
       position: relative;
     }
+
+    .btn-reminder {
+      @include button-variant(#FFF, $cr-streaming-blue, $cr-streaming-blue);
+      margin-left: 1em;
+    }
+
+
 
     .see-schedule {
       text-transform: uppercase;
@@ -185,6 +198,7 @@ streaming {
           display: inline-block;
         }
       }
+
       a.btn-sm {
         @include button-variant(#FFF, lighten($cr-streaming-blue, 12.5%), $cr-streaming-blue);
         font-weight: 400;

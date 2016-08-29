@@ -7,8 +7,10 @@ import { CountdownComponent } from './countdown.component';
 import { CurrentSeriesComponent } from './current-series.component';
 import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
+import { ReminderModalComponent } from './reminder-modal.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
+
 
 // CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
@@ -41,6 +43,7 @@ declare var _: any;
     StickyHeaderDirective,
     ContentCardComponent, 
     CurrentSeriesComponent,
+    ReminderModalComponent,
     MODAL_DIRECTIVES
   ],
   templateUrl: './streaming.ng2component.html',
@@ -53,7 +56,7 @@ declare var _: any;
 })
 
 export class StreamingComponent {
-  @ViewChild('reminderModal') modal: ModalComponent;
+  @ViewChild('reminderModal') modal: ReminderModalComponent;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
@@ -107,7 +110,6 @@ export class StreamingComponent {
   }
 
   ngAfterViewInit() {
-    this.modal.open('lg')
+    // this.modal.open('lg')
   }
-
 }
