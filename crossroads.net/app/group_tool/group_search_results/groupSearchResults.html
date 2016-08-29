@@ -4,9 +4,23 @@
     <div class="col-sm-5 push-half-bottom">
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
         <label for="query">{{$root.MESSAGES.groupToolSearchPageKeywordLabel.content | htmlToPlainText}}</label>
-        <div class="input-group">
-          <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
+
+        <div class="group-search-input-wrapper input-group">
+          <input id="query"
+                 name="query"
+                 ng-model="groupSearchResults.search.query"
+                 type="text"
+                 class="form-control"
+                 ng-class="{ 'group-input-clear-visible': groupSearchForm.query.$viewValue.length > 0 }"
+                 placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
           <span class="group-search-icon input-group-btn">
+            <a ng-if="!groupSearchResults.processing && groupSearchForm.query.$viewValue.length > 0"
+               ng-click="groupSearchForm.query.$setViewValue(''); groupSearchForm.query.$render()"
+               class="group-input-clear">
+              <svg viewBox="0 0 32 32" class="icon icon-times">
+                <use xlink:href="#times"></use>
+              </svg>
+            </a>
             <button type="submit" class="btn btn-default">
               <svg viewBox="0 0 32 32" class="icon search3">
                 <use xlink:href="#search3"></use>
@@ -14,7 +28,8 @@
             </button>
           </span>
         </div>
-        <!-- TODO - This is a hack to get the UI to look right when error on the location input. Someone with CSS skillz would need to do this the right way. -->
+        <!-- TODO -
+        This is a hack to get the UI to look right when error on the location input. Someone with CSS skillz would need to do this the right way. -->
         <p ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">&nbsp;</p>
       </form>
     </div>
@@ -32,15 +47,16 @@
                      ng-model-options="{ updateOn: 'submit' }"
                      type="text"
                      class="group-location-input form-control"
+                     ng-class="{ 'group-input-clear-visible': groupLocationForm.location.$viewValue.length > 0 }"
                      placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
-              <a ng-if="!groupSearchResults.processing && groupLocationForm.location.$viewValue.length > 0"
-                 ng-click="groupLocationForm.location.$setViewValue(''); groupLocationForm.location.$render()"
-                 class="group-location-clear">
-                <svg viewBox="0 0 32 32" class="icon icon-close">
-                  <use xlink:href="#close"></use>
-                </svg>
-              </a>
               <span class="input-group-btn">
+                <a ng-if="!groupSearchResults.processing && groupLocationForm.location.$viewValue.length > 0"
+                   ng-click="groupLocationForm.location.$setViewValue(''); groupLocationForm.location.$render()"
+                   class="group-input-clear">
+                  <svg viewBox="0 0 32 32" class="icon icon-times">
+                    <use xlink:href="#times"></use>
+                  </svg>
+                </a>
                 <loading-button
                   input-type='submit'
                   normal-text='Update'

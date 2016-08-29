@@ -15,35 +15,40 @@ group-search-results {
     }
   }
 
+  .group-search-input-wrapper {
+    position: relative;
+  }
+
   .group-location-input-wrapper {
     position: relative;
 
     .btn {
       border-radius: 0;
     }
+  }
 
-    .group-location-input {
-      padding-right: 35px;
-
-      &::-ms-clear {
+  input[type='text'] {
+    &::-ms-clear {
       display: none;
-      }
     }
 
-    a {
-      position: absolute;
-      top: 15%;
-      right: 95px;
-      z-index: 3;
-      color: $gray;
+    &.group-input-clear-visible {
+      padding-right: 40px;
     }
   }
 
-  .group-search-icon {
-    svg {
-      width: 22px;
-      height: 22px;
-    }
+  .group-input-clear {
+    position: absolute;
+    top: 2px;
+    left: -40px;
+    z-index: 3;
+    padding: 10px;
+    color: $gray;
+  }
+
+  .search3 {
+    width: 22px;
+    height: 22px;
   }
 
   table {
