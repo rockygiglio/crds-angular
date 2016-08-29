@@ -1,5 +1,5 @@
 // angular imports
-import { Component, ViewChild, DynamicComponentLoader, ViewContainerRef } from '@angular/core';
+import { Component, ComponentResolver, ViewChild, DynamicComponentLoader, ViewContainerRef } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
@@ -46,7 +46,7 @@ declare var _: any;
     VideoComponent
   ],
   templateUrl: './streaming.ng2component.html',
-  providers: [CMSDataService, VideoComponent],
+  providers: [CMSDataService],
   pipes: [
     ReplaceNonAlphaNumericPipe, 
     HtmlToPlainTextPipe, 
@@ -65,7 +65,8 @@ export class StreamingComponent {
 
   constructor(private streamspotService: StreamspotService, 
               private cmsDataService: CMSDataService,
-              private dcl:DynamicComponentLoader) {
+              private componentResolver:ComponentResolver,
+              private viewContainerRef:ViewContainerRef) {
 
     PageScrollConfig.defaultScrollOffset = -10;
     PageScrollConfig.defaultEasingFunction = (t:number, b:number, c:number, d:number):number => {
@@ -115,23 +116,25 @@ export class StreamingComponent {
 
   watchNowClicked(event) {
     this.modal.open();
-    this.dcl.loadNextToLocation(VideoComponent, this.videoTarget)
-    .then(component => {
-      this.videoComponent = component
-      this.videoComponent.instance.inModal = true;
-      this.videoComponent.instance._close.subscribe((closeEvent) => {
-        this.modal.close();
-        this.modalClose();
-      });
-    });
+
+    this.componentResolver.resolveComponent(VideoComponent).then((factory) => {
+      if (typeof this.videoComponent === 'undefined') {
+        this.videoComponent = this.videoTarget.createComponent(factory);
+        this.videoComponent.instance.inModal = true;
+      }
+    })
+  }
+
+  modalOpen() {
+    console.log('modal openned');
   }
 
   modalClose() {
-    this.videoComponent.destroy();
+    console.log('modal closed');
   }
 
   modalDismiss() {
-    this.videoComponent.destroy();
+    console.log('modal dismissed');
   }
 
 }
