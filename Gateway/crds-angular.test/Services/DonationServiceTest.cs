@@ -1530,7 +1530,7 @@ namespace crds_angular.test.Services
                 && !d.RecurringGift 
                 && d.ProcessorId.Equals(string.Empty) 
                 && d.ProgramId.Equals(donation.Distributions[0].donationDistributionProgram)
-                && d.PymtType.Equals(donation.paymentTypeId + "") 
+                && d.PymtType.Equals(MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(donation.paymentTypeId).name) 
                 && d.RecurringGiftId == null 
                 && !d.RegisteredDonor 
                 && d.SetupDate == refund.Data[0].BalanceTransaction.Created
@@ -1544,6 +1544,7 @@ namespace crds_angular.test.Services
                 && d.Distributions[1].donationDistributionProgram.Equals(donation.Distributions[1].donationDistributionProgram)
                 && d.Distributions[1].PledgeId == donation.Distributions[1].PledgeId
             ), false)).Returns(999);
+
 
             var result = _fixture.CreateDonationForBankAccountErrorRefund(refund);
             Assert.IsNotNull(result);

@@ -273,6 +273,8 @@ namespace crds_angular.Services
                     // ReSharper disable once PossibleIntendedRethrow
                     throw e;
                 }
+                _logger.Debug(string.Format("Updating charge id {0} to Declined status", charge.Id));
+                _donationService.UpdateDonationStatus(refund.Data[0].ChargeId, _donationStatusDeclined, DateTime.Now);
             }
             else
             {

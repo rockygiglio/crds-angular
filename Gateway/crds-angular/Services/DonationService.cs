@@ -14,6 +14,10 @@ using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
+using MinistryPlatform.Translation.Enum;
+using PaymentType = crds_angular.Models.Crossroads.Stewardship.PaymentType;
+
+//using PaymentType = MinistryPlatform.Translation.Enum.PaymentType;
 
 namespace crds_angular.Services
 {
@@ -467,7 +471,7 @@ namespace crds_angular.Services
                 RecurringGift = false,
                 ProcessorId = string.Empty,
                 ProgramId = donation.Distributions[0].donationDistributionProgram,
-                PymtType = donation.paymentTypeId+"",
+                PymtType = MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(donation.paymentTypeId).name,
                 RecurringGiftId = null,
                 RegisteredDonor = false,
                 SetupDate = refund.Data[0].BalanceTransaction.Created,
@@ -519,7 +523,20 @@ namespace crds_angular.Services
             var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription, charge.ProcessorId);
             _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
            
-            var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
+            DonationStatus donationStatus;
+            if (charge.Status == "failure")
+            {
+                 donationStatus = DonationStatus.Declined;
+            }
+            else if (charge.Status == "succeeded")
+            {
+                 donationStatus = DonationStatus.Succeeded;
+
+            }
+            else
+            {  donationStatus = DonationStatus.Pending;
+            }
+          
             var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
             var amount = charge.Amount / Constants.StripeDecimalConversionValue;
 
