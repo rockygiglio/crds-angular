@@ -526,6 +526,12 @@ namespace crds_angular.Services
             }
         }
 
+        /// <summary>
+        /// Sends a participant and email based off of a template ID and any merge data you need for that template. 
+        /// </summary>
+        /// <param name="participant"></param>
+        /// <param name="templateId"></param>
+        /// <param name="mergeData"></param>
         public void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData)
         {
             var emailTemplate = _communicationRepository.GetTemplate(templateId);
