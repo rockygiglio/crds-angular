@@ -1093,13 +1093,12 @@ namespace crds_angular.test.Services
             {
                 Body = "body",
                 FromContactId = 876,
-                FromEmailAddress = "88",
+                FromEmailAddress = "from@crossroads.net",
                 ReplyToContactId = 77,
-                ReplyToEmailAddress = "66",
+                ReplyToEmailAddress = "reply@crossroads.net",
                 Subject = "55"
             };
             _communicationRepository.Setup(mocked => mocked.GetTemplate(It.IsAny<int>())).Returns(template);
-            _communicationRepository.Setup(mocked => mocked.GetEmailFromContactId(It.IsAny<int>())).Returns(fromEmailAddress);
             var to = new List<MpContact>();
             to.Add(new MpContact() {ContactId = participant.ContactId, EmailAddress = participant.Email});
             var url = @"https://" + BaseUrl + "/groups/search";
@@ -1111,10 +1110,10 @@ namespace crds_angular.test.Services
                                 c.DomainId == DomainId
                                 && c.EmailBody.Equals(template.Body)
                                 && c.EmailSubject.Equals(template.Subject)
-                                && c.FromContact.ContactId == DefaultGroupContactId
-                                && c.FromContact.EmailAddress.Equals(fromEmailAddress)
-                                && c.ReplyToContact.ContactId == DefaultGroupContactId
-                                && c.ReplyToContact.EmailAddress.Equals(fromEmailAddress)
+                                && c.FromContact.ContactId == template.FromContactId
+                                && c.FromContact.EmailAddress.Equals(template.FromEmailAddress)
+                                && c.ReplyToContact.ContactId == template.FromContactId
+                                && c.ReplyToContact.EmailAddress.Equals(template.FromEmailAddress)
                                 && c.AuthorUserId == 5
                                 && c.ToContacts[0].ContactId == participant.ContactId
                                 && c.ToContacts[0].EmailAddress == participant.Email
