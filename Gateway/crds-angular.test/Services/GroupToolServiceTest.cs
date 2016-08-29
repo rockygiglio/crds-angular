@@ -1123,7 +1123,13 @@ namespace crds_angular.test.Services
                     false)
             ).Returns(5);
 
-            _fixture.SendGroupEndedParticipantEmail(participant);
+            var mergeData = new Dictionary<string, object>()
+            {
+                {"Participant_Name", "nickname"},
+                {"Group_Tool_Url", url}
+            };
+
+            _fixture.SendSingleGroupParticipantEmail(participant,GroupEndedParticipantEmailTemplate, mergeData);
             _communicationRepository.VerifyAll();
         }
         [Test]
