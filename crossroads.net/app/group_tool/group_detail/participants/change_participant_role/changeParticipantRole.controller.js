@@ -17,7 +17,7 @@ export default class ChangeParticipantRoleController {
   submit() {
     if (this.hasRoleChanged()) {
       this.processing = true;
-      var promise = this.groupService.updateParticipant(this.participant)
+      this.groupService.updateParticipant(this.participant)
         .then((data) => {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
         },
