@@ -42,6 +42,12 @@ namespace crds_angular.Models.Crossroads
         public string RecipientName { get; set; }
 
         /// <summary>
+        /// A custom message to the invitee.
+        /// </summary>
+        [JsonProperty(PropertyName = "customMessage")]
+        public string CustomMessage { get; set; }
+
+        /// <summary>
         /// The date the invitation is created.
         /// </summary>
         [JsonProperty(PropertyName = "requestDate")]

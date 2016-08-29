@@ -23,10 +23,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
   debug: boolean = false;
   angulartics: any;
 
-  constructor(
-    private streamspot: StreamspotService, 
-    @Inject('$analytics') angularticsService) {
-    this.angulartics = angularticsService;
+  constructor( private streamspot: StreamspotService, @Inject('$analytics') angTicServ) {
+    this.angulartics = angTicServ;
   }
 
   ngOnDestroy() {
@@ -62,7 +60,6 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           "techOrder": ["html5"],
           "fluid": true,
           "poster" : defaultPlayer.bgLink,
-          "preload": 'auto',
           "controls": true,
           "html5": {
             "hlsjsConfig": {
@@ -80,13 +77,12 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
               category: 'Streaming',
               label: 'Live Streaming Play'
             });
-            console.log('Video played.');
           }
         });
 
         // create stop handler (analytics)
         this.player.on('pause', () => {
-          if(window.SSTracker){
+          if(window.SSTracker) {
             window.SSTracker.stop();
             window.SSTracker = null;
           }
@@ -95,7 +91,6 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
               category: 'Streaming',
               label: 'Live Streaming Pause'
             });
-            console.log('Video paused.');
           }
         });
             
@@ -126,6 +121,8 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
         "src": src
       }
     ]);
+    this.player.qualityPickerPlugin();
+    this.player.updateStyleEl_();
     this.visible = true;
     this.player.ready(() => this.player.play());
   }

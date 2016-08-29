@@ -35,11 +35,11 @@ var tripHelpers = require('../trips.helpers');
     var Session;
 
     describe('Page 0', function() {
-      
+
       beforeEach(angular.mock.module(function($provide) {
         $provide.value('pageId', 0);
       }));
-   
+
       beforeEach(inject(function(_$controller_, _$log_, $injector) {
         $rootScope = $injector.get('$rootScope');
         $scope = $rootScope.$new();
