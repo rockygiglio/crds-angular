@@ -26,18 +26,20 @@
         <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit(groupLocationForm)" ng-class='{"has-error": groupLocationForm.$submitted && groupLocationForm.location.$invalid}'>
             <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
             <div class="group-location-input-wrapper input-group">
-              <div class="group-location-input form-control">
-                <input name="location"
-                       ng-model="groupSearchResults.search.location"
-                       ng-model-options="{ updateOn: 'submit' }"
-                       type="text"
-                       placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
-                <a ng-click="" class="group-location-clear">
-                  <svg viewBox="0 0 32 32" class="icon icon-close">
-                    <use xlink:href="#close"></use>
-                  </svg>
-                </a>
-              </div>
+              <input id="location"
+                     name="location"
+                     ng-model="groupSearchResults.search.location"
+                     ng-model-options="{ updateOn: 'submit' }"
+                     type="text"
+                     class="group-location-input form-control"
+                     placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
+              <a ng-if="!groupSearchResults.processing && groupLocationForm.location.$viewValue.length > 0"
+                 ng-click="groupLocationForm.location.$setViewValue(''); groupLocationForm.location.$render()"
+                 class="group-location-clear">
+                <svg viewBox="0 0 32 32" class="icon icon-close">
+                  <use xlink:href="#close"></use>
+                </svg>
+              </a>
               <span class="input-group-btn">
                 <loading-button
                   input-type='submit'
@@ -45,9 +47,8 @@
                   loading-text='Updating...'
                   loading='groupSearchResults.processing'
                   loading-class='disabled'
-                  input-classes='btn btn-default'></loading-button>
+                  input-classes='group-location-loading btn btn-default'></loading-button>
               </span>
-              <!--<button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchResults.hideLocationForm(groupLocationForm)">Cancel</button>-->
             </div>
             <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
               <ng-messages-include src="on-pause-messages"></ng-messages-include>

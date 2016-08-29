@@ -16,34 +16,26 @@ group-search-results {
   }
 
   .group-location-input-wrapper {
+    position: relative;
+
     .btn {
       border-radius: 0;
     }
 
     .group-location-input {
-      position: relative;
+      padding-right: 35px;
 
-      input {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        bottom: 2px;
-        width: calc(100% - 40px);
-        border: none;
-
-        &:focus {
-          border-color: #3b6e8f;
-          box-shadow: none;
-          //outline: none;
-        }
+      &::-ms-clear {
+      display: none;
       }
+    }
 
-      a {
-        position: absolute;
-        right: 9px;
-        z-index: 1;
-        color: $gray;
-      }
+    a {
+      position: absolute;
+      top: 15%;
+      right: 95px;
+      z-index: 3;
+      color: $gray;
     }
   }
 
