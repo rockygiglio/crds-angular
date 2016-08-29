@@ -10,20 +10,33 @@ export default class ChangeParticipantRoleController {
     this.groupDetailService = GroupDetailService;
   }
 
+  $onInit() {
+    this.currentRole = this.participant.groupRoleId;
+  }
+
   submit() {
-    this.processing = true;
-    var promise = this.groupService.updateParticipant(this.participant)
-      .then((data) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-      },
-      (data) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      }).finally(() => {
-        this.processing = false;
-        this.cancel();
-      });
-    // Invoke the parent callback function
-    this.submitAction();
+    if (this.hasRoleChanged()) {
+      this.processing = true;
+      this.groupService.updateParticipant(this.participant)
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        },
+        (data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }).finally(() => {
+          this.processing = false;
+          this.cancel();
+        });
+      // Invoke the parent callback function
+      this.submitAction();
+    }
+  }
+
+  hasRoleChanged(){
+    if (this.currentRole === this.participant.groupRoleId){
+      return false;
+    }
+    return true;
   }
 
   isParticipant() {

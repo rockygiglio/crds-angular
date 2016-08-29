@@ -288,7 +288,7 @@ export default class GroupService {
   }
 
   updateParticipant(participant) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/updateParticipant`)
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/updateParticipantRole`)
       .save({}, participant).$promise;
     return promise.then((data) => {
       return data;
