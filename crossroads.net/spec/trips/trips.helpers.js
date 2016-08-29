@@ -183,5 +183,45 @@ module.exports = {
         StatementTypeId: 0,
         DonorId: 0}
       ]
+  },
+  Application: {
+    page2: {
+      guardianFirstName: 'Andrew',
+      guardianLastName: 'Cant',
+      referral: true,
+      conditions: 'bad',
+      why: 'roaches'
+    },
+    page3: {
+      emergencyContactFirstName: 'Leslie',
+      emergencyContactLastName: 'Leave',
+      emergencyContactEmail: 'leslie@leave.com',
+      emergencyContactPrimaryPhone: '123456789',
+      emergencyContactSecondaryPhone: '00000000000'
+    },
+    page4: {
+      groupCommonName: 'qwerf',
+      roommateFirstChoice: 'Leslie',
+      roommateSecondChoice: 'Miles',
+      supportPersonEmail: 'support@person.com',
+      interestedInGroupLeader: false,
+      whyGroupLeader: null
+    },
+    page5: {
+      sponsorChildInNicaragua: true,
+      sponsorChildFirstName: 'asdf',
+      sponsorChildLastName: 'asfd',
+      sponsorChildNumber: 12347865432,
+      sponsorChildTown: 'asdf',
+      nolaFirstChoiceWorkTeam: null,
+      nolaFirstChoiceExperience: null,
+      nolaSecondChoiceWorkTeam: null
+    },
+    page6: {
+      experienceAbroad: true,
+      describeExperienceAbroad: 'kalsdfjasdf',
+      pastAbuseHistory: 'asdf',
+      validPassport: true
+    }
   }
 };
