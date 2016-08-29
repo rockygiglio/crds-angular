@@ -9,7 +9,7 @@ export default class GroupResourcesService {
   }
   
   getGroupResources() {
-    let promised = this.resource(`${__CMS_ENDPOINT__}/api/groupresourcecategory`).
+    let promised = this.resource(`${__CMS_ENDPOINT__}api/groupresourcecategory`).
       get().$promise;
 
     return promised.then((data) => {
