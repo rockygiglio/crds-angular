@@ -355,14 +355,14 @@ namespace crds_angular.Controllers.API
         /// Update the participant for a particular group
         /// </summary>
         [RequiresAuthorization]
-        [Route("api/group/updateParticipant")]
+        [Route("api/group/updateParticipantRole")]
         public IHttpActionResult UpdateParticipant([FromBody] GroupParticipantDTO participant)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupService.UpdateGroupParticipant(participant);
+                    _groupService.UpdateGroupParticipantRole(token, participant);
                     return Ok();
                 }
                 catch (InvalidOperationException)

@@ -17,8 +17,6 @@ class TripDepositController {
     this.loadingDonor = false;
     this.window = $window;
     this.initialized = false;
-
-    
   }
 
   $onDestroy() {
