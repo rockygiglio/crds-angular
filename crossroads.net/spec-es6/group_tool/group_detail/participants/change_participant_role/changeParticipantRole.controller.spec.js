@@ -1,7 +1,6 @@
 
 import constants from 'crds-constants';
 import ChangeParticipantRoleController from '../../../../../app/group_tool/group_detail/participants/change_participant_role/changeParticipantRole.controller';
-//import ChangeParticipantRoleComponent from '../../../../../app/group_tool/group_detail/participants/change_participant_role/changeParticipantRole.component';
 import Participant from '../../../../../app/group_tool/model/participant';
 
 describe('ChangeParticipantRoleController', () => {
@@ -9,9 +8,7 @@ describe('ChangeParticipantRoleController', () => {
         groupService,
         anchorScroll,
         groupDetailService,
-        rootScope,
-        componentController,
-        qApi;
+        rootScope;
 
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
@@ -22,17 +19,11 @@ describe('ChangeParticipantRoleController', () => {
         $provide.value('Profile', mockProfile);
     }));
 
-// https://docs.angularjs.org/guide/component
-
-    //beforeEach(inject((_$componentController_, _$rootScope_, $injector) => {
     beforeEach(inject((_$rootScope_, $injector) => {
-        //componentController = _$componentController_;
         rootScope = _$rootScope_;
         groupService = $injector.get('GroupService');
         anchorScroll = $injector.get('$anchorScroll');
         groupDetailService = $injector.get('GroupDetailService');
-        qApi = $injector.get('$q');
-
         fixture = new ChangeParticipantRoleController(groupService, anchorScroll, rootScope, groupDetailService);
     }));
 
@@ -72,7 +63,6 @@ describe('ChangeParticipantRoleController', () => {
         });
     });
 
-
     describe('warningApprenticeMax', () => {
         it('should return false when less than 5', () => {
             let participants = [
@@ -109,35 +99,15 @@ describe('ChangeParticipantRoleController', () => {
             fixture.participant = participant;
         });
 
-
-        it('should return immediately if role not changed', function () {
-            spyOn(groupService, 'updateParticipant').and.callFake(() => { });
+        it('should return false if role not changed', function () {
             fixture.currentRole = constants.GROUP.ROLES.LEADER;
-            fixture.submit();
-            expect(groupService.updateParticipant).not.toHaveBeenCalled();
+            expect(fixture.hasRoleChanged()).toBe(false);
         });
 
-        it('should submit if role changed', function () {
-            // let deferred = qApi.defer();
-            // deferred.resolve({});
-            // spyOn(groupService, 'updateParticipant').and.callFake(() => {
-            //     return (deferred.promise);
-            // });
-
-
-
-
-            // let onSubmitSpy = jasmine.createSpy('onSubmit');
-            // let bindings = { submitAction: {} };
-            // let controller = componentController('changeParticipantRoleComponent', null, bindings);
-            // controller.onSubmit();
-            // expect(onSubmitSpy).toHaveBeenCalled();
-
-
-            //fixture.currentRole = 16;
-            //fixture.submit();
-            //expect(groupService.updateParticipant).toHaveBeenCalled();
+        it('should return true if role changed', function () {
+            fixture.currentRole = constants.GROUP.ROLES.PARTICIPANT;
+            expect(fixture.hasRoleChanged()).toBe(true);
         });
+
     });
-
 });
