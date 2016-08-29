@@ -21,7 +21,7 @@ describe('GroupResource model', () => {
         tagline: 'tagline1',
         url: 'url1',
         author: 'author1',
-        img: 'image1',
+        image: 'image1',
         type: 'type1',
         sortOrder: 1
       };
@@ -33,8 +33,33 @@ describe('GroupResource model', () => {
       expect(fixture.hasUrl()).toBeTruthy();
       expect(fixture.getAuthor()).toEqual(resource.author);
       expect(fixture.getImage()).toEqual(resource.img);
-      expect(fixture.getType()).toEqual(resource.type);
       expect(fixture.getSortOrder()).toEqual(resource.sortOrder);
+    });
+  });
+
+  describe('resource type functions', () => {
+    it('should behave properly for PDF', () => {
+      let fixture = new GroupResource({resourceType: 'file-pdf'});
+      expect(fixture.isPdf()).toBeTruthy();
+      expect(fixture.isBook()).toBeFalsy();
+      expect(fixture.isOther()).toBeFalsy();
+      expect(fixture.getIcon()).toEqual('file-pdf');
+    });
+
+    it('should behave properly for Book', () => {
+      let fixture = new GroupResource({resourceType: 'book'});
+      expect(fixture.isBook()).toBeTruthy();
+      expect(fixture.isPdf()).toBeFalsy();
+      expect(fixture.isOther()).toBeFalsy();
+      expect(fixture.getIcon()).toEqual('book');
+    });
+
+    it('should behave properly for Other', () => {
+      let fixture = new GroupResource({resourceType: 'other'});
+      expect(fixture.isOther()).toBeTruthy();
+      expect(fixture.isPdf()).toBeFalsy();
+      expect(fixture.isBook()).toBeFalsy();
+      expect(fixture.getIcon()).toEqual('link');
     });
   });
 

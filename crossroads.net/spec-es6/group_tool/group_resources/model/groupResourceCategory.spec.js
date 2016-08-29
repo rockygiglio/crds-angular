@@ -20,16 +20,16 @@ describe('GroupResourceCategory model', () => {
       let category = {
         title: 'title1',
         description: 'description1',
-        communitygroupcontent: 'footercontent1',
+        footerContent: 'footercontent1',
         sortOrder: 1,
-        active: true,
-        resources: [
+        default: true,
+        groupResources: [
           {
             title: 'title2',
             tagline: 'tagline2',
             url: 'url2',
             author: 'author2',
-            img: 'image2',
+            image: 'image2',
             type: 'type2',
             sortOrder: 2
           },
@@ -38,7 +38,7 @@ describe('GroupResourceCategory model', () => {
             tagline: 'tagline1',
             url: 'url1',
             author: 'author1',
-            img: 'image1',
+            image: 'image1',
             type: 'type1',
             sortOrder: 1
           }
@@ -48,13 +48,13 @@ describe('GroupResourceCategory model', () => {
       let fixture = new GroupResourceCategory(category);
       expect(fixture.getTitle()).toEqual(category.title);
       expect(fixture.getDescription()).toEqual(category.description);
-      expect(fixture.getFooterContent()).toEqual(category.communitygroupcontent);
+      expect(fixture.getFooterContent()).toEqual(category.footerContent);
       expect(fixture.hasFooterContent()).toBeTruthy();
       expect(fixture.getSortOrder()).toEqual(category.sortOrder);
       expect(fixture.isActive()).toBeTruthy();
       expect(fixture.getResources()).toEqual([ 
-        new GroupResource(category.resources[1]),
-        new GroupResource(category.resources[0]) 
+        new GroupResource(category.groupResources[1]),
+        new GroupResource(category.groupResources[0]) 
       ]);
       expect(fixture.hasResources()).toBeTruthy();
     });

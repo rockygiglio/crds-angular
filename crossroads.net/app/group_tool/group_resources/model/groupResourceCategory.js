@@ -13,8 +13,8 @@ export default class GroupResourceCategory {
   _assignProperties(source) {
       this.title = source.title;
       this.description = source.description;
-      this.footerContent = source.communitygroupcontent;
-      this.sortOrder = parseInt(source.sortOrder);
+      this.footerContent = source.footerContent;
+      this.sortOrder = source.sortOrder ? parseInt(source.sortOrder) : undefined;
       this.active = source.default;
       if(source.groupResources) {
         this.resources = source.groupResources.map((r) => {

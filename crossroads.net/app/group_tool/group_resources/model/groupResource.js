@@ -13,7 +13,7 @@ export default class GroupResource {
       this.tagline = source.tagline;
       this.type = source.resourceType;
       this.author = source.author;
-      this.sortOrder = parseInt(source.sortOrder);
+      this.sortOrder = source.sortOrder ? parseInt(source.sortOrder) : undefined;
       if(source.image && source.image.filename) {
         this.image = source.image.filename;
       } else {
@@ -58,7 +58,7 @@ export default class GroupResource {
   }
 
   getIcon() {
-    return this.isPdf() ? 'file-pdf' : this.isBook() ? 'book' : 'file-text-o';
+    return this.isPdf() ? 'file-pdf' : this.isBook() ? 'book' : 'link';
   }
 
   isPdf() {
