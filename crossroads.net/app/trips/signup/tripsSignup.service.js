@@ -21,7 +21,8 @@
       progressLabel: null,
       applicationValid: false,
       isScholarshipped: false,
-      saveApplication: saveApplication
+      saveApplication: saveApplication,
+      isTripfull: false
     };
 
     function activate() {
