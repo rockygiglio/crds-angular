@@ -35,7 +35,6 @@ export class VideoComponent implements OnInit {
   closeModal:       EventEmitter<any> = new EventEmitter();
 
   constructor(private cmsDataService: CMSDataService) {
-    console.log('VideoComponent.constructor', this.inModal);
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -65,7 +64,6 @@ export class VideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('VideoComponent.ngOnInit', this.inModal);
     if (this.inModal) {
       this.redirectText = 'Close Modal';
     }

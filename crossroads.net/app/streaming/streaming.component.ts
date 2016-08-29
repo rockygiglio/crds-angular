@@ -11,6 +11,7 @@ import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { VideoComponent } from './video.component';
 
+
 // CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
 import { CMSDataService } from '../../core/services/CMSData.service';
@@ -117,24 +118,18 @@ export class StreamingComponent {
   watchNowClicked(event) {
     this.modal.open();
 
+    if (typeof this.videoComponent !== 'undefined') { 
+      this.videoComponent.destroy(); 
+    }
+
     this.componentResolver.resolveComponent(VideoComponent).then((factory) => {
-      if (typeof this.videoComponent === 'undefined') {
-        this.videoComponent = this.videoTarget.createComponent(factory);
-        this.videoComponent.instance.inModal = true;
-      }
+      this.videoComponent = this.videoTarget.createComponent(factory);
+      this.videoComponent.instance.inModal = true;
     })
   }
-
-  modalOpen() {
-    console.log('modal openned');
-  }
-
+  
   modalClose() {
-    console.log('modal closed');
-  }
-
-  modalDismiss() {
-    console.log('modal dismissed');
+    this.videoComponent.destroy(); 
   }
 
 }

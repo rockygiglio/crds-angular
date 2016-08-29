@@ -75,7 +75,8 @@
     </div>
   </section>
 </div>
-<modal class="watch-now" #modal (onOpen)="modalOpen()" (onClose)="modalClose()" (onDismiss)="modalDismiss()">
+
+<modal class="watch-now" #modal (onClose)="modalClose()" (onDismiss)="modalClose()">
   <modal-body>
     <div id="watch-now-source" #videoTarget></div>
   </modal-body>
