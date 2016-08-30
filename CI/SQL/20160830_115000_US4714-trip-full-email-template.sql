@@ -25,7 +25,7 @@ INSERT INTO [dbo].[dp_Communications]
            @communicationId
            ,5
            ,'[Pledge_Campaign] is full'
-           ,'<p>The [Pledge_Campaign] has reached maximum capacity. Please update <a href="https://crossroadsgo.net" >crossroadsgo.net</a> to reflect that this trip is no longer available</p>'
+           ,'<p>The [Pledge_Campaign] has reached maximum capacity. Please update <a href="http://crossroadsgo.net" >crossroadsgo.net</a> to reflect that this trip is no longer available</p>'
            ,1
 		   ,GetDate()
 		   ,1519180

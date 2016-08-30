@@ -134,7 +134,8 @@ namespace crds_angular.Services
                 RegistrationStart = campaign.RegistrationStart,
                 RegistrationDeposit = campaign.RegistrationDeposit,
                 AgeExceptions = campaign.AgeExceptions,
-                IsFull = false
+                IsFull = false,
+                EventId = campaign.EventId
             };
             var pledges = new List<MpPledge>();
 
@@ -426,6 +427,32 @@ namespace crds_angular.Services
             var scholarshipDollars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
             var pledgeTotal = distributions.FirstOrDefault(d => d.EventId == campaign.EventId)?.TotalPledge;
             return scholarshipDollars == pledgeTotal;
+        }
+
+        public void SendTripIsFullMessage(int campaignId)
+        {
+            var campaign = GetTripCampaign(campaignId);
+            if (!campaign.IsFull) return;
+            var templateId = _configurationWrapper.GetConfigIntValue("TripIsFullTemplateId");
+            var fromReplyToContactId = _configurationWrapper.GetConfigIntValue("TripIsFullFromContactId");
+            var fromReplyToEmailAddress = _configurationWrapper.GetConfigValue("TripIsFullFromEmailAddress");
+
+            var eventDeets = _mpEventService.GetEvent(campaign.EventId);
+
+            var mergeData = new Dictionary<String, Object>
+            {
+                {"Pledge_Campaign", campaign.Name}
+            };
+
+            var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                 fromReplyToContactId,
+                                                                                 fromReplyToEmailAddress,
+                                                                                 fromReplyToContactId,
+                                                                                 fromReplyToEmailAddress,
+                                                                                 eventDeets.PrimaryContact.ContactId,
+                                                                                 eventDeets.PrimaryContact.EmailAddress,
+                                                                                 mergeData);
+            _communicationService.SendMessage(communication);
         }
 
         public int GeneratePrivateInvite(PrivateInviteDto dto, string token)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Messaging;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -50,7 +51,7 @@ namespace crds_angular.Controllers.API
         }
 
         [Route("api/trip-application"), HttpPost]
-        public IHttpActionResult Save([FromBody] TripApplicationDto dto)
+        public async Task<IHttpActionResult> Save([FromBody] TripApplicationDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +74,9 @@ namespace crds_angular.Controllers.API
                     ProgramId = participantPledgeInfo.ProgramId,
                     ProgramName = participantPledgeInfo.ProgramName
                 };
-
+                
+                new Task(() => { _tripService.SendTripIsFullMessage(dto.PledgeCampaignId); } ).Start();
+                  
             }
             catch (Exception e)
             {
