@@ -15,7 +15,7 @@ export default class GroupResourceCategory {
       this.description = source.description;
       this.footerContent = source.footerContent;
       this.sortOrder = source.sortOrder ? parseInt(source.sortOrder) : undefined;
-      this.active = source.default;
+      this.active = source.default === '1';
       if(source.groupResources) {
         this.resources = source.groupResources.map((r) => {
           return new GroupResource(r);
