@@ -12,7 +12,6 @@ import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { VideoComponent } from './video.component';
 
-
 // CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
 import { CMSDataService } from '../../core/services/CMSData.service';
