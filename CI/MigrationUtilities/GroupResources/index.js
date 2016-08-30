@@ -25,13 +25,13 @@ var processCategories = function(categories) {
     inserts += '\n\n-- =============================================\n';
     inserts += '-- Category: ' + categories[i].title + '\n';
     inserts += '-- =============================================\n';
-    inserts += "INSERT INTO SS_mysite.groupresourcecategory (ClassName, Created, LastEdited, Title, `Default`, SortOrder, Description, FooterContent)\n";
+    inserts += "INSERT INTO SS_mysite.GroupResourceCategory (ClassName, Created, LastEdited, Title, `Default`, SortOrder, Description, FooterContent)\n";
     inserts += "  SELECT * FROM (SELECT 'GroupResourceCategory', CURDATE(), CURDATE() as d2, '" + 
       quote(categories[i].title) + "', " + 
       (categories[i].active === 'true' ? 1 : 0) + ", " + i + ", " + 
       "'" + quote(categories[i].description) + "', " +
       (categories[i].communitygroupcontent === undefined || categories[i].communitygroupcontent === null ? "NULL" : "'" + quote(categories[i].communitygroupcontent) + "'") + ")\n";
-    inserts += "  AS tmp WHERE NOT EXISTS (SELECT Title FROM SS_mysite.groupresourcecategory WHERE Title = '" + quote(categories[i].title) + "') LIMIT 1;\n";
+    inserts += "  AS tmp WHERE NOT EXISTS (SELECT Title FROM SS_mysite.GroupResourceCategory WHERE Title = '" + quote(categories[i].title) + "') LIMIT 1;\n";
     inserts += 'SELECT LAST_INSERT_ID() INTO `@catId`;\n';
     inserts += processResources(categories[i].resources);
   }
@@ -56,11 +56,11 @@ var processResources = function(resources) {
     res += '\n-- Resource: ' + resources[i].title + '\n';
 
     var url = type === 'file-pdf' ? "NULL" : "'" + resources[i].url + "'";
-    res += "SELECT ID INTO `@imageId` FROM SS_mysite.file WHERE Filename LIKE '%" + image[image.length - 1] + "' LIMIT 1;\n";
-    res += "INSERT INTO SS_mysite.groupresource (ClassName, Created, LastEdited, Title, Tagline, Url, Author, ResourceType, SortOrder, GroupResourceCategoryID, ImageID)\n";
+    res += "SELECT ID INTO `@imageId` FROM SS_mysite.File WHERE Filename LIKE '%groupresources/images/" + image[image.length - 1] + "' LIMIT 1;\n";
+    res += "INSERT INTO SS_mysite.GroupResource (ClassName, Created, LastEdited, Title, Tagline, Url, Author, ResourceType, SortOrder, GroupResourceCategoryID, ImageID)\n";
     res += "  SELECT * FROM (SELECT '" + resClass + "', CURDATE(), CURDATE() as d2, '" + quote(resources[i].title) + "', '" + quote(resources[i].tagline) + "', " + 
       url + ", '" + quote(resources[i].author) + "', '" + type + "', " + i + ", `@catId`, `@imageId`)\n";
-    res += "  AS tmp WHERE NOT EXISTS (SELECT Title FROM SS_mysite.groupresource WHERE Title = '" + quote(resources[i].title) + "' AND GroupResourceCategoryID = `@catId`) LIMIT 1;\n";
+    res += "  AS tmp WHERE NOT EXISTS (SELECT Title FROM SS_mysite.GroupResource WHERE Title = '" + quote(resources[i].title) + "' AND GroupResourceCategoryID = `@catId`) LIMIT 1;\n";
 
     if(type !== 'file-pdf') {
       continue;
@@ -68,9 +68,9 @@ var processResources = function(resources) {
 
     var pdf = resources[i].url.split('/');
     res += '\n-- PDF: ' + pdf[pdf.length - 1] + '\n';
-    res += "SELECT ID INTO `@resourceId` FROM SS_mysite.groupresource WHERE Title = '" + quote(resources[i].title) + "' AND GroupResourceCategoryID = `@catId` LIMIT 1;\n";
-    res += "SELECT ID INTO `@pdfId` FROM SS_mysite.file WHERE Filename LIKE '%" + pdf[pdf.length - 1] + "' LIMIT 1;\n";
-    res += "INSERT INTO SS_mysite.pdfgroupresource (ID, PdfFileID) SELECT * FROM (SELECT `@resourceId`, `@pdfId`) AS tmp WHERE NOT EXISTS (SELECT ID FROM SS_mysite.pdfgroupresource WHERE ID = `@resourceId`) LIMIT 1;\n";
+    res += "SELECT ID INTO `@resourceId` FROM SS_mysite.GroupResource WHERE Title = '" + quote(resources[i].title) + "' AND GroupResourceCategoryID = `@catId` LIMIT 1;\n";
+    res += "SELECT ID INTO `@pdfId` FROM SS_mysite.File WHERE Filename LIKE '%groupresources/pdf/" + pdf[pdf.length - 1] + "' LIMIT 1;\n";
+    res += "INSERT INTO SS_mysite.PdfGroupResource (ID, PdfFileID) SELECT * FROM (SELECT `@resourceId`, `@pdfId`) AS tmp WHERE NOT EXISTS (SELECT ID FROM SS_mysite.PdfGroupResource WHERE ID = `@resourceId`) LIMIT 1;\n";
   }
 
   return res;
