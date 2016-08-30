@@ -63,7 +63,7 @@ streaming {
   .fixed-header {
     .navbar-section {
       position: fixed;
-      z-index: 9999;
+      z-index: 1000;
       left: 0;
       right: 0;
       top: 0;
@@ -870,6 +870,131 @@ streaming {
     }
   }
 } // .live-stream
+
+.vjs-crds-skin {
+  overflow: hidden;
+
+  .vjs-control-bar {
+    background: transparent;
+  }
+
+  .vjs-progress-holder {
+    background-color: #4B4A51;
+  }
+
+  .vjs-load-progress {
+    background-color: #878A95;
+  }
+
+  .vjs-play-progress {
+    background-color: $streaming-blue;
+  }
+
+  .vjs-remaining-time {
+    display: none;
+  }
+
+  .vjs-current-time,
+  .vjs-duration,
+  .vjs-time-divider {
+    display: none;
+    order: 5;
+    width: auto;
+  }
+
+  .vjs-live-control {
+    flex: none;
+    width: auto;
+  }
+
+  .vjs-current-time {
+    padding-right: 0;
+  }
+
+  .vjs-duration {
+    padding-left: 0;
+  }
+
+  .vjs-time-divider {
+    margin: 0;
+  }
+
+  .vjs-current-time {
+    margin-left: 1em;
+  }
+
+  .vjs-volume-menu-button {
+    order: 1;
+  }
+
+  .vjs-chromecast-button,
+  .vjs-fullscreen-control {
+    order: 7;
+    flex: none;
+    position: absolute;
+    right: 0;
+  }
+
+  .vjs-chromecast-button {
+    right: 5.5em;
+  }
+
+  .vjs-fullscreen-control {
+    font-size: 120%;
+    margin-top: -0.35em;
+  }
+
+  .vjs-play-control {
+    flex: none;
+    align-self: center;
+    font-size: 250%;
+    margin-top: -3.2em;
+    width: 2em;
+  }
+
+  .vjs-progress-control {
+    flex: none;
+    position: absolute;
+    width: 100%;
+    bottom: 2em;
+    padding-right: 6em;
+    left: 5.35em;
+  }
+
+} // .vjs-crds-skin
+
+modal.watch-now {
+  &.fade .modal-dialog {
+    @include translate(0, 0);
+    @include transition-transform(0.3s ease-out);
+  }
+  &.in .modal-dialog { @include translate(0, 0) }
+  .modal-header {
+    border: none; 
+  }
+  .modal-dialog {
+    width: 100%;
+    margin: 0;
+    height: 100%;
+  }
+
+  .modal-content {
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    border-radius: none;
+  }
+
+  .modal-body {
+    height: 100%;
+    padding: 0;
+
+    iframe {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
 
 .current-series-trailer {
   button {

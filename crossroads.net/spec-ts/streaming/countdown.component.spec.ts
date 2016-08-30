@@ -7,17 +7,10 @@ import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testin
 import { Event } from '../../app/streaming/event';
 import { StreamspotService } from '../../app/streaming/streamspot.service';
 import { CountdownComponent } from '../../app/streaming/countdown.component';
+import { MockStreamspotService } from '../core/mocks/mock-streamspot.service';
+
 
 var moment = require('moment-timezone');
-
-class MockStreamspotService extends StreamspotService {
-  constructor() {
-    super(null)
-  }
-  getEvents(): any {
-    return [];
-  }
-}
 
 describe('Component: Countdown', () => {
 
