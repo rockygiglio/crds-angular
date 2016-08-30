@@ -66,7 +66,7 @@
     }
 
     function displayLocation(locationId) {
-      return _.result(_.find(vm.locations, 'dp_RecordID', locationId), 'dp_RecordName');
+      return _.result(_.find(vm.locations, {'dp_RecordID':locationId}), 'dp_RecordName');
     }
 
     function getCountries() {
