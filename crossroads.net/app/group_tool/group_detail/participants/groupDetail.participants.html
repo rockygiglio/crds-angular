@@ -20,8 +20,8 @@
 
   <div class="row mobile-push-half-top">
     <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView()' class="col-sm-6 col-sm-push-6 sm-text-right">
+      <a type='button' class='btn btn-primary btn-block-mobile push-half-bottom sm-pull-right' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
       <a type='button' class='btn btn-standard btn-block-mobile push-half-bottom' href='#' ng-click='groupDetailParticipants.setEditView()' ng-if='groupDetailParticipants.isLeader'>Edit</a>
-      <a type='button' class='btn btn-primary btn-block-mobile push-half-bottom' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>
     </div>
     <div ng-if='groupDetailParticipants.isEditView()' class="col-sm-6 col-sm-offset-6">
       <a type='button' class='btn btn-primary btn-block-mobile push-half-bottom' href='#' ng-click='groupDetailParticipants.setListView()' ng-if='groupDetailParticipants.isLeader'>Cancel</a>
