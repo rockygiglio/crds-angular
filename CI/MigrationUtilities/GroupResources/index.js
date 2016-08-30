@@ -4,7 +4,8 @@ var dateformat = require('dateformat');
 
 var now = new Date();
 
-var callback = function(response) {
+// This gets invoked when the http.get() below executes
+var main = function(response) {
   var content = '';
 
   response.on('data', function (chunk) {
@@ -12,11 +13,11 @@ var callback = function(response) {
   });
 
   response.on('end', function () {
-    // console.log('Got data: ' + content);
     processCategories(JSON.parse(content).resources.category);
   });
 };
 
+// Process all the categories returned from the http.get() 
 var processCategories = function(categories) {
   var sqlFileTemplate = fs.readFileSync('InsertGroupResourcesTemplate.sql', "utf8");
   var inserts = '';
@@ -41,6 +42,7 @@ var processCategories = function(categories) {
   getFiles(categories);
 };
 
+// Process all the resources on a category returned from the http.get()
 var processResources = function(resources) {
   var res = '';
   for(var i = 0; i < resources.length; i++) {
@@ -76,10 +78,12 @@ var processResources = function(resources) {
   return res;
 };
 
+// Replace single quotes with two single quotes in SQL inserts
 var quote = function(str) {
   return(str.replace(/'/g, "''"));
 };
 
+// Generate a shell script to download images and PDFs
 var getFiles = function(categories) {
   var curl = '';
   curl += "# Get Group Resource images and PDFs\n";
@@ -95,6 +99,7 @@ var getFiles = function(categories) {
   fs.writeFile(dateformat(now, 'yyyymmdd_HHMMss') + '_USnnnn-DownloadGroupResources.sh', curl);
 };
 
-http.get('http://crossroads-media.s3.amazonaws.com/documents/group-resources/group-resources.json', callback).on('error', function(e) {
+// Get the static "V1" Group Resources JSON
+http.get('http://crossroads-media.s3.amazonaws.com/documents/group-resources/group-resources.json', main).on('error', function(e) {
   console.log('Got error: ' + JSON.stringify(e));
 });
