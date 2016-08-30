@@ -9,6 +9,7 @@ module.exports = function (config) {
         basePath: '',
         frameworks: ['jasmine'],
         files: [
+            'node_modules/jquery/dist/jquery.js',
             'spec-ts/spec_index.js'
         ],
         exclude: [
