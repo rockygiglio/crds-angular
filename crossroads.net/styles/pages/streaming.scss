@@ -857,3 +857,64 @@ streaming {
     }
   }
 } // .live-stream
+
+
+.reminder-content {
+
+  margin-bottom: 2em;
+
+  > label {
+    text-transform: uppercase;
+    font-size: 85%;
+    margin-bottom: 0.5em; 
+  }
+
+  .btn {
+    &.btn-set-reminder {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF);
+    }
+    &.btn-time-select {
+      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
+      &.active {
+        color: $cr-streaming-blue;
+        background: #FFF;
+        box-shadow: none;
+      } 
+    }
+  }
+
+  .form-control {
+    label {
+      text-transform: none;
+    }
+  }
+
+  .contact, .schedule {
+    @include make-sm-column(5);
+  }
+  
+  .schedule {
+    @include make-sm-column-offset(1);
+    .btn {
+      margin: 0 0.35em 0.5em 0;
+    }
+  }
+
+  .btn-group {
+    margin: 1.5em 0;
+    .btn.active,
+    .btn:first-child {
+      border-right: none;
+    }
+  }
+
+  @media(min-width: $screen-md) {
+    .schedule {
+      border-right: 1px solid lighten($cr-streaming-blue, 20);
+      min-height: 200px;
+    }
+    .contact {
+      padding-left: 3em;
+    }
+  }
+}  // .reminder-content

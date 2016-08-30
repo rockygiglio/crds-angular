@@ -3,6 +3,7 @@ import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { Reminder } from './reminder';
 import { Event } from './event';
 import { StreamspotService } from './streamspot.service';
+import { upgradeAdapter } from '../upgrade-adapter';
 
 var $:any = require('jquery');
 var bootstrap:any = require('bootstrap');
@@ -11,7 +12,7 @@ var _ = require('lodash');
 @Component({
   selector: 'reminder-modal',
   templateUrl: './reminder-modal.ng2component.html',
-  directives: [MODAL_DIRECTIVES],
+  directives: [MODAL_DIRECTIVES, upgradeAdapter.upgradeNg1Component('preloader')],
   providers: [],
   pipes: []
 })

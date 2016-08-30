@@ -4,46 +4,49 @@
       <h2>Live Stream Reminder</h2>
     </modal-header>
     <modal-body>
-      <div class="reminder-content schedule">
-        <h3>Which upcoming live stream?</h3>
-        <div class="form-group">
-          <select [(ngModel)]="model.date" name="date" id="">
-            <option *ngFor="let event of upcoming" value="{{event.start.format(keyDateFormat)}}">{{event.start.format('dddd, MMMM Do')}}</option>
-          </select>
-        </div>
+      <preloader full-screen='true' *ngIf="upcoming.length == 0"></preloader>
+      <div class="reminder-content" *ngIf="upcoming.length > 0">
+        <div class="schedule">
+          <h3>Which upcoming live stream?</h3>
+          <div class="form-group">
+            <select [(ngModel)]="model.date" name="date" id="">
+              <option *ngFor="let event of upcoming" value="{{event.start.format(keyDateFormat)}}">{{event.start.format('dddd, MMMM Do')}}</option>
+            </select>
+          </div>
 
-        <div *ngIf="model.date">
-          <label>Select the time</label>
-          <div data-toggle="buttons">
-            <label class="btn btn-sm btn-time-select" *ngFor="let event of selectedDate(model.date)" (click)="model.time=event.start.format('h:mma z')">
-              <input type="radio" name="time" autocomplete="off" [(ngModel)]="model.time" value="{{event.start.format('h:mma z')}}"> {{event.start.format('h:mma z')}}
+          <div *ngIf="model.date">
+            <label>Select the time</label>
+            <div data-toggle="buttons">
+              <label class="btn btn-sm btn-time-select" *ngFor="let event of selectedDate(model.date)" (click)="model.time=event.start.format('h:mma z')">
+                <input type="radio" name="time" autocomplete="off" [(ngModel)]="model.time" value="{{event.start.format('h:mma z')}}"> {{event.start.format('h:mma z')}}
+              </label>
+            </div>
+          </div>
+
+        </div>
+        <div class="contact">
+          <h3>How would you like to be reminded?</h3>
+
+          <div class="btn-group btn-group-justified" data-toggle="buttons">
+            <label class="btn btn-lg btn-time-select" (click)="model.type='phone'">
+              <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type"> Text
+            </label>
+            <label class="btn btn-lg btn-time-select" (click)="model.type='email'">
+              <input type="radio" name="type" value="email" autocomplete="off" [(ngModel)]="model.type"> Email
             </label>
           </div>
-        </div>
 
-      </div>
-      <div class="reminder-content contact">
-        <h3>How would you like to be reminded?</h3>
-
-        <div class="btn-group btn-group-justified" data-toggle="buttons">
-          <label class="btn btn-lg btn-time-select" (click)="model.type='phone'">
-            <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type"> Text
-          </label>
-          <label class="btn btn-lg btn-time-select" (click)="model.type='email'">
-            <input type="radio" name="type" value="email" autocomplete="off" [(ngModel)]="model.type"> Email
-          </label>
-        </div>
-
-        <div class="form-group" *ngIf="model.type=='phone'">
-          <input [(ngModel)]="model.phone" name="phone" type="tel" class="form-control" placeholder="Enter your phone number">
-        </div>
-        <div class="form-group" *ngIf="model.type=='email'">
-          <input [(ngModel)]="model.email" name="email" type="email" class="form-control" placeholder="Enter your email address">
+          <div class="form-group" *ngIf="model.type=='phone'">
+            <input [(ngModel)]="model.phone" name="phone" type="tel" class="form-control" placeholder="Enter your phone number">
+          </div>
+          <div class="form-group" *ngIf="model.type=='email'">
+            <input [(ngModel)]="model.email" name="email" type="email" class="form-control" placeholder="Enter your email address">
+          </div>
         </div>
       </div>
     </modal-body>
     <modal-footer>
-      <button type="submit" class="btn btn-set-reminder">Set Reminder</button>
+      <button type="submit" class="btn btn-default btn-set-reminder" *ngIf="upcoming.length > 0">Set Reminder</button>
     </modal-footer>
   </form>
 </modal>

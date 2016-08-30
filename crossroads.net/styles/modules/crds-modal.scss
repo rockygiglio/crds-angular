@@ -45,37 +45,6 @@
     padding: 1em;
   }
 
-  .reminder-content > label {
-    text-transform: uppercase;
-    font-size: 85%;
-    margin-bottom: 0.5em; 
-  }
-
-  .btn {
-    border-radius: 4px;
-    font-size: 90%;
-    font-weight: 500;
-    &:focus, &.focus {
-      outline: none;
-    }
-    &.btn-set-reminder {
-      @include button-variant($cr-streaming-blue, #FFF, #FFF);
-    }
-    &.btn-time-select {
-      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
-      &.active {
-        color: $cr-streaming-blue;
-        background: #FFF;
-        box-shadow: none;
-      } 
-    }
-  }
-
-  .form-control {
-    label {
-      text-transform: none;
-    }
-  }
 
   .close {
     font-size: 210%;
@@ -99,25 +68,6 @@
     color: #FFF;
   }
 
-  .reminder-content {
-    @include make-sm-column(5);
-    margin-bottom: 2em;
-
-    &.schedule {
-      @include make-sm-column-offset(1);
-      .btn {
-        margin: 0 0.35em 0.5em 0;
-      }
-    }
-    .btn-group {
-      margin: 1.5em 0;
-      .btn.active,
-      .btn:first-child {
-        border-right: none;
-      }
-    }
-  }
-
   .modal-header {
     padding-top: 2em;
     .close {
@@ -131,15 +81,17 @@
     padding-bottom: 2.5em;
   }
 
-  @media(min-width: $screen-md) {
-    .reminder-content {
-      &.schedule {
-        border-right: 1px solid lighten($cr-streaming-blue, 20);
-      }
-      &.contact {
-        padding-left: 3em;
-      }
+  .btn {
+    border-radius: 4px;
+    font-size: 90%;
+    font-weight: 500;
+    &:focus, &.focus {
+      outline: none;
+    }
+
+    &.btn-default {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF);
     }
   }
-  
+
 }
