@@ -1034,7 +1034,7 @@ namespace crds_angular.test.Services
 
             var part = new List<MpGroupParticipant>();
 
-            groupRepository.Setup(x=>x.ParticipantGroupHasStudents(token,
+            groupRepository.Setup(x=>x.ParticipantGroupHasStudents(It.IsAny<string>(),
                                     participant.ParticipantId, participant.GroupParticipantId)).Returns(true);
 
             fixture.UpdateGroupParticipantRole(participant);
