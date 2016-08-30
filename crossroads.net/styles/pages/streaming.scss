@@ -885,6 +885,14 @@ streaming {
     }
   }
 
+  .alert {
+    font-size: 85%;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0;
+    padding: 5px;
+  }
+
   .btn-group {
     .btn.active,
     .btn:first-child {
@@ -906,12 +914,14 @@ streaming {
   .schedule {
     @include make-sm-column(5);
     @include make-sm-column-offset(1);
+    margin-bottom: 1em;
+
     .btn {
       margin: 0 0.35em 0.5em 0;
     }
 
     .btn-date-select {
-      width: 90%;
+      width: 100%;
       .glyphicon-chevron-down {
         font-size: 60%;
       }
@@ -920,6 +930,9 @@ streaming {
     @media(min-width: $screen-md) {
       border-right: 1px solid lighten($cr-streaming-blue, 20);
       min-height: 200px;
+      .btn-date-select {
+        width: 90%;
+      }
     }
   }
 }  // .reminder-content
