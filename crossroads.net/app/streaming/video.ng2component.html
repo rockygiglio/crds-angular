@@ -1,4 +1,4 @@
-<div class="live-stream">
+<div class="live-stream" *ngIf="inProgress">
 
   <div class="pushdown-container" *ngIf="displayCounter">
     <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
@@ -8,7 +8,7 @@
   </div>
   <div class="control-container ">
     <div class="container">
-      <a href="/live" class="btn btn-standard-dark">Go Back</a>
+      <a (click)="goBack()" class="btn btn-standard-dark" data-dismiss="modal">{{ redirectText }}</a>
     </div>
   </div>
   <div class="dark-bg">

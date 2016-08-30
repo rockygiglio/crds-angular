@@ -1,5 +1,5 @@
 // angular imports
-import { Component, ViewChild } from '@angular/core';
+import { Component, ComponentResolver, ViewChild, DynamicComponentLoader, ViewContainerRef } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
@@ -10,6 +10,7 @@ import { SocialSharingComponent } from './social-sharing.component';
 import { ReminderModalComponent } from './reminder-modal.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
+import { VideoComponent } from './video.component';
 
 
 // CRDS core
@@ -35,6 +36,7 @@ declare var _: any;
 @Component({
   selector: 'streaming',
   directives: [
+    MODAL_DIRECTIVES,
     DynamicContentNg2Component, 
     ScheduleComponent, 
     CountdownComponent,
@@ -44,7 +46,7 @@ declare var _: any;
     ContentCardComponent, 
     CurrentSeriesComponent,
     ReminderModalComponent,
-    MODAL_DIRECTIVES
+    VideoComponent
   ],
   templateUrl: './streaming.ng2component.html',
   providers: [CMSDataService],
@@ -57,11 +59,17 @@ declare var _: any;
 
 export class StreamingComponent {
   @ViewChild('reminderModal') modal: ReminderModalComponent;
+  @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
+  @ViewChild('watchNowModal') watchNowModal: ModalComponent;
+  videoComponent: any;
   inProgress: boolean = false;
   currentSeries: any;
   pastWeekends: any = [];
 
-  constructor(private streamspotService: StreamspotService, private cmsDataService: CMSDataService) {
+  constructor(private streamspotService: StreamspotService, 
+              private cmsDataService: CMSDataService,
+              private componentResolver:ComponentResolver,
+              private viewContainerRef:ViewContainerRef) {
 
     PageScrollConfig.defaultScrollOffset = -10;
     PageScrollConfig.defaultEasingFunction = (t:number, b:number, c:number, d:number):number => {
@@ -108,4 +116,24 @@ export class StreamingComponent {
           })
         });
   }
+
+  watchNowClicked(event) {
+    if (this.inProgress) {
+      this.watchNowModal.open();
+
+      if (typeof this.videoComponent !== 'undefined') { 
+        this.videoComponent.destroy(); 
+      }
+
+      this.componentResolver.resolveComponent(VideoComponent).then((factory) => {
+        this.videoComponent = this.videoTarget.createComponent(factory);
+        this.videoComponent.instance.inModal = true;
+      })
+    }
+  }
+  
+  modalClose() {
+    this.videoComponent.destroy(); 
+  }
+
 }
