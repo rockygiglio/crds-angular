@@ -1,5 +1,5 @@
 // angular imports
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
@@ -107,9 +107,5 @@ export class StreamingComponent {
               }
           })
         });
-  }
-
-  ngAfterViewInit() {
-    this.modal.open('lg')
   }
 }

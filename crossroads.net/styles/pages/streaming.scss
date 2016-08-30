@@ -97,11 +97,9 @@ streaming {
     }
 
     .btn-reminder {
-      @include button-variant(#FFF, $cr-streaming-blue, $cr-streaming-blue);
+      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
       margin-left: 1em;
-    }
-
-
+    } 
 
     .see-schedule {
       text-transform: uppercase;

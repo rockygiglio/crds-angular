@@ -33,7 +33,6 @@
         </div>
         <div class="contact">
           <h3>How would you like to be reminded?</h3>
-
           <div class="btn-group btn-group-justified" data-toggle="buttons">
             <label class="btn btn-lg btn-time-select" (click)="model.type='phone'">
               <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type"> Text
@@ -53,7 +52,7 @@
       </div>
     </modal-body>
     <modal-footer>
-      <button type="submit" class="btn btn-default btn-set-reminder" *ngIf="upcoming.length > 0">Set Reminder</button>
+      <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="!model.isValid()" *ngIf="upcoming.length > 0">Set Reminder</button>
     </modal-footer>
   </form>
 </modal>
