@@ -40,6 +40,11 @@ export class VideoComponent implements OnInit {
   constructor(private cmsDataService: CMSDataService,
               private streamspotService: StreamspotService) {
 
+    this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
+      this.inProgress = inProgress;
+      this.redirect();
+    });
+    
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -71,14 +76,16 @@ export class VideoComponent implements OnInit {
   ngOnInit() {
     if (this.inModal) {
       this.redirectText = 'Close Modal';
-    } else {
-      // if not in modal make sure the broadcase is on
-      this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
-        this.inProgress = inProgress;
-        if (this.inProgress === false) {
-          window.location.href = '/live';
-        }
-      });
+    } 
+  }
+
+  redirect() {
+    if (this.inProgress === false) {
+      if (this.inModal) {
+        this._close.emit({});
+      } else {
+        window.location.href = '/live';
+      }
     }
   }
 
