@@ -4,8 +4,6 @@
       <h2>Live Stream Reminder</h2>
     </modal-header>
     <modal-body>
-      <!--<pre>{{ form.value | json }}</pre>-->
-
       <preloader full-screen='true' *ngIf="isLoading()"></preloader>
       <div class="reminder-content" *ngIf="!isLoading() && !formSuccess">
         <div class="schedule">
