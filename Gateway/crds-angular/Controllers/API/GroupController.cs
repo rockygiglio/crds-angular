@@ -362,7 +362,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupService.UpdateGroupParticipantRole(token, participant);
+                    _groupService.UpdateGroupParticipantRole(participant);
                     return Ok();
                 }
                 catch (InvalidOperationException)

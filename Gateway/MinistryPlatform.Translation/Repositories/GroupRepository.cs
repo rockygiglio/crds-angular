@@ -823,25 +823,6 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("updated group: " + group.GroupId);
         }
 
-        /// <summary>
-        /// Returns list of small groups from the My groups > My Small Groups view. 
-        /// </summary>
-        /// <param name="userToken"></param>
-        /// <returns></returns>
-        public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
-        {
-            var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
-            var mpGroupList = groups.Select(MapRecordToMpGroup).ToList();
-
-            foreach (MpGroup group in mpGroupList)
-            {
-                group.Participants = LoadGroupParticipants(group.GroupId, userToken).Where(p => p.GroupRoleId == GroupLeaderRoleId).ToList();
-            }
-
-            return mpGroupList;
-
-        }
-
         public MpGroup GetSmallGroupDetailsById(int groupId)
         {
             var apiToken = ApiLogin();
@@ -856,7 +837,7 @@ namespace MinistryPlatform.Translation.Repositories
             return group;
         }
 
-        private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
+        public MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
         {
             return new MpGroup
             {
@@ -876,7 +857,7 @@ namespace MinistryPlatform.Translation.Repositories
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
                 MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : (record.ContainsKey("Meeting_Day_ID_Text") ? record.ToString("Meeting_Day_ID_Text") : string.Empty)),
                 MeetingTime = !string.IsNullOrEmpty(record.ToString("Meeting_Time")) ? DateTime.Parse(record.ToString("Meeting_Time")).ToShortTimeString() : string.Empty,
-                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty)),
+                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : ((record.ContainsKey("Meeting_Frequency_ID_Text") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty))),
                 AvailableOnline = record.ToBool("Available_Online"),
                 MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
                 RemainingCapacity = (record.ContainsKey("Remaining_Capacity") ? record["Remaining_Capacity"] as int? : null),
