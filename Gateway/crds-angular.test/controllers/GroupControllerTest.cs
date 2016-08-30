@@ -604,7 +604,7 @@ namespace crds_angular.test.controllers
                 GroupRoleTitle = "Group Leader"
             };
 
-            _groupServiceMock.Setup(x => x.UpdateGroupParticipantRole(It.IsAny<string>(), It.IsAny<GroupParticipantDTO>()));
+            _groupServiceMock.Setup(x => x.UpdateGroupParticipantRole(It.IsAny<GroupParticipantDTO>()));
             _fixture.UpdateParticipant(participant);
             _groupServiceMock.Verify();
         }
