@@ -12,8 +12,7 @@
                  type="text"
                  class="form-control"
                  ng-class="{ 'group-input-clear-visible': groupSearchForm.query.$viewValue.length > 0 }"
-                 placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}"
-                 autofocus>
+                 placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
           <span class="group-search-icon input-group-btn">
             <a ng-if="!groupSearchResults.processing && groupSearchForm.query.$viewValue.length > 0"
                ng-click="groupSearchForm.query.$setViewValue(''); groupSearchForm.query.$render()"
@@ -151,6 +150,5 @@
     </div>
   </div>
 
-  <div ng-show='groupSearchResults.ready && groupSearchResults.showSearchResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
-  <div ng-show='groupSearchResults.ready && groupSearchResults.showFilteredResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchFilterNoResults.content | html"></div>
+  <div ng-show='groupSearchResults.ready && !groupSearchResults.hasResults()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
 </div>
