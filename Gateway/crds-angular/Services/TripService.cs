@@ -497,7 +497,7 @@ namespace crds_angular.Services
                 
                 return formResponseId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // send applicant message
                 SendApplicantErrorMessage(dto.ContactId);

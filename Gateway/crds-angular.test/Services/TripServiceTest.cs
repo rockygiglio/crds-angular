@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Serve;
+using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -220,6 +221,204 @@ namespace crds_angular.test.Services
 
             var result = _fixture.HasScholarship(contactId, pledgeCampaignId);
             Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void ShouldSendTripEmail()
+        {
+            const int formResponseId = 12345;
+            const int contactId = 1234;
+            const int pledgeCampaignId = 9876;
+
+            var mycontact = new MpMyContact
+            {
+                Contact_ID = 7,
+                Email_Address = "from@from.com"
+            };
+            
+
+            var to = new MpContact
+            {
+                ContactId = 8,
+                EmailAddress = "to@to.com"
+            };
+
+            var tolist = new List<MpContact> {to};
+            
+            var mpc = new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "body",
+                EmailSubject = "subject",
+                FromContact = to,
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = to,
+                StartDate = new DateTime(2011, 10, 11),
+                TemplateId = 444,
+                ToContacts = tolist
+            };
+
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId)).Returns(mockPledgeCampaign());
+            _donationService.Setup(m => m.GetMyTripDistributions(contactId)).Returns(MockTripScholarshipDonationsResponse());
+            _formSubmissionService.Setup(f => f.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns(formResponseId);
+            _communicationService.Setup(
+                s =>
+                    s.GetTemplateAsCommunication(It.IsAny<int>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<Dictionary<string, object>>())).Returns(mpc);
+
+            _communicationService.Setup(s => s.SendMessage(mpc,false)).Returns(9999);
+            _contactService.Setup(s => s.GetContactById(It.IsAny<int>())).Returns(mycontact);
+
+            var result = _fixture.SaveApplication(mockTripApplication(contactId,pledgeCampaignId));
+
+            Assert.IsTrue(result == formResponseId);
+          
+            _configurationWrapper.Verify(v => v.GetConfigIntValue("TripApplicantSuccessTemplate"), Times.Exactly(1));
+        }
+
+        [Test]
+        public void ShouldSendComboEmail()
+        {
+            const int formResponseId = 12345;
+            const int contactId = 1234;
+            const int pledgeCampaignId = 9876;
+
+            var mycontact = new MpMyContact
+            {
+                Contact_ID = 7,
+                Email_Address = "from@from.com"
+            };
+
+
+            var to = new MpContact
+            {
+                ContactId = 8,
+                EmailAddress = "to@to.com"
+            };
+
+            var tolist = new List<MpContact> { to };
+
+            var mpc = new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "body",
+                EmailSubject = "subject",
+                FromContact = to,
+                MergeData = new Dictionary<string, object>(),
+                ReplyToContact = to,
+                StartDate = new DateTime(2011, 10, 11),
+                TemplateId = 444,
+                ToContacts = tolist
+            };
+
+            var program = new MpProgram
+            {
+                Name = "prog name",
+                AllowRecurringGiving = false,
+                ProgramId = 333,
+                ProgramType = 3
+            };
+
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId)).Returns(mockPledgeCampaign());
+            _donationService.Setup(m => m.GetMyTripDistributions(contactId)).Returns(MockTripDonationsResponse());
+            _formSubmissionService.Setup(f => f.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns(formResponseId);
+            _communicationService.Setup(
+                s =>
+                    s.GetTemplateAsCommunication(It.IsAny<int>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<int>(),
+                                                 It.IsAny<string>(),
+                                                 It.IsAny<Dictionary<string, object>>())).Returns(mpc);
+
+            _communicationService.Setup(s => s.SendMessage(mpc, false)).Returns(9999);
+            _contactService.Setup(s => s.GetContactById(It.IsAny<int>())).Returns(mycontact);
+            _programRepository.Setup(s => s.GetProgramById(It.IsAny<int>())).Returns(program);
+
+            var result = _fixture.SaveApplication(mockTripApplication(contactId, pledgeCampaignId));
+
+            Assert.IsTrue(result == formResponseId);
+
+            _configurationWrapper.Verify(v => v.GetConfigIntValue("TripAppAndDonationComboMessageTemplateId"), Times.Exactly(1));
+        }
+
+        private TripApplicationDto mockTripApplication(int contactid, int pledgeid)
+        {
+            var depositInfo = new TripApplicationDto.ApplicationDepositInformation();
+            depositInfo.DonationAmount = "300";
+            depositInfo.DonationDate = "1/1/2011";
+            depositInfo.PaymentMethod = "Bank";
+
+            var pageTwo = new TripApplicationDto.ApplicationPageTwo();
+            pageTwo.Allergies = "";
+            pageTwo.Conditions = "";
+            pageTwo.GuardianFirstName = "Bob";
+            pageTwo.GuardianLastName = "Smith";
+            pageTwo.Referral = "";
+            pageTwo.ScrubSizeBottom = "S";
+            pageTwo.ScrubSizeTop = "S";
+            pageTwo.SpiritualLife = new string[] { "" };
+            pageTwo.Why = "";
+
+            var pageThree = new TripApplicationDto.ApplicationPageThree();
+            pageThree.EmergencyContactEmail = "bob@bob.com";
+            pageThree.EmergencyContactFirstName = "bob";
+            pageThree.EmergencyContactLastName = "roberts";
+            pageThree.EmergencyContactPrimaryPhone = "888-888-8888";
+            pageThree.EmergencyContactSecondaryPhone = "555-555-5555";
+
+            var pageFour = new TripApplicationDto.ApplicationPageFour();
+            pageFour.GroupCommonName = "group name";
+            pageFour.InterestedInGroupLeader = "No";
+            pageFour.RoommateFirstChoice = "Pete Rose";
+            pageFour.RoommateSecondChoice = "Bill Clinton";
+            pageFour.SupportPersonEmail = "support@qwerty.com";
+            pageFour.WhyGroupLeader = "";
+
+            var pageFive = new TripApplicationDto.ApplicationPageFive();
+            pageFive.NolaFirstChoiceExperience = "first choice";
+            pageFive.NolaFirstChoiceWorkTeam = "first work team";
+            pageFive.NolaSecondChoiceWorkTeam = "second work team";
+            pageFive.SponsorChildFirstName = "Suzy";
+            pageFive.SponsorChildLastName = "Sponserchild";
+            pageFive.SponsorChildNumber = "99";
+            pageFive.SponsorChildTown = "Townville";
+
+            var pageSix = new TripApplicationDto.ApplicationPageSix();
+            pageSix.DescribeExperienceAbroad = "None";
+            pageSix.ExperienceAbroad = "None";
+            pageSix.FrequentFlyers = new string[] { "" };
+            pageSix.InternationalTravelExpericence = "NA";
+            pageSix.PassportCountry = "";
+            pageSix.PassportExpirationDate = "";
+            pageSix.PassportFirstName = "";
+            pageSix.PassportLastName = "";
+            pageSix.PassportMiddleName = "";
+            pageSix.PassportNumber = "";
+            pageSix.PastAbuseHistory = "None";
+
+            var dto = new TripApplicationDto();
+            dto.ContactId = contactid;
+            dto.PledgeCampaignId = pledgeid;
+            dto.InviteGUID = "";
+            dto.DepositInformation = depositInfo;
+            dto.PageTwo = pageTwo;
+            dto.PageThree = pageThree;
+            dto.PageFour = pageFour;
+            dto.PageFive = pageFive;
+            dto.PageSix = pageSix;
+
+            return dto;
         }
 
         private MpPledge mockPledge()
