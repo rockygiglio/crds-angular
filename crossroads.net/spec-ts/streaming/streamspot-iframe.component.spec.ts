@@ -6,27 +6,10 @@ import { describe, it, expect, inject, beforeEach, addProviders, beforeEachProvi
 
 import { StreamspotIframeComponent } from '../../app/streaming/streamspot-iframe.component';
 
-class MockStreamspotService extends StreamspotService {
-  constructor() {
-    super(null)
-  }
-  getEvents(): any {
-    return [];
-  }
-}
-
 describe('Component: StreamspotIframe', () => {
 
-  beforeEach(() => {
-    addProviders([
-      HTTP_PROVIDERS,
-      { provide: StreamspotService, useClass: MockStreamspotService }
-    ])
-  });
-
   it('should create the component with service successfully', () => {
-    let service = new MockStreamspotService();
-    let component = new StreamspotIframeComponent(service);
+    let component = new StreamspotIframeComponent();
     expect(component).toBeTruthy();
   });
 
