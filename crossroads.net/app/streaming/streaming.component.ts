@@ -11,7 +11,6 @@ import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { VideoComponent } from './video.component';
 
-
 // CRDS core
 import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
 import { CMSDataService } from '../../core/services/CMSData.service';
@@ -57,8 +56,7 @@ declare var _: any;
 
 export class StreamingComponent {
   @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
-  @ViewChild('modal')
-  modal: ModalComponent;
+  @ViewChild('modal') modal: ModalComponent;
   videoComponent: any;
   inProgress: boolean = false;
   currentSeries: any;
@@ -116,16 +114,18 @@ export class StreamingComponent {
   }
 
   watchNowClicked(event) {
-    this.modal.open();
+    if (this.inProgress) {
+      this.modal.open();
 
-    if (typeof this.videoComponent !== 'undefined') { 
-      this.videoComponent.destroy(); 
+      if (typeof this.videoComponent !== 'undefined') { 
+        this.videoComponent.destroy(); 
+      }
+
+      this.componentResolver.resolveComponent(VideoComponent).then((factory) => {
+        this.videoComponent = this.videoTarget.createComponent(factory);
+        this.videoComponent.instance.inModal = true;
+      })
     }
-
-    this.componentResolver.resolveComponent(VideoComponent).then((factory) => {
-      this.videoComponent = this.videoTarget.createComponent(factory);
-      this.videoComponent.instance.inModal = true;
-    })
   }
   
   modalClose() {

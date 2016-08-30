@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
+import { StreamspotService } from './streamspot.service';
 import { ContentCardComponent } from './content-card.component'
 import { VideoJSComponent } from './videojs.component';
 
@@ -25,6 +26,8 @@ var WOW = require('wow.js/dist/wow.min.js');
 export class VideoComponent implements OnInit {
   @Input() inModal: boolean = false;
   @Output('close') _close = new EventEmitter();
+
+  inProgress:       boolean    = false;
   number_of_people: number     = 2;
   displayCounter:   boolean    = true;
   countSubmit:      boolean    = false;
@@ -34,7 +37,9 @@ export class VideoComponent implements OnInit {
 
   closeModal:       EventEmitter<any> = new EventEmitter();
 
-  constructor(private cmsDataService: CMSDataService) {
+  constructor(private cmsDataService: CMSDataService,
+              private streamspotService: StreamspotService) {
+
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -66,6 +71,14 @@ export class VideoComponent implements OnInit {
   ngOnInit() {
     if (this.inModal) {
       this.redirectText = 'Close Modal';
+    } else {
+      // if not in modal make sure the broadcase is on
+      this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
+        this.inProgress = inProgress;
+        if (this.inProgress === false) {
+          window.location.href = '/live';
+        }
+      });
     }
   }
 
