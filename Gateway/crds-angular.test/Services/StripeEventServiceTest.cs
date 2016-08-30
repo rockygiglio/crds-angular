@@ -317,14 +317,26 @@ namespace crds_angular.test.Services
                 Id = 5150,
                 ProcessorTransferId = "OU812"
             });
-
+           
             var stripeRefundData = new StripeRefundData
             {
                 Id = "re999",
                 Amount = "999",
+                ChargeId = "ch999",
                 Charge = new StripeCharge
                 {
                     Id = "ch999"
+                },
+                BalanceTransaction = new StripeBalanceTransaction
+                {
+                   Created = DateTime.Now
+                }
+            };
+            var refund = new StripeRefund
+            {
+                Data = new List<StripeRefundData>
+                {
+                    stripeRefundData
                 }
             };
             _paymentService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefundData);
@@ -379,6 +391,8 @@ namespace crds_angular.test.Services
                     Status = DonationStatus.Declined
                 });
             });
+
+            _donationService.Setup(mocked => mocked.UpdateDonationStatus(refund.Data[0].ChargeId, 777, refund.Data[0].BalanceTransaction.Created, null)).Returns(9999);
 
             var invoice = new StripeInvoice
             {

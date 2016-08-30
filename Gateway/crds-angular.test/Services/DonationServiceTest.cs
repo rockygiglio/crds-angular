@@ -1545,7 +1545,6 @@ namespace crds_angular.test.Services
                 && d.Distributions[1].PledgeId == donation.Distributions[1].PledgeId
             ), false)).Returns(999);
 
-
             var result = _fixture.CreateDonationForBankAccountErrorRefund(refund);
             Assert.IsNotNull(result);
             Assert.AreEqual(999, result.Value);

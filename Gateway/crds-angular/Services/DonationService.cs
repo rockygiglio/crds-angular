@@ -17,8 +17,6 @@ using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus
 using MinistryPlatform.Translation.Enum;
 using PaymentType = crds_angular.Models.Crossroads.Stewardship.PaymentType;
 
-//using PaymentType = MinistryPlatform.Translation.Enum.PaymentType;
-
 namespace crds_angular.Services
 {
     public class DonationService: IDonationService
@@ -522,21 +520,8 @@ namespace crds_angular.Services
             var charge = _paymentService.GetCharge(invoice.Charge);
             var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription, charge.ProcessorId);
             _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
-           
-            DonationStatus donationStatus;
-            if (charge.Status == "failure")
-            {
-                 donationStatus = DonationStatus.Declined;
-            }
-            else if (charge.Status == "succeeded")
-            {
-                 donationStatus = DonationStatus.Succeeded;
 
-            }
-            else
-            {  donationStatus = DonationStatus.Pending;
-            }
-          
+            var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
             var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
             var amount = charge.Amount / Constants.StripeDecimalConversionValue;
 
