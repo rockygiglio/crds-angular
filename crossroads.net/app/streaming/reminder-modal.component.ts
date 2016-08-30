@@ -21,7 +21,11 @@ export class ReminderModalComponent {
   deliveryType: String = 'email';
   model: Reminder;
   upcoming: any = [];
-  keyDateFormat: string = 'MM/DD/YYYY';
+  isSelectingDates: boolean = true;
+  dateFormats: any = {
+    key: 'MM/DD/YYYY',
+    display: 'dddd, MMMM Do'
+  };
 
   constructor(private streamspotService: StreamspotService) {
     this.model = new Reminder();
@@ -34,10 +38,18 @@ export class ReminderModalComponent {
     console.log(this.model);
   }
 
+  uniqueDates() {
+    return _.
+      chain(this.upcoming).
+      uniq('dayOfYear').
+      value()
+      ;
+  }
+
   groupedDates() {
     return _.
       chain(this.upcoming).
-      groupBy((event: Event) => event.start.format(this.keyDateFormat)).
+      groupBy((event: Event) => event.start.format(this.dateFormats.key)).
       value()
       ;
   }
@@ -48,6 +60,12 @@ export class ReminderModalComponent {
     } else {
       return this.groupedDates()[date];
     }
+  }
+
+  setDates(event) {
+    this.model.date = event.start.format(this.dateFormats.key);
+    this.model.formattedDate = event.start.format(this.dateFormats.display);
+    this.isSelectingDates = false;
   }
 
   public open(size) {

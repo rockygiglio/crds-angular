@@ -8,14 +8,21 @@
       <div class="reminder-content" *ngIf="upcoming.length > 0">
         <div class="schedule">
           <h3>Which upcoming live stream?</h3>
-          <div class="form-group">
-            <select [(ngModel)]="model.date" name="date" id="">
-              <option *ngFor="let event of upcoming" value="{{event.start.format(keyDateFormat)}}">{{event.start.format('dddd, MMMM Do')}}</option>
-            </select>
+
+          <a href="#" class="btn btn-date-select" (click)="isSelectingDates=true" *ngIf="model.date && !isSelectingDates">
+            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
+            {{model.formattedDate}}
+            &nbsp;&nbsp;<i class="glyphicon glyphicon-chevron-down"></i>
+          </a>
+
+          <div data-toggle="buttons" *ngIf="isSelectingDates">
+            <label class="btn btn-lg btn-date-select" (click)="setDates(event)" *ngFor="let event of uniqueDates()">
+              <input type="radio" name="date" value="model.date" autocomplete="off" [(ngModel)]="model.date"> {{event.start.format(dateFormats.display)}}
+            </label>
           </div>
 
-          <div *ngIf="model.date">
-            <label>Select the time</label>
+          <div *ngIf="model.date && !isSelectingDates">
+            <label class="text-uppercase">Select the time</label>
             <div data-toggle="buttons">
               <label class="btn btn-sm btn-time-select" *ngFor="let event of selectedDate(model.date)" (click)="model.time=event.start.format('h:mma z')">
                 <input type="radio" name="time" autocomplete="off" [(ngModel)]="model.time" value="{{event.start.format('h:mma z')}}"> {{event.start.format('h:mma z')}}

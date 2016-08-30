@@ -1,6 +1,7 @@
 export class Reminder {
   public stream_id: number;
   public date: string;
+  public formattedDate: string;
   public time: string;
   public type: string;
   public phone: string;
