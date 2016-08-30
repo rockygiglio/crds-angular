@@ -22,7 +22,7 @@ describe('GroupResourceCategory model', () => {
         description: 'description1',
         footerContent: 'footercontent1',
         sortOrder: 1,
-        default: true,
+        default: '1',
         groupResources: [
           {
             title: 'title2',
