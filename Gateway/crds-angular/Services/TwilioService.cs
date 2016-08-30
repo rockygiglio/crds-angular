@@ -29,7 +29,6 @@ namespace crds_angular.Services
             {
                 _logger.Error(message.RestException.Message);
             }
-            
         }
 
         public void SetLogger(ILog logger)
