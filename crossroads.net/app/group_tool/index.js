@@ -36,3 +36,4 @@ import groupInvitation from './group_invitation';
 import endGroup from './end_group';
 import filterResults from './group_search_filter';
 import groupEmail from './group_email';
+import groupResources from './group_resources';
