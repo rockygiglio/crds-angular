@@ -21,6 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<IAddressRepository> _addressRepository;
+        private Mock<IObjectAttributeRepository> _objectAttributeRepository;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
@@ -38,7 +39,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
             _addressRepository = new Mock<IAddressRepository>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
+            _objectAttributeRepository = new Mock<IObjectAttributeRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object, _objectAttributeRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");

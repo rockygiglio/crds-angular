@@ -91,7 +91,11 @@ export class StreamingComponent {
 
               event.delay = i * 100;
               event.subtitle = event.title
-              event.title = '';
+              if (event.number === 0) {
+                event.number++;
+              }
+              event.title = `${event.series.title} #${event.number}`;
+
               event.url = `/message/${event.id}/${slugPipe.transform(event.title)}`
               event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
 
@@ -100,10 +104,6 @@ export class StreamingComponent {
               } 
               event.imageSrc = event.image.replace(/https*:/, '')
 
-              this.cmsDataService.getSeries(`id=${event.series}`)
-                .subscribe((series) => {
-                  event.title = series.length > 0 ? _.first(series).title : 'Message';
-                })
               }
           })
         });

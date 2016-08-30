@@ -150,7 +150,7 @@
     "video.js": "5.10.8",
     "videojs-chromecast": "^1.0.0",
     "wow.js": "^1.2.0",
-    "zone.js": "^0.6.12"
+    "zone.js": "0.6.12"
   },
   "browser": {
     "angular-aside": "./lib/angular-aside.js",
