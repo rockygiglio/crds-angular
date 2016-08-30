@@ -25,11 +25,11 @@ export default class GroupInvitationController {
         this.group = data;
         this.ready = true;
       },
-      (err) => {
-        this.log.error(`Unable to get group invitation: ${err.status} - ${err.statusText}`);
-        this.error = true;
-        this.ready = true;
-      });
+        (err) => {
+          this.log.error(`Unable to get group invitation: ${err.status} - ${err.statusText}`);
+          this.error = true;
+          this.ready = true;
+        });
     }
     else {
       this.ready = true;
@@ -42,18 +42,16 @@ export default class GroupInvitationController {
 
   accept() {
     this.processingAccept = true;
-debugger;
     this.participantService.acceptDenyInvitation(this.group.groupId, this.invitationGUID, true).then(() => {
-      debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationSuccessGrowler);
       this.state.go('grouptool.mygroups');
     },
-    (err) => {
-      this.log.error(`Unable to accept group Invitation: ${err.status} - ${err.statusText}`);
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationFailureGrowler);
-    }).finally(() => {
-      this.processingAccept = false;
-    });
+      (err) => {
+        this.log.error(`Unable to accept group Invitation: ${err.status} - ${err.statusText}`);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationFailureGrowler);
+      }).finally(() => {
+        this.processingAccept = false;
+      });
   }
 
   deny() {
@@ -63,12 +61,12 @@ debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationSuccessGrowler);
       this.location.path('/groups');
     },
-    (err) => {
-      this.log.error(`Unable to revoke group Invitation: ${err.status} - ${err.statusText}`);
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationFailureGrowler);
-    }).finally(() => {
-      this.processingDeny = false;
-    });
+      (err) => {
+        this.log.error(`Unable to revoke group Invitation: ${err.status} - ${err.statusText}`);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolDenyInvitationFailureGrowler);
+      }).finally(() => {
+        this.processingDeny = false;
+      });
   }
 
 }
