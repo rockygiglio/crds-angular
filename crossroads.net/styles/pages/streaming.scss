@@ -622,7 +622,7 @@ streaming {
       color: $gray;
     }
     a {
-      cursor: default;
+      // cursor: default;
     }
 
     figure {
@@ -663,7 +663,7 @@ streaming {
     }
 
     section {
-      top: -1em;
+      top: -0.5em;
     }
 
     figure > a {

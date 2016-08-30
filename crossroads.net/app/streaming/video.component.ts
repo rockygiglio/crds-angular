@@ -39,6 +39,12 @@ export class VideoComponent {
               feature.delay = i * 100
               feature.url = 'javascript:;';
 
+              if (feature.link !== null) {
+                feature.url = feature.link;
+              }
+
+              feature.target = '_blank';
+
               if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
                 feature.image = feature.image.filename;
               } else {
