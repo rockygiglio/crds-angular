@@ -183,6 +183,21 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldSendTripFullConfirmation()
+        {
+            
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, token)).Returns(mockTripCampaign());
+            _fixture.SendTripFullCommunication(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
+        }
+
+        [Test]
         public void ThrowExceptionWhenCreateParticipantFails()
         {
             const int contactId = 3123;
