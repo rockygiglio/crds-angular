@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Serve;
+using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -381,6 +382,14 @@ namespace crds_angular.test.Services
             _pledgeService.Verify(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken), Times.Never);
         }
 
+        [Test]
+        public void ShouldSendTripisFullMessage()
+        {
+            const int pledgeCampaign = 12345;
+            var campaign = mockPledgeCampaign(pledgeCampaign);
+            
+
+        }
 
         private MpPledge mockPledge()
         {
@@ -414,6 +423,22 @@ namespace crds_angular.test.Services
                 Nickname = "Go Nica",
                 ProgramId = 123,
                 MaximumRegistrants = 4                
+            };
+        }
+
+        private TripCampaignDto mockTripCampaignDto(int campaignId = 4)
+        {
+            return new TripCampaignDto
+            {
+                Id = campaignId,
+                Name = "Name",
+                FormId = 1,
+                Nickname = "Nickname",
+                YoungestAgeAllowed = 17,
+                RegistrationEnd = DateTime.Now,
+                RegistrationStart = DateTime.Now,
+                RegistrationDeposit = "300",
+                IsFull = false
             };
         }
 
