@@ -77,6 +77,14 @@ export default class GroupSearchResultsController {
     return this.tableParams.settings().dataset.length > 0;
   }
 
+  showSearchResultMessage() {
+    return this.results.length === 0;
+  }
+
+  showFilteredResultMessage() {
+    return this.results.length > 0 && this.tableParams.settings().dataset.length === 0;
+  }
+
   showLocationForm(form) {
     form.location.$rollbackViewValue();
     this.showLocationInput = true;
