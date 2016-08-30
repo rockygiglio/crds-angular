@@ -693,17 +693,18 @@ namespace crds_angular.Services
             return group;
         }
 
-        public void UpdateGroupParticipantRole(string token, GroupParticipantDTO participant)
+        public void UpdateGroupParticipantRole(GroupParticipantDTO participant)
         {
             try
             {
+                var apiToken = _apiUserService.GetToken();
                 var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
                 List<MpGroupParticipant> part = new List<MpGroupParticipant>();
                 part.Add(mpParticipant);
                 _mpGroupService.UpdateGroupParticipant(part);
                 if (participant.GroupRoleId == _groupRoleLeader)
                 {
-                    if (_mpGroupService.ParticipantGroupHasStudents(token, mpParticipant.ParticipantId, mpParticipant.GroupParticipantId))
+                    if (_mpGroupService.ParticipantGroupHasStudents(apiToken, mpParticipant.ParticipantId, mpParticipant.GroupParticipantId))
                     {
                         _mpGroupService.SendNewStudentMinistryGroupAlertEmail(part);
                     }

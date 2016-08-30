@@ -1015,7 +1015,7 @@ namespace crds_angular.test.Services
             };
 
             groupRepository.Setup(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()));
-            fixture.UpdateGroupParticipantRole(It.IsAny<string>(),participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify();
 
         }
@@ -1037,15 +1037,16 @@ namespace crds_angular.test.Services
             groupRepository.Setup(x=>x.ParticipantGroupHasStudents(token,
                                     participant.ParticipantId, participant.GroupParticipantId)).Returns(true);
 
-            fixture.UpdateGroupParticipantRole(token, participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.VerifyAll();// (x=>x.SendNewStudentMinistryGroupAlertEmail(part),Times.Once);
 
         }
 
         [Test]
         public void ShouldNotSendEmailWhenLeaderAddedToGroupWithOutStudents()
-        {
-            var token = "123";
+        {  
+            var token = "123";  
+                   
             var participant = new GroupParticipantDTO()
             {
                 ParticipantId = 1,
@@ -1059,7 +1060,7 @@ namespace crds_angular.test.Services
             groupRepository.Setup(x => x.ParticipantGroupHasStudents(token,
                                     participant.ParticipantId, participant.GroupParticipantId)).Returns(false);
 
-            fixture.UpdateGroupParticipantRole(token, participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify(x => x.SendNewStudentMinistryGroupAlertEmail(part), Times.Never);
 
         }
