@@ -56,7 +56,7 @@ declare var _: any;
 
 export class StreamingComponent {
   @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
-  @ViewChild('modal') modal: ModalComponent;
+  @ViewChild('watchNowModal') watchNowModal: ModalComponent;
   videoComponent: any;
   inProgress: boolean = false;
   currentSeries: any;
@@ -115,7 +115,7 @@ export class StreamingComponent {
 
   watchNowClicked(event) {
     if (this.inProgress) {
-      this.modal.open();
+      this.watchNowModal.open();
 
       if (typeof this.videoComponent !== 'undefined') { 
         this.videoComponent.destroy(); 
