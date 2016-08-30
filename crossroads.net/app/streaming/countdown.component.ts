@@ -36,7 +36,7 @@ export class CountdownComponent implements OnInit {
   event:            Event     = null;
   countdown:        Countdown = new Countdown;
   isCountdown:      boolean   = false;
-  isBroadcasting:   boolean   = true;
+  isBroadcasting:   boolean   = false;
   displayCountdown: boolean   = true
   intervalId:       any;
   subscriber:       any;
