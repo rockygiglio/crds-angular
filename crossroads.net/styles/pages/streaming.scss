@@ -597,7 +597,6 @@ streaming {
 
 } // streaming
 
-
 .live-stream {
   display: block;
   background: #000;
@@ -670,7 +669,6 @@ streaming {
     figure > a {
       display: block;
       width: 100%;
-      margin-bottom: 2%; 
     }
 
     @media (max-width: $screen-xs-max) { 
@@ -679,14 +677,12 @@ streaming {
       }
 
       figure > a {
-        margin-bottom: 2%;
         margin-left: 2%;
         margin-right: 2%;
       }
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       figure > a {
-        margin-bottom: 2%;
         margin-left: 2%;
         margin-right: 2%;
       }
@@ -727,22 +723,23 @@ streaming {
     }
   }
 
-  @media (min-width: $screen-sm) {
-    .related {
-      @include make-sm-column(6);
-    }
-    .participate {
-      @include make-sm-column(5);
-      @include make-sm-column-offset(1);
+  .digital-program-container {
+    @media only screen and (max-width:  $screen-sm-min){
+      background: #151515;
     }
   }
 
   .digital-program {
-    background: #252526;
     padding-bottom: 15px;
 
     header {
       @include make-md-column(12);
+    }
+
+    &.bg,
+    > .bg {
+      background: #151515;
+      overflow: hidden;
     }
 
     .gradient {
@@ -762,6 +759,27 @@ streaming {
         display: block;
       }
     }
+
+    &.related {
+      @media (min-width: $screen-sm) {
+        @include make-sm-column(6);
+      }
+    }
+
+    &.participate {
+      @media (min-width: $screen-sm) {
+        @include make-sm-column(6);
+        border-left: 25px solid #000;
+      }
+
+      hr {
+        border-color: #212121;
+        float: left;
+        width: 100%;
+        margin: 2em 0;
+      }
+    }
+
   }
 
   .participate {
@@ -780,7 +798,6 @@ streaming {
         @include make-md-column(8);
       }
     }
-
     .promo {
       &:last-child {
         hr {
@@ -790,8 +807,6 @@ streaming {
     }
 
     margin-bottom: 3em;
-    font-family: $cr-streaming-font-sans;
-    font-size: 88%;
 
     h3 {
       @include crds-make-condensed();
@@ -803,15 +818,13 @@ streaming {
         color: #FFF;
       }
     }
-    hr {
-      margin-top: 0;
-      border-color: darken($gray, 10%);
-      clear: both;
 
-      
+    article {
+      font-family: $cr-streaming-font-sans;
+      font-size: 88%;
     }
+
     figure {
-      margin-bottom: 1em;
       padding-left: 0;
     }
   }

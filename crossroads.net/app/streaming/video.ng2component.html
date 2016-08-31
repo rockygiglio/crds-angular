@@ -19,17 +19,16 @@
     </section>
   </div>
 
-  <div class="container">
-    <div class="row">
-      <section class="related digital-program" *ngIf="dontMiss.length > 0">
+  <div class="container digital-program-container">
+
+      <section class="related digital-program bg" *ngIf="dontMiss.length > 0">
           <header class="clearfix">
             <h2>don't miss</h2>
           </header>
-
           <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
-
       </section>
-      <section class="participate digital-program" *ngIf="beTheChurch.length > 0">
+
+      <section class="participate digital-program bg" *ngIf="beTheChurch.length > 0">
         <header class="clearfix">
           <h2>be the church</h2>
         </header>
@@ -47,6 +46,6 @@
           <hr>
         </article>
       </section>
-    </div>
+
   </div>
 </div>
