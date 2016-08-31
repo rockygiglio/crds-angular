@@ -6,8 +6,15 @@
              tabindex="0"
              ng-value="option[to.valueProp || 'value']"
              ng-model="model[options.key]">
-      <strong>{{option[to.labelProp || 'name']}}<strong>
+      <div ng-if="to.bold">
+        <div ng-if="to.descInline"><strong>{{option[to.labelProp || 'name']}}</strong> {{option[to.descProp || 'name']}}</div>
+        <div ng-if="!to.descInline"><strong>{{option[to.labelProp || 'name']}}</strong></div>
+      </div>
+      <div ng-if="!to.bold">
+        <div ng-if="to.descInline">{{option[to.labelProp || 'name']}} {{option[to.descProp || 'name']}}</div>
+        <div ng-if="!to.descInline">{{option[to.labelProp || 'name']}}</div>
+      </div>
     </label>
-    <div><label>{{option[to.descProp || 'name']}}</label></div>
+    <div ng-if="!to.descInline"><label>{{option[to.descProp || 'name']}}</label></div>
   </div>
 </div>
