@@ -2,7 +2,7 @@ export class Reminder {
   public day: string;
   public formattedDay: string;
   public time: string;
-  public type: string;
+  public type: string = 'phone';
   public phone: string;
   public email: string;
 
