@@ -86,7 +86,8 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.openPassportExpireDatePicker = openPassportExpireDatePicker;
 
     $rootScope.$on('$stateChangeStart', stateChangeStart);
-    $scope.$on('$viewContentLoaded', stateChangeSuccess);
+    $rootScope.$on('$stateChangeSuccess', stateChangeSuccess);
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
     $window.onbeforeunload = onBeforeUnload;
 
     activate();
@@ -434,7 +435,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function stateChangeStart(event, toState, toParams, fromState, fromParams) {
-      if (fromState.name === 'tripsignup.application.thankyou') {
+      if (fromState.name === 'tripsignup.application.thankyou' || fromState.name === 'tripdeposit.thanks') {
         if (toState.name === 'tripsignup.application.page') {
           event.preventDefault();
           $state.go('tripsignup', {campaignId: toParams.campaignId});
@@ -480,7 +481,17 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       }
     }
 
-    function stateChangeSuccess(event) {
+    function stateChangeSuccess(event, toState, toParams, fromState, fromParams) {
+      if (fromState.name === 'tripsignup' &&
+          toState.name === 'tripsignup.application.page' &&
+          Number(toParams.stepId) > 1) {
+        event.preventDefault();
+        $state.go('tripsignup', {campaignId: toParams.campaignId});
+        return;
+      }
+    }
+
+    function viewContentLoaded() {
       toTop();
     }
 

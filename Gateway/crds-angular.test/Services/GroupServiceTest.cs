@@ -641,78 +641,6 @@ namespace crds_angular.test.Services
             _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
         }
 
-        [Test]
-        public void CanReturnSmallGroupsForAUser()
-        {
-            const string token = "JUSTDOITFOLLOWYOURDREAMS";
-
-            var newGroupList = new List<MpGroup>()
-            {
-                new MpGroup()
-                {
-                    Name = "Awesome Sweet Small Group",
-                    GroupDescription = "This is not the greatest group in the world no this is just a tribute",
-                    GroupId = 1337,
-                    GroupType = 1,
-                    MinistryId = 0,
-                    CongregationId = 0,
-                    StartDate = DateTime.Now,
-                    EndDate = null,
-                    Full = false,
-                    AvailableOnline = true,
-                    RemainingCapacity = 8,
-                    WaitList = false,
-                    ChildCareAvailable = false,
-                    MeetingDayId = null,
-                    MeetingDay = "Monday",
-                    MeetingTime = "19:30",
-                    GroupRoleId = 0,
-                    Address = new MpAddress()
-                    {
-                        Address_ID = null,
-                        Address_Line_1 = "123 Place Street",
-                        Address_Line_2 = null,
-                        City = "CITY",
-                        State = "OH",
-                        Postal_Code = "45219",
-                        Foreign_Country = null,
-                        County = null
-                    },
-                    Participants = new List<MpGroupParticipant>()
-                    {
-                        new MpGroupParticipant()
-                        {
-                            ParticipantId = 123456,
-                            ContactId = 456812,
-                            GroupParticipantId = 0,
-                            NickName = "Phillip J",
-                            LastName = "Fry",
-                            GroupRoleId = 0,
-                            GroupRoleTitle = null,
-                            Email = null
-                        },
-                        new MpGroupParticipant()
-                        {
-                            ParticipantId = 654321,
-                            ContactId = 77777,
-                            GroupParticipantId = 0,
-                            NickName = "Leelah",
-                            LastName = "Multipass",
-                            GroupRoleId = 0,
-                            GroupRoleTitle = null,
-                            Email = null
-                        }
-                    }
-                }
-            };
-
-            groupRepository.Setup(x => x.GetSmallGroupsForAuthenticatedUser(token)).Returns(newGroupList);
-
-            var groups = fixture.GetSmallGroupsForAuthenticatedUser(token);
-            Assert.AreEqual(groups.Count, 1);
-            Assert.AreEqual(groups[0].GroupName, "Awesome Sweet Small Group");
-        }
-
         public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
         {
             var g = new MpGroup
@@ -1015,7 +943,7 @@ namespace crds_angular.test.Services
             };
 
             groupRepository.Setup(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()));
-            fixture.UpdateGroupParticipantRole(It.IsAny<string>(),participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify();
 
         }
@@ -1034,18 +962,19 @@ namespace crds_angular.test.Services
 
             var part = new List<MpGroupParticipant>();
 
-            groupRepository.Setup(x=>x.ParticipantGroupHasStudents(token,
+            groupRepository.Setup(x=>x.ParticipantGroupHasStudents(It.IsAny<string>(),
                                     participant.ParticipantId, participant.GroupParticipantId)).Returns(true);
 
-            fixture.UpdateGroupParticipantRole(token, participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.VerifyAll();// (x=>x.SendNewStudentMinistryGroupAlertEmail(part),Times.Once);
 
         }
 
         [Test]
         public void ShouldNotSendEmailWhenLeaderAddedToGroupWithOutStudents()
-        {
-            var token = "123";
+        {  
+            var token = "123";  
+                   
             var participant = new GroupParticipantDTO()
             {
                 ParticipantId = 1,
@@ -1059,7 +988,7 @@ namespace crds_angular.test.Services
             groupRepository.Setup(x => x.ParticipantGroupHasStudents(token,
                                     participant.ParticipantId, participant.GroupParticipantId)).Returns(false);
 
-            fixture.UpdateGroupParticipantRole(token, participant);
+            fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify(x => x.SendNewStudentMinistryGroupAlertEmail(part), Times.Never);
 
         }

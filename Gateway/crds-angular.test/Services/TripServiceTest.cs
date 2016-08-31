@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Serve;
+using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -180,6 +181,108 @@ namespace crds_angular.test.Services
 
             _apiUserReposity.VerifyAll();
            _tripRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldSendTripFullConfirmation()
+        {
+            
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+            const int templateId = 7878;
+
+            var campaign = mockPledgeCampaign(pledgeCampaignId);
+
+            var pledges = mockPledges(campaign);
+            pledges.Add(
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 4,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
+            );
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Pledge_Campaign", campaign.Name}
+            };
+
+            var communication = new MpCommunication()
+            {
+                TemplateId = templateId,
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<p> Some random body of text </p>",
+                EmailSubject = "more randomness",
+                FromContact = new MpContact() {ContactId = 5, EmailAddress = "updates@crossroads.net"},
+                MergeData = mergeData,
+                ReplyToContact = new MpContact {ContactId = 5, EmailAddress = "updates@crossroads.net"},
+                StartDate = DateTime.Now,
+                ToContacts = new List<MpContact> {new MpContact {ContactId = 45, EmailAddress = "asdf@asdf.com"}}
+            };
+
+            var eventDetails = EventDetails(campaign.EventId);
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, token)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, token)).Returns(pledges);        
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("TripIsFullTemplateId")).Returns(templateId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("TripIsFullFromContactId")).Returns(5);
+            _configurationWrapper.Setup(m => m.GetConfigValue("TripIsFullFromEmailAddress")).Returns("updates@crossroads.net");
+
+            _eventService.Setup(m => m.GetEvent(campaign.EventId)).Returns(eventDetails);
+
+            _communicationService.Setup(
+                m => m.GetTemplateAsCommunication(templateId,
+                                                  communication.FromContact.ContactId,
+                                                  communication.FromContact.EmailAddress,
+                                                  communication.FromContact.ContactId,
+                                                  communication.FromContact.EmailAddress,
+                                                  eventDetails.PrimaryContact.ContactId,
+                                                  eventDetails.PrimaryContact.EmailAddress,
+                                                  mergeData)).Returns(communication);
+
+
+            _communicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
+
+            _fixture.SendTripIsFullMessage(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _communicationService.VerifyAll();
+            _eventService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldNotSendTripFullConfirmation()
+        {
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+            
+            var campaign = mockPledgeCampaign(pledgeCampaignId);
+            var pledges = mockPledges(campaign);
+            
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, token)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, token)).Returns(pledges);
+            
+            _fixture.SendTripIsFullMessage(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), It.IsAny<bool>()), Times.Never);
         }
 
         [Test]
@@ -366,6 +469,13 @@ namespace crds_angular.test.Services
             _pledgeService.Verify(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken), Times.Never);
         }
 
+        private MpEvent EventDetails(int eventId = 8)
+        {
+            return new MpEvent
+            {
+                PrimaryContact = new MpContact { ContactId = 5, EmailAddress = "updates@crossroads.net"}       
+            };
+        }
 
         private MpPledge mockPledge()
         {
@@ -398,7 +508,23 @@ namespace crds_angular.test.Services
                 Name = "Go Midgar",
                 Nickname = "Go Nica",
                 ProgramId = 123,
-                MaximumRegistrants = 4                
+                MaximumRegistrants = 4,                            
+            };
+        }
+
+        private TripCampaignDto mockTripCampaignDto(int campaignId = 4)
+        {
+            return new TripCampaignDto
+            {
+                Id = campaignId,
+                Name = "Name",
+                FormId = 1,
+                Nickname = "Nickname",
+                YoungestAgeAllowed = 17,
+                RegistrationEnd = DateTime.Now,
+                RegistrationStart = DateTime.Now,
+                RegistrationDeposit = "300",
+                IsFull = false
             };
         }
 

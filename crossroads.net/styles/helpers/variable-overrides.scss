@@ -23,6 +23,7 @@ $brand-danger:          #c9302c !default;
 
 $state-danger-text:     #c9302c !default;
 
+
 // Brand colors
 // -------------------------
 
@@ -33,6 +34,16 @@ $cr-grey:				#878785; //PMS Cool Grey 9
 
 $brand-primary:			$cr-blue;
 $brand-secondary:   $cr-orange;
+
+
+// Streaming colors & fonts
+// -------------------------
+
+$cr-streaming-blue: #0795E3;
+$cr-streaming-font-extra-cond: "acumin-pro-extra-condensed", sans-serif;
+$cr-streaming-font-sans: "acumin-pro", sans-serif;
+$cr-streaming-font-serif: "lexia", serif;
+
 
 //== Scaffolding
 //

@@ -41,14 +41,12 @@ namespace crds_angular.Services.Interfaces
 
         void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId);
 
-        List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token);
-
         List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
 
         GroupDTO UpdateGroup(GroupDTO @group);
 
         void EndDateGroup(int groupId, int? reasonEndedId = null);
 
-        void UpdateGroupParticipantRole(string token, GroupParticipantDTO participant);
+        void UpdateGroupParticipantRole(GroupParticipantDTO participant);
     }
 }

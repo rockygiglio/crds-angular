@@ -16,9 +16,7 @@ class TripDepositController {
     this.stateParams = $stateParams;
     this.loadingDonor = false;
     this.window = $window;
-    this.initialized = false;
-
-
+    this.initialized = false; 
   }
 
   $onDestroy() {
@@ -165,6 +163,4 @@ class TripDepositController {
   }
 
 }
-
-
 export default TripDepositController;

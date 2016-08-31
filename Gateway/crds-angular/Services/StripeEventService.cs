@@ -266,6 +266,8 @@ namespace crds_angular.Services
                 if (_donationService.CreateDonationForBankAccountErrorRefund(refund) != null)
                 {
                     donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
+                    _logger.Debug(string.Format("Updating charge id {0} to Declined status", charge.Id));
+                    _donationService.UpdateDonationStatus(refund.Data[0].ChargeId, _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
                 }
                 else
                 {
