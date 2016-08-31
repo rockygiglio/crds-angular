@@ -1,5 +1,5 @@
 <div class="wrapper" id="wrapper" stickyHeader>
-  <section id="countdown" class="navbar-section" >
+  <section id="countdown" class="navbar-section">
     <div class="container animated fadeIn">
       <pageScroll href="#schedule" class="btn see-schedule">
         See Schedule
@@ -8,6 +8,7 @@
         </svg>
       </pageScroll>
       <countdown (watchNowClick)="watchNowClicked()"></countdown>
+      <button type="button" class="btn btn-sm btn-reminder" (click)="modal.open('lg')">Remind Me</button>
     </div>
   </section>
 
@@ -75,6 +76,8 @@
     </div>
   </section>
 </div>
+
+<reminder-modal #reminderModal></reminder-modal>
 
 <modal class="watch-now" #watchNowModal (onClose)="modalClose()" (onDismiss)="modalClose()">
   <modal-body>
