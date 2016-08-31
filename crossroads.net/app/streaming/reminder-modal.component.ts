@@ -24,7 +24,7 @@ export class ReminderModalComponent {
   upcoming: any = [];
   loading: boolean = false;
   formSuccess: boolean = false;
-  isSelectingDates: boolean = true;
+  isSelectingDates: boolean = false;
   isDayValid: boolean = false;
   isTimeValid: boolean = false;
   isEmailValid: boolean = true;
@@ -39,6 +39,7 @@ export class ReminderModalComponent {
     this.model = new Reminder();
     streamspotService.events.then(response => {
       this.upcoming = response;
+      this.model.day = this.nextDate();
     })
   }
 
@@ -82,6 +83,14 @@ export class ReminderModalComponent {
       ;
   }
 
+  nextDate() {
+    return _.
+      head(this.uniqueDates()).
+      start.
+      format(this.dateFormats.key)
+      ;
+  }
+
   selectedDate(date) {
     if(_.isEmpty(this.upcoming)) {
       return this.upcoming;
@@ -98,8 +107,6 @@ export class ReminderModalComponent {
   }
 
   public open(size) {
-    this.isSelectingDates = true;
-    this.model = new Reminder();
     this.modal.open(size)
   }
 }
