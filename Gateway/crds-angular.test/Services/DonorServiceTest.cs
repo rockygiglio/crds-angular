@@ -385,7 +385,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(recurringGift.DonorAccountId.Value)).Returns(1);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month", null));
 
             var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
             _paymentService.VerifyAll();
@@ -759,7 +759,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(gift.DonorAccountId.Value)).Returns(3);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Credit Card", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Credit Card", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month", null));
 
             _fixture.CancelRecurringGift(authUserToken, recurringGiftId);
             _mpDonorService.VerifyAll();
@@ -981,7 +981,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(234)).Returns(1);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftUpdateEmailTemplateId, newRecurringGift.DonorId, (int)(80000M / 100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month"));
+                    mocked.SendEmail(RecurringGiftUpdateEmailTemplateId, newRecurringGift.DonorId, (int)(80000M / 100), "Bank", It.IsAny<DateTime>(), "Crossroads", string.Empty, "12th of the month", null));
 
             var result = _fixture.EditRecurringGift(authUserToken, editGift, donor);
             _mpDonorService.VerifyAll();
