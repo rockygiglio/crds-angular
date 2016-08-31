@@ -16,6 +16,7 @@ class TripDeposit {
     this.giveTransferService.amountSubmitted = true;
     this.giveTransferService.givingType = 'one_time';
     this.giveTransferService.processing = false;
+    this.giveTransferService.tripDeposit = true;
 
     // Setup the give flow service
     this.giveFlow.reset({

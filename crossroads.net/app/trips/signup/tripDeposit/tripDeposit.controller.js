@@ -104,8 +104,6 @@ class TripDepositController {
     this.initDefaultState();
   }
 
- 
-
   initDefaultState() {
 
     let program = {
@@ -128,8 +126,21 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
+  getPaymentType() {
+    if (this.dto.view === 'cc') {
+      return 'Credit Card';
+    }
+    else if (this.dto.view === 'bank') {
+      return 'Bank';
+    }
+    else {
+      return 'Unknown';
+    }
+  }
+
   saveApplication(shouldSubmitBank = '') {
     this.dto.processing = true;
+    this.signupService.paymentMethod = this.getPaymentType();
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
     } else {

@@ -95,6 +95,7 @@ describe('TripSignupService', () => {
     signupService.page5 = tripHelpers.Application.page5;
     signupService.page6 = tripHelpers.Application.page6;
     signupService.person = tripHelpers.Person;
+    signupService.depositInfo = tripHelpers.Application.depositInformation;
 
     let mockObj = {
       contactId: tripHelpers.Person.contactId,
@@ -104,7 +105,8 @@ describe('TripSignupService', () => {
       pageFour: signupService.page4,
       pageFive: signupService.page5,
       pageSix: signupService.page6,
-      inviteGUID: undefined
+      inviteGUID: undefined,
+      depositInformation: signupService.depositInfo
     };
 
     httpBackend.expectPOST(`${endpoint}/trip-application`,
@@ -130,6 +132,7 @@ describe('TripSignupService', () => {
     signupService.page5 = tripHelpers.Application.page5;
     signupService.page6 = tripHelpers.Application.page6;
     signupService.person = tripHelpers.Person;
+    signupService.depositInfo = tripHelpers.Application.depositInformation;
 
     let mockObj = {
       contactId: tripHelpers.Person.contactId,
@@ -139,7 +142,8 @@ describe('TripSignupService', () => {
       pageFour: signupService.page4,
       pageFive: signupService.page5,
       pageSix: signupService.page6,
-      inviteGUID: undefined
+      inviteGUID: undefined,
+      depositInformation: signupService.depositInfo
     };
 
     httpBackend.expectPOST(`${endpoint}/trip-application`,
