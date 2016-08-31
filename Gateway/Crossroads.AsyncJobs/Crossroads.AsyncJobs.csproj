@@ -204,6 +204,7 @@
     <Compile Include="Application\QueueProcessor.cs" />
     <Compile Include="App_Start\ApplicationPreload.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
+    <Compile Include="App_Start\QuartzConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">

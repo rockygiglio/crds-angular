@@ -62,7 +62,13 @@ namespace crds_angular.Controllers.API
                 ScheduledJob scheduledJob = new ScheduledJob();
                 scheduledJob.StartDateTime = textCommunicationData.StartDate.Value;
                 scheduledJob.JobType = typeof(SendTextMessageJob);
-                scheduledJob.Dto = textCommunicationData;
+                scheduledJob.Dto = new Dictionary<string, object>()
+                {
+                    {"TemplateId", textCommunicationData.TemplateId},
+                    {"MergeData", textCommunicationData.MergeData},
+                    {"ToPhoneNumber", textCommunicationData.ToPhoneNumber},
+                    {"StartDate", textCommunicationData.StartDate}
+                };
 
                 var message = _messageFactory.CreateMessage(scheduledJob);
 

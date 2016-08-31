@@ -22,7 +22,7 @@ namespace Crossroads.AsyncJobs.Processors
             _logger.Debug("Scheduling Job "+ scheduledJob.JobType + " at "+ scheduledJob.StartDateTime);
 
             IJobDetail job = new JobDetailImpl("ScheduledJob", scheduledJob.JobType);
-            job.JobDataMap.Put("dto", scheduledJob.Dto);
+            job.JobDataMap.PutAll(scheduledJob.Dto);
 
             ITrigger trigger = TriggerBuilder.Create()
                 .StartAt(scheduledJob.StartDateTime)
