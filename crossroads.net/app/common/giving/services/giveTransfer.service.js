@@ -42,6 +42,7 @@
       this.recurringGiftId = undefined;
       this.recurringConvert = false;
       this.impersonateDonorId = null;
+      this.tripDeposit = false;
 
       // TODO - This is added to allow UX team to mock pledge-related UI components in the give pages
       // To use, start the giving flow with "?mockPledge=true" appended to the URL, for example:
