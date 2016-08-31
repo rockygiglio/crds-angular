@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services.Interfaces;
@@ -388,16 +389,19 @@ namespace crds_angular.Services
 
         public TripParticipantPledgeDto CreateTripParticipant(int contactId, int pledgeCampaignId)
         {
-            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
+
             var token = _apiUserRepository.GetToken();
-            var added = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
-            if (!added)
+            var result = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
+            if (!result.Status)
             {
-                throw new Exception("Unable to add as a participant on the trip");
+                // trip is full
+                throw new TripFullException();
             }
-            var pledge = _mpPledgeService.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId);
-            tripParticipantPledgeInfo.CampaignName = pledge.CampaignName;
-            tripParticipantPledgeInfo.DonorId = pledge.DonorId;
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto
+            {
+                CampaignName = result.Value.CampaignName,
+                DonorId = result.Value.DonorId
+            };
             return tripParticipantPledgeInfo;
         }
 

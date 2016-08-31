@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
-using Crossroads.Utilities.Functions;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;

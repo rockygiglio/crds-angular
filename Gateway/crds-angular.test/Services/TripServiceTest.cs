@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -173,10 +175,12 @@ namespace crds_angular.test.Services
             const int contactId = 3123;
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
+            var mockPledge = this.mockPledge();
+
+            var tripPledgeDto = new Result<MpPledge>(true, mockPledge);
 
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
-            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(true);
-            _pledgeService.Setup(m => m.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId)).Returns(mockPledge());
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(tripPledgeDto);
             _fixture.CreateTripParticipant(contactId, pledgeCampaignId);
 
             _apiUserReposity.VerifyAll();
@@ -292,9 +296,11 @@ namespace crds_angular.test.Services
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
 
+            var pledgeRes = new Result<MpPledge>(false, "Trip is Full");
+
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
-            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(false);
-            Assert.Throws<Exception>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(pledgeRes);
+            Assert.Throws<TripFullException>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
 
             _apiUserReposity.VerifyAll();
             _tripRepository.VerifyAll();

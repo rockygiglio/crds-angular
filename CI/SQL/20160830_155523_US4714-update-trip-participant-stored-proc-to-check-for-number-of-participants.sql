@@ -23,8 +23,8 @@ EXEC dbo.sp_executesql @statement = N'
 --				Campaign. Also adding Documents to the event participant record. 
 -- =============================================
 ALTER PROCEDURE [dbo].[api_crds_Add_As_TripParticipant]
-    @PledgeCampaignID int = 10000000,
-	@ContactID int = 2562428
+    @PledgeCampaignID int,
+	@ContactID int
 AS
 BEGIN
 
@@ -36,8 +36,12 @@ BEGIN
 	DECLARE @GroupRoleID int = 16;
 	DECLARE @Current_Event_ID int;
 	DECLARE @Pledge_ID int;
+	DECLARE @Donor_ID int = 0;
 	DECLARE @Max_Registrants int;
-	DECLARE @Number_Of_Pledges int;
+	DECLARE @Number_Of_Pledges int;	
+	DECLARE @Campaign_Name nvarchar(2048);
+
+	DECLARE @ERRORMSG NVARCHAR(2048) = N''Trip is full'';
 
 	DECLARE @EVENTS TABLE (
 		EventID int
@@ -49,7 +53,8 @@ BEGIN
 		   @FundraisingGoal = pg.[Fundraising_Goal],
 		   @GroupID = ev.Group_ID,
 		   @EventID = pg.Event_ID,
-		   @Max_Registrants = pg.Maximum_Registrants
+		   @Max_Registrants = pg.Maximum_Registrants,
+		   @Campaign_Name = pg.[Campaign_Name]
 	FROM [dbo].[Pledge_Campaigns] pg
 	JOIN  [dbo].[Event_Groups] ev on ev.Event_ID = pg.Event_ID
 	WHERE [Pledge_Campaign_ID] = @PledgeCampaignID;
@@ -58,7 +63,7 @@ BEGIN
 
 	IF (@Max_Registrants > @Number_Of_Pledges) 
 	BEGIN
-
+		PRINT N''There are spots left''
 		SELECT @ParticipantID = Participant_Record FROM Contacts WHERE Contact_ID = @ContactID;
 		-- END PLEDGE CAMPAIGN DETAILS
 
@@ -87,7 +92,7 @@ BEGIN
 
 	
 		-- CREATE PLEDGE RECORD IF IT DOESN''T EXIST
-		EXECUTE api_crds_CreatePledge @ContactID = @ContactID, @PledgeCampaignID = @PledgeCampaignID, @PledgeID = @Pledge_ID OUT
+		EXECUTE api_crds_CreatePledge @ContactID = @ContactID, @PledgeCampaignID = @PledgeCampaignID, @PledgeID = @Pledge_ID OUT, @DonorID = @Donor_ID OUT
 		-- END PLEDGE
 
 		-- ADD AS EVENT PARTICIPANT FOR EACH GROUP EVENT
@@ -133,7 +138,14 @@ BEGIN
 
 		EXECUTE crds_AddDocumentsToParticipant @DestinationID, @EVENT_PARTICPANT;
 		-- END DOCUMENTS
+
+		SELECT @Pledge_ID as Pledge_ID,	
+			   @Donor_ID as Donor_ID,
+			   @Campaign_Name as Campaign_Name
+
 	END
+	ELSE
+		PRINT N''There are no spots left''
 END
 '
 END
