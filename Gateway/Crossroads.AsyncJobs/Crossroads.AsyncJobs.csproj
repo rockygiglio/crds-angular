@@ -231,30 +231,37 @@
     <Content Include="..\crds-angular\MinistryPlatform.config">
       <Link>MinistryPlatform.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <TransformOnBuild>true</TransformOnBuild>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.Debug.config">
       <Link>MinistryPlatform.Debug.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.Demo.config">
       <Link>MinistryPlatform.Demo.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.Integration.config">
       <Link>MinistryPlatform.Integration.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.local test.config">
       <Link>MinistryPlatform.local test.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.MPTest01.config">
       <Link>MinistryPlatform.MPTest01.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <Content Include="..\crds-angular\MinistryPlatform.Release.config">
       <Link>MinistryPlatform.Release.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
+	  <IsTransformFile>True</IsTransformFile>
     </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
