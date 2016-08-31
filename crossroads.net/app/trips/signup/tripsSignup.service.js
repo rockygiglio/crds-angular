@@ -21,7 +21,8 @@
       progressLabel: null,
       applicationValid: false,
       isScholarshipped: false,
-      saveApplication: saveApplication
+      saveApplication: saveApplication,
+      paymentMethod: ''
     };
 
     function activate() {
@@ -46,6 +47,11 @@
       if (signupService.page6 === undefined) {
         signupService.page6 = page6();
       }
+
+      if (signupService.depositInfo === undefined) {
+        signupService.depositInfo = depositInfo();
+      }
+
     }
 
     function reset(campaign, currentPage = 1) {
@@ -53,7 +59,6 @@
       signupService.ageLimitReached = false;
       signupService.contactId = '';
       signupService.currentPage = currentPage;
-      //signupService.numberOfPages = 0;
       signupService.pageHasErrors = true;
       signupService.privateInvite = $location.search().invite;
 
@@ -62,6 +67,15 @@
       signupService.page4 = page4();
       signupService.page5 = page5();
       signupService.page6 = page6();
+      signupService.depositInfo = depositInfo();
+    }
+
+    function depositInfo() {
+      return {
+        donationAmount: null,
+        donationDate: null,
+        paymentMethod: null
+      };
     }
 
     function page2() {
@@ -127,6 +141,10 @@
       application.pageFive = signupService.page5;
       application.pageSix = signupService.page6;
       application.inviteGUID = $stateParams.invite;
+      application.depositInformation = signupService.depositInfo;
+      application.depositInformation.donationAmount = signupService.depositAmount;
+      application.depositInformation.donationDate = moment(new Date()).format('l');
+      application.depositInformation.paymentMethod = this.paymentMethod;
 
       /*jshint unused:false */
       application.$save((data) => {

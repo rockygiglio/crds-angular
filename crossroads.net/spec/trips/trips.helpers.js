@@ -222,6 +222,11 @@ module.exports = {
       describeExperienceAbroad: 'kalsdfjasdf',
       pastAbuseHistory: 'asdf',
       validPassport: true
+    },
+    depositInformation: {
+      donationAmount: '300',
+      donationDate: '1/1/2016',
+      paymentMethod: 'Credit Card'
     }
   }
 };
