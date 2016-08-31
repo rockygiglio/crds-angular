@@ -176,17 +176,13 @@
             return $state.next.data.meta;
           },
 
-          ParentItemProperty: function() {
-            return 'series';
-          },
-
           ParentMedia: function(Media, SingleMedia) {
             var message = SingleMedia.message;
             if (!message) {
               return null;
             }
 
-            var parent = Media.Series({id: message.series}).get().$promise;
+            var parent = message.series;
             return parent;
           },
 
