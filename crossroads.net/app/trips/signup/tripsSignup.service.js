@@ -139,8 +139,8 @@
           });
           signupService.reset(signupService.campaign, 'thanks');
           success(data);
-        }, () => {
-        error();
+        }, (err) => {
+          error(err);
       });
     }
 
