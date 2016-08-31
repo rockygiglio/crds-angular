@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
+using Rhino.Mocks;
 using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
@@ -172,14 +175,118 @@ namespace crds_angular.test.Services
             const int contactId = 3123;
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
+            var mockPledge = this.mockPledge();
+
+            var tripPledgeDto = new Result<MpPledge>(true, mockPledge);
 
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
-            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(true);
-            _pledgeService.Setup(m => m.GetPledgeByCampaignAndContact(pledgeCampaignId, contactId)).Returns(mockPledge());
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(tripPledgeDto);
             _fixture.CreateTripParticipant(contactId, pledgeCampaignId);
 
             _apiUserReposity.VerifyAll();
            _tripRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldSendTripFullConfirmation()
+        {
+            
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+            const int templateId = 7878;
+
+            var campaign = mockPledgeCampaign(pledgeCampaignId);
+
+            var pledges = mockPledges(campaign);
+            pledges.Add(
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 4,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
+            );
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Pledge_Campaign", campaign.Name}
+            };
+
+            var communication = new MpCommunication()
+            {
+                TemplateId = templateId,
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<p> Some random body of text </p>",
+                EmailSubject = "more randomness",
+                FromContact = new MpContact() {ContactId = 5, EmailAddress = "updates@crossroads.net"},
+                MergeData = mergeData,
+                ReplyToContact = new MpContact {ContactId = 5, EmailAddress = "updates@crossroads.net"},
+                StartDate = DateTime.Now,
+                ToContacts = new List<MpContact> {new MpContact {ContactId = 45, EmailAddress = "asdf@asdf.com"}}
+            };
+
+            var eventDetails = EventDetails(campaign.EventId);
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, token)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, token)).Returns(pledges);        
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("TripIsFullTemplateId")).Returns(templateId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("TripIsFullFromContactId")).Returns(5);
+            _configurationWrapper.Setup(m => m.GetConfigValue("TripIsFullFromEmailAddress")).Returns("updates@crossroads.net");
+
+            _eventService.Setup(m => m.GetEvent(campaign.EventId)).Returns(eventDetails);
+
+            _communicationService.Setup(
+                m => m.GetTemplateAsCommunication(templateId,
+                                                  communication.FromContact.ContactId,
+                                                  communication.FromContact.EmailAddress,
+                                                  communication.FromContact.ContactId,
+                                                  communication.FromContact.EmailAddress,
+                                                  eventDetails.PrimaryContact.ContactId,
+                                                  eventDetails.PrimaryContact.EmailAddress,
+                                                  mergeData)).Returns(communication);
+
+
+            _communicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
+
+            _fixture.SendTripIsFullMessage(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _communicationService.VerifyAll();
+            _eventService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldNotSendTripFullConfirmation()
+        {
+            const int pledgeCampaignId = 09786834;
+            const string token = "asdfasdf";
+            
+            var campaign = mockPledgeCampaign(pledgeCampaignId);
+            var pledges = mockPledges(campaign);
+            
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, token)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, token)).Returns(pledges);
+            
+            _fixture.SendTripIsFullMessage(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _tripRepository.VerifyAll();
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), It.IsAny<bool>()), Times.Never);
         }
 
         [Test]
@@ -189,9 +296,11 @@ namespace crds_angular.test.Services
             const int pledgeCampaignId = 09786834;
             const string token = "asdfasdf";
 
+            var pledgeRes = new Result<MpPledge>(false, "Trip is Full");
+
             _apiUserReposity.Setup(m => m.GetToken()).Returns(token);
-            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(false);
-            Assert.Throws<Exception>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
+            _tripRepository.Setup(m => m.AddAsTripParticipant(contactId, pledgeCampaignId, token)).Returns(pledgeRes);
+            Assert.Throws<TripFullException>(() => _fixture.CreateTripParticipant(contactId, pledgeCampaignId));
 
             _apiUserReposity.VerifyAll();
             _tripRepository.VerifyAll();
@@ -221,6 +330,157 @@ namespace crds_angular.test.Services
 
             var result = _fixture.HasScholarship(contactId, pledgeCampaignId);
             Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void TripShouldNotBeFull()
+        {
+            const int pledgeCampaignId = 12345456;
+            const string apiToken = "980osjklhdfdf";
+
+            var campaign = mockPledgeCampaign();
+
+
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(apiToken);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, apiToken)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken)).Returns(mockPledges(campaign));
+
+            var tripCampaign = _fixture.GetTripCampaign(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _campaignService.VerifyAll();
+            _pledgeService.VerifyAll();
+
+            Assert.IsFalse(tripCampaign.IsFull);
+        }
+
+        [Test]
+        public void TripShouldBeFull()
+        {
+            const int pledgeCampaignId = 12345456;
+            const string apiToken = "980osjklhdfdf";
+
+            var campaign = mockPledgeCampaign();
+
+            var pledges = mockPledges(campaign);
+            pledges.Add(
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 4,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
+            );
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(apiToken);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, apiToken)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken)).Returns(pledges);
+
+            var tripCampaign = _fixture.GetTripCampaign(pledgeCampaignId);
+
+            _apiUserReposity.VerifyAll();
+            _campaignService.VerifyAll();
+            _pledgeService.VerifyAll();
+
+            Assert.IsTrue(tripCampaign.IsFull);
+
+
+        }
+
+        [Test]
+        public void IsTripsFullShouldThrowException()
+        {
+            const int pledgeCampaignId = 12345456;
+            const string apiToken = "980osjklhdfdf";
+
+            var campaign = mockPledgeCampaign();
+
+            var pledges = mockPledges(campaign);
+            pledges.Add(
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 4,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
+            );
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(apiToken);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, apiToken)).Returns(campaign);
+            _pledgeService.Setup(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken)).Throws<Exception>();
+
+            Assert.Throws<Exception>(() =>
+            {
+                _fixture.GetTripCampaign(pledgeCampaignId);
+                _apiUserReposity.VerifyAll();
+                _campaignService.VerifyAll();
+                _pledgeService.VerifyAll();
+            });
+        }
+
+        [Test]
+        public void ShouldNotBeFullIfMaxParticipantsIsNull()
+        {
+            const int pledgeCampaignId = 12345456;
+            const string apiToken = "980osjklhdfdf";
+
+            var campaign = mockPledgeCampaign();
+            campaign.MaximumRegistrants = null;
+
+            var pledges = mockPledges(campaign);
+            pledges.Add(
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 4,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
+            );
+
+            _apiUserReposity.Setup(m => m.GetToken()).Returns(apiToken);
+            _campaignService.Setup(m => m.GetPledgeCampaign(pledgeCampaignId, apiToken)).Returns(campaign);
+
+            var tripcampaign = _fixture.GetTripCampaign(pledgeCampaignId);
+            Assert.IsFalse(tripcampaign.IsFull);
+            _apiUserReposity.VerifyAll();
+            _campaignService.VerifyAll();
+            _pledgeService.Verify(m => m.GetPledgesByCampaign(pledgeCampaignId, apiToken), Times.Never);
+        }
+
+        private MpEvent EventDetails(int eventId = 8)
+        {
+            return new MpEvent
+            {
+                PrimaryContact = new MpContact {ContactId = 5, EmailAddress = "updates@crossroads.net"}
+            };
         }
 
         [Test]
@@ -440,11 +700,87 @@ namespace crds_angular.test.Services
             };
         }
 
-        private MpPledgeCampaign mockPledgeCampaign()
+        private MpPledgeCampaign mockPledgeCampaign(int campaignId = 4)
         {
             return new MpPledgeCampaign
             {
-                EventId = 8
+                Id = campaignId,
+                EventId = 8,
+                EndDate = new DateTime(2020, 08, 12),
+                StartDate = new DateTime(2012, 09, 12),
+                Goal = 5000.00,
+                Name = "Go Midgar",
+                Nickname = "Go Nica",
+                ProgramId = 123,
+                MaximumRegistrants = 4,                            
+            };
+        }
+
+        private TripCampaignDto mockTripCampaignDto(int campaignId = 4)
+        {
+            return new TripCampaignDto
+            {
+                Id = campaignId,
+                Name = "Name",
+                FormId = 1,
+                Nickname = "Nickname",
+                YoungestAgeAllowed = 17,
+                RegistrationEnd = DateTime.Now,
+                RegistrationStart = DateTime.Now,
+                RegistrationDeposit = "300",
+                IsFull = false
+            };
+        }
+
+        private List<MpPledge> mockPledges(MpPledgeCampaign campaign)
+        {
+            return new List<MpPledge>
+            {
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 1,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                },
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 2,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                },
+                new MpPledge()
+                {
+                    CampaignName = campaign.Name,
+                    CampaignStartDate = campaign.StartDate,
+                    CampaignEndDate = campaign.EndDate,
+                    CampaignTypeId = 1,
+                    CampaignTypeName = campaign.Type,
+                    DonorId = 3,
+                    PledgeCampaignId = campaign.Id,
+                    PledgeDonations = 1,
+                    PledgeId = 3,
+                    PledgeStatus = "active",
+                    PledgeStatusId = 1,
+                    PledgeTotal = 100
+                }
             };
         }
 

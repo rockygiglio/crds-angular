@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
@@ -8,7 +9,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
 {
-    class CampaignRepository : BaseRepository, ICampaignRepository
+    public class CampaignRepository : BaseRepository, ICampaignRepository
     {
         
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -24,7 +25,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         public MpPledgeCampaign GetPledgeCampaign(int campaignId)
-        {
+        {            
             return WithApiLogin<MpPledgeCampaign>(token =>
             {
                 var results = _ministryPlatformService.GetPageViewRecords(_configurationWrapper.GetConfigIntValue("GoTripsWithForms"), token, campaignId.ToString());
@@ -57,6 +58,43 @@ namespace MinistryPlatform.Translation.Repositories
                 return campaigns.FirstOrDefault();
             });
            
+        }
+
+        public MpPledgeCampaign GetPledgeCampaign(int campaignId, string token)
+        {
+            var columnList = new List<string>
+            {
+                "Pledge_Campaigns.Pledge_Campaign_ID",
+                "Pledge_Campaigns.Campaign_Name",
+                "Pledge_Campaign_Type_ID_Table.Campaign_Type",
+                "Pledge_Campaigns.Start_Date",
+                "Pledge_Campaigns.[End_Date]",
+                "Pledge_Campaigns.[Campaign_Goal]",
+                "Registration_Form_Table.[Form_ID]",
+                "Registration_Form_Table.[Form_Title]",
+                "Pledge_Campaigns.[Registration_Start]",
+                "Pledge_Campaigns.[Registration_End]",
+                "Pledge_Campaigns.[Registration_Deposit]",
+                "Pledge_Campaigns.[Youngest_Age_Allowed]",
+                "Event_ID_Table.[Event_Start_Date]",
+                "Pledge_Campaigns.[Nickname]",
+                "Event_ID_Table.[Event_ID]",
+                "Pledge_Campaigns.[Program_ID]",
+                "Pledge_Campaigns.Maximum_Registrants"
+            };
+            var pledgeCampaigns = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {campaignId}", columnList);
+            if (pledgeCampaigns.Count == 0)
+            {
+                throw new Exception("Pledge Campaign not found");
+            }
+            var pledgeCampaign = pledgeCampaigns.Single();
+
+            //TODO: update to use new rest API 
+            var ageExceptions = _ministryPlatformService.GetSubPageRecords(_configurationWrapper.GetConfigIntValue("GoTripAgeExceptions"), campaignId, token);
+            var exceptions = ageExceptions.Select(ae => ae.ToInt("Contact_ID")).ToList();
+
+            pledgeCampaign.AgeExceptions = exceptions;
+            return pledgeCampaign;
         }
 
         public List<MpTripRecord> GetGoTripDetailsByCampaign(int pledgeCampaignId)

@@ -32,5 +32,11 @@ namespace crds_angular.Models.Crossroads.Trip
 
         [JsonProperty(PropertyName = "ageExceptions")]
         public List<int> AgeExceptions { get; set; }
+
+        [JsonProperty(PropertyName = "eventId")]
+        public int EventId { get; set; }
+
+        [JsonProperty(PropertyName = "isFull")]
+        public bool IsFull { get; set; }
     }
 }

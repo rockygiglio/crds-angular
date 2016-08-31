@@ -22,6 +22,7 @@
       applicationValid: false,
       isScholarshipped: false,
       saveApplication: saveApplication,
+      isTripfull: false,
       paymentMethod: ''
     };
 
@@ -156,8 +157,8 @@
           });
           signupService.reset(signupService.campaign, 'thanks');
           success(data);
-        }, () => {
-        error();
+        }, (err) => {
+          error(err);
       });
     }
 

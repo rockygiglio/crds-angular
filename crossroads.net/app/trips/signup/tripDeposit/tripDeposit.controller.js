@@ -16,7 +16,7 @@ class TripDepositController {
     this.stateParams = $stateParams;
     this.loadingDonor = false;
     this.window = $window;
-    this.initialized = false;
+    this.initialized = false; 
   }
 
   $onDestroy() {
@@ -73,7 +73,7 @@ class TripDepositController {
           fromParams.stepId &&
           Number(fromParams.stepId) < 5
           ) {
-        event.preventDefault(); 
+        event.preventDefault();
         this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
         return;
       }
@@ -94,7 +94,7 @@ class TripDepositController {
         this.signupService.pageId = 'thanks';
         this.dto.initialized = false;
         this.window.onbeforeunload = null;
-      } 
+      }
     });
 
     this.rootScope.$on('$stateChangeError', (event, toState, toParams) => {
@@ -148,9 +148,13 @@ class TripDepositController {
         this.tripDeposit.applicationSaved = true;
         this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);
-      }, () => {
+      }, (err) => {
         this.dto.processing = false;
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        if (err.status === 409) {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.tripIsFull);
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }
       });
     }
   }
@@ -170,6 +174,4 @@ class TripDepositController {
   }
 
 }
-
-
 export default TripDepositController;

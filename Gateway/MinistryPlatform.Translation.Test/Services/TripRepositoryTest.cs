@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -34,15 +36,19 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldAddAsTripParticipant()
         {
+
+            var lists = ValidMpPledgeList();
+
             var values = new Dictionary<string, object>
             {
                 {"@PledgeCampaignID", 12345},
                 {"@ContactID", 433334}
             };
-            _ministryPlatformRest.Setup(m => m.PostStoredProc(storedProc, values)).Returns(200);
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpPledge>(storedProc, values)).Returns(lists);
             var returnVal = _fixture.AddAsTripParticipant(433334, 12345, token);
 
-            Assert.AreEqual(true, returnVal);
+            Assert.AreEqual(lists[0].FirstOrDefault(), returnVal.Value);
+            Assert.AreEqual(true, returnVal.Status);
             _ministryPlatformRest.VerifyAll();
         }
 
@@ -54,11 +60,33 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"@PledgeCampaignID", 12345},
                 {"@ContactID", 433334}
             };
-            _ministryPlatformRest.Setup(m => m.PostStoredProc(storedProc, values)).Returns(400);
+
+            var lists = new List<List<MpPledge>>();
+
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpPledge>(storedProc, values)).Returns(lists);
             var returnVal = _fixture.AddAsTripParticipant(433334, 12345, token);
 
-            Assert.AreEqual(false, returnVal);
+            Assert.AreEqual(false, returnVal.Status);
+            Assert.IsNotEmpty(returnVal.ErrorMessage);
             _ministryPlatformRest.VerifyAll();
+        }
+
+        private static List<List<MpPledge>> ValidMpPledgeList()
+        {
+            var mpPledge = new MpPledge
+            {
+                CampaignName = "asdfasdf",
+                DonorId = 1234,
+                PledgeId = 9087
+            };
+
+            return new List<List<MpPledge>>
+            {
+                new List<MpPledge>
+                {
+                    mpPledge
+                }
+            };
         }
 
     }

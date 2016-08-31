@@ -16,7 +16,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ITripService _tripService;
 
-        public TripController(ITripService tripService, IPersonService personService)
+        public TripController(ITripService tripService)
         {
             _tripService = tripService;
         }
