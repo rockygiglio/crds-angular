@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { Reminder } from './reminder';
@@ -37,9 +37,6 @@ export class ReminderModalComponent {
 
   constructor(private streamspotService: StreamspotService) {
     this.model = new Reminder();
-    streamspotService.events.then(response => {
-      this.upcoming = response;
-    })
   }
 
   submit(reminderForm) {
@@ -95,6 +92,12 @@ export class ReminderModalComponent {
     this.formSuccess = false;
     this.loading = false;
     this.modal.close();
+  }
+
+  ngOnInit() {
+    this.streamspotService.events.then(response => {
+      this.upcoming = response;
+    })
   }
 
   public open(size) {
