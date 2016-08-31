@@ -449,8 +449,6 @@ streaming {
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       figure > a {
         margin-bottom: 2%;
-        margin-left: 2%;
-        margin-right: 2%;
       }
       figcaption {
         top: -0.95em;
@@ -607,20 +605,14 @@ streaming {
   color: #FFF;
 
   content-card {
-
-    @media only screen and (max-width:  $screen-md-min - 1){
-      @include make-sm-column(12);
-      &:nth-child(2n+1) {
-        clear: left;
-      }
-    }
-    @media only screen and (min-width:  $screen-md-min){
-      @include make-md-column(6);
+    article {
+      margin-bottom: 1em;
     }
 
     &, h3 {
       color: $gray;
     }
+
     a {
       // cursor: default;
     }
@@ -653,7 +645,6 @@ streaming {
       }
     }
 
-
     figcaption {
       font-family: $cr-streaming-font-extra-cond;
       font-size: 210%;
@@ -675,12 +666,8 @@ streaming {
       figcaption {
         top: -1.15em;
       }
-
-      figure > a {
-        margin-left: 2%;
-        margin-right: 2%;
-      }
     }
+
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       figure > a {
         margin-left: 2%;
@@ -691,19 +678,14 @@ streaming {
       }
     }
 
-    .view-all-mobile {
-      @media only screen and (min-width:  $screen-sm-min){
-        display: none;
-      }
+    @media (min-width:  $screen-md-min) {
+      @include make-md-column(6);
+      // NOTE: The following rule will break content-cards after every 2 elements...
+      // &:nth-child(3n+1) {
+      //   clear: left;
+      // }
     }
 
-    .container {
-      padding: 0;
-      @media (min-width: $screen-sm-min) {
-        padding-left: 1em;
-        padding-right: 1em;
-      }
-    }
   }
 
   h2 {
@@ -783,10 +765,18 @@ streaming {
   }
 
   .participate {
+
     .promo {
       @include make-md-column(12);
     }
+
     @media (min-width: $screen-md-min) {
+      header, 
+      .promo {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
       figure {
         @include make-md-column(4);
         a {
@@ -826,6 +816,9 @@ streaming {
 
     figure {
       padding-left: 0;
+      @media (max-width: $screen-md-min) {
+        margin-bottom: 1em;
+      }
     }
   }
 

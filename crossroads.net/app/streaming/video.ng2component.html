@@ -29,22 +29,26 @@
       </section>
 
       <section class="participate digital-program bg" *ngIf="beTheChurch.length > 0">
-        <header class="clearfix">
-          <h2>be the church</h2>
-        </header>
+        <div class="row">
+
+          <header class="clearfix">
+            <h2>be the church</h2>
+          </header>
         
-        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
-          <figure class="wow fadeIn" data-wow-delay="">
-            <a href="{{ promo.url }}" target="_blank">
-              <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
-            </a>
-          </figure>
-          <section>
-            <h3 title="{{ promo.title }}"><a href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</a></h3>
-            <div [innerHTML]="promo.description"></div>
-          </section>
-          <hr>
-        </article>
+          <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
+            <figure class="wow fadeIn" data-wow-delay="">
+              <a href="{{ promo.url }}" target="_blank">
+                <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
+              </a>
+            </figure>
+            <section>
+              <h3 title="{{ promo.title }}"><a href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</a></h3>
+              <div [innerHTML]="promo.description"></div>
+            </section>
+            <hr>
+          </article>
+
+        </div>
       </section>
 
   </div>
