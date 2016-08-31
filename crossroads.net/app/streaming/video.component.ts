@@ -1,8 +1,9 @@
 // angular imports
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
+import { StreamspotService } from './streamspot.service';
 import { ContentCardComponent } from './content-card.component'
 import { VideoJSComponent } from './videojs.component';
 
@@ -22,14 +23,28 @@ var WOW = require('wow.js/dist/wow.min.js');
   pipes: [TruncatePipe]
 })
 
-export class VideoComponent {
-  number_of_people: number = 2;
-  displayCounter: boolean = true;
-  countSubmit: boolean = false;
-  dontMiss: Array<any> = [];
-  beTheChurch: Array<any> = [];
+export class VideoComponent implements OnInit {
+  @Input() inModal: boolean = false;
+  @Output('close') _close = new EventEmitter();
 
-  constructor(private cmsDataService: CMSDataService) {
+  inProgress:       boolean    = false;
+  number_of_people: number     = 2;
+  displayCounter:   boolean    = true;
+  countSubmit:      boolean    = false;
+  dontMiss:         Array<any> = [];
+  beTheChurch:      Array<any> = [];
+  redirectText:     string     = 'Go Back';
+
+  closeModal:       EventEmitter<any> = new EventEmitter();
+
+  constructor(private cmsDataService: CMSDataService,
+              private streamspotService: StreamspotService) {
+
+    this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
+      this.inProgress = inProgress;
+      this.redirect();
+    });
+    
     this.cmsDataService
         .getDigitalProgram()
         .subscribe((data) => {
@@ -38,6 +53,12 @@ export class VideoComponent {
             if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
               feature.delay = i * 100
               feature.url = 'javascript:;';
+
+              if (feature.link !== null) {
+                feature.url = feature.link;
+              }
+
+              feature.target = '_blank';
 
               if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
                 feature.image = feature.image.filename;
@@ -58,15 +79,41 @@ export class VideoComponent {
     }).init();
   }
 
+  ngOnInit() {
+    if (this.inModal) {
+      this.redirectText = 'Close Modal';
+    } 
+  }
+
+  redirect() {
+    if (this.inProgress === false) {
+      if (this.inModal) {
+        this._close.emit({});
+      } else {
+        window.location.href = '/live';
+      }
+    }
+  }
+
   increaseCount() {
     this.number_of_people++;
   }
+
   decreaseCount() {
     if(this.number_of_people > 1) {
       this.number_of_people--;
     }
   }
+
   submitCount() {
     this.countSubmit = true;
+  }
+
+  goBack() {
+    if (!this.inModal) {
+      window.location.href = '/live';
+    } else {
+      this._close.emit({});
+    }
   }
 }

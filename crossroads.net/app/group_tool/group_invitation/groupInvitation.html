@@ -23,10 +23,30 @@
       </div>
     </div>
     <div class='push-top text-center sm-text-right'>
+      <!-- shows at page load and if processing a accepting -->
+      <loading-button
+        normal-text='Join Group'
+        loading-text='Joining...'
+        loading='groupInvitation.processingAccept'
+        loading-class='disabled'
+        input-classes='sm-pull-right btn btn-primary btn-block-mobile mobile-push-half-bottom'
+        ng-click='groupInvitation.accept()'
+        ng-if='(!groupInvitation.processingAccept && !groupInvitation.processingDeny) || groupInvitation.processingAccept'></loading-button>
+
+      <!-- shows when processing a deny request -->
+      <loading-button
+        normal-text='Join Group'
+        loading-text='Join Group'
+        loading='groupInvitation.processingDeny'
+        loading-class='disabled'
+        input-classes='sm-pull-right btn btn-primary btn-block-mobile mobile-push-half-bottom'
+        ng-click='groupInvitation.accept()'
+        ng-if='!groupInvitation.processingAccept && groupInvitation.processingDeny'></loading-button>
+
       <!-- shows at page load and if processing a deny -->
       <loading-button
               normal-text='No Thanks'
-              loading-text='Denying Invite...'
+              loading-text='Declining...'
               loading='groupInvitation.processingDeny'
               loading-class='disabled'
               input-classes='btn btn-standard btn-block-mobile mobile-push-half-bottom'
@@ -42,26 +62,6 @@
               input-classes='btn btn-standard btn-block-mobile mobile-push-half-bottom'
               ng-click='groupInvitation.deny()'
               ng-if='groupInvitation.processingAccept && !groupInvitation.processingDeny'></loading-button>
-
-      <!-- shows at page load and if processing a accepting -->
-      <loading-button
-              normal-text='Join Group'
-              loading-text='Joining Group...'
-              loading='groupInvitation.processingAccept'
-              loading-class='disabled'
-              input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'
-              ng-click='groupInvitation.accept()'
-              ng-if='(!groupInvitation.processingAccept && !groupInvitation.processingDeny) || groupInvitation.processingAccept'></loading-button>
-
-      <!-- shows when processing a deny request -->
-      <loading-button
-              normal-text='Join Group'
-              loading-text='Join Group'
-              loading='groupInvitation.processingDeny'
-              loading-class='disabled'
-              input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'
-              ng-click='groupInvitation.accept()'
-              ng-if='!groupInvitation.processingAccept && groupInvitation.processingDeny'></loading-button>
     </div>
   </div>
 </div>

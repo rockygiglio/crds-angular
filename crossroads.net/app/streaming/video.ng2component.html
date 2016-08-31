@@ -1,4 +1,4 @@
-<div class="live-stream">
+<div class="live-stream" *ngIf="inProgress">
 
   <div class="pushdown-container" *ngIf="displayCounter">
     <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
@@ -8,7 +8,7 @@
   </div>
   <div class="control-container ">
     <div class="container">
-      <a href="/live" class="btn btn-standard-dark">Go Back</a>
+      <a (click)="goBack()" class="btn btn-standard-dark" data-dismiss="modal">{{ redirectText }}</a>
     </div>
   </div>
   <div class="dark-bg">
@@ -36,10 +36,12 @@
         
         <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
           <figure class="wow fadeIn" data-wow-delay="">
-            <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
+            <a href="{{ promo.url }}" target="_blank">
+              <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
+            </a>
           </figure>
           <section>
-            <h3 title="{{ promo.title }}">{{ promo.title | truncate: 38 }}</h3>
+            <h3 title="{{ promo.title }}"><a href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</a></h3>
             <div [innerHTML]="promo.description"></div>
           </section>
           <hr>

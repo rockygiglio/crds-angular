@@ -8,17 +8,5 @@ import { StreamspotService } from './streamspot.service';
 })
 
 export class StreamspotIframeComponent {
-
-  constructor(private streamspotService: StreamspotService) {
-
-    this.streamspotService.isBroadcasting.subscribe((inProgress: boolean) => {
-
-      if ( inProgress === false ) {
-        window.location.href = '/live';
-      }
-      
-    });
-
-  }
-
+  constructor() {}
 }

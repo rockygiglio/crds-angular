@@ -21,6 +21,9 @@ export class ContentCardComponent implements OnInit{
   constructor(private cmsDataService: CMSDataService) {}
   
   ngOnInit() {
+    if (typeof this.content.target === 'undefined') {
+      this.content.target = '_self';
+    }
     if (typeof this.content.delay === 'undefined' || isNaN(this.content.delay)) {
       this.content.delay = 0;
     }
