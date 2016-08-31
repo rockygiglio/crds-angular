@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Crossroads.Utilities.Functions
+namespace Crossroads.Utilities.FunctionalHelpers
 {
     public static class Functions
     {

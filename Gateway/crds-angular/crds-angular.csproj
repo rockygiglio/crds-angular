@@ -310,6 +310,7 @@
     <Compile Include="Exceptions\InvalidAddressException.cs" />
     <Compile Include="Exceptions\MoreThanOneRecordException.cs" />
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
+    <Compile Include="Exceptions\TripFullException.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildCareDate.cs" />
