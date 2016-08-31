@@ -8,5 +8,7 @@ namespace crds_angular.Models.Crossroads.Attribute
         public AttributeDTO Value { get; set; }
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
     }
 }

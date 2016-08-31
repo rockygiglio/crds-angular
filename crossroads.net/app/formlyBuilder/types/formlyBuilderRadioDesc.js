@@ -16,6 +16,7 @@ export default ngModule => {
                     valueProp: check.string.optional,
                     descProp: check.string.optional,
                     inline: check.bool.optional,
+                    descInline: check.bool.optional
                 }
             })
         });

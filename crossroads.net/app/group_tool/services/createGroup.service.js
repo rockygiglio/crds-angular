@@ -377,11 +377,13 @@ export default class CreateGroupService {
             },
             fieldGroup: [{
                 key: 'group.typeId',
-                type: 'formlyBuilderRadio',
+                type: 'formlyBuilderRadioDesc',
                 templateOptions: {
                     labelProp: 'name',
                     required: true,
                     valueProp: 'attributeId',
+                    descProp: 'description',
+                    descInline: 'true',
                     options: []
                 },
                 controller: /* @ngInject */ function ($scope, $log, GroupService, CreateGroupService) {
@@ -672,7 +674,7 @@ export default class CreateGroupService {
         let groupType = _.find(this.typeIdLookup, (groupType) => {
             return groupType.attributeId === this.model.group.typeId
         });
-        smallGroup.groupType = new GroupType({ attributeId: groupType.attributeId, name: groupType.name });
+        smallGroup.groupType = new GroupType({ attributeId: groupType.attributeId, name: groupType.name + ' ' + groupType.description });
     }
 
     mapToSmallGroupSingleAttributes(smallGroup) {

@@ -85,6 +85,7 @@ export default class GroupService {
       query({ groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId }).$promise;
 
     return promise.then((data) => {
+      debugger;
       let groups = data.map((group) => {
         return new SmallGroup(group);
       });
