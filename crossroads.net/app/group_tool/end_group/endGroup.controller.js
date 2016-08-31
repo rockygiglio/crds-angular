@@ -80,6 +80,7 @@ export default class EndGroupController {
         labelProp: 'dp_RecordName',
         descProp: 'Description',
         descInline: false,
+        bold: true,
         options: this.endedReasonsList
       }
     }]

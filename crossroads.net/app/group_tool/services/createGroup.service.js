@@ -384,6 +384,7 @@ export default class CreateGroupService {
                     valueProp: 'attributeId',
                     descProp: 'description',
                     descInline: 'true',
+                    bold: false,
                     options: []
                 },
                 controller: /* @ngInject */ function ($scope, $log, GroupService, CreateGroupService) {
