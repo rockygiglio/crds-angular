@@ -3,6 +3,9 @@ import { beforeEach, describe, it, addProviders, expect, inject, fakeAsync, befo
 
 import { VideoComponent } from '../../app/streaming/video.component';
 import { CMSDataService } from '../../core/services/CMSData.service';
+import { StreamspotService } from '../../app/streaming/streamspot.service';
+
+import { MockStreamspotService } from '../core/mocks/mock-streamspot.service';
 
 import { provide } from '@angular/core';
 import {
@@ -30,6 +33,7 @@ describe('Component: Video', () => {
     return [
       MockBackend,
       BaseRequestOptions,
+      provide(StreamspotService, MockStreamspotService),
       provide(Http, mockHttpProvider),
       CMSDataService
     ]
@@ -37,14 +41,22 @@ describe('Component: Video', () => {
 
 
   it('should create an instance', () => {
-    
+    inject(
+      [CMSDataService, MockBackend],
+      fakeAsync((service: CMSDataService, backend: MockBackend) => {
+        let streamspot = new MockStreamspotService(); 
+        let testComponent = new VideoComponent(service, streamspot);
+        
+      })
+    )
   });
 
   it('should increment the number of people', () => {
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
-        let testComponent = new VideoComponent(service);
+        let streamspot = new MockStreamspotService();
+        let testComponent = new VideoComponent(service, streamspot);
         let currentNum = testComponent.number_of_people;
         testComponent.increaseCount();
 
@@ -60,7 +72,7 @@ describe('Component: Video', () => {
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
-        let testComponent = new VideoComponent(service);
+        let testComponent = new VideoComponent(service, new MockStreamspotService());
         let currentNum = testComponent.number_of_people;
         testComponent.decreaseCount();
 
@@ -76,7 +88,7 @@ describe('Component: Video', () => {
     inject(
       [CMSDataService, MockBackend],
       fakeAsync((service: CMSDataService, backend: MockBackend) => {
-        let testComponent = new VideoComponent(service);
+        let testComponent = new VideoComponent(service, new MockStreamspotService());
         testComponent.submitCount();
         expect(testComponent.countSubmit).toBe(true);
       })

@@ -1,8 +1,8 @@
 <!-- <div ng-show="groupsignup.viewReady"> -->
 <div>
-
-  <!--THIS CONTENT SHOULD BE PER TRIP (TRIP SPECIFIC)-->
- <span dynamic-content="tripsSignup.signupService.thankYou | html"> </span>
+  <span>
+    Thank you for signing up for a GO Trip!  An email confirmation has been sent to {{$root.email}}.
+  </span>
 
   <preloader ng-show='tripsSignup.loading' full-screen='false'> </preloader>
   <family-select family-members='tripsSignup.signupService.familyMembers' show-sign-up='thankyou' ></family-select>

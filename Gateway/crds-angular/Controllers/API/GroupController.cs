@@ -88,7 +88,7 @@ namespace crds_angular.Controllers.API
                     _groupToolService.VerifyCurrentUserIsGroupLeader(token, @group.GroupId);
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
-                        _addressService.FindOrCreateAddress(group.Address);
+                        _addressService.FindOrCreateAddress(group.Address, true);
                     }
 
                     group = _groupService.UpdateGroup(group);
@@ -355,14 +355,14 @@ namespace crds_angular.Controllers.API
         /// Update the participant for a particular group
         /// </summary>
         [RequiresAuthorization]
-        [Route("api/group/updateParticipant")]
+        [Route("api/group/updateParticipantRole")]
         public IHttpActionResult UpdateParticipant([FromBody] GroupParticipantDTO participant)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupService.UpdateGroupParticipant(participant);
+                    _groupService.UpdateGroupParticipantRole(participant);
                     return Ok();
                 }
                 catch (InvalidOperationException)

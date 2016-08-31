@@ -16,5 +16,7 @@ namespace crds_angular.Services.Interfaces
         int SaveApplication(TripApplicationDto dto);
         TripParticipantPledgeDto CreateTripParticipant(int contactId, int pledgeCampaignId);
         TripParticipantPledgeDto GetCampaignPledgeInfo(int contactId, int pledgeCampaignId);
+        bool HasScholarship(int contactId, int campaignId);
+        void SendTripIsFullMessage(int campaignId);
     }
 }

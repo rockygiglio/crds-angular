@@ -195,7 +195,9 @@
 
           pageId: function() {
             return 0;
-          }
+          },
+
+          Scholarshipped: isScholarshipped
         }
       })
       .state('tripsignup.application.thankyou', {
@@ -290,6 +292,21 @@
         }, (err) => {
           console.log(err);
           deferred.reject();
+        });
+        return deferred.promise;
+      }
+
+      function isScholarshipped($q, $stateParams, Trip, TripsSignupService) {
+        var deferred = $q.defer();
+        let promise = Trip.TripScholarship.get(
+          {campaignId: $stateParams.campaignId, contactId: $stateParams.contactId}
+        ).$promise;
+        promise.then(() => {
+          TripsSignupService.isScholarshipped = true;
+          deferred.resolve();
+        }, () => {
+          TripsSignupService.isScholarshipped = false;
+          deferred.resolve();
         });
         return deferred.promise;
       }

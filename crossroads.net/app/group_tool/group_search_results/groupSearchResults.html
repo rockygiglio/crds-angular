@@ -4,9 +4,24 @@
     <div class="col-sm-5 push-half-bottom">
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
         <label for="query">{{$root.MESSAGES.groupToolSearchPageKeywordLabel.content | htmlToPlainText}}</label>
-        <div class="input-group">
-          <input id="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}">
+
+        <div class="group-search-input-wrapper input-group">
+          <input id="query"
+                 name="query"
+                 ng-model="groupSearchResults.search.query"
+                 type="text"
+                 class="form-control"
+                 ng-class="{ 'group-input-clear-visible': groupSearchForm.query.$viewValue.length > 0 }"
+                 placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}"
+                 autofocus>
           <span class="group-search-icon input-group-btn">
+            <a ng-if="!groupSearchResults.processing && groupSearchForm.query.$viewValue.length > 0"
+               ng-click="groupSearchForm.query.$setViewValue(''); groupSearchForm.query.$render()"
+               class="group-input-clear">
+              <svg viewBox="0 0 32 32" class="icon icon-times">
+                <use xlink:href="#times"></use>
+              </svg>
+            </a>
             <button type="submit" class="btn btn-default">
               <svg viewBox="0 0 32 32" class="icon search3">
                 <use xlink:href="#search3"></use>
@@ -14,7 +29,8 @@
             </button>
           </span>
         </div>
-        <!-- TODO - This is a hack to get the UI to look right when error on the location input. Someone with CSS skillz would need to do this the right way. -->
+        <!-- TODO -
+        This is a hack to get the UI to look right when error on the location input. Someone with CSS skillz would need to do this the right way. -->
         <p ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">&nbsp;</p>
       </form>
     </div>
@@ -25,16 +41,31 @@
       <div ng-show="groupSearchResults.showLocationInput">
         <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit(groupLocationForm)" ng-class='{"has-error": groupLocationForm.$submitted && groupLocationForm.location.$invalid}'>
             <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
-            <div class="group-location-input-wrapper">
-              <input name="location" ng-model="groupSearchResults.search.location" ng-model-options="{ updateOn: 'submit' }" type="text" class="form-control" placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
-              <loading-button
-                input-type='submit'
-                normal-text='{{!groupSearchResults.searchedWithLocation ? "Save" : "Update"}}'
-                loading-text='{{!groupSearchResults.searchedWithLocation ? "Saving..." : "Updating..."}}'
-                loading='groupSearchResults.processing'
-                loading-class='disabled'
-                input-classes='btn btn-primary'></loading-button>
-              <button type="button" class="btn btn-standard" ng-click="groupSearchResults.hideLocationForm(groupLocationForm)">Cancel</button>
+            <div class="group-location-input-wrapper input-group">
+              <input id="location"
+                     name="location"
+                     ng-model="groupSearchResults.search.location"
+                     ng-model-options="{ updateOn: 'submit' }"
+                     type="text"
+                     class="group-location-input form-control"
+                     ng-class="{ 'group-input-clear-visible': groupLocationForm.location.$viewValue.length > 0 }"
+                     placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
+              <span class="input-group-btn">
+                <a ng-if="!groupSearchResults.processing && groupLocationForm.location.$viewValue.length > 0"
+                   ng-click="groupLocationForm.location.$setViewValue(''); groupLocationForm.location.$render()"
+                   class="group-input-clear">
+                  <svg viewBox="0 0 32 32" class="icon icon-times">
+                    <use xlink:href="#times"></use>
+                  </svg>
+                </a>
+                <loading-button
+                  input-type='submit'
+                  normal-text='Update'
+                  loading-text='Updating...'
+                  loading='groupSearchResults.processing'
+                  loading-class='disabled'
+                  input-classes='group-location-loading btn btn-default'></loading-button>
+              </span>
             </div>
             <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
               <ng-messages-include src="on-pause-messages"></ng-messages-include>
@@ -57,7 +88,7 @@
     DESKTOP ONLY results
     WARNING!!! If you make a change here, apply it to the mobile results list below
     -->
-  <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs push-half-top">
+  <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs hidden-sm push-half-top">
     <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
       <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
       <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
@@ -75,12 +106,12 @@
         <span ng-if="!group.hasAddress()">Online</span>
       </td>
     </tr>
-    <tr ng-if="group.expanded" ng-repeat-end class="gray-lighter">
+    <tr ng-if="group.expanded" ng-repeat-end class="group-search-detail">
       <td colspan="8">
-        <group-detail-about data="group" for-search="true"></group-detail-about>
-        <div class="text-right push-half-bottom soft-half-right">
-          <button type="button" class="btn btn-standard-dark" ng-click="group.expanded = false">Close</button>
-          <button type="button" class="btn btn-secondary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+        <group-detail-about data="group" for-search="true" class="clearfix"></group-detail-about>
+        <div class="text-right push-top push-half-bottom soft-half-right">
+          <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
+          <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
           <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
         </div>
       </td>
@@ -91,9 +122,9 @@
     MOBILE ONLY results
     WARNING!!! If you make a change here, apply it to the desktop results list above
     -->
-  <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-sm hidden-md hidden-lg push-half-top">
+  <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-md hidden-lg push-half-top">
     <div ng-repeat-start="group in groupSearchResults.results"
-         class="group-result push-half-bottom soft-half-bottom"
+         class="group-result soft-half-bottom soft-half-top"
          ng-click="group.expanded = true" ng-if="!group.expanded">
       <div class="row">
         <strong class="col-xs-9">{{group.groupName}}</strong>
@@ -108,17 +139,18 @@
         </div>
       </div>
       <div>{{group.categories.join(', ')}}</div>
-      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
+      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime | time}}</span></div>
     </div>
-    <div ng-if="group.expanded" ng-repeat-end class="gray-lighter push-bottom">
+    <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
       <group-detail-about data="group" for-search="true"></group-detail-about>
-      <div class="soft-half">
+      <div class="soft-half push-half-top">
         <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
-        <button type="button" class="btn btn-secondary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
-        <button type="button" class="btn btn-standard-dark btn-block" ng-click="group.expanded = false">Close</button>
+        <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+        <button type="button" class="btn btn-standard btn-block" ng-click="group.expanded = false">Close</button>
       </div>
     </div>
   </div>
 
-  <div ng-show='groupSearchResults.ready && !groupSearchResults.hasResults()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
+  <div ng-show='groupSearchResults.ready && groupSearchResults.showSearchResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
+  <div ng-show='groupSearchResults.ready && groupSearchResults.showFilteredResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchFilterNoResults.content | html"></div>
 </div>

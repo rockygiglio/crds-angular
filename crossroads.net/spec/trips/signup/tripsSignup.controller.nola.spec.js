@@ -62,7 +62,7 @@ describe('GOTrip NOLA Signup Application Controller', function() {
   });
 
   it('should set numberOfPages to 6', function() {
-    expect(controller.numberOfPages).toBe(6);
+    expect(controller.signupService.numberOfPages).toBe(6);
   });
 
 });
