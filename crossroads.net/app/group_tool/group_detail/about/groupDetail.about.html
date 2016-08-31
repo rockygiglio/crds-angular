@@ -20,17 +20,22 @@
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Category</strong></div>
-            <div class='col-sm-8'>{{groupDetailAbout.data.categories.join(', ')}}</div>
-          </div>
-          <div class="row push-quarter-bottom">
-            <div class='group-detail-label col-sm-4'><strong>Group Type</strong></div>
-            <div class='col-sm-8'>{{groupDetailAbout.data.groupType.name}} {{groupDetailAbout.data.groupType.description}}</div>
-          </div>
-          <div class="row push-quarter-bottom">
-            <div class='group-detail-label col-sm-4'><strong>Leaders</strong></div>
             <div class='col-sm-8'>
-              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
+              <div ng-repeat="category in groupDetailAbout.data.categories">{{category.category}} / {{category.name}}</div>
             </div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Where</strong></div>
+            <div class="col-sm-8" ng-if='groupDetailAbout.forSearch && groupDetailAbout.data.hasAddress()'>
+              <a href="https://maps.google.com/maps?f=q&q={{groupDetailAbout.data.address.zip}}" target="_new">{{groupDetailAbout.getAddress()}}
+                <span ng-if='groupDetailAbout.data.proximity !== undefined && groupDetailAbout.data.proximity !== null'>({{groupDetailAbout.data.proximity}} mi)</span>
+              </a>
+            </div>
+            <div class="col-sm-8" ng-if='!groupDetailAbout.forSearch || !groupDetailAbout.data.hasAddress()'>{{groupDetailAbout.getAddress()}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>When</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.getGroupCardWhenField()}}</div>
           </div>
           <div class='row push-quarter-bottom' ng-if='groupDetailAbout.isLeader'>
             <div class='group-detail-label col-sm-4'><strong>Visibility</strong></div>
@@ -40,21 +45,18 @@
 
         <div class="col-sm-6">
           <div class="row push-quarter-bottom">
+            <div class='group-detail-label col-sm-4'><strong>Group Type</strong></div>
+            <div class='col-sm-8'>{{groupDetailAbout.data.groupType.name}} {{groupDetailAbout.data.groupType.description}}</div>
+          </div>
+          <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Age Range</strong></div>
             <div class='col-sm-8'>{{groupDetailAbout.data.ageRange.join(', ')}}</div>
           </div>
           <div class="row push-quarter-bottom">
-            <div class='group-detail-label col-sm-4'><strong>Where</strong></div>
-            <div class="col-sm-8" ng-if='groupDetailAbout.forSearch && groupDetailAbout.data.hasAddress()'>
-              <a href="https://maps.google.com/maps?f=q&q={{groupDetailAbout.data.address.zip}}" target="_new">{{groupDetailAbout.getAddress()}}
-                  <span ng-if='groupDetailAbout.data.proximity !== undefined && groupDetailAbout.data.proximity !== null'>({{groupDetailAbout.data.proximity}} mi)</span>
-              </a>
+            <div class='group-detail-label col-sm-4'><strong>Leaders</strong></div>
+            <div class='col-sm-8'>
+              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
             </div>
-            <div class="col-sm-8" ng-if='!groupDetailAbout.forSearch || !groupDetailAbout.data.hasAddress()'>{{groupDetailAbout.getAddress()}}</div>
-          </div>
-          <div class="row push-quarter-bottom">
-            <div class='group-detail-label col-sm-4'><strong>When</strong></div>
-            <div class='col-sm-8'>{{groupDetailAbout.data.getGroupCardWhenField()}}</div>
           </div>
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Kids Welcome</strong></div>
