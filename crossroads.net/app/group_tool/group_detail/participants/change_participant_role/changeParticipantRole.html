@@ -57,14 +57,16 @@
       </div>
 
       <div class='text-right push-ends'>
-        <a type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' href='#' ng-click='changeParticipantRole.cancel(changeParticipantForm)'>Cancel</a>
         <loading-button
           input-type='submit'
           normal-text='Change Role'
           loading-text='Changing...'
           loading='changeParticipantRole.processing'
           loading-class='disabled'
-          input-classes='btn btn-primary btn-block-mobile mobile-push-half-bottom'/>
+          input-classes='sm-pull-right btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+
+        <a type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' href='#' ng-click='changeParticipantRole.cancel(changeParticipantForm)'>Cancel</a>
+
       </div>
     </div>
   </div>
