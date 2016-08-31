@@ -34,7 +34,7 @@
         <div class="contact">
           <h3>How would you like to be reminded?</h3>
           <div class="btn-group btn-group-justified" data-toggle="buttons">
-            <label class="btn btn-lg btn-time-select" (click)="model.type='phone'">
+            <label class="btn btn-lg btn-time-select active" (click)="model.type='phone'">
               <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type" ngControl="type" #type="ngForm"> Text
             </label>
             <label class="btn btn-lg btn-time-select" (click)="model.type='email'">
