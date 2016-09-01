@@ -61,8 +61,14 @@ namespace crds_angular.test.Processors
             dto.MergeData.Add("Event_Date", "datey mcdateface");
             dto.MergeData.Add("Event_Start_Time", "starty mctimeface");
 
-            IDictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-            keyValuePairs.Add("dto", dto);
+            IDictionary<string, object> keyValuePairs = new Dictionary<string, object>()
+            {
+                { "TemplateId", dto.TemplateId },
+                { "MergeData", dto.MergeData },
+                { "StartDate", dto.StartDate },
+                { "ToPhoneNumber", dto.ToPhoneNumber }
+            };
+
             JobDataMap jobDataMap = new JobDataMap(keyValuePairs);
 
             _mockJobExecutionContext.SetupGet(p => p.JobDetail.JobDataMap).Returns(jobDataMap);
