@@ -1,5 +1,5 @@
 // angular imports
-import { Component, ComponentResolver, ViewChild, DynamicComponentLoader, ViewContainerRef } from '@angular/core';
+import { Component, ComponentResolver, ViewChild, DynamicComponentLoader, ViewContainerRef, AfterViewInit } from '@angular/core';
 
 // streaming
 import { ContentCardComponent } from './content-card.component';
