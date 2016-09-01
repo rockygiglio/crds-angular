@@ -141,7 +141,7 @@ namespace crds_angular.Services
                     var displayName = _guestGiverDisplayName;
                     if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
                     {
-                        displayName = $"{lastName}, {firstName}";
+                        displayName = firstName;
                     }
                     contactDonorResponse.ContactId = _mpContactService.CreateContactForGuestGiver(emailAddress, displayName, firstName, lastName);
                 }
