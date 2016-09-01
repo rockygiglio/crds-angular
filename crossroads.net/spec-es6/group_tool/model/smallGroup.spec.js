@@ -32,7 +32,7 @@ describe('Group Tool SmallGroup', () => {
       'meetingDay': 'Friday',
       'meetingTime': '12:30:00',
       'meetingFrequency': 'Every Week',
-      'meetingTimeFrequency': 'Friday\'s at 12:30 PM, Every Week',
+      'meetingTimeFrequency': 'Fridays at 12:30 PM, Every Week',
       'groupRoleId': 0,
       'address': {
         'addressId': null,
@@ -291,22 +291,22 @@ describe('Group Tool SmallGroup', () => {
 
   describe('getGroupCardWhenField', () => {
     it('should return a group location string for display', () => {
-      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30 pm, Every Week');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Fridays at 12:30 pm, Every Week');
     });
 
     it('should return a group location string for display', () => {
       smallGroup.meetingTime = "19:30:00";
-      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 7:30 pm, Every Week');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Fridays at 7:30 pm, Every Week');
     });
 
     it('should return a group location string for display', () => {
       smallGroup.meetingTime = "4:30:00";
-      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 4:30 am, Every Week');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Fridays at 4:30 am, Every Week');
     });
 
     it('should return every month', () => {
       smallGroup.meetingFrequencyText = 'Every month';
-      expect(smallGroup.getGroupCardWhenField()).toEqual('Friday\'s at 12:30 pm, Every month');
+      expect(smallGroup.getGroupCardWhenField()).toEqual('Fridays at 12:30 pm, Every month');
     });
 
     it('should return a group location string for display', () => {

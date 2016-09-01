@@ -210,6 +210,14 @@ namespace MinistryPlatform.Translation.Test.Services
             var p = _fixture.UsingAuthenticationToken(_authToken).Get<MyPaymentType>(2);
             Console.WriteLine("Payment_Type\t{0}", p);
         }
+
+        [Test]
+        public void ShouldGetDataFromTableByName()
+        {
+            var contact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>("Pledges", 656098, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
+            Assert.AreEqual("Andy", contact.Nickname);
+            Assert.AreEqual("Canterbury", contact.LastName);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

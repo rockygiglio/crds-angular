@@ -8,7 +8,6 @@
         </svg>
       </pageScroll>
       <countdown (watchNowClick)="watchNowClicked()"></countdown>
-      <button type="button" class="btn btn-sm btn-reminder" (click)="modal.open('lg')" *ngIf="!inProgress">Remind Me</button>
     </div>
   </section>
 
@@ -76,8 +75,6 @@
     </div>
   </section>
 </div>
-
-<reminder-modal #reminderModal></reminder-modal>
 
 <modal class="watch-now" #watchNowModal (onClose)="modalClose()" (onDismiss)="modalClose()">
   <modal-body>

@@ -20,6 +20,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <returns>An object representing the MP row for the ID, if found.</returns>
         T Get<T>(int recordId, string selectColumns = null);
 
+        T Get<T>(string tableName, int recordId, string columnName);
+
         /// <summary>
         /// Get results from a stored procedure in Ministry Platform
         /// </summary>

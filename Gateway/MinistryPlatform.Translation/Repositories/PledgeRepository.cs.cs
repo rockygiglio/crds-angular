@@ -124,7 +124,6 @@ namespace MinistryPlatform.Translation.Repositories
                 .Search<MpPledge>("Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + pledgeCampaignId + " AND Pledge_Status_ID_Table.Pledge_Status_ID=1", columnList);
         }
 
-
         public int GetDonorForPledge(int pledgeId)
         {
             var record = _ministryPlatformService.GetRecordDict(_pledgePageId, pledgeId, ApiLogin());
