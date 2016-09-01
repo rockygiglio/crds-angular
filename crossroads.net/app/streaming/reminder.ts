@@ -9,10 +9,10 @@ export class Reminder {
   public phone:        string;
   public email:        string;
   public type:         string  = 'phone';
-  public isDayValid:   boolean = false;
-  public isTimeValid:  boolean = false;
-  public isPhoneValid: boolean = false;
-  public isEmailValid: boolean = false;
+  public isDayValid:   boolean;
+  public isTimeValid:  boolean;
+  public isPhoneValid: Boolean;
+  public isEmailValid: boolean;
 
   constructor(private reminderService: ReminderService) { }
 

@@ -44,11 +44,11 @@
 
           <div class="form-group" *ngIf="model.type=='phone'">
             <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
-            <div *ngIf="!isPhoneValid" class="alert alert-danger">Phone number is invalid</div>
+            <div *ngIf="model.isPhoneValid === false" class="alert alert-danger">Phone number is invalid</div>
           </div>
           <div class="form-group" *ngIf="model.type=='email'">
             <input [(ngModel)]="model.email" ngControl="email" #email="ngForm" type="email" class="form-control" placeholder="Enter your email address" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
-            <div *ngIf="!isEmailValid" class="alert alert-danger">Email address is invalid</div>
+            <div *ngIf="model.isEmailValid === false" class="alert alert-danger">Email address is invalid</div>
           </div>
         </div>
       </div>
