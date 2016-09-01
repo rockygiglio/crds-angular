@@ -1,17 +1,18 @@
 <div class="live-stream" *ngIf="inProgress">
 
   <div class="pushdown-container" *ngIf="displayCounter">
-    <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
-    <div class="container"><div class="iframe-wrapper">
-      <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
-    </div></div>
-  </div>
-  <div class="control-container ">
     <div class="container">
-      <a (click)="goBack()" class="btn btn-standard-dark" data-dismiss="modal">{{ redirectText }}</a>
+      <div class="iframe-wrapper">
+        <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <a href="#" class="pull-right btn-dismiss" (click)="displayCounter=false">Dismiss</a>
     </div>
   </div>
   <div class="dark-bg">
+    <header class="container clearfix">
+      <a href="http://crossroads.net" class="navbar-brand logo pull-left"><svg viewBox="0 0 800.416 115.217" class="icon-logo"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#logo"></use> </svg> </a>
+      <a href="#" (click)="goBack()" class="pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+    </header>
     <section>
       <div class="container">
         <streamspot-iframe></streamspot-iframe>
