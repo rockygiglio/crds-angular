@@ -703,6 +703,15 @@ streaming {
     .video-player {
       margin: 0 auto;
     }
+
+    > header {
+      .navbar-brand.logo {
+        color: white;
+        position: static;
+        margin-left: -10px;
+        padding-left: -10px;
+      }
+    }
   }
 
   .digital-program-container {
@@ -860,10 +869,10 @@ streaming {
   .pushdown-container {
     background: #252526;
 
-    .pull-right {
+    .btn-dismiss {
       color: #FFF;
-      display: block;
-      margin: 1em;
+      font-size: 90%;
+      padding: 0 1.25em 0.5em;
     }
     .iframe-wrapper {
       position: relative;
