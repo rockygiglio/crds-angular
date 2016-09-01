@@ -18,16 +18,10 @@ import {
 } from '@angular/core/testing';
 
 import { MockBackend, MockConnection } from '@angular/http/testing';
+import { mockHttpProvider } from '../mocks/mock-http.provider';
 
 import { CMSDataService } from '../../../core/services/CMSData.service';
 declare var __CMS_ENDPOINT__: string;
-
-const mockHttpProvider = {
-  deps: [ MockBackend, BaseRequestOptions ],
-  useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
-    return new Http(backend, defaultOptions);
-  }
-}
 
 
 describe('Service: CMSData', () => {

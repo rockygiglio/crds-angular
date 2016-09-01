@@ -43,12 +43,12 @@
           </div>
 
           <div class="form-group" *ngIf="model.type=='phone'">
-            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="[0-9-\(\)]*">
-            <div *ngIf="!isPhoneValid" class="alert alert-danger">Phone number is invalid</div>
+            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <div *ngIf="model.isPhoneValid === false" class="alert alert-danger">Phone number is invalid</div>
           </div>
           <div class="form-group" *ngIf="model.type=='email'">
             <input [(ngModel)]="model.email" ngControl="email" #email="ngForm" type="email" class="form-control" placeholder="Enter your email address" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
-            <div *ngIf="!isEmailValid" class="alert alert-danger">Email address is invalid</div>
+            <div *ngIf="model.isEmailValid === false" class="alert alert-danger">Email address is invalid</div>
           </div>
         </div>
       </div>
@@ -56,8 +56,14 @@
       <div *ngIf="formSuccess">
         <h3 class="text-center">Thanks!<br>Your reminder was set successfully.</h3>
       </div>
+
+      <div *ngIf="formError">
+        <h3 class="text-center">Sorry!<br/>There was an error, try again later</h3>
+      </div>
+      
     </modal-body>
     <modal-footer>
+      <div class="alert alert-danger" *ngIf="dateTimeError">Please select a date and time</div>
       <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="false" *ngIf="!isLoading() && !formSuccess">Set Reminder</button>
       <button type="button" class="btn btn-default btn-set-reminder" (click)="close()" *ngIf="formSuccess">Close</button>
     </modal-footer>

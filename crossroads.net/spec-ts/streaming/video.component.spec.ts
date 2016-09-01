@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 import { beforeEach, describe, it, addProviders, expect, inject, fakeAsync, beforeEachProviders } from '@angular/core/testing';
-
+import { mockHttpProvider } from '../core/mocks/mock-http.provider'
 import { VideoComponent } from '../../app/streaming/video.component';
 import { CMSDataService } from '../../core/services/CMSData.service';
 import { StreamspotService } from '../../app/streaming/streamspot.service';
@@ -18,14 +18,6 @@ import {
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
 declare var __CMS_ENDPOINT__: string;
-
-const mockHttpProvider = {
-  deps: [ MockBackend, BaseRequestOptions ],
-  useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
-    return new Http(backend, defaultOptions);
-  }
-}
-
 
 describe('Component: Video', () => {
 

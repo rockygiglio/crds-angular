@@ -18,7 +18,7 @@ namespace crds_angular.Services.Interfaces
             
         MpContactDonor GetContactDonorForCheckAccount(string encryptedKey);
 
-        MpContactDonor CreateOrUpdateContactDonor(MpContactDonor existingDonor,  string encryptedKey, string emailAddress, string paymentProcessorToken = null, DateTime? setupDate = null);
+        MpContactDonor CreateOrUpdateContactDonor(MpContactDonor existingDonor,  string encryptedKey, string firstName, string lastName, string emailAddress, string paymentProcessorToken = null, DateTime? setupDate = null);
 
         string DecryptValues(string value);
 

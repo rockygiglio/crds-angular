@@ -16,11 +16,6 @@
   }
 }
 
-.sixteen-nine {
-  overflow: hidden;
-  @include aspect-ratio(16,9);  
-}
-
 @mixin crds-make-condensed {
   font-family: $cr-streaming-font-extra-cond;
   font-size: 170%;
@@ -440,10 +435,12 @@ streaming {
       top: -1em;
     }
 
-    figure > a {
+    figure > linked-content > a {
+      @include aspect-ratio(16,9);
+      overflow: hidden;
       display: block;
       width: 100%;
-      margin-bottom: 2%; 
+      margin-bottom: 2%;
     }
 
     @media (max-width: $screen-xs-max) { 
@@ -451,12 +448,12 @@ streaming {
         top: -1.15em;
       }
 
-      figure > a {
+      figure a {
         margin-bottom: 2%;
       }
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      figure > a {
+      figure a {
         margin-bottom: 2%;
       }
       figcaption {
@@ -664,7 +661,7 @@ streaming {
       top: -0.5em;
     }
 
-    figure > a {
+    figure a {
       display: block;
       width: 100%;
     }
@@ -705,6 +702,15 @@ streaming {
     background: #000;
     .video-player {
       margin: 0 auto;
+    }
+
+    > header {
+      .navbar-brand.logo {
+        color: white;
+        position: static;
+        margin-left: -10px;
+        padding-left: -10px;
+      }
     }
   }
 
@@ -863,10 +869,10 @@ streaming {
   .pushdown-container {
     background: #252526;
 
-    .pull-right {
+    .btn-dismiss {
       color: #FFF;
-      display: block;
-      margin: 1em;
+      font-size: 90%;
+      padding: 0 1.25em 0.5em;
     }
     .iframe-wrapper {
       position: relative;
@@ -1080,6 +1086,7 @@ modal.watch-now {
   }
 
   .modal-body {
+    background: #000;
     height: 100%;
     padding: 0;
 

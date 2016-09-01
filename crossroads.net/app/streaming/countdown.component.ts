@@ -5,6 +5,7 @@ import { Event } from './event';
 import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
 import { ReminderModalComponent } from './reminder-modal.component';
+import { ReminderService } from './reminder.service'
 
 var moment = require('moment-timezone');
 declare var _: any;
@@ -33,7 +34,7 @@ declare var _: any;
     <reminder-modal #reminderModal></reminder-modal>
   `,
   directives: [ReminderModalComponent],
-  providers: [HTTP_PROVIDERS]
+  providers: [HTTP_PROVIDERS, ReminderService]
 })
 
 export class CountdownComponent implements OnInit {

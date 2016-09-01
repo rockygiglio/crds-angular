@@ -6,7 +6,7 @@ declare var chrome: any;
 
 window.videojs = require('video.js/dist/video');
 
-require('./vendor/streamspotAnalytics');
+// require('./vendor/streamspotAnalytics');
 require('./vendor/videojs5-hlsjs-source-handler.min');
 require('videojs-chromecast/dist/videojs-chromecast');
 
