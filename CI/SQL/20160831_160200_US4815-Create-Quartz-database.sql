@@ -1,7 +1,13 @@
 -- this script is for SQL Server and Azure SQL
 
 IF NOT EXISTS (SELECT name FROM dbo.sysdatabases WHERE name = 'Quartz')
+BEGIN
 CREATE DATABASE Quartz
+ON
+( NAME = 'Quartz_dat' , FILENAME = 'F:\Data\Quartz_dat.mdf' )
+LOG ON
+( NAME = 'Quartz_log' , FILENAME = 'F:\Log\Quartz_log.ldf' )
+END
 GO
 
 USE [Quartz]
@@ -11,7 +17,7 @@ IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'ApiUser')
 BEGIN
     CREATE USER [ApiUser] FOR LOGIN [ApiUser]
     EXEC sp_addrolemember db_owner, ApiUser
-END;
+END
 GO
 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[FK_QRTZ_TRIGGERS_QRTZ_JOB_DETAILS]') AND OBJECTPROPERTY(id, N'ISFOREIGNKEY') = 1)
