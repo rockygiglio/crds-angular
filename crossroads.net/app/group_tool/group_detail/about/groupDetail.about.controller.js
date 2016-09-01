@@ -1,10 +1,11 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log, $cookies) {
+  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
+    this.stateParams = $stateParams;
     this.log = $log;
     this.cookies = $cookies;
 
@@ -44,6 +45,11 @@ export default class GroupDetailAboutController {
       //this.setGroupImageUrl();
       this.ready = true;
     }
+
+
+    // Set show visibility flag
+    this.showVisibility = !!this.stateParams.showVisibility;
+
   }
 
   setGroupImageUrl() {
