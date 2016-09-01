@@ -39,7 +39,7 @@ export class ReminderModalComponent {
     this.model = new Reminder();
     streamspotService.events.then(response => {
       this.upcoming = response;
-      this.model.day = this.nextDate();
+      this.resetForm();
     })
   }
 
@@ -99,10 +99,15 @@ export class ReminderModalComponent {
     }
   }
 
-  close() {
+  resetForm() {
     this.model = new Reminder();
+    this.model.day = this.nextDate();
     this.formSuccess = false;
     this.loading = false;
+  }
+
+  close() {
+    this.resetForm();
     this.modal.close();
   }
 
