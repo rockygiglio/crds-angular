@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { Reminder } from './reminder';
+import { ReminderService } from './reminder.service'
 import { Event } from './event';
 import { StreamspotService } from './streamspot.service';
 import { upgradeAdapter } from '../upgrade-adapter';
@@ -38,8 +39,9 @@ export class ReminderModalComponent {
   };
 
   constructor(private streamspotService: StreamspotService,
-              private http: Http) {
-    this.model = new Reminder(this.http);
+              private http: Http,
+              private reminderService: ReminderService) {
+    this.model = new Reminder(this.reminderService);
     streamspotService.events.then(response => {
       this.upcoming = response;
       this.model.day = this.nextDate();
@@ -47,12 +49,12 @@ export class ReminderModalComponent {
   }
 
   submit(reminderForm) {
-    this.isDayValid = this.isValid(reminderForm.form.controls.day);
-    this.isTimeValid = this.isValid(reminderForm.form.controls.time);
-    this.isEmailValid = this.isValid(reminderForm.form.controls.email);
-    this.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
+    this.model.isDayValid = this.isValid(reminderForm.form.controls.day);
+    this.model.isTimeValid = this.isValid(reminderForm.form.controls.time);
+    this.model.isEmailValid = this.isValid(reminderForm.form.controls.email);
+    this.model.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
 
-    if(this.isDayValid && this.isTimeValid && (this.isEmailValid || this.isPhoneValid)) {
+    if(this.model.isDayValid && this.model.isTimeValid && (this.model.isEmailValid || this.model.isPhoneValid)) {
       this.loading = true;
       this.model.send()
         .then((response) => {
@@ -108,7 +110,7 @@ export class ReminderModalComponent {
   }
 
   close() {
-    this.model = new Reminder(this.http);
+    this.model = new Reminder(this.reminderService);
     this.formSuccess = this.formError = false;
     this.loading = false;
     this.modal.close();
@@ -122,7 +124,7 @@ export class ReminderModalComponent {
 
   public open(size) {
     this.isSelectingDates = true;
-    this.model = new Reminder(this.http);
+    this.model = new Reminder(this.reminderService);
     this.modal.open(size)
   }
 }
