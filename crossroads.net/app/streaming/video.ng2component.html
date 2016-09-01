@@ -37,12 +37,12 @@
         
           <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
             <figure class="wow fadeIn" data-wow-delay="">
-              <a href="{{ promo.url }}" target="_blank">
+              <linked-content href="{{ promo.url }}" target="_blank">
                 <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
-              </a>
+              </linked-content>
             </figure>
             <section>
-              <h3 title="{{ promo.title }}"><a href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</a></h3>
+              <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</linked-content></h3>
               <div [innerHTML]="promo.description"></div>
             </section>
             <hr>

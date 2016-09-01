@@ -139,6 +139,11 @@ class TripDepositController {
   }
 
   saveApplication(shouldSubmitBank = '') {
+    if (!this.tripForm.$valid){
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      return;
+    }
+
     this.dto.processing = true;
     this.signupService.paymentMethod = this.getPaymentType();
     if (this.tripDeposit.applicationSaved) {

@@ -31,7 +31,8 @@ namespace crds_angular.test.controllers
         public void Setup()
         {
             var configuration = new Mock<IConfigurationWrapper>();
-            configuration.Setup(mocked => mocked.GetConfigValue("TextEventQueueName")).Returns("queue name");
+            configuration.Setup(mocked => mocked.GetConfigValue("ScheduledJobsQueueName")).Returns("queue name");
+            configuration.Setup(mocked => mocked.GetConfigIntValue("StreamReminderTemplate")).Returns(264567);
 
             _textCommunicationService = new Mock<ITextCommunicationService>();
             _messageFactory = new Mock<IMessageFactory>();
@@ -54,7 +55,13 @@ namespace crds_angular.test.controllers
             ScheduledJob scheduledJob = new ScheduledJob();
             scheduledJob.StartDateTime = textData.StartDate.Value;
             scheduledJob.JobType = typeof(SendTextMessageJob);
-            scheduledJob.Dto = textData;
+            scheduledJob.Dto = new Dictionary<string, object>()
+                {
+                    {"TemplateId", textData.TemplateId},
+                    {"MergeData", textData.MergeData},
+                    {"ToPhoneNumber", textData.ToPhoneNumber},
+                    {"StartDate", textData.StartDate}
+                };
 
             var msg = new Mock<Message>();
             ScheduledJob spiedScheduledJob = new ScheduledJob();

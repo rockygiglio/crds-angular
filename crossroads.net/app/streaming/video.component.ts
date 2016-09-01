@@ -6,6 +6,7 @@ import { StreamspotIframeComponent } from './streamspot-iframe.component';
 import { StreamspotService } from './streamspot.service';
 import { ContentCardComponent } from './content-card.component'
 import { VideoJSComponent } from './videojs.component';
+import { LinkedContentNg2Component } from '../../core/linked_content/linked-content-ng2.component';
 
 // core imports
 import { CMSDataService } from '../../core/services/CMSData.service'
@@ -19,7 +20,7 @@ var WOW = require('wow.js/dist/wow.min.js');
   selector: 'live-stream',
   templateUrl: './video.ng2component.html',
   providers: [CMSDataService],
-  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent],
+  directives: [StreamspotIframeComponent, ContentCardComponent, VideoJSComponent, LinkedContentNg2Component],
   pipes: [TruncatePipe]
 })
 
