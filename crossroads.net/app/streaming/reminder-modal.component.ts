@@ -32,6 +32,7 @@ export class ReminderModalComponent {
   isEmailValid:     boolean = true;
   isPhoneValid:     boolean = true;
   formError:        boolean = false;
+  dateTimeError:    boolean = false;
   dateFormats:      any     = {
     key: 'MM/DD/YYYY',
     display: 'dddd, MMMM Do',
@@ -49,10 +50,16 @@ export class ReminderModalComponent {
   }
 
   submit(reminderForm) {
+    this.dateTimeError = false;
+
     this.model.isDayValid = this.isValid(reminderForm.form.controls.day);
     this.model.isTimeValid = this.isValid(reminderForm.form.controls.time);
     this.model.isEmailValid = this.isValid(reminderForm.form.controls.email);
     this.model.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
+
+    if (this.model.isDayValid === false && this.model.isTimeValid === false) {
+      this.dateTimeError = true;
+    }
 
     if(this.model.isDayValid && this.model.isTimeValid && (this.model.isEmailValid || this.model.isPhoneValid)) {
       this.loading = true;
