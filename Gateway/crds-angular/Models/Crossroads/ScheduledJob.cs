@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Quartz;
 
 namespace crds_angular.Models.Crossroads
 {
@@ -8,6 +7,6 @@ namespace crds_angular.Models.Crossroads
     {
         public DateTime StartDateTime { get; set; }
         public Type JobType { get; set; }
-        public Object Dto { get; set; }
+        public Dictionary<string,object> Dto { get; set; }
     }
 }
