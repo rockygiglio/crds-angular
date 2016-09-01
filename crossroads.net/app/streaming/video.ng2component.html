@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="dark-bg">
-    <section class="wow fadeIn">
+    <section>
       <div class="container">
         <streamspot-iframe></streamspot-iframe>
       </div>
@@ -25,7 +25,7 @@
           <header class="clearfix">
             <h2>don't miss</h2>
           </header>
-          <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
+          <content-card *ngFor="let event of dontMiss" [content]="event" [animate]="false"></content-card>
       </section>
 
       <section class="participate digital-program bg" *ngIf="beTheChurch.length > 0">
@@ -35,8 +35,8 @@
             <h2>be the church</h2>
           </header>
         
-          <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of beTheChurch">
-            <figure class="wow fadeIn" data-wow-delay="">
+          <article class="promo" *ngFor="let promo of beTheChurch">
+            <figure>
               <linked-content href="{{ promo.url }}" target="_blank">
                 <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
               </linked-content>
