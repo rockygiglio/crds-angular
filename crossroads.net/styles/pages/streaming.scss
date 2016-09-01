@@ -112,7 +112,7 @@ streaming {
       right: 0;
       display: none;
 
-      @media (min-width: $screen-xs-min) {
+      @media (min-width: $screen-md) {
         display: block;
       }
       @media (max-width: $screen-sm-min) {
@@ -133,7 +133,7 @@ streaming {
         margin: 0 auto;
       }
 
-      i, ul {
+      i, ul, .btn-reminder {
         display: table-cell;
         vertical-align: middle;
       }
@@ -144,6 +144,10 @@ streaming {
         font-size: 123%;
         letter-spacing: -0.015em;
         padding-right: 1em;
+      }
+
+      ul {
+        padding-right: 20px;
       }
 
       li {
