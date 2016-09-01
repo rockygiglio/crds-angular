@@ -239,14 +239,18 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       } else {
         vm.signupService.saveApplication(() => {
           $state.go('tripsignup.application.thankyou');
-        }, () => {
-          saveError();
+        }, (err) => {
+          vm.submitting = false;
+          if (err.status === 409) {
+            $rootScope.$emit('notify', $rootScope.MESSAGES.tripIsFull);
+          } else {
+            saveError();
+          }
         });
       }
     }
 
     function saveError() {
-      vm.submitting = false;
       $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       return;
     }

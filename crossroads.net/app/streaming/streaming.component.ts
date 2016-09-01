@@ -7,7 +7,6 @@ import { CountdownComponent } from './countdown.component';
 import { CurrentSeriesComponent } from './current-series.component';
 import { ScheduleComponent } from './schedule.component';
 import { SocialSharingComponent } from './social-sharing.component';
-import { ReminderModalComponent } from './reminder-modal.component';
 import { StreamspotService } from './streamspot.service';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { VideoComponent } from './video.component';
@@ -44,7 +43,6 @@ declare var _: any;
     StickyHeaderDirective,
     ContentCardComponent, 
     CurrentSeriesComponent,
-    ReminderModalComponent,
     VideoComponent
   ],
   templateUrl: './streaming.ng2component.html',
@@ -57,7 +55,6 @@ declare var _: any;
 })
 
 export class StreamingComponent {
-  @ViewChild('reminderModal') reminderModal: ReminderModalComponent;
   @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
   @ViewChild('watchNowModal') watchNowModal: ModalComponent;
   videoComponent: any;
@@ -133,10 +130,6 @@ export class StreamingComponent {
   
   modalClose() {
     this.videoComponent.destroy(); 
-  }
-
-  ngAfterViewInit() {
-    this.reminderModal.open('lg');
   }
 
 }

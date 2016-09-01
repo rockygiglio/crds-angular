@@ -8,7 +8,6 @@
         </svg>
       </pageScroll>
       <countdown (watchNowClick)="watchNowClicked()"></countdown>
-      <button type="button" class="btn btn-sm btn-reminder" (click)="reminderModal.open('lg')">Remind Me</button>
     </div>
   </section>
 
@@ -28,7 +27,7 @@
         <h2>Past Weekends</h2>
       </header>
 
-      <div class="row">
+      <div class="content-card-row">
         <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
@@ -76,8 +75,6 @@
     </div>
   </section>
 </div>
-
-<reminder-modal #reminderModal></reminder-modal>
 
 <modal class="watch-now" #watchNowModal (onClose)="modalClose()" (onDismiss)="modalClose()">
   <modal-body>

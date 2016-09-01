@@ -29,13 +29,32 @@ namespace MinistryPlatform.Translation.Repositories
 
         public T Get<T>(int recordId, string selectColumns = null)
         {
-            var url = AddColumnSelection(string.Format("/tables/{0}/{1}", GetTableName<T>(), recordId), selectColumns);
+            var url = AddGetColumnSelection(string.Format("/tables/{0}/{1}", GetTableName<T>(), recordId), selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
             response.CheckForErrors(string.Format("Error getting {0} by ID {1}", GetTableName<T>(), recordId), true);
+
+            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+            if (content == null || !content.Any())
+            {
+                return default(T);
+            }
+
+            return content.FirstOrDefault();
+        }
+
+        public T Get<T>(string tableName, int recordId, string columnName)
+        {
+            var url = AddGetColumnSelection(string.Format("/tables/{0}/{1}", tableName, recordId), columnName);
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors(string.Format("Error getting {0} by ID {1}", tableName, recordId), true);
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
             if (content == null || !content.Any())
@@ -67,7 +86,7 @@ namespace MinistryPlatform.Translation.Repositories
                 return default(List<List<T>>);
             }
             return content;
-        }
+        }   
 
         public int PostStoredProc(string procedureName, Dictionary<string, object> parameters)
         {
@@ -161,6 +180,11 @@ namespace MinistryPlatform.Translation.Repositories
         private static string AddColumnSelection(string url, string selectColumns)
         {
             return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}&$select={1}", url, selectColumns);
+        }
+
+        private static string AddGetColumnSelection(string url, string selectColumns)
+        {
+            return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}?$select={1}", url, selectColumns);
         }
     }
 

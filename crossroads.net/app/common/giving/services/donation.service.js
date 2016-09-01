@@ -195,7 +195,8 @@
           GiveTransferService.donor.donorId,
           GiveTransferService.email,
           GiveTransferService.view,
-          GiveTransferService.anonymous).then(function(confirmation) {
+          GiveTransferService.anonymous,
+          GiveTransferService.tripDeposit).then(function(confirmation) {
             GiveTransferService.amount = confirmation.amount;
             GiveTransferService.program = program;
             GiveTransferService.program_name = GiveTransferService.program.Name;

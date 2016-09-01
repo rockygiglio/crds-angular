@@ -117,9 +117,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"@PledgeCampaignID", 10000000},
                 {"@ContactID", 2186211 }
             };
-            var results = _fixture.UsingAuthenticationToken(_authToken).PostStoredProc("api_crds_Add_As_TripParticipant", fields);
-            Console.WriteLine("Results\t" + results.ToString());
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPledge>("api_crds_Add_As_TripParticipant", fields);
+            Console.WriteLine("Result\t" + results.ToString());
         }
+
         [Test]
         public void TestSearchAllPaymentTypes()
         {
@@ -173,11 +174,49 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestGetGoTripsWithForms()
+        {
+            var pledgeCampaignId = 10000000;
+            var columnList = new List<string>
+            {
+                "Pledge_Campaigns.Pledge_Campaign_ID",
+                "Pledge_Campaigns.Campaign_Name",
+                "Pledge_Campaign_Type_ID_Table.Campaign_Type",
+                "Pledge_Campaigns.Start_Date",
+                "Pledge_Campaigns.[End_Date]",
+                "Pledge_Campaigns.[Campaign_Goal]",
+                "Registration_Form_Table.[Form_ID]",
+                "Registration_Form_Table.[Form_Title]",
+                "Pledge_Campaigns.[Registration_Start]",
+                "Pledge_Campaigns.[Registration_End]",
+                "Pledge_Campaigns.[Registration_Deposit]",
+                "Pledge_Campaigns.[Youngest_Age_Allowed]",
+                "Event_ID_Table.[Event_Start_Date]",
+                "Pledge_Campaigns.[Nickname]",
+                "Event_ID_Table.[Event_ID]",
+                "Pledge_Campaigns.[Program_ID]",
+                "Pledge_Campaigns.Maximum_Registrants"
+            };
+
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList);
+            Assert.AreEqual(1, results.Count);
+            Assert.IsNotNull(results[0].MaximumRegistrants);
+        }
+
+        [Test]
         public void TestGetPaymentType()
         {
             Console.WriteLine("TestGetPaymentType");
             var p = _fixture.UsingAuthenticationToken(_authToken).Get<MyPaymentType>(2);
             Console.WriteLine("Payment_Type\t{0}", p);
+        }
+
+        [Test]
+        public void ShouldGetDataFromTableByName()
+        {
+            var contact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>("Pledges", 656098, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
+            Assert.AreEqual("Andy", contact.Nickname);
+            Assert.AreEqual("Canterbury", contact.LastName);
         }
     }
 

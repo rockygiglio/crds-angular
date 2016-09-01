@@ -139,7 +139,7 @@
         </div>
       </div>
       <div>{{group.categories.join(', ')}}</div>
-      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime}}</span></div>
+      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime | time}}</span></div>
     </div>
     <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
       <group-detail-about data="group" for-search="true"></group-detail-about>

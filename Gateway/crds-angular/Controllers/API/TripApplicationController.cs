@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Messaging;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Models.Json;
@@ -10,6 +14,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
+using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
 {
@@ -61,8 +66,8 @@ namespace crds_angular.Controllers.API
 
             TripApplicationResponseDto response;
             try
-            {                
-                var participantPledgeInfo =_tripService.CreateTripParticipant(dto.ContactId, dto.PledgeCampaignId);
+            {
+                var participantPledgeInfo = _tripService.CreateTripParticipant(dto.ContactId, dto.PledgeCampaignId);
                 var message = _messageFactory.CreateMessage(dto);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
                 response = new TripApplicationResponseDto
@@ -73,6 +78,16 @@ namespace crds_angular.Controllers.API
                     ProgramId = participantPledgeInfo.ProgramId,
                     ProgramName = participantPledgeInfo.ProgramName
                 };
+
+                new Task(() => { _tripService.SendTripIsFullMessage(dto.PledgeCampaignId); }).Start();
+
+            }
+            catch (TripFullException e)
+            {
+                var json = JsonConvert.SerializeObject(e.Message, Formatting.None);
+                var message = new HttpResponseMessage(HttpStatusCode.Conflict);
+                message.Content = new StringContent(json);
+                throw new HttpResponseException(message);
             }
             catch (Exception e)
             {

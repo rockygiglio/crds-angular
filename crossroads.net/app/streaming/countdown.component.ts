@@ -1,9 +1,10 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Event } from './event';
 import { Countdown } from './countdown';
 import { StreamspotService } from './streamspot.service';
+import { ReminderModalComponent } from './reminder-modal.component';
 
 var moment = require('moment-timezone');
 declare var _: any;
@@ -23,16 +24,20 @@ declare var _: any;
           <li class="vr"></li>
           <li><strong>{{ countdown.seconds }}</strong> <small>sec</small></li>
         </ul>
+        <a href="#" class="btn btn-sm btn-reminder" (click)="modal.open('lg')">Remind Me</a>
       </div>
       <div *ngIf="isBroadcasting" class="in-progress">
         <i>Live stream in progress...</i> <a (click)="watchNow($event)" class="btn btn-sm">Watch Now</a>
       </div>
     </div>
+    <reminder-modal #reminderModal></reminder-modal>
   `,
+  directives: [ReminderModalComponent],
   providers: [HTTP_PROVIDERS]
 })
 
 export class CountdownComponent implements OnInit {
+  @ViewChild('reminderModal') modal: ReminderModalComponent;
   event:            Event     = null;
   countdown:        Countdown = new Countdown;
   isCountdown:      boolean   = false;

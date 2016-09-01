@@ -47,6 +47,7 @@ namespace MinistryPlatform.Translation.Repositories
         public const string HashKey = "Mcc3#e758ebe8Seb1fdeF628dbK796e5";
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IProgramRepository _programService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IContactRepository _contactService;
@@ -54,10 +55,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly DateTimeFormatInfo _dateTimeFormat;
         
 
-        public DonorRepository(IMinistryPlatformService ministryPlatformService, IProgramRepository programService, ICommunicationRepository communicationService, IAuthenticationRepository authenticationService, IContactRepository contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
+        public DonorRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IProgramRepository programService, ICommunicationRepository communicationService, IAuthenticationRepository authenticationService, IContactRepository contactService,  IConfigurationWrapper configuration, ICryptoProvider crypto)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _programService = programService;
             _communicationService = communicationService;
             _contactService = contactService;
@@ -365,7 +367,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 try
                 {
-                    SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType);
+                    SetupConfirmationEmail(Convert.ToInt32(donationAndDistribution.ProgramId), donationAndDistribution.DonorId, donationAndDistribution.DonationAmt, donationAndDistribution.SetupDate, donationAndDistribution.PymtType, donationAndDistribution.PledgeId ?? 0);
                 }
             catch (Exception e)
                 {
@@ -590,15 +592,22 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        public void SetupConfirmationEmail(int programId, int donorId, decimal donationAmount, DateTime setupDate, string pymtType)
+        public void SetupConfirmationEmail(int programId, int donorId, decimal donationAmount, DateTime setupDate, string pymtType, int pledgeId = 0)
         {
+            var apiToken = ApiLogin();
+            string pledgeName = null;
+            if (pledgeId > 0)
+            {
+                var contact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>("Pledges", pledgeId, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
+                pledgeName = contact.Nickname + " " + contact.LastName;
+            }
             var program = _programService.GetProgramById(programId);
             //If the communcations admin does not link a message to the program, the default template will be used.
             var communicationTemplateId = program.CommunicationTemplateId != null && program.CommunicationTemplateId != 0
                 ? program.CommunicationTemplateId.Value
                 : _configurationWrapper.GetConfigIntValue("DefaultGiveConfirmationEmailTemplate");
 
-            SendEmail(communicationTemplateId, donorId, donationAmount, pymtType, setupDate, program.Name, EmailReason);
+            SendEmail(communicationTemplateId, donorId, donationAmount, pymtType, setupDate, program.Name, EmailReason, null, pledgeName);
         }
 
         public MpContactDonor GetEmailViaDonorId(int donorId)
@@ -640,7 +649,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         // TODO Made this virtual so could mock in a unit test.  Probably ought to refactor to a separate class - shouldn't have to mock the class we're testing...
-        public virtual void SendEmail(int communicationTemplateId, int donorId, decimal donationAmount, string paymentType, DateTime setupDate, string program, string emailReason, string frequency = null)
+        public virtual void SendEmail(int communicationTemplateId, int donorId, decimal donationAmount, string paymentType, DateTime setupDate, string program, string emailReason, string frequency = null, string pledgeName = null)
         {
             var template = _communicationService.GetTemplate(communicationTemplateId);
             var defaultContact = _contactService.GetContactById(AppSetting("DefaultGivingContactEmailId"));
@@ -669,6 +678,11 @@ namespace MinistryPlatform.Translation.Repositories
             if (!string.IsNullOrWhiteSpace(frequency))
             {
                 comm.MergeData["Frequency"] = frequency;
+            }
+
+            if (!string.IsNullOrWhiteSpace(pledgeName))
+            {
+                comm.MergeData["Pledge_Donor"] = pledgeName;
             }
 
             _communicationService.SendMessage(comm);

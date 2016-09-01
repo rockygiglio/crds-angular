@@ -25,13 +25,13 @@ export class ReminderModalComponent {
   upcoming:         any     = [];
   loading:          boolean = false;
   formSuccess:      boolean = false;
-  formError:        boolean = false;
-  isSelectingDates: boolean = true;
+  isSelectingDates: boolean = false;
   isDayValid:       boolean = false;
   isTimeValid:      boolean = false;
   isEmailValid:     boolean = true;
   isPhoneValid:     boolean = true;
-  dateFormats: any = {
+  formError:        boolean = false;
+  dateFormats:      any     = {
     key: 'MM/DD/YYYY',
     display: 'dddd, MMMM Do',
     time: 'h:mma z'
@@ -40,6 +40,10 @@ export class ReminderModalComponent {
   constructor(private streamspotService: StreamspotService,
               private http: Http) {
     this.model = new Reminder(this.http);
+    streamspotService.events.then(response => {
+      this.upcoming = response;
+      this.model.day = this.nextDate();
+    })
   }
 
   submit(reminderForm) {
@@ -84,6 +88,14 @@ export class ReminderModalComponent {
       chain(this.upcoming).
       groupBy((event: Event) => event.start.format(this.dateFormats.key)).
       value()
+      ;
+  }
+
+  nextDate() {
+    return _.
+      head(this.uniqueDates()).
+      start.
+      format(this.dateFormats.key)
       ;
   }
 
