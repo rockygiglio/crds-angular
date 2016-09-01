@@ -79,14 +79,14 @@
 
       if (GiveTransferService.view === 'cc') {
         donationService.createCard();
-        PaymentService.createDonorWithCard(donationService.card, GiveTransferService.email)
-          .then(function(donor) {
+        PaymentService.createDonorWithCard(donationService.card, GiveTransferService.email, GiveTransferService.donorFirstName, GiveTransferService.donorLastName)
+          .then(function (donor) {
             donationService.donate(pgram, GiveTransferService.campaign);
           }, PaymentService.stripeErrorHandler);
       } else if (GiveTransferService.view === 'bank') {
         donationService.createBank();
-        PaymentService.createDonorWithBankAcct(donationService.bank, GiveTransferService.email)
-          .then(function(donor) {
+        PaymentService.createDonorWithBankAcct(donationService.bank, GiveTransferService.email, GiveTransferService.donorFirstName, GiveTransferService.donorLastName)
+          .then(function (donor) {
             donationService.donate(pgram, GiveTransferService.campaign);
           }, PaymentService.stripeErrorHandler);
       }

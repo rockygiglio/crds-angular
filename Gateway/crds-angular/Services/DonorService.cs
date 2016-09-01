@@ -112,12 +112,16 @@ namespace crds_angular.Services
         ///    whether a Customer needs to be created at the payment processor, etc.
         /// </summary>
         /// <param name="mpContactDonorAn existing MpContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing mpContact or donor.</param>
-        ///  <param name="encryptedKey"> The encrypted routing and account number</param>
+        /// <param name="mpContactDonor"></param>
+        /// <param name="encryptedKey"> The encrypted routing and account number</param>
+        /// <param name="dto"></param>
+        /// <param name="lastName"></param>
         /// <param name="emailAddress">An email address to use when creating a Contact (#1 above).</param>
         /// <param name="paymentProcessorToken">The one-time-use token given by the payment processor - if not set, a donor will still be potentially created or updated, but will not be setup in Stripe.</param>
         /// <param name="setupDate">The date when the Donor is marked as setup, defaults to today's date.</param>
+        /// <param name="firstName"></param>
         /// <returns></returns>
-        public MpContactDonor CreateOrUpdateContactDonor(MpContactDonor mpContactDonor, string encryptedKey, string emailAddress, string paymentProcessorToken = null, DateTime? setupDate = null)
+        public MpContactDonor CreateOrUpdateContactDonor(MpContactDonor mpContactDonor, string encryptedKey, string firstName, string lastName, string emailAddress, string paymentProcessorToken = null, DateTime? setupDate = null)
         {
             setupDate = setupDate ?? DateTime.Now;
 
@@ -134,7 +138,12 @@ namespace crds_angular.Services
                 }
                 else
                 {
-                    contactDonorResponse.ContactId = _mpContactService.CreateContactForGuestGiver(emailAddress, _guestGiverDisplayName);
+                    var displayName = _guestGiverDisplayName;
+                    if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+                    {
+                        displayName = $"{lastName}, {firstName}";
+                    }
+                    contactDonorResponse.ContactId = _mpContactService.CreateContactForGuestGiver(emailAddress, displayName, firstName, lastName);
                 }
 
                 var donorAccount = mpContactDonor != null ? mpContactDonor.Account : null;

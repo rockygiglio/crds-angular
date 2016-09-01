@@ -29,12 +29,12 @@
 
     stripe.setPublishableKey(__STRIPE_PUBKEY__);
 
-    function createDonorWithBankAcct(bankAcct, email) {
-      return apiDonor(bankAcct, email, stripe.bankAccount, 'POST');
+    function createDonorWithBankAcct(bankAcct, email, firstName, lastName) {
+      return apiDonor(bankAcct, email, firstName, lastName, stripe.bankAccount, 'POST');
     }
 
-    function createDonorWithCard(card, email) {
-      return apiDonor(card, email, stripe.card, 'POST');
+    function createDonorWithCard(card, email, firstName, lastName) {
+      return apiDonor(card, email, firstName, lastName, stripe.card, 'POST');
     }
 
     function createRecurringGiftWithBankAcct(bankAcct, impersonateDonorId = null) {
@@ -142,11 +142,11 @@
     }
 
     function updateDonorWithBankAcct(donorId, bankAcct, email) {
-      return apiDonor(bankAcct, email, stripe.bankAccount, 'PUT');
+      return apiDonor(bankAcct, email, null, null, stripe.bankAccount, 'PUT');
     }
 
     function updateDonorWithCard(donorId, card, email) {
-      return apiDonor(card, email, stripe.card, 'PUT');
+      return apiDonor(card, email, null, null, stripe.card, 'PUT');
     }
 
     function _addGlobalErrorMessage(error, httpStatusCode) {
@@ -188,13 +188,13 @@
       return e;
     }
 
-    function apiDonor(donorInfo, email, stripeFunc, apiMethod) {
+    function apiDonor(donorInfo, email, firstName, lastName, stripeFunc, apiMethod) {
       var def = $q.defer();
       stripeFunc.createToken(donorInfo, function(status, response) {
         if (response.error) {
           def.reject(_addGlobalErrorMessage(response.error, status));
         } else {
-          var donorRequest = { stripe_token_id: response.id, email_address: email };
+          var donorRequest = { stripe_token_id: response.id, email_address: email, first_name: firstName, last_name: lastName };
           $http({
             method: apiMethod,
             url: __API_ENDPOINT__ + 'api/donor',
