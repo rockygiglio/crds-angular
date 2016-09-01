@@ -57,7 +57,7 @@ declare var _: any;
 })
 
 export class StreamingComponent {
-  @ViewChild('reminderModal') modal: ReminderModalComponent;
+  @ViewChild('reminderModal') reminderModal: ReminderModalComponent;
   @ViewChild('videoTarget', {read: ViewContainerRef}) videoTarget;
   @ViewChild('watchNowModal') watchNowModal: ModalComponent;
   videoComponent: any;
@@ -136,7 +136,7 @@ export class StreamingComponent {
   }
 
   ngAfterViewInit() {
-    this.modal.open('lg');
+    this.reminderModal.open('lg');
   }
 
 }

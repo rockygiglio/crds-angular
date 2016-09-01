@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import { Http } from '@angular/http';
 import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { Reminder } from './reminder';
@@ -19,24 +20,26 @@ var _ = require('lodash');
 })
 export class ReminderModalComponent {
   @ViewChild('reminderModal') modal: ModalComponent;
-  deliveryType: String = 'email';
-  model: Reminder;
-  upcoming: any = [];
-  loading: boolean = false;
-  formSuccess: boolean = false;
+  deliveryType:     String  = 'email';
+  model:            Reminder;
+  upcoming:         any     = [];
+  loading:          boolean = false;
+  formSuccess:      boolean = false;
+  formError:        boolean = false;
   isSelectingDates: boolean = true;
-  isDayValid: boolean = false;
-  isTimeValid: boolean = false;
-  isEmailValid: boolean = true;
-  isPhoneValid: boolean = true;
+  isDayValid:       boolean = false;
+  isTimeValid:      boolean = false;
+  isEmailValid:     boolean = true;
+  isPhoneValid:     boolean = true;
   dateFormats: any = {
     key: 'MM/DD/YYYY',
     display: 'dddd, MMMM Do',
     time: 'h:mma z'
   };
 
-  constructor(private streamspotService: StreamspotService) {
-    this.model = new Reminder();
+  constructor(private streamspotService: StreamspotService,
+              private http: Http) {
+    this.model = new Reminder(this.http);
   }
 
   submit(reminderForm) {
@@ -44,11 +47,16 @@ export class ReminderModalComponent {
     this.isTimeValid = this.isValid(reminderForm.form.controls.time);
     this.isEmailValid = this.isValid(reminderForm.form.controls.email);
     this.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
-    // TODO Implement API
 
     if(this.isDayValid && this.isTimeValid && (this.isEmailValid || this.isPhoneValid)) {
       this.loading = true;
-      setTimeout(() => { this.formSuccess = true; }, 1500);
+      this.model.send()
+        .then((response) => {
+          this.formSuccess = true;
+        })
+        .catch((error) => {
+          this.formError = false;
+        });
     }
   }
 
@@ -88,8 +96,8 @@ export class ReminderModalComponent {
   }
 
   close() {
-    this.model = new Reminder();
-    this.formSuccess = false;
+    this.model = new Reminder(this.http);
+    this.formSuccess = this.formError = false;
     this.loading = false;
     this.modal.close();
   }
@@ -102,7 +110,7 @@ export class ReminderModalComponent {
 
   public open(size) {
     this.isSelectingDates = true;
-    this.model = new Reminder();
+    this.model = new Reminder(this.http);
     this.modal.open(size)
   }
 }

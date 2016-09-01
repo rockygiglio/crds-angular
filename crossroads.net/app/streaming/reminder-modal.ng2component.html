@@ -34,7 +34,7 @@
         <div class="contact">
           <h3>How would you like to be reminded?</h3>
           <div class="btn-group btn-group-justified" data-toggle="buttons">
-            <label class="btn btn-lg btn-time-select" (click)="model.type='phone'">
+            <label class="btn btn-lg btn-time-select active" (click)="model.type='phone'">
               <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type" ngControl="type" #type="ngForm"> Text
             </label>
             <label class="btn btn-lg btn-time-select" (click)="model.type='email'">
@@ -43,7 +43,7 @@
           </div>
 
           <div class="form-group" *ngIf="model.type=='phone'">
-            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$">
+            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
             <div *ngIf="!isPhoneValid" class="alert alert-danger">Phone number is invalid</div>
           </div>
           <div class="form-group" *ngIf="model.type=='email'">
@@ -56,8 +56,14 @@
       <div *ngIf="formSuccess">
         <h3 class="text-center">Thanks!<br>Your reminder was set successfully.</h3>
       </div>
+
+      <div *ngIf="formError">
+        <h3 class="text-center">Sorry!<br/>There was an error, try again later</h3>
+      </div>
+      
     </modal-body>
     <modal-footer>
+      <div class="alert alert-danger" *ngIf="dateTimeError">Please select a date and time</div>
       <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="false" *ngIf="!isLoading() && !formSuccess">Set Reminder</button>
       <button type="button" class="btn btn-default btn-set-reminder" (click)="close()" *ngIf="formSuccess">Close</button>
     </modal-footer>
