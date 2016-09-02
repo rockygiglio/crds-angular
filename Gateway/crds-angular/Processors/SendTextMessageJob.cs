@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
@@ -23,11 +24,10 @@ namespace crds_angular.Processors
         public void Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            TextCommunicationDto dto = (TextCommunicationDto)dataMap.Get("dto");
-            MpMessageTemplate template = _communicationService.GetTemplate(dto.TemplateId);
-            string htmlBody =_communicationService.ParseTemplateBody(template.Body, dto.MergeData);
+            MpMessageTemplate template = _communicationService.GetTemplate(dataMap.GetIntValue("TemplateId"));
+            string htmlBody =_communicationService.ParseTemplateBody(template.Body, (Dictionary<string, object>) dataMap["MergeData"]);
             string textBody = HtmlHelper.StripHTML(htmlBody);
-            _textCommunicationService.SendTextMessage(dto.ToPhoneNumber, textBody);
+            _textCommunicationService.SendTextMessage(dataMap.GetString("ToPhoneNumber"), textBody);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using crds_angular.Models.Crossroads;
+﻿using System;
+using crds_angular.Models.Crossroads;
 using Crossroads.AsyncJobs.Interfaces;
 using log4net;
 using Quartz;
@@ -19,9 +20,12 @@ namespace Crossroads.AsyncJobs.Processors
         {
             ScheduledJob scheduledJob = details.Data;
 
-            _logger.Debug("Scheduling Job "+ scheduledJob.JobType + " at "+ scheduledJob.StartDateTime);
+            string jobName = scheduledJob.JobType.Name + ":" + Guid.NewGuid() + "@" + scheduledJob.StartDateTime;
 
-            IJobDetail job = new JobDetailImpl("ScheduledJob", scheduledJob.JobType);
+            _logger.Debug("Scheduling Job: " + jobName);
+
+            IJobDetail job = new JobDetailImpl(jobName, scheduledJob.JobType);
+
             job.JobDataMap.PutAll(scheduledJob.Dto);
 
             ITrigger trigger = TriggerBuilder.Create()

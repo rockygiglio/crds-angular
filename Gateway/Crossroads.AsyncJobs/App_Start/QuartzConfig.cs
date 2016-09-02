@@ -32,9 +32,11 @@ namespace Crossroads.AsyncJobs.App_Start
         {
             var quartzConfig = GetConfiguration();
 
-            ISchedulerFactory schedulerFactory = new StdSchedulerFactory(quartzConfig);
-
-            container.RegisterInstance(schedulerFactory);
+            ISchedulerFactory schedulerFactory = new UnitySchedulerFactory(new UnityJobFactory(container));
+            ((UnitySchedulerFactory)schedulerFactory).Initialize(quartzConfig);
+            
+            container.RegisterInstance<ISchedulerFactory>(schedulerFactory);
+            
             container.RegisterType<IScheduler>(new InjectionFactory(c => c.Resolve<ISchedulerFactory>().GetScheduler()));
         }
     }
