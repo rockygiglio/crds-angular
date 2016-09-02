@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { StreamspotService } from './streamspot.service';
+import { SafeResourceUrl, DomSanitizationService } from '@angular/platform-browser';
 
 @Component({
   selector: 'streamspot-iframe',
@@ -11,8 +12,11 @@ export class StreamspotIframeComponent {
 
   debug: boolean = false;
   markup: string = '';
+  sanitizer: any;
 
-  constructor( private streamspot: StreamspotService) {}
+  constructor( private streamspot: StreamspotService, sanitizer: DomSanitizationService) {
+    this.sanitizer = sanitizer;
+  }
 
   ngOnDestroy() {
     this.markup = '';
@@ -43,11 +47,13 @@ export class StreamspotIframeComponent {
           defaultPlayer = broadcaster.players[0];
         }
 
-        console.log(defaultPlayer);
-
         if ( broadcaster.isBroadcasting === true || this.debug ) {
 
-          this.markup = '<iframe width="640" height="360" src="https://player2.streamspot.com/?playerId=' + defaultPlayer.id + '" frameborder="0" allowfullscreen></iframe>';
+          let id = '1adb55de';
+          if ( this.streamspot.ssid == 'crossr30e3' ) {
+            id = '2887fba1';
+          }
+          this.markup = this.sanitizer.bypassSecurityTrustHtml('<iframe width="640" height="360" src="https://player2.streamspot.com/?playerId=' + id + '" frameborder="0" allowfullscreen></iframe>');
 
         }
         else {
