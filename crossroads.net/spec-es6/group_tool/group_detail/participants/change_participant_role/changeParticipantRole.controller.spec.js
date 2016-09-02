@@ -10,21 +10,20 @@ describe('ChangeParticipantRoleController', () => {
         groupDetailService,
         rootScope;
 
-    var mockProfile;
-
     beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
+
+    var mockProfile;
 
     beforeEach(angular.mock.module(($provide) => {
         mockProfile = jasmine.createSpyObj('Profile', ['Personal']);
         $provide.value('Profile', mockProfile);
     }));
 
-    beforeEach(inject(function ($injector) {
+    beforeEach(inject((_$rootScope_, $injector) => {
+        rootScope = _$rootScope_;
         groupService = $injector.get('GroupService');
         anchorScroll = $injector.get('$anchorScroll');
         groupDetailService = $injector.get('GroupDetailService');
-        rootScope = $injector.get('$rootScope');
-
         fixture = new ChangeParticipantRoleController(groupService, anchorScroll, rootScope, groupDetailService);
     }));
 
@@ -64,7 +63,6 @@ describe('ChangeParticipantRoleController', () => {
         });
     });
 
-
     describe('warningApprenticeMax', () => {
         it('should return false when less than 5', () => {
             let participants = [
@@ -95,5 +93,21 @@ describe('ChangeParticipantRoleController', () => {
         });
     });
 
+    describe('submit', function () {
+        beforeEach(() => {
+            let participant = new Participant({ nickName: 'f1', lastName: 'l1', groupRoleId: constants.GROUP.ROLES.LEADER, participantId: 11 });
+            fixture.participant = participant;
+        });
 
+        it('should return false if role not changed', function () {
+            fixture.currentRole = constants.GROUP.ROLES.LEADER;
+            expect(fixture.hasRoleChanged()).toBe(false);
+        });
+
+        it('should return true if role changed', function () {
+            fixture.currentRole = constants.GROUP.ROLES.PARTICIPANT;
+            expect(fixture.hasRoleChanged()).toBe(true);
+        });
+
+    });
 });

@@ -76,7 +76,7 @@ namespace crds_angular.Controllers.API
 
             try
             {
-                donor = _donorService.CreateOrUpdateContactDonor(donor, String.Empty, dto.email_address, dto.stripe_token_id, DateTime.Now);
+                donor = _donorService.CreateOrUpdateContactDonor(donor, String.Empty, dto.first_name, dto.last_name, dto.email_address, dto.stripe_token_id, DateTime.Now);
             }
             catch (PaymentProcessorException e)
             {
@@ -111,7 +111,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 var donor = _donorService.GetContactDonorForAuthenticatedUser(authToken);
-                donor = _donorService.CreateOrUpdateContactDonor(donor, string.Empty, string.Empty, dto.stripe_token_id, DateTime.Now);
+                donor = _donorService.CreateOrUpdateContactDonor(donor, string.Empty, string.Empty, string.Empty, string.Empty, dto.stripe_token_id, DateTime.Now);
 
                 var response = new DonorDTO
                 {
@@ -306,7 +306,7 @@ namespace crds_angular.Controllers.API
                                                                   () =>
                                                                       _donorService.GetContactDonorForAuthenticatedUser(token))
                         : _donorService.GetContactDonorForAuthenticatedUser(token);
-                    var donor = _donorService.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty);
+                    var donor = _donorService.CreateOrUpdateContactDonor(contactDonor, string.Empty,string.Empty, string.Empty, string.Empty);
                     var recurringGift = !string.IsNullOrWhiteSpace(impersonateUserId)
                         ? _impersonationService.WithImpersonation(token,
                                                                   impersonateUserId,

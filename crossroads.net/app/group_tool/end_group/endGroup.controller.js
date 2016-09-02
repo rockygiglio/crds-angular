@@ -79,6 +79,8 @@ export default class EndGroupController {
         valueProp: 'dp_RecordID',
         labelProp: 'dp_RecordName',
         descProp: 'Description',
+        descInline: false,
+        bold: true,
         options: this.endedReasonsList
       }
     }]

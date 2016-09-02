@@ -31,14 +31,6 @@ namespace crds_angular.Controllers.API
             _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
         }
 
-        [AcceptVerbs("POST")]
-        [Route("api/grouptool/join-request")]
-        public IHttpActionResult CreateRequestToJoin([FromBody] Invitation dto)
-        {
-            throw new NotImplementedException();
-        }
-
-
         /// <summary>
         /// Return all pending invitations
         /// </summary>

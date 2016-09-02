@@ -38,6 +38,7 @@
     vm.onEmailNotFound = onEmailNotFound;
     vm.program = null;
     vm.tripParticipant = TripParticipant;
+    vm.showNameInput = showNameInput;
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
 
@@ -130,6 +131,14 @@
           angular.element(closeButton).triggerHandler('click');
         }, 0);
       }
+    }
+
+    function showNameInput() {
+      if (this.dto.anonymous === true || activeSession()) {
+        return false;
+      }
+
+      return true;
     }
 
   }

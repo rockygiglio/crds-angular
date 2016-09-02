@@ -33,6 +33,40 @@
   <hr>
 
     <ng-form name="accountForm">
+
+      <div class='row' ng-show='tripGiving.showNameInput()'>
+        <div class="form-group col-sm-6" ng-class="{'has-error': accountForm.donorFirstName.$invalid && tripGiving.dto.bankinfoSubmitted }">
+          <label for='firstName'> First Name </label>
+          <input ng-model="tripGiving.dto.donorFirstName" 
+              type="text" class="form-control" 
+              name="donorFirstName" 
+              id="donorFirstName"  
+              placeholder='First Name' 
+              ng-required='tripGiving.showNameInput()' />
+          <ng-messages for="accountForm.donorFirstName.$error" ng-if="accountForm.donorFirstName.$invalid && tripGiving.dto.bankinfoSubmitted">
+            <span ng-message="required">
+              <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+            </span>
+          </ng-messages>              
+        </div>
+        
+        <div class="form-group col-sm-6" ng-class="{'has-error': accountForm.donorLastName.$invalid && tripGiving.dto.bankinfoSubmitted }">
+          <label for='lastName'> Last Name </label>
+          <input ng-model="tripGiving.dto.donorLastName" 
+              type='text' 
+              class='form-control' 
+              name="donorLastName" 
+              id='donorLastName' 
+              placeholder='Last Name' 
+              ng-required='tripGiving.showNameInput()' />
+          <ng-messages for="accountForm.donorLastName.$error" ng-if="accountForm.donorLastName.$invalid && tripGiving.dto.bankinfoSubmitted">
+            <span ng-message="required">
+              <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+            </span>
+          </ng-messages> 
+        </div>       
+      </div>
+
 	    <div
 	        class="form-group"
 	        ng-if="!tripGiving.activeSession()"

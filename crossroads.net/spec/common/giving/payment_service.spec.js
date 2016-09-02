@@ -148,7 +148,9 @@ describe('PaymentService', function() {
     beforeEach(function() {
       postData = {
         stripe_token_id: 'tok_test',
-        email_address: 'me@here.com'
+        email_address: 'me@here.com',
+        first_name: 'fname',
+        last_name: 'lname'
       };
     });
 
@@ -164,7 +166,7 @@ describe('PaymentService', function() {
         });
 
       var errorCallback = jasmine.createSpyObj('errorCallback', ['onError']);
-      sut.createDonorWithCard(card, 'me@here.com')
+      sut.createDonorWithCard(card, 'me@here.com', 'fname', 'lname')
         .then(function(donor) {
           expect(donor).toBeDefined();
           expect(donor.id).toEqual('12345');
@@ -181,7 +183,7 @@ describe('PaymentService', function() {
       });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
-      sut.createDonorWithCard(card, 'me@here.com')
+      sut.createDonorWithCard(card, 'me@here.com', 'fname', 'lname')
         .then(successCallback.onSuccess,
         function(error) {
           expect(error).toBeDefined();
@@ -201,7 +203,7 @@ describe('PaymentService', function() {
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
-      sut.createDonorWithCard(card, 'me@here.com')
+      sut.createDonorWithCard(card, 'me@here.com', 'fname', 'lname')
         .then(successCallback.onSuccess,
         function(error) {
           expect(error).toBeDefined();
@@ -219,7 +221,9 @@ describe('PaymentService', function() {
     beforeEach(function() {
       postData = {
         stripe_token_id: 'tok_test',
-        email_address: 'me@here.com'
+        email_address: 'me@here.com',
+        first_name: 'fname',
+        last_name: 'lname'
       };
     });
 
@@ -235,7 +239,7 @@ describe('PaymentService', function() {
         });
 
       var errorCallback = jasmine.createSpyObj('errorCallback', ['onError']);
-      sut.createDonorWithBankAcct(bankAccount, 'me@here.com')
+      sut.createDonorWithBankAcct(bankAccount, 'me@here.com', 'fname', 'lname')
         .then(function(donor) {
           expect(donor).toBeDefined();
           expect(donor.id).toEqual('12345');
@@ -252,7 +256,7 @@ describe('PaymentService', function() {
       });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
-      sut.createDonorWithBankAcct(bankAccount, 'me@here.com')
+      sut.createDonorWithBankAcct(bankAccount, 'me@here.com', 'fname', 'lname')
         .then(successCallback.onSuccess,
         function(error) {
           expect(error).toBeDefined();
@@ -271,7 +275,7 @@ describe('PaymentService', function() {
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
-      sut.createDonorWithBankAcct(bankAccount, 'me@here.com')
+      sut.createDonorWithBankAcct(bankAccount, 'me@here.com', 'fname', 'lname')
         .then(successCallback.onSuccess,
         function(error) {
           expect(error).toBeDefined();
@@ -480,7 +484,9 @@ describe('PaymentService', function() {
     beforeEach(function() {
       putData = {
         stripe_token_id: 'tok_test',
-        email_address: 'me@here.com'
+        email_address: 'me@here.com',
+        first_name: null,
+        last_name: null
       };
 
       card = {
@@ -560,7 +566,9 @@ describe('PaymentService', function() {
     beforeEach(function() {
       putData = {
         stripe_token_id: 'tok_test',
-        email_address: 'me@here.com'
+        email_address: 'me@here.com',
+        first_name: null,
+        last_name: null
       };
 
       bankAccount = {

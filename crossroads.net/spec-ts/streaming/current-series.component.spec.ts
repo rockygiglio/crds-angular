@@ -7,7 +7,7 @@ import { async, inject, beforeEach, beforeEachProviders,
 import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
 
 import { CurrentSeriesComponent } from '../../app/streaming/current-series.component'
-import { CMSDataService } from '../../core/services/cmsData.service';
+import { CMSDataService } from '../../core/services/CMSData.service';
 import { HTTP_PROVIDERS, XHRBackend, Response, ResponseOptions } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 

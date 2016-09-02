@@ -16,9 +16,7 @@ class TripDepositController {
     this.stateParams = $stateParams;
     this.loadingDonor = false;
     this.window = $window;
-    this.initialized = false;
-
-    
+    this.initialized = false; 
   }
 
   $onDestroy() {
@@ -66,8 +64,23 @@ class TripDepositController {
       this.state.go('home');
     });
 
-    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams) => {
+    this.rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (toState && !/^tripdeposit.*/.test(toState.name)) {
+        return;
+      }
+      if (fromState.name === 'tripsignup.application.page' &&
+          toState.name === 'tripdeposit' &&
+          fromParams.stepId &&
+          Number(fromParams.stepId) < 5
+          ) {
+        event.preventDefault();
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
+        return;
+      }
+      if (fromState.name !== 'tripsignup.application.page' &&
+          fromState.name !== 'tripdeposit.confirm' &&
+            toState.name === 'tripdeposit' ) {
+        this.state.go('tripsignup', { campaignId: this.stateParams.campaignId });
         return;
       }
       this.dto.processing = false;
@@ -91,8 +104,6 @@ class TripDepositController {
     this.initDefaultState();
   }
 
- 
-
   initDefaultState() {
 
     let program = {
@@ -115,34 +126,41 @@ class TripDepositController {
     return this.signupService.pledgeAmount - this.signupService.depositAmount;
   }
 
-  saveApplication(shouldSubmitBank = "") {
+  getPaymentType() {
+    if (this.dto.view === 'cc') {
+      return 'Credit Card';
+    }
+    else if (this.dto.view === 'bank') {
+      return 'Bank';
+    }
+    else {
+      return 'Unknown';
+    }
+  }
+
+  saveApplication(shouldSubmitBank = '') {
+    this.dto.bankinfoSubmitted = true;
+    if (!this.tripForm.$valid){
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      return;
+    }
+
     this.dto.processing = true;
+    this.signupService.paymentMethod = this.getPaymentType();
     if (this.tripDeposit.applicationSaved) {
       this.saveDeposit(shouldSubmitBank);
     } else {
-      var application = new this.signupService.TripApplication();
-      application.contactId = this.signupService.person.contactId;
-      application.pledgeCampaignId = this.signupService.campaign.id;
-      application.pageTwo = this.signupService.page2;
-      application.pageThree = this.signupService.page3;
-      application.pageFour = this.signupService.page4;
-      application.pageFive = this.signupService.page5;
-      application.pageSix = this.signupService.page6;
-      application.inviteGUID = this.stateParams.invite;
-
-      /*jshint unused:false */
-      application.$save((data) => {
+      this.signupService.saveApplication((data) => {
         this.tripDeposit.applicationSaved = true;
-          _.each(this.signupService.familyMembers, (f) => {
-            if (f.contactId === Number(this.stateParams.contactId)) {
-              f.signedUp = true;
-              f.signedUpDate = new Date();
-            }
-          });
+        this.dto.campaign.pledgeDonorId = data.donorId;
         this.saveDeposit(shouldSubmitBank);
-      }, () => {
+      }, (err) => {
         this.dto.processing = false;
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        if (err.status === 409) {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.tripIsFull);
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }
       });
     }
   }
@@ -162,6 +180,4 @@ class TripDepositController {
   }
 
 }
-
-
 export default TripDepositController;

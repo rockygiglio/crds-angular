@@ -28,24 +28,19 @@ module.exports = {
     formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
     boot: ['./app/boot.ts']
   },
-  resolve: {
-    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
-  },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
     moment: 'moment'
   },
-  noParse: [
-      /node_modules[\/]video\.js[\/]/,
-      /node_modules[\/]videojs-contrib-hls[\/]/,
-      /node_modules[\/]moment[\/]/
-  ],
   context: __dirname,
   output: {
     path: './assets',
     publicPath: '/assets/',
     filename: '[name].[hash].js',
+  },
+  resolve: {
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -61,7 +56,7 @@ module.exports = {
           ],
           exclude: [
             /streamspotAnalytics\.js$/,
-            /videojs5-hlsjs-source-handler\.min\.js$/
+            /videojs5-hlsjs-source-handler/
           ],
           loader: 'ng-annotate!babel-loader'
         },
@@ -102,7 +97,7 @@ module.exports = {
     ],
     noParse: [
         path.join(__dirname, "node_modules", "video.js","dist","video.js"),
-        /videojs5-hlsjs-source-handler\.min\.js/,
+        /videojs5-hlsjs-source-handler/,
         path.join(__dirname, "node_modules", "videojs-chromecast","dist","videojs-chromecast.js")
     ]
   },

@@ -412,6 +412,17 @@
             }
           }
         })
+        .state('livestreamvjs', {
+          parent: 'noHeaderOrFooter',
+          url: '/live/videojs',
+          template: '<videojs></videojs>',
+          data: {
+            meta: {
+              title: 'Live VideoJS',
+              description: ''
+            }
+          }
+        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',

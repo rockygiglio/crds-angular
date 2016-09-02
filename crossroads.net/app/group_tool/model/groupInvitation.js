@@ -10,6 +10,7 @@ export default class GroupInvitation {
       this.sourceId = undefined;
       this.groupRoleId = undefined;
       this.emailAddress = undefined;
+      this.customMessage = undefined;
       this.recipientName = undefined;
       this.requestDate = undefined;
       this.imageUrl = undefined;

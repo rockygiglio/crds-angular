@@ -26,6 +26,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.create', {
       parent: 'noSideBar',
       url: '/groups/create',
+      params: {
+        cancelSref: null
+      },
       template: '<create-group></create-group>',
       resolve:{
         stateList: (CreateGroupService, GroupService) =>{
@@ -202,6 +205,17 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         isProtected: true,
         meta: {
           title: 'End Your Group',
+          description: ''
+        }
+      }
+    })
+    .state('grouptool.resources', {
+      parent: 'noSideBar',
+      url: '/groups/resources',
+      template: '<group-resources></group-resources>',
+      data: {
+        meta: {
+          title: 'Groups Resources',
           description: ''
         }
       }

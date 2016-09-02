@@ -35,11 +35,9 @@
         return 'Transfer';
       }
 
-      if (vm.donation.registeredDonor) {
-        return vm.donation.donorNickname + ' ' + vm.donation.donorLastName;
-      } else {
-        return vm.donation.donorEmail;
-      }
+      var lastName = vm.donation.donorLastName === null ? "" : vm.donation.donorLastName;
+
+      return vm.donation.donorNickname + ' ' + lastName;
     }
 
     function sendMessage(message, onSuccess, onError) {

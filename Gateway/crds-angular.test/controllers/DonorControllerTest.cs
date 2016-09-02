@@ -82,7 +82,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(It.IsAny<string>())).Returns((MpContactDonor)null);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(null, string.Empty, string.Empty, "tok_test", It.IsAny<DateTime>())).Returns(_donor);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(null, string.Empty, string.Empty, string.Empty, string.Empty, "tok_test", It.IsAny<DateTime>())).Returns(_donor);
             
             IHttpActionResult result = _fixture.Post(createDonorDto);
 
@@ -175,7 +175,9 @@ namespace crds_angular.test.controllers
             var createDonorDto = new CreateDonorDTO
             {
                 stripe_token_id = "tok_test",
-                email_address = "me@here.com"
+                email_address = "me@here.com",
+                first_name = "",
+                last_name = ""
             };
 
             var lookupDonor = new MpContactDonor
@@ -193,7 +195,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty,string.Empty, string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
 
             IHttpActionResult result = _fixture.Post(createDonorDto);
 
@@ -219,7 +221,9 @@ namespace crds_angular.test.controllers
             var createDonorDto = new CreateDonorDTO
             {
                 stripe_token_id = "tok_test",
-                email_address = "me@here.com"
+                email_address = "me@here.com",
+                first_name = "",
+                last_name = ""
             };
 
             var lookupDonor = new MpContactDonor
@@ -237,7 +241,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, string.Empty, string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Returns(createDonor);
 
             IHttpActionResult result = _fixture.Post(createDonorDto);
 
@@ -292,7 +296,9 @@ namespace crds_angular.test.controllers
             var createDonorDto = new CreateDonorDTO
             {
                 stripe_token_id = "tok_test",
-                email_address = "me@here.com"
+                email_address = "me@here.com",
+                first_name = "",
+                last_name = ""
             };
 
             var lookupDonor = new MpContactDonor
@@ -305,7 +311,7 @@ namespace crds_angular.test.controllers
             var createException = new Exception("Danger, Will Robinson!");
 
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail(createDonorDto.email_address)).Returns(lookupDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Throws(createException);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(It.Is<MpContactDonor>(d => d == lookupDonor), string.Empty, string.Empty, string.Empty, createDonorDto.email_address, createDonorDto.stripe_token_id, It.IsAny<DateTime>())).Throws(createException);
 
             try
             {
@@ -493,7 +499,9 @@ namespace crds_angular.test.controllers
             var dto = new CreateDonorDTO
             {
                 email_address = "me@here.com",
-                stripe_token_id = "456"
+                stripe_token_id = "456",
+                first_name = "",
+                last_name = ""
             };
 
             var contactDonor = new MpContactDonor
@@ -508,7 +516,7 @@ namespace crds_angular.test.controllers
             var stripeException = new PaymentProcessorException(HttpStatusCode.PaymentRequired, "auxMessage", "type", "message", "code", "decline", "param");
             _donorService.Setup(mocked => mocked.GetContactDonorForEmail("me@here.com")).Returns(contactDonor);
             _donorService.Setup(
-                (mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, "me@here.com", "456", It.IsAny<DateTime>())))
+                (mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, string.Empty,  "me@here.com", "456", It.IsAny<DateTime>())))
                 .Throws(stripeException);
 
             var response = _fixture.Post(dto);
@@ -539,7 +547,7 @@ namespace crds_angular.test.controllers
             var stripeException = new PaymentProcessorException(HttpStatusCode.PaymentRequired, "auxMessage", "type", "message", "code", "decline", "param");
             _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(It.IsAny<string>())).Returns(contactDonor);
             _donorService.Setup(
-                (mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, String.Empty, "456", It.IsAny<DateTime>())))
+                (mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, string.Empty,  String.Empty, "456", It.IsAny<DateTime>())))
                 .Throws(stripeException);
 
             var response = _fixture.Post(dto);
@@ -567,7 +575,7 @@ namespace crds_angular.test.controllers
             };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(_authType + " " + _authToken)).Returns(contactDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, null, null)).Returns(contactDonorUpdated);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, string.Empty, string.Empty, null, null)).Returns(contactDonorUpdated);
             _donorService.Setup(mocked => mocked.CreateRecurringGift(_authType + " " + _authToken, recurringGiftDto, contactDonorUpdated)).Returns(123);
 
             var response = _fixture.CreateRecurringGift(recurringGiftDto);
@@ -601,7 +609,7 @@ namespace crds_angular.test.controllers
                                                                 new ContentBlock());
 
             _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(_authType + " " + _authToken)).Returns(contactDonor);
-            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, null, null)).Returns(contactDonorUpdated);
+            _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, string.Empty, string.Empty, null, null)).Returns(contactDonorUpdated);
             _donorService.Setup(mocked => mocked.CreateRecurringGift(_authType + " " + _authToken, recurringGiftDto, contactDonorUpdated)).Throws(stripeException);
 
             var response = _fixture.CreateRecurringGift(recurringGiftDto);
