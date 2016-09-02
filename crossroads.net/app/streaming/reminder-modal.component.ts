@@ -136,8 +136,7 @@ export class ReminderModalComponent {
   }
 
   public open(size) {
-    this.isSelectingDates = true;
-    this.model = new Reminder(this.reminderService);
+    this.resetForm()
     this.modal.open(size)
   }
 }
