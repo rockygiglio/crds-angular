@@ -61,9 +61,6 @@ namespace crds_angular.Models.Crossroads.Trip
             [JsonProperty(PropertyName = "allergies")]
             public string Allergies { get; set; }
 
-            [JsonProperty(PropertyName = "conditions")]
-            public string Conditions { get; set; }
-
             [JsonProperty(PropertyName = "guardianFirstName")]
             public string GuardianFirstName { get; set; }
 
@@ -107,6 +104,13 @@ namespace crds_angular.Models.Crossroads.Trip
 
             [JsonProperty(PropertyName = "emergencyContactSecondaryPhone")]
             public string EmergencyContactSecondaryPhone { get; set; }
+
+            [JsonProperty(PropertyName = "emergencyContactRelationship")]
+            public string EmergencyContactRelationship { get; set; }
+
+            [JsonProperty(PropertyName = "conditions")]
+            public string Conditions { get; set; }
+
         }
 
         public class ApplicationPageFour
