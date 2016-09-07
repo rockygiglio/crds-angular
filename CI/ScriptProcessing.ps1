@@ -6,7 +6,7 @@
 # becomes a problem we'll have to rework it a bit.
 
 param (
-    [string]$DBServer = "mp-int-db.cloudapp.net",
+    [string]$DBServer = "mp-int-db.centralus.cloudapp.azure.com",
     [string]$path = $(throw "-path is required."),
     [string]$SQLcmd = "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe",
     [string]$DBUser = $(Get-ChildItem Env:MP_SOURCE_DB_USER).Value, # Default to environment variable

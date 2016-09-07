@@ -1,8 +1,7 @@
 <div>
   <div class='row'>
     <div class="col-sm-10 col-sm-offset-1" >
-      <h1 class="page-header"> {{page0.signupService.campaign.nickname}} Signup</h1>
-      <h2 class="subheading">{{page0.signupService.campaign.name}}</h2>
+      <h1 class="page-header"> {{page0.signupService.campaign.name}} Signup</h1>
       <div class="well" ng-if='page0.signupService.campaign.isFull'>
         <span dynamic-content='$root.MESSAGES.tripIsFull.content | html'> </span> 
       </div>  
