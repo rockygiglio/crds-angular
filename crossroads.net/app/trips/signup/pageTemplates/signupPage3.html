@@ -92,19 +92,19 @@
         <div class="row">
             <div class="form-group col-sm-12">
               <label for="conditions">Please describe any medical condition(s) that may affect your ability to participate in this trip <small class="text-muted">Leave blank if it doesn't apply</small></label>
-              <textarea ng-model="tripsSignup.signupService.page2.conditions" class="form-control" rows="2" cols="1" id="conditions" maxlength="250"></textarea>
+              <textarea ng-model="tripsSignup.signupService.page3.conditions" class="form-control" rows="2" cols="1" id="conditions" maxlength="250"></textarea>
             </div><!--/form-group-->
         </div><!--/row-->
         <div class="row">
             <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestriction') }">
               <label class="block required control-label">Do you have any medication restrictions? <small class="text-muted">Leave blank if it doesn't apply</small></label>
               <label class="radio-inline" ng-click="isCollapsed = true">
-                <input ng-model="tripsSignup.signupService.page4.medicalRestriction" type="radio" value="yes" name="medicalRestriction" id="medicalRestriction-yes" ng-required="true">Yes
+                <input ng-model="tripsSignup.signupService.page3.medicalRestriction" type="radio" value="yes" name="medicalRestriction" id="medicalRestriction-yes" ng-required="true">Yes
               </label>
               <label class="radio-inline" ng-click="isCollapsed = false">
-                <input ng-model="tripsSignup.signupService.page4.medicalRestriction" type="radio" value="no" name="medicalRestriction" id="medicalRestriction-no" ng-required="true">No
+                <input ng-model="tripsSignup.signupService.page3.medicalRestriction" type="radio" value="no" name="medicalRestriction" id="medicalRestriction-no" ng-required="true">No
               </label>
-              <ng-messages for="tripsSignup.tripAppPage4.medicalRestriction.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestriction')">
+              <ng-messages for="tripsSignup.tripAppPage3.medicalRestriction.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestriction')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
@@ -112,8 +112,8 @@
             </div>
             <div class="form-group col-sm-12" collapse="!isCollapsed" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestrictionDetail') }">
               <label for="medical_restriction_detail" class="control-label required">Medication Restrictions. <small class="text-muted">List any medications you are allergic to or have any reactions to</small></label>
-              <textarea ng-model="tripsSignup.signupService.page4.medicalRestrictionDetail" cols="1" rows="4" class="form-control" id="medical_restriction_detail" maxlength="250" name="medicalRestrictionDetail" ng-required="isCollapsed"></textarea>
-              <ng-messages for="tripsSignup.tripAppPage4.medicalRestrictionDetail.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestrictionDetail')">
+              <textarea ng-model="tripsSignup.signupService.page3.medicalRestrictionDetail" cols="1" rows="4" class="form-control" id="medical_restriction_detail" maxlength="250" name="medicalRestrictionDetail" ng-required="isCollapsed"></textarea>
+              <ng-messages for="tripsSignup.tripAppPage3.medicalRestrictionDetail.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestrictionDetail')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
@@ -124,21 +124,21 @@
             <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicationIntake') }">
               <label class="block required control-label">Are you currently taking any medication?</label>
               <label class="radio-inline" ng-click="isCollapsed = true">
-                <input ng-model="tripsSignup.signupService.page4.medicationIntake" type="radio" value="yes" name="medicationIntake" id="medicationIntake-yes" ng-required="true">Yes
+                <input ng-model="tripsSignup.signupService.page3.medicationIntake" type="radio" value="yes" name="medicationIntake" id="medicationIntake-yes" ng-required="true">Yes
               </label>
               <label class="radio-inline" ng-click="isCollapsed = false">
-                <input ng-model="tripsSignup.signupService.page4.medicationIntake" type="radio" value="no" name="medicationIntake" id="medicationIntake-no" ng-required="true">No
+                <input ng-model="tripsSignup.signupService.page3.medicationIntake" type="radio" value="no" name="medicationIntake" id="medicationIntake-no" ng-required="true">No
               </label>
-              <ng-messages for="tripsSignup.tripAppPage4.medicationIntake.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicationIntake')">
+              <ng-messages for="tripsSignup.tripAppPage3.medicationIntake.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationIntake')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
               </ng-messages>
             </div>
-            <div class="form-group col-sm-12" collapse="!isCollapsed" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicationList') }">
+            <div class="form-group col-sm-12" collapse="!isCollapsed" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationList') }">
               <label for="medication_list" class="control-label required">List any medications you are taking</label>
-              <textarea ng-model="tripsSignup.signupService.page4.medicationList" cols="1" rows="4" class="form-control" id="medication_list" maxlength="250" name="medicationList" ng-required="isCollapsed"></textarea>
-              <ng-messages for="tripsSignup.tripAppPage4.medicationList.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicationList')">
+              <textarea ng-model="tripsSignup.signupService.page3.medicationList" cols="1" rows="4" class="form-control" id="medication_list" maxlength="250" name="medicationList" ng-required="isCollapsed"></textarea>
+              <ng-messages for="tripsSignup.tripAppPage3.medicationList.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationList')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
