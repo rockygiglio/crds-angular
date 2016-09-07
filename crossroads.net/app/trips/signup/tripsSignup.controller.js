@@ -59,6 +59,9 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.isNola = isNola;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
+    vm.medRestrictionsCollapsed = true;
+    vm.medRestrictionsToggled = medRestrictionsToggled;
+    vm.medTakingCollapsed = true;
     vm.numberOfPages = 0;
     vm.page6ButtonText = page6ButtonText();
     vm.pageHasErrors = true;
@@ -285,6 +288,15 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       }
 
       return false;
+    }
+
+    function medRestrictionsToggled( yesOrNo, medRestriction) {
+      if (yesOrNo == "no") {
+        medRestriction.notes = "";
+        vm.medRestrictionsCollapsed = true;
+      } else {
+        vm.medRestrictionsCollapsed = false;
+      }
     }
 
     function onBeforeUnload() {
