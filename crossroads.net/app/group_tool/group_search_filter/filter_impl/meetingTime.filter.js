@@ -9,7 +9,8 @@ class TimeRange {
 
   isWithinTimeRange(meetingTime) {
     let m = moment(meetingTime, 'HH:mm:ss');
-    // inclusive match on begin and end time
+    // inclusive match on begin and end time - can use inclusive match on moment.isBetween() if we update to 2.13 or higher
+    // http://momentjs.com/docs/#/query/is-between/
     return m.isSameOrAfter(this.beginTime) && m.isSameOrBefore(this.endTime);
   }
 }
