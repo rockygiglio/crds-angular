@@ -92,12 +92,20 @@
         <div class="row">
             <div class="form-group col-sm-12">
               <label for="medical_condition">Please describe any medical condition(s) that may affect your ability to participate in this trip. Leave blank if it doesn’t apply</label>
-              <textarea ng-model="tripsSignup.signupService.page4.medicalCondition" cols="1" rows="4" class="form-control" id="medical_condition" maxlength="250" name="medicalCondition"></textarea>
+              <textarea ng-model="tripsSignup.tripAppPage3.medicalCondition" 
+                        cols="1"
+                        rows="4"
+                        class="form-control"
+                        id="medical_condition"
+                        maxlength="250"
+                        name="medicalCondition">
+              </textarea>
             </div> 
         </div>
         <div class="row">
-            <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestriction') }">
-              <label class="block required control-label">Do you have any medication restrictions? Leave blank if it doesn’t <apply></apply></label>
+            <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestriction') }">
+              <label class="block required control-label">
+                Do you have any medication restrictions? Leave blank if it doesn’t <apply></apply></label>
               <label class="radio-inline" ng-click="isCollapsed = true">
                 <input ng-model="tripsSignup.signupService.page4.medicalRestriction" type="radio" value="yes" name="medicalRestriction" id="medicalRestriction-yes" ng-required="true">Yes
               </label>
@@ -110,9 +118,23 @@
                 </span>
               </ng-messages>
             </div>
-            <div class="form-group col-sm-12" collapse="!isCollapsed" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestrictionDetail') }">
-              <label for="medical_restriction_detail" class="control-label required">Medication Restrictions. List any medications you are allergic to or have any reactions to</label>
-              <textarea ng-model="tripsSignup.signupService.page4.medicalRestrictionDetail" cols="1" rows="4" class="form-control" id="medical_restriction_detail" maxlength="250" name="medicalRestrictionDetail" ng-required="isCollapsed"></textarea>
+            <div class="form-group col-sm-12" 
+                 collapse="!isCollapsed" 
+                 ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestrictionDetail') }">
+              <label for="medical_restriction_detail" 
+                     class="control-label required"> 
+                Medication Restrictions. List any medications you are allergic to or have any reactions to
+              </label>
+              <pre> {{signupStep.medicalRestrictions}} </pre>
+              <textarea ng-model="signupStep.medicalRestrictions.notes"
+                        cols="1" 
+                        rows="4" 
+                        class="form-control" 
+                        id="medical_restriction_detail" 
+                        maxlength="250" 
+                        name="medicalRestrictionDetail" 
+                        ng-required="isCollapsed">
+              </textarea>
               <ng-messages for="tripsSignup.tripAppPage4.medicalRestrictionDetail.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage4, 'medicalRestrictionDetail')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
