@@ -11,7 +11,7 @@ export default class GroupService {
     this.log = $log;
     this.resource = $resource;
     this.profile = Profile;
-    this.deferred = $q;
+    this.qApi = $q;
     this.auth = AuthService;
     this.lookupService = LookupService;
     this.imgService = ImageService;
@@ -58,6 +58,40 @@ export default class GroupService {
 
   getGenders() {
     return this.lookupService.Genders.query().$promise;
+  }
+
+  getGroupCategories() {
+    let categories = [
+      {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+        label: 'Interest',
+        labelDesc: 'groupToolInterestDetail',
+        placeholder: 'Ex. Boxing, XBox'
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+        label: 'Neighborhoods',
+        labelDesc: 'groupToolNeighborhoodDescription',
+        placeholder: 'Ex. Norwood, Gaslight'
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+        label: 'Spiritual Growth',
+        labelDesc: 'groupToolSpiritualGrowthDescription',
+        placeholder: 'Ex. Huddle, James'
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+        label: 'Life Stage',
+        labelDesc: 'groupToolLifeStageDescription',
+        placeholder: 'Ex. new family, young married, college, empty nesters'
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
+        label: 'Healing',
+        labelDesc: 'groupToolHealingDescription',
+        placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
+      }];
+
+    let deferred = this.qApi.defer();
+    deferred.resolve(categories);
+    return deferred.promise;
   }
 
   sendGroupInvitation(invitation) {

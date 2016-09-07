@@ -504,6 +504,7 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
+                    // TODO - These are needed in the filters as well; created getGroupCategories() on group.service.js - can we use the same in both places?
                     options: [
                         {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
