@@ -38,9 +38,10 @@ namespace crds_angular.Services
         public List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses)
         {
             var originCoords = _addressGeocodingService.GetGeoCoordinates(originAddress);
-            
+
+            //var numRequests = Math.Ceiling(destinationAddresses.Count / (decimal)MaxDestinationsPerRequest);
             var numRequests = (destinationAddresses.Count / MaxDestinationsPerRequest) + 1;
-            
+
             var results = new List<decimal?>(destinationAddresses.Count);
 
             for (var i = 0; i < numRequests; i++)
