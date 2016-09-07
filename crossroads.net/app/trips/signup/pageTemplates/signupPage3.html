@@ -106,7 +106,7 @@
         <div class="row">
           <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestriction') }">
             <label class="block required control-label">Do you have any medication restrictions? </label>
-            <label class="radio-inline" ng-click="tripsSignup.medRestrictionsToggled()">
+            <label class="radio-inline" ng-click="tripsSignup.medRestrictionsToggled('yes', signupStep.medicalRestrictions)">
               <input ng-model="tripsSignup.signupService.page3.medicalRestriction"
                      type="radio"
                      value="yes"
@@ -147,7 +147,7 @@
                       id="medical_restriction_detail" 
                       maxlength="250" 
                       name="medicalRestrictionDetail" 
-                      ng-required="isCollapsed">
+                      ng-required="!tripsSignup.medRestrictionsCollapsed">
             </textarea>
             <ng-messages for="tripsSignup.tripAppPage3.medicalRestrictionDetail.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestrictionDetail')">
               <span ng-message="required">
@@ -161,7 +161,7 @@
         <div class="row">
             <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationIntake') }">
               <label class="block required control-label">Are you currently taking any medication?</label>
-              <label class="radio-inline" ng-click="tripsSignup.medTakingCollapsed = false">
+              <label class="radio-inline" ng-click="tripsSignup.medTakingToggled('yes')">
                 <input ng-model="tripsSignup.signupService.page3.medicationIntake" 
                        type="radio" 
                        value="yes" 
@@ -170,7 +170,7 @@
                        required />
                   Yes
               </label>
-              <label class="radio-inline" ng-click="tripsSignup.medTakingCollapsed = true">
+              <label class="radio-inline" ng-click="tripsSignup.medTakingToggled('no', signupStep.medicationsTaking)">
                 <input ng-model="tripsSignup.signupService.page3.medicationIntake" 
                        type="radio"
                        value="no"
@@ -199,7 +199,7 @@
                         id="medication_list"
                         maxlength="250"
                         name="medicationList"
-                        ng-required="tripsSignup.medTakingCollapsed">
+                        ng-required="!tripsSignup.medTakingCollapsed">
               </textarea>
               <ng-messages for="tripsSignup.tripAppPage3.medicationList.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationList')">
                 <span ng-message="required">
