@@ -1,6 +1,7 @@
 
 import {SearchFilterValue} from './filter_impl/searchFilter';
 import AgeRangeFilter from './filter_impl/ageRange.filter'; 
+import CategoryFilter from './filter_impl/category.filter'; 
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
@@ -13,6 +14,7 @@ export default class GroupSearchResultsController {
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
+    this.categories = [];
     this.expanded = false;
     this.allFilters = [];
   }
@@ -30,6 +32,7 @@ export default class GroupSearchResultsController {
     this.allFilters = [
       // TODO - When new filters are implemented, add them here - they will display in the order specified in this array
       new AgeRangeFilter('Age Range', this.ageRanges),
+      new CategoryFilter('Category', this.categories),
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
@@ -39,6 +42,7 @@ export default class GroupSearchResultsController {
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
+    this.loadCategories();
   }
 
   applyFilters() {
@@ -111,6 +115,20 @@ export default class GroupSearchResultsController {
       (data) => {
         this.groupTypes.push.apply(this.groupTypes, data.attributes.map((a) => {
           return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
+  }
+
+  loadCategories() {
+    this.groupService.getGroupCategories().then(
+      (data) => {
+        this.categories.push.apply(this.categories, data.map((c) => {
+          return new SearchFilterValue(c.label, c.categoryId, false, c.labelDesc);
         }));
       },
       (/*err*/) => {
