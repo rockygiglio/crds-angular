@@ -9,6 +9,7 @@ export class Reminder {
   public phone:        string;
   public email:        string;
   public type:         string  = 'phone';
+  private startDate:   string;
   public isDayValid:   boolean;
   public isTimeValid:  boolean;
   public isPhoneValid: Boolean;
@@ -22,6 +23,13 @@ export class Reminder {
 
   public send(): Promise<any> {
     let result = null;
+    let offset = '-0500'; // default to EST offset
+    if (this.time.endsWith('EDT')) {
+      offset = '-0400';
+    }
+    let time = this.time.slice(0, this.time.length - 4); // strip of tz code and leading space
+
+    this.startDate = moment(`${this.day} ${time}${offset}`, 'MM/DD/YYYY h:mma').format();
 
     if (this.isValid()) {
       switch(this.type) {
