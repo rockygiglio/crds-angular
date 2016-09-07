@@ -9,16 +9,17 @@ class TimeRange {
 
   isWithinTimeRange(meetingTime) {
     let m = moment(meetingTime, 'HH:mm:ss');
-    return m.isBetween(this.beginTime, this.endTime);
+    // inclusive match on begin and end time
+    return m.isSameOrAfter(this.beginTime) && m.isSameOrBefore(this.endTime);
   }
 }
 
 export default class MeetingTimeFilter extends SearchFilter {
   constructor(filterName) {
     let filterValues = [
-      new SearchFilterValue('Mornings (before noon)', new TimeRange('00:00:00', '12:00:00'), false),
-      new SearchFilterValue('Afternoons (12 - 5pm)', new TimeRange('11:59:59', '17:00:01'), false),
-      new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:00', '00:00:00'), false)
+      new SearchFilterValue('Mornings (before noon)', new TimeRange('00:00:00', '11:59:59'), false),
+      new SearchFilterValue('Afternoons (12 - 5pm)', new TimeRange('12:00:00', '17:00:00'), false),
+      new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:01', '23:59:59'), false)
     ];
 
     super(filterName, filterValues, this._matchingFunction);
