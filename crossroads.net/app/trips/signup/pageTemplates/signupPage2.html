@@ -98,13 +98,6 @@
     </div><!--/row-->
 
     <div class="row">
-      <div class="form-group col-sm-12">
-        <label for="conditions">Please describe any medical condition(s) that may affect your ability to participate in this trip <small class="text-muted">Leave blank if it doesn't apply</small></label>
-        <textarea ng-model="tripsSignup.signupService.page2.conditions" class="form-control" rows="2" cols="1" id="conditions" maxlength="250"></textarea>
-      </div><!--/form-group-->
-    </div><!--/row-->
-
-    <div class="row">
       <div id="Site" class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'diet') }">
         <label for="diet" class="control-label">
           Please define any dietary restrictions <small class="text-muted">If you mark yes we will do our best to be sensitive to your diet during the trip</small>        </label>
