@@ -4,6 +4,7 @@ import AgeRangeFilter from './filter_impl/ageRange.filter';
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
@@ -11,6 +12,7 @@ export default class GroupSearchResultsController {
     this.groupService = GroupService;
     this.ageRanges = [];
     this.groupTypes = [];
+    this.days = [];
     this.expanded = false;
     this.allFilters = [];
   }
@@ -30,11 +32,13 @@ export default class GroupSearchResultsController {
       new AgeRangeFilter('Age Range', this.ageRanges),
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
-      new LocationFilter('Location')
+      new LocationFilter('Location'),
+      new MeetingDayFilter('Day', this.days)
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
+    this.loadDays();
   }
 
   applyFilters() {
@@ -115,4 +119,20 @@ export default class GroupSearchResultsController {
         () => {
       });
   }  
+
+  loadDays() {
+    this.groupService.getDaysOfTheWeek().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        this.days.push.apply(this.days, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (err) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }
+    ).finally(
+      () => {
+      });
+  }
 }

@@ -5,6 +5,7 @@ import AgeRangeFilter from '../../../app/group_tool/group_search_filter/filter_i
 import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filter_impl/kidsWelcome.filter';
 import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
+import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
 
 describe('GroupSearchFilter', () => {
   let fixture, groupService;
@@ -22,6 +23,7 @@ describe('GroupSearchFilter', () => {
     it('should initialize properties', () => {
       expect(fixture.ageRanges).toEqual([]);
       expect(fixture.groupTypes).toEqual([]);
+      expect(fixture.days).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
     });
@@ -60,14 +62,18 @@ describe('GroupSearchFilter', () => {
       let groupTypes = [4, 5, 6];
       spyOn(fixture, 'loadGroupTypes').and.callFake(() => {});
 
+      let meetingDays = [7, 8, 9];
+      spyOn(fixture, 'loadDays').and.callFake(() => {});
+
       fixture.allFilters = [];
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
+      fixture.days = meetingDays;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(4);
+      expect(fixture.allFilters.length).toEqual(5);
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
@@ -87,6 +93,10 @@ describe('GroupSearchFilter', () => {
       let locationFilter = fixture.allFilters[i++];
       expect(locationFilter instanceof LocationFilter).toBeTruthy();
       expect(locationFilter.getName()).toEqual('Location');
+
+      let meetingDayFilter = fixture.allFilters[i++];
+      expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
+      expect(meetingDayFilter.getName()).toEqual('Day');
     });
   });
 
