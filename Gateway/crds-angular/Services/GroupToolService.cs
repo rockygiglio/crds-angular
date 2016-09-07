@@ -416,6 +416,7 @@ namespace crds_angular.Services
         public void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message)
         {
             var requestor = _participantRepository.GetParticipantRecord(token);
+            var requestorContact = _contactRepository.GetContactById(requestor.ContactId);
             var group = _groupService.GetGroupDetails(groupId);
 
             var fromContact = new MpContact
@@ -435,12 +436,27 @@ namespace crds_angular.Services
                 Select(groupParticipant => new MpContact
                        {
                            ContactId = groupParticipant.ContactId,
-                           EmailAddress = groupParticipant.Email
+                           EmailAddress = groupParticipant.Email,
+                           LastName = groupParticipant.LastName,
+                           Nickname = groupParticipant.NickName
                        }).ToList();
+
+            var fromString = "<p><i>This email was sent from: " + requestorContact.Nickname + " " + requestorContact.Last_Name + " (" + requestor.EmailAddress + ")</i></p>";
+
+            var toString = "<p><i>This email was sent to: ";
+
+            foreach (var item in leaders)
+            {
+                toString += item.Nickname + " " + item.LastName + " (" + item.EmailAddress + "), ";
+            }
+
+            char[] trailingChars = { ',', ' ' };
+            toString = toString.TrimEnd(trailingChars);
+            toString += "</i></p>";
 
             var email = new MpCommunication
             {
-                EmailBody = message.Body,
+                EmailBody = fromString + "<p>" + message.Body + "</p>" + toString,
                 EmailSubject = $"Crossroads Group {@group.GroupName}: {message.Subject}",
                 AuthorUserId = _defaultAuthorUserId,
                 DomainId = _domainId,
