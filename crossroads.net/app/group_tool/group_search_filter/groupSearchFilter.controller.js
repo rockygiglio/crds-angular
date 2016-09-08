@@ -5,16 +5,22 @@ import CategoryFilter from './filter_impl/category.filter';
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
-import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
+import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
+    this.createGroupService = CreateGroupService;
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
     this.categories = [];
+    this.frequencies = [];
+    this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
   }
@@ -36,13 +42,18 @@ export default class GroupSearchResultsController {
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
-      new MeetingDayFilter('Day', this.days)
+      new MeetingDayFilter('Day', this.days),
+      new MeetingTimeFilter('Time'),
+      new FrequencyFilter('Frequency', this.frequencies),
+      new LeadersSiteFilter('Leaders Site', this.leadersSite)
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
     this.loadCategories();
+    this.loadFrequencies();
+    this.loadLeadersSite();
   }
 
   applyFilters() {
@@ -152,6 +163,30 @@ export default class GroupSearchResultsController {
       }
     ).finally(
       () => {
+      });
+  }
+
+  loadFrequencies() {
+    let frequencies = this.createGroupService.getMeetingFrequencies();
+    frequencies = _.sortBy( frequencies, 'meetingFrequencyId' );
+
+    this.frequencies.push.apply(this.frequencies, frequencies.map((a) => {
+      return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
+    }));
+  }
+
+  loadLeadersSite() {
+    this.groupService.getSites().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        this.leadersSite.push.apply(this.leadersSite, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
       });
   }
 }

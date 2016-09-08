@@ -15,7 +15,8 @@
             ChildcareTimes: $resource(__API_ENDPOINT__ + 'api/lookup/childcaretimes/:congregationId'),
             Sites: $resource(__API_ENDPOINT__ + 'api/lookup/sites'),
             Genders: $resource(__API_ENDPOINT__ + 'api/lookup/genders'),
-            DaysOfTheWeek: $resource(__API_ENDPOINT__ + 'api/lookup/meetingdays')
+            DaysOfTheWeek: $resource(__API_ENDPOINT__ + 'api/lookup/meetingdays'),
+            MeetingFrequencies: $resource(__API_ENDPOINT__ + 'api/lookup/meetingdays'),
         };
     }
 
