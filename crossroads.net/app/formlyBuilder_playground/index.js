@@ -1,3 +1,4 @@
+import PlaygroundService from './services/playground.service.js';
 (function() {
   'use strict';
   
@@ -6,7 +7,9 @@
   angular.module(MODULES.FORMLY_BUILDER_PLAYGROUND, [
     MODULES.COMMON,
     MODULES.CORE
-  ]).config(require('./formlyBuilder_playground.routes'))
-    ;
+  ])
+  .config(require('./formlyBuilder_playground.routes'))
+  .service('PlaygroundService', PlaygroundService)
+  ;
 
 })();
