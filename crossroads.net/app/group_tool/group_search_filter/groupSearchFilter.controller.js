@@ -6,6 +6,7 @@ import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter';
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
 import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
+import MeetingTimeFilter from './filter_impl/meetingTime.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
@@ -36,7 +37,8 @@ export default class GroupSearchResultsController {
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
-      new MeetingDayFilter('Day', this.days)
+      new MeetingDayFilter('Day', this.days),
+      new MeetingTimeFilter('Time')
     ];
 
     this.loadAgeRanges();
