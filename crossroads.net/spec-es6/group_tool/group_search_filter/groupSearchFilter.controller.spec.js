@@ -7,6 +7,7 @@ import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filte
 import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
 import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
+import MeetingTimeFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingTime.filter';
 import FrequencyFilter from '../../../app/group_tool/group_search_filter/filter_impl/frequency.filter';
 
 describe('GroupSearchFilter', () => {
@@ -117,6 +118,10 @@ describe('GroupSearchFilter', () => {
       let meetingDayFilter = fixture.allFilters[i++];
       expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
       expect(meetingDayFilter.getName()).toEqual('Day');
+
+      let meetingTimeFilter = fixture.allFilters[i++];
+      expect(meetingTimeFilter instanceof MeetingTimeFilter).toBeTruthy();
+      expect(meetingTimeFilter.getName()).toEqual('Time');
 
       let frequencyFilter = fixture.allFilters[i++];
       expect(frequencyFilter instanceof FrequencyFilter).toBeTruthy();

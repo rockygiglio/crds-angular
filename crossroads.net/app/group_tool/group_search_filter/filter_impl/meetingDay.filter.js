@@ -8,14 +8,14 @@ export default class MeetingDayFilter extends SearchFilter {
 
   _matchingFunction(result) {
     // Guard against errors if group has no days.  Shouldn't happen, but just in case...
-    if(!result.meetingDay) {
+    if(!result.meetingDay && !result.meetingTimeFrequency) {
       return false;
     }
 
     let selectedMeetingDays = this.getSelectedValues();
 
     let filtered = selectedMeetingDays.filter((a) => {
-      return a.getName() === result.meetingDay;
+      return a.getName() === result.meetingDay || a.getName() === result.meetingTimeFrequency;
     });
 
     return filtered !== undefined && filtered.length > 0;

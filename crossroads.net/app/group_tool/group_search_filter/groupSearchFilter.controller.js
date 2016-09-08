@@ -6,7 +6,8 @@ import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter';
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
 import MeetingDayFilter from './filter_impl/meetingDay.filter';
-import FrequencyFilter from './filter_impl/frequency.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
@@ -40,6 +41,7 @@ export default class GroupSearchResultsController {
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
       new MeetingDayFilter('Day', this.days),
+      new MeetingTimeFilter('Time')
       new FrequencyFilter('Frequency', this.frequencies)
     ];
 
@@ -147,6 +149,7 @@ export default class GroupSearchResultsController {
     this.groupService.getDaysOfTheWeek().then(
       (data) => {
         data = _.sortBy( data, 'dp_RecordID' );
+        data.push({dp_RecordID: 0, dp_RecordName: 'Flexible Meeting Time'});
         this.days.push.apply(this.days, data.map((a) => {
           return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
         }));
