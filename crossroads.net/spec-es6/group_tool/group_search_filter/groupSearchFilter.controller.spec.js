@@ -6,6 +6,7 @@ import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filte
 import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
 import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
+import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filter_impl/leadersSite.filter';
 
 describe('GroupSearchFilter', () => {
   let fixture, groupService;
@@ -24,6 +25,7 @@ describe('GroupSearchFilter', () => {
       expect(fixture.ageRanges).toEqual([]);
       expect(fixture.groupTypes).toEqual([]);
       expect(fixture.days).toEqual([]);
+      expect(fixture.leadersSite).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
     });
@@ -65,15 +67,19 @@ describe('GroupSearchFilter', () => {
       let meetingDays = [7, 8, 9];
       spyOn(fixture, 'loadDays').and.callFake(() => {});
 
+      let leadersSite = [17, 18, 19];
+      spyOn(fixture, 'loadLeadersSite').and.callFake(() => {});
+
       fixture.allFilters = [];
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
       fixture.days = meetingDays;
+      fixture.leadersSite = leadersSite;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(5);
+      expect(fixture.allFilters.length).toEqual(6);
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
@@ -97,6 +103,10 @@ describe('GroupSearchFilter', () => {
       let meetingDayFilter = fixture.allFilters[i++];
       expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
       expect(meetingDayFilter.getName()).toEqual('Day');
+
+      let leadersSiteFilter = fixture.allFilters[i++];
+      expect(leadersSiteFilter instanceof LeadersSiteFilter).toBeTruthy();
+      expect(leadersSiteFilter.getName()).toEqual('Leaders Site');
     });
   });
 

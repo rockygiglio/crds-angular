@@ -5,6 +5,7 @@ import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter';
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
 import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
+import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
@@ -13,6 +14,7 @@ export default class GroupSearchResultsController {
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
+    this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
   }
@@ -33,12 +35,14 @@ export default class GroupSearchResultsController {
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
-      new MeetingDayFilter('Day', this.days)
+      new MeetingDayFilter('Day', this.days),
+      new LeadersSiteFilter('Leaders Site', this.leadersSite),
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
+    this.loadLeadersSite();
   }
 
   applyFilters() {
@@ -136,4 +140,19 @@ export default class GroupSearchResultsController {
       () => {
       });
   }
+
+  loadLeadersSite() {
+    this.groupService.getSites().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        this.leadersSite.push.apply(this.leadersSite, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
+  }  
 }
