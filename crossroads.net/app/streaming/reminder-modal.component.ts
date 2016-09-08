@@ -119,9 +119,11 @@ export class ReminderModalComponent {
   resetForm() {
     this.model = new Reminder(this.reminderService);
     this.model.day = this.nextDate();
-    this.formSuccess = this.formError = false;
-    this.formSuccess = false;
-    this.loading = false;
+    
+    this.formError     = false;
+    this.dateTimeError = false;
+    this.formSuccess   = false;
+    this.loading       = false;
   }
 
   close() {
