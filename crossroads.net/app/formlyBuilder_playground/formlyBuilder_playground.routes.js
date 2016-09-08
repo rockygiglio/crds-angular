@@ -14,7 +14,9 @@ import html from './formlyBuilder_playground.html';
     $stateProvider.state('formlybuilder-playground', {
       parent: 'noSideBar',
       url: '/formlybuilder-playground',
-      template: html
+      template: html,
+      controller: 'PlaygroundController',
+      controllerAs: 'ctrl'
     });
   }
 

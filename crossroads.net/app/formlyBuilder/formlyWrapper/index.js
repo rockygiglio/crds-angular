@@ -1,3 +1,5 @@
+import WrapperDirective from './directives/formlyWrapper.directive';
+
 export default ngModule => {
-  //require('./multiCheckBoxCombo')(ngModule);
+  ngModule.directive('formlyWrapper', () => new WrapperDirective);
 }

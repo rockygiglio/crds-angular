@@ -1,4 +1,5 @@
-import PlaygroundService from './services/playground.service.js';
+import PlaygroundService from './services/playground.service';
+import PlaygroundController from './formlyBuilder_playground.controller';
 (function() {
   'use strict';
   
@@ -10,6 +11,7 @@ import PlaygroundService from './services/playground.service.js';
   ])
   .config(require('./formlyBuilder_playground.routes'))
   .service('PlaygroundService', PlaygroundService)
+  .controller('PlaygroundController', PlaygroundController)
   ;
 
 })();
