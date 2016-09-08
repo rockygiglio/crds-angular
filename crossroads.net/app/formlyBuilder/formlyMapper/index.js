@@ -1,3 +1,4 @@
 export default ngModule => {
-  //require('./multiCheckBoxCombo')(ngModule);
+  require('./services')(ngModule);
+  require('./types')(ngModule);
 } 

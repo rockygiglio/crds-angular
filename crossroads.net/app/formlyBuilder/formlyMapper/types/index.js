@@ -1,5 +1,4 @@
 export default ngModule => {
-    require('./firstName')(ngModule);
-    require('./lastName')(ngModule);
-    require('./preferredName')(ngModule);
-}
+  require('./compositions')(ngModule);
+  require('./elements')(ngModule);
+} 
