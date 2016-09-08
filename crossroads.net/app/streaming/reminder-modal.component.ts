@@ -19,6 +19,7 @@ var _ = require('lodash');
   providers: [],
   pipes: []
 })
+
 export class ReminderModalComponent {
   @ViewChild('reminderModal') modal: ModalComponent;
   deliveryType:     String  = 'email';
@@ -119,7 +120,7 @@ export class ReminderModalComponent {
   resetForm() {
     this.model = new Reminder(this.reminderService);
     this.model.day = this.nextDate();
-    
+
     this.formError     = false;
     this.dateTimeError = false;
     this.formSuccess   = false;
