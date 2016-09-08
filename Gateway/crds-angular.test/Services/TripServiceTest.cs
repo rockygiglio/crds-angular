@@ -620,8 +620,7 @@ namespace crds_angular.test.Services
             depositInfo.PaymentMethod = "Bank";
 
             var pageTwo = new TripApplicationDto.ApplicationPageTwo();
-            pageTwo.Allergies = "";
-            pageTwo.Conditions = "";
+            pageTwo.Allergies = "";            
             pageTwo.GuardianFirstName = "Bob";
             pageTwo.GuardianLastName = "Smith";
             pageTwo.Referral = "";
@@ -636,6 +635,7 @@ namespace crds_angular.test.Services
             pageThree.EmergencyContactLastName = "roberts";
             pageThree.EmergencyContactPrimaryPhone = "888-888-8888";
             pageThree.EmergencyContactSecondaryPhone = "555-555-5555";
+            pageThree.Conditions = "";
 
             var pageFour = new TripApplicationDto.ApplicationPageFour();
             pageFour.GroupCommonName = "group name";

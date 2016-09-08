@@ -95,7 +95,8 @@
         emergencyContactLastName: null,
         emergencyContactEmail: null,
         emergencyContactPrimaryPhone: null,
-        emergencyContactSecondaryPhone: null
+        emergencyContactSecondaryPhone: null,
+        emergencyContactRelationship: null
       };
     }
 
