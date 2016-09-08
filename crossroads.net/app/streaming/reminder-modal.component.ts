@@ -57,7 +57,7 @@ export class ReminderModalComponent {
     this.model.isEmailValid = this.isValid(reminderForm.form.controls.email);
     this.model.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
 
-    if (this.model.isDayValid === false && this.model.isTimeValid === false) {
+    if (this.model.isDayValid === false || this.model.isTimeValid === false) {
       this.dateTimeError = true;
     }
 
