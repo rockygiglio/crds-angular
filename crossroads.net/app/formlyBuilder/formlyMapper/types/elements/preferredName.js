@@ -1,10 +1,6 @@
-export default ngModule => {
-    ngModule.run(addPreferredName);
-
-    function addPreferredName(formBuilderConfig) {
-        formBuilderConfig.setElement({
-            name: 'preferredName',
-            model: require('./models/preferredName.json')
-        });
-    }
+export default function addPreferredName(formlyMapperConfig) {
+    formlyMapperConfig.setElement({
+        name: 'preferredName',
+        model: require('./models/preferredName.json')
+    });
 }

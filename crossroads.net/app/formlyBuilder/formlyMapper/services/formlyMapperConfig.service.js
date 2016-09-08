@@ -1,5 +1,4 @@
-
-export default class formBuilderConfig {
+export default class formlyMapperConfig {
     /*@ngInject*/
     constructor($log) {
         this.log = $log;

@@ -1,12 +1,8 @@
-export default ngModule => {
-    ngModule.run(addPerson);
-
-    function addPerson(formBuilderConfig) {
-        formBuilderConfig.setComposition({
-            name: 'person',
-            elements: [
-                "firstName","lastName","preferredName"
-            ]
-        });
-    }
+export default function Person(formlyMapperConfig) {
+    formlyMapperConfig.setComposition({
+        name: 'person',
+        elements: [
+            "firstName", "lastName", "preferredName"
+        ]
+    });
 }

@@ -1,3 +1,5 @@
+import formlyMapperConfig from './formlyMapperConfig.service'
+
 export default ngModule => {
-  //require('./multiCheckBoxCombo')(ngModule);
+    ngModule.service('formlyMapperConfig', formlyMapperConfig);
 }

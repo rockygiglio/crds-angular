@@ -9,5 +9,5 @@
   require('./formlyConfig/types')(ngModule);
   require('./formlyConfig/wrappers')(ngModule);
   require('./formlyWrapper')(ngModule);
-  require('./formlyMapper')(ngModule);
+  require('./formlyMapper/')(ngModule);
 })();

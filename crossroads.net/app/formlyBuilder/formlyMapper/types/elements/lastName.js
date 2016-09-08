@@ -1,10 +1,6 @@
-export default ngModule => {
-    ngModule.run(addLastName);
-
-    function addLastName(formBuilderConfig) {
-        formBuilderConfig.setElement({
-            name: 'lastName',
-            model: require('./models/lastName.json')
-        });
-    }
+export default function addLastName(formlyMapperConfig) {
+    formlyMapperConfig.setElement({
+        name: 'lastName',
+        model: require('./models/lastName.json')
+    });
 }
