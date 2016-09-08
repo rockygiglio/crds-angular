@@ -5,16 +5,19 @@ import CategoryFilter from './filter_impl/category.filter';
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
-import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import FrequencyFilter from './filter_impl/frequency.filter';
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
+    this.createGroupService = CreateGroupService;
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
     this.categories = [];
+    this.frequencies = [];
     this.expanded = false;
     this.allFilters = [];
   }
@@ -36,13 +39,15 @@ export default class GroupSearchResultsController {
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
-      new MeetingDayFilter('Day', this.days)
+      new MeetingDayFilter('Day', this.days),
+      new FrequencyFilter('Frequency', this.frequencies)
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
     this.loadCategories();
+    this.loadFrequencies();
   }
 
   applyFilters() {
@@ -152,5 +157,14 @@ export default class GroupSearchResultsController {
     ).finally(
       () => {
       });
+  }
+
+  loadFrequencies() {
+    let frequencies = this.createGroupService.getMeetingFrequencies();
+    frequencies = _.sortBy( frequencies, 'meetingFrequencyId' );
+
+    this.frequencies.push.apply(this.frequencies, frequencies.map((a) => {
+      return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
+    }));
   }
 }
