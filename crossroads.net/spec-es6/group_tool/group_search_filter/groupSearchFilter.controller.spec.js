@@ -2,14 +2,17 @@
 import constants from 'crds-constants';
 import GroupSearchFilter from '../../../app/group_tool/group_search_filter/groupSearchFilter.controller';
 import AgeRangeFilter from '../../../app/group_tool/group_search_filter/filter_impl/ageRange.filter';
+import CategoryFilter from '../../../app/group_tool/group_search_filter/filter_impl/category.filter';
 import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filter_impl/kidsWelcome.filter';
 import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
 import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
+import MeetingTimeFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingTime.filter';
+import FrequencyFilter from '../../../app/group_tool/group_search_filter/filter_impl/frequency.filter';
 import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filter_impl/leadersSite.filter';
 
 describe('GroupSearchFilter', () => {
-  let fixture, groupService;
+  let fixture, groupService, createGroupService;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
@@ -17,7 +20,10 @@ describe('GroupSearchFilter', () => {
     groupService = {
       getAgeRanges: function () { }
     };
-    fixture = new GroupSearchFilter(groupService);
+    createGroupService = {
+      getMeetingFrequencies: function () { }
+    };
+    fixture = new GroupSearchFilter(groupService, createGroupService);
   }));
 
   describe('the constructor', () => {
@@ -25,14 +31,16 @@ describe('GroupSearchFilter', () => {
       expect(fixture.ageRanges).toEqual([]);
       expect(fixture.groupTypes).toEqual([]);
       expect(fixture.days).toEqual([]);
+      expect(fixture.categories).toEqual([]);
       expect(fixture.leadersSite).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
+      expect(fixture.frequencies).toEqual([]);
     });
   });
 
   describe('$onInit function', () => {
-    it('should load age ranges', () => {
+    it('should initialize filters', () => {
       spyOn(fixture, 'initializeFilters').and.callFake(() => {});
       fixture.$onInit();
       expect(fixture.initializeFilters).toHaveBeenCalled();
@@ -67,6 +75,12 @@ describe('GroupSearchFilter', () => {
       let meetingDays = [7, 8, 9];
       spyOn(fixture, 'loadDays').and.callFake(() => {});
 
+      let categories = [10, 11, 12];
+      spyOn(fixture, 'loadCategories').and.callFake(() => {});
+
+      let frequencies = [20, 21, 22];
+      spyOn(fixture, 'loadFrequencies').and.callFake(() => {});
+
       let leadersSite = [17, 18, 19];
       spyOn(fixture, 'loadLeadersSite').and.callFake(() => {});
 
@@ -74,18 +88,26 @@ describe('GroupSearchFilter', () => {
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
       fixture.days = meetingDays;
+      fixture.categories = categories;
+      fixture.frequencies = frequencies;
       fixture.leadersSite = leadersSite;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(6);
+      expect(fixture.allFilters.length).toEqual(9);
+
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
       expect(ageRangeFilter instanceof AgeRangeFilter).toBeTruthy();
       expect(ageRangeFilter.getName()).toEqual('Age Range');
       expect(ageRangeFilter.getValues()).toBe(ageRanges);
+
+      let categoryFilter = fixture.allFilters[i++];
+      expect(categoryFilter instanceof CategoryFilter).toBeTruthy();
+      expect(categoryFilter.getName()).toEqual('Category');
+      expect(categoryFilter.getValues()).toBe(categories);
 
       let groupTypeFilter = fixture.allFilters[i++];
       expect(groupTypeFilter instanceof GroupTypeFilter).toBeTruthy();
@@ -103,6 +125,14 @@ describe('GroupSearchFilter', () => {
       let meetingDayFilter = fixture.allFilters[i++];
       expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
       expect(meetingDayFilter.getName()).toEqual('Day');
+
+      let meetingTimeFilter = fixture.allFilters[i++];
+      expect(meetingTimeFilter instanceof MeetingTimeFilter).toBeTruthy();
+      expect(meetingTimeFilter.getName()).toEqual('Time');
+
+      let frequencyFilter = fixture.allFilters[i++];
+      expect(frequencyFilter instanceof FrequencyFilter).toBeTruthy();
+      expect(frequencyFilter.getName()).toEqual('Frequency');
 
       let leadersSiteFilter = fixture.allFilters[i++];
       expect(leadersSiteFilter instanceof LeadersSiteFilter).toBeTruthy();

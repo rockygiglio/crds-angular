@@ -939,6 +939,14 @@ namespace crds_angular.test.Services
                 Subject = "I need help"
             };
 
+            var requestorContact = new MpMyContact
+            {
+                Contact_ID = 123,
+                Email_Address = "test@test.com",
+                Last_Name = "Smith",
+                Nickname = "Test"
+            };
+
             var group = new GroupDTO();
             group.GroupId = 1231;
             group.GroupName = "Test Group";
@@ -952,6 +960,7 @@ namespace crds_angular.test.Services
                 }
             };
 
+            _contactRepository.Setup(m => m.GetContactById(123)).Returns(requestorContact);
             _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
             _participantRepository.Setup(m => m.GetParticipantRecord(It.IsAny<string>())).Returns(groupParticipantDTO);
             _groupService.Setup(m => m.GetGroupDetails(It.IsAny<int>())).Returns(group);

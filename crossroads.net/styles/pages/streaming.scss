@@ -200,7 +200,7 @@ streaming {
       }
 
       a.btn-sm {
-        @include button-variant(#FFF, lighten($cr-streaming-blue, 12.5%), $cr-streaming-blue);
+        @include button-variant(#FFF, lighten($cr-streaming-blue, 12.5%), lighten($cr-streaming-blue, 12.5%));
         font-weight: 400;
         font-size: 110%;
       }

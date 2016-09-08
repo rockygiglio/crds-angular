@@ -1,19 +1,25 @@
 
 import {SearchFilterValue} from './filter_impl/searchFilter';
 import AgeRangeFilter from './filter_impl/ageRange.filter'; 
+import CategoryFilter from './filter_impl/category.filter'; 
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
-import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
 import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
+    this.createGroupService = CreateGroupService;
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
+    this.categories = [];
+    this.frequencies = [];
     this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
@@ -32,16 +38,21 @@ export default class GroupSearchResultsController {
     this.allFilters = [
       // TODO - When new filters are implemented, add them here - they will display in the order specified in this array
       new AgeRangeFilter('Age Range', this.ageRanges),
+      new CategoryFilter('Category', this.categories),
       new GroupTypeFilter('Group Type', this.groupTypes),
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
       new MeetingDayFilter('Day', this.days),
-      new LeadersSiteFilter('Leaders Site', this.leadersSite),
+      new MeetingTimeFilter('Time'),
+      new FrequencyFilter('Frequency', this.frequencies),
+      new LeadersSiteFilter('Leaders Site', this.leadersSite)
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
+    this.loadCategories();
+    this.loadFrequencies();
     this.loadLeadersSite();
   }
 
@@ -122,6 +133,20 @@ export default class GroupSearchResultsController {
       }).finally(
         () => {
       });
+  }
+
+  loadCategories() {
+    this.groupService.getGroupCategories().then(
+      (data) => {
+        this.categories.push.apply(this.categories, data.map((c) => {
+          return new SearchFilterValue(c.label, c.categoryId, false, c.labelDesc);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
   }  
 
   loadDays() {
@@ -141,6 +166,15 @@ export default class GroupSearchResultsController {
       });
   }
 
+  loadFrequencies() {
+    let frequencies = this.createGroupService.getMeetingFrequencies();
+    frequencies = _.sortBy( frequencies, 'meetingFrequencyId' );
+
+    this.frequencies.push.apply(this.frequencies, frequencies.map((a) => {
+      return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
+    }));
+  }
+
   loadLeadersSite() {
     this.groupService.getSites().then(
       (data) => {
@@ -154,5 +188,5 @@ export default class GroupSearchResultsController {
       }).finally(
         () => {
       });
-  }  
+  }
 }
