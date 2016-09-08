@@ -123,7 +123,7 @@
     WARNING!!! If you make a change here, apply it to the desktop results list above
     -->
   <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-md hidden-lg push-half-top">
-    <div ng-repeat-start="group in groupSearchResults.results"
+    <div ng-repeat-start="group in groupSearchResults.tableParams.settings().dataset"
          class="group-result soft-half-bottom soft-half-top"
          ng-click="group.expanded = true" ng-if="!group.expanded">
       <div class="row">
