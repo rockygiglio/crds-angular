@@ -41,7 +41,7 @@ export default class GroupSearchResultsController {
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
       new MeetingDayFilter('Day', this.days),
-      new MeetingTimeFilter('Time')
+      new MeetingTimeFilter('Time'),
       new FrequencyFilter('Frequency', this.frequencies)
     ];
 

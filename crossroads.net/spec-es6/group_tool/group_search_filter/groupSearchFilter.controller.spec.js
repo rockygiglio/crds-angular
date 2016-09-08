@@ -89,7 +89,7 @@ describe('GroupSearchFilter', () => {
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(7);
+      expect(fixture.allFilters.length).toEqual(8);
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
