@@ -12,11 +12,8 @@ using GoogleMapsAPI.NET.API.Common.Components;
 using GoogleMapsAPI.NET.API.DistanceMatrix.Components;
 using GoogleMapsAPI.NET.API.DistanceMatrix.Responses;
 using GoogleMapsAPI.NET.Requests;
-using GoogleMapsAPI.NET.Web.Extensions;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Linq.Expressions;
 
 namespace crds_angular.test.Services
 {
