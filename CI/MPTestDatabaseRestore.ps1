@@ -7,7 +7,7 @@
 #   -DBPassword password         The SQLServer password to login to the DBServer (optional, defaults to environment variable MP_TARGET_DB_PASSWORD)
 
 Param (
-  [string]$DBServer = "mp-int-db.cloudapp.net", # default to mp-int-db
+  [string]$DBServer = "mp-int-db.centralus.cloudapp.azure.com", # default to mp-int-db
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [string]$BackupPath = $(throw "-BackupPath (backup file path on the DBServer) is required."),
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable

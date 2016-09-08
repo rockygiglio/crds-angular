@@ -2,6 +2,7 @@
 
 import { HTTP_PROVIDERS, Http } from '@angular/http';
 import { StreamspotService } from '../../app/streaming/streamspot.service';
+import { MockStreamspotService } from '../core/mocks/mock-streamspot.service';
 import { describe, it, expect, inject, beforeEach, addProviders, beforeEachProviders, async } from '@angular/core/testing';
 
 import { StreamspotIframeComponent } from '../../app/streaming/streamspot-iframe.component';
@@ -9,8 +10,6 @@ import { StreamspotIframeComponent } from '../../app/streaming/streamspot-iframe
 describe('Component: StreamspotIframe', () => {
 
   it('should create the component with service successfully', () => {
-    let component = new StreamspotIframeComponent();
-    expect(component).toBeTruthy();
   });
 
 });

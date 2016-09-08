@@ -17,11 +17,11 @@ export class ReminderService {
     let body = JSON.stringify({ 
       "templateId": 0,
       "mergeData": {
-        "Event_Date": reminder.day,
+        "Event_Date":       reminder.day,
         "Event_Start_Time": reminder.time
       },
-      "toPhoneNumber": reminder.phone,
-      "startDate": moment().format()
+      "startDate":     reminder.startDate,
+      "toPhoneNumber": reminder.phone
     });
     let options = new RequestOptions({ headers: this.headers });
 
@@ -33,9 +33,9 @@ export class ReminderService {
   sendEmailReminder(reminder): Promise<any> {
     let body = JSON.stringify({
       "emailAddress":   reminder.email,
-      "startDate":      moment().format(),
+      "startDate":      reminder.startDate,
       "mergeData": {
-        "Event_Date": reminder.day,
+        "Event_Date":       reminder.day,
         "Event_Start_Time": reminder.time
       },
     })

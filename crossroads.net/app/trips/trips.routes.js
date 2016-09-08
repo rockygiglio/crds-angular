@@ -214,21 +214,6 @@
         resolve: {
           AttributeTypeService: 'AttributeTypeService',
           $stateParams: '$stateParams',
-          ScrubTopSizes: function(AttributeTypeService, $stateParams) {
-            if ($stateParams.stepId === '2') {
-              return AttributeTypeService.AttributeTypes().get({ id: attributes.SCRUB_TOP_SIZES }).$promise;
-            }
-
-            return null;
-          },
-
-          ScrubBottomSizes: function(AttributeTypeService, $stateParams) {
-            if ($stateParams.stepId === '2') {
-              return AttributeTypeService.AttributeTypes().get({ id: attributes.SCRUB_BOTTOM_SIZES }).$promise;
-            }
-
-            return;
-          },
 
           TshirtSizes: function(AttributeTypeService, $stateParams) {
             if ($stateParams.stepId === '2') {

@@ -6,7 +6,7 @@
 #   -DestinationPath path_name   The directory to send the file to on the remote server (required)
 
 Param (
-  [string]$DBServer = "mp-int-db.cloudapp.net", # default to mp-int-db
+  [string]$DBServer = "mp-int-db.centralus.cloudapp.azure.com", # default to mp-int-db
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [string]$BackupPath = "/cygdrive/E/Program Files/Microsoft SQL Server/MSSQL11.MSSQLSERVER/MSSQL/Backup",
   [string]$DestinationPath = "/cygdrive/D/SQLServer/Backup"
