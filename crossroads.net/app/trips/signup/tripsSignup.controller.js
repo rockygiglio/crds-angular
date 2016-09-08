@@ -56,6 +56,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.handleSubmit = handleSubmit;
     vm.isIndia = isIndia;
     vm.isNica = isNica;
+    vm.isNicaOrSA = isNicaOrSA;
     vm.isNola = isNola;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
@@ -284,6 +285,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     function isNica() {
       if (vm.destination === 'Nicaragua') {
+        return true;
+      }
+
+      return false;
+    }
+
+    function isNicaOrSA() {
+      if (isNica() || isSouthAfrica()) {
         return true;
       }
 

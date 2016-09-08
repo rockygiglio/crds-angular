@@ -74,10 +74,18 @@
                 </span>
               </ng-messages>
             </div>
+
             <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyRelationship') }">
               <label for="emergency-lastname" class="control-label required">Relationship</label>
-              <input ng-model="tripsSignup.signupService.page3.emergencyContactRelationship" type="text" class="form-control" name="emergencyRelationship" id="emergency-relationship" placeholder="Enter emergency contact relationship" ng-required="true">
-              <ng-messages for="tripsSignup.tripAppPage3.emergencyRelatioship.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyRelationship')">
+              <input ng-model="tripsSignup.signupService.page3.emergencyContactRelationship" 
+                     type="text" 
+                     class="form-control" 
+                     name="emergencyRelationship" 
+                     id="emergency-relationship" 
+                     placeholder="Enter emergency contact relationship" 
+                     required />
+              <ng-messages for="tripsSignup.tripAppPage3.emergencyRelationship.$error"
+                           ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyRelationship')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
@@ -103,8 +111,8 @@
             </div><!--/form-group-->
         </div><!--/row-->
 
-        <div class="row">
-          <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestriction') }">
+        <div class="row" ng-if="tripsSignup.isNicaOrSA()">
+          <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestrictions') }">
             <label class="block required control-label">Do you have any medication restrictions? </label>
             <label class="radio-inline" ng-click="tripsSignup.medRestrictionsToggled('yes', signupStep.medicalRestrictions)">
               <input ng-model="tripsSignup.signupService.page3.medicalRestriction"
@@ -125,7 +133,7 @@
                      required />
                 No
             </label>
-            <ng-messages for="tripsSignup.tripAppPage3.medicalRestriction.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestriction')">
+            <ng-messages for="tripsSignup.tripAppPage3.medicalRestrictions.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicalRestrictions')">
               <span ng-message="required">
                 <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
               </span>
@@ -158,7 +166,7 @@
         </div>
 
 
-        <div class="row">
+        <div class="row" ng-if="tripsSignup.isNicaOrSA()">
             <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'medicationIntake') }">
               <label class="block required control-label">Are you currently taking any medication?</label>
               <label class="radio-inline" ng-click="tripsSignup.medTakingToggled('yes')">
