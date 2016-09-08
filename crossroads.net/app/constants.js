@@ -12,6 +12,7 @@
       CROSSROADS: 'crossroads',
       FORM_BUILDER: 'crossroads.form_builder',
       FORMLY_BUILDER: 'crossroads.formly_builder',
+      FORMLY_BUILDER_PLAYGROUND: 'crossroads.formly_builder_playground',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       //GROUP_FINDER: 'crossroads.group_finder',

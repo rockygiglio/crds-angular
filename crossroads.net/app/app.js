@@ -15,6 +15,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
       constants.MODULES.FORM_BUILDER,
+      constants.MODULES.FORMLY_BUILDER_PLAYGROUND,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
       //constants.MODULES.GROUP_FINDER,
@@ -43,5 +44,6 @@ require('ui-select/dist/select.css');
   require('./volunteer_signup');
   require('./volunteer_application');
   require('./giving_history');
+  require('./formlyBuilder_playground')
 
 })();

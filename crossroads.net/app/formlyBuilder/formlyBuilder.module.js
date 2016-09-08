@@ -6,6 +6,8 @@
   
   ngModule.run(require('./formlyBuilder.validationConfig'));
   
-  require('./types')(ngModule);
-  require('./wrappers')(ngModule);
+  require('./formlyConfig/types')(ngModule);
+  require('./formlyConfig/wrappers')(ngModule);
+  require('./formlyWrapper')(ngModule);
+  require('./formlyMapper')(ngModule);
 })();
