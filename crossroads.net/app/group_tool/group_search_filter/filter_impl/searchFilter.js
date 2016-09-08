@@ -47,10 +47,11 @@ export class SearchFilter {
 }
 
 export class SearchFilterValue {
-  constructor(name, value, selected) {
+  constructor(name, value, selected, helpTextContentBlockTitle) {
     this.name = name;
     this.value = value;
     this.selected = selected;
+    this.helpTextContentBlockTitle = helpTextContentBlockTitle;
   }
 
   getName() {
@@ -59,6 +60,14 @@ export class SearchFilterValue {
 
   getValue() {
     return this.value;
+  }
+
+  hasHelpText() {
+    return this.helpTextContentBlockTitle && this.helpTextContentBlockTitle.length > 0;
+  }
+
+  getHelpText() {
+    return this.helpTextContentBlockTitle;
   }
 
   isSelected() {
