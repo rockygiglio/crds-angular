@@ -38,6 +38,7 @@ export default class SmallGroup {
     this.meetingDay = jsonObject.meetingDay;
     this.meetingTime = jsonObject.meetingTime;
     this.meetingFrequencyText = jsonObject.meetingFrequency;
+    this.meetingFrequencyId = jsonObject.meetingFrequencyId;
     this.meetingTimeFrequency = this.getGroupCardWhenField();
   }
 
@@ -163,7 +164,7 @@ export default class SmallGroup {
   getGroupCardWhenField() {
     let meetingDayStr = 'Flexible Meeting Time';
     if (this.meetingDay !== undefined && this.meetingDay !== null) {
-      meetingDayStr = this.meetingDay + '\'s at ' + new moment(this.meetingTime, 'HH:mm:ss').format('h:mm a') + ', ' + this.meetingFrequencyText;
+      meetingDayStr = this.meetingDay + 's at ' + new moment(this.meetingTime, 'HH:mm:ss a').format('h:mm a') + ', ' + this.meetingFrequencyText;
     }
     return meetingDayStr;
   }

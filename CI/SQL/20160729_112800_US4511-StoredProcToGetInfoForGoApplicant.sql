@@ -27,7 +27,7 @@ BEGIN
 
 	DECLARE @GoTripEventTypeID INT = 6
 
-	SELECT pc.Destination_ID, pc.Fundraising_Goal, g.group_id
+	SELECT pc.Destination_ID, pc.Fundraising_Goal, g.group_id, pc.Registration_Deposit
 	FROM [dbo].[Pledge_Campaigns] pc
 	JOIN dbo.events e ON e.program_id = pc.program_id AND e.Event_Type_ID = @GoTripEventTypeID
 	JOIN dbo.event_groups eg ON eg.event_id = e.event_id

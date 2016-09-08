@@ -6,6 +6,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -17,6 +18,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IContactRepository _contactService;
         private readonly IContentBlockService _contentBlockService;
         private readonly IAddressRepository _addressRepository;
+        private readonly IObjectAttributeRepository _objectAttributeRepository;
         private readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly int GroupsParticipantsPageId = Convert.ToInt32(AppSettings("GroupsParticipants"));
         private readonly int GroupsParticipantsSubPageId = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
@@ -35,6 +37,8 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
         private readonly int MyCurrentGroupParticipationPageId = Convert.ToInt32(AppSettings("MyCurrentGroupParticipationPageId"));
         private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
+        private readonly int GroupHasMiddleSchoolStudents = Convert.ToInt32(AppSettings("GroupHasMiddleSchoolStudents"));
+        private readonly int GroupHasHighSchoolStudents = Convert.ToInt32(AppSettings("GroupHasHighSchoolStudents"));
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -49,7 +53,8 @@ namespace MinistryPlatform.Translation.Repositories
                                ICommunicationRepository communicationService,
                                IContactRepository contactService,
                                IContentBlockService contentBlockService,
-                               IAddressRepository addressRepository)
+                               IAddressRepository addressRepository,
+                               IObjectAttributeRepository objectAttributeRepository)
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
@@ -59,6 +64,7 @@ namespace MinistryPlatform.Translation.Repositories
             _contactService = contactService;
             _contentBlockService = contentBlockService;
             _addressRepository = addressRepository;
+            _objectAttributeRepository = objectAttributeRepository;
         }
 
         public int CreateGroup(MpGroup group)
@@ -478,6 +484,7 @@ namespace MinistryPlatform.Translation.Repositories
             var groupParticipants = new List<MpGroupParticipant>();
             logger.Debug("Getting participants for group " + groupId);
             List<Dictionary<string, object>> participants;
+
             if (activeGroups)
             {
                 participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
@@ -499,6 +506,7 @@ namespace MinistryPlatform.Translation.Repositories
                         {
                             ContactId = p.ToInt("Contact_ID"),
                             ParticipantId = p.ToInt("Participant_ID"),
+                            IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),
                             GroupParticipantId = p.ToInt("dp_RecordID"),
                             GroupRoleId = p.ToInt("Group_Role_ID"),
                             GroupRoleTitle = p.ToString("Role_Title"),
@@ -815,25 +823,6 @@ namespace MinistryPlatform.Translation.Repositories
             logger.Debug("updated group: " + group.GroupId);
         }
 
-        /// <summary>
-        /// Returns list of small groups from the My groups > My Small Groups view. 
-        /// </summary>
-        /// <param name="userToken"></param>
-        /// <returns></returns>
-        public List<MpGroup> GetSmallGroupsForAuthenticatedUser(string userToken)
-        {
-            var groups = ministryPlatformService.GetPageViewRecords(MySmallGroupsPageView, userToken, "");
-            var mpGroupList = groups.Select(MapRecordToMpGroup).ToList();
-
-            foreach (MpGroup group in mpGroupList)
-            {
-                group.Participants = LoadGroupParticipants(group.GroupId, userToken).Where(p => p.GroupRoleId == GroupLeaderRoleId).ToList();
-            }
-
-            return mpGroupList;
-
-        }
-
         public MpGroup GetSmallGroupDetailsById(int groupId)
         {
             var apiToken = ApiLogin();
@@ -848,7 +837,7 @@ namespace MinistryPlatform.Translation.Repositories
             return group;
         }
 
-        private MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
+        public MpGroup MapRecordToMpGroup(Dictionary<string, object> record)
         {
             return new MpGroup
             {
@@ -868,7 +857,7 @@ namespace MinistryPlatform.Translation.Repositories
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
                 MeetingDay = (record.ContainsKey("Meeting_Day") ? record.ToString("Meeting_Day") : (record.ContainsKey("Meeting_Day_ID_Text") ? record.ToString("Meeting_Day_ID_Text") : string.Empty)),
                 MeetingTime = !string.IsNullOrEmpty(record.ToString("Meeting_Time")) ? DateTime.Parse(record.ToString("Meeting_Time")).ToShortTimeString() : string.Empty,
-                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty)),
+                MeetingFrequency = (record.ContainsKey("Meeting_Frequency") ? record.ToString("Meeting_Frequency") : ((record.ContainsKey("Meeting_Frequency_ID_Text") ? record.ToString("Meeting_Frequency_ID_Text") : string.Empty))),
                 AvailableOnline = record.ToBool("Available_Online"),
                 MaximumAge = (record.ContainsKey("Maximum_Age") ? record["Maximum_Age"] as int? : null),
                 RemainingCapacity = (record.ContainsKey("Remaining_Capacity") ? record["Remaining_Capacity"] as int? : null),
@@ -987,6 +976,24 @@ namespace MinistryPlatform.Translation.Repositories
             };
         }
 
-       
+        public bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId)
+        {
+            var groups = GetGroupsForParticipant(token, participantId);
+            var groupId = 0;
+            foreach (var group in groups)
+            {
+                var participants = LoadGroupParticipants(group.GroupId, token);
+                if (participants.Exists(x => x.GroupParticipantId == groupParticipantId))
+                {
+                    groupId = group.GroupId;
+                    break;
+                }
+            }
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var attributes = _objectAttributeRepository.GetCurrentObjectAttributes(token, groupId, configuration);
+            return  attributes.Find(x => x.AttributeId == GroupHasMiddleSchoolStudents
+                                        || x.AttributeId == GroupHasHighSchoolStudents) != null
+                                        ?true:false;
+        }
     }
 }

@@ -40,14 +40,16 @@ namespace MinistryPlatform.Translation.Repositories
             _participantsPageId = configuration.GetConfigIntValue("Participants");
         }
 
-        public int CreateContactForGuestGiver(string emailAddress, string displayName)
+        public int CreateContactForGuestGiver(string emailAddress, string displayName, string firstName, string lastName)
         {
             var contactDonor = new MpContactDonor
             {
                 Details = new MpContactDetails
                 {
                     DisplayName = displayName,
-                    EmailAddress = emailAddress
+                    EmailAddress = emailAddress,
+                    FirstName =  firstName,
+                    LastName = lastName
                 }
             };
             return (CreateContact(contactDonor));
@@ -425,6 +427,8 @@ namespace MinistryPlatform.Translation.Repositories
 
             var emailAddress = mpContactDonor.Details.EmailAddress;
             var displayName = mpContactDonor.Details.DisplayName;
+            var firstName = mpContactDonor.Details.FirstName;
+            var lastName = mpContactDonor.Details.LastName;
             int? householdId = null;
             if (mpContactDonor.Details.HasAddress)
             {
@@ -445,6 +449,8 @@ namespace MinistryPlatform.Translation.Repositories
             var contactDictionary = new Dictionary<string, object>
             {
                 {"Email_Address", emailAddress},
+                {"First_Name", firstName },
+                {"Last_Name", lastName },
                 {"Company", false},
                 {"Display_Name", displayName},
                 {"Nickname", displayName},

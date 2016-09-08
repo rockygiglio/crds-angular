@@ -5,9 +5,9 @@
 
   module.exports = TripRoutes;
 
-  TripRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider', '$locationProvider'];
+  TripRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider'];
 
-  function TripRoutes($stateProvider, $urlMatcherFactory, $locationProvider) {
+  function TripRoutes($stateProvider, $urlMatcherFactory) {
 
     $urlMatcherFactory.strictMode(false);
 
@@ -19,8 +19,7 @@
         templateUrl: 'tripsearch/tripsearch.html',
         resolve: {
           Page: 'Page',
-          $stateParams: '$stateParams',
-          CmsInfo: function(Page, $stateParams) {
+          CmsInfo: function(Page) {
             return Page.get({
               url: '/trips/search/'
             }).$promise;
@@ -33,6 +32,7 @@
           }
         }
       })
+
       .state('tripgiving', {
         parent: 'noSideBar',
         url: '/trips/giving/:eventParticipantId',
@@ -80,6 +80,36 @@
       .state('tripgiving.thank-you', {
         templateUrl: 'tripgivingTemplates/thank_you.html'
       })
+      .state('tripdeposit', {
+        parent: 'noSideBar',
+        url: '/trips/:campaignId/deposit/:contactId?invite',
+        template: '<trip-deposit> </trip-deposit>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Trip Deposit',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+          TripsSignupService: 'TripsSignupService',
+          $stateParams: '$stateParams',
+          CampaignInfo: getCampaignInfo
+        }
+      })
+      .state('tripdeposit.account', {
+        templateUrl: 'templates/tripDepositAccount.html'
+      })
+      .state('tripdeposit.change', {
+        templateUrl: 'templates/tripDepositChange.html'
+      })
+      .state('tripdeposit.confirm', {
+        templateUrl: 'templates/tripDepositConfirm.html'
+      })
+      .state('tripdeposit.thanks', {
+        templateUrl: 'templates/tripDepositThanks.html'
+      })
       .state('mytrips', {
         parent: 'noSideBar',
         url: '/trips/mytrips',
@@ -96,7 +126,7 @@
           loggedin: crds_utilities.checkLoggedin,
           Trip: 'Trip',
           $cookies: '$cookies',
-          MyTrips: function(Trip, $cookies) {
+          MyTrips: function(Trip) {
             return Trip.MyTrips.get().$promise;
           }
         }
@@ -165,7 +195,9 @@
 
           pageId: function() {
             return 0;
-          }
+          },
+
+          Scholarshipped: isScholarshipped
         }
       })
       .state('tripsignup.application.thankyou', {
@@ -178,26 +210,10 @@
           var template = 'pageTemplates/signupPage' + $stateParams.stepId + '.html';
           return template;
         },
-
         controller: 'SignupStepController as signupStep',
         resolve: {
           AttributeTypeService: 'AttributeTypeService',
           $stateParams: '$stateParams',
-          ScrubTopSizes: function(AttributeTypeService, $stateParams) {
-            if ($stateParams.stepId === '2') {
-              return AttributeTypeService.AttributeTypes().get({ id: attributes.SCRUB_TOP_SIZES }).$promise;
-            }
-
-            return null;
-          },
-
-          ScrubBottomSizes: function(AttributeTypeService, $stateParams) {
-            if ($stateParams.stepId === '2') {
-              return AttributeTypeService.AttributeTypes().get({ id: attributes.SCRUB_BOTTOM_SIZES }).$promise;
-            }
-
-            return;
-          },
 
           TshirtSizes: function(AttributeTypeService, $stateParams) {
             if ($stateParams.stepId === '2') {
@@ -239,6 +255,46 @@
 
         }
       });
+
+      function getCampaignInfo(TripsSignupService, $stateParams, $q) {
+        var deferred = $q.defer();
+        var promise = TripsSignupService.CampaignInfo.get({
+          contactId: $stateParams.contactId,
+          campaignId: $stateParams.campaignId
+        }).$promise;
+        promise.then( (data) => {
+          if (TripsSignupService.campaign !== undefined) {
+            TripsSignupService.campaign.name = data.campaignName;
+            TripsSignupService.campaign.campaignId = data.campaignId;
+            TripsSignupService.campaign.nickname = data.campaignNickname;
+            TripsSignupService.depositAmount = data.deposit;
+            TripsSignupService.donorId = data.donorId;
+            TripsSignupService.programId = data.programId;
+            TripsSignupService.programName = data.programName;
+            TripsSignupService.pledgeAmount = data.pledgeAmount;
+          }
+          deferred.resolve();
+        }, (err) => {
+          console.log(err);
+          deferred.reject();
+        });
+        return deferred.promise;
+      }
+
+      function isScholarshipped($q, $stateParams, Trip, TripsSignupService) {
+        var deferred = $q.defer();
+        let promise = Trip.TripScholarship.get(
+          {campaignId: $stateParams.campaignId, contactId: $stateParams.contactId}
+        ).$promise;
+        promise.then(() => {
+          TripsSignupService.isScholarshipped = true;
+          deferred.resolve();
+        }, () => {
+          TripsSignupService.isScholarshipped = false;
+          deferred.resolve();
+        });
+        return deferred.promise;
+      }
   }
 
 })();

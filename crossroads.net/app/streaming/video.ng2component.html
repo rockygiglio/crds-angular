@@ -1,50 +1,56 @@
-<div class="live-stream">
+<div class="live-stream" *ngIf="inProgress">
 
   <div class="pushdown-container" *ngIf="displayCounter">
-    <a href="#" class="pull-right" (click)="displayCounter=false"><span class="glyphicon glyphicon-remove"></span></a>
-    <div class="container"><div class="iframe-wrapper">
-      <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
-    </div></div>
-  </div>
-  <div class="control-container ">
     <div class="container">
-      <a href="/live" class="btn btn-standard-dark">Go Back</a>
+      <div class="iframe-wrapper">
+        <iframe id="slider-iframe" width="800" height="100" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <a href="#" class="pull-right btn-dismiss" (click)="displayCounter=false">Dismiss</a>
     </div>
   </div>
   <div class="dark-bg">
-    <section class="wow fadeIn">
+    <header class="container clearfix">
+      <a href="http://crossroads.net" class="navbar-brand logo pull-left"><svg viewBox="0 0 800.416 115.217" class="icon-logo"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#logo"></use> </svg> </a>
+      <a href="#" (click)="goBack()" class="pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+    </header>
+    <section>
       <div class="container">
-        <videojs></videojs>
+        <streamspot-iframe></streamspot-iframe>
       </div>
     </section>
   </div>
 
-  <div class="container">
-    <div class="row">
-      <section class="related digital-program" *ngIf="dontMiss.length > 0">
+  <div class="container digital-program-container">
+
+      <section class="related digital-program bg" *ngIf="dontMiss.length > 0">
           <header class="clearfix">
             <h2>don't miss</h2>
           </header>
-
-          <content-card *ngFor="let event of dontMiss" [content]="event" ></content-card>
-
+          <content-card *ngFor="let event of dontMiss" [content]="event" [animate]="false"></content-card>
       </section>
-      <section class="participate digital-program" *ngIf="promos.length > 0">
-        <header class="clearfix">
-          <h2>be the church</h2>
-        </header>
+
+      <section class="participate digital-program bg" *ngIf="beTheChurch.length > 0">
+        <div class="row">
+
+          <header class="clearfix">
+            <h2>be the church</h2>
+          </header>
         
-        <article class="wow fadeInUp promo" data-wow-delay="500ms" *ngFor="let promo of promos">
-          <figure class="wow fadeIn" data-wow-delay="">
-            <img src="{{promo.image}}" alt="" class="img-responsive" />
-          </figure>
-          <section>
-            <h3>{{ promo.title }}</h3>
-            <div [innerHTML]="promo.description"></div>
-          </section>
-          <hr>
-        </article>
+          <article class="promo" *ngFor="let promo of beTheChurch">
+            <figure>
+              <linked-content href="{{ promo.url }}" target="_blank">
+                <img src="{{promo.image}}" alt="" class="img-responsive" title="{{ promo.title }}"/>
+              </linked-content>
+            </figure>
+            <section>
+              <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</linked-content></h3>
+              <div [innerHTML]="promo.description"></div>
+            </section>
+            <hr>
+          </article>
+
+        </div>
       </section>
-    </div>
+
   </div>
 </div>

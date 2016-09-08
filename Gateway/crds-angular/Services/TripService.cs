@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services.Interfaces;
@@ -32,8 +33,10 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IPersonService _personService;
         private readonly IServeService _serveService;
+        private readonly IProgramRepository _programRepository;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ITripRepository _tripRepository;
+        private readonly IDonorRepository _mpDonorService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (TripService));
 
@@ -51,8 +54,10 @@ namespace crds_angular.Services
                            IConfigurationWrapper configurationWrapper,
                            IPersonService personService,
                            IServeService serveService,
+                           IProgramRepository programRepository,
                            IApiUserRepository apiUserRepository,
-                           ITripRepository tripRepository)
+                           ITripRepository tripRepository,
+                           IDonorRepository mpDonorService)
         {
             _eventParticipantService = eventParticipant;
             _donationService = donationService;
@@ -68,8 +73,10 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _personService = personService;
             _serveService = serveService;
+            _programRepository = programRepository;
             _apiUserRepository = apiUserRepository;
             _tripRepository = tripRepository;
+            _mpDonorService = mpDonorService;
         }
 
         public List<TripGroupDto> GetGroupsByEventId(int eventId)
@@ -115,12 +122,9 @@ namespace crds_angular.Services
 
         public TripCampaignDto GetTripCampaign(int pledgeCampaignId)
         {
-            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
-            if (campaign == null)
-            {
-                return null;
-            }
-            return new TripCampaignDto()
+            var token = _apiUserRepository.GetToken();
+            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId, token);
+            var response = new TripCampaignDto()
             {
                 Id = campaign.Id,
                 Name = campaign.Name,
@@ -130,8 +134,22 @@ namespace crds_angular.Services
                 RegistrationEnd = campaign.RegistrationEnd,
                 RegistrationStart = campaign.RegistrationStart,
                 RegistrationDeposit = campaign.RegistrationDeposit,
-                AgeExceptions = campaign.AgeExceptions
+                AgeExceptions = campaign.AgeExceptions,
+                IsFull = false,
+                EventId = campaign.EventId
             };
+            var pledges = new List<MpPledge>();
+
+            if (campaign.MaximumRegistrants != null)
+            {
+                pledges = _mpPledgeService.GetPledgesByCampaign(pledgeCampaignId, token);               
+            }
+            if (campaign.MaximumRegistrants == null || campaign.MaximumRegistrants > pledges.Count)
+            {
+                return response;
+            }
+            response.IsFull = true;
+            return response;
         }
 
         private TripApplicantResponse GetTripAplicants(int selectionId, int selectionCount, int formResponseId)
@@ -369,15 +387,76 @@ namespace crds_angular.Services
             return myTrips;
         }
 
-        public void CreateTripParticipant(int contactId, int pledgeCampaignId)
+        public TripParticipantPledgeDto CreateTripParticipant(int contactId, int pledgeCampaignId)
         {
-            var token = _apiUserRepository.GetToken();
-            var added = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
 
-            if (!added)
+            var token = _apiUserRepository.GetToken();
+            var result = _tripRepository.AddAsTripParticipant(contactId, pledgeCampaignId, token);
+            if (!result.Status)
             {
-                throw new Exception("Unable to add as a participant on the trip");
+                // trip is full
+                throw new TripFullException();
             }
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto
+            {
+                CampaignName = result.Value.CampaignName,
+                DonorId = result.Value.DonorId
+            };
+            return tripParticipantPledgeInfo;
+        }
+
+        public TripParticipantPledgeDto GetCampaignPledgeInfo(int contactId, int pledgeCampaignId)
+        {
+            var tripParticipantPledgeInfo = new TripParticipantPledgeDto();
+
+            var tripRecord = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId).FirstOrDefault();
+            var tripDonor = _mpDonorService.GetContactDonor(contactId);
+            var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
+
+            tripParticipantPledgeInfo.PledgeAmount = tripRecord != null ? (int)tripRecord.CampaignFundRaisingGoal : 0;
+            tripParticipantPledgeInfo.CampaignNickname = campaign.Nickname;
+            tripParticipantPledgeInfo.CampaignName = campaign.Name;
+            tripParticipantPledgeInfo.Deposit = tripRecord != null ? (int)tripRecord.RegistrationDeposit : 0;
+            tripParticipantPledgeInfo.DonorId = tripDonor.DonorId;
+            tripParticipantPledgeInfo.ProgramId = campaign.ProgramId;
+            tripParticipantPledgeInfo.ProgramName = _programRepository.GetProgramById(tripParticipantPledgeInfo.ProgramId).Name;
+
+            return tripParticipantPledgeInfo;
+        }
+
+        public bool HasScholarship(int contactId, int campaignId)
+        {
+            var campaign = _campaignService.GetPledgeCampaign(campaignId);
+            var distributions = _donationService.GetMyTripDistributions(contactId);
+            var scholarshipDollars = distributions.Where(d => d.EventId == campaign.EventId).Sum(d => d.DonationAmount);
+            var pledgeTotal = distributions.FirstOrDefault(d => d.EventId == campaign.EventId)?.TotalPledge;
+            return scholarshipDollars == pledgeTotal;
+        }
+
+        public void SendTripIsFullMessage(int campaignId)
+        {
+            var campaign = GetTripCampaign(campaignId);
+            if (!campaign.IsFull) return;
+            var templateId = _configurationWrapper.GetConfigIntValue("TripIsFullTemplateId");
+            var fromReplyToContactId = _configurationWrapper.GetConfigIntValue("TripIsFullFromContactId");
+            var fromReplyToEmailAddress = _configurationWrapper.GetConfigValue("TripIsFullFromEmailAddress");
+
+            var eventDeets = _mpEventService.GetEvent(campaign.EventId);
+
+            var mergeData = new Dictionary<String, Object>
+            {
+                {"Pledge_Campaign", campaign.Name}
+            };
+
+            var communication = _communicationService.GetTemplateAsCommunication(templateId,
+                                                                                 fromReplyToContactId,
+                                                                                 fromReplyToEmailAddress,
+                                                                                 fromReplyToContactId,
+                                                                                 fromReplyToEmailAddress,
+                                                                                 eventDeets.PrimaryContact.ContactId,
+                                                                                 eventDeets.PrimaryContact.EmailAddress,
+                                                                                 mergeData);
+            _communicationService.SendMessage(communication);
         }
 
         public int GeneratePrivateInvite(PrivateInviteDto dto, string token)
@@ -433,13 +512,14 @@ namespace crds_angular.Services
             try
             {
                 UpdateChildSponsorship(dto);
-                var formResponse = new MpFormResponse();
-                formResponse.ContactId = dto.ContactId; //contact id of the person the application is for
-                formResponse.FormId = _configurationWrapper.GetConfigIntValue("TripApplicationFormId");
-                formResponse.PledgeCampaignId = dto.PledgeCampaignId;
-
-                formResponse.FormAnswers = new List<MpFormAnswer>(FormatFormAnswers(dto));
-
+                var formResponse = new MpFormResponse
+                {
+                    ContactId = dto.ContactId, //contact id of the person the application is for
+                    FormId = _configurationWrapper.GetConfigIntValue("TripApplicationFormId"),
+                    PledgeCampaignId = dto.PledgeCampaignId,
+                    FormAnswers = new List<MpFormAnswer>(FormatFormAnswers(dto))
+                };
+                
                 var formResponseId = _formSubmissionService.SubmitFormResponse(formResponse);
 
                 if (dto.InviteGUID != null)
@@ -447,8 +527,15 @@ namespace crds_angular.Services
                     _privateInviteService.MarkAsUsed(dto.PledgeCampaignId, dto.InviteGUID);
                 }
 
-                SendTripApplicantSuccessMessage(dto.ContactId);
-
+                if (HasScholarship(dto.ContactId, dto.PledgeCampaignId))
+                {
+                    SendTripApplicantSuccessMessage(dto.ContactId);
+                }
+                else
+                {
+                    SendTripApplicantDonationComboMessage(dto);
+                }
+                
                 return formResponseId;
             }
             catch (Exception ex)
@@ -479,6 +566,23 @@ namespace crds_angular.Services
                                                                             toContact.Email_Address,
                                                                             mergeData);
             _communicationService.SendMessage(template);
+        }
+
+        private void SendTripApplicantDonationComboMessage(TripApplicationDto dto)
+        {
+            var pledgeCampaign = _campaignService.GetPledgeCampaign(dto.PledgeCampaignId);
+            var program = _programRepository.GetProgramById(pledgeCampaign.ProgramId);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Destination_Name", pledgeCampaign.Nickname },
+                {"Program_Name", program.Name},
+                {"Donation_Amount", dto.DepositInformation.DonationAmount ?? ""},
+                {"Donation_Date", dto.DepositInformation.DonationDate ?? ""},
+                {"Payment_Method", dto.DepositInformation.PaymentMethod }
+            };
+
+            SendMessage("TripAppAndDonationComboMessageTemplateId", dto.ContactId, mergeData);
         }
 
         private void SendTripApplicantSuccessMessage(int contactId)

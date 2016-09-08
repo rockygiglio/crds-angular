@@ -22,7 +22,6 @@
 
     function link(scope, el, attr, vm) {
       vm.loading = true;
-      vm.thankYou = TripsSignupService.thankYouMessage;
       activate();
 
       function activate() {

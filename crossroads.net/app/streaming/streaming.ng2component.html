@@ -1,5 +1,5 @@
-<div class="wrapper" stickyHeader>
-  <section class="navbar-section" >
+<div class="wrapper" id="wrapper" stickyHeader>
+  <section id="countdown" class="navbar-section">
     <div class="container animated fadeIn">
       <pageScroll href="#schedule" class="btn see-schedule">
         See Schedule
@@ -7,11 +7,11 @@
           <use xlink:href="#arrow-down9"></use>
         </svg>
       </pageScroll>
-      <countdown></countdown>
+      <countdown (watchNowClick)="watchNowClicked()"></countdown>
     </div>
   </section>
 
-  <section class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
     <div class="wow fadeInUp">
       <dynamic-content-ng2 title="streamingLandingIntro"></dynamic-content-ng2>
       <p *ngIf="inProgress" class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
@@ -27,7 +27,7 @@
         <h2>Past Weekends</h2>
       </header>
 
-      <div class="row">
+      <div class="content-card-row">
         <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
@@ -75,3 +75,9 @@
     </div>
   </section>
 </div>
+
+<modal class="watch-now" #watchNowModal (onClose)="modalClose()" (onDismiss)="modalClose()">
+  <modal-body>
+    <div id="watch-now-source" #videoTarget></div>
+  </modal-body>
+</modal>

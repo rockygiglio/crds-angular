@@ -1,14 +1,3 @@
-// NOTE These vars aren't assumed to be global yet, hence the `streaming` prefix.
-$streaming-font-extra_cond: "acumin-pro-extra-condensed", sans-serif;
-$streaming-font-sans: "acumin-pro", sans-serif;
-$streaming-font-serif: "lexia", serif;
-
-// NOTE This is a local deviation from CRDS pallette.
-//      We should move this into lib when these changes go global.
-$streaming-blue: #0795E3;
-
-// ----------------------------------------- ###
-
 @mixin aspect-ratio($width, $height) {
   position: relative;
   &:before{
@@ -27,13 +16,8 @@ $streaming-blue: #0795E3;
   }
 }
 
-.sixteen-nine {
-  overflow: hidden;
-  @include aspect-ratio(16,9);  
-}
-
 @mixin crds-make-condensed {
-  font-family: $streaming-font-extra_cond;
+  font-family: $cr-streaming-font-extra-cond;
   font-size: 170%;
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -43,10 +27,10 @@ $streaming-blue: #0795E3;
 
 streaming {
 
-  font-family: $streaming-font-sans;
+  font-family: $cr-streaming-font-sans;
 
   h1, h2 {
-    font-family: $streaming-font-sans;
+    font-family: $cr-streaming-font-sans;
     font-weight: 100;
   }
 
@@ -58,23 +42,27 @@ streaming {
     @include make-row();
     @include clearfix();
     overflow-x: hidden;
+
+    .navbar-section .container {
+      display: flex;
+      justify-content: center;
+    }
+    
   }
 
   .fixed-header {
     .navbar-section {
       position: fixed;
-      z-index: 9999;
+      z-index: 1000;
       left: 0;
       right: 0;
       top: 0;
-    }
-    .intro {
-      margin-top: 66px;
+      -webkit-overflow-scrolling: touch;
     }
   }
 
   .navbar-section {
-    background: $streaming-blue;
+    background: $cr-streaming-blue;
     color: #FFF;
     text-align: center;
     padding: 1em 0;
@@ -85,14 +73,31 @@ streaming {
       min-height: 66px;
     }
 
-    countdown {
-      display: inline;
+    #conuntdown-header {
+      -webkit-animation-duration: 1.5s;
+         -moz-animation-duration: 1.5s;
+          -ms-animation-duration: 1.5s;
+           -o-animation-duration: 1.5s;
+              animation-duration: 1.5s;
+
+      countdown {
+        display: inline;
+      }
     }
+
 
     .container {
       @include clearfix();
       position: relative;
     }
+
+    .btn-reminder {
+      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
+      margin-left: 1em;
+      @media (max-width: $screen-sm-min) {
+        font-size: 70%;
+      }
+    } 
 
     .see-schedule {
       text-transform: uppercase;
@@ -102,7 +107,7 @@ streaming {
       right: 0;
       display: none;
 
-      @media (min-width: $screen-xs-min) {
+      @media (min-width: $screen-md) {
         display: block;
       }
       @media (max-width: $screen-sm-min) {
@@ -123,17 +128,21 @@ streaming {
         margin: 0 auto;
       }
 
-      i, ul {
+      i, ul, .btn-reminder {
         display: table-cell;
         vertical-align: middle;
       }
 
       i {
-        font-family: $streaming-font-serif;
+        font-family: $cr-streaming-font-serif;
         font-style: italic;
         font-size: 123%;
         letter-spacing: -0.015em;
         padding-right: 1em;
+      }
+
+      ul {
+        padding-right: 20px;
       }
 
       li {
@@ -155,7 +164,7 @@ streaming {
       }
 
       i, li.vr:before {
-        color: lighten($streaming-blue, 25%);
+        color: lighten($cr-streaming-blue, 25%);
       }
 
       strong {
@@ -189,8 +198,9 @@ streaming {
           display: inline-block;
         }
       }
+
       a.btn-sm {
-        @include button-variant(#FFF, lighten($streaming-blue, 12.5%), $streaming-blue);
+        @include button-variant(#FFF, lighten($cr-streaming-blue, 12.5%), lighten($cr-streaming-blue, 12.5%));
         font-weight: 400;
         font-size: 110%;
       }
@@ -228,6 +238,22 @@ streaming {
 
   .current-series {
 
+    .embeded {
+      display: none;
+    }
+
+    /* Medium devices (desktops, 992px and up) */
+    @media (min-width: $screen-md-min) {
+      .embeded {
+        display: inline-block;
+      }
+
+      .link {
+        display: none;
+      }
+    }
+
+
     figure {
       margin-top: 1em;
       margin-bottom: 1.75em;
@@ -235,7 +261,7 @@ streaming {
       position: relative;
 
       figcaption {
-        font-family: $streaming-font-serif;
+        font-family: $cr-streaming-font-serif;
         font-style: italic;
         font-size: 85%;
         position: absolute;
@@ -245,6 +271,7 @@ streaming {
         background: #D3DFE6;
         color: $gray;
         position: absolute;
+        word-wrap: break-word;
 
         @media (min-width: $screen-sm-min) {
           margin-left: 8em;
@@ -287,7 +314,7 @@ streaming {
         margin-bottom: 0.75em;
 
         small {
-          font-family: $streaming-font-sans;
+          font-family: $cr-streaming-font-sans;
           font-weight: 600;
           font-size: 32%;
           text-transform: uppercase;
@@ -339,7 +366,7 @@ streaming {
         font-size: 90%;
         padding-top: 1em;
         &, li {
-          font-family: $streaming-font-sans;
+          font-family: $cr-streaming-font-sans;
         }
         li {
           white-space: nowrap;
@@ -363,15 +390,18 @@ streaming {
     &, h3 {
       color: $gray;
     }
-    article {
-      @media only screen and (max-width:  $screen-md-min - 1){
+
+    content-card {
+      @media(max-width: $screen-md-min){
         @include make-sm-column(6);
+      }
+      @media(min-width: $screen-md-min){
+        @include make-md-column(3);
+      }
+      @media(max-width: $screen-md-min){
         &:nth-child(2n+1) {
           clear: left;
         }
-      }
-      @media only screen and (min-width:  $screen-md-min){
-        @include make-md-column(3);
       }
     }
 
@@ -393,21 +423,24 @@ streaming {
       }
     }
 
-
     figcaption {
-      font-family: $streaming-font-extra_cond;
+      font-family: $cr-streaming-font-extra-cond;
       font-size: 210%;
       top: -0.85em;
+      word-wrap: break-word;
+      
     }
 
     section {
       top: -1em;
     }
 
-    figure > a {
+    figure > linked-content > a {
+      @include aspect-ratio(16,9);
+      overflow: hidden;
       display: block;
       width: 100%;
-      margin-bottom: 2%; 
+      margin-bottom: 2%;
     }
 
     @media (max-width: $screen-xs-max) { 
@@ -415,15 +448,13 @@ streaming {
         top: -1.15em;
       }
 
-      figure > a {
+      figure a {
         margin-bottom: 2%;
       }
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      figure > a {
+      figure a {
         margin-bottom: 2%;
-        margin-left: 2%;
-        margin-right: 2%;
       }
       figcaption {
         top: -0.95em;
@@ -436,11 +467,9 @@ streaming {
       }
     }
 
-    .container {
-      padding: 0;
+    .content-card-row {
       @media (min-width: $screen-sm-min) {
-        padding-left: 1em;
-        padding-right: 1em;
+        @include make-row();
       }
     }
   }
@@ -484,6 +513,8 @@ streaming {
         font-size: 70%;
         font-weight: 600;
         margin-top: 0.3em;
+        word-wrap: break-word;
+        
 
         span {
           font-weight: normal;
@@ -568,7 +599,6 @@ streaming {
 
 } // streaming
 
-
 .live-stream {
   display: block;
   background: #000;
@@ -579,22 +609,16 @@ streaming {
   color: #FFF;
 
   content-card {
-
-    @media only screen and (max-width:  $screen-md-min - 1){
-      @include make-sm-column(12);
-      &:nth-child(2n+1) {
-        clear: left;
-      }
-    }
-    @media only screen and (min-width:  $screen-md-min){
-      @include make-md-column(6);
+    article {
+      margin-bottom: 1em;
     }
 
     &, h3 {
       color: $gray;
     }
+
     a {
-      cursor: default;
+      // cursor: default;
     }
 
     figure {
@@ -625,63 +649,48 @@ streaming {
       }
     }
 
-
     figcaption {
-      font-family: $streaming-font-extra_cond;
+      font-family: $cr-streaming-font-extra-cond;
       font-size: 210%;
-      top: -0.85em;
+      top: -0.5em;
+      word-wrap: break-word;
+      
     }
 
     section {
-      top: -1em;
+      top: -0.5em;
     }
 
-    figure > a {
+    figure a {
       display: block;
       width: 100%;
-      margin-bottom: 2%; 
     }
 
     @media (max-width: $screen-xs-max) { 
       figcaption {
         top: -1.15em;
       }
-
-      figure > a {
-        margin-bottom: 2%;
-        margin-left: 2%;
-        margin-right: 2%;
-      }
     }
+
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      figure > a {
-        margin-bottom: 2%;
-        margin-left: 2%;
-        margin-right: 2%;
-      }
       figcaption {
         top: -0.95em;
       }
     }
 
-    .view-all-mobile {
-      @media only screen and (min-width:  $screen-sm-min){
-        display: none;
-      }
+    @media (min-width:  $screen-md-min) {
+      @include make-md-column(6);
+      // NOTE: The following rule will break content-cards after every 2 elements...
+      // &:nth-child(3n+1) {
+      //   clear: left;
+      // }
     }
 
-    .container {
-      padding: 0;
-      @media (min-width: $screen-sm-min) {
-        padding-left: 1em;
-        padding-right: 1em;
-      }
-    }
   }
 
   h2 {
     color: darken(#FFF, 70%);
-    font-family: $streaming-font-sans;
+    font-family: $cr-streaming-font-sans;
     font-weight: 300;
     font-size: 170%;
     letter-spacing: -0.05em;
@@ -694,24 +703,34 @@ streaming {
     .video-player {
       margin: 0 auto;
     }
+
+    > header {
+      .navbar-brand.logo {
+        color: white;
+        position: static;
+        margin-left: -10px;
+        padding-left: -10px;
+      }
+    }
   }
 
-  @media (min-width: $screen-sm) {
-    .related {
-      @include make-sm-column(6);
-    }
-    .participate {
-      @include make-sm-column(5);
-      @include make-sm-column-offset(1);
+  .digital-program-container {
+    @media only screen and (max-width:  $screen-sm-min){
+      background: #151515;
     }
   }
 
   .digital-program {
-    background: #252526;
     padding-bottom: 15px;
 
     header {
       @include make-md-column(12);
+    }
+
+    &.bg,
+    > .bg {
+      background: #151515;
+      overflow: hidden;
     }
 
     .gradient {
@@ -731,13 +750,42 @@ streaming {
         display: block;
       }
     }
+
+    &.related {
+      @media (min-width: $screen-sm) {
+        @include make-sm-column(6);
+      }
+    }
+
+    &.participate {
+      @media (min-width: $screen-sm) {
+        @include make-sm-column(6);
+        border-left: 25px solid #000;
+      }
+
+      hr {
+        border-color: #212121;
+        float: left;
+        width: 100%;
+        margin: 2em 0;
+      }
+    }
+
   }
 
   .participate {
+
     .promo {
       @include make-md-column(12);
     }
+
     @media (min-width: $screen-md-min) {
+      header, 
+      .promo {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
       figure {
         @include make-md-column(4);
         a {
@@ -749,7 +797,6 @@ streaming {
         @include make-md-column(8);
       }
     }
-
     .promo {
       &:last-child {
         hr {
@@ -759,25 +806,28 @@ streaming {
     }
 
     margin-bottom: 3em;
-    font-family: $streaming-font-sans;
-    font-size: 88%;
 
     h3 {
       @include crds-make-condensed();
       letter-spacing: normal;
       margin: 0 0 0.3em;
       color: #FFF;
-    }
-    hr {
-      margin-top: 0;
-      border-color: darken($gray, 10%);
-      clear: both;
 
-      
+      a {
+        color: #FFF;
+      }
     }
+
+    article {
+      font-family: $cr-streaming-font-sans;
+      font-size: 88%;
+    }
+
     figure {
-      margin-bottom: 1em;
       padding-left: 0;
+      @media (max-width: $screen-md-min) {
+        margin-bottom: 1em;
+      }
     }
   }
 
@@ -819,10 +869,10 @@ streaming {
   .pushdown-container {
     background: #252526;
 
-    .pull-right {
+    .btn-dismiss {
       color: #FFF;
-      display: block;
-      margin: 1em;
+      font-size: 90%;
+      padding: 0 1.25em 0.5em;
     }
     .iframe-wrapper {
       position: relative;
@@ -841,7 +891,85 @@ streaming {
   }
 } // .live-stream
 
+.reminder-content {
 
+  margin-bottom: 2em;
+
+  h3 {
+    margin-bottom: 0.75em;
+  }
+
+  label.text-uppercase {
+    font-size: 85%;
+    margin: 1em 0 0.5em; 
+  }
+
+  .btn {
+    &.btn-set-reminder {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF);
+    }
+    &.btn-date-select,
+    &.btn-time-select {
+      @include button-variant(#FFF, $cr-streaming-blue, lighten($cr-streaming-blue, 20));
+      &.active {
+        color: $cr-streaming-blue;
+        background: #FFF;
+        box-shadow: none;
+      } 
+    }
+  }
+
+  .alert {
+    font-size: 85%;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0;
+    padding: 5px;
+  }
+
+  .btn-group {
+    .btn.active,
+    .btn:first-child {
+      border-right: none;
+    }
+  }
+
+  .contact {
+    @include make-sm-column(5);
+    @media(min-width: $screen-md) {
+      padding-left: 3em;
+    }
+
+    .btn-group {
+      margin-bottom: 0.5em;
+    }
+  }
+  
+  .schedule {
+    @include make-sm-column(5);
+    @include make-sm-column-offset(1);
+    margin-bottom: 1em;
+
+    .btn {
+      margin: 0 0.35em 0.5em 0;
+    }
+
+    .btn-date-select {
+      width: 100%;
+      .glyphicon-chevron-down {
+        font-size: 60%;
+      }
+    }
+
+    @media(min-width: $screen-md) {
+      border-right: 1px solid lighten($cr-streaming-blue, 20);
+      min-height: 200px;
+      .btn-date-select {
+        width: 90%;
+      }
+    }
+  }
+}  // .reminder-content
 
 .vjs-crds-skin {
   overflow: hidden;
@@ -859,7 +987,7 @@ streaming {
   }
 
   .vjs-play-progress {
-    background-color: $streaming-blue;
+    background-color: $cr-streaming-blue;
   }
 
   .vjs-remaining-time {
@@ -934,3 +1062,48 @@ streaming {
   }
 
 } // .vjs-crds-skin
+
+modal.watch-now {
+  &.fade .modal-dialog {
+    @include translate(0, 0);
+    @include transition-transform(0.3s ease-out);
+  }
+  &.in .modal-dialog { @include translate(0, 0) }
+  .modal-header {
+    border: none; 
+  }
+  .modal-dialog {
+    width: 100%;
+    margin: 0;
+    height: 100%;
+  }
+
+  .modal-content {
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    border-radius: none;
+  }
+
+  .modal-body {
+    background: #000;
+    height: 100%;
+    padding: 0;
+
+    iframe {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.current-series-trailer {
+  .modal-body {
+    padding: 0;
+    height: 450px;
+  }
+  iframe {
+    height: 450px;
+    width: 900px;
+  }
+} // .current-series-trailer

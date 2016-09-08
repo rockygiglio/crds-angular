@@ -65,17 +65,12 @@ $spark-purple-seethrough:  rgba(29, 22, 79, .65);
 }
 
 .intro-video-play {
-  // border-radius: 50%;
-  // background: white;
-
   svg {
     color: rgba(00,00,00,.1);
-    width: 74%;
     height: auto;
     -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
-
-    // @include transition(all .2s ease-in-out);
+    max-width: 30%;
   }
 
   &:hover {
@@ -104,12 +99,14 @@ $spark-purple-seethrough:  rgba(29, 22, 79, .65);
 }
 
 .spark-logo {
-  max-width: 80%;
-}
+  max-width: 70%;
 
-@media (min-width: $screen-lg-min) {
-  .spark-logo-cols {
-    margin-top: $line-height-computed*2;
+  @media (min-width: $screen-sm-min) {
+    max-width: 50%;
+  }
+
+  @media (min-width: $screen-lg-min) {
+    max-width: 40%;
   }
 }
 

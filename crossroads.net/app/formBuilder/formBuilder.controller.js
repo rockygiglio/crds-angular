@@ -80,7 +80,7 @@
     }
 
     function displayLocation(locationId) {
-      return _.result(_.find(vm.data.locations, 'dp_RecordID', locationId), 'dp_RecordName');
+      return _.result(_.find(vm.data.locations, {'dp_RecordID': locationId}), 'dp_RecordName');
     }
 
     function userExistsInGroupType() {

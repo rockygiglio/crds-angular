@@ -18,16 +18,10 @@ import {
 } from '@angular/core/testing';
 
 import { MockBackend, MockConnection } from '@angular/http/testing';
+import { mockHttpProvider } from '../mocks/mock-http.provider';
 
 import { CMSDataService } from '../../../core/services/CMSData.service';
 declare var __CMS_ENDPOINT__: string;
-
-const mockHttpProvider = {
-  deps: [ MockBackend, BaseRequestOptions ],
-  useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
-    return new Http(backend, defaultOptions);
-  }
-}
 
 
 describe('Service: CMSData', () => {
@@ -82,7 +76,7 @@ describe('Service: CMSData', () => {
 
           expect(connection.request.method).toBe(RequestMethod.Get);
           expect(connection.request.url).toBe(
-            `${__CMS_ENDPOINT__}api/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&SeriesID__GreaterThan=0&__limit%5B%5D=4`);
+            `${__CMS_ENDPOINT__}api/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit%5B%5D=4`);
         });
 
         service.getXMostRecentMessages(4);

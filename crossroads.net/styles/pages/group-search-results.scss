@@ -13,22 +13,42 @@ group-search-results {
         text-align: right;
       }
     }
+  }
 
-    .group-location-input-wrapper {
-      display: flex;
-      margin: 0 -5px;
+  .group-search-input-wrapper {
+    position: relative;
+  }
 
-      &> * {
-        margin: 0 5px;
-      }
+  .group-location-input-wrapper {
+    position: relative;
+
+    .btn {
+      border-radius: 0;
     }
   }
 
-  .group-search-icon {
-    svg {
-      width: 22px;
-      height: 22px;
+  input[type='text'] {
+    &::-ms-clear {
+      display: none;
     }
+
+    &.group-input-clear-visible {
+      padding-right: 40px;
+    }
+  }
+
+  .group-input-clear {
+    position: absolute;
+    top: 2px;
+    left: -40px;
+    z-index: 3;
+    padding: 10px;
+    color: $gray;
+  }
+
+  .search3 {
+    width: 22px;
+    height: 22px;
   }
 
   table {
@@ -67,6 +87,16 @@ group-search-results {
     .group-location {
       width: 80px;
     }
+  }
+
+  $group-detail-border-color: $gray-light;
+  .group-search-detail {
+    border-top: solid 3px $group-detail-border-color;
+    border-bottom: solid 3px $group-detail-border-color;
+  }
+
+  .table-hover > tbody > tr.group-search-detail:hover {
+    background-color: white;
   }
 
   // Disable ng-table sort header background-color

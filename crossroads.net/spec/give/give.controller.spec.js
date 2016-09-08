@@ -882,7 +882,7 @@ describe('GiveController', function() {
 
       $rootScope.$apply();
 
-      expect(mockPaymentService.donateToProgram).toHaveBeenCalledWith(1, 321, 123, '2', 'test@here.com', 'cc', false);
+      expect(mockPaymentService.donateToProgram).toHaveBeenCalledWith(1, 321, 123, '2', 'test@here.com', 'cc', false, false);
       expect(callback.onSuccess).toHaveBeenCalled();
       expect(callback.onFailure).not.toHaveBeenCalled();
     });

@@ -1,46 +1,51 @@
 <div ng-if="groupSearchFilter.expanded" class="border-ends push-ends soft-half-top">
-  <h4 class="inline">Filters</h4>
-  <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
+  <form role="form" class="" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
+    <h4 class="inline">Filters</h4>
+    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 
-  <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
+    <div class="visible-xs pull-right">
+      <button type="button" class="btn btn-standard btn-xs "
+              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
+      </button>
+      <button type='submit' class='btn btn-primary btn-xs'>Update Filters</button>
+    </div>
 
-  <!-- TODO - remove class "form-inline" when we add a 2nd filter -->
-  <form role="form" class="form-inline" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
-    <dl class="push-half-ends">
-      <dt>
-        Age Range
-      </dt>
-      <dd>
-        <div class="row">
-           <!--TODO - remove class "checkbox-inline" when we add a 2nd filter -->
-          <div class="checkbox col-lg-4 col-sm-6" ng-repeat="ageRange in groupSearchFilter.ageRanges">
-            <label for="ageRange-{{ageRange.attributeId}}">
-              <input ng-model="ageRange.selected"
+    <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
+
+    <div class="row">
+      <div class="group-search-filter col-lg-4 col-md-6 col-sm-6 col-xs-12 push-bottom" ng-repeat="filter in groupSearchFilter.allFilters">
+        <strong>{{filter.getName()}}</strong>
+        <div class="inline">
+          <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
+          <div class="checkbox" ng-repeat="value in filter.getValues()">
+            <label for="{{filter.getFilterName()}}-{{value.getValue()}}">
+              <input ng-model="value.selected"
                      ng-model-options="{ updateOn: 'submit' }"
                      type="checkbox"
-                     ng-value="ageRange.attributeId"
-                     id="ageRange-{{ageRange.attributeId}}"/>
-              {{ageRange.name}}
+                     ng-value="value.getValue()"
+                     id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
+              {{value.getName()}}
             </label>
           </div>
         </div>
-      </dd>
-    </dl>
+      </div>
+    </div>
     <div class="text-right push-half-bottom">
+      <button type='submit' class='sm-pull-right btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'>Update Filters</button>
       <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
               ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
       </button>
-      <button type='submit' class='btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'>Update Filters</button>
     </div>
+  </div>
+  <div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
+    <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
+    <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='f in groupSearchFilter.getCurrentFilters()' ng-click='groupSearchFilter.clearFilter(f)'>
+      {{f.getName()}}
+      <svg viewBox="0 0 32 32" class="icon icon-close">
+        <use xlink:href="#close"></use>
+      </svg>
+    </button>
+    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
   </form>
-</div>
-<div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
-  <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
-  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='(name, clear) in groupSearchFilter.currentFilters' ng-click='clear()'>
-    {{name}}
-    <svg viewBox="0 0 32 32" class="icon icon-close">
-      <use xlink:href="#close"></use>
-    </svg>
-  </button>
-  <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
+
 </div>

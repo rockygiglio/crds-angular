@@ -11,7 +11,6 @@ using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using Newtonsoft.Json;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interfaces.IAttributeRepository;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
@@ -51,7 +50,7 @@ namespace crds_angular.Services
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
-        private readonly int _GroupRoleLeader;
+        private readonly int _groupRoleLeader;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -93,7 +92,7 @@ namespace crds_angular.Services
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
-            _GroupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -631,28 +630,6 @@ namespace crds_angular.Services
             }
         }
 
-        public List<GroupDTO> GetSmallGroupsForAuthenticatedUser(string token)
-        {
-            var smallGroups = _mpGroupService.GetSmallGroupsForAuthenticatedUser(token);
-            if (smallGroups == null)
-            {
-                return null;
-            }
-
-            var groupDetail = smallGroups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
-            //var configuration = MpObjectAttributeConfigurationFactory.Group();
-            //var mpAttributes = _attributeRepository.GetAttributes(null);
-
-            //foreach (var group in groupDetail)
-            //{
-                //var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
-                //group.AttributeTypes = attributesTypes.MultiSelect;
-                //group.SingleAttributes = attributesTypes.SingleSelect;
-            //}
-
-            return groupDetail;
-        }
-
         public GroupDTO UpdateGroup(GroupDTO group)
         {
             try
@@ -680,7 +657,7 @@ namespace crds_angular.Services
 
                 if (group.MinorAgeGroupsAdded)
                 {
-                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _GroupRoleLeader).ToList();
+                    var leaders =groupParticipants.Where(p => p.GroupRoleId == _groupRoleLeader).ToList();
                     _mpGroupService.SendNewStudentMinistryGroupAlertEmail(leaders);
                 }
             }
@@ -694,6 +671,30 @@ namespace crds_angular.Services
             return group;
         }
 
+        public void UpdateGroupParticipantRole(GroupParticipantDTO participant)
+        {
+            try
+            {
+                var apiToken = _apiUserService.GetToken();
+                var mpParticipant = Mapper.Map<MpGroupParticipant>(participant);
+                List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+                part.Add(mpParticipant);
+                _mpGroupService.UpdateGroupParticipant(part);
+                if (participant.GroupRoleId == _groupRoleLeader)
+                {
+                    if (_mpGroupService.ParticipantGroupHasStudents(apiToken, mpParticipant.ParticipantId, mpParticipant.GroupParticipantId))
+                    {
+                        _mpGroupService.SendNewStudentMinistryGroupAlertEmail(part);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var message = String.Format("Could not update group participant {0}", participant.ParticipantId);
+                _logger.Error(message, e);
+            }
+        }
+
         private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
             foreach (var part in participants)
@@ -703,6 +704,5 @@ namespace crds_angular.Services
 
             _mpGroupService.UpdateGroupParticipant(participants);
         }
-
     }
 }

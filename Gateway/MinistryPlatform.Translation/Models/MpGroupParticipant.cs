@@ -14,5 +14,6 @@ namespace MinistryPlatform.Translation.Models
         public string Email { get; set; }
         public DateTime? StartDate { get; set; }
         public string Congregation { get; set; }
+        public bool IsApprovedSmallGroupLeader { get; set; }
     }
 }

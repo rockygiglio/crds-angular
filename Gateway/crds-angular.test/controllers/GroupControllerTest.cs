@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,7 +15,6 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 namespace crds_angular.test.controllers
@@ -403,7 +401,7 @@ namespace crds_angular.test.controllers
             {
                 GroupName = "This will work"
             };
-            
+
             _groupServiceMock.Setup(mocked => mocked.CreateGroup(group)).Returns(returnGroup);            
 
             IHttpActionResult result = _fixture.PostGroup(group);
@@ -561,7 +559,14 @@ namespace crds_angular.test.controllers
         {
             var group = new GroupDTO()
             {
-                GroupName = "This will work"
+                GroupName = "This will work",
+                Address = new AddressDTO
+                {
+                    AddressLine1 = "line 1",
+                    City = "city",
+                    State = "state",
+                    PostalCode = "zip"
+                }
             };
 
             var returnGroup = new GroupDTO()
@@ -570,8 +575,10 @@ namespace crds_angular.test.controllers
             };
 
             _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Returns(returnGroup);
+            _addressServiceMock.Setup(mocked => mocked.FindOrCreateAddress(It.IsAny<AddressDTO>(), true));
 
             IHttpActionResult result = _fixture.EditGroup(group);
+            _addressServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(CreatedNegotiatedContentResult<GroupDTO>), result);
         }
@@ -583,15 +590,39 @@ namespace crds_angular.test.controllers
 
             var group = new GroupDTO()
             {
-                GroupName = "This will work"
+                GroupName = "This will work",
+                Address = new AddressDTO
+                {
+                    AddressLine1 = "line 1",
+                    City = "city",
+                    State = "state",
+                    PostalCode = "zip"
+                }
             };
 
             _groupServiceMock.Setup(mocked => mocked.UpdateGroup(group)).Throws(ex);
+            _addressServiceMock.Setup(mocked => mocked.FindOrCreateAddress(It.IsAny<AddressDTO>(), true));
 
             IHttpActionResult result = _fixture.EditGroup(group);
             _groupServiceMock.VerifyAll();
+            _addressServiceMock.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(BadRequestResult), result);
+        }
+
+        [Test]
+        public void ShouldCallServiceUpdateParticipant()
+        {
+            var participant = new GroupParticipantDTO()
+            {
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
+
+            _groupServiceMock.Setup(x => x.UpdateGroupParticipantRole(It.IsAny<GroupParticipantDTO>()));
+            _fixture.UpdateParticipant(participant);
+            _groupServiceMock.Verify();
         }
     }
 }

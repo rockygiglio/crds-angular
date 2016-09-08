@@ -1,15 +1,32 @@
 
+import {SearchFilterValue} from './filter_impl/searchFilter';
+import AgeRangeFilter from './filter_impl/ageRange.filter'; 
+import CategoryFilter from './filter_impl/category.filter'; 
+import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
+import LocationFilter from './filter_impl/location.filter'; 
+import GroupTypeFilter from './filter_impl/groupType.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
+import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
+
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
+    this.createGroupService = CreateGroupService;
     this.ageRanges = [];
+    this.groupTypes = [];
+    this.days = [];
+    this.categories = [];
+    this.frequencies = [];
+    this.leadersSite = [];
     this.expanded = false;
-    this.currentFilters = {};
+    this.allFilters = [];
   }
 
   $onInit() {
-    this.loadAgeRanges();
+    this.initializeFilters();
   }
 
   $onChanges(allChanges) {
@@ -17,11 +34,37 @@ export default class GroupSearchResultsController {
     this.applyFilters();
   }
 
+  initializeFilters() {
+    this.allFilters = [
+      // TODO - When new filters are implemented, add them here - they will display in the order specified in this array
+      new AgeRangeFilter('Age Range', this.ageRanges),
+      new CategoryFilter('Category', this.categories),
+      new GroupTypeFilter('Group Type', this.groupTypes),
+      new KidsWelcomeFilter('Kids Welcome'),
+      new LocationFilter('Location'),
+      new MeetingDayFilter('Day', this.days),
+      new MeetingTimeFilter('Time'),
+      new FrequencyFilter('Frequency', this.frequencies),
+      new LeadersSiteFilter('Leaders Site', this.leadersSite)
+    ];
+
+    this.loadAgeRanges();
+    this.loadGroupTypes();
+    this.loadDays();
+    this.loadCategories();
+    this.loadFrequencies();
+    this.loadLeadersSite();
+  }
+
   applyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
-        // TODO When additional filters are added, call their functions here
-        return this.ageRangeFilter(r);
+        for (let i = 0; i < this.allFilters.length; i++) {
+          if(!this.allFilters[i].matches(r)) {
+            return false;
+          }
+        }
+        return true;
       })
     };
 
@@ -31,10 +74,24 @@ export default class GroupSearchResultsController {
   }
 
   clearFilters() {
-    // TODO When additional filters are added, call their clear functions here
-    this.clearAgeRangeFilter();
+    this.allFilters.forEach(function(f) {
+      f.clear();
+    }, this);
 
     this.applyFilters();
+  }
+
+  clearFilter(filter) {
+    filter.clear();
+    this.applyFilters();
+  }
+
+  getCurrentFilters() {
+    return this.allFilters.filter((f) => f.isActive());
+  }
+
+  hasFilters() {
+    return this.allFilters.find((f) => f.isActive()) !== undefined;
   }
 
   openFilters() {
@@ -49,60 +106,87 @@ export default class GroupSearchResultsController {
     this.expanded = false;
   }
 
-  hasFilters() {
-    return Object.keys(this.currentFilters).length > 0;
-  }
-
-  // TODO - This is probably not very efficient, might need to optimize with large result sets
-  ageRangeFilter(searchResult) {
-    delete this.currentFilters['Age Range'];
-    let selectedAgeRanges = this.ageRanges.filter((a) => {
-      return a.selected === true;
-    }).map((a) => {
-      return a.attributeId;
-    });
-
-    if(selectedAgeRanges.length === 0) {
-      return true;
-    }
-
-    this.currentFilters['Age Range'] = () => {
-      this.clearAgeRangeFilter();
-      this.applyFilters();
-    };
-
-    // Guard against errors if group has no age ranges.  Shouldn't happen, but just in case...
-    if(!searchResult.ageRange || !Array.isArray(searchResult.ageRange)) {
-      return false;
-    }
-    
-    let filteredResults = searchResult.ageRange.filter((a) => {
-      return selectedAgeRanges.find((s) => { return s === a.attributeId; }) !== undefined;
-    });
-
-    return filteredResults !== undefined && filteredResults.length > 0;
-  }
-
-  clearAgeRangeFilter() {
-    for(let i = 0; i < this.ageRanges.length; i++)
-    {
-      this.ageRanges[i].selected = false;
-    }
-    delete this.currentFilters['Age Range'];
-  }
-
   loadAgeRanges() {
     this.groupService.getAgeRanges().then(
       (data) => {
-        this.ageRanges = data.attributes;
-
-        this.clearAgeRangeFilter();
+        this.ageRanges.push.apply(this.ageRanges, data.attributes.map((a) => {
+          return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
       }
     ).finally(
       () => {
+      });
+  }
+
+  loadGroupTypes() {
+    this.groupService.getGroupGenderMixType().then(
+      (data) => {
+        this.groupTypes.push.apply(this.groupTypes, data.attributes.map((a) => {
+          return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
+  }
+
+  loadCategories() {
+    this.groupService.getGroupCategories().then(
+      (data) => {
+        this.categories.push.apply(this.categories, data.map((c) => {
+          return new SearchFilterValue(c.label, c.categoryId, false, c.labelDesc);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
+  }  
+
+  loadDays() {
+    this.groupService.getDaysOfTheWeek().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        data.push({dp_RecordID: 0, dp_RecordName: 'Flexible Meeting Time'});
+        this.days.push.apply(this.days, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (err) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }
+    ).finally(
+      () => {
+      });
+  }
+
+  loadFrequencies() {
+    let frequencies = this.createGroupService.getMeetingFrequencies();
+    frequencies = _.sortBy( frequencies, 'meetingFrequencyId' );
+
+    this.frequencies.push.apply(this.frequencies, frequencies.map((a) => {
+      return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
+    }));
+  }
+
+  loadLeadersSite() {
+    this.groupService.getSites().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        this.leadersSite.push.apply(this.leadersSite, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
       });
   }
 }

@@ -11,13 +11,13 @@ namespace crds_angular.Services
     public class AddressService : IAddressService
     {
         private readonly MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository _mpAddressService;
-        private readonly IAddressProximityService _addressProximityService;
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(typeof (AddressService));
 
-        public AddressService(MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository mpAddressService, IAddressProximityService addressProximityService)
+        public AddressService(MinistryPlatform.Translation.Repositories.Interfaces.IAddressRepository mpAddressService, IAddressGeocodingService addressGeocodingService)
         {
             _mpAddressService = mpAddressService;
-            _addressProximityService = addressProximityService;
+            _addressGeocodingService = addressGeocodingService;
         }
 
         public void FindOrCreateAddress(AddressDTO address, bool updateGeoCoordinates = false)
@@ -47,7 +47,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var coords = _addressProximityService.GetGeoCoordinates(address);
+                var coords = _addressGeocodingService.GetGeoCoordinates(address);
                 address.Longitude = coords.Longitude;
                 address.Latitude = coords.Latitude;
             }

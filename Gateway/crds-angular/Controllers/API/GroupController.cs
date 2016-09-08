@@ -88,7 +88,7 @@ namespace crds_angular.Controllers.API
                     _groupToolService.VerifyCurrentUserIsGroupLeader(token, @group.GroupId);
                     if (group.Address != null && string.IsNullOrEmpty(group.Address.AddressLine1) == false)
                     {
-                        _addressService.FindOrCreateAddress(group.Address);
+                        _addressService.FindOrCreateAddress(group.Address, true);
                     }
 
                     group = _groupService.UpdateGroup(group);
@@ -352,6 +352,32 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Update the participant for a particular group
+        /// </summary>
+        [RequiresAuthorization]
+        [Route("api/group/updateParticipantRole")]
+        public IHttpActionResult UpdateParticipant([FromBody] GroupParticipantDTO participant)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupService.UpdateGroupParticipantRole(participant);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error updating participant for participant ID " + participant.ParticipantId, ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Send an email invitation to an email address for a Journey Group
         /// Requires the user to be a member or leader of the Journey Group
         /// Will return a 404 if the user is not a Member or Leader of the group
@@ -379,6 +405,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        
+
+
+
     }
 }

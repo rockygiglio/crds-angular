@@ -30,7 +30,7 @@ export class CMSDataService {
                 allActiveSeries.sort(this.dateSortMethod);
                 currentSeries = allActiveSeries[0];
             }
-
+            
             return currentSeries;
 
         });
@@ -51,9 +51,19 @@ export class CMSDataService {
                         .map(rsp => {return rsp.json().series[0]})
     }
     
+    public getLastSeries() {
+        let todaysDate = new Date().toISOString().slice(0, 10);
+        let nearestSeriesAPIAddress = `api/series?endDate__LessThanOrEqual=${todaysDate}&endDate__sort=DESC&__limit[]=1`
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + nearestSeriesAPIAddress))
+                        .map(rsp => {
+                            return rsp.json().series[0]
+                        })
+    }
+
+    
     getXMostRecentMessages(limit:number) {
         let todaysDate = new Date().toISOString().slice(0, 10);
-        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`))
+        return this.http.get(encodeURI(__CMS_ENDPOINT__ + `api/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`))
                         .map(rsp => {return rsp.json().messages});
     }
     

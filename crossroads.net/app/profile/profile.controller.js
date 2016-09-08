@@ -73,8 +73,7 @@
         locationName = _.result(
           _.find(
             vm.locations,
-            'dp_RecordID',
-            vm.profileData.person.congregationId),
+            {'dp_RecordID': vm.profileData.person.congregationId}),
             'dp_RecordName');
       }
 
