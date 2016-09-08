@@ -1,13 +1,13 @@
 <modal id="reminderModal" #reminderModal class="crds-modal">
   <form #form="ngForm" (ngSubmit)="submit(form)" novalidate>
     <modal-header [show-close]="true">
-      <h2>Live Stream Reminder</h2>
+      <dynamic-content-ng2 title="streamingReminderTitle"></dynamic-content-ng2>
     </modal-header>
     <modal-body>
       <preloader full-screen='true' *ngIf="isLoading()"></preloader>
       <div class="reminder-content" *ngIf="!isLoading() && !formSuccess">
         <div class="schedule">
-          <h3>Which upcoming live stream?</h3>
+          <dynamic-content-ng2 title="streamingReminderStreamSelect"></dynamic-content-ng2>
 
           <a href="#" class="btn btn-date-select" (click)="model.day=false" *ngIf="model.day">
             <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
@@ -22,7 +22,7 @@
           </div>
 
           <div *ngIf="model.day">
-            <label class="text-uppercase">Select the time</label>
+            <dynamic-content-ng2 title="streamingReminderLabelTime"></dynamic-content-ng2>
             <div data-toggle="buttons">
               <label class="btn btn-sm btn-time-select" *ngFor="let event of selectedDate(model.day)" (click)="model.time=event.start.format(dateFormats.time)">
                 <input type="radio" autocomplete="off" [(ngModel)]="model.time" ngControl="time" #time="ngForm"> {{event.start.format(dateFormats.time)}}
@@ -32,7 +32,7 @@
 
         </div>
         <div class="contact">
-          <h3>How would you like to be reminded?</h3>
+          <dynamic-content-ng2 title="streamingReminderTypeSelect"></dynamic-content-ng2>
           <div class="btn-group btn-group-justified" data-toggle="buttons">
             <label class="btn btn-lg btn-time-select active" (click)="model.type='phone'">
               <input type="radio" name="type" value="phone" autocomplete="off" [(ngModel)]="model.type" ngControl="type" #type="ngForm"> Text
@@ -44,26 +44,26 @@
 
           <div class="form-group" *ngIf="model.type=='phone'">
             <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
-            <div *ngIf="model.isPhoneValid === false" class="alert alert-danger">Phone number is invalid</div>
+            <dynamic-content-ng2 title="streamingReminderErrorPhone" *ngIf="model.isPhoneValid === false"></dynamic-content-ng2>
           </div>
           <div class="form-group" *ngIf="model.type=='email'">
             <input [(ngModel)]="model.email" ngControl="email" #email="ngForm" type="email" class="form-control" placeholder="Enter your email address" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
-            <div *ngIf="model.isEmailValid === false" class="alert alert-danger">Email address is invalid</div>
+            <dynamic-content-ng2 title="streamingReminderErrorEmail" *ngIf="model.isEmailValid === false"></dynamic-content-ng2>
           </div>
         </div>
       </div>
 
       <div *ngIf="formSuccess">
-        <h3 class="text-center">Thanks!<br>Your reminder was set successfully.</h3>
+        <dynamic-content-ng2 title="streamingReminderSuccess"></dynamic-content-ng2>
       </div>
 
       <div *ngIf="formError">
-        <h3 class="text-center">Sorry!<br/>There was an error, try again later</h3>
+        <dynamic-content-ng2 title="streamingReminderFailure"></dynamic-content-ng2>
       </div>
       
     </modal-body>
     <modal-footer>
-      <div class="alert alert-danger" *ngIf="dateTimeError">Please select a date and time</div>
+      <dynamic-content-ng2 title="streamingLandingDateTimeError" *ngIf="dateTimeError" ></dynamic-content-ng2>
       <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="false" *ngIf="!isLoading() && !formSuccess">Set Reminder</button>
       <button type="button" class="btn btn-default btn-set-reminder" (click)="close()" *ngIf="formSuccess">Close</button>
     </modal-footer>
