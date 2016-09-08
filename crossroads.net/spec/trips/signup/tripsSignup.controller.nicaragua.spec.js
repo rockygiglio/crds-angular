@@ -62,7 +62,7 @@ describe('GOTrip Nicaragua Signup Application Controller', function() {
   });
 
   it('should set numberOfPages to 7', function() {
-    expect(controller.numberOfPages).toBe(7);
+    expect(controller.signupService.numberOfPages).toBe(7);
   });
 
 });

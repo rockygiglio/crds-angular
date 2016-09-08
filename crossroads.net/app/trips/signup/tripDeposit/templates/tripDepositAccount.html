@@ -13,6 +13,9 @@
   <ng-form name="accountForm">
       <bank-credit-card-details
         dto='tripDeposit.dto'
+        bank-info-submitted='tripDeposit.dto.bankinfoSubmitted'
+        donor='tripDeposit.dto.donor'
+        email='tripDeposit.dto.email'
         set-valid-card='setValidCard'
         set-valid-cvc='setValidCvc'
         account-state-name='tripDeposit.account' >

@@ -60,6 +60,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
     vm.numberOfPages = 0;
+    vm.page6ButtonText = page6ButtonText();
     vm.pageHasErrors = true;
     vm.passportInvalidContent = passportInvalidContent;
     vm.privateInvite = $location.search()['invite'];
@@ -83,10 +84,10 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.maxPassportExpireDate = new Date(now.getFullYear() + 150, now.getMonth(), now.getDate());
     vm.minPassportExpireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     vm.openPassportExpireDatePicker = openPassportExpireDatePicker;
-    
 
     $rootScope.$on('$stateChangeStart', stateChangeStart);
-    $scope.$on('$viewContentLoaded', stateChangeSuccess);
+    $rootScope.$on('$stateChangeSuccess', stateChangeSuccess);
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
     $window.onbeforeunload = onBeforeUnload;
 
     activate();
@@ -122,22 +123,18 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
       switch (vm.destination) {
         case 'NOLA':
-          vm.numberOfPages = 6;
-          vm.signupService.numberOfPages = 6;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 5 : 6;
           break;
         case 'South Africa':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           break;
         case 'India':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           vm.whyPlaceholder = 'Please be specific. ' +
             'In instances where we have a limited number of spots, we strongly consider responses to this question.';
           break;
         case 'Nicaragua':
-          vm.numberOfPages = 7;
-          vm.signupService.numberOfPages = 7;
+          vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           break;
       }
 
@@ -185,6 +182,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
        vm.passportExpireDateOpen = true;
     }
 
+    function page6ButtonText(){
+      if (TripsSignupService.isScholarshipped) {
+        return { normal: 'Submit Application', processing: 'Submitting...' };
+      }
+
+      return { normal: 'Next', processing: 'Next...' };
+    }
+
     function frequentFlyerChanged(flyer) {
       if (!_.isEmpty(flyer.notes)) {
         flyer.selected = true;
@@ -227,13 +232,25 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       } else {
         saveProfile();
       }
-      $state.go('tripdeposit',
-                    {campaignId: vm.signupService.campaign.id, contactId: $stateParams.contactId});
-
+      if (!TripsSignupService.isScholarshipped) {
+        $state.go('tripdeposit',
+                      { campaignId: vm.signupService.campaign.id,
+                        contactId: $stateParams.contactId });
+      } else {
+        vm.signupService.saveApplication(() => {
+          $state.go('tripsignup.application.thankyou');
+        }, (err) => {
+          vm.submitting = false;
+          if (err.status === 409) {
+            $rootScope.$emit('notify', $rootScope.MESSAGES.tripIsFull);
+          } else {
+            saveError();
+          }
+        });
+      }
     }
 
     function saveError() {
-      vm.submitting = false;
       $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       return;
     }
@@ -418,7 +435,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function stateChangeStart(event, toState, toParams, fromState, fromParams) {
-      if (fromState.name === 'tripsignup.application.thankyou') {
+      if (fromState.name === 'tripsignup.application.thankyou' || fromState.name === 'tripdeposit.thanks') {
         if (toState.name === 'tripsignup.application.page') {
           event.preventDefault();
           $state.go('tripsignup', {campaignId: toParams.campaignId});
@@ -464,7 +481,17 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       }
     }
 
-    function stateChangeSuccess(event) {
+    function stateChangeSuccess(event, toState, toParams, fromState, fromParams) {
+      if (fromState.name === 'tripsignup' &&
+          toState.name === 'tripsignup.application.page' &&
+          Number(toParams.stepId) > 1) {
+        event.preventDefault();
+        $state.go('tripsignup', {campaignId: toParams.campaignId});
+        return;
+      }
+    }
+
+    function viewContentLoaded() {
       toTop();
     }
 

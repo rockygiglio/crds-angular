@@ -1,10 +1,10 @@
-<article class="crds-card wow fadeInUp" [attr.data-wow-delay]="content.delay" >
+<article class="crds-card fadeInUp" [attr.data-wow-delay]="content.delay" [ngClass]="{ wow: animate }">
   <figure>
-    <a class="sixteen-nine" href="{{ content.url }}">
+    <linked-content href="{{ content.url }}" target="{{ content.target }}">
       <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="content.imageSrc" src="{{ content.image }}" title="{{ content.title }}">
-    </a>
+    </linked-content>
     <figcaption>
-      <a href="{{ content.url }}" *ngIf="content.title">{{ content.title | truncate: 38 }}</a>
+      <linked-content target="{{ content.target }}" href="{{ content.url }}" *ngIf="content.title" title="{{ content.title }}">{{ content.title | truncate: 38 }}</linked-content>
     </figcaption>
   </figure>
   <section>

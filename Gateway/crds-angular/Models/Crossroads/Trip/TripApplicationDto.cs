@@ -30,6 +30,21 @@ namespace crds_angular.Models.Crossroads.Trip
         [JsonProperty(PropertyName = "pledgeCampaignId")]
         public int PledgeCampaignId { get; set; }
 
+        [JsonProperty(PropertyName = "depositInformation")]
+        public ApplicationDepositInformation DepositInformation { get; set; }
+
+        public class ApplicationDepositInformation
+        {
+            [JsonProperty(PropertyName = "donationAmount")]
+            public string DonationAmount { get; set; }
+
+            [JsonProperty(PropertyName = "donationDate")]
+            public string DonationDate { get; set; }
+
+            [JsonProperty(PropertyName = "paymentMethod")]
+            public string PaymentMethod { get; set; }
+        }
+
         public class ApplicationPageOne
         {
             [JsonProperty(PropertyName = "firstName")]

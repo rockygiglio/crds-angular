@@ -21,6 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IContactRepository> _contactService;
         private Mock<IContentBlockService> _contentBlockService;
         private Mock<IAddressRepository> _addressRepository;
+        private Mock<IObjectAttributeRepository> _objectAttributeRepository;
         private readonly int _groupsParticipantsPageId = 298;
         private readonly int _groupsParticipantsSubPage = 88;
         private readonly int _groupsPageId = 322;
@@ -38,7 +39,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _contactService = new Mock<IContactRepository>();
             _contentBlockService = new Mock<IContentBlockService>();
             _addressRepository = new Mock<IAddressRepository>();
-            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object);
+            _objectAttributeRepository = new Mock<IObjectAttributeRepository>();
+            _fixture = new GroupRepository(_ministryPlatformService.Object, _ministryPlatformRestService.Object, _configWrapper.Object, _authService.Object, _communicationService.Object, _contactService.Object, _contentBlockService.Object, _addressRepository.Object, _objectAttributeRepository.Object);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -789,6 +791,69 @@ namespace MinistryPlatform.Translation.Test.Services
             var result = _fixture.GetAuthenticatedUserParticipationByGroupID("abc", groupId);
             _ministryPlatformService.VerifyAll();
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public void SetMeetingFrequencyForNonInvite()
+        {
+            var record = getTestGroupRecord();
+            record.Add("Meeting_Frequency",  "Weekly");
+            var group = _fixture.MapRecordToMpGroup(record);
+            Assert.AreEqual("Weekly", group.MeetingFrequency);
+        }
+
+        [Test]
+        public void SetMeetingFrequencyForInvite()
+        {
+            var record = getTestGroupRecord();
+            record.Add("Meeting_Frequency_ID_Text", "Weekly");
+            var group = _fixture.MapRecordToMpGroup(record);
+            Assert.AreEqual("Weekly", group.MeetingFrequency);
+        }
+
+        [Test]
+        public void MeetingFrequencyMissingReturnsEmpty()
+        {
+            var record = getTestGroupRecord();
+            var group = _fixture.MapRecordToMpGroup(record);
+            Assert.AreEqual(string.Empty, group.MeetingFrequency);
+        }
+
+
+
+        private Dictionary<string, object> getTestGroupRecord()
+        {
+            var values = new Dictionary<string, object>
+            {
+                {"Group_ID", 1 },
+                {"Group_Name", "New Testing Group"},
+                {"Group_Type_ID", 19 },
+                {"Ministry_ID", 8 },
+                {"Congregation_ID", 1 },
+                {"Primary_Contact", 74657},
+                {"Description", "The best group ever created for testing stuff and things" },
+                {"Start_Date", string.Empty},
+                {"End_Date", string.Empty },
+                {"Target_Size", 0 },
+                {"Offsite_Meeting_Address", 43567 },
+                {"Group_Is_Full", false },
+                {"Available_Online", true },
+                {"Meeting_Time", "15:15:00" },
+                {"Meeting_Day_Id", 2},
+                {"Domain_ID", 1 },
+                {"Child_Care_Available", false },
+                {"Remaining_Capacity", 8 },
+                {"Enable_Waiting_List", false },
+                {"Online_RSVP_Minimum_Age", 0 },
+                {"Maximum_Age", 99 },
+                {"Minimum_Participants", 8 },
+                {"Kids_Welcome", false },
+                {"Meeting_Day_ID", 1 },
+                {"Primary_Contact_Text", "Text" },
+                {"Meeting_Frequency_ID", null }
+
+            };
+            return values;
         }
     }
 }

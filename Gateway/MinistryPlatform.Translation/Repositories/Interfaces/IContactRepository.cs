@@ -12,7 +12,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpHouseholdMember> GetHouseholdFamilyMembers(int householdId);
         List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId);
         MpMyContact GetMyProfile(string token);
-        int CreateContactForGuestGiver(string emailAddress, string displayName);
+        int CreateContactForGuestGiver(string emailAddress, string displayName, string firstName = null, string lastName = null);
         int CreateContactForSponsoredChild(string firstName, string lastName, string town, string idCard);
         int CreateContactForNewDonor(MpContactDonor mpContactDonor);
         IList<int> GetContactIdByRoleId(int roleId, string token);

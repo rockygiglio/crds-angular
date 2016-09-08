@@ -204,3 +204,6 @@ crossroads.net/.vscode/settings.json
 .floo
 .flooignore
 
+# Ignore MinistryPlatform.config files in AsyncJobs.  These are linked to crds-angular, but are copied locally during build
+Gateway/Crossroads.AsyncJobs/MinistryPlatform.config
+Gateway/Crossroads.AsyncJobs/MinistryPlatform.*.config

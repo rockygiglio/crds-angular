@@ -196,11 +196,35 @@ namespace MinistryPlatform.Translation.Test.Services
                 mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
                 .Returns(123);
 
-            var contactId = _fixture.CreateContactForGuestGiver("me@here.com", "display name");
+            var contactId = _fixture.CreateContactForGuestGiver("me@here.com", "display name", "", "");
 
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,
                                                                           It.Is<Dictionary<string, object>>(d =>
                                                                                                                 d["Email_Address"].Equals("me@here.com")
+                                                                                                                && d["Company"].Equals(false)
+                                                                                                                && d["Display_Name"].Equals("display name")
+                                                                                                                && d["Nickname"].Equals("display name")
+                                                                                                                && d["Household_Position_ID"].Equals(1)
+                                                                              ),
+                                                                          It.IsAny<string>(),
+                                                                          false));
+
+            Assert.AreEqual(123, contactId);
+        }
+        [Test]
+        public void ShouldCreateContactForGuestGiverGivenFirstnameandLastName()
+        {
+            _ministryPlatformService.Setup(
+                mocked => mocked.CreateRecord(292, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), false))
+                .Returns(123);
+
+            var contactId = _fixture.CreateContactForGuestGiver("me@here.com", "display name", "firstName", "lastName");
+
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(292,
+                                                                          It.Is<Dictionary<string, object>>(d =>
+                                                                                                                d["Email_Address"].Equals("me@here.com")
+                                                                                                                && d["First_Name"].Equals("firstName")
+                                                                                                                && d["Last_Name"].Equals("lastName")
                                                                                                                 && d["Company"].Equals(false)
                                                                                                                 && d["Display_Name"].Equals("display name")
                                                                                                                 && d["Nickname"].Equals("display name")
@@ -269,7 +293,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             try
             {
-                _fixture.CreateContactForGuestGiver("me@here.com", "display");
+                _fixture.CreateContactForGuestGiver("me@here.com", "display", string.Empty, string.Empty);
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (Exception e)

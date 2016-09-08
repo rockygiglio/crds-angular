@@ -1,5 +1,5 @@
 <div class="wrapper" id="wrapper" stickyHeader>
-  <section id="countdown" class="navbar-section" >
+  <section id="countdown" class="navbar-section">
     <div class="container animated fadeIn">
       <pageScroll href="#schedule" class="btn see-schedule">
         See Schedule
@@ -7,7 +7,7 @@
           <use xlink:href="#arrow-down9"></use>
         </svg>
       </pageScroll>
-      <countdown></countdown>
+      <countdown (watchNowClick)="watchNowClicked()"></countdown>
     </div>
   </section>
 
@@ -27,7 +27,7 @@
         <h2>Past Weekends</h2>
       </header>
 
-      <div class="row">
+      <div class="content-card-row">
         <content-card *ngFor="let event of pastWeekends; let i = index" [content]="event" [key]="i" ></content-card>
       </div>
 
@@ -75,3 +75,9 @@
     </div>
   </section>
 </div>
+
+<modal class="watch-now" #watchNowModal (onClose)="modalClose()" (onDismiss)="modalClose()">
+  <modal-body>
+    <div id="watch-now-source" #videoTarget></div>
+  </modal-body>
+</modal>

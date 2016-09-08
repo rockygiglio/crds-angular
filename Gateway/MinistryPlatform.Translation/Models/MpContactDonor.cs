@@ -49,6 +49,8 @@ namespace MinistryPlatform.Translation.Models
     {
         public string EmailAddress { get; set; }
         public string DisplayName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public MpPostalAddress Address { get; set; }
         public int HouseholdId { get; set; }
 

@@ -20,6 +20,7 @@ namespace MinistryPlatform.Translation.Test.Services
     public class DonorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IProgramRepository> _programService;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IAuthenticationRepository> _authService;
@@ -33,6 +34,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _programService = new Mock<IProgramRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
             _authService = new Mock<IAuthenticationRepository>();
@@ -57,7 +59,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new DonorRepository(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
+            _fixture = new DonorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
         }
 
         [Test]
@@ -457,6 +459,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(
               donationPageId, It.IsAny<Dictionary<string, object>>(),
               It.IsAny<string>(), true)).Returns(expectedDonationId);
+            _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(mocked => mocked.Get<MpContact>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new MpContact());
 
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
@@ -893,11 +897,11 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(program.CommunicationTemplateId.Value, donorId, amount, accountType, setupDate, program.Name, "None", null));
+            donorService.Setup(mocked => mocked.SendEmail(program.CommunicationTemplateId.Value, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 
@@ -925,11 +929,11 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null));
+            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 
@@ -957,11 +961,11 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             // TODO Mocking the test fixture in order to mock SendEmail.  Probably ought to refactor SendEmail to a separate class - shouldn't have to mock the class we're testing...
-            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
+            var donorService = new Mock<DonorRepository>(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object)
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null));
+            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 

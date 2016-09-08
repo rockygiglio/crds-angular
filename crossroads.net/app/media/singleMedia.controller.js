@@ -11,7 +11,6 @@
     'SingleMedia',
     'ItemProperty',
     'ParentMedia',
-    'ParentItemProperty',
     'ImageURL',
     'YT_EVENT',
     'ResponsiveImageService',
@@ -28,7 +27,6 @@
                                  SingleMedia,
                                  ItemProperty,
                                  ParentMedia,
-                                 ParentItemProperty,
                                  ImageURL,
                                  YT_EVENT,
                                  ResponsiveImageService,
@@ -91,7 +89,7 @@
     }
 
     if (ParentMedia) {
-      vm.parentMedia = ParentMedia[ParentItemProperty];
+      vm.parentMedia = ParentMedia;
     } else {
       vm.parentMedia = false;
     }
