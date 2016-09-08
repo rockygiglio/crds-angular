@@ -23,6 +23,7 @@ export default class GroupSearchResultsController {
     this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
+    this.expandedFilter = null;
   }
 
   $onInit() {
@@ -96,6 +97,7 @@ export default class GroupSearchResultsController {
 
   openFilters() {
     this.expanded = true;
+    this.expandedFilter = false;
   }
 
   closeFilters(filterForm) {
@@ -104,6 +106,18 @@ export default class GroupSearchResultsController {
     filterForm.$rollbackViewValue();
 
     this.expanded = false;
+  }
+
+  toggleFilter(filter) {
+    if (this.expandedFilter === filter) {
+      this.expandedFilter = null;
+    } else {
+      this.expandedFilter = filter;
+    }
+  }
+
+  isOpenFilter(filter) {
+    return this.expandedFilter === filter;
   }
 
   loadAgeRanges() {

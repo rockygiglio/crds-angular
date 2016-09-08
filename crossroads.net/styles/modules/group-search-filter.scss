@@ -1,12 +1,41 @@
 group-search-filter {
-  @media (min-width: $screen-md) {
-    dt {
-      float: left;
-      width: 100px;
-    }
+  // Font size matches that used in the search results table
+  font-size: 85%;
 
-    dd {
-      margin-left: 125px;
+  @media (min-width: $screen-sm) {
+    font-size: 95%;
+  }
+
+  .group-search-filters-expanded {
+    border-top: solid 3px $gray-light;
+    border-bottom: solid 3px $gray-light;
+  }
+
+  .group-search-filter-row {
+    position: relative;
+  }
+
+  .group-search-filter-options {
+    padding-right: $line-height-computed * 2;
+  }
+
+  .group-search-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  svg.icon-arrow-down9 {
+    transition-property: transform;
+    transition-duration: .25s;
+
+    transform: rotate(0deg);
+  }
+
+  .expanded  {
+    svg.icon-arrow-down9 {
+      transform: rotate(-180deg);
     }
   }
 

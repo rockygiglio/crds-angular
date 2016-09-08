@@ -1,51 +1,64 @@
-<div ng-if="groupSearchFilter.expanded" class="border-ends push-ends soft-half-top">
+<!--
+ Expanded Filters
+-->
+<div ng-if="groupSearchFilter.expanded" class="group-search-filters-expanded border-ends push-ends soft-half-top">
   <form role="form" class="" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
     <h4 class="inline">Filters</h4>
     <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 
-    <div class="visible-xs pull-right">
-      <button type="button" class="btn btn-standard btn-xs "
-              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
+    <div class="pull-right">
+      <button type="button" class="btn btn-primary btn-xs "
+              ng-click="groupSearchFilter.applyFilters()">Close Filters
       </button>
-      <button type='submit' class='btn btn-primary btn-xs'>Update Filters</button>
     </div>
 
     <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
-    <div class="row">
-      <div class="group-search-filter col-lg-4 col-md-6 col-sm-6 col-xs-12 push-bottom" ng-repeat="filter in groupSearchFilter.allFilters">
-        <strong>{{filter.getName()}}</strong>
-        <div class="inline">
-          <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
-          <div class="checkbox" ng-repeat="value in filter.getValues()">
-            <label for="{{filter.getFilterName()}}-{{value.getValue()}}">
-              <input ng-model="value.selected"
-                     ng-model-options="{ updateOn: 'submit' }"
-                     type="checkbox"
-                     ng-value="value.getValue()"
-                     id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
-              {{value.getName()}}
-            </label>
+    <div class="soft-half-sides">
+      <div ng-repeat="filter in groupSearchFilter.allFilters" ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }" class="group-search-filter-row row soft-half-top border-top">
+        <div class="col-xs-4 col-sm-3 col-md-2 push-half-bottom">
+          <a ng-click="groupSearchFilter.toggleFilter(filter)">{{filter.getName()}}</a>
+        </div>
+        <div class="group-search-filter-options col-xs-8 col-sm-9 col-md-10 push-half-bottom">
+          <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="row">
+            <div class="col-md-6 col-lg-4" ng-repeat="value in filter.getValues()">
+              <label class="checkbox-inline" for="{{filter.getFilterName()}}-{{value.getValue()}}">
+                <input ng-model="value.selected"
+                       ng-model-options="{ updateOn: 'submit' }"
+                       type="checkbox"
+                       ng-value="value.getValue()"
+                       id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
+                {{value.getName()}}
+              </label>
+            </div>
           </div>
         </div>
+        <a ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-toggle soft-half-top soft-half-right soft-half-bottom">
+          <svg viewBox="0 0 32 32" class="icon icon-large icon-arrow-down9">
+            <use xlink:href="#arrow-down9"></use>
+          </svg>
+        </a>
       </div>
     </div>
-    <div class="text-right push-half-bottom">
-      <button type='submit' class='sm-pull-right btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'>Update Filters</button>
-      <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
-              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
-      </button>
-    </div>
-  </div>
-  <div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
-    <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
-    <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='f in groupSearchFilter.getCurrentFilters()' ng-click='groupSearchFilter.clearFilter(f)'>
-      {{f.getName()}}
-      <svg viewBox="0 0 32 32" class="icon icon-close">
-        <use xlink:href="#close"></use>
-      </svg>
-    </button>
-    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
   </form>
+</div>
 
+<div ng-if="groupSearchFilter.expanded" class="visible-xs push-half-bottom">
+  <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom"
+          ng-click="groupSearchFilter.applyFilters()">Close Filters
+  </button>
+</div>
+
+<!--
+  Collapsed Filters
+-->
+<div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
+  <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
+  <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='f in groupSearchFilter.getCurrentFilters()' ng-click='groupSearchFilter.clearFilter(f)'>
+    {{f.getName()}}
+    <svg viewBox="0 0 32 32" class="icon icon-close">
+      <use xlink:href="#close"></use>
+    </svg>
+  </button>
+  <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 </div>
