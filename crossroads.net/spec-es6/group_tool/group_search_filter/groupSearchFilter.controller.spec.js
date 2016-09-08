@@ -9,6 +9,7 @@ import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_
 import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
 import MeetingTimeFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingTime.filter';
 import FrequencyFilter from '../../../app/group_tool/group_search_filter/filter_impl/frequency.filter';
+import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filter_impl/leadersSite.filter';
 
 describe('GroupSearchFilter', () => {
   let fixture, groupService, createGroupService;
@@ -31,6 +32,7 @@ describe('GroupSearchFilter', () => {
       expect(fixture.groupTypes).toEqual([]);
       expect(fixture.days).toEqual([]);
       expect(fixture.categories).toEqual([]);
+      expect(fixture.leadersSite).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
       expect(fixture.frequencies).toEqual([]);
@@ -79,17 +81,22 @@ describe('GroupSearchFilter', () => {
       let frequencies = [20, 21, 22];
       spyOn(fixture, 'loadFrequencies').and.callFake(() => {});
 
+      let leadersSite = [17, 18, 19];
+      spyOn(fixture, 'loadLeadersSite').and.callFake(() => {});
+
       fixture.allFilters = [];
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
       fixture.days = meetingDays;
       fixture.categories = categories;
       fixture.frequencies = frequencies;
+      fixture.leadersSite = leadersSite;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(8);
+      expect(fixture.allFilters.length).toEqual(9);
+
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
@@ -126,6 +133,10 @@ describe('GroupSearchFilter', () => {
       let frequencyFilter = fixture.allFilters[i++];
       expect(frequencyFilter instanceof FrequencyFilter).toBeTruthy();
       expect(frequencyFilter.getName()).toEqual('Frequency');
+
+      let leadersSiteFilter = fixture.allFilters[i++];
+      expect(leadersSiteFilter instanceof LeadersSiteFilter).toBeTruthy();
+      expect(leadersSiteFilter.getName()).toEqual('Leaders Site');
     });
   });
 
