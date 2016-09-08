@@ -2,9 +2,11 @@
 import constants from 'crds-constants';
 import GroupSearchFilter from '../../../app/group_tool/group_search_filter/groupSearchFilter.controller';
 import AgeRangeFilter from '../../../app/group_tool/group_search_filter/filter_impl/ageRange.filter';
+import CategoryFilter from '../../../app/group_tool/group_search_filter/filter_impl/category.filter';
 import KidsWelcomeFilter from '../../../app/group_tool/group_search_filter/filter_impl/kidsWelcome.filter';
 import LocationFilter from '../../../app/group_tool/group_search_filter/filter_impl/location.filter';
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
+import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
 
 describe('GroupSearchFilter', () => {
   let fixture, groupService;
@@ -22,13 +24,15 @@ describe('GroupSearchFilter', () => {
     it('should initialize properties', () => {
       expect(fixture.ageRanges).toEqual([]);
       expect(fixture.groupTypes).toEqual([]);
+      expect(fixture.days).toEqual([]);
+      expect(fixture.categories).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
     });
   });
 
   describe('$onInit function', () => {
-    it('should load age ranges', () => {
+    it('should initialize filters', () => {
       spyOn(fixture, 'initializeFilters').and.callFake(() => {});
       fixture.$onInit();
       expect(fixture.initializeFilters).toHaveBeenCalled();
@@ -60,20 +64,33 @@ describe('GroupSearchFilter', () => {
       let groupTypes = [4, 5, 6];
       spyOn(fixture, 'loadGroupTypes').and.callFake(() => {});
 
+      let meetingDays = [7, 8, 9];
+      spyOn(fixture, 'loadDays').and.callFake(() => {});
+
+      let categories = [10, 11, 12];
+      spyOn(fixture, 'loadCategories').and.callFake(() => {});
+
       fixture.allFilters = [];
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
+      fixture.days = meetingDays;
+      fixture.categories = categories;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(4);
+      expect(fixture.allFilters.length).toEqual(6);
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
       expect(ageRangeFilter instanceof AgeRangeFilter).toBeTruthy();
       expect(ageRangeFilter.getName()).toEqual('Age Range');
       expect(ageRangeFilter.getValues()).toBe(ageRanges);
+
+      let categoryFilter = fixture.allFilters[i++];
+      expect(categoryFilter instanceof CategoryFilter).toBeTruthy();
+      expect(categoryFilter.getName()).toEqual('Category');
+      expect(categoryFilter.getValues()).toBe(categories);
 
       let groupTypeFilter = fixture.allFilters[i++];
       expect(groupTypeFilter instanceof GroupTypeFilter).toBeTruthy();
@@ -87,6 +104,10 @@ describe('GroupSearchFilter', () => {
       let locationFilter = fixture.allFilters[i++];
       expect(locationFilter instanceof LocationFilter).toBeTruthy();
       expect(locationFilter.getName()).toEqual('Location');
+
+      let meetingDayFilter = fixture.allFilters[i++];
+      expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
+      expect(meetingDayFilter.getName()).toEqual('Day');
     });
   });
 
