@@ -116,21 +116,29 @@ namespace crds_angular.test.Services
                 addresses.Add($"{900 + i} Reading Rd, Mason, OH 45040");
             }
 
-            Expression<Action<IMapsAPIClient>> expression = x => x.APIGet("/maps/api/distancematrix/json",
-                                                                          It.IsAny<QueryParams>(),
-                                                                          It.IsAny<Func<HttpWebResponse, GetDistanceMatrixResponse>>(),
-                                                                          It.IsAny<DateTime?>(),
-                                                                          0,
-                                                                          It.IsAny<string>(),
-                                                                          true,
-                                                                          null,
-                                                                          true,
-                                                                          null);
-
-            mapsApiClient.Setup(mocked => expression).Returns(response);
+            mapsApiClient.Setup(mocked => mocked.APIGet("/maps/api/distancematrix/json",
+                                                        It.IsAny<QueryParams>(),
+                                                        It.IsAny<Func<HttpWebResponse, GetDistanceMatrixResponse>>(),
+                                                        It.IsAny<DateTime?>(),
+                                                        0,
+                                                        It.IsAny<string>(),
+                                                        true,
+                                                        null,
+                                                        true,
+                                                        null)).Returns(response);
 
             var result = _fixture.GetProximity("990 Reading Rd, Mason, OH 45040", addresses);
-            mapsApiClient.VerifyAll();
+            mapsApiClient.Verify(mocked => mocked.APIGet("/maps/api/distancematrix/json",
+                                                         It.IsAny<QueryParams>(),
+                                                         It.IsAny<Func<HttpWebResponse, GetDistanceMatrixResponse>>(),
+                                                         It.IsAny<DateTime?>(),
+                                                         0,
+                                                         It.IsAny<string>(),
+                                                         true,
+                                                         null,
+                                                         true,
+                                                         null),
+                                 Times.Once);
             Assert.AreEqual(100, result.Count);
         }
     }

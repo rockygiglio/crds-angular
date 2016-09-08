@@ -39,8 +39,7 @@ namespace crds_angular.Services
         {
             var originCoords = _addressGeocodingService.GetGeoCoordinates(originAddress);
 
-            //var numRequests = Math.Ceiling(destinationAddresses.Count / (decimal)MaxDestinationsPerRequest);
-            var numRequests = (destinationAddresses.Count / MaxDestinationsPerRequest) + 1;
+            var numRequests = Math.Ceiling(destinationAddresses.Count / (decimal)MaxDestinationsPerRequest);
 
             var results = new List<decimal?>(destinationAddresses.Count);
 
