@@ -4,10 +4,10 @@ export default class PlaygroundController {
 
     getFields() {
         return [{
-            key: 'profile.addressLine1',
+            key: 'person.firstName',
             type: 'formlyBuilderInput',
             templateOptions: {
-                label: 'Street',
+                label: 'First Name',
                 required: true,
             }
         }];
