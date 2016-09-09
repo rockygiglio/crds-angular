@@ -32,5 +32,6 @@ namespace crds_angular.Services.Interfaces
         void EndGroup(int groupId, int reasonEndedId);
         void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
         MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId);
+        void SendSmallGroupPendingInquiryReminderEmails();
     }
 }
