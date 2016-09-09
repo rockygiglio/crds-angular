@@ -1,7 +1,9 @@
 export default class FormlyWrapperController {
   /*@ngInject*/
-  constructor(formlyMapperConfig, $log) {
+  constructor(formlyMapperConfig, formlyMapperService, $log, $rootScope ) {
     this.formlyMapperConfig = formlyMapperConfig;
+    this.rootScope = $rootScope;
+    this.formlyMapperService = formlyMapperService;
     this.log = $log;
     this.invokedFields = this.fields();
     this.log.debug(this);
@@ -24,11 +26,22 @@ export default class FormlyWrapperController {
   }
 
   prepareValidation(field, validations) {
-    
+
   }
 
-  submit()
-  {
-    this.log.debug(this.model);
+  submit() {
+    try {
+      var promise = this.formlyMapperService.saveFormlyFormData(this.model)
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+          this.log.debug(this.model);
+        })
+    }
+    catch (error) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      throw (error);
+    }
   }
+
+
 }
