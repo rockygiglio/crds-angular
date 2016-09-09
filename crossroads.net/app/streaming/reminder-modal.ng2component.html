@@ -43,7 +43,7 @@
           </div>
 
           <div class="form-group" *ngIf="model.type=='phone'">
-            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <input [(ngModel)]="model.phone" ngControl="phone" #phone="ngForm" type="tel" class="form-control" placeholder="Enter your phone number" pattern="\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
             <div *ngIf="model.isPhoneValid === false" class="alert alert-danger">Phone number is invalid</div>
           </div>
           <div class="form-group" *ngIf="model.type=='email'">
