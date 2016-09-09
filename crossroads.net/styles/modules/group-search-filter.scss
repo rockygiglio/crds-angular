@@ -49,6 +49,9 @@ group-search-filter {
   }
 
   .search-filter-tag {
+    display: inline-block;
+    background-color: $gray-lighter;
+    padding: $padding-small-vertical $padding-small-horizontal;
     border-radius: 10px;
 
     svg {

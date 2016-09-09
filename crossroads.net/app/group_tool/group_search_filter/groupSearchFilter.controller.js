@@ -101,7 +101,12 @@ export default class GroupSearchResultsController {
 
   openFilters() {
     this.expanded = true;
-    this.expandedFilter = false;
+    this.expandedFilter = null;
+  }
+
+  openFilter(filter) {
+    this.expanded = true;
+    this.expandedFilter = filter;
   }
 
   closeFilters() {
