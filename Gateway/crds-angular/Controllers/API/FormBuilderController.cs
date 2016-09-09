@@ -48,5 +48,16 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        /// <summary>
+        /// Omnibus endpoint for form builder
+        /// </summary>
+        [Route("api/formbuilder/hugeEndPoint")]
+        [HttpPost]
+        public IHttpActionResult SaveFormbuilderForm(dynamic jsonModel)
+        {
+            _logger.Info("Hit the endpoint");
+            return Ok();
+        }
     }
 }

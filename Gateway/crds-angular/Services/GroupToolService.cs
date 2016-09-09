@@ -26,19 +26,19 @@ namespace crds_angular.Services
         private readonly IAddressProximityService _addressProximityService;
         private readonly IContactRepository _contactRepository;
         private readonly IAddressProximityService _addressMatrixService;
+        private readonly IEmailCommunication _emailCommunicationService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
-        private readonly int _defaultGroupTypeId;
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
         private readonly int _domainId;
         private readonly int _groupEndedParticipantEmailTemplate;
-        private readonly int _defaultEmailContactId;
         private readonly string _baseUrl;
         private readonly int _addressMatrixSearchDepth;
-        private readonly int _GroupRequestToJoinEmailTemplate;
+        private readonly int _groupRequestToJoinEmailTemplate;
+        private readonly int _groupRequestPendingReminderEmailTemplateId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -60,7 +60,8 @@ namespace crds_angular.Services
             IInvitationRepository invitationRepository,
             IAddressProximityService addressProximityService,
             IContactRepository contactRepository,
-            IAddressProximityService addressMatrixService)
+            IAddressProximityService addressMatrixService,
+            IEmailCommunication emailCommunicationService)
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -72,19 +73,19 @@ namespace crds_angular.Services
             _addressProximityService = addressProximityService;
             _contactRepository = contactRepository;
             _addressMatrixService = addressMatrixService;
+            _emailCommunicationService = emailCommunicationService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
-            _defaultGroupTypeId = configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
+            _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
-            _defaultEmailContactId = Convert.ToInt32(configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            _GroupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("GroupRequestToJoinEmailTemplate");
+            _groupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("GroupRequestToJoinEmailTemplate");
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
             _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
         }
@@ -249,13 +250,13 @@ namespace crds_angular.Services
             if (groupParticipant.GroupRoleId != _groupRoleLeaderId)
                 throw new NotGroupLeaderException($"User is not a leader of group {groupId}");
 
-            return new MyGroup()
+            return new MyGroup
             {
-                Group = new GroupDTO()
+                Group = new GroupDTO
                 {
                     GroupId = groupId
                 },
-                Me = new Participant()
+                Me = new Participant
                 {
                     ParticipantId = groupParticipant.ParticipantId
                 }
@@ -355,7 +356,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being denied from group {groupId}", e);
             }
         }
 
@@ -487,7 +488,7 @@ namespace crds_angular.Services
                 EmailAddress = leaderRecord.EmailAddress
             };
 
-            List<MpContact> toContacts = groups.First().Participants.Select(groupParticipant => new MpContact
+            var toContacts = groups.First().Participants.Select(groupParticipant => new MpContact
                                                                             {
                                                                                 ContactId = groupParticipant.ContactId,
                                                                                 EmailAddress = groupParticipant.Email
@@ -669,8 +670,61 @@ namespace crds_angular.Services
 
             foreach (var leader in leaders)
             {
-                var mergeData = new Dictionary<string, object>() {{"Name", leader.NickName}};
-                SendSingleGroupParticipantEmail(leader, _GroupRequestToJoinEmailTemplate, mergeData);
+                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}};
+                SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
+            }
+        }
+
+        public void SendSmallGroupPendingInquiryReminderEmails()
+        {
+            try
+            {
+                var mpRequests = _groupToolRepository.GetInquiries();
+                var groupsWithPendingRequests = mpRequests.Select(r => r.GroupId).Distinct().ToList();
+
+                foreach (var groupId in groupsWithPendingRequests)
+                {
+                    var group = _groupRepository.getGroupDetails(groupId);
+                    var requests = mpRequests.FindAll(r => r.GroupId == groupId);
+                    SendPendingInquiryReminderEmail(group, requests);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Exception retrieving pending inquiries", e);
+                throw;
+            }
+        }
+
+        private void SendPendingInquiryReminderEmail(MpGroup group, IReadOnlyCollection<MpInquiry> inquiries)
+        {
+            var leaders = ((List<MpGroupParticipant>) group.Participants).FindAll(p => p.GroupRoleId == _groupRoleLeaderId).ToList();
+            var allLeaders = string.Join(", ", leaders.Select(leader => $"{leader.NickName} {leader.LastName} ({leader.Email})").ToArray());
+            var pendingRequests = string.Join("<br>", inquiries.Select(inquiry => $"{inquiry.FirstName} {inquiry.LastName} ({inquiry.EmailAddress})").ToArray());
+
+            // ReSharper disable once LoopCanBePartlyConvertedToQuery
+            foreach (var leader in leaders)
+            {
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"Nick_Name", leader.NickName},
+                    {"Last_Name", leader.LastName},
+                    {"All_Leaders", allLeaders},
+                    {"Pending_Requests", pendingRequests},
+                    {"Group_Name", group.Name},
+                    {"Group_Description", group.GroupDescription},
+                    {"Group_ID", group.GroupId},
+                    {"Pending_Requests_Count", inquiries.Count}
+                };
+
+                var email = new EmailCommunicationDTO
+                {
+                    groupId = group.GroupId,
+                    TemplateId = _groupRequestPendingReminderEmailTemplateId,
+                    ToContactId = leader.ContactId,
+                    MergeData = mergeData
+                };
+                _emailCommunicationService.SendEmail(email);
             }
         }
     }
