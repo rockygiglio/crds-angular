@@ -15,12 +15,17 @@
     <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
     <div class="soft-half-sides">
-      <div ng-repeat="filter in groupSearchFilter.allFilters" ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }" class="group-search-filter-row row soft-half-top border-top">
-        <div class="col-xs-4 col-sm-3 col-md-2 push-half-bottom">
-          <a ng-click="groupSearchFilter.toggleFilter(filter)">{{filter.getName()}}</a>
+      <div ng-repeat="filter in groupSearchFilter.allFilters"
+           ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }"
+           class="group-search-filter-row row soft-half-top soft-half-bottom border-top">
+
+        <div ng-click="groupSearchFilter.toggleFilter(filter)" class="pointer col-xs-4 col-sm-3 col-md-2">
+          <a>{{filter.getName()}}</a>
         </div>
-        <div class="group-search-filter-options col-xs-8 col-sm-9 col-md-10 push-half-bottom">
-          <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="row">
+
+        <!-- Expanded Filter Options -->
+        <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="group-search-filter-options col-xs-8 col-sm-9 col-md-10">
+          <div class="row">
             <div ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues() <= 3 }" ng-repeat="value in filter.getValues()">
               <label class="checkbox-inline" for="{{filter.getFilterName()}}-{{value.getValue()}}">
                 <input ng-model="value.selected"
@@ -33,6 +38,22 @@
             </div>
           </div>
         </div>
+
+        <!-- Collapsed Filter shows selections -->
+        <div ng-show="!groupSearchFilter.isOpenFilter(filter)"
+             ng-class="{ 'col-xs-12  mobile-flush-top': filter.getSelectedValues().length, 'col-xs-8': !filter.getSelectedValues().length }"
+             class="group-search-filter-options col-sm-9 col-md-10">
+
+          <div ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-filter-summary pointer">
+            <small>
+              <span ng-repeat="selected in filter.getSelectedValues()">
+                {{selected.getName()}}<span ng-if="!$last">, </span>
+              </span>
+            </small>
+          </div>
+        </div>
+
+        <!-- Filter row toggle -->
         <a ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-toggle soft-half-top soft-half-right soft-half-bottom">
           <svg viewBox="0 0 32 32" class="icon icon-large icon-arrow-down9">
             <use xlink:href="#arrow-down9"></use>

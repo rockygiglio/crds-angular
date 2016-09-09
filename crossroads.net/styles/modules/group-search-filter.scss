@@ -1,6 +1,6 @@
 group-search-filter {
   // Font size matches that used in the search results table
-  font-size: 85%;
+  font-size: 95%;
 
   @media (min-width: $screen-sm) {
     font-size: 95%;
@@ -17,6 +17,15 @@ group-search-filter {
 
   .group-search-filter-options {
     padding-right: $line-height-computed * 2;
+  }
+
+  .group-search-filter-summary {
+    min-height: $line-height-computed;
+
+    span {
+      line-height: 1em;
+      vertical-align: middle;
+    }
   }
 
   .group-search-toggle {
