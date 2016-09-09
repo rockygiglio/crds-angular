@@ -56,9 +56,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     vm.handleSubmit = handleSubmit;
     vm.isIndia = isIndia;
     vm.isNica = isNica;
+    vm.isNicaOrSA = isNicaOrSA;
     vm.isNola = isNola;
     vm.isSouthAfrica = isSouthAfrica;
     vm.loading = false;
+    vm.medRestrictionsCollapsed = true;
+    vm.medRestrictionsToggled = medRestrictionsToggled;
+    vm.medTakingToggled = medTakingToggled;
+    vm.medTakingCollapsed = true;
     vm.numberOfPages = 0;
     vm.page6ButtonText = page6ButtonText();
     vm.pageHasErrors = true;
@@ -136,6 +141,21 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
         case 'Nicaragua':
           vm.signupService.numberOfPages = TripsSignupService.isScholarshipped ? 6 : 7;
           break;
+      }
+
+      if (vm.signupService.person.singleAttributes) {
+
+        if (vm.signupService.person.singleAttributes[attributeTypes.MEDICAL_RESTRICTIONS] && 
+           vm.signupService.person.singleAttributes[attributeTypes.MEDICAL_RESTRICTIONS].notes) {
+          vm.signupService.page3.medicalRestriction = 'yes';
+          vm.medRestrictionsCollapsed = false;
+        }
+
+        if (vm.signupService.person.singleAttributes[attributeTypes.MEDICATION_TAKING] && 
+           vm.signupService.person.singleAttributes[attributeTypes.MEDICATION_TAKING].notes) {
+          vm.signupService.page3.medicationIntake = 'yes';
+          vm.medTakingCollapsed = false;
+        }
       }
 
       toTop();
@@ -251,6 +271,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function saveError() {
+      vm.submitting = false;
       $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       return;
     }
@@ -265,6 +286,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
 
     function isNica() {
       if (vm.destination === 'Nicaragua') {
+        return true;
+      }
+
+      return false;
+    }
+
+    function isNicaOrSA() {
+      if (isNica() || isSouthAfrica()) {
         return true;
       }
 
@@ -287,6 +316,24 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       return false;
     }
 
+    function medRestrictionsToggled( yesOrNo, medRestriction) {
+      if (yesOrNo === 'no') {
+        medRestriction.notes = '';
+        vm.medRestrictionsCollapsed = true;
+      } else {
+        vm.medRestrictionsCollapsed = false;
+      }
+    }
+
+    function medTakingToggled( yesOrNo, medTaking) {
+      if (yesOrNo === 'no') {
+        medTaking.notes = '';
+        vm.medTakingCollapsed = true;
+      } else {
+        vm.medTakingCollapsed = false;
+      }
+    }
+   
     function onBeforeUnload() {
       $log.debug('onBeforeUnload start');
       if (vm.tpForm.$dirty) {

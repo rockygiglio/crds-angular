@@ -49,7 +49,7 @@
             Requested to Join
           </div>
           <div class="col-sm-3 ellipsis">
-            {{inquiry.emailAddress}}
+            <a href="mailto:{{inquiry.emailAddress}}">{{inquiry.emailAddress}}</a>
           </div>
           <div class="col-sm-3 ellipsis">
             {{inquiry.requestDate | date: 'MM/dd/yyyy'}}
@@ -80,7 +80,7 @@
             Invite Sent
           </div>
           <div class="col-sm-3 ellipsis">
-            {{invite.emailAddress}}
+            <a href="mailto:{{invite.emailAddress}}">{{invite.emailAddress}}</a>
           </div>
           <div class="col-sm-3 ellipsis">
             {{invite.requestDate | date: 'MM/dd/yyyy'}}

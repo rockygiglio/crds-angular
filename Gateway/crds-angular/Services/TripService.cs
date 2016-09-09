@@ -671,23 +671,20 @@ namespace crds_angular.Services
 
             var page2 = applicationData.PageTwo;
 
-            answers.Add(new MpFormAnswer {Response = page2.Allergies, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Allergies")});
-            answers.Add(new MpFormAnswer {Response = page2.Conditions, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Conditions")});
+            answers.Add(new MpFormAnswer {Response = page2.Allergies, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Allergies")});            
             answers.Add(new MpFormAnswer {Response = page2.GuardianFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianFirstName")});
             answers.Add(new MpFormAnswer {Response = page2.GuardianLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GuardianLastName")});
             answers.Add(new MpFormAnswer {Response = page2.Referral, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Referral")});
             answers.Add(new MpFormAnswer {Response = page2.Why, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Why")});
 
             var page3 = applicationData.PageThree;
+            answers.Add(new MpFormAnswer {Response = page3.Conditions, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.Conditions") });
             answers.Add(new MpFormAnswer {Response = page3.EmergencyContactEmail, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactEmail")});
             answers.Add(new MpFormAnswer {Response = page3.EmergencyContactFirstName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactFirstName")});
             answers.Add(new MpFormAnswer {Response = page3.EmergencyContactLastName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactLastName")});
             answers.Add(new MpFormAnswer {Response = page3.EmergencyContactPrimaryPhone, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactPrimaryPhone")});
-            answers.Add(new MpFormAnswer
-            {
-                Response = page3.EmergencyContactSecondaryPhone,
-                FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactSecondaryPhone")
-            });
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactRelationship, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactRelationship")});
+            answers.Add(new MpFormAnswer {Response = page3.EmergencyContactSecondaryPhone, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.EmergencyContactSecondaryPhone")});
 
             var page4 = applicationData.PageFour;
             answers.Add(new MpFormAnswer {Response = page4.GroupCommonName, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.GroupCommonName")});
