@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
 
 import { Reminder } from './reminder';
 import { ReminderService } from './reminder.service'
@@ -15,7 +16,7 @@ var _ = require('lodash');
 @Component({
   selector: 'reminder-modal',
   templateUrl: './reminder-modal.ng2component.html',
-  directives: [MODAL_DIRECTIVES, upgradeAdapter.upgradeNg1Component('preloader')],
+  directives: [MODAL_DIRECTIVES, upgradeAdapter.upgradeNg1Component('preloader'), DynamicContentNg2Component],
   providers: [],
   pipes: []
 })

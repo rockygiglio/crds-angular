@@ -271,6 +271,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function saveError() {
+      vm.submitting = false;
       $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
       return;
     }
