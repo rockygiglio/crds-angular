@@ -5,6 +5,8 @@ FormlyWrapperComponent.$inject = [];
 
 export default function FormlyWrapperComponent() {
 
+//why doesn't binding work with < binding - cycles through in a loop??
+//what is difference between template and templateURL (omit import line at top)
   let formlyWrapperComponent = {
     bindings: {
       fields: '&'
