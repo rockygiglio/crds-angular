@@ -60,15 +60,19 @@
         <div class="row">
             <div class="form-group col-sm-6"
                  ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyContactEmail') }">
-              <label class="control-label" for="emergency-email">Email Address</label>
+              <label class="control-label required" for="emergency-email">Email Address</label>
               <input ng-model="tripsSignup.signupService.page3.emergencyContactEmail"
                      name="emergencyContactEmail"
                      type="email"
                      class="form-control"
                      id="emergency-email"
                      ng-model-options="{updateOn: 'blur'}"
-                     placeholder="Enter emergency contact email address">
+                     placeholder="Enter emergency contact email address"
+                     required >
               <ng-messages for="tripsSignup.tripAppPage3.emergencyContactEmail.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyContactEmail')">
+                <span ng-message="required">
+                  <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+                </span>
                 <span ng-message="email">
                   <span dynamic-content="$root.MESSAGES.invalidEmail.content | html"></span>
                 </span>
