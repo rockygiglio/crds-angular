@@ -22,6 +22,12 @@
             return false;
           }
 
+          // Sometimes the validDropdownValue list comes in empty
+          // in these cases, we just need to validate that the value
+          // is not undefined, null or 0.
+          if (scope.validDropdownValue.length < 1) {
+            return val !== undefined && val !== null && val !== 0;
+          }
           return _.includes(scope.validDropdownValue, val);
         };
       }
