@@ -6,33 +6,34 @@ export default class FormlyWrapper {
         this.controller = dirCtrl;
         this.controllerAs = 'dirCtrl';
         this.bindToController = true;
-        this.template = '<formly-form fields="{{fields}}" model="{{model}}"></formly-form>';
+        this.template = '<formly-form fields="dirCtrl.fields" model="dirCtrl.model"></formly-form>';
         //this.template = '{{dirCtrl.test}}'
         this.restrict = 'E';
         this.scope = {
-            fieldSet: '=',
-            model: '=',
+            fieldSet: '@',
+            model: '@',
         };
         this.formlyMapperConfig = formlyMapperConfig;
 
     }
-    link(scope, element, attrs) {
-        dirCtrl.fields = attrs.fieldSet; 
+    compile(element, attrs) {
+        dirCtrl.fields = attrs.fieldSet;
         dirCtrl.model = attrs.model;
     }
 }
 
 class dirCtrl {
-    constructor(){
-        this.model = {}
-        // this.fields = [{
-        //     key: 'profile.addressLine1',
-        //     type: 'formlyBuilderInput',
-        //     templateOptions: {
-        //         label: 'Street',
-        //         required: true,
-        //     }
-        // }];
-        this.test = "test";
+    constructor() {
+             this.model = {}
+        //     this.fields = [{
+        //         key: 'profile.addressLine1',
+        //         type: 'formlyBuilderInput',
+        //         templateOptions: {
+        //             label: 'Street',
+        //             required: true,
+        //         }
+        //     }];
+        //     this.test = "test";
+        // }
     }
 }

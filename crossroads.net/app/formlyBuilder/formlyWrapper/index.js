@@ -1,5 +1,6 @@
-import WrapperDirective from './directives/formlyWrapper.directive';
+import WrapperComponent from './formlyWrapper.component';
 
 export default ngModule => {
-  ngModule.directive('formlyWrapper', () => new WrapperDirective);
+  ngModule.component('formlyWrapper', WrapperComponent());
+  //ngModule.directive('formlyWrapper', () => new WrapperDirective);
 }
