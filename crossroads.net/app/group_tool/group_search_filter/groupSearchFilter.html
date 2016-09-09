@@ -8,7 +8,7 @@
 
     <div class="pull-right">
       <button type="button" class="btn btn-primary btn-xs "
-              ng-click="groupSearchFilter.applyFilters()">Close Filters
+              ng-click="groupSearchFilter.closeFilters()">Close Filters
       </button>
     </div>
 
@@ -21,12 +21,12 @@
         </div>
         <div class="group-search-filter-options col-xs-8 col-sm-9 col-md-10 push-half-bottom">
           <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="row">
-            <div class="col-md-6 col-lg-4" ng-repeat="value in filter.getValues()">
+            <div ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues() <= 3 }" ng-repeat="value in filter.getValues()">
               <label class="checkbox-inline" for="{{filter.getFilterName()}}-{{value.getValue()}}">
                 <input ng-model="value.selected"
-                       ng-model-options="{ updateOn: 'submit' }"
-                       type="checkbox"
                        ng-value="value.getValue()"
+                       ng-click="groupSearchFilter.applyFilters()"
+                       type="checkbox"
                        id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
                 {{value.getName()}}
               </label>
@@ -45,7 +45,7 @@
 
 <div ng-if="groupSearchFilter.expanded" class="visible-xs push-half-bottom">
   <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom"
-          ng-click="groupSearchFilter.applyFilters()">Close Filters
+          ng-click="groupSearchFilter.closeFilters()">Close Filters
   </button>
 </div>
 
