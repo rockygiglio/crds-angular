@@ -5,7 +5,7 @@ DECLARE @AuthorUserID int = 5; -- Administrator, Church
 DECLARE @FromContactID int = 7675411; -- groups@crossroads.net
 DECLARE @ReplyToContactID int = 7675411; -- groups@crossroads.net
 DECLARE @TemplateID int = 2004; -- Assigned by MPIdentityMaintenance.dbo.Get_Next_Available_ID
-DECLARE @Body VARCHAR(max) = '<div>Hi [Nick_Name] [Last_Name],</div><div><br /></div><div>You have [Pending_Requests_Count] pending request(s) from people who want to join your &quot;[Group_Name]&quot; group. Log into your crossroads.net account, and go to your groups dashboard to view them, and approve or deny the group participants.</div><div><br /></div><div>https://[BaseUrl]/groups/mygroups/detail/[Group_ID]/requests</div><div><br /></div><div>All Pending Requests:</div><div>[Pending_Requests]</div><div><br /></div><div>Thanks!</div><div>Crossroads Groups Team</div><div><br /></div><div><i>This email was sent to: [All_Leaders]</i></div>';
+DECLARE @Body VARCHAR(max) = '<div>Hi [Nick_Name] [Last_Name],</div><div><br /></div><div>You have [Pending_Requests_Count] pending request(s) from people who want to join your &quot;[Group_Name]&quot; group. Log into your crossroads.net account, and go to your groups dashboard to view them, and approve or deny the group participants.</div><div><br /></div><div>https://[BaseUrl]/groups/mygroups/detail/[Group_ID]/requests</div><div><br /></div><div><br /></div><div>Thanks!</div><div>Crossroads Groups Team</div><div><br /></div><div><i>This email was sent to: [All_Leaders]</i></div>';
 DECLARE @Subject VARCHAR(max) = 'Pending Request(s) to Join Group';
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)
