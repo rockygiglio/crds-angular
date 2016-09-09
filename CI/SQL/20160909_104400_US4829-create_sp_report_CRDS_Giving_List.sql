@@ -75,6 +75,7 @@ select distinct d.donor_id,d.contact_id, c.household_id
 	and don.Donation_Amount > 0
 	and dd.program_id IN (SELECT Item FROM dbo.dp_Split(@programid, ','))
 	and don.donation_status_id IN (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
+	and c.Display_Name != 'Guest Giver'
 
 
 --get the donor id for the soft credit donor
