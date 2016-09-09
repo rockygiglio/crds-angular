@@ -1,37 +1,31 @@
 export default class PlaygroundService {
     PlaygroundService(formlyMapperConfig, $log) {
         this.formlyMapperConfig = formlyMapperConfig;
-        this.log=$log;
+        this.log = $log;
     }
 
-    getFields(){
+    getFields() {
         return [
             {
-                name: 'person.firstName',
-                formlyConfig: {
-                    type: 'formlyBuilderInput',
-                    templateOptions: {
-                        label: 'First Name',
-                        required: true
-                    }
+                key: 'person.firstName',
+                type: 'formlyBuilderInput',
+                templateOptions: {
+                    label: 'First Name',
+                    required: true
                 }
-            },{
-                name: 'person.lastName',
-                formlyConfig: {
-                    type: 'formlyBuilderInput',
-                    templateOptions: {
-                        label: 'Last Name',
-                        required: true
-                    }
+            }, {
+                key: 'person.lastName',
+                type: 'formlyBuilderInput',
+                templateOptions: {
+                    label: 'Last Name',
+                    required: true
                 }
-            },{
-                name: 'person.preferredName',
-                formlyConfig: {
-                    type: 'formlyBuilderInput',
-                    templateOptions: {
-                        label: 'Preferred Name',
-                        required: true
-                    }
+            }, {
+                key: 'person.preferredName',
+                type: 'formlyBuilderInput',
+                templateOptions: {
+                    label: 'Preferred Name',
+                    required: true
                 }
             }
         ]

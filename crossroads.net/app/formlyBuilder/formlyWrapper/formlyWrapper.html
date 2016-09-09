@@ -1,2 +1,6 @@
-<formly-form fields="ctrl.invokedFields" model="ctrl.model"></formly-form>
+<form ng-submit="ctrl.submit()">
+<formly-form fields="ctrl.preparedFields" model="ctrl.model">
+    <button ng-click= type="submit" class="sm-pull-right btn btn-primary btn-block-mobile submit-button mobile-push-half-bottom">Submit</button>
+</formly-form>
+</form>
 TEST2

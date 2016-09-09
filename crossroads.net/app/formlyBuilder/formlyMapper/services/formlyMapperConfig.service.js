@@ -18,4 +18,8 @@ export default class formlyMapperConfig {
         this.compositionMap[composition.name] = composition;
         return this.compositionMap[composition.name];
     }
+
+    getElement(elementName) {
+        return this.elementMap[elementName];
+    }
 }
