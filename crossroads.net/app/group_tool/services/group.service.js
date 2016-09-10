@@ -145,8 +145,12 @@ export default class GroupService {
         throw err;
       }
 
+      let primaryContactId = data[0].contactId;
+
       let participants = data[0].Participants.map((participant) => {
-        return new Participant(participant);
+        let p = new Participant(participant);
+        p.primary = p.contactId === primaryContactId;
+        return p;
       });
 
       return participants;
