@@ -23,6 +23,7 @@
   </div>
   <div>
     <small class='text-muted' ng-if='groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit' dynamic-content='$root.MESSAGES.groupToolEditParticipantsCantRemoveMyself.content | html'/>
-    <small class='text-muted' ng-if='groupDetailParticipantCard.participant.primary && groupDetailParticipantCard.edit' dynamic-content='$root.MESSAGES.groupToolEditParticipantsCantRemovePrimary.content | html'/>
+    <!-- Only show if this is the primary participant AND it is not me (we don't want two messages...') -->
+    <small class='text-muted' ng-if='groupDetailParticipantCard.participant.primary && !groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit' dynamic-content='$root.MESSAGES.groupToolEditParticipantsCantRemovePrimary.content | html'/>
   </div>
 </div>
