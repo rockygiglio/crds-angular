@@ -1,9 +1,9 @@
-export default class formlyMapperService {
+export default class fbMapperService {
     /*@ngInject*/
-    constructor(formlyMapperConfig, $log, $resource) {
+    constructor(fbMapperConfig, $log, $resource) {
         this.log = $log;
         this.resource = $resource;
-        this.formlyMapperConfig = formlyMapperConfig;
+        this.fbMapperConfig = fbMapperConfig;
     }
 
     saveFormlyFormData(model) {        

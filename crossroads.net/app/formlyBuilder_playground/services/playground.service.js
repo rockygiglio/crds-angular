@@ -1,6 +1,6 @@
 export default class PlaygroundService {
-    PlaygroundService(formlyMapperConfig, $log) {
-        this.formlyMapperConfig = formlyMapperConfig;
+    PlaygroundService(fbMapperConfig, $log) {
+        this.fbMapperConfig = fbMapperConfig;
         this.log = $log;
     }
 

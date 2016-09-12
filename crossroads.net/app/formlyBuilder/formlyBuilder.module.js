@@ -6,6 +6,6 @@
   
   require('./formlyConfig/types')(ngModule);
   require('./formlyConfig/wrappers')(ngModule);
-  require('./formlyWrapper')(ngModule);
-  require('./formlyMapper/')(ngModule);
+  require('./fbComposer')(ngModule);
+  require('./fbMapper/')(ngModule);
 })();

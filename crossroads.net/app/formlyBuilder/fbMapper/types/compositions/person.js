@@ -1,5 +1,5 @@
-export default function Person(formlyMapperConfig) {
-    formlyMapperConfig.setComposition({
+export default function Person(fbMapperConfig) {
+    fbMapperConfig.setComposition({
         name: 'person',
         elements: [
             "firstName", "lastName", "preferredName"

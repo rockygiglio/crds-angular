@@ -1,9 +1,9 @@
-export default class FormlyWrapperController {
+export default class FBComposerController {
   /*@ngInject*/
-  constructor(formlyMapperConfig, formlyMapperService, $log, $rootScope ) {
-    this.formlyMapperConfig = formlyMapperConfig;
+  constructor(fbMapperConfig, fbMapperService, $log, $rootScope ) {
+    this.fbMapperConfig = fbMapperConfig;
     this.rootScope = $rootScope;
-    this.formlyMapperService = formlyMapperService;
+    this.fbMapperService = fbMapperService;
     this.log = $log;
     this.invokedFields = this.fields();
     this.log.debug(this);
@@ -18,7 +18,7 @@ export default class FormlyWrapperController {
     let fields = [];
     _.forEach(builderFields, (builderField) => {
       let field = builderField;
-      let mapperConfigElement = this.formlyMapperConfig.getElement(builderField.key.substring(builderField.key.lastIndexOf('.') + 1));
+      let mapperConfigElement = this.fbMapperConfig.getElement(builderField.key.substring(builderField.key.lastIndexOf('.') + 1));
       this.log.debug(mapperConfigElement);
       fields.push(field);
     });
@@ -31,7 +31,7 @@ export default class FormlyWrapperController {
 
   submit() {
     try {
-      var promise = this.formlyMapperService.saveFormlyFormData(this.model)
+      var promise = this.fbMapperService.saveFormlyFormData(this.model)
         .then((data) => {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
           this.log.debug(this.model);
