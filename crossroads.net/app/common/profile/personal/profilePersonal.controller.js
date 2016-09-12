@@ -132,6 +132,7 @@
 
             underThirteen();
             setOldEmail();
+            emailChange.setEmail(vm.profileData.person.emailAddress);
             vm.viewReady = true;
           });
         } else {
@@ -139,10 +140,9 @@
           setAttendanceStartDateToJSDate();
           underThirteen();
           setOldEmail();
+          emailChange.setEmail(vm.profileData.person.emailAddress);
           vm.viewReady = true;
-
         }
-        emailChange.setEmail(vm.profileData.person.emailAddress);
       });
 
       vm.buttonText = vm.buttonText !== undefined ? vm.buttonText : 'Save';
