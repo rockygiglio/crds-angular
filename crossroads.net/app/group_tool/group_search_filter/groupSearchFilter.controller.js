@@ -1,3 +1,4 @@
+import debounce from 'lodash/function/debounce';
 
 import {SearchFilterValue} from './filter_impl/searchFilter';
 import AgeRangeFilter from './filter_impl/ageRange.filter'; 
@@ -9,6 +10,8 @@ import MeetingDayFilter from './filter_impl/meetingDay.filter';
 import MeetingTimeFilter from './filter_impl/meetingTime.filter';
 import FrequencyFilter from './filter_impl/frequency.filter'; 
 import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
+
+const APPLY_FILTER_DEBOUNCE = 750;
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
@@ -23,6 +26,9 @@ export default class GroupSearchResultsController {
     this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
+    this.expandedFilter = null;
+
+    this.applyFilters = debounce(this._internalApplyFilters, APPLY_FILTER_DEBOUNCE);
   }
 
   $onInit() {
@@ -56,7 +62,7 @@ export default class GroupSearchResultsController {
     this.loadLeadersSite();
   }
 
-  applyFilters() {
+  _internalApplyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
         for (let i = 0; i < this.allFilters.length; i++) {
@@ -68,7 +74,6 @@ export default class GroupSearchResultsController {
       })
     };
 
-    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
@@ -96,14 +101,28 @@ export default class GroupSearchResultsController {
 
   openFilters() {
     this.expanded = true;
+    this.expandedFilter = null;
   }
 
-  closeFilters(filterForm) {
-    // Reset all filters that are not in sync with the model. This handles the case 
-    // where someone changes filter values but does not click "Update Filters". 
-    filterForm.$rollbackViewValue();
+  openFilter(filter) {
+    this.expanded = true;
+    this.expandedFilter = filter;
+  }
 
+  closeFilters() {
     this.expanded = false;
+  }
+
+  toggleFilter(filter) {
+    if (this.expandedFilter === filter) {
+      this.expandedFilter = null;
+    } else {
+      this.expandedFilter = filter;
+    }
+  }
+
+  isOpenFilter(filter) {
+    return this.expandedFilter === filter;
   }
 
   loadAgeRanges() {

@@ -81,9 +81,9 @@ export class VideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.inModal) {
-      this.redirectText = 'Close Modal';
-    } 
+    setTimeout(function() {
+      window.dispatchEvent(new Event('resize'));
+    }, 1000);
   }
 
   redirect() {
