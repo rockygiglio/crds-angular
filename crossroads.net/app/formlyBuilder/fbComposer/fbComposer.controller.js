@@ -1,11 +1,11 @@
 export default class FBComposerController {
   /*@ngInject*/
-  constructor(fbMapperConfig, fbMapperService, $log, $rootScope ) {
+  constructor(fbMapperConfig, fbMapperService, $log, $rootScope) {
     this.fbMapperConfig = fbMapperConfig;
     this.rootScope = $rootScope;
     this.fbMapperService = fbMapperService;
     this.log = $log;
-    this.invokedFields = this.fields();
+    this.invokedFields = _.isFunction(this.fields) ? this.fields() : this.fields;
     this.log.debug(this);
   }
 
@@ -14,34 +14,49 @@ export default class FBComposerController {
   }
 
   prepareFields(builderFields) {
+    //prepopulate
+    ////find compositions used
+    let compositions = [];
     //Composition Validation (check that it is valid)
     let fields = [];
     _.forEach(builderFields, (builderField) => {
       let field = builderField;
-      let mapperConfigElement = this.fbMapperConfig.getElement(builderField.key.substring(builderField.key.lastIndexOf('.') + 1));
-      this.log.debug(mapperConfigElement);
+      let keyArray = this.fbMapperConfig.getElement(builderField.key.split('.'));
+      this.log.debug(keyArray[keyArray.length - 1]);
       fields.push(field);
+      compositions.push(keyArray[0])
     });
+
+    compositions = _.uniq(compositions);
+
+
+    //this is not finished, stopped here for the day
+    let preModel = fbMapperService.prepopulateCompositions(compositions);
+    preModel = _.where(builderFields, (field) => {
+      return field.prepopulate == true;
+    });
+
+
     return fields;
   }
 
-  prepareValidation(field, validations) {
+prepareValidation(field, validations) {
 
-  }
+}
 
-  submit() {
-    try {
-      var promise = this.fbMapperService.saveFormlyFormData(this.model)
-        .then((data) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-          this.log.debug(this.model);
-        })
-    }
-    catch (error) {
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      throw (error);
-    }
+submit() {
+  try {
+    var promise = this.fbMapperService.saveFormlyFormData(this.model)
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        this.log.debug(this.model);
+      })
   }
+  catch (error) {
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+    throw (error);
+  }
+}
 
 
 }

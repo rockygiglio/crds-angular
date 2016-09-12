@@ -15,4 +15,11 @@ export default class fbMapperService {
             throw err;
         });
     }
+
+    //This takes an array of composition Names
+    prepopulateCompositions(compositions){
+        var compositions = fbMapperConfig.getComposition(composition);
+        
+
+    }
 }

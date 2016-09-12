@@ -4,6 +4,7 @@ export default class fbMapperConfig {
         this.log = $log;
         this.elementMap = {};
         this.compositionMap = {};
+        //{ 'person': { elements: [], data: { 'firstName': ''}}}
     }
 
     setElement(element)
