@@ -177,10 +177,10 @@ describe('GroupSearchFilter', () => {
 
       spyOn(fixture.tableParams, 'reload').and.callFake(() => {});
 
-      fixture.applyFilters();
+      fixture._internalApplyFilters();
 
       expect(fixture.tableParams.reload).toHaveBeenCalled();
-      expect(fixture.expanded).toBeFalsy();
+      expect(fixture.expanded).toBeTruthy();
       expect(fixture.tableParams.settings().dataset).toEqual([{ 'age': 2, 'kids': true }]);
       expect(fixture.tableParams.settings().someOtherSettingThatShouldNotChange).toBeTruthy();
     });
@@ -217,11 +217,9 @@ describe('GroupSearchFilter', () => {
     it('closeFilters should set expanded to false', () => {
       fixture.expanded = true;
       let form = {
-        $rollbackViewValue: jasmine.createSpy('$rollbackViewValue')
       };
       fixture.closeFilters(form);
 
-      expect(form.$rollbackViewValue).toHaveBeenCalled();
       expect(fixture.expanded).toBeFalsy();
     });
 
