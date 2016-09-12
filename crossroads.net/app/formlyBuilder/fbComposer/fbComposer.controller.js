@@ -28,7 +28,6 @@ export default class FBComposerController {
       compositions.push(keyArray[0])
     });
 
-    debugger;
     compositions = _.uniq(compositions);
 
     //this is not finished, stopped here for the day
@@ -36,8 +35,8 @@ export default class FBComposerController {
     let unPopulate = _.where(builderFields, (field) => {
       return field.prepopulate === false;
     });
-    debugger;
     _.forEach(unPopulate, (model) => {
+      this.model[unPopulate.key] = undefined;
 
     });
 

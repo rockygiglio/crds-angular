@@ -21,7 +21,6 @@ export default class fbMapperService {
     prepopulateCompositions(compositions){
         let returnModel = {};
         _.forEach(compositions, (compositionName) => {
-            debugger;
             let composition = this.fbMapperConfig.getComposition(compositionName);
             returnModel[compositionName] = composition.prePopulate.get();
             // composition.prePopulate.get().then( (data) => {
