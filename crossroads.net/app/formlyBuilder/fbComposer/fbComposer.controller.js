@@ -20,22 +20,26 @@ export default class FBComposerController {
     //Composition Validation (check that it is valid)
     let fields = [];
     _.forEach(builderFields, (builderField) => {
-      let field = builderField;
-      let keyArray = this.fbMapperConfig.getElement(builderField.key.split('.'));
-      this.log.debug(keyArray[keyArray.length - 1]);
+      let field = builderField.formlyConfig;
+      let keyArray = builderField.formlyConfig.key.split('.');
+      let mapperConfigElement = this.fbMapperConfig.getElement(keyArray[keyArray.length - 1]);
+      this.log.debug(mapperConfigElement);
       fields.push(field);
       compositions.push(keyArray[0])
     });
 
+    debugger;
     compositions = _.uniq(compositions);
 
-
     //this is not finished, stopped here for the day
-    let preModel = fbMapperService.prepopulateCompositions(compositions);
-    preModel = _.where(builderFields, (field) => {
-      return field.prepopulate == true;
+    this.model = this.fbMapperService.prepopulateCompositions(compositions);
+    let unPopulate = _.where(builderFields, (field) => {
+      return field.prepopulate === false;
     });
+    debugger;
+    _.forEach(unPopulate, (model) => {
 
+    });
 
     return fields;
   }

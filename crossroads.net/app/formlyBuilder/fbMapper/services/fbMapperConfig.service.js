@@ -23,4 +23,8 @@ export default class fbMapperConfig {
     getElement(elementName) {
         return this.elementMap[elementName];
     }
+
+    getComposition(compositionName) {
+        return this.compositionMap[compositionName];
+    }
 }

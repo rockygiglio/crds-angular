@@ -16,7 +16,14 @@ import html from './formlyBuilder_playground.html';
       url: '/formlybuilder-playground',
       template: html,
       controller: 'PlaygroundController',
-      controllerAs: 'ctrl'
+      controllerAs: 'ctrl',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'FormBuilder Playground',
+          description: ''
+        }
+      }
     });
   }
 

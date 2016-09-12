@@ -7,25 +7,32 @@ export default class PlaygroundService {
     getFields() {
         return [
             {
-                key: 'person.firstName',
-                type: 'formlyBuilderInput',
-                templateOptions: {
-                    label: 'First Name',
-                    required: true
+                formlyConfig: {
+                    key: 'person.firstName',
+                    type: 'formlyBuilderInput',
+                    templateOptions: {
+                        label: 'First Name',
+                        required: true
+                    }
+                },
+                prePopulate: false
+            }, {
+                formlyConfig: {
+                    key: 'person.lastName',
+                    type: 'formlyBuilderInput',
+                    templateOptions: {
+                        label: 'Last Name',
+                        required: true
+                    }
                 }
             }, {
-                key: 'person.lastName',
-                type: 'formlyBuilderInput',
-                templateOptions: {
-                    label: 'Last Name',
-                    required: true
-                }
-            }, {
-                key: 'person.preferredName',
-                type: 'formlyBuilderInput',
-                templateOptions: {
-                    label: 'Preferred Name',
-                    required: true
+                formlyConfig: {
+                    key: 'person.nickName',
+                    type: 'formlyBuilderInput',
+                    templateOptions: {
+                        label: 'Preferred Name',
+                        required: true
+                    }
                 }
             }
         ]

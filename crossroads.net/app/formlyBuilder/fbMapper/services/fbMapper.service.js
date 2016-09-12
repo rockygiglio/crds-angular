@@ -1,9 +1,10 @@
 export default class fbMapperService {
     /*@ngInject*/
-    constructor(fbMapperConfig, $log, $resource) {
+    constructor(fbMapperConfig, $log, $resource, $q) {
         this.log = $log;
         this.resource = $resource;
         this.fbMapperConfig = fbMapperConfig;
+        this.qApi = $q;
     }
 
     saveFormlyFormData(model) {        
@@ -18,8 +19,16 @@ export default class fbMapperService {
 
     //This takes an array of composition Names
     prepopulateCompositions(compositions){
-        var compositions = fbMapperConfig.getComposition(composition);
-        
+        let returnModel = {};
+        _.forEach(compositions, (compositionName) => {
+            debugger;
+            let composition = this.fbMapperConfig.getComposition(compositionName);
+            returnModel[compositionName] = composition.prePopulate.get();
+            // composition.prePopulate.get().then( (data) => {
+            //      returnModel[compositionName] = data;
+            // });
+        });
 
+        return returnModel;
     }
 }
