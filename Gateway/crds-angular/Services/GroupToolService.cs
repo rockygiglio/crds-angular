@@ -590,7 +590,12 @@ namespace crds_angular.Services
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
-            var search = string.IsNullOrWhiteSpace(keywords) ? null : keywords.Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
+            var search = string.IsNullOrWhiteSpace(keywords)
+                ? null
+                : keywords
+                    .Replace("'", "''") // Replace single quote with two, since the MP Rest API doesn't do it
+                    .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
+                    .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
             var results = _groupToolRepository.SearchGroups(groupTypeId, search);
             if (results == null || !results.Any())
