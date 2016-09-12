@@ -22,6 +22,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     '$window',
     '$anchorScroll',
     '$stateParams',
+    'emailChange'
   ];
 
   function TripsSignupController(
@@ -40,12 +41,14 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       Validation,
       $window,
       $anchorScroll,
-      $stateParams) {
+      $stateParams,
+      emailChange) {
 
     var vm = this;
     var now = new Date();
 
     vm.ageLimitReached = true;
+    vm.applicantContactId = $stateParams.contactId;
     vm.buttonText = 'Next';
     vm.campaign = Campaign;
     vm.contactId = contactId;
@@ -447,6 +450,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       });
 
       vm.profileData.person.$save(function() {
+        emailChange.reset();
         if (success) { success(); }
       }, function() {
         if (err) { err(); }
