@@ -1,8 +1,6 @@
 <article class="crds-card fadeInUp" [attr.data-wow-delay]="content.delay" [ngClass]="{ wow: animate }">
   <figure>
-    <linked-content href="{{ content.url }}" target="{{ content.target }}">
-      <img alt="" class="content img-responsive imgix-fluid" [attr.data-src]="content.imageSrc" src="{{ content.image }}" title="{{ content.title }}">
-    </linked-content>
+    <linked-content target="{{ content.target }}" href="{{ content.url }}" class="imgix-fluid-bg img-full-width" background="{{ content.image }}"></linked-content>
     <figcaption>
       <linked-content target="{{ content.target }}" href="{{ content.url }}" *ngIf="content.title" title="{{ content.title }}">{{ content.title | truncate: 38 }}</linked-content>
     </figcaption>
