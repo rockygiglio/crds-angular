@@ -8,4 +8,4 @@
   require('./formlyConfig/wrappers')(ngModule);
   require('./fbComposer')(ngModule);
   require('./fbMapper/')(ngModule);
-})();
+})(); 
