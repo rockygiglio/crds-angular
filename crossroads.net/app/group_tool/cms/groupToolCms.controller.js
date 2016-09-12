@@ -10,9 +10,9 @@ export default class GroupToolCms {
   $onInit() {
     this.participantService.get().then((data) => {
       if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
-        this.link = this.link || '/groups/leader/resources/';
+        this.url = this.url || '/groups/leader/resources/';
 
-        this.page.get({ url: this.link }).$promise.then((data) => {
+        this.page.get({ url: this.url }).$promise.then((data) => {
           if(data.pages.length > 0) {
             this.content = data.pages[0].content;
           }

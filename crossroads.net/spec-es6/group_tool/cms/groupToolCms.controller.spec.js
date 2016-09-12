@@ -37,7 +37,7 @@ describe('GroupToolCmsController', () => {
         fixture.$onInit();
 
         //had to go this route as I could never get mocking a spy on this.page to work
-        expect(fixture.link).toEqual('/groups/leader/resources/');
+        expect(fixture.url).toEqual('/groups/leader/resources/');
     });
 
     it('is not an approved group leader', () =>{
