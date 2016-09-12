@@ -1,17 +1,15 @@
 import PlaygroundService from './services/playground.service';
 import PlaygroundController from './formlyBuilder_playground.controller';
-(function() {
-  'use strict';
-  
-  var MODULES = require('crds-constants').MODULES;
+import FBPlaygroundRoutes from './formlyBuilder_playground.routes';
 
-  angular.module(MODULES.FORMLY_BUILDER_PLAYGROUND, [
-    MODULES.COMMON,
-    MODULES.CORE
+var MODULES = require('crds-constants').MODULES;
+
+export default angular
+  .module(MODULES.FORMLY_BUILDER_PLAYGROUND, [
+  MODULES.COMMON,
+  MODULES.CORE
   ])
-  .config(require('./formlyBuilder_playground.routes'))
+  .config(FBPlaygroundRoutes)
   .service('PlaygroundService', PlaygroundService)
   .controller('PlaygroundController', PlaygroundController)
   ;
-
-})();
