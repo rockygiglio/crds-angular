@@ -8,7 +8,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
 CREATE PROCEDURE [dbo].[report_CRDS_Giving_List] 
      @startdate DATETIME,
      @enddate DATETIME,
@@ -100,10 +99,12 @@ select sd_donor_id, c.Contact_ID, c.household_id
  from #sddonormaster sd
  left join Donors d on sd.sd_donor_id = d.Donor_ID
  left join Contacts c on d.Contact_ID = c.Contact_ID
+ where NOT EXISTS (select donor_id from #ftdonormaster 
+					where donor_id = sd.sd_donor_id)
 
  --now get the cogiver info
  insert into #cogivers
-	select c1.contact_id,c2.contact_id,c1.household_id
+	select distinct c1.contact_id,c2.contact_id,c1.household_id
 	FROM
 	#ftdonormaster ftd  
 	inner join contacts c1 on ftd.hhid = c1.household_id
@@ -151,7 +152,7 @@ update #alldonordetail set cgemail ='' where cgemail  is null
 
 
 
-select f.cid1 as 'Contact Id',f.cfname as 'First Name',f.clname as 'Last Name', f.cemail as 'Email Address',
+select distinct f.cid1 as 'Contact Id',f.cfname as 'First Name',f.clname as 'Last Name', f.cemail as 'Email Address',
 f.cid2 as 'Spouse Id',f.cgfname as 'Spouse FName',f.cglname as 'Spouse LName', f.cgemail as 'Spouse Email'
 from #alldonordetail f order by f.cfname asc
 
