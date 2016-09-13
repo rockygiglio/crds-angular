@@ -1,11 +1,16 @@
-USE [MinistryPlatform]
+USE MinistryPlatform
 GO
 
-/****** Object:  StoredProcedure [dbo].[report_CRDS_Trip_Export]    Script Date: 9/13/2016 8:27:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_CRDS_Trip_Export]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Trip_Export] AS' 
+END
 GO
 
 
@@ -554,5 +559,3 @@ END;
 
 
 GO
-
-

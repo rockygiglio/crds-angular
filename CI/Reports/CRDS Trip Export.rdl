@@ -13,7 +13,7 @@
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="EventID">
+          <QueryParameter Name="eventid">
             <Value>=Parameters!EventID.Value</Value>
           </QueryParameter>
         </QueryParameters>
@@ -23,375 +23,376 @@
       </Query>
       <Fields>
         <Field Name="First_Name">
-          <DataField>First_Name</DataField>
+          <DataField>first_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Middle_Name">
-          <DataField>Middle_Name</DataField>
+          <DataField>middle_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Last_Name">
-          <DataField>Last_Name</DataField>
+          <DataField>last_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Maiden_Name">
-          <DataField>Maiden_Name</DataField>
+          <DataField>maiden_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Nickname">
-          <DataField>Nickname</DataField>
+          <DataField>nickname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Email_Address">
-          <DataField>Email_Address</DataField>
+          <DataField>email_address</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Date_of_Birth">
-          <DataField>Date_of_Birth</DataField>
+          <DataField>date_of_birth</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Marital_Status">
-          <DataField>Marital_Status</DataField>
+          <DataField>marital_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Gender">
-          <DataField>Gender</DataField>
+          <DataField>gender</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Employer_Name">
-          <DataField>Employer_Name</DataField>
+          <DataField>employer_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="First_Attendance_Ever">
-          <DataField>First_Attendance_Ever</DataField>
+          <DataField>first_attendance_ever</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Mobile_Phone">
-          <DataField>Mobile_Phone</DataField>
+          <DataField>mobile_phone</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Address_Line_1">
-          <DataField>Address_Line_1</DataField>
+          <DataField>address_line_1</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Address_Line_2">
-          <DataField>Address_Line_2</DataField>
+          <DataField>address_line_2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="City">
-          <DataField>City</DataField>
+          <DataField>city</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="State_Region">
-          <DataField>State/Region</DataField>
+          <DataField>state/region</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Postal_Code">
-          <DataField>Postal_Code</DataField>
+          <DataField>postal_code</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="County">
-          <DataField>County</DataField>
+          <DataField>county</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Foreign_Country">
-          <DataField>Foreign_Country</DataField>
+          <DataField>foreign_country</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Home_Phone">
-          <DataField>Home_Phone</DataField>
+          <DataField>home_phone</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Congregation_Name">
-          <DataField>Congregation_Name</DataField>
+          <DataField>congregation_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TripGuardianFirstName">
-          <DataField>TripGuardianFirstName</DataField>
+          <DataField>tripguardianfirstname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ValidPassport">
-          <DataField>ValidPassport</DataField>
+          <DataField>validpassport</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TripGuardianLastName">
-          <DataField>TripGuardianLastName</DataField>
+          <DataField>tripguardianlastname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Middlename">
-          <DataField>Passport_Middlename</DataField>
+          <DataField>passport_middlename</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Firstname">
-          <DataField>Passport_Firstname</DataField>
+          <DataField>passport_firstname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TShirtSize">
-          <DataField>TShirtSize</DataField>
+          <DataField>tshirtsize</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Lastname">
-          <DataField>Passport_Lastname</DataField>
+          <DataField>passport_lastname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ScrubSizeTop">
-          <DataField>ScrubSizeTop</DataField>
+          <DataField>scrubsizetop</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Number">
-          <DataField>Passport_Number</DataField>
+          <DataField>passport_number</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Country">
-          <DataField>Passport_Country</DataField>
+          <DataField>passport_country</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ScrubSizeBottom">
-          <DataField>ScrubSizeBottom</DataField>
+          <DataField>scrubsizebottom</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Dietary_Restrictions">
-          <DataField>Dietary_Restrictions</DataField>
+          <DataField>dietary_restrictions</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Passport_Expiration">
-          <DataField>Passport_Expiration</DataField>
+          <DataField>passport_expiration</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Allergies">
-          <DataField>Allergies</DataField>
+          <DataField>allergies</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Spritual_Life">
-          <DataField>Spritual_Life</DataField>
+          <DataField>spritual_life</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="medicationrestrictions">
+          <DataField>medicationrestrictions</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WhyGoOnTrip">
-          <DataField>WhyGoOnTrip</DataField>
+          <DataField>whygoontrip</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="medicationstaking">
+          <DataField>medicationstaking</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="EmergencyContactFirstName">
-          <DataField>EmergencyContactFirstName</DataField>
+          <DataField>emergencycontactfirstname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="EmergencyContactLastName">
-          <DataField>EmergencyContactLastName</DataField>
+          <DataField>emergencycontactlastname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="EmergencyContactPrimaryPhone">
-          <DataField>EmergencyContactPrimaryPhone</DataField>
+          <DataField>emergencycontactprimaryphone</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="EmergencyContactSecondaryPhone">
-          <DataField>EmergencyContactSecondaryPhone</DataField>
+          <DataField>emergencycontactsecondaryphone</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="EmergencyContactEmailAddress">
-          <DataField>EmergencyContactEmailAddress</DataField>
+          <DataField>emergencycontactemailaddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="LotteryPreference">
-          <DataField>LotteryPreference</DataField>
+          <DataField>lotterypreference</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="CommonName">
-          <DataField>CommonName</DataField>
+          <DataField>commonname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="RequestedRoommate1">
-          <DataField>RequestedRoommate1</DataField>
+          <DataField>requestedroommate1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="emergencycontactrelationship">
+          <DataField>emergencycontactrelationship</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="RequestedRoommate2">
-          <DataField>RequestedRoommate2</DataField>
+          <DataField>requestedroommate2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SupportPersonEmail">
-          <DataField>SupportPersonEmail</DataField>
+          <DataField>supportpersonemail</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="GoGroupLeaderInterest">
-          <DataField>GoGroupLeaderInterest</DataField>
+          <DataField>gogroupleaderinterest</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Previous_Trip_Experience">
-          <DataField>Previous_Trip_Experience</DataField>
+          <DataField>previous_trip_experience</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SponsoredChild">
-          <DataField>SponsoredChild</DataField>
+          <DataField>sponsoredchild</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
         <Field Name="SponsoredChildFirstName">
-          <DataField>SponsoredChildFirstName</DataField>
+          <DataField>sponsoredchildfirstname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Profession">
-          <DataField>Profession</DataField>
+          <DataField>profession</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SponsoredChildLastName">
-          <DataField>SponsoredChildLastName</DataField>
+          <DataField>sponsoredchildlastname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="FF_Delta">
-          <DataField>FF_Delta</DataField>
+          <DataField>ff_delta</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="FF_South_African_Airlines">
-          <DataField>FF_South_African_Airlines</DataField>
+          <DataField>ff_south_african_airlines</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SponsoredChildIdNumber">
-          <DataField>SponsoredChildIdNumber</DataField>
+          <DataField>sponsoredchildidnumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="FF_United">
-          <DataField>FF_United</DataField>
+          <DataField>ff_united</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="FF_USAir">
-          <DataField>FF_USAir</DataField>
+          <DataField>ff_usair</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="International_Travel_Experience">
-          <DataField>International_Travel_Experience</DataField>
+          <DataField>international_travel_experience</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Experience_Serving_Abroad">
-          <DataField>Experience_Serving_Abroad</DataField>
+          <DataField>experience_serving_abroad</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SignUpDate">
-          <DataField>SignUpDate</DataField>
+          <DataField>signupdate</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SpouseOnTrip">
-          <DataField>SpouseOnTrip</DataField>
+          <DataField>spouseontrip</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
         <Field Name="Deposit">
-          <DataField>Deposit</DataField>
+          <DataField>deposit</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Payment_Type">
-          <DataField>Payment_Type</DataField>
+          <DataField>payment_type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Donation_Date">
-          <DataField>Donation_Date</DataField>
+          <DataField>donation_date</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Pledge_Status">
-          <DataField>Pledge_Status</DataField>
+          <DataField>pledge_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DepositAmount">
-          <DataField>DepositAmount</DataField>
+          <DataField>depositamount</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="SpouseName">
-          <DataField>SpouseName</DataField>
+          <DataField>spousename</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Abuse_Victim">
-          <DataField>Abuse_Victim</DataField>
+          <DataField>abuse_victim</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="StewardsOfChildren">
-          <DataField>StewardsOfChildren</DataField>
+          <DataField>stewardsofchildren</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Visa">
-          <DataField>Visa</DataField>
+          <DataField>visa</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Diploma">
-          <DataField>Diploma</DataField>
+          <DataField>diploma</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="MedicalLicense">
-          <DataField>MedicalLicense</DataField>
+          <DataField>medicallicense</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="LetterVerification">
-          <DataField>LetterVerification</DataField>
+          <DataField>letterverification</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="GoodFaithLetter">
-          <DataField>GoodFaithLetter</DataField>
+          <DataField>goodfaithletter</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="GoodStandingLetter">
-          <DataField>GoodStandingLetter</DataField>
+          <DataField>goodstandingletter</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Form10">
-          <DataField>Form10</DataField>
+          <DataField>form10</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="MedicalApplication">
-          <DataField>MedicalApplication</DataField>
+          <DataField>medicalapplication</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="OrchardAfricaWaiver">
-          <DataField>OrchardAfricaWaiver</DataField>
+          <DataField>orchardafricawaiver</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="CopyOfPassport">
-          <DataField>CopyOfPassport</DataField>
+          <DataField>copyofpassport</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="IPromise">
-          <DataField>IPromise</DataField>
+          <DataField>ipromise</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Waiver">
-          <DataField>Waiver</DataField>
+          <DataField>waiver</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ProofOfGuardianship">
-          <DataField>ProofOfGuardianship</DataField>
+          <DataField>proofofguardianship</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="CountryDocumentation">
-          <DataField>CountryDocumentation</DataField>
+          <DataField>countrydocumentation</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="PreviousTrips">
-          <DataField>PreviousTrips</DataField>
+          <DataField>previoustrips</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WorkTeamPreference1">
-          <DataField>WorkTeamPreference1</DataField>
+          <DataField>workteampreference1</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WorkTeamPreference2">
-          <DataField>WorkTeamPreference2</DataField>
+          <DataField>workteampreference2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WorkTeamExperience">
-          <DataField>WorkTeamExperience</DataField>
+          <DataField>workteamexperience</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="GOTripsEvents">
+    <DataSet Name="GOTrips">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="DomainID">
-            <Value>=Parameters!DomainID.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="UserID">
-            <Value>=Parameters!UserID.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="PageID">
-            <Value>=Parameters!PageID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>dbo.report_filter_mission_trips</CommandText>
+        <CommandText>report_CRDS_filter_trips</CommandText>
       </Query>
       <Fields>
         <Field Name="Event_Title">
@@ -412,6 +413,15 @@
           <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
                 <TablixColumn>
                   <Width>1in</Width>
                 </TablixColumn>
@@ -1700,6 +1710,66 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox15">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Medication Restrictions</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox23">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Medications Taking</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox23</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox64">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -1835,6 +1905,36 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox72</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Emergency Contact Relationship</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -4315,6 +4415,66 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="medicationrestrictions">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!medicationrestrictions.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>medicationrestrictions</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="medicationstaking">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!medicationstaking.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>medicationstaking</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Allergies">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -4450,6 +4610,36 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>EmergencyContactLastName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="emergencycontactrelationship">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!emergencycontactrelationship.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>emergencycontactrelationship</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -5996,6 +6186,9 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -6012,7 +6205,7 @@
             <Top>0.83958in</Top>
             <Left>0.1in</Left>
             <Height>0.5in</Height>
-            <Width>87in</Width>
+            <Width>90in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -6059,7 +6252,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>88.1in</Width>
+      <Width>90.1in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -6115,22 +6308,42 @@
   <ReportParameters>
     <ReportParameter Name="DomainID">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Domain ID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="UserID">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>User ID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="PageID">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Page ID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="EventID">
       <DataType>Integer</DataType>
       <Prompt>Event ID</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>GOTripsEvents</DataSetName>
+          <DataSetName>GOTrips</DataSetName>
           <ValueField>Event_ID</ValueField>
           <LabelField>Event_Title</LabelField>
         </DataSetReference>
