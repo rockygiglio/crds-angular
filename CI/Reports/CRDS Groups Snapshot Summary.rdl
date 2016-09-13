@@ -2055,13 +2055,7 @@
             <ChartSeriesHierarchy>
               <ChartMembers>
                 <ChartMember>
-                  <Group Name="chart3_SeriesGroup1">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Group_Type.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <Label>=Fields!Group_Type.Value</Label>
-                  <DataElementOutput>Output</DataElementOutput>
+                  <Label>All Members</Label>
                 </ChartMember>
               </ChartMembers>
             </ChartSeriesHierarchy>
@@ -2071,11 +2065,12 @@
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
+                        <X>=Fields!Congregation_Name.Value</X>
                         <Y>=Sum(Fields!All_Members.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
-                        <Label>=SUM(Fields!Leaders.Value) &amp; " Participants"</Label>
+                        <Label>=SUM(Fields!All_Members.Value) &amp; " Participants"</Label>
                         <Visible>true</Visible>
                       </ChartDataLabel>
                       <Style />
