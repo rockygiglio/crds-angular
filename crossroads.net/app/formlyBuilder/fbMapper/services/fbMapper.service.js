@@ -7,7 +7,7 @@ export default class fbMapperService {
         this.qApi = $q;
     }
 
-    saveFormlyFormData(model) {        
+    saveFormlyFormData(model) {
         let promise = this.resource(`${__API_ENDPOINT__}api/formbuilder/hugeEndPoint`)
             .save({}, model).$promise;
         return promise.then(() => {
@@ -18,16 +18,22 @@ export default class fbMapperService {
     }
 
     //This takes an array of composition Names
-    prepopulateCompositions(compositions){
+    prepopulateCompositions(compositions) {
         let returnModel = {};
+        let promises = [];
         _.forEach(compositions, (compositionName) => {
             let composition = this.fbMapperConfig.getComposition(compositionName);
-            returnModel[compositionName] = composition.prePopulate.get();
-            // composition.prePopulate.get().then( (data) => {
-            //      returnModel[compositionName] = data;
-            // });
+            promises.push(composition.prePopulate.get().$promise);
         });
-
-        return returnModel;
+        return this.qApi.all(promises).then((data)=>{
+            _.forEach(data, (compositionData, index)=> {
+                debugger;
+                returnModel[compositions[index]] = compositionData;
+            });
+            return returnModel;
+        })
+        .catch((err)=> {
+            return returnModel;
+        });
     }
 }

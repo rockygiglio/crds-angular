@@ -1,15 +1,18 @@
 export default class FBComposerController {
   /*@ngInject*/
-  constructor(fbMapperConfig, fbMapperService, $log, $rootScope) {
+  constructor(fbMapperConfig, fbMapperService, $log, $rootScope, $q) {
     this.fbMapperConfig = fbMapperConfig;
     this.rootScope = $rootScope;
     this.fbMapperService = fbMapperService;
     this.log = $log;
+    this.qApi = $q;
     this.invokedFields = _.isFunction(this.fields) ? this.fields() : this.fields;
     this.log.debug(this);
+    this.prePopulationComplete = false;
   }
 
   $onInit() {
+    debugger;
     this.preparedFields = this.prepareFields(this.invokedFields);
   }
 
@@ -31,35 +34,36 @@ export default class FBComposerController {
     compositions = _.uniq(compositions);
 
     //this is not finished, stopped here for the day
-    this.model = this.fbMapperService.prepopulateCompositions(compositions);
-    let unPopulate = _.where(builderFields, (field) => {
-      return field.prepopulate === false;
-    });
-    _.forEach(unPopulate, (model) => {
-      this.model[unPopulate.key] = undefined;
-
-    });
-
-    return fields;
-  }
-
-prepareValidation(field, validations) {
-
-}
-
-submit() {
-  try {
-    var promise = this.fbMapperService.saveFormlyFormData(this.model)
+    this.fbMapperService.prepopulateCompositions(compositions)
       .then((data) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-        this.log.debug(this.model);
-      })
+        debugger;
+        this.model = data;
+        // let unPopulate = _.where(builderFields, { prePopulate: false });
+        // _.forEach(unPopulate, (field) => {
+        //   this.model[field.formlyConfig.key] = undefined;
+        // });      
+        this.prePopulationComplete = true;
+        return fields;
+      });
   }
-  catch (error) {
-    this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-    throw (error);
+
+  prepareValidation(field, validations) {
+
   }
-}
+
+  submit() {
+    try {
+      var promise = this.fbMapperService.saveFormlyFormData(this.model)
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+          this.log.debug(this.model);
+        })
+    }
+    catch (error) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      throw (error);
+    }
+  }
 
 
 }
