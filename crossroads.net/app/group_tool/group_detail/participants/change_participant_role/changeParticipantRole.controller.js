@@ -51,9 +51,12 @@ export default class ChangeParticipantRoleController {
     return (this.participant.groupRoleId === CONSTANTS.GROUP.ROLES.APPRENTICE);
   }
 
+  isApprovedLeader() {
+    return this.participant.isApprovedLeader === true;
+  }
 
-  leaderDisabled() {
-    return !this.participant.isApprovedLeader;
+  isLeaderDisabled() {
+    return !this.isLeader() && (!this.isApprovedLeader() || this.warningLeaderMax());
   }
 
   warningLeaderMax() {
@@ -71,6 +74,10 @@ export default class ChangeParticipantRoleController {
       return true;
     }
     return false;
+  }
+
+  isApprenticeDisabled() {
+    return !this.isApprentice() && this.warningApprenticeMax();
   }
 
   warningApprenticeMax() {
