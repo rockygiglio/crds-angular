@@ -4,6 +4,9 @@
 <div
   ng-show='groupDetailParticipants.ready'
   ng-if='groupDetailParticipants.isListView() || groupDetailParticipants.isEditView()'>
+
+  <h4 ng-if="groupDetailParticipants.data.length > 1" class="visible-xs group-detail-title-mobile push-top soft-half-bottom border-bottom">Participants</h4>
+
   <div class='group-detail-participant-list row push-top'>
     <div ng-repeat='participant in groupDetailParticipants.data' class="group-detail-participant-item col-xs-12 col-sm-6 col-lg-4 push-bottom">
       <group-detail-participant-card

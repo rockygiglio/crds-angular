@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IGroupToolRepository
     {
         List<MpInvitation> GetInvitations(int sourceId, int invitationTypeId);
-        List<MpInquiry> GetInquiries(int groupId);
+        List<MpInquiry> GetInquiries(int? groupId = null);
         List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null);
     }
 }

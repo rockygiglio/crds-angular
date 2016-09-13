@@ -220,5 +220,16 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('grouptool.leaderresources', {
+      parent: 'noSideBar',
+      url: '/groups/leader/resources',
+      template: '<group-tool-cms></group-tool-cms>',
+      data: {
+        meta: {
+          title: 'Leader Resources',
+          description: ''
+        }
+      },
+    })
   ;
 }

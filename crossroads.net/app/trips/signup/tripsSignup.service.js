@@ -69,6 +69,8 @@
       signupService.page5 = page5();
       signupService.page6 = page6();
       signupService.depositInfo = depositInfo();
+
+      signupService.spiritualLifeShown = false;
     }
 
     function depositInfo() {
@@ -95,7 +97,8 @@
         emergencyContactLastName: null,
         emergencyContactEmail: null,
         emergencyContactPrimaryPhone: null,
-        emergencyContactSecondaryPhone: null
+        emergencyContactSecondaryPhone: null,
+        emergencyContactRelationship: null
       };
     }
 

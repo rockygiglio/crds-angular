@@ -38,6 +38,7 @@ export default class SmallGroup {
     this.meetingDay = jsonObject.meetingDay;
     this.meetingTime = jsonObject.meetingTime;
     this.meetingFrequencyText = jsonObject.meetingFrequency;
+    this.meetingFrequencyId = jsonObject.meetingFrequencyId;
     this.meetingTimeFrequency = this.getGroupCardWhenField();
   }
 

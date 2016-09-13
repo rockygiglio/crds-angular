@@ -924,4 +924,8 @@ export default class CreateGroupService {
         return categoryId;
     }
 
+    getMeetingFrequencies() {
+        return this.meetingFrequencyLookup;
+    }
+
 }

@@ -42,6 +42,8 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
     vm.internationalExpSelected = vm.signupService.person.singleAttributes[attributeTypes.INTERNATIONAL_EXPERIENCE];
     vm.interExperience = InternationalExperience;
     vm.locations = Locations;
+    vm.medicalRestrictions = vm.signupService.person.singleAttributes[attributeTypes.MEDICAL_RESTRICTIONS];
+    vm.medicationsTaking = vm.signupService.person.singleAttributes[attributeTypes.MEDICATION_TAKING];
     vm.person = vm.signupService.person;
     vm.passportValid = _.isEmpty(vm.signupService.person.passportNumber) ? '' : 'true';
     vm.spiritualLife = vm.signupService.person.attributeTypes[attributeTypes.SPIRITUAL_JOURNEY].attributes;
@@ -63,6 +65,11 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
         case '2':
           evaluateAllergies();
           evaluateSpiritualLife();
+          vm.signupService.spiritualLifeShown = true;
+          break;
+        case '3':
+          evaluateMedicationsTaking();
+          evaluateMedicalRestrictions();
           break;
         case '5':
           evaluatePreviousTripExperience();
@@ -101,6 +108,22 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
       });
     }
 
+    function evaluateMedicalRestrictions() {
+      if (!vm.medicalRestrictions.attribute) {
+        vm.medicalRestrictions.attribute = {
+          attributeId: attributes.MEDICAL_RESTRICTIONS
+        };
+      }
+    }
+
+    function evaluateMedicationsTaking() {
+      if (!vm.medicationsTaking.attribute) {
+        vm.medicationsTaking.attribute = {
+          attributeId: attributes.MEDICATION_TAKING
+        };
+      }
+    }
+
     function evaluatePreviousTripExperience() {
       if (!vm.tripExperience.attribute) {
         vm.tripExperience.attribute = {
@@ -111,12 +134,14 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
     }
 
     function evaluateSpiritualLife() {
-      _.forEach(vm.spiritualLife, function(spirit) {
-        if (spirit.selected) {
-          spirit.selected = false;
-          spirit.endDate = new Date();
-        }
-      });
+      if (!vm.signupService.spiritualLifeShown) {
+        _.forEach(vm.spiritualLife, function(spirit) {
+          if (spirit.selected) {
+            spirit.selected = false;
+            spirit.endDate = new Date();
+          }
+        });
+      }
     }
 
   }

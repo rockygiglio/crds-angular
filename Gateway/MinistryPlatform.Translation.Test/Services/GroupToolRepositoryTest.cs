@@ -19,6 +19,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
         private const int InvitationPageId = 55;
         private const int GroupInquiriesSubPageId = 304;
+        private const int GroupInquiriesNotPlacedPageView = 90210;
 
         [SetUp]
         public void SetUp()
@@ -32,6 +33,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             config.Setup(mocked => mocked.GetConfigIntValue("InvitationPageID")).Returns(InvitationPageId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupInquiresSubPage")).Returns(GroupInquiriesSubPageId);
+            config.Setup(mocked => mocked.GetConfigIntValue("GroupInquiriesNotPlacedPageView")).Returns(GroupInquiriesNotPlacedPageView);
 
             config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
             config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
@@ -78,6 +80,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
+            const string token = "abc123";
+            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
 
             _ministryPlatformService.Setup(mocked => mocked.GetSubPageRecords(GroupInquiriesSubPageId, groupId, It.IsAny<string>())).Returns(returned);
 
@@ -148,6 +152,45 @@ namespace MinistryPlatform.Translation.Test.Services
             _apiUserRepository.VerifyAll();
             _ministryPlatformRestRepository.VerifyAll();
             Assert.AreSame(searchResults[0], results);
+        }
+
+        [Test]
+        public void TestGetInquiriesForAllGroups()
+        {
+            const string token = "abc123";
+            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
+            var inquiryResults = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"dp_RecordID", 123},
+                    {"Group_ID", 456},
+                    {"Email", "me@here.com"},
+                    {"Phone", "513-555-1212"},
+                    {"First_Name", "first"},
+                    {"Last_Name", "last"},
+                    {"Inquiry_Date", new DateTime(1973, 10, 15).Date},
+                    {"Placed", true},
+                    {"Contact_ID", 789}
+                }
+            };
+
+            _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(GroupInquiriesNotPlacedPageView, token, string.Empty, string.Empty, 0)).Returns(inquiryResults);
+            var results = _fixture.GetInquiries();
+            _apiUserRepository.VerifyAll();
+            _ministryPlatformService.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(inquiryResults[0]["dp_RecordID"], results[0].InquiryId);
+            Assert.AreEqual(inquiryResults[0]["Group_ID"], results[0].GroupId);
+            Assert.AreEqual(inquiryResults[0]["Email"], results[0].EmailAddress);
+            Assert.AreEqual(inquiryResults[0]["Phone"], results[0].PhoneNumber);
+            Assert.AreEqual(inquiryResults[0]["First_Name"], results[0].FirstName);
+            Assert.AreEqual(inquiryResults[0]["Last_Name"], results[0].LastName);
+            Assert.AreEqual(inquiryResults[0]["Inquiry_Date"], results[0].RequestDate);
+            Assert.AreEqual(inquiryResults[0]["Placed"], results[0].Placed);
+            Assert.AreEqual(inquiryResults[0]["Contact_ID"], results[0].ContactId);
+
         }
     }
 }

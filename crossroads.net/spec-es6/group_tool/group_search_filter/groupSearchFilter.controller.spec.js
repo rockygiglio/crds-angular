@@ -8,9 +8,11 @@ import LocationFilter from '../../../app/group_tool/group_search_filter/filter_i
 import GroupTypeFilter from '../../../app/group_tool/group_search_filter/filter_impl/groupType.filter';
 import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingDay.filter';
 import MeetingTimeFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingTime.filter';
+import FrequencyFilter from '../../../app/group_tool/group_search_filter/filter_impl/frequency.filter';
+import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filter_impl/leadersSite.filter';
 
 describe('GroupSearchFilter', () => {
-  let fixture, groupService;
+  let fixture, groupService, createGroupService;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
@@ -18,7 +20,10 @@ describe('GroupSearchFilter', () => {
     groupService = {
       getAgeRanges: function () { }
     };
-    fixture = new GroupSearchFilter(groupService);
+    createGroupService = {
+      getMeetingFrequencies: function () { }
+    };
+    fixture = new GroupSearchFilter(groupService, createGroupService);
   }));
 
   describe('the constructor', () => {
@@ -27,8 +32,10 @@ describe('GroupSearchFilter', () => {
       expect(fixture.groupTypes).toEqual([]);
       expect(fixture.days).toEqual([]);
       expect(fixture.categories).toEqual([]);
+      expect(fixture.leadersSite).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
       expect(fixture.allFilters).toEqual([]);
+      expect(fixture.frequencies).toEqual([]);
     });
   });
 
@@ -71,16 +78,25 @@ describe('GroupSearchFilter', () => {
       let categories = [10, 11, 12];
       spyOn(fixture, 'loadCategories').and.callFake(() => {});
 
+      let frequencies = [20, 21, 22];
+      spyOn(fixture, 'loadFrequencies').and.callFake(() => {});
+
+      let leadersSite = [17, 18, 19];
+      spyOn(fixture, 'loadLeadersSite').and.callFake(() => {});
+
       fixture.allFilters = [];
       fixture.ageRanges = ageRanges;
       fixture.groupTypes = groupTypes;
       fixture.days = meetingDays;
       fixture.categories = categories;
+      fixture.frequencies = frequencies;
+      fixture.leadersSite = leadersSite;
 
       fixture.initializeFilters();
 
       expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(7);
+      expect(fixture.allFilters.length).toEqual(9);
+
       let i = 0;
 
       let ageRangeFilter = fixture.allFilters[i++];
@@ -113,6 +129,14 @@ describe('GroupSearchFilter', () => {
       let meetingTimeFilter = fixture.allFilters[i++];
       expect(meetingTimeFilter instanceof MeetingTimeFilter).toBeTruthy();
       expect(meetingTimeFilter.getName()).toEqual('Time');
+
+      let frequencyFilter = fixture.allFilters[i++];
+      expect(frequencyFilter instanceof FrequencyFilter).toBeTruthy();
+      expect(frequencyFilter.getName()).toEqual('Frequency');
+
+      let leadersSiteFilter = fixture.allFilters[i++];
+      expect(leadersSiteFilter instanceof LeadersSiteFilter).toBeTruthy();
+      expect(leadersSiteFilter.getName()).toEqual('Leaders Site');
     });
   });
 
@@ -153,10 +177,10 @@ describe('GroupSearchFilter', () => {
 
       spyOn(fixture.tableParams, 'reload').and.callFake(() => {});
 
-      fixture.applyFilters();
+      fixture._internalApplyFilters();
 
       expect(fixture.tableParams.reload).toHaveBeenCalled();
-      expect(fixture.expanded).toBeFalsy();
+      expect(fixture.expanded).toBeTruthy();
       expect(fixture.tableParams.settings().dataset).toEqual([{ 'age': 2, 'kids': true }]);
       expect(fixture.tableParams.settings().someOtherSettingThatShouldNotChange).toBeTruthy();
     });
@@ -193,11 +217,9 @@ describe('GroupSearchFilter', () => {
     it('closeFilters should set expanded to false', () => {
       fixture.expanded = true;
       let form = {
-        $rollbackViewValue: jasmine.createSpy('$rollbackViewValue')
       };
       fixture.closeFilters(form);
 
-      expect(form.$rollbackViewValue).toHaveBeenCalled();
       expect(fixture.expanded).toBeFalsy();
     });
 

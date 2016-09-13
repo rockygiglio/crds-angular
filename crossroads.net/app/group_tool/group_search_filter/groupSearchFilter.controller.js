@@ -1,3 +1,4 @@
+import debounce from 'lodash/function/debounce';
 
 import {SearchFilterValue} from './filter_impl/searchFilter';
 import AgeRangeFilter from './filter_impl/ageRange.filter'; 
@@ -5,19 +6,29 @@ import CategoryFilter from './filter_impl/category.filter';
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
-import MeetingDayFilter from './filter_impl/meetingDay.filter'; 
-import MeetingTimeFilter from './filter_impl/meetingTime.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
+import LeadersSiteFilter from './filter_impl/leadersSite.filter'; 
+
+const APPLY_FILTER_DEBOUNCE = 750;
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
+    this.createGroupService = CreateGroupService;
     this.ageRanges = [];
     this.groupTypes = [];
     this.days = [];
     this.categories = [];
+    this.frequencies = [];
+    this.leadersSite = [];
     this.expanded = false;
     this.allFilters = [];
+    this.expandedFilter = null;
+
+    this.applyFilters = debounce(this._internalApplyFilters, APPLY_FILTER_DEBOUNCE);
   }
 
   $onInit() {
@@ -38,16 +49,20 @@ export default class GroupSearchResultsController {
       new KidsWelcomeFilter('Kids Welcome'),
       new LocationFilter('Location'),
       new MeetingDayFilter('Day', this.days),
-      new MeetingTimeFilter('Time')
+      new MeetingTimeFilter('Time'),
+      new FrequencyFilter('Frequency', this.frequencies),
+      new LeadersSiteFilter('Leaders Site', this.leadersSite)
     ];
 
     this.loadAgeRanges();
     this.loadGroupTypes();
     this.loadDays();
     this.loadCategories();
+    this.loadFrequencies();
+    this.loadLeadersSite();
   }
 
-  applyFilters() {
+  _internalApplyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
         for (let i = 0; i < this.allFilters.length; i++) {
@@ -59,7 +74,6 @@ export default class GroupSearchResultsController {
       })
     };
 
-    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
@@ -87,14 +101,28 @@ export default class GroupSearchResultsController {
 
   openFilters() {
     this.expanded = true;
+    this.expandedFilter = null;
   }
 
-  closeFilters(filterForm) {
-    // Reset all filters that are not in sync with the model. This handles the case 
-    // where someone changes filter values but does not click "Update Filters". 
-    filterForm.$rollbackViewValue();
+  openFilter(filter) {
+    this.expanded = true;
+    this.expandedFilter = filter;
+  }
 
+  closeFilters() {
     this.expanded = false;
+  }
+
+  toggleFilter(filter) {
+    if (this.expandedFilter === filter) {
+      this.expandedFilter = null;
+    } else {
+      this.expandedFilter = filter;
+    }
+  }
+
+  isOpenFilter(filter) {
+    return this.expandedFilter === filter;
   }
 
   loadAgeRanges() {
@@ -154,6 +182,30 @@ export default class GroupSearchResultsController {
       }
     ).finally(
       () => {
+      });
+  }
+
+  loadFrequencies() {
+    let frequencies = this.createGroupService.getMeetingFrequencies();
+    frequencies = _.sortBy( frequencies, 'meetingFrequencyId' );
+
+    this.frequencies.push.apply(this.frequencies, frequencies.map((a) => {
+      return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
+    }));
+  }
+
+  loadLeadersSite() {
+    this.groupService.getSites().then(
+      (data) => {
+        data = _.sortBy( data, 'dp_RecordID' );
+        this.leadersSite.push.apply(this.leadersSite, data.map((a) => {
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
       });
   }
 }

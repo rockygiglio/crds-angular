@@ -35,7 +35,7 @@ export default class GroupDetailParticipantsController {
 
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
-    })
+    });
   }
 
   loadGroupParticipants() {
