@@ -17,7 +17,7 @@
 
           <div data-toggle="buttons" [hidden]="model.day">
             <label class="btn btn-lg btn-date-select" *ngFor="let date of uniqueDates()" (click)="model.day=date.start.format(dateFormats.key);dateTimeError=false">
-              <input type="radio" autocomplete="off" [(ngModel)]="model.day" ngControl="day" #day="ngForm"> {{date.start.format(dateFormats.display)}}
+              <input type="radio" autocomplete="off" [(ngModel)]="model.day" ngControl="day" #day="ngForm" value="{{date.start.format(dateFormats.key)}}" name="{{date.start.format(dateFormats.key)}}"> {{date.start.format(dateFormats.display)}}
             </label>
             <dynamic-content-ng2 title="streamingLandingDateTimeError" *ngIf="dateTimeError" ></dynamic-content-ng2>
           </div>
