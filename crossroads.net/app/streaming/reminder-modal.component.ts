@@ -140,7 +140,6 @@ export class ReminderModalComponent {
   }
 
   public open(size) {
-    this.resetForm()
     this.modal.open(size)
   }
 }
