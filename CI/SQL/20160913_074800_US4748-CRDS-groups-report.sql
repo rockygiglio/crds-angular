@@ -12,6 +12,9 @@ SELECT @page_id = p.Page_ID FROM
 
 IF NOT EXISTS(SELECT * FROM [dbo].[dp_reports] WHERE Report_Path = '/MPReports/CRDS Groups Snapshot Summary')
 BEGIN
+
+	SET IDENTITY_INSERT [dbo].[dp_Reports] ON
+
 	INSERT INTO [dbo].[dp_reports]
 			   ([Report_ID],
 			    [Report_Name],
@@ -29,6 +32,8 @@ BEGIN
 			   ,0
 			   ,0          
 			   ,1)
+			   
+	SET IDENTITY_INSERT [dbo].[dp_Reports] OFF
 END
 
 SELECT @report_id = r.Report_ID FROM
