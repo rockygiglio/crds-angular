@@ -12,7 +12,7 @@ export default class FBComposerController {
   }
 
   $onInit() {
-    this.prepareFields(this.invokedFields).then((fields)=>{
+    this.prepareFields(this.invokedFields).then((fields) => {
       this.preparedFields = fields;
     });
   }
@@ -32,10 +32,10 @@ export default class FBComposerController {
     return this.fbMapperService.prepopulateCompositions(compositions)
       .then((data) => {
         this.model = data;
-        // let unPopulate = _.where(builderFields, { prePopulate: false });
-        // _.forEach(unPopulate, (field) => {
-        //   this.model[field.formlyConfig.key] = undefined;
-        // });      
+        let unPopulate = _.where(builderFields, { prePopulate: false });
+        _.forEach(unPopulate, (field) => {
+          _.set(this.model, field.formlyConfig.key, undefined);
+        });
         this.prePopulationComplete = true;
         return fields;
       });
