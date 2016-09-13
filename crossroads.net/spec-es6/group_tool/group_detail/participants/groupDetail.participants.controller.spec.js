@@ -86,6 +86,30 @@ describe('GroupDetailParticipantsController', () => {
 
     });
 
+    describe('finishChangeParticipantRole() function', () => {
+      it('should return to list view', () => {
+        let participant = new Participant();
+        fixture.roleParticipant = participant;
+        fixture.setRoleView();
+        fixture.finishChangeParticipantRole();
+
+        expect(fixture.isListView()).toBeTruthy();
+        expect(fixture.roleParticipant).not.toBeDefined();
+      });
+    });
+
+    describe('cancelChangeParticipantRole() function', () => {
+      it('should return to list view', () => {
+        let participant = new Participant();
+        fixture.roleParticipant = participant;
+        fixture.setRoleView();
+        fixture.cancelChangeParticipantRole();
+
+        expect(fixture.isEditView()).toBeTruthy();
+        expect(fixture.roleParticipant).not.toBeDefined();
+      });
+    });
+
     describe('beginRemoveParticipant() function', () => {
       it('should set properties', () => {
         let participant = new Participant();
