@@ -7,4 +7,4 @@ export default angular
   .config(liveStreamRouter)
   ;
 
-import stream from './stream';
+import landing from './landing';

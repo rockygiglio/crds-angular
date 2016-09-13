@@ -7,7 +7,7 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
     .state('live-v1', {
       parent: 'screenWidth',
       url: '/live-v1',
-      template: '<stream></stream>',
+      template: '<landing></landing>',
       data: {
         meta: {
           title: 'Live',

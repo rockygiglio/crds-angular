@@ -1,4 +1,4 @@
-export default class StreamController {
+export default class LandingController {
   /*@ngInject*/
   constructor($state, $rootScope) {
     this.state = $state;
