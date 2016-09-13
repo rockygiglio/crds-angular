@@ -27,7 +27,6 @@ export default class fbMapperService {
         });
         return this.qApi.all(promises).then((data)=>{
             _.forEach(data, (compositionData, index)=> {
-                debugger;
                 returnModel[compositions[index]] = compositionData;
             });
             return returnModel;
