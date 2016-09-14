@@ -8,6 +8,7 @@ BEGIN
 			JOIN [eCheckIn].[dbo].[tblKidsClub_Archived_Services] srv on srv.[ID] = registrations.[Service] 
 			JOIN [eCheckIn].[dbo].[tblKidsClub_Building_Locations] loc on loc.[ID] = registrations.[Building_Location_ID] 
 			WHERE registrations.ID > @last_inserted_id AND Checkin_Date is not null
+	GO
 END
 ELSE
 BEGIN
@@ -16,4 +17,5 @@ BEGIN
 			JOIN [eCheckIn].[dbo].[tblKidsClub_Archived_Services] srv on srv.[ID] = registrations.[Service] 
 			JOIN [eCheckIn].[dbo].[tblKidsClub_Building_Locations] loc on loc.[ID] = registrations.[Building_Location_ID]
 			WHERE Checkin_Date > '2016-01-01'
+	GO
 END
