@@ -16,7 +16,7 @@ export class SearchFilter {
   }
 
   getSelectedValues() {
-    return this.filterValues.filter((i) => { return i.selected === true; })
+    return this.filterValues.filter((i) => { return i.selected === true; });
   }
 
   getValues() {

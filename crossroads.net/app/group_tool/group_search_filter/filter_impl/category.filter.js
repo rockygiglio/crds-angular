@@ -1,9 +1,21 @@
 
-import {SearchFilter} from './searchFilter';
+import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class CategoryFilter extends SearchFilter {
-  constructor(filterName, filterValues) {
-    super(filterName, filterValues, this._matchingFunction);
+  constructor(filterName, groupService) {
+    super(filterName, [], this._matchingFunction);
+
+    groupService.getGroupCategories().then(
+      (data) => {
+        this.getValues().push.apply(this.getValues(), data.map((c) => {
+          return new SearchFilterValue(c.label, c.categoryId, false, c.labelDesc);
+        }));
+      },
+      (/*err*/) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }).finally(
+        () => {
+      });
   }
 
   _matchingFunction(result) {
