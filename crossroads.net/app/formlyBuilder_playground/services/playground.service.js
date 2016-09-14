@@ -30,7 +30,16 @@ export default class PlaygroundService {
                     key: 'person.nickName',
                     type: 'formlyBuilderInput',
                     templateOptions: {
-                        label: 'Preferred Name',
+                        label: 'Nick Name',
+                        required: true
+                    }
+                }
+            }, {
+                formlyConfig: {
+                    key: 'person.gender',
+                    type: 'formlyBuilderSelect',
+                    templateOptions: {
+                        label: 'Gender',
                         required: true
                     }
                 }

@@ -23,12 +23,19 @@ export default class FBComposerController {
     _.forEach(builderFields, (builderField) => {
       let field = builderField.formlyConfig;
       let keyArray = builderField.formlyConfig.key.split('.');
-      let mapperConfigElement = this.fbMapperConfig.getElement(keyArray[keyArray.length - 1]);
-      this.log.debug(mapperConfigElement);
-      fields.push(field);
+      // Generate formly fields object
+      this.fbMapperConfig.getElement(keyArray[keyArray.length - 1]).then((mapperConfigElement) => {
+        if (_.has(mapperConfigElement, 'lookupData')){
+          field.templateOptions.options = mapperConfigElement.lookupData;
+          field.templateOptions.labelProp = mapperConfigElement.model.lookup.labelProp;
+          field.templateOptions.valueProp = mapperConfigElement.model.lookup.valueProp;
+        }
+        fields.push(field);
+      });
       compositions.push(keyArray[0])
     });
     compositions = _.uniq(compositions);
+    // generate model
     return this.fbMapperService.prepopulateCompositions(compositions)
       .then((data) => {
         this.model = data;
