@@ -28,8 +28,9 @@
           <div class="row">
             <div ng-repeat="value in filter.getValues()"
                  ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues().length <= 3 }"
-                 class="mobile-push-half-bottom"
-                 ng-include="'expanded-filter-renderer.html'">
+                 class="mobile-push-half-bottom">
+              <!-- Individual expanded filter renderer - supports multiple levels of grouped filters (sort-of...) -->
+              <group-search-filter-renderer value="value"></group-search-filter-renderer>
             </div>
           </div>
         </div>
@@ -81,40 +82,3 @@
 
 
 </div>
-
-<!-- Collapsed Filters renderer -->
-<script type="text/ng-template" id="collapsed-filters-renderer.html">
-  <div ng-if="f.constructor.name !== 'FilterGroup'">
-    <a ng-click="groupSearchFilter.openFilter(f)">{{f.getName()}}</a>
-    <svg ng-click='groupSearchFilter.clearFilter(f)'
-          viewBox="0 0 32 32"
-          class="icon icon-close pointer">
-      <use xlink:href="#close"></use>
-    </svg>
-  </div>
-
-  <div ng-if="f.constructor.name === 'FilterGroup'">
-    <div ng-repeat="f in f.getCurrentFilters()"
-          ng-include="'collapsed-filters-renderer.html'"/> 
-  </div>
-</script>
-
-<!-- Individual expanded filter renderer - supports multiple levels of grouped filters (sort-of...) -->
-<script type="text/ng-template" id="expanded-filter-renderer.html">
-  <label ng-if="value.constructor.name === 'SearchFilterValue'" class="checkbox-inline" for="{{filter.getFilterName()}}-{{value.getValue()}}">
-    <input ng-model="value.selected"
-            ng-value="value.getValue()"
-            ng-click="groupSearchFilter.applyFilters()"
-            type="checkbox"
-            id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
-    {{value.getName()}}
-  </label>
-  <div ng-if="value.constructor.name !== 'SearchFilterValue'">
-    <h5>{{value.getName()}}</h5>
-    <div ng-repeat="value in value.getValues()"
-          ng-class="{ 'col-md-6 col-lg-4': value.getValues().length > 3, 'col-xs-12': value.getValues() <= 3 }"
-          class="mobile-push-half-bottom"
-          ng-include="'expanded-filter-renderer.html'">
-    </div>
-  </div>
-</script>

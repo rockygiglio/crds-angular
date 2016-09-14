@@ -8,7 +8,7 @@ export default class MeetingDayFilter extends SearchFilter {
     groupService.getDaysOfTheWeek().then(
       (data) => {
         data = _.sortBy( data, 'dp_RecordID' );
-        data.push({dp_RecordID: 0, dp_RecordName: 'Flexible Meeting Time'});
+        data.push({dp_RecordID: 0, dp_RecordName: 'Flexible'});
         this.getValues().push.apply(this.getValues(), data.map((a) => {
           return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
         }));

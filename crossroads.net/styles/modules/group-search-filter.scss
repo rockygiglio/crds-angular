@@ -34,6 +34,10 @@ group-search-filter {
     padding-right: $line-height-computed * 2;
   }
 
+  .group-search-filter-subheading {
+    font-weight: 400;
+  }
+
   .group-search-filter-summary {
     min-height: $line-height-computed;
 
