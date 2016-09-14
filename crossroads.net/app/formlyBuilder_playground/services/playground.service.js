@@ -45,6 +45,16 @@ export default class PlaygroundService {
                     }
                 },
                 prePopulate: true
+            }, {
+                formlyConfig: {
+                    key: 'person.site',
+                    type: 'formlyBuilderSelect',
+                    templateOptions: {
+                        label: 'Site',
+                        required: true
+                    }
+                },
+                prePopulate: true
             }
         ]
     }
