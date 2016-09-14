@@ -64,7 +64,7 @@ AS
 			JOIN Events e ON CONVERT(date, Checkin_Date) = CONVERT(date, e.Event_Start_Date) AND CONVERT(time, e.Event_Start_Date) = CONVERT(time, Service_Time) AND e.Cancelled != 1
 			JOIN Congregations con ON con.Congregation_ID = e.Congregation_ID 
 			WHERE e.Event_Type_ID = 243 
-				AND Service_Day <> 'Saturday'
+				AND Service_Day != 'Saturday'
 				AND Service_Day != 'Sunday'
 				AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
 				AND e.Congregation_ID = @CongregationId
