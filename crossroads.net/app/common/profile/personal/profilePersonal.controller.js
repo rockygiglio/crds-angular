@@ -149,7 +149,7 @@
     }
 
     function editingOtherProfile() {
-      return vm.contactId !== parseInt(Session.exists('userId'));
+      return Number(vm.contactId) !== parseInt(Session.exists('userId'));
     }
 
     function setAttendanceStartDateToJSDate() {
