@@ -15,7 +15,7 @@ export default class PlaygroundService {
                         required: true
                     }
                 },
-                prePopulate: false
+                prePopulate: true
             }, {
                 formlyConfig: {
                     key: 'person.lastName',
@@ -24,7 +24,8 @@ export default class PlaygroundService {
                         label: 'Last Name',
                         required: true
                     }
-                }
+                },
+                prePopulate: false
             }, {
                 formlyConfig: {
                     key: 'person.nickName',
@@ -33,7 +34,8 @@ export default class PlaygroundService {
                         label: 'Preferred Name',
                         required: true
                     }
-                }
+                },
+                prePopulate: true
             }
         ]
     }
