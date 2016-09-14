@@ -1,7 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-/****** Object:  Table [dbo].[cr_Echeck_Registrations]    Script Date: 9/12/2016 1:06:47 PM ******/
+/****** Object:  Table [dbo].[cr_Echeck_Registrations]    Script Date: 9/12/2016 4:09:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -16,7 +16,14 @@ CREATE TABLE [dbo].[cr_Echeck_Registrations](
 	[Child_ID] [int] NOT NULL,
 	[Checkin_Date] [datetime] NULL,
 	[Checkin_Time] [time](7) NULL,
+	[Service_Day] [varchar](50) NULL,
+	[Service_Time] [varchar](20) NULL,
+	[Building_Name] [varchar](50) NULL 
  CONSTRAINT [PK_crds_Echeck_Registrations] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [IX_cr_Echeck_Registrations_Unique_Sarah_Id] UNIQUE NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -24,4 +31,6 @@ CREATE TABLE [dbo].[cr_Echeck_Registrations](
 END
 GO
 
-
+GRANT INSERT ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
+GRANT UPDATE ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
+GRANT SELECT ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
