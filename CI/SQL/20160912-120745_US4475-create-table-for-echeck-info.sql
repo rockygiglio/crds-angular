@@ -34,3 +34,5 @@ GO
 GRANT INSERT ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
 GRANT UPDATE ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
 GRANT SELECT ON [dbo].[cr_Echeck_Registrations] TO [EcheckAgent];
+
+GO
