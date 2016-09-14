@@ -893,6 +893,14 @@ streaming, landing {
     }
   }
 
+  .validation-control {
+    .alert {
+      p {
+        margin: 0;
+      }
+    }
+  }
+
   .alert {
     font-size: 85%;
     font-weight: bold;
