@@ -3,6 +3,8 @@
 require('./childcare');
 require('./mp_tools');
 require('./group_tool');
+require('./live_stream');
+
 require('ui-select/dist/select.css');
 
 (function() {
@@ -18,6 +20,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
       //constants.MODULES.GROUP_FINDER,
+      constants.MODULES.LIVE_STREAM,
       constants.MODULES.MEDIA,
       constants.MODULES.MPTOOLS,
       constants.MODULES.GROUP_TOOL,

@@ -53,7 +53,7 @@ SELECT Groups = 1
 , (SELECT TOP(1) Congregation_Name FROM Congregations c INNER JOIN Households h ON c.Congregation_ID
 = h.Congregation_ID INNER JOIN contacts ct ON ct.Household_ID = h.Household_ID where ct.Contact_ID=g.Primary_Contact) AS Leader_Site
 , CASE G.[Available_Online] WHEN 0 THEN 'Private' WHEN 1 THEN 'Public' ELSE 'Unknown' END AS [Public]
-, DATEADD(DAY, 1-(DATEPART( dw, G.Start_Date )) % 7 - 1, G.Start_Date) AS Start_Week_Date
+, CONVERT(date, DATEADD(DAY, 1-(DATEPART( dw, G.Start_Date )) % 7 - 1, G.Start_Date)) AS Start_Week_Date
 
 FROM Groups G
  INNER JOIN Group_Types GT ON GT.Group_Type_ID = G.Group_Type_ID

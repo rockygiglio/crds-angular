@@ -140,6 +140,11 @@ export default class GroupDetailParticipantsController {
 
   finishChangeParticipantRole() {
     this.roleParticipant = undefined;
+    this.setListView();
+  }
+
+  cancelChangeParticipantRole() {
+    this.roleParticipant = undefined;
     this.setEditView();
   }
 

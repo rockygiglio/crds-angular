@@ -19,7 +19,7 @@
            ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }"
            class="group-search-filter-row row soft-half-top soft-half-bottom border-top">
 
-        <div ng-click="groupSearchFilter.toggleFilter(filter)" class="pointer col-xs-4 col-sm-3 col-md-2">
+        <div ng-click="groupSearchFilter.toggleFilter(filter)" class="pointer col-xs-12 col-sm-3 col-md-2">
           <a>{{filter.getName()}}</a>
         </div>
 
@@ -27,7 +27,7 @@
         <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="group-search-filter-options col-xs-12 col-sm-9 col-md-10 mobile-push-left mobile-push-half-top">
           <div class="row">
             <div ng-repeat="value in filter.getValues()"
-                 ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues() <= 3 }"
+                 ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues().length <= 3 }"
                  class="mobile-push-half-bottom"
                  ng-include="'expanded-filter-renderer.html'">
             </div>
@@ -36,7 +36,7 @@
 
         <!-- Collapsed Filter shows selections -->
         <div ng-show="!groupSearchFilter.isOpenFilter(filter)"
-             ng-class="{ 'col-xs-12  mobile-flush-top': filter.getSelectedValues().length, 'col-xs-8': !filter.getSelectedValues().length }"
+             ng-class="{ 'col-xs-12  mobile-flush-top': filter.getSelectedValues().length, 'hidden-xs': !filter.getSelectedValues().length }"
              class="group-search-filter-options col-sm-9 col-md-10">
 
           <div ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-filter-summary pointer">
@@ -59,22 +59,13 @@
   </form>
 </div>
 
-<div ng-if="groupSearchFilter.expanded" class="visible-xs push-half-bottom">
-  <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom"
-          ng-click="groupSearchFilter.closeFilters()">Close Filters
-  </button>
-</div>
-
 <!--
   Collapsed Filters
 -->
-<div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
-  <button type="button"
-          class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom"
-          ng-click="groupSearchFilter.openFilters()">Filters</button>
-
+<div class="group-search-filter-tools push-ends mobile-push-half-top text-right">
   <div class='search-filter-tag push-half-left mobile-push-half-bottom'
-          ng-repeat='f in groupSearchFilter.getCurrentFilters()'>
+       ng-if="!groupSearchFilter.expanded"
+       ng-repeat='f in groupSearchFilter.getCurrentFilters()'>
     <a ng-click="groupSearchFilter.openFilter(f)">{{f.getName()}}</a>
     <svg ng-click='groupSearchFilter.clearFilter(f)'
          viewBox="0 0 32 32"
@@ -83,7 +74,12 @@
     </svg>
   </div>
 
-  <a class="push-half-left mobile-push-half-bottom" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
+  <button type="button"
+          class="btn btn-primary btn-sm mobile-push-half-bottom push-half-left"
+          ng-click="groupSearchFilter.openFilters()">Filters</button>
+
+
+
 </div>
 
 <!-- Collapsed Filters renderer -->
