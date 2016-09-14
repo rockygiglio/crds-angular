@@ -558,7 +558,7 @@ namespace crds_angular.Services
             var fromContactId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             var fromContact = _contactService.GetContactById(fromContactId);
             var replyToContactId = _configurationWrapper.GetConfigIntValue("GoTripsReplyToContactId");
-            var replyToContact = _contactService.GetContactById(fromContactId);
+            var replyToContact = _contactService.GetContactById(replyToContactId);
             var toContact = _contactService.GetContactById(toContactId);
             var template = _communicationService.GetTemplateAsCommunication(templateId,
                                                                             fromContact.Contact_ID,
