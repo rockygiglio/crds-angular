@@ -628,7 +628,7 @@ streaming, landing {
       font-size: 210%;
       top: -0.5em;
       word-wrap: break-word;
-      
+      -webkit-transform: translateZ(0);
     }
 
     section {
@@ -890,6 +890,14 @@ streaming, landing {
         background: #FFF;
         box-shadow: none;
       } 
+    }
+  }
+
+  .validation-control {
+    .alert {
+      p {
+        margin: 0;
+      }
     }
   }
 

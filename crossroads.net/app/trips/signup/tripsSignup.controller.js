@@ -261,6 +261,7 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
                         contactId: $stateParams.contactId });
       } else {
         vm.signupService.saveApplication(() => {
+          vm.signupService.pageId = "thanks";
           $state.go('tripsignup.application.thankyou');
         }, (err) => {
           vm.submitting = false;
