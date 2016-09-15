@@ -12,43 +12,72 @@ export default class FBComposerController {
   }
 
   $onInit() {
-    this.prepareFields(this.invokedFields).then((fields) => {
-      this.preparedFields = fields;
-    });
+    this.prepareForm(this.invokedFields)
+      .then((form) => {
+        this.preparedFields = form.fields;
+        this.model = form.model;
+      });
   }
 
-  prepareFields(builderFields) {
-    let compositions = [];
+  prepareForm(builderFields) {
+    let form = {
+      model: {},
+      fields: []
+    };
+    let compositions = _.uniq(_.map(builderFields, (field) => { return field.mapperSuperPath.split('.')[0] }));
+    var promiseseseses = [
+      this._prepareFields(builderFields),
+      this._prepareModel(builderFields, compositions)
+    ]
+    let formBuildingOperations = [
+      this._prepareFields(builderFields),
+      this._prepareModel(builderFields, compositions)
+    ]
+    return this.qApi.all(formBuildingOperations)
+      .then((dataArray) => {
+        form.fields = dataArray[0];
+        form.model = dataArray[1];
+        return form;
+      }).catch((err) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        throw (err);
+      });
+  }
+
+  _prepareModel(builderFields, compositions) {
+    let prepareModel = {};
+    return this.fbMapperService.prepopulateCompositions(compositions)
+      .then((data) => {
+        prepareModel = data;
+        let unPopulate = _.where(builderFields, { prePopulate: false });
+        _.forEach(unPopulate, (field) => {
+          _.set(prepareModel, field.formlyConfig.key, undefined);
+        });
+        return prepareModel;
+      });
+  }
+
+  _prepareFields(builderFields) {
     let fields = [];
     _.forEach(builderFields, (builderField) => {
       let field = builderField.formlyConfig;
-      let keyArray = builderField.formlyConfig.key.split('.');
+      field.key = builderField.mapperSuperPath;
       // Generate formly fields object
-      this.fbMapperConfig.getElement(keyArray[keyArray.length - 1]).then((mapperConfigElement) => {
-        if (_.has(mapperConfigElement, 'lookupData')){
-          field.templateOptions.options = mapperConfigElement.lookupData;
-          field.templateOptions.labelProp = mapperConfigElement.model.lookup.labelProp;
-          field.templateOptions.valueProp = mapperConfigElement.model.lookup.valueProp;
-        }
-        fields.push(field);
-      });
-      compositions.push(keyArray[0])
-    });
-    compositions = _.uniq(compositions);
-    // generate model
-    return this.fbMapperService.prepopulateCompositions(compositions)
-      .then((data) => {
-        this.model = data;
-        let unPopulate = _.where(builderFields, { prePopulate: false });
-        _.forEach(unPopulate, (field) => {
-          _.set(this.model, field.formlyConfig.key, undefined);
+      let fieldPromise = this.fbMapperConfig.getElement(field.key.split('.').pop())
+        .then((mapperConfigElement) => {
+          if (_.has(mapperConfigElement, 'lookupData')) {
+            field.templateOptions.options = mapperConfigElement.lookupData;
+            field.templateOptions.labelProp = mapperConfigElement.model.lookup.labelProp;
+            field.templateOptions.valueProp = mapperConfigElement.model.lookup.valueProp;
+          }
+          return field;
         });
-        this.prePopulationComplete = true;
-        return fields;
-      });
+      fields.push(fieldPromise);
+    });
+    return this.qApi.all(fields);
   }
 
-  prepareValidation(field, validations) {
+  _prepareValidation(field, validations) {
 
   }
 
