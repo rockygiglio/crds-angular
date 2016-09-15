@@ -6,9 +6,24 @@ group-search-filter {
     font-size: 95%;
   }
 
+  .group-search-filter-tools {
+    min-height: $line-height-computed;
+
+    button {
+      vertical-align: bottom;
+    }
+  }
+
   .group-search-filters-expanded {
-    border-top: solid 3px $gray-light;
-    border-bottom: solid 3px $gray-light;
+    position: absolute;
+    margin: 0;
+    padding: 15px;
+    right: 0;
+    //left: 0;
+    width: 90%;
+    border: solid 3px $gray-light;
+    background-color: $white;
+    z-index: 10;
   }
 
   .group-search-filter-row {

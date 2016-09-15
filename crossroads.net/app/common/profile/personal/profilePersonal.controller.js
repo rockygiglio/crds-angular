@@ -149,7 +149,7 @@
     }
 
     function editingOtherProfile() {
-      return vm.contactId !== parseInt(Session.exists('userId'));
+      return Number(vm.contactId) !== parseInt(Session.exists('userId'));
     }
 
     function setAttendanceStartDateToJSDate() {
@@ -390,7 +390,9 @@
 
     // set the old email address
     function setOldEmail() {
-      vm.oldEmail = vm.profileData.person.emailAddress;
+      if (!emailChange.isSet) {
+        vm.oldEmail = vm.profileData.person.emailAddress;
+      }
     }
 
     function showPasswordConfirmModal() {
