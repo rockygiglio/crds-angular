@@ -30,7 +30,7 @@
                  ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues().length <= 3 }"
                  class="mobile-push-half-bottom">
               <!-- Individual expanded filter renderer - supports multiple levels of grouped filters (sort-of...) -->
-              <group-search-filter-renderer apply-filters="groupSearchFilter.applyFilters()" value="value"></group-search-filter-renderer>
+              <group-search-filter-renderer filter='filter' apply-filters="groupSearchFilter.applyFilters()" value="value"></group-search-filter-renderer>
             </div>
           </div>
         </div>

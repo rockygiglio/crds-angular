@@ -8,6 +8,7 @@ export default function GroupSearchFilterRendererComponent() {
   let groupSearchFilterRendererComponent = {
     bindings: {
       value: '<',
+      filter: '<',
       applyFilters: '&'
     },
     restrict: 'E',
