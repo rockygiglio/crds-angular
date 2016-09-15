@@ -32,4 +32,11 @@ namespace crds_angular.Exceptions
     {
         public ExistingRequestException(string message) : base(message) { StatusCode = HttpStatusCode.Conflict; }
     }
+
+    // DuplicateGroupParticipantException
+    public class DuplicateGroupParticipantException : Exception
+    {
+        public HttpStatusCode StatusCode { get; protected set; }
+        public DuplicateGroupParticipantException(string message) : base(message) { StatusCode = HttpStatusCode.Conflict; }
+    }
 }

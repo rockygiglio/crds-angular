@@ -40,6 +40,7 @@ export default class CreateGroupService {
     }
 
     reset() {
+        debugger;
         this.resolved = false;
         this.model = {};
         this.profileData = {};
