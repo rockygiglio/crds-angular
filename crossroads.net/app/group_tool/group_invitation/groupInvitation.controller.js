@@ -48,10 +48,7 @@ export default class GroupInvitationController {
     },
       (err) => {
 
-        debugger;
-
         if (err.status === 409) {
-          debugger;
           this.log.error(`Invitee already in group: ${err.status} - ${err.statusText}`);
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupInviteeInGroupError);
         } else {
