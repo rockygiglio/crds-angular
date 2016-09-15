@@ -13,6 +13,10 @@ class TimeRange {
     // http://momentjs.com/docs/#/query/is-between/
     return m.isSameOrAfter(this.beginTime) && m.isSameOrBefore(this.endTime);
   }
+
+  toString() {
+    return `${this.beginTime.format('HHmm')}-${this.endTime.format('HHmm')}`;
+  }
 }
 
 export default class MeetingTimeFilter extends SearchFilter {

@@ -75,6 +75,10 @@ export class SearchFilterValue {
     return this.value;
   }
 
+  getValueString() {
+    return typeof this.value.toString === 'function' ? this.value.toString() : this.value;
+  }
+
   hasHelpText() {
     return this.helpTextContentBlockTitle != null && this.helpTextContentBlockTitle.length > 0;
   }

@@ -1,11 +1,11 @@
 <label ng-if="groupSearchFilterRenderer.value.constructor.name === 'SearchFilterValue'"
        class="checkbox-inline"
-       for="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValue()}}">
+       for="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValueString()}}">
   <input ng-model="groupSearchFilterRenderer.value.selected"
          ng-value="groupSearchFilterRenderer.value.getValue()"
          ng-click="groupSearchFilterRenderer.applyFilters()"
          type="checkbox"
-         id="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValue()}}"/>
+         id="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValueString()}}"/>
   {{groupSearchFilterRenderer.value.getName()}}<small class='text-muted' ng-if='groupSearchFilterRenderer.value.hasOptionSelectedText() && groupSearchFilterRenderer.value.isSelected()' dynamic-content='$root.MESSAGES[groupSearchFilterRenderer.value.getOptionSelectedText()].content | html'></small>
 </label>
 <div ng-if="groupSearchFilterRenderer.value.constructor.name !== 'SearchFilterValue'">
