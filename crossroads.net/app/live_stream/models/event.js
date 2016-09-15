@@ -1,4 +1,4 @@
-export class Event {
+export default class Event {
 
   static asEvents(jsonArray) {
     return jsonArray.map((jsonEvent) => Event.build(jsonEvent));
