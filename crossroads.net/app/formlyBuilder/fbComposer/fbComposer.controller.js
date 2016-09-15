@@ -25,23 +25,20 @@ export default class FBComposerController {
       fields: []
     };
     let compositions = _.uniq(_.map(builderFields, (field) => { return field.mapperSuperPath.split('.')[0] }));
-    var promiseseseses = [
-      this._prepareFields(builderFields),
-      this._prepareModel(builderFields, compositions)
-    ]
     let formBuildingOperations = [
       this._prepareFields(builderFields),
       this._prepareModel(builderFields, compositions)
     ]
     return this.qApi.all(formBuildingOperations)
-      .then((dataArray) => {
-        form.fields = dataArray[0];
-        form.model = dataArray[1];
-        return form;
-      }).catch((err) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-        throw (err);
-      });
+            .then((dataArray) => {
+              form.fields = dataArray[0];
+              form.model = dataArray[1];
+              return form;
+            })
+            .catch((err) => {
+              this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+              throw (err);
+            });
   }
 
   _prepareModel(builderFields, compositions) {
