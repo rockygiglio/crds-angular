@@ -1,9 +1,22 @@
 
-import {SearchFilter} from './searchFilter';
+import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class AgeRangeFilter extends SearchFilter {
-  constructor(filterName, filterValues) {
-    super(filterName, filterValues, this._matchingFunction);
+  constructor(filterName, groupService) {
+    super(filterName, [], this._matchingFunction);
+
+    groupService.getAgeRanges().then(
+      (data) => {
+        this.getValues().push.apply(this.getValues(), data.attributes.map((a) => {
+          return new SearchFilterValue(a.name, a.attributeId, false);
+        }));
+      },
+      (err) => {
+        // TODO what happens on error? (could be 404/no results, or other error)
+      }
+    ).finally(
+      () => {
+    });
   }
 
   _matchingFunction(result) {

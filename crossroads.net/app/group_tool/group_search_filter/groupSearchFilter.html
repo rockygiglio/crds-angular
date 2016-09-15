@@ -15,7 +15,7 @@
     <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
     <div class="soft-half-sides">
-      <div ng-repeat="filter in groupSearchFilter.allFilters"
+      <div ng-repeat="filter in groupSearchFilter.allFilters.getValues()"
            ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }"
            class="group-search-filter-row row soft-half-top soft-half-bottom border-top">
 
@@ -29,14 +29,8 @@
             <div ng-repeat="value in filter.getValues()"
                  ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues().length <= 3 }"
                  class="mobile-push-half-bottom">
-              <label class="checkbox-inline" for="{{filter.getFilterName()}}-{{value.getValue()}}">
-                <input ng-model="value.selected"
-                       ng-value="value.getValue()"
-                       ng-click="groupSearchFilter.applyFilters()"
-                       type="checkbox"
-                       id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
-                {{value.getName()}}
-              </label>
+              <!-- Individual expanded filter renderer - supports multiple levels of grouped filters (sort-of...) -->
+              <group-search-filter-renderer apply-filters="groupSearchFilter.applyFilters()" value="value"></group-search-filter-renderer>
             </div>
           </div>
         </div>

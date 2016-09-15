@@ -10,32 +10,32 @@ import MeetingDayFilter from '../../../app/group_tool/group_search_filter/filter
 import MeetingTimeFilter from '../../../app/group_tool/group_search_filter/filter_impl/meetingTime.filter';
 import FrequencyFilter from '../../../app/group_tool/group_search_filter/filter_impl/frequency.filter';
 import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filter_impl/leadersSite.filter';
+import FilterGroup from '../../../app/group_tool/group_search_filter/filter_impl/filterGroup';
 
 describe('GroupSearchFilter', () => {
-  let fixture, groupService, createGroupService;
+  let fixture, groupService, createGroupService, qApi;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-  beforeEach(inject(function (/* $injector */) {
-    groupService = {
-      getAgeRanges: function () { }
-    };
-    createGroupService = {
-      getMeetingFrequencies: function () { }
-    };
+  beforeEach(inject(function ($injector) {
+    groupService = jasmine.createSpyObj('groupServiceMock', [ 'getAgeRanges', 
+                                                              'getGroupGenderMixType', 
+                                                              'getDaysOfTheWeek', 
+                                                              'getGroupCategories', 
+                                                              'getSites']);
+
+    createGroupService = jasmine.createSpyObj('createGroupServiceMock', ['getMeetingFrequencies']);
+
+    qApi = $injector.get('$q');
+
     fixture = new GroupSearchFilter(groupService, createGroupService);
   }));
 
   describe('the constructor', () => {
     it('should initialize properties', () => {
-      expect(fixture.ageRanges).toEqual([]);
-      expect(fixture.groupTypes).toEqual([]);
-      expect(fixture.days).toEqual([]);
-      expect(fixture.categories).toEqual([]);
-      expect(fixture.leadersSite).toEqual([]);
       expect(fixture.expanded).toBeFalsy();
-      expect(fixture.allFilters).toEqual([]);
-      expect(fixture.frequencies).toEqual([]);
+      expect(fixture.allFilters).not.toBeDefined();
+      expect(fixture.expandedFilter).toBe(null);
     });
   });
 
@@ -66,77 +66,67 @@ describe('GroupSearchFilter', () => {
 
   describe('initializeFilters function', () => {
     it('should initialize all filters', () => {
-      let ageRanges = [1, 2, 3];
-      spyOn(fixture, 'loadAgeRanges').and.callFake(() => {});
+      groupService.getAgeRanges.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getGroupGenderMixType.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getDaysOfTheWeek.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getGroupCategories.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      createGroupService.getMeetingFrequencies.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getSites.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
 
-      let groupTypes = [4, 5, 6];
-      spyOn(fixture, 'loadGroupTypes').and.callFake(() => {});
-
-      let meetingDays = [7, 8, 9];
-      spyOn(fixture, 'loadDays').and.callFake(() => {});
-
-      let categories = [10, 11, 12];
-      spyOn(fixture, 'loadCategories').and.callFake(() => {});
-
-      let frequencies = [20, 21, 22];
-      spyOn(fixture, 'loadFrequencies').and.callFake(() => {});
-
-      let leadersSite = [17, 18, 19];
-      spyOn(fixture, 'loadLeadersSite').and.callFake(() => {});
-
-      fixture.allFilters = [];
-      fixture.ageRanges = ageRanges;
-      fixture.groupTypes = groupTypes;
-      fixture.days = meetingDays;
-      fixture.categories = categories;
-      fixture.frequencies = frequencies;
-      fixture.leadersSite = leadersSite;
+      fixture.allFilters = undefined;
 
       fixture.initializeFilters();
 
-      expect(fixture.loadAgeRanges).toHaveBeenCalled();
-      expect(fixture.allFilters.length).toEqual(9);
+      expect(fixture.allFilters.getValues().length).toEqual(7);
 
       let i = 0;
 
-      let ageRangeFilter = fixture.allFilters[i++];
+      let ageRangeFilter = fixture.allFilters.getValues()[i++];
       expect(ageRangeFilter instanceof AgeRangeFilter).toBeTruthy();
       expect(ageRangeFilter.getName()).toEqual('Age Range');
-      expect(ageRangeFilter.getValues()).toBe(ageRanges);
+      expect(groupService.getAgeRanges).toHaveBeenCalled();
 
-      let categoryFilter = fixture.allFilters[i++];
+      let categoryFilter = fixture.allFilters.getValues()[i++];
       expect(categoryFilter instanceof CategoryFilter).toBeTruthy();
       expect(categoryFilter.getName()).toEqual('Category');
-      expect(categoryFilter.getValues()).toBe(categories);
+      expect(groupService.getGroupCategories).toHaveBeenCalled();
 
-      let groupTypeFilter = fixture.allFilters[i++];
+      let groupTypeFilter = fixture.allFilters.getValues()[i++];
       expect(groupTypeFilter instanceof GroupTypeFilter).toBeTruthy();
       expect(groupTypeFilter.getName()).toEqual('Group Type');
-      expect(groupTypeFilter.getValues()).toBe(groupTypes);
+      expect(groupService.getGroupGenderMixType).toHaveBeenCalled();
 
-      let kidsWelcomeFilter = fixture.allFilters[i++];
+      let kidsWelcomeFilter = fixture.allFilters.getValues()[i++];
       expect(kidsWelcomeFilter instanceof KidsWelcomeFilter).toBeTruthy();
       expect(kidsWelcomeFilter.getName()).toEqual('Kids Welcome');
 
-      let locationFilter = fixture.allFilters[i++];
+      let locationFilter = fixture.allFilters.getValues()[i++];
       expect(locationFilter instanceof LocationFilter).toBeTruthy();
       expect(locationFilter.getName()).toEqual('Location');
 
-      let meetingDayFilter = fixture.allFilters[i++];
+      let dayTimeFrequencyFilter = fixture.allFilters.getValues()[i++];
+      expect(dayTimeFrequencyFilter instanceof FilterGroup).toBeTruthy();
+      expect(dayTimeFrequencyFilter.getValues().length).toEqual(3);
+
+      let j = 0;
+
+      let meetingDayFilter = dayTimeFrequencyFilter.getValues()[j++];
       expect(meetingDayFilter instanceof MeetingDayFilter).toBeTruthy();
       expect(meetingDayFilter.getName()).toEqual('Day');
+      expect(groupService.getDaysOfTheWeek).toHaveBeenCalled();
 
-      let meetingTimeFilter = fixture.allFilters[i++];
+      let meetingTimeFilter = dayTimeFrequencyFilter.getValues()[j++];
       expect(meetingTimeFilter instanceof MeetingTimeFilter).toBeTruthy();
       expect(meetingTimeFilter.getName()).toEqual('Time');
 
-      let frequencyFilter = fixture.allFilters[i++];
+      let frequencyFilter = dayTimeFrequencyFilter.getValues()[j++];
       expect(frequencyFilter instanceof FrequencyFilter).toBeTruthy();
       expect(frequencyFilter.getName()).toEqual('Frequency');
 
-      let leadersSiteFilter = fixture.allFilters[i++];
+      let leadersSiteFilter = fixture.allFilters.getValues()[i++];
       expect(leadersSiteFilter instanceof LeadersSiteFilter).toBeTruthy();
       expect(leadersSiteFilter.getName()).toEqual('Leaders Site');
+      expect(groupService.getSites).toHaveBeenCalled();
     });
   });
 
@@ -150,18 +140,21 @@ describe('GroupSearchFilter', () => {
         { 'age': 3, 'kids': true },
       ];
 
-      fixture.allFilters = [
-        {
-          matches: function(r) {
-            return r.age === 2;
+      fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['getValues']);
+      fixture.allFilters.getValues.and.returnValue(
+        [
+          {
+            matches: function(r) {
+              return r.age === 2;
+            }
+          },
+          {
+            matches: function(r) {
+              return r.kids === true;
+            }
           }
-        },
-        {
-          matches: function(r) {
-            return r.kids === true;
-          }
-        },
-      ];
+        ]
+      );
 
       let settings = {
             dataset: [{ 'age': 5 }],
@@ -188,22 +181,11 @@ describe('GroupSearchFilter', () => {
 
   describe('filter manipulation function', () => {
     it('clearFilters should clear and re-apply all filters', () => {
-      let filters = [
-        {
-          clear: jasmine.createSpy('clear')
-        },
-        {
-          clear: jasmine.createSpy('clear')
-        }
-      ];
-      fixture.allFilters = filters;
-
+      fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['clear']);
       spyOn(fixture, 'applyFilters').and.callFake(() => {});
 
       fixture.clearFilters();
-      filters.forEach(function(f) {
-        expect(f.clear).toHaveBeenCalled();
-      }, this);
+      expect(fixture.allFilters.clear).toHaveBeenCalled();
       expect(fixture.applyFilters).toHaveBeenCalled();
     });
 
@@ -224,37 +206,19 @@ describe('GroupSearchFilter', () => {
     });
 
     it('hasFilters should return false if no active filters', () => {
-      let filters = [
-        {
-          isActive: jasmine.createSpy('isActive').and.returnValue(false)
-        },
-        {
-          isActive: jasmine.createSpy('isActive').and.returnValue(false)
-        }
-      ];
-      fixture.allFilters = filters;
+      fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['hasFilters']);
+      fixture.allFilters.hasFilters.and.returnValue(false);
 
       expect(fixture.hasFilters()).toBeFalsy();
-      filters.forEach(function(f) {
-        expect(f.isActive).toHaveBeenCalled();
-      }, this);
+      expect(fixture.allFilters.hasFilters).toHaveBeenCalled();
     });    
 
     it('hasFilters should return true if one or more active filters', () => {
-      let filters = [
-        {
-          isActive: jasmine.createSpy('isActive').and.returnValue(false)
-        },
-        {
-          isActive: jasmine.createSpy('isActive').and.returnValue(true)
-        }
-      ];
-      fixture.allFilters = filters;
+      fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['hasFilters']);
+      fixture.allFilters.hasFilters.and.returnValue(true);
 
       expect(fixture.hasFilters()).toBeTruthy();
-      filters.forEach(function(f) {
-        expect(f.isActive).toHaveBeenCalled();
-      }, this);
+      expect(fixture.allFilters.hasFilters).toHaveBeenCalled();
     });    
   });
 });
