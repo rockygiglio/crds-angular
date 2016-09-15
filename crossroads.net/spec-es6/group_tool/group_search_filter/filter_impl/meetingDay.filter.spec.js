@@ -29,11 +29,11 @@ describe('MeetingDayFilter', () => {
       expect(filter.getValues().length).toEqual(days.length + 1);
       for(let i = 0; i < days.length; i++) {
         expect(filter.getValues()[i].getName()).toEqual(days[i].dp_RecordName);
-        expect(filter.getValues()[i].getValue()).toEqual(days[i].dp_RecordID);
+        expect(filter.getValues()[i].getValue()).toEqual(days[i].dp_RecordName);
         expect(filter.getValues()[i].isSelected()).toBeFalsy();
       }
       expect(filter.getValues()[days.length].getName()).toEqual('Flexible');
-      expect(filter.getValues()[days.length].getValue()).toEqual(0);
+      expect(filter.getValues()[days.length].getValue()).toEqual('Flexible Meeting Time');
       expect(filter.getValues()[days.length].isSelected()).toBeFalsy();
     });
   });
@@ -53,7 +53,7 @@ describe('MeetingDayFilter', () => {
 
     it('should return true if no meeting day currently filtered', () => {
       let meetingDays = [
-        new SearchFilterValue('Sunday', 123, false)
+        new SearchFilterValue('Sunday', 'Sunday', false)
       ];
       let searchResult = {
         meetingDay: 'Saturday'
@@ -65,8 +65,8 @@ describe('MeetingDayFilter', () => {
 
     it('should return true if the search result contains a filtered meeting day', () => {
       let meetingDays = [
-        new SearchFilterValue('Sunday', 123, false),
-        new SearchFilterValue('Monday', 456, true)
+        new SearchFilterValue('Sunday', 'Sunday', false),
+        new SearchFilterValue('Monday', 'Monday', true)
       ];
       let searchResult = {
         meetingDay: 'Monday'
@@ -78,8 +78,8 @@ describe('MeetingDayFilter', () => {
 
     it('should return false if the search result does not contain a filtered meeting day', () => {
       let meetingDays = [
-        new SearchFilterValue('Sunday', 123, false),
-        new SearchFilterValue('Monday', 456, true)
+        new SearchFilterValue('Sunday', 'Sunday', false),
+        new SearchFilterValue('Monday', 'Monday', true)
       ];
       let searchResult = {
         meetingDay: 'Tuesday'
@@ -91,8 +91,8 @@ describe('MeetingDayFilter', () => {
 
     it('should return false if the search result does not contain an meeting day', () => {
       let meetingDays = [
-        new SearchFilterValue('Sunday', 123, false),
-        new SearchFilterValue('Monday', 456, true)
+        new SearchFilterValue('Sunday', 'Sunday', false),
+        new SearchFilterValue('Monday', 'Monday', true)
       ];
       let searchResult = { };
       fixture.filterValues = meetingDays;

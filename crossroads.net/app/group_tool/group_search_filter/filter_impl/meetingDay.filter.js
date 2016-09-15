@@ -9,9 +9,9 @@ export default class MeetingDayFilter extends SearchFilter {
       (data) => {
         data = _.sortBy( data, 'dp_RecordID' );
         this.getValues().push.apply(this.getValues(), data.map((a) => {
-          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordName, false);
         }));
-        this.getValues().push(new SearchFilterValue('Flexible', 0, false, undefined, 'groupToolFlexibleMeetingFilterHelpText'));
+        this.getValues().push(new SearchFilterValue('Flexible', 'Flexible Meeting Time', false, undefined, 'groupToolFlexibleMeetingFilterHelpText'));
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
@@ -30,7 +30,7 @@ export default class MeetingDayFilter extends SearchFilter {
     let selectedMeetingDays = this.getSelectedValues();
 
     let filtered = selectedMeetingDays.filter((a) => {
-      return a.getName() === result.meetingDay || a.getName() === result.meetingTimeFrequency;
+      return a.getValue() === result.meetingDay || a.getValue() === result.meetingTimeFrequency;
     });
 
     return filtered !== undefined && filtered.length > 0;
