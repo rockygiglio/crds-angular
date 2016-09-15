@@ -1,3 +1,4 @@
+
 import groupSearchFilterRendererComponent from './groupSearchFilterRenderer.component';
 import CONSTANTS from 'crds-constants';
 import './groupSearchFilterRenderer.html';

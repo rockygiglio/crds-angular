@@ -48,7 +48,7 @@ export default class GroupSearchResultsController {
         new FrequencyFilter('Frequency', this.createGroupService),
       ]),
       new LeadersSiteFilter('Leaders Site', this.groupService)
-    ]);
+    ], true);
   }
 
   _internalApplyFilters() {
@@ -92,7 +92,7 @@ export default class GroupSearchResultsController {
 
   openFilter(filter) {
     this.expanded = true;
-    this.expandedFilter = filter;
+    this.expandedFilter = this._getFilter(filter);
   }
 
   closeFilters() {
@@ -100,14 +100,18 @@ export default class GroupSearchResultsController {
   }
 
   toggleFilter(filter) {
-    if (this.expandedFilter === filter) {
+    if (this.expandedFilter === this._getFilter(filter)) {
       this.expandedFilter = null;
     } else {
-      this.expandedFilter = filter;
+      this.expandedFilter = this._getFilter(filter);
     }
   }
 
   isOpenFilter(filter) {
-    return this.expandedFilter === filter;
+    return this.expandedFilter === this._getFilter(filter);
+  }
+
+  _getFilter(filter) {
+    return filter.belongsToFilterGroup() ? filter.getFilterGroup() : filter;
   }
 }

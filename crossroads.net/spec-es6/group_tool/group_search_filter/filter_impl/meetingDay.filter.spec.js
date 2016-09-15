@@ -32,7 +32,7 @@ describe('MeetingDayFilter', () => {
         expect(filter.getValues()[i].getValue()).toEqual(days[i].dp_RecordID);
         expect(filter.getValues()[i].isSelected()).toBeFalsy();
       }
-      expect(filter.getValues()[days.length].getName()).toEqual('Flexible Meeting Time');
+      expect(filter.getValues()[days.length].getName()).toEqual('Flexible');
       expect(filter.getValues()[days.length].getValue()).toEqual(0);
       expect(filter.getValues()[days.length].isSelected()).toBeFalsy();
     });

@@ -1,8 +1,15 @@
 
 export default class FilterGroup {
-  constructor(filterName, filters) {
+  constructor(filterName, filters, topLevel) {
     this.filterName = filterName;
     this.filters = filters;
+    
+    // Only set parent group if this is not the top-level group
+    if(topLevel !== true) {
+      this.filters.forEach((f) => {
+        f.setFilterGroup(this);
+      });
+    }
   }
 
   getName() {
@@ -41,6 +48,7 @@ export default class FilterGroup {
   }
 
   matches(result) {
+    // For a filter group to match a result, all filters in the group must match the result
     for(let i = 0; i < this.filters.length; i++) {
       if(!this.filters[i].matches(result)) {
         return false;
@@ -68,6 +76,18 @@ export default class FilterGroup {
     {
       this.filters[i].clear();
     }
+  }
+
+  belongsToFilterGroup() {
+    return this.filterGroup !== undefined;
+  }
+
+  setFilterGroup(filterGroup) {
+    this.filterGroup = filterGroup;
+  }
+
+  getFilterGroup() {
+    return this.filterGroup;
   }
 
   compareTo(other) {

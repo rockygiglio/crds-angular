@@ -3,10 +3,10 @@
        for="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValue()}}">
   <input ng-model="groupSearchFilterRenderer.value.selected"
          ng-value="groupSearchFilterRenderer.value.getValue()"
-         ng-click="groupSearchFilter.applyFilters()"
+         ng-click="groupSearchFilterRenderer.applyFilters()"
          type="checkbox"
          id="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValue()}}"/>
-  {{groupSearchFilterRenderer.value.getName()}}
+  {{groupSearchFilterRenderer.value.getName()}}<span class='text-muted' ng-if='groupSearchFilterRenderer.value.hasOptionSelectedText() && groupSearchFilterRenderer.value.isSelected()' dynamic-content='$root.MESSAGES[groupSearchFilterRenderer.value.getOptionSelectedText()].content | html'></span>
 </label>
 <div ng-if="groupSearchFilterRenderer.value.constructor.name !== 'SearchFilterValue'">
   <div class="group-search-filter-subheading">
@@ -16,7 +16,7 @@
   <div class="row push-half-bottom">
     <div ng-repeat="nested in groupSearchFilterRenderer.value.getValues()"
          class="col-xs-12 col-md-6 col-lg-4 mobile-push-half-bottom">
-      <group-search-filter-renderer value="nested"></group-search-filter-renderer>
+      <group-search-filter-renderer apply-filters="groupSearchFilterRenderer.applyFilters()" value="nested"></group-search-filter-renderer>
     </div>
   </div>
 </div>
