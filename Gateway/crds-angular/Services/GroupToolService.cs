@@ -663,7 +663,7 @@ namespace crds_angular.Services
             var contact = _contactRepository.GetContactById(participant.ContactId);
 
             // check to see if the inquiry is going against a group where a person is already a member or has an outstanding request to join
-            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && (r.Placed == null || r.Placed == true));
+            var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && r.Placed == null);
             var participants = _groupRepository.GetGroupParticipants(groupId, true).Where(r => r.ContactId == participant.ContactId);
 
             if (requestsForContact.Any() || participants.Any())
