@@ -3,7 +3,7 @@ export default class FilterGroup {
   constructor(filterName, filters, topLevel) {
     this.filterName = filterName;
     this.filters = filters;
-    
+
     // Only set parent group if this is not the top-level group
     if(topLevel !== true) {
       this.filters.forEach((f) => {
@@ -26,56 +26,40 @@ export default class FilterGroup {
 
   getSelectedValues() {
     let selected = [];
-    for(let i = 0; i < this.filters.length; i++) {
-      selected.push.apply(selected, this.filters[i].getSelectedValues());
-    }
+    this.filters.forEach((f) => { selected.push.apply(selected, f.getSelectedValues()); });
     return selected;
   }
 
   getCurrentFilters() {
     let current = [];
-    for(let i = 0; i < this.filters.length; i++) {
-      if(!this.filters[i].isActive()) {
-        continue;
+    this.filters.forEach((f) => {
+      if(f.isActive()) {
+        if(f.constructor.name !== 'FilterGroup') {
+          current.push(f);
+        } else {
+          current.push.apply(current, f.getCurrentFilters());
+        }
       }
-      if(this.filters[i].constructor.name !== 'FilterGroup') {
-        current.push.apply(current, [this.filters[i]]);
-      } else {
-        current.push.apply(current, this.filters[i].getCurrentFilters());
-      }
-    }
+    });
     return current;
   }
 
   matches(result) {
-    // For a filter group to match a result, all filters in the group must match the result
-    for(let i = 0; i < this.filters.length; i++) {
-      if(!this.filters[i].matches(result)) {
-        return false;
-      }
-    }
-    return true;
+    // A filter group matches a result only if all contained filters match the result
+    return this.filters.find((f) => { return f.matches(result) === false; }) === undefined;
   }
 
   hasFilters() {
-    return this.getValues().find((f) => f.isActive()) !== undefined;    
+    return this.isActive();
   }
 
   isActive() {
-    for(let i = 0; i < this.filters.length; i++)
-    {
-      if(this.filters[i].isActive()) {
-        return true;
-      }
-    }
-    return false;
+    // A filter group is active if any of the contained filters are active
+    return this.filters.find((f) => { return f.isActive() === true; }) !== undefined;
   }  
 
   clear() {
-    for(let i = 0; i < this.filters.length; i++)
-    {
-      this.filters[i].clear();
-    }
+    this.filters.forEach((f) => { f.clear(); });
   }
 
   belongsToFilterGroup() {

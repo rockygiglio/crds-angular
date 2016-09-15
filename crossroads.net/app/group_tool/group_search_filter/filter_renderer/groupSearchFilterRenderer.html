@@ -6,7 +6,7 @@
          ng-click="groupSearchFilterRenderer.applyFilters()"
          type="checkbox"
          id="{{groupSearchFilterRenderer.filter.getFilterName()}}-{{groupSearchFilterRenderer.value.getValue()}}"/>
-  {{groupSearchFilterRenderer.value.getName()}}<span class='text-muted' ng-if='groupSearchFilterRenderer.value.hasOptionSelectedText() && groupSearchFilterRenderer.value.isSelected()' dynamic-content='$root.MESSAGES[groupSearchFilterRenderer.value.getOptionSelectedText()].content | html'></span>
+  {{groupSearchFilterRenderer.value.getName()}}<small class='text-muted' ng-if='groupSearchFilterRenderer.value.hasOptionSelectedText() && groupSearchFilterRenderer.value.isSelected()' dynamic-content='$root.MESSAGES[groupSearchFilterRenderer.value.getOptionSelectedText()].content | html'></small>
 </label>
 <div ng-if="groupSearchFilterRenderer.value.constructor.name !== 'SearchFilterValue'">
   <div class="group-search-filter-subheading">
