@@ -375,12 +375,59 @@ namespace crds_angular.test.Services
                 ParticipantId = 9090
             };
 
+            List<MpGroupParticipant> groupParticipants = new List<MpGroupParticipant>();
+
             _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(participant);
             _groupRepository.Setup(
                 mocked => mocked.addParticipantToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<DateTime>(), null, false, null)).Returns(1);
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(It.IsAny<int>(), It.IsAny<bool>())).Returns(groupParticipants);
             _invitationRepositor.Setup(mocked => mocked.MarkInvitationAsUsed(It.IsAny<string>())).Verifiable();
 
             _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, true);
+            _participantRepository.VerifyAll();
+            _groupRepository.VerifyAll();
+            _invitationRepositor.VerifyAll();
+        }
+
+        public void TestAcceptDenyGroupInvitationInGroup()
+        {
+            string token = "afdsak;fkjadfjkas;fpeiwjkja";
+            int groupId = 23;
+            string invitationGuid = "akdfjadfjajeoihqwpoi392053qiweur9";
+
+
+            var participant = new Participant
+            {
+                ParticipantId = 9090
+            };
+
+            var groupParticipant = new MpGroupParticipant
+            {
+                GroupParticipantId = 9090
+            };
+
+            List<MpGroupParticipant> groupParticipants = new List<MpGroupParticipant>();
+            groupParticipants.Add(groupParticipant);
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(participant);
+            _groupRepository.Setup(
+                mocked => mocked.addParticipantToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<DateTime>(), null, false, null)).Returns(1);
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(It.IsAny<int>(), It.IsAny<bool>())).Returns(groupParticipants);
+            _invitationRepositor.Setup(mocked => mocked.MarkInvitationAsUsed(It.IsAny<string>())).Verifiable();
+
+            var ex = new DuplicateGroupParticipantException("Cannot accept invite - already member of group");
+
+            try
+            {
+                _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, true);
+                Assert.Fail("expected exception was not thrown");
+            }
+            catch (DuplicateGroupParticipantException e)
+            {
+                Assert.AreSame(typeof(DuplicateGroupParticipantException), e.GetType());
+                Assert.AreSame(ex, e.InnerException);
+            }
+
             _participantRepository.VerifyAll();
             _groupRepository.VerifyAll();
             _invitationRepositor.VerifyAll();
