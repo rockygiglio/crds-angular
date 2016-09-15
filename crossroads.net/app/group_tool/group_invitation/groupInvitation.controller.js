@@ -47,8 +47,17 @@ export default class GroupInvitationController {
       this.state.go('grouptool.mygroups');
     },
       (err) => {
-        this.log.error(`Unable to accept group Invitation: ${err.status} - ${err.statusText}`);
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationFailureGrowler);
+
+        debugger;
+
+        if (err.status === 409) {
+          debugger;
+          this.log.error(`Invitee already in group: ${err.status} - ${err.statusText}`);
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupInviteeInGroupError);
+        } else {
+          this.log.error(`Unable to accept group Invitation: ${err.status} - ${err.statusText}`);
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolAcceptInvitationFailureGrowler);
+        }
       }).finally(() => {
         this.processingAccept = false;
       });

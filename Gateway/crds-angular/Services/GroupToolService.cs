@@ -398,10 +398,25 @@ namespace crds_angular.Services
                 if (accept)
                 {
                     var participant = _participantRepository.GetParticipantRecord(token);
+
+                    // make sure the person isn't already in a group
+                    var groupParticipants = _groupRepository.GetGroupParticipants(groupId, true);
+
+                    if (groupParticipants.Any())
+                    {
+                        // mark as used here, too, because of exception flow
+                        _invitationRepository.MarkInvitationAsUsed(invitationGuid);
+                        throw new DuplicateGroupParticipantException("Cannot accept invite - already member of group");
+                    }
+
                     _groupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _defaultGroupRoleId, false, DateTime.Now);
                 }
 
                 _invitationRepository.MarkInvitationAsUsed(invitationGuid);
+            }
+            catch (DuplicateGroupParticipantException e)
+            {
+                throw e;
             }
             catch (GroupParticipantRemovalException e)
             {
