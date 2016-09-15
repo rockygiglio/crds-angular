@@ -16,7 +16,7 @@
   <div class="row push-half-bottom">
     <div ng-repeat="nested in groupSearchFilterRenderer.value.getValues()"
          class="col-xs-12 col-md-6 col-lg-4 mobile-push-half-bottom">
-      <group-search-filter-renderer apply-filters="groupSearchFilterRenderer.applyFilters()" value="nested"></group-search-filter-renderer>
+      <group-search-filter-renderer filter='groupSearchFilterRenderer.value' apply-filters="groupSearchFilterRenderer.applyFilters()" value="nested"></group-search-filter-renderer>
     </div>
   </div>
 </div>
