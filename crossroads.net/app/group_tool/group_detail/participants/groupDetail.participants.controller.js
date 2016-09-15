@@ -35,7 +35,7 @@ export default class GroupDetailParticipantsController {
 
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
-    })
+    });
   }
 
   loadGroupParticipants() {
@@ -139,6 +139,11 @@ export default class GroupDetailParticipantsController {
   }
 
   finishChangeParticipantRole() {
+    this.roleParticipant = undefined;
+    this.setListView();
+  }
+
+  cancelChangeParticipantRole() {
     this.roleParticipant = undefined;
     this.setEditView();
   }
