@@ -78,12 +78,11 @@ export default class GroupSearchResultsController {
   }
 
   getCurrentFilters() {
-    // return this.allFilters.getValues().filter((f) => f.isActive());
     return this.allFilters.getCurrentFilters();
   }
 
   hasFilters() {
-    return this.allFilters.getValues().find((f) => f.isActive()) !== undefined;
+    return this.allFilters.hasFilters();
   }
 
   openFilters() {

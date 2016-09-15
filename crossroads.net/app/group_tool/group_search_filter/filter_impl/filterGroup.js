@@ -49,6 +49,10 @@ export default class FilterGroup {
     return true;
   }
 
+  hasFilters() {
+    return this.getValues().find((f) => f.isActive()) !== undefined;    
+  }
+
   isActive() {
     for(let i = 0; i < this.filters.length; i++)
     {
