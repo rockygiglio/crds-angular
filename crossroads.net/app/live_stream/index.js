@@ -10,3 +10,4 @@ export default angular
   ;
 
 import landing from './landing';
+import countdown from './countdown';
