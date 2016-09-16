@@ -37,8 +37,9 @@ describe('Live Streaming Streamspot Service', () => {
   beforeEach(angular.mock.module(CONSTANTS.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function($injector) {
-    resource = $injector.get('$resource');
+    resource    = $injector.get('$resource');
     httpBackend = $injector.get('$httpBackend');
+
     service = new StreamspotService(resource);
   }))
 

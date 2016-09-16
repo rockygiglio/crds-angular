@@ -1,9 +1,8 @@
 import Event from '../models/event';
-import Observable from 'rxjs/Rx'
 
 export default class StreamspotService {
 
-  constructor($resource) {
+  constructor($resource, $rootScope) {
     this.resource = $resource
     this.headers = {
       'Content-Type': 'application/json',
@@ -11,6 +10,7 @@ export default class StreamspotService {
     };
     this.url  = __STREAMSPOT_ENDPOINT__;
     this.ssid = __STREAMSPOT_SSID__;
+    this.rootScope = $rootScope;
     this.events = this.getEvents();
   }
 
@@ -18,8 +18,8 @@ export default class StreamspotService {
     let event = _(this.parseEvents()).first();
 
     // dispatch updates
-    // this.isBroadcasting.emit(event.isBroadcasting());
-    // this.nextEvent.emit(event);
+    this.rootScope.$broadcast('isBroadcasting', event.isBroadcasting());
+    this.rootScope.$broadcast('nextEvent', event);
   }
 
   getEvents() {
@@ -33,9 +33,9 @@ export default class StreamspotService {
         let events = this.parseEvents();
         if (events.length > 0) {
           this.broadcast();
-          Observable.interval(1000).subscribe(() => {
+          setInterval(() => {
             this.broadcast()
-          }); 
+          }, 1000)
         }
         return events;
       })
