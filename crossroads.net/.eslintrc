@@ -1,7 +1,7 @@
 {
   "rules": {
-    "camelcase": false,
-    "curly": true,
+    "camelcase": 0,
+    "curly": 1,
     "eqeqeq": true,
     "es3": false,
     "forin": true,
