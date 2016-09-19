@@ -1,5 +1,5 @@
 // angular imports
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, AfterViewInit } from '@angular/core';
 
 // streaming imports
 import { StreamspotIframeComponent } from './streamspot-iframe.component';
@@ -24,7 +24,7 @@ var WOW = require('wow.js/dist/wow.min.js');
   pipes: [TruncatePipe]
 })
 
-export class VideoComponent implements OnInit {
+export class VideoComponent {
   @Input() inModal: boolean = false;
   @Output('close') _close = new EventEmitter();
 
@@ -80,10 +80,21 @@ export class VideoComponent implements OnInit {
     }).init();
   }
 
-  ngOnInit() {
-    if (this.inModal) {
-      this.redirectText = 'Close Modal';
-    } 
+  ngAfterViewInit() {
+    // Trigger a window.resize() event so imgix will
+    // reevaluate background images in modal context
+    setTimeout(function() {
+      var event;
+      if ("createEvent" in document) {
+        // initUIEvent() is deprecated but IE11 doesn't support UIEvent()
+        event = document.createEvent('UIEvents');
+        event.initUIEvent('resize', true, false, window, 0);
+      } else {
+        event = new UIEvent('resize');
+      }
+      window.dispatchEvent(event);
+    }, 1000);
+
   }
 
   redirect() {

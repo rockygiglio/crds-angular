@@ -91,7 +91,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpMyContact GetContactByIdCard(string idCard)
         {
-            var searchString = string.Format(new String(',', 33) + "\"{0}\"", idCard);
+            var searchString = string.Format(new String(',', 34) + "\"{0}\"", idCard);
             var pageViewRecords = _ministryPlatformService.GetPageViewRecords("AllIndividualsWithContactId", ApiLogin(), searchString);
             if (pageViewRecords.Count > 1)
             {

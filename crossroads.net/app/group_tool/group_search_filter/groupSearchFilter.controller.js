@@ -1,18 +1,29 @@
 
-import {SearchFilterValue} from './filter_impl/searchFilter';
+import debounce from 'lodash/function/debounce';
+
 import AgeRangeFilter from './filter_impl/ageRange.filter'; 
+import CategoryFilter from './filter_impl/category.filter'; 
 import KidsWelcomeFilter from './filter_impl/kidsWelcome.filter'; 
 import LocationFilter from './filter_impl/location.filter'; 
 import GroupTypeFilter from './filter_impl/groupType.filter'; 
+import MeetingDayFilter from './filter_impl/meetingDay.filter';
+import MeetingTimeFilter from './filter_impl/meetingTime.filter';
+import FrequencyFilter from './filter_impl/frequency.filter'; 
+import LeadersSiteFilter from './filter_impl/leadersSite.filter';
+import FilterGroup from './filter_impl/filterGroup'; 
+
+const APPLY_FILTER_DEBOUNCE = 750;
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(GroupService) {
+  constructor(GroupService, CreateGroupService) {
     this.groupService = GroupService;
-    this.ageRanges = [];
-    this.groupTypes = [];
+    this.createGroupService = CreateGroupService;
     this.expanded = false;
-    this.allFilters = [];
+    this.allFilters = undefined;
+    this.expandedFilter = null;
+
+    this.applyFilters = debounce(this._internalApplyFilters, APPLY_FILTER_DEBOUNCE);
   }
 
   $onInit() {
@@ -25,23 +36,26 @@ export default class GroupSearchResultsController {
   }
 
   initializeFilters() {
-    this.allFilters = [
-      // TODO - When new filters are implemented, add them here - they will display in the order specified in this array
-      new AgeRangeFilter('Age Range', this.ageRanges),
-      new GroupTypeFilter('Group Type', this.groupTypes),
+    this.allFilters = new FilterGroup('All Filters', [
+      new AgeRangeFilter('Age Range', this.groupService),
+      new CategoryFilter('Category', this.groupService),
+      new GroupTypeFilter('Group Type', this.groupService),
       new KidsWelcomeFilter('Kids Welcome'),
-      new LocationFilter('Location')
-    ];
-
-    this.loadAgeRanges();
-    this.loadGroupTypes();
+      new LocationFilter('Location'),
+      new FilterGroup('Day / Time / Frequency', [
+        new MeetingDayFilter('Day', this.groupService),
+        new MeetingTimeFilter('Time'),
+        new FrequencyFilter('Frequency', this.createGroupService),
+      ]),
+      new LeadersSiteFilter('Leaders Site', this.groupService)
+    ], true);
   }
 
-  applyFilters() {
+  _internalApplyFilters() {
     let settings = {
       dataset: this.searchResults.filter((r) => {
-        for (let i = 0; i < this.allFilters.length; i++) {
-          if(!this.allFilters[i].matches(r)) {
+        for (let i = 0; i < this.allFilters.getValues().length; i++) {
+          if(!this.allFilters.getValues()[i].matches(r)) {
             return false;
           }
         }
@@ -49,16 +63,12 @@ export default class GroupSearchResultsController {
       })
     };
 
-    this.expanded = false;
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
   }
 
   clearFilters() {
-    this.allFilters.forEach(function(f) {
-      f.clear();
-    }, this);
-
+    this.allFilters.clear();
     this.applyFilters();
   }
 
@@ -68,51 +78,40 @@ export default class GroupSearchResultsController {
   }
 
   getCurrentFilters() {
-    return this.allFilters.filter((f) => f.isActive());
+    return this.allFilters.getCurrentFilters();
   }
 
   hasFilters() {
-    return this.allFilters.find((f) => f.isActive()) !== undefined;
+    return this.allFilters.hasFilters();
   }
 
   openFilters() {
     this.expanded = true;
+    this.expandedFilter = null;
   }
 
-  closeFilters(filterForm) {
-    // Reset all filters that are not in sync with the model. This handles the case 
-    // where someone changes filter values but does not click "Update Filters". 
-    filterForm.$rollbackViewValue();
+  openFilter(filter) {
+    this.expanded = true;
+    this.expandedFilter = this._getFilter(filter);
+  }
 
+  closeFilters() {
     this.expanded = false;
   }
 
-  loadAgeRanges() {
-    this.groupService.getAgeRanges().then(
-      (data) => {
-        this.ageRanges.push.apply(this.ageRanges, data.attributes.map((a) => {
-          return new SearchFilterValue(a.name, a.attributeId, false);
-        }));
-      },
-      (err) => {
-        // TODO what happens on error? (could be 404/no results, or other error)
-      }
-    ).finally(
-      () => {
-      });
+  toggleFilter(filter) {
+    if (this.expandedFilter === this._getFilter(filter)) {
+      this.expandedFilter = null;
+    } else {
+      this.expandedFilter = this._getFilter(filter);
+    }
   }
 
-  loadGroupTypes() {
-    this.groupService.getGroupGenderMixType().then(
-      (data) => {
-        this.groupTypes.push.apply(this.groupTypes, data.attributes.map((a) => {
-          return new SearchFilterValue(a.name, a.attributeId, false);
-        }));
-      },
-      (/*err*/) => {
-        // TODO what happens on error? (could be 404/no results, or other error)
-      }).finally(
-        () => {
-      });
-  }  
+  isOpenFilter(filter) {
+    return this.expandedFilter === this._getFilter(filter);
+  }
+
+  _getFilter(filter) {
+    return filter.belongsToFilterGroup() ? filter.getFilterGroup() : filter;
+  }
 }

@@ -300,7 +300,8 @@ describe('Group Tool Group Service', () => {
     });
 
     it('should get all participants when successful', () => {
-      let mockParticipants = [{
+      let mockGroup = [{
+        contactId: 5224083,
         Participants: [
           {
             "participantId": 4188863,
@@ -357,12 +358,12 @@ describe('Group Tool Group Service', () => {
 
       let groupId = 172286;
 
-      let participants = mockParticipants[0].Participants.map((p) => {
+      let participants = mockGroup[0].Participants.map((p) => {
         return new Participant(p);
       });
 
       httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
-                  respond(200, mockParticipants);
+                  respond(200, mockGroup);
 
       var promise = fixture.getGroupParticipants(groupId);
       httpBackend.flush();
@@ -379,6 +380,11 @@ describe('Group Tool Group Service', () => {
           expect(data[i].groupRoleId).toEqual(participants[i].groupRoleId);
           expect(data[i].groupRoleTitle).toEqual(participants[i].groupRoleTitle);
           expect(data[i].email).toEqual(participants[i].email);
+          if(data[i].contactId === mockGroup[0].contactId) {
+            expect(data[i].primary).toBeTruthy();
+          } else {
+            expect(data[i].primary).toBeFalsy();
+          }
         }
       });
     });

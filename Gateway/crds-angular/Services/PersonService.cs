@@ -62,7 +62,7 @@ namespace crds_angular.Services
             // TODO: See About moving the check for new password above or moving the update for user / person into an atomic operation
             //
             // update the user values if the email and/or password has changed
-            if (!(String.IsNullOrEmpty(person.NewPassword)) || (person.EmailAddress != person.OldEmail))
+            if (!(String.IsNullOrEmpty(person.NewPassword)) || (person.EmailAddress != person.OldEmail && person.OldEmail != null))
             {
                 var authData = TranslationService.Login(person.OldEmail, person.OldPassword);
 

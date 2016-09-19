@@ -66,6 +66,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
       <Private>True</Private>
@@ -174,11 +177,18 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+    <None Include="ScheduledDataUpdate.Unity.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\crds-angular\crds-angular.csproj">
       <Project>{dc3b7edc-2b9a-49f4-a5c8-50ba4c3e2a7b}</Project>
       <Name>crds-angular</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Crossroads.Utilities\Crossroads.Utilities.csproj">
+      <Project>{61238A82-D410-4330-BD25-889239FC7873}</Project>
+      <Name>Crossroads.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
