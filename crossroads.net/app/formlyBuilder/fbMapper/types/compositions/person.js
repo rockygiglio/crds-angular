@@ -4,8 +4,23 @@ export default function Person(fbMapperConfig, $resource) {
     fbMapperConfig.setComposition({
         name: 'person',
         elements: [
-            "firstName", "lastName", "nickName", "gender", "site"
-        ],
-        prePopulate: $resource(__API_ENDPOINT__ +  'api/profile')
+            {
+                name: "firstName",    
+            },
+            {
+                name: "lastName"
+            },
+            {
+                name: "nickName"
+            },
+            {
+                name: "gender",
+                alias: "genderId"
+            },
+            {
+                name: "site",
+                alias: "congregationId"
+            }],
+        prePopulate: $resource(__API_ENDPOINT__ + 'api/profile')
     });
 }

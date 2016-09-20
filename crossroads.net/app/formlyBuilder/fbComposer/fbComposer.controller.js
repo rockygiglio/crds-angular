@@ -30,15 +30,15 @@ export default class FBComposerController {
       this._prepareModel(builderFields, compositions)
     ]
     return this.qApi.all(formBuildingOperations)
-            .then((dataArray) => {
-              form.fields = dataArray[0];
-              form.model = dataArray[1];
-              return form;
-            })
-            .catch((err) => {
-              this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-              throw (err);
-            });
+      .then((dataArray) => {
+        form.fields = dataArray[0];
+        form.model = dataArray[1];
+        return form;
+      })
+      .catch((err) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        throw (err);
+      });
   }
 
   _prepareModel(builderFields, compositions) {
@@ -60,13 +60,19 @@ export default class FBComposerController {
       let field = builderField.formlyConfig;
       field.key = builderField.mapperSuperPath;
       // Generate formly fields object
-      let fieldPromise = this.fbMapperConfig.getElement(field.key.split('.').pop())
+      let fieldPromise = this.fbMapperConfig.getElementByComposition(field.key)
         .then((mapperConfigElement) => {
-          if (_.has(mapperConfigElement, 'lookupData')) {
-            field.templateOptions.options = mapperConfigElement.lookupData;
-            field.templateOptions.labelProp = mapperConfigElement.model.lookup.labelProp;
-            field.templateOptions.valueProp = mapperConfigElement.model.lookup.valueProp;
+          if (_.has(mapperConfigElement.body, 'lookupData')) {
+            field.templateOptions.options = mapperConfigElement.body.lookupData;
+            field.templateOptions.labelProp = mapperConfigElement.body.model.lookup.labelProp;
+            field.templateOptions.valueProp = mapperConfigElement.body.model.lookup.valueProp;
           }
+
+          if (_.has(mapperConfigElement, 'alias')) {
+            //replace the last . piece in the chain with the alias
+            field.key = field.key.substring(0, _.lastIndexOf(field.key, '.') + 1) + mapperConfigElement.alias;
+          }
+
           return field;
         });
       fields.push(fieldPromise);

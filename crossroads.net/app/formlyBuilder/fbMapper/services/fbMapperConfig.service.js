@@ -14,7 +14,13 @@ export default class fbMapperConfig {
     }
 
     setComposition(composition) {
-        this.compositionMap[composition.name] = composition;
+        let newComp = composition;
+        _.forEach(composition.elements, (element) => {
+            element.body = this._getElement(element.name);
+            newComp.elements.push(element);
+        });
+
+        this.compositionMap[composition.name] = newComp;
         return this.compositionMap[composition.name];
     }
 
@@ -22,31 +28,45 @@ export default class fbMapperConfig {
         return this.compositionMap[compositionName];
     }
 
-    getElement(elementName) {
+    _getElement(elementName) {
+        return this.elementMap[elementName];
+    }
+
+    getElementByComposition(elementPath) {
         //if is Lookup, get values
-        let element = this.elementMap[elementName];
-        if (!_.has(element, 'lookupData')) {
-            if (_.has(element.model, 'lookup')) {
-                return this._setLookupValues(element).then((lookupArray) => {
-                    element.lookupData = lookupArray;
-                    return element;
-                });
+        let pathArray = elementPath.split('.');
+        let composition = this.getComposition(pathArray[0]);
+        let element = _.find(composition.elements, (e) => { return e.name == pathArray[1] });
+        let elementIdx = _.findIndex(composition.elements, (e) => { return e.name == element.name });
+
+        //is the composition and the element registered?
+        if (composition != null && composition != undefined && element != null && element != undefined) {
+            if (!_.has(element.body, 'lookupData')) {
+                if (_.has(element.body.model, 'lookup')) {
+                    return this._setLookupValues(element.body).then((lookupArray) => {
+                        element.body.lookupData = lookupArray;
+                        composition.elements[elementIdx].body.lookupData = lookupArray;
+                        return composition.elements[elementIdx];
+                    });
+                }
             }
+            var deferred = this.qApi.defer();
+            deferred.resolve(composition.elements[elementIdx]);
+            return deferred.promise;
+
+        } else {
+            this.log.error("Composition + Element combination do not exist");
+            return undefined;
         }
-        var deferred = this.qApi.defer();
-        deferred.resolve(element);
-        return deferred.promise;
     }
 
     _setLookupValues(lookupElement) {
         let lookupValues = [];
-        return this._getLookupValues(lookupElement.model.lookup.location).then((lookup) => {
-            return lookup;
-        });
+        return this._getLookupValues(lookupElement.model.lookup.location);
     }
 
     _getLookupValues(path) {
-        return this.resource(`${__API_ENDPOINT__}` + path )
-            .query().$promise.then((data) => { return data;});
+        return this.resource(`${__API_ENDPOINT__}` + path)
+            .query().$promise;
     }
 }
