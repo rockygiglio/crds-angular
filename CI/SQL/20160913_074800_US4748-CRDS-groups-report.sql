@@ -10,7 +10,7 @@ DECLARE @page_id INT;
 SELECT @page_id = p.Page_ID FROM
 	[dbo].[dp_Pages] p WHERE p.Display_Name = N'Groups'
 
-IF NOT EXISTS(SELECT * FROM [dbo].[dp_reports] WHERE Report_Path = '/MPReports/CRDS Groups Snapshot Summary')
+IF NOT EXISTS(SELECT * FROM [dbo].[dp_reports] WHERE Report_Path = '/MPReports/Crossroads/Group Trends Summary')
 BEGIN
 
 	SET IDENTITY_INSERT [dbo].[dp_Reports] ON
@@ -26,9 +26,9 @@ BEGIN
 			   )
 		 VALUES
 			   (302
-			   ,N'CRDS Groups Snapshot Summary'
+			   ,N'Group Trend Summary'
 			   ,N'Crossroads-specific Group Data Summary'
-			   ,N'/MPReports/CRDS Groups Snapshot Summary'
+			   ,N'/MPReports/Crossroads/Group Trends Summary'
 			   ,0
 			   ,0          
 			   ,1)
@@ -37,7 +37,7 @@ BEGIN
 END
 
 SELECT @report_id = r.Report_ID FROM
-	[dp_reports] r WHERE r.Report_Path = N'/MPReports/CRDS Groups Snapshot Summary'
+	[dp_reports] r WHERE r.Report_Path = N'/MPReports/Crossroads/Group Trends Summary'
 
 IF NOT EXISTS(SELECT * FROM [dbo].[dp_Report_Pages] WHERE Report_ID = @report_id AND Page_ID = @page_id )
 BEGIN
