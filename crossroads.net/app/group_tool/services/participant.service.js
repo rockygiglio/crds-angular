@@ -23,7 +23,6 @@ export default class ParticipantService {
                            save({groupId: groupId, invitationGUID: invitationGUID}, accept).$promise;
 
     return promise.then((data) => {
-      alert(data);
         return data;
       }, (err) => {
         throw err;
