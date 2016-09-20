@@ -51,7 +51,7 @@
   require('./services/session_service');
   require('./services/auth_service');
   require('./services/user_service');
-  require('./services/CMSData.service');
+  require('./services/CMS.service');
 
 
   require('./errors');
