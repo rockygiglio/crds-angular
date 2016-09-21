@@ -14,6 +14,9 @@ export default function Person(fbMapperConfig, $resource) {
                 name: "nickName"
             },
             {
+                name: "middleName"
+            },
+            {
                 name: "gender",
                 alias: "genderId"
             },

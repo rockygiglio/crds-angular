@@ -17,16 +17,6 @@ export default class PlaygroundService {
                     }
                 }
             },{
-                mapperSuperPath: 'person.site',
-                prePopulate: true,
-                formlyConfig: {
-                    type: 'formlyBuilderSelect',
-                    templateOptions: {
-                        label: 'Site',
-                        required: true
-                    }
-                }
-            },{
                 mapperSuperPath: 'person.middleName',
                 prePopulate: true,
                 formlyConfig: {
@@ -34,6 +24,16 @@ export default class PlaygroundService {
                     templateOptions: {
                         label: 'Middle Name',
                         required: false
+                    }
+                }
+            },{
+                mapperSuperPath: 'person.lastName',
+                prePopulate: true,
+                formlyConfig: {
+                    type: 'formlyBuilderInput',
+                    templateOptions: {
+                        label: 'Last Name',
+                        required: true
                     }
                 }
             }, {
