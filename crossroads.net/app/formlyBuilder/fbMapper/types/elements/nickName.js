@@ -18,8 +18,15 @@ export default function addNickName(fbMapperConfig) {
         };
     };
 
+    var defaultComposition = () => {
+        return {
+            name: "nickName"
+        };
+    };
+
     fbMapperConfig.setElement({
         name: 'nickName',
-        model: getModel()
+        model: getModel(),
+        defaultComposition: defaultComposition;
     });
 }

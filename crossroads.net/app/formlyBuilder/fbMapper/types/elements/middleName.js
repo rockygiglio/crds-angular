@@ -18,8 +18,15 @@ export default function addMiddleName(fbMapperConfig) {
         };
     };
 
+    var defaultComposition = () => {
+        return {
+            name: "middleName"
+        };
+    };
+
     fbMapperConfig.setElement({
         name: 'middleName',
-        model: getModel()
+        model: getModel(),
+        defaultComposition: defaultComposition;
     });
 }

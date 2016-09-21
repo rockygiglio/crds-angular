@@ -16,8 +16,15 @@ export default function Gender(fbMapperConfig) {
                 "valueProp": "dp_RecordID",
                 "labelProp": "dp_RecordName"
             }
-        }
-    }
+        };
+    };
+
+    var defaultComposition = () => {
+        return {
+            name: "gender"
+        };
+    };
+
     fbMapperConfig.setElement({
         name: 'gender',
         model: getModel()

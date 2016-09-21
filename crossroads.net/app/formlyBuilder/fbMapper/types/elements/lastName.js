@@ -18,8 +18,15 @@ export default function addLastName(fbMapperConfig) {
         };
     };
 
+    var defaultComposition = () => {
+        return {
+            name: "lastName"
+        };
+    };
+
     fbMapperConfig.setElement({
         name: 'lastName',
-        model: getModel()
+        model: getModel(),
+        defaultComposition: defaultComposition;
     });
 }
