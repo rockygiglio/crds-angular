@@ -1,10 +1,12 @@
 import Countdown from '../models/countdown';
 
 export default class countdownComponent {
-  constructor($rootScope, StreamspotService) {
+  constructor($rootScope, StreamspotService, StreamingReminderService) {
     this.rootScope = $rootScope;
     this.streamspotService = StreamspotService;
     this.countdown = new Countdown();
+
+    this.streamingReminderService = StreamingReminderService;
   }
 
   $onInit() {
@@ -12,6 +14,11 @@ export default class countdownComponent {
       this.event = event;
       this.parseEvent();
     })
+  }
+
+  openReminder() {
+    console.log('openReminder');
+    this.streamingReminderService.open();
   }
 
   parseEvent() {

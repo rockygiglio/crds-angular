@@ -11,3 +11,4 @@ export default angular
 
 import landing from './landing';
 import countdown from './countdown';
+import streamingReminder from './streaming_reminder';

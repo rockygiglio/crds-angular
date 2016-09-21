@@ -1,0 +1,76 @@
+<modal id="reminderModal" class="crds-modal">
+  <form>
+    <modal-header >
+      <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
+    </modal-header>
+    <modal-body>
+      <preloader full-screen='true' ng-if="isLoading()"></preloader>
+      <div class="reminder-content" ng-if="!isLoading() && !formSuccess">
+        <div class="schedule">
+          <div dynamic-content="$root.MESSAGES.streamingReminderStreamSelect.content | html "></div>
+
+          <a href="#" class="btn btn-date-select" ng-click="model.day=false;dateTimeError=false" ng-if="model.day">
+            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
+            09/24/2016
+            &nbsp;&nbsp;<i class="glyphicon glyphicon-chevron-down"></i>
+          </a>
+
+          <div data-toggle="buttons" ng-hide="model.day">
+            <label class="btn btn-lg btn-date-select">
+              <input autocomplete="off" ngcontrol="day" type="radio" ng-reflect-name="day" ng-reflect-model="false" ng-reflect-value="09/24/2016" value="09/24/2016" class="ng-untouched ng-pristine ng-valid"> Saturday, September 24th
+            </label>
+            <div dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
+          </div>
+
+          <div ng-if="model.day">
+            <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime | html"></div>
+            <div data-toggle="buttons">
+              <label class="btn btn-sm btn-time-select">
+                <input autocomplete="off" type="radio" ng-reflect-name="time" class="ng-untouched ng-pristine ng-valid"> 1:56pm EDT
+              </label>
+              <div dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="contact">
+          <div dynamic-content="$root.MESSAGES.streamingReminderTypeSelect.content | html"></div>
+          <div class="btn-group btn-group-justified" data-toggle="buttons">
+            <label class="btn btn-lg btn-time-select active" ng-click="model.type='phone'">
+              <input type="radio" name="type" value="phone" autocomplete="off" > Text
+            </label>
+            <label class="btn btn-lg btn-time-select" ng-click="model.type='email'">
+              <input type="radio" name="type" value="email" autocomplete="off" > Email
+            </label>
+          </div>
+
+          <div class="form-group validation-control" ng-if="model.type=='phone'">
+            <input type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <div class="alert alert-danger" ng-if="model.isPhoneValid === false">
+              <div dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
+            </div>
+          </div>
+          <div class="form-group validation-control" ng-if="model.type=='email'">
+            <input type="email" class="form-control" placeholder="Enter your email address" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
+            <div class="alert alert-danger"  ng-if="model.isEmailValid === false">
+              <div dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="formSuccess">
+        <div dynamic-content="$root.MESSAGES.streamingReminderSuccess.content | html"></div>
+      </div>
+
+      <div ng-if="formError">
+        <div dynamic-content="$root.MESSAGES.streamingReminderFailure.content | html"></div>
+      </div>
+      
+    </modal-body>
+    <modal-footer>
+      <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="false" ng-if="!isLoading() && !formSuccess">Set Reminder</button>
+      <button type="button" class="btn btn-default btn-set-reminder" ng-click="close()" ng-if="formSuccess">Close</button>
+    </modal-footer>
+  </form>
+</modal>
