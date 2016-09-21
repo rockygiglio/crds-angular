@@ -48,14 +48,17 @@ describe('Object: Reminder', () => {
           expect(connection.request.url).toBe(
             `${__API_ENDPOINT__}api/sendTextMessageReminder`
           );
-          expect(connection.request.getBody()).toBe(`{"templateId":0,"mergeData":{"Event_Date":"09/01/2016","Event_Start_Time":"6:00pm EDT"},"toPhoneNumber":"1231231234","startDate":"${moment().format()}"}`)
+          expect(connection.request.getBody()).toBe(`{"templateId":0,"mergeData":{"Event_Date":"${reminder.day}","Event_Start_Time":"${reminder.time}"},"startDate":"${reminder.startDate}","toPhoneNumber":"${reminder.phone}"}`)
         });
 
         let reminder = new Reminder(service);
-        reminder.day   = "09/01/2016";
-        reminder.time  = "6:00pm EDT";
+        reminder.day   = moment().format('MM/DD/YYYY');
+        reminder.time  = moment().format('h:mma [EDT]');
         reminder.type  = 'phone';
         reminder.phone = '1231231234';
+
+        let time = reminder.time.slice(0, reminder.time.length - 4); // strip of tz code and leading space
+        reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").format();
 
         service.sendTextReminder(reminder);
       })
@@ -66,19 +69,25 @@ describe('Object: Reminder', () => {
     inject(
       [ReminderService, MockBackend],
       fakeAsync((service: ReminderService, backend: MockBackend) => {
+        
+        
         backend.connections.subscribe((connection: MockConnection) => {
           expect(connection.request.method).toBe(RequestMethod.Post);
           expect(connection.request.url).toBe(
+
             `${__API_ENDPOINT__}api/sendEmailReminder`
           );
-          expect(connection.request.getBody()).toBe(`{"emailAddress":"test@test.com","startDate":"${moment().format()}","mergeData":{"Event_Date":"09/01/2016","Event_Start_Time":"6:00pm EDT"}}`)          
+          expect(connection.request.getBody()).toBe(`{"emailAddress":"${reminder.email}","startDate":"${reminder.startDate}","mergeData":{"Event_Date":"${reminder.day}","Event_Start_Time":"${reminder.time}"}}`)          
         });
 
         let reminder = new Reminder(service);
-        reminder.day   = "09/01/2016";
-        reminder.time  = "6:00pm EDT";
+        reminder.day   = moment().format('MM/DD/YYYY');
+        reminder.time  = moment().format('h:mma [EDT]');
         reminder.type  = 'email';
         reminder.email = 'test@test.com';
+
+        let time = reminder.time.slice(0, reminder.time.length - 4); // strip of tz code and leading space
+        reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").format();
 
         service.sendEmailReminder(reminder);
       })

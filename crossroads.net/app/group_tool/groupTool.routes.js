@@ -67,6 +67,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           description: ''
         },
         isCreate: true
+      },
+      params: {
+        showVisibility: true
       }
     })
     .state('grouptool.edit.preview', {
@@ -79,6 +82,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           description: ''
         },
         isCreate: false
+      },
+      params: {
+        showVisibility: true
       }
     })
     .state('grouptool.edit', {
@@ -137,7 +143,10 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.detail.about', {
       url: '/about',
-      template: '<group-detail-about></group-detail-about>'
+      template: '<group-detail-about></group-detail-about>',
+      params: {
+        showVisibility: true
+      }
     })
     .state('grouptool.detail.participants', {
       url: '/participants',
@@ -219,6 +228,17 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
           description: ''
         }
       }
+    })
+    .state('grouptool.leaderresources', {
+      parent: 'noSideBar',
+      url: '/groups/leader/resources',
+      template: '<group-tool-cms></group-tool-cms>',
+      data: {
+        meta: {
+          title: 'Leader Resources',
+          description: ''
+        }
+      },
     })
   ;
 }

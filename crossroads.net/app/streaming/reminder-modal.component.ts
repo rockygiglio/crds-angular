@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { MODAL_DIRECTIVES, ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { DynamicContentNg2Component } from '../../core/dynamic_content/dynamic-content-ng2.component';
 
 import { Reminder } from './reminder';
 import { ReminderService } from './reminder.service'
@@ -15,10 +16,11 @@ var _ = require('lodash');
 @Component({
   selector: 'reminder-modal',
   templateUrl: './reminder-modal.ng2component.html',
-  directives: [MODAL_DIRECTIVES, upgradeAdapter.upgradeNg1Component('preloader')],
+  directives: [MODAL_DIRECTIVES, upgradeAdapter.upgradeNg1Component('preloader'), DynamicContentNg2Component],
   providers: [],
   pipes: []
 })
+
 export class ReminderModalComponent {
   @ViewChild('reminderModal') modal: ModalComponent;
   deliveryType:     String  = 'email';
@@ -57,7 +59,7 @@ export class ReminderModalComponent {
     this.model.isEmailValid = this.isValid(reminderForm.form.controls.email);
     this.model.isPhoneValid = this.isValid(reminderForm.form.controls.phone);
 
-    if (this.model.isDayValid === false && this.model.isTimeValid === false) {
+    if (this.model.isDayValid === false || this.model.isTimeValid === false) {
       this.dateTimeError = true;
     }
 
@@ -119,9 +121,11 @@ export class ReminderModalComponent {
   resetForm() {
     this.model = new Reminder(this.reminderService);
     this.model.day = this.nextDate();
-    this.formSuccess = this.formError = false;
-    this.formSuccess = false;
-    this.loading = false;
+
+    this.formError     = false;
+    this.dateTimeError = false;
+    this.formSuccess   = false;
+    this.loading       = false;
   }
 
   close() {
@@ -136,7 +140,6 @@ export class ReminderModalComponent {
   }
 
   public open(size) {
-    this.resetForm()
     this.modal.open(size)
   }
 }

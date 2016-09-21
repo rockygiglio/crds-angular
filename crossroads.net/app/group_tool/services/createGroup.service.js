@@ -40,6 +40,7 @@ export default class CreateGroupService {
     }
 
     reset() {
+        debugger;
         this.resolved = false;
         this.model = {};
         this.profileData = {};
@@ -504,6 +505,7 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
+                    // TODO - These are needed in the filters as well; created getGroupCategories() on group.service.js - can we use the same in both places?
                     options: [
                         {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
@@ -921,6 +923,10 @@ export default class CreateGroupService {
                 break;
         }
         return categoryId;
+    }
+
+    getMeetingFrequencies() {
+        return this.meetingFrequencyLookup;
     }
 
 }

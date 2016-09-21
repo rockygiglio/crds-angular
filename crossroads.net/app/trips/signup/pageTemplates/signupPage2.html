@@ -39,37 +39,6 @@
         </ng-messages>
       </div><!--/form-group-->
     </div>
-    <div class="row" ng-show="tripsSignup.isSouthAfrica()">
-      <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'scrubBottom') }">
-        <label for="scrub" class="control-label" ng-class="{'required': tripsSignup.isSouthAfrica()}">Scrub Size Bottom</label>
-        <select class="form-control col-sm-12" name="scrubBottom" id="scrubBottom"
-          ng-model="signupStep.scrubBottom.attribute"
-          ng-options="bottom.name for bottom in signupStep.scrubBottomSizes.attributes | orderBy: 'attributeId' track by bottom.attributeId"
-          ng-required="tripsSignup.isSouthAfrica()">
-          <option value=""> -- Please Select a Scrub Bottom Size -- </option>
-        </select>
-        <ng-messages for="tripsSignup.tripAppPage2.scrubBottom.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'scrubBottom')">
-          <span ng-message="required">
-            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-          </span>
-        </ng-messages>
-      </div>
-
-      <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'scrubTop') }">
-        <label for="scrub" class="control-label" ng-class="{'required': tripsSignup.isSouthAfrica()}">Scrub Size Top</label>
-        <select class="form-control col-sm-12" name="scrubTop" id="scrubTop"
-          ng-model="signupStep.scrubTop.attribute"
-          ng-options="top.name for top in signupStep.scrubTopSizes.attributes | orderBy: 'attributeId'  track by top.attributeId"
-          ng-required="tripsSignup.isSouthAfrica()">
-          <option value=""> -- Please Select a Scrub Top Size -- </option>
-        </select>
-        <ng-messages for="tripsSignup.tripAppPage2.scrubTop.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'scrubTop')">
-          <span ng-message="required">
-            <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-          </span>
-        </ng-messages>
-      </div><!--/form-group-->
-    </div>
 
     <div class="row">
       <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage2, 'referral') }">
@@ -94,13 +63,6 @@
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
             </span>
           </ng-messages>
-      </div><!--/form-group-->
-    </div><!--/row-->
-
-    <div class="row">
-      <div class="form-group col-sm-12">
-        <label for="conditions">Please describe any medical condition(s) that may affect your ability to participate in this trip <small class="text-muted">Leave blank if it doesn't apply</small></label>
-        <textarea ng-model="tripsSignup.signupService.page2.conditions" class="form-control" rows="2" cols="1" id="conditions" maxlength="250"></textarea>
       </div><!--/form-group-->
     </div><!--/row-->
 

@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-      <div ng-if="profile.requireEmail" class="form-group col-sm-6"  ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'email')}" >
+      <div ng-if="profile.emailRequired()" class="form-group col-sm-6"  ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'email')}" >
         <label for="email" class="required">Email</label>
         <input type="email"
                class="form-control"

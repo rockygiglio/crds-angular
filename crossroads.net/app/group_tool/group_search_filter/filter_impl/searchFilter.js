@@ -16,7 +16,7 @@ export class SearchFilter {
   }
 
   getSelectedValues() {
-    return this.filterValues.filter((i) => { return i.selected === true; })
+    return this.filterValues.filter((i) => { return i.selected === true; });
   }
 
   getValues() {
@@ -41,16 +41,30 @@ export class SearchFilter {
     }
   }
 
+  belongsToFilterGroup() {
+    return this.filterGroup !== undefined;
+  }
+
+  setFilterGroup(filterGroup) {
+    this.filterGroup = filterGroup;
+  }
+
+  getFilterGroup() {
+    return this.filterGroup;
+  }
+
   compareTo(other) {
     return this.getName().localeCompare(other.getName());
   }
 }
 
 export class SearchFilterValue {
-  constructor(name, value, selected) {
+  constructor(name, value, selected, helpTextContentBlockTitle, optionSelectedTextContentBlockTitle) {
     this.name = name;
     this.value = value;
     this.selected = selected;
+    this.helpTextContentBlockTitle = helpTextContentBlockTitle;
+    this.optionSelectedTextContentBlockTitle = optionSelectedTextContentBlockTitle;
   }
 
   getName() {
@@ -59,6 +73,26 @@ export class SearchFilterValue {
 
   getValue() {
     return this.value;
+  }
+
+  getValueString() {
+    return typeof this.value.toString === 'function' ? this.value.toString() : this.value;
+  }
+
+  hasHelpText() {
+    return this.helpTextContentBlockTitle != null && this.helpTextContentBlockTitle.length > 0;
+  }
+
+  getHelpText() {
+    return this.helpTextContentBlockTitle;
+  }
+
+  hasOptionSelectedText() {
+    return this.optionSelectedTextContentBlockTitle != null && this.optionSelectedTextContentBlockTitle.length > 0;
+  }
+
+  getOptionSelectedText() {
+    return this.optionSelectedTextContentBlockTitle;
   }
 
   isSelected() {
