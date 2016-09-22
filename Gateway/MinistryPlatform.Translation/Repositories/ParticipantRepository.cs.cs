@@ -33,7 +33,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         //Get Participant IDs of a contact
-        public Participant GetParticipantRecord(string token)
+        public MpParticipant GetParticipantRecord(string token)
         {
             var results = _ministryPlatformService.GetRecordsDict("MyParticipantRecords", token);
             Dictionary<string, object> result = null;
@@ -53,7 +53,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return null;
             }
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ContactId = result.ToInt("Contact_ID"),
                 ParticipantId = result.ToInt("dp_RecordID"),
@@ -66,9 +66,9 @@ namespace MinistryPlatform.Translation.Repositories
             return participant;
         }
 
-        public Participant GetParticipant(int contactId)
+        public MpParticipant GetParticipant(int contactId)
         {
-            Participant participant;
+            MpParticipant participant;
             //var records = new List<Dictionary<string, object>>();
             try
             {
@@ -79,7 +79,7 @@ namespace MinistryPlatform.Translation.Repositories
                             (_ministryPlatformService.GetPageViewRecords("ParticipantByContactId", apiToken, searchStr,
                                 "")));
                 var record = records.Single();
-                participant = new Participant
+                participant = new MpParticipant
                 {
                     ContactId = record.ToInt("Contact ID"),
                     ParticipantId = record.ToInt("dp_RecordID"),

@@ -57,7 +57,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             const int mockParticipantId = 7777;
             _participantService.Setup(m => m.GetParticipantRecord(It.IsAny<string>()))
-                .Returns(new Participant {ParticipantId = mockParticipantId});
+                .Returns(new MpParticipant {ParticipantId = mockParticipantId});
 
             const string opportunityResponsePageKey = "OpportunityResponses";
             _ministryPlatformService.Setup(
@@ -116,7 +116,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string comment = "Fail Test Comment";
             const int mockParticipantId = 7777;
             _participantService.Setup(m => m.GetParticipantRecord(It.IsAny<string>()))
-                .Returns(new Participant {ParticipantId = mockParticipantId});
+                .Returns(new MpParticipant {ParticipantId = mockParticipantId});
 
             const string opportunityResponsePageKey = "OpportunityResponses";
             var exceptionDetail =
@@ -176,7 +176,7 @@ namespace MinistryPlatform.Translation.Test.Services
             //ARRANGE
             const int opportunityId = 2;
             const int eventId = 3;
-            var participant = new Participant {ParticipantId = 5};
+            var participant = new MpParticipant {ParticipantId = 5};
 
             // mock _ministryPlatformService.GetPageViewRecords
             const string viewKey = "ResponseByOpportunityAndEvent";
@@ -219,7 +219,7 @@ namespace MinistryPlatform.Translation.Test.Services
             //ARRANGE
             const int opportunityId = 77;
             const int eventId = 3;
-            var participant = new Participant {ParticipantId = 777};
+            var participant = new MpParticipant {ParticipantId = 777};
 
             // mock _ministryPlatformService.GetPageViewRecords
             const string viewKey = "ResponseByOpportunityAndEvent";
@@ -262,7 +262,7 @@ namespace MinistryPlatform.Translation.Test.Services
             //ARRANGE
             const int opportunityId = 8;
             const int eventId = 3;
-            var participant = new Participant {ParticipantId = 5};
+            var participant = new MpParticipant {ParticipantId = 5};
 
             // mock _ministryPlatformService.GetPageViewRecords
             const string viewKey = "ResponseByOpportunityAndEvent";
@@ -323,7 +323,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string pageKey = "OpportunityResponses";
 
             _participantService.Setup(m => m.GetParticipantRecord(It.IsAny<string>()))
-                .Returns(new Participant {ParticipantId = mockParticipantId});
+                .Returns(new MpParticipant {ParticipantId = mockParticipantId});
 
             _ministryPlatformService.Setup(
                 m => m.CreateRecord(pageKey, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true))

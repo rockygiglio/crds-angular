@@ -168,11 +168,11 @@ namespace crds_angular.Services
                                               int? toGroupParticipantId,
                                               GroupDTO group,
                                               int emailTemplateId,
-                                              Participant toParticipant = null,
+                                              MpParticipant toParticipant = null,
                                               string subjectTemplateContentBlockTitle = null,
                                               string emailTemplateContentBlockTitle = null,
                                               string message = null,
-                                              Participant fromParticipant = null)
+                                              MpParticipant fromParticipant = null)
         {
             var participant = toParticipant == null
                 ? group.Participants.Find(p => p.GroupParticipantId == toGroupParticipantId)
@@ -256,7 +256,7 @@ namespace crds_angular.Services
                 {
                     GroupId = groupId
                 },
-                Me = new Participant
+                Me = new MpParticipant
                 {
                     ParticipantId = groupParticipant.ParticipantId
                 }
@@ -315,7 +315,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
+        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
@@ -338,7 +338,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, Participant me, string message)
+        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
@@ -364,7 +364,7 @@ namespace crds_angular.Services
                                                  int groupId,
                                                  GroupDTO group,
                                                  Inquiry inquiry,
-                                                 Participant me,
+                                                 MpParticipant me,
                                                  int emailTemplateId,
                                                  string emailTemplateContentBlockTitle,
                                                  string message)
