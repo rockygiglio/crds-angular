@@ -5,10 +5,9 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
-using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Repositories;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
-using Participant = MinistryPlatform.Translation.Models.Participant;
+using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 
 namespace crds_angular.Services
@@ -53,7 +52,7 @@ namespace crds_angular.Services
             {                
                 participant.AttendanceStart = person.AttendanceStartDate;
                 // convert to the object with underscores
-                var p = Mapper.Map <MpParticipant>(participant);
+                var p = Mapper.Map <Participant>(participant);
                 _participantService.UpdateParticipant(getDictionary(p));
             }
 

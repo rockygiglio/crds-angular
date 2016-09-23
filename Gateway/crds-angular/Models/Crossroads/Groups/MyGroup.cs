@@ -1,4 +1,4 @@
-﻿using Participant = MinistryPlatform.Translation.Models.Participant;
+﻿using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.Models.Crossroads.Groups
 {

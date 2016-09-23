@@ -121,7 +121,7 @@ namespace crds_angular.test.Services
         public void TestGetMyGroupInfoNotGroupLeader()
         {
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -171,7 +171,7 @@ namespace crds_angular.test.Services
         public void TestGetMyGroupInfoIsGroupLeader()
         {
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -205,7 +205,7 @@ namespace crds_angular.test.Services
         public void TestApproveDenyInquiryFromMyGroupApprove()
         {
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -241,7 +241,7 @@ namespace crds_angular.test.Services
             };
             const string message = "message";
 
-            var approveParticipant = new Participant
+            var approveParticipant = new MpParticipant
             {
                 ParticipantId = 9090
             };
@@ -286,7 +286,7 @@ namespace crds_angular.test.Services
         public void TestApproveDenyInquiryFromMyGroupDeny()
         {
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -322,7 +322,7 @@ namespace crds_angular.test.Services
             };
             const string message = "message";
 
-            var approveParticipant = new Participant
+            var approveParticipant = new MpParticipant
             {
                 ParticipantId = 9090
             };
@@ -370,7 +370,7 @@ namespace crds_angular.test.Services
             string invitationGuid = "akdfjadfjajeoihqwpoi392053qiweur9";
 
 
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ParticipantId = 9090
             };
@@ -396,7 +396,7 @@ namespace crds_angular.test.Services
             string invitationGuid = "akdfjadfjajeoihqwpoi392053qiweur9";
 
 
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ParticipantId = 9090
             };
@@ -459,7 +459,7 @@ namespace crds_angular.test.Services
         public void TestRemoveParticipantNotGroupLeader()
         {
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -489,7 +489,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
 
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -543,7 +543,7 @@ namespace crds_angular.test.Services
             const int groupId = 222;
 
             const int myParticipantId = 952;
-            var myParticipant = new Participant
+            var myParticipant = new MpParticipant
             {
                 ParticipantId = myParticipantId
             };
@@ -692,7 +692,7 @@ namespace crds_angular.test.Services
             };
             _contentBlockService.Setup(mocked => mocked[contentBlockTitle]).Returns(content);
 
-            var fromParticipant = new Participant
+            var fromParticipant = new MpParticipant
             {
                 ContactId = 456,
                 EmailAddress = "email",
@@ -752,7 +752,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var toGroupParticipant = new Participant
+            var toGroupParticipant = new MpParticipant
             {
                 ParticipantId = removeParticipantId,
                 PreferredName = "preferred",
@@ -787,7 +787,7 @@ namespace crds_angular.test.Services
             _communicationRepository.Setup(mocked => mocked.ParseTemplateBody("subject content", It.IsAny<Dictionary<string, object>>())).Returns("subject content parsed");
             _communicationRepository.Setup(mocked => mocked.ParseTemplateBody(bodyContent.Content, It.IsAny<Dictionary<string, object>>())).Returns($"{bodyContent.Content} parsed");
 
-            var fromParticipant = new Participant
+            var fromParticipant = new MpParticipant
             {
                 ContactId = 456,
                 EmailAddress = "email",
@@ -941,7 +941,7 @@ namespace crds_angular.test.Services
         {
             string token = "123ABC";
 
-            var groupParticipantDTO = new Participant
+            var groupParticipantDTO = new MpParticipant
             {
                 ContactId = 123,
                 EmailAddress = "test@test.com",
@@ -976,7 +976,7 @@ namespace crds_angular.test.Services
         {
             string token = "123ABC";
 
-            var groupParticipantDTO = new Participant
+            var groupParticipantDTO = new MpParticipant
             {
                 ContactId = 123,
                 EmailAddress = "test@test.com",
@@ -1205,7 +1205,7 @@ namespace crds_angular.test.Services
             var syncedTime = System.DateTime.Now;
             var active = true;
 
-            Participant contactParticipant = new Participant
+            MpParticipant contactParticipant = new MpParticipant
             {
                 ContactId = 1234567,
                 EmailAddress = "test@test.com"
@@ -1272,7 +1272,7 @@ namespace crds_angular.test.Services
             var syncedTime = System.DateTime.Now;
             var active = true;
 
-            Participant contactParticipant = new Participant
+            MpParticipant contactParticipant = new MpParticipant
             {
                 ContactId = 1234567
             };
