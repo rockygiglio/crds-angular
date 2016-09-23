@@ -95,7 +95,7 @@ namespace crds_angular.test.Services
 
             _groupRepository.Setup(mocked => mocked.getGroupDetails(invitation.SourceId)).Returns(testGroup);
 
-            var testLeaderParticipant = new Participant
+            var testLeaderParticipant = new MpParticipant
             {
                 DisplayName = "TestLeaderName",
                 ContactId = 123,
@@ -175,7 +175,7 @@ namespace crds_angular.test.Services
                 SourceId = 33
             };
 
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ParticipantId = 654
             };
@@ -216,7 +216,7 @@ namespace crds_angular.test.Services
                 SourceId = 33
             };
 
-            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns((Participant)null);
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns((MpParticipant)null);
 
             _fixture.ValidateInvitation(invitation, token);
         }
@@ -236,7 +236,7 @@ namespace crds_angular.test.Services
                 SourceId = 33
             };
 
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ParticipantId = 654
             };
@@ -261,7 +261,7 @@ namespace crds_angular.test.Services
                 SourceId = 33
             };
 
-            var participant = new Participant
+            var participant = new MpParticipant
             {
                 ParticipantId = 654
             };

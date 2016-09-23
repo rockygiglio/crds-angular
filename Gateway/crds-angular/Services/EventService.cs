@@ -14,7 +14,7 @@ using WebGrease.Css.Extensions;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
-using Participant = MinistryPlatform.Translation.Models.People.Participant;
+using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 using TranslationEventService = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 
 namespace crds_angular.Services

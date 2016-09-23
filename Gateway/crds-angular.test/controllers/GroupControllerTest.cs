@@ -183,7 +183,7 @@ namespace crds_angular.test.controllers
             g.WaitListGroupId = 888;
             g.RemainingCapacity = 10;
 
-            Participant participant = new Participant();
+            MpParticipant participant = new MpParticipant();
             participant.ParticipantId = 90210;
             _participantServiceMock.Setup(
                 mocked => mocked.GetParticipantRecord(_fixture.Request.Headers.Authorization.ToString()))
@@ -293,7 +293,7 @@ namespace crds_angular.test.controllers
             const string token = "1234frd32";
             const int groupTypeId = 19;
           
-            Participant participant = new Participant() 
+            MpParticipant participant = new MpParticipant() 
             { 
                 ParticipantId = 90210
             };
@@ -316,7 +316,7 @@ namespace crds_angular.test.controllers
         {
             const int groupTypeId = 19;
 
-            Participant participant = new Participant()
+            MpParticipant participant = new MpParticipant()
             {
                 ParticipantId = 90210
             };

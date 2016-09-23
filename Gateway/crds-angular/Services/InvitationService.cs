@@ -136,7 +136,7 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation, Participant leader, string groupName)
+        private void SendEmail(MpInvitation invitation, MpParticipant leader, string groupName)
         {
             var leaderContact = _contactRepository.GetContactById(leader.ContactId);
 
