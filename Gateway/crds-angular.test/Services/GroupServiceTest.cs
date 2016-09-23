@@ -20,7 +20,7 @@ using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
-using Participant = MinistryPlatform.Translation.Models.Participant;
+using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.test.Services
 {

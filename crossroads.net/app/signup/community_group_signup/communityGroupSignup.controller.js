@@ -47,6 +47,7 @@
     vm.hasParticipantID = hasParticipantID;
     vm.modalInstance = {};
     vm.person = {};
+    vm.profileButtonText = 'Save Profile';
     vm.response = {};
     vm.saving = false;
     vm.showContent = true;

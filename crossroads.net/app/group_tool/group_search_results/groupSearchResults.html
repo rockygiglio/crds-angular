@@ -78,79 +78,82 @@
     </div>
   </div>
 
-  <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
+  <!-- Search Results -->
+  <div class="relative">
+    <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
-  <div ng-show='groupSearchResults.ready'>
-    <group-search-filter table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"/>
-  </div>
+    <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"></group-search-filter>
 
-  <!--
-    DESKTOP ONLY results
-    WARNING!!! If you make a change here, apply it to the mobile results list below
-    -->
-  <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs hidden-sm push-half-top">
-    <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
-      <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
-      <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
-      <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
-      <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
-      <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
-      <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
-      <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
-      <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center">
-        <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
-        <span ng-if="!group.hasAddress()">Online</span>
-      </td>
-      <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" >
-        <a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a>
-        <span ng-if="!group.hasAddress()">Online</span>
-      </td>
-    </tr>
-    <tr ng-if="group.expanded" ng-repeat-end class="group-search-detail">
-      <td colspan="8">
-        <group-detail-about data="group" for-search="true" class="clearfix"></group-detail-about>
-        <div class="text-right push-top push-half-bottom soft-half-right">
-          <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
-          <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
-          <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
-        </div>
-      </td>
-    </tr>
-  </table>
-
-  <!--
-    MOBILE ONLY results
-    WARNING!!! If you make a change here, apply it to the desktop results list above
-    -->
-  <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-md hidden-lg push-half-top">
-    <div ng-repeat-start="group in groupSearchResults.tableParams.settings().dataset"
-         class="group-result soft-half-bottom soft-half-top"
-         ng-click="group.expanded = true" ng-if="!group.expanded">
-      <div class="row">
-        <strong class="col-xs-9">{{group.groupName}}</strong>
-
-        <div ng-if="groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+    <!--
+      DESKTOP ONLY results
+      WARNING!!! If you make a change here, apply it to the mobile results list below
+      -->
+    <table ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' ng-table="groupSearchResults.tableParams" class="table table-hover group-result-desktop hidden-xs hidden-sm push-half-top">
+      <tr ng-repeat-start="group in $data" class="group-result pointer" ng-click="group.expanded = true" ng-if="!group.expanded">
+        <td data-title="'Group Name'" sortable="'groupName'" class="group-name"><a>{{group.groupName}}</a></td>
+        <td data-title="'Category'" sortable="'categories[0].category'" class="group-category"><span ng-repeat="cat in group.categories">{{cat.category}}<br/></span></td>
+        <td data-title="'Detail'" sortable="'categories[0].name'" class="group-detail"><span ng-repeat="cat in group.categories">{{cat.name}}<br/></span></td>
+        <td data-title="'Group Type'" sortable="'groupType.name'" class="group-type">{{group.groupType.name}}</td>
+        <td data-title="'Leader Site'" sortable="'leaders()[0].congregation'" class="group-site"><span ng-repeat="leader in group.leaders()">{{leader.congregation}}<br/></span></td>
+        <td data-title="'Day'" sortable="'meetingDay'" class="group-day">{{group.meetingDay}}</td>
+        <td data-title="'Time'" sortable="'meetingTime'" class="group-time"><span ng-if="group.meetingTime">{{group.meetingTime | time}}</span></td>
+        <td ng-if="groupSearchResults.searchedWithLocation" data-title="'Distance'" sortable="'proximity'" class="group-location text-center">
           <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
           <span ng-if="!group.hasAddress()">Online</span>
-        </div>
-        <div ng-if="!groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
-          <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" >Map</a>
+        </td>
+        <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" >
+          <a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a>
           <span ng-if="!group.hasAddress()">Online</span>
+        </td>
+      </tr>
+      <tr ng-if="group.expanded" ng-repeat-end class="group-search-detail">
+        <td colspan="8">
+          <group-detail-about data="group" for-search="true" class="clearfix"></group-detail-about>
+          <div class="text-right push-top push-half-bottom soft-half-right">
+            <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
+            <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+            <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!--
+      MOBILE ONLY results
+      WARNING!!! If you make a change here, apply it to the desktop results list above
+      -->
+    <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-md hidden-lg push-half-top">
+      <div ng-repeat-start="group in groupSearchResults.tableParams.settings().dataset"
+           class="group-result soft-half-bottom soft-half-top"
+           ng-click="group.expanded = true" ng-if="!group.expanded">
+        <div class="row">
+          <strong class="col-xs-9">{{group.groupName}}</strong>
+
+          <div ng-if="groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+            <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
+            <span ng-if="!group.hasAddress()">Online</span>
+          </div>
+          <div ng-if="!groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
+            <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" >Map</a>
+            <span ng-if="!group.hasAddress()">Online</span>
+          </div>
+        </div>
+        <div>{{group.categories.join(', ')}}</div>
+        <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime | time}}</span></div>
+      </div>
+      <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
+        <group-detail-about data="group" for-search="true"></group-detail-about>
+        <div class="soft-half push-half-top">
+          <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+          <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+          <button type="button" class="btn btn-standard btn-block" ng-click="group.expanded = false">Close</button>
         </div>
       </div>
-      <div>{{group.categories.join(', ')}}</div>
-      <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime | time}}</span></div>
     </div>
-    <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
-      <group-detail-about data="group" for-search="true"></group-detail-about>
-      <div class="soft-half push-half-top">
-        <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
-        <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
-        <button type="button" class="btn btn-standard btn-block" ng-click="group.expanded = false">Close</button>
-      </div>
-    </div>
+
+    <div ng-show='groupSearchResults.ready && groupSearchResults.showSearchResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
+    <div ng-show='groupSearchResults.ready && groupSearchResults.showFilteredResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchFilterNoResults.content | html"></div>
+
   </div>
 
-  <div ng-show='groupSearchResults.ready && groupSearchResults.showSearchResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchNoResults.content | html"></div>
-  <div ng-show='groupSearchResults.ready && groupSearchResults.showFilteredResultMessage()' dynamic-content="$root.MESSAGES.groupToolSearchFilterNoResults.content | html"></div>
 </div>

@@ -9,7 +9,8 @@ export default function GroupDetailAboutComponent() {
       data: '<',
       edit: '<',
       forInvitation: '<',
-      forSearch: '<'
+      forSearch: '<',
+      isLeader: '<'
     },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',

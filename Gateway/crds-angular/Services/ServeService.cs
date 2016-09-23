@@ -277,7 +277,7 @@ namespace crds_angular.Services
             return capacity;
         }
 
-        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<Participant, MpEvent, bool> saveFunc = null)
+        public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<MpParticipant, MpEvent, bool> saveFunc = null)
         {
             var updatedEvents = new List<int>();
 
@@ -524,7 +524,7 @@ namespace crds_angular.Services
                                                       int opportunityId,
                                                       List<int> opportunityIds,
                                                       bool signUp,
-                                                      Participant participant,
+                                                      MpParticipant participant,
                                                       MpEvent @event,
                                                       MpMyContact groupLeader)
         {
@@ -557,7 +557,7 @@ namespace crds_angular.Services
             return events;
         }
 
-        private Dictionary<string, object> HandleYesRsvp(Participant participant,
+        private Dictionary<string, object> HandleYesRsvp(MpParticipant participant,
                                                          MpEvent e,
                                                          int opportunityId,
                                                          IReadOnlyCollection<int> opportunityIds,
@@ -602,7 +602,7 @@ namespace crds_angular.Services
             };
         }
 
-        private Dictionary<string, object> HandleNoRsvp(Participant participant,
+        private Dictionary<string, object> HandleNoRsvp(MpParticipant participant,
                                                         MpEvent e,
                                                         List<int> opportunityIds,
                                                         string token,
@@ -807,7 +807,7 @@ namespace crds_angular.Services
                 Index = record.RowNumber,
                 LastName = record.ParticipantLastName,
                 Name = record.ParticipantNickname,
-                Participant = new Participant {ParticipantId = record.ParticipantId}
+                Participant = new MpParticipant {ParticipantId = record.ParticipantId}
             };
 
             member.Roles.Add(NewServingRole(record));

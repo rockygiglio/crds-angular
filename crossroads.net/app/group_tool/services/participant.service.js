@@ -1,3 +1,4 @@
+
 export default class ParticipantService {
   /*@ngInject*/
   constructor($log, $resource, $q, AuthService) {
@@ -15,7 +16,7 @@ export default class ParticipantService {
       var promised = this.deferred.defer();
       promised.resolve({'ApprovedSmallGroupLeader': false});
       return promised.promise;
-    };
+    }
   }
 
   acceptDenyInvitation(groupId, invitationGUID, accept) {

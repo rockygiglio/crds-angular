@@ -71,11 +71,14 @@
         </div>
         <div class="modal-body">
           <profile-personal
+            contact-id='groupsignup.contactId'
             updated-person='groupsignup.response[0]'
             modal-instance="groupsignup.modalInstance"
-            for-trips="true"
+            for-trips="false"
             locations='groupsignup.locations'
-            allow-password-change="false"/>
+            allow-password-change="false"
+            require-mobile-phone="false"
+            button-text="groupsignup.profileButtonText" />
         </div>
       </script>
     </div>

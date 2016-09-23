@@ -473,6 +473,7 @@ namespace crds_angular.Services
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
+            var replyToContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoTripsReplyToContactId"));
             var mergeData = SetMergeData(invite.PledgeCampaignIdText, invite.PledgeCampaignId, invite.InvitationGuid, invite.RecipientName);
 
             return new MpCommunication
@@ -482,7 +483,7 @@ namespace crds_angular.Services
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
                 FromContact = new MpContact {ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address},
-                ReplyToContact = new MpContact { ContactId = fromContact.Contact_ID, EmailAddress = fromContact.Email_Address },
+                ReplyToContact = new MpContact { ContactId = replyToContact.Contact_ID, EmailAddress = replyToContact.Email_Address },
                 ToContacts = new List<MpContact> {new MpContact{ContactId = fromContact.Contact_ID, EmailAddress = invite.EmailAddress}},
                 MergeData = mergeData
             };
@@ -556,12 +557,14 @@ namespace crds_angular.Services
             var templateId = _configurationWrapper.GetConfigIntValue(templateKey);
             var fromContactId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             var fromContact = _contactService.GetContactById(fromContactId);
+            var replyToContactId = _configurationWrapper.GetConfigIntValue("GoTripsReplyToContactId");
+            var replyToContact = _contactService.GetContactById(replyToContactId);
             var toContact = _contactService.GetContactById(toContactId);
             var template = _communicationService.GetTemplateAsCommunication(templateId,
                                                                             fromContact.Contact_ID,
                                                                             fromContact.Email_Address,
-                                                                            fromContact.Contact_ID,
-                                                                            fromContact.Email_Address,
+                                                                            replyToContact.Contact_ID,
+                                                                            replyToContact.Email_Address,
                                                                             toContact.Contact_ID,
                                                                             toContact.Email_Address,
                                                                             mergeData);

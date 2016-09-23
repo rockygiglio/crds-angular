@@ -12,7 +12,7 @@
 
     <p class='text-center'><button type='button' class='btn btn-primary btn-block-mobile' ng-click="groupDetailRequests.setView('Invite', false)">Invite Someone</button></p>
 
-    <h4 class="group-detail-title-mobile push-top soft-half-bottom">Requests</h4>
+    <h4 ng-if="groupDetailRequests.hasRequestsOrInvites()" class="group-detail-title-mobile push-top soft-half-bottom border-bottom">Requests</h4>
   </div>
 
   <!-- Requests Table -->
