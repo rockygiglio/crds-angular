@@ -65,7 +65,6 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
         case '2':
           evaluateAllergies();
           evaluateSpiritualLife();
-          vm.signupService.spiritualLifeShown = true;
           break;
         case '3':
           evaluateMedicationsTaking();
@@ -134,14 +133,12 @@ var attributes = require('crds-constants').ATTRIBUTE_IDS;
     }
 
     function evaluateSpiritualLife() {
-      if (!vm.signupService.spiritualLifeShown) {
-        _.forEach(vm.spiritualLife, function(spirit) {
-          if (spirit.selected) {
-            spirit.selected = false;
-            spirit.endDate = new Date();
-          }
-        });
-      }
+      _.forEach(vm.spiritualLife, function(spirit) {
+        if (spirit.selected) {
+          spirit.selected = false;
+          spirit.endDate = new Date();
+        }
+      });
     }
 
   }

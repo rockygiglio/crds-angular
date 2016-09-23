@@ -8,7 +8,6 @@ describe('GroupDetailAboutController', () => {
         groupService,
         imageService,
         state,
-        stateParams,
         rootScope,
         log,
         qApi,
@@ -27,7 +26,6 @@ describe('GroupDetailAboutController', () => {
         groupService = $injector.get('GroupService');
         imageService = $injector.get('ImageService');
         state = $injector.get('$state');
-        stateParams = $injector.get('$stateParams');
         rootScope = $injector.get('$rootScope');
         log = $injector.get('$log');
         qApi = $injector.get('$q');
@@ -37,7 +35,7 @@ describe('GroupDetailAboutController', () => {
           groupId: 123
         };
 
-        fixture = new GroupDetailAboutController(groupService, imageService, state, stateParams, log, cookies);
+        fixture = new GroupDetailAboutController(groupService, imageService, state, log, cookies);
     }));
 
     describe('groupExists() function', () => {

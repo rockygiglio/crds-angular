@@ -1,6 +1,6 @@
 <div class="radio-group">
-  <div ng-repeat="(key, option) in to.options" class="checkbox clearfix">
-    <div>
+  <div ng-repeat="(key, option) in to.options" class="checkbox">
+    <div class="row">
       <label>
         <input type="checkbox"
               id="{{id + '_'+ $index}}"
@@ -11,7 +11,7 @@
       </label>
       <p class="soft-left ng-binding" dynamic-content="{{option[to.descProp]}}"></p>    
     </div>
-    <div class="soft-left">
+    <div class="row soft-left">
         <input type="input"
                 id="{{id + '_'+ $index + '_detail'}}"
                 ng-model="multiCheckboxCombo.detail[$index]"
@@ -19,7 +19,7 @@
                 ng-if="multiCheckboxCombo.checked[$index]"
                 maxlength="{{to.maxFieldLength}}"
                 placeholder="{{option[to.placeholder]}}"
-                class="form-control ng-pristine ng-valid ng-empty push-half-bottom">
+                class="form-control ng-pristine ng-valid ng-empty">
     </div>
   </div>
 </div>

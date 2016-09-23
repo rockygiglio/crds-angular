@@ -23,15 +23,6 @@
   }
 }
 
-.change-role-option {
-  @extend .radio;
-  
-  label[disabled] {
-    @extend .text-muted;
-    cursor: not-allowed;
-  }
-}
-
 group-detail-participant-card {
   .group-participant {
     min-height: 75px;

@@ -18,9 +18,7 @@
     'Validation',
     '$sce',
     '$modal',
-    'PasswordService',
-    'Session',
-    'emailChange'
+    'PasswordService'
   ];
 
   function ProfilePersonalController(
@@ -36,9 +34,7 @@
       Validation,
       $sce,
       $modal,
-      PasswordService,
-      Session,
-      emailChange) {
+      PasswordService) {
 
     var vm = this;
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -52,8 +48,6 @@
     vm.crossroadsStartDate = new Date(1994, 0, 1);
     vm.currentPassword = '';
     vm.dateFormat = /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]((19|20)\d\d)$/;
-    vm.editingOtherProfile = editingOtherProfile;
-    vm.emailRequired = emailRequired;
     vm.formatAnniversaryDate = formatAnniversaryDate;
     vm.householdForm = {};
     vm.householdInfo = {};
@@ -132,7 +126,6 @@
 
             underThirteen();
             setOldEmail();
-            emailChange.setEmail(vm.profileData.person.emailAddress);
             vm.viewReady = true;
           });
         } else {
@@ -140,16 +133,13 @@
           setAttendanceStartDateToJSDate();
           underThirteen();
           setOldEmail();
-          emailChange.setEmail(vm.profileData.person.emailAddress);
           vm.viewReady = true;
+
         }
+
       });
 
       vm.buttonText = vm.buttonText !== undefined ? vm.buttonText : 'Save';
-    }
-
-    function editingOtherProfile() {
-      return Number(vm.contactId) !== parseInt(Session.exists('userId'));
     }
 
     function setAttendanceStartDateToJSDate() {
@@ -244,14 +234,6 @@
       vm.startAttendingOpen = true;
     }
 
-    function emailRequired() {
-      if (!editingOtherProfile() || (!emailChange.originalEmail)) {
-        return vm.requireEmail;
-      }
-
-      return false;
-    }
-
     function savePersonal() {
 
       //force genders field to be dirty
@@ -287,13 +269,7 @@
 
         if (vm.pform.email !== undefined) {
           if (vm.pform.email.$touched === true) {
-            if (vm.forTrips) {
-              if (vm.oldEmail !== null && vm.oldEmail !== '') {
-                vm.emailSet = true;
-              }
-            } else {
-              vm.emailSet = true;
-            }
+            vm.emailSet = true;
           }
         }
 
@@ -311,7 +287,7 @@
 
         vm.profileData.person['State/Region'] = vm.profileData.person.State;
         if (vm.submitFormCallback !== undefined) {
-          vm.submitFormCallback({profile: vm.profileData});
+          vm.submitFormCallback({profile: vm.profileData });
         } else {
           vm.profileData.person.$save(function() {
                 vm.submitted = false;
@@ -341,7 +317,6 @@
                 if (vm.emailSet === true) {
                   vm.oldEmail = vm.profileData.person.emailAddress;
                 }
-                emailChange.reset();
 
                 vm.pform.email.$setUntouched();
                 vm.emailSet = false;
@@ -390,9 +365,7 @@
 
     // set the old email address
     function setOldEmail() {
-      if (!emailChange.isSet) {
-        vm.oldEmail = vm.profileData.person.emailAddress;
-      }
+      vm.oldEmail = vm.profileData.person.emailAddress;
     }
 
     function showPasswordConfirmModal() {

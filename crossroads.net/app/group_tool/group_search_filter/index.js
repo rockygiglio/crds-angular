@@ -6,5 +6,3 @@ export default angular.
 module(CONSTANTS.MODULES.GROUP_TOOL).
 component('groupSearchFilter', groupSearchFilterComponent())
 ;
-
-import './filter_renderer';

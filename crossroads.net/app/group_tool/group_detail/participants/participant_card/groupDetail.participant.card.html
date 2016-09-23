@@ -13,17 +13,11 @@
         <a href="mailto:{{groupDetailParticipantCard.participant.email}}">{{groupDetailParticipantCard.participant.email}}</a>
       </span>
     </div>
-    <div class="push-half-top push-bottom" ng-if='!groupDetailParticipantCard.participant.me && !groupDetailParticipantCard.participant.primary && groupDetailParticipantCard.edit'>
-      <div>
+    <div class="push-half-top push-bottom">
+      <div ng-if='!groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit'>
         <button type="button" class="btn btn-standard btn-sm" ng-click='groupDetailParticipantCard.invokeDeleteAction(groupDetailParticipantCard.participant)'>Remove</button>
         <button type="button" class="btn btn-primary btn-sm" ng-click='groupDetailParticipantCard.invokeRoleAction(groupDetailParticipantCard.participant)'>Change Role</button>
       </div>
     </div>
-    <div class="push-half-top" ng-if="(groupDetailParticipantCard.participant.me || groupDetailParticipantCard.participant.primary) && groupDetailParticipantCard.edit"/>
-  </div>
-  <div>
-    <small class='text-muted' ng-if='groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit' dynamic-content='$root.MESSAGES.groupToolEditParticipantsCantRemoveMyself.content | html'/>
-    <!-- Only show if this is the primary participant AND it is not me (we don't want two messages...') -->
-    <small class='text-muted' ng-if='groupDetailParticipantCard.participant.primary && !groupDetailParticipantCard.participant.me && groupDetailParticipantCard.edit' dynamic-content='$root.MESSAGES.groupToolEditParticipantsCantRemovePrimary.content | html'/>
   </div>
 </div>

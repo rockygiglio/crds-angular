@@ -81,10 +81,6 @@ module.exports = function(config) {
           {
             test: /\.html$/,
             loader: 'ng-cache?prefix=[dir]'
-          },
-          {
-            test: /\.json$/,
-            loaders: ["json-loader"]
           }
         ],
         noParse: [

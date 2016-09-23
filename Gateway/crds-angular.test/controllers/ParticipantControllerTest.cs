@@ -27,13 +27,13 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetParticipant()
         {
-            var participant = new MinistryPlatform.Translation.Models.MpParticipant();
+            var participant = new MinistryPlatform.Translation.Models.Participant();
             _groupService.Setup(mocked => mocked.GetParticipantRecord(string.Format("{0} {1}", AuthType, AuthToken))).Returns(participant);
 
             var result = _fixture.GetParticipant();
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkNegotiatedContentResult<MinistryPlatform.Translation.Models.MpParticipant>>(result);
-            var okResult = (OkNegotiatedContentResult<MinistryPlatform.Translation.Models.MpParticipant>) result;
+            Assert.IsInstanceOf<OkNegotiatedContentResult<MinistryPlatform.Translation.Models.Participant>>(result);
+            var okResult = (OkNegotiatedContentResult<MinistryPlatform.Translation.Models.Participant>) result;
             Assert.IsNotNull(okResult.Content);
             Assert.AreSame(participant, okResult.Content);
         }

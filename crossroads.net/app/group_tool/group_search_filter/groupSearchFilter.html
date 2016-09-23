@@ -1,84 +1,51 @@
-<!--
- Expanded Filters
--->
-<div ng-if="groupSearchFilter.expanded" class="group-search-filters-expanded border-ends push-ends soft-half-top">
+<div ng-if="groupSearchFilter.expanded" class="border-ends push-ends soft-half-top">
   <form role="form" class="" ng-submit='groupSearchFilter.applyFilters()' name='filterForm'>
     <h4 class="inline">Filters</h4>
     <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
 
-    <div class="pull-right">
-      <button type="button" class="btn btn-primary btn-xs "
-              ng-click="groupSearchFilter.closeFilters()">Close Filters
+    <div class="visible-xs pull-right">
+      <button type="button" class="btn btn-standard btn-xs "
+              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
       </button>
+      <button type='submit' class='btn btn-primary btn-xs'>Update Filters</button>
     </div>
 
     <div class='push-half-top' dynamic-content='$root.MESSAGES.groupToolSearchFilterHelpText.content | html'/>
 
-    <div class="soft-half-sides">
-      <div ng-repeat="filter in groupSearchFilter.allFilters.getValues()"
-           ng-class="{ 'expanded': groupSearchFilter.isOpenFilter(filter) }"
-           class="group-search-filter-row row soft-half-top soft-half-bottom border-top">
-
-        <div ng-click="groupSearchFilter.toggleFilter(filter)" class="pointer col-xs-12 col-sm-3 col-md-2">
-          <a>{{filter.getName()}}</a>
-        </div>
-
-        <!-- Expanded Filter Options -->
-        <div ng-show="groupSearchFilter.isOpenFilter(filter)" class="group-search-filter-options col-xs-12 col-sm-9 col-md-10 mobile-push-left mobile-push-half-top">
-          <div class="row">
-            <div ng-repeat="value in filter.getValues()"
-                 ng-class="{ 'col-md-6 col-lg-4': filter.getValues().length > 3, 'col-xs-12': filter.getValues().length <= 3 }"
-                 class="mobile-push-half-bottom">
-              <!-- Individual expanded filter renderer - supports multiple levels of grouped filters (sort-of...) -->
-              <group-search-filter-renderer filter='filter' apply-filters="groupSearchFilter.applyFilters()" value="value"></group-search-filter-renderer>
-            </div>
+    <div class="row">
+      <div class="group-search-filter col-lg-4 col-md-6 col-sm-6 col-xs-12 push-bottom" ng-repeat="filter in groupSearchFilter.allFilters">
+        <strong>{{filter.getName()}}</strong>
+        <div class="inline">
+          <!--TODO - remove class "checkbox-inline" when we add a 2nd filter (Jim K - checkbox-inline was not here, but layout was wrong when removing form-inline above) -->
+          <div class="checkbox" ng-repeat="value in filter.getValues()">
+            <label for="{{filter.getFilterName()}}-{{value.getValue()}}">
+              <input ng-model="value.selected"
+                     ng-model-options="{ updateOn: 'submit' }"
+                     type="checkbox"
+                     ng-value="value.getValue()"
+                     id="{{filter.getFilterName()}}-{{value.getValue()}}"/>
+              {{value.getName()}}
+            </label>
           </div>
         </div>
-
-        <!-- Collapsed Filter shows selections -->
-        <div ng-show="!groupSearchFilter.isOpenFilter(filter)"
-             ng-class="{ 'col-xs-12  mobile-flush-top': filter.getSelectedValues().length, 'hidden-xs': !filter.getSelectedValues().length }"
-             class="group-search-filter-options col-sm-9 col-md-10">
-
-          <div ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-filter-summary pointer">
-            <small>
-              <span ng-repeat="selected in filter.getSelectedValues()">
-                {{selected.getName()}}<span ng-if="!$last">, </span>
-              </span>
-            </small>
-          </div>
-        </div>
-
-        <!-- Filter row toggle -->
-        <a ng-click="groupSearchFilter.toggleFilter(filter)" class="group-search-toggle soft-half-top soft-half-right soft-half-bottom">
-          <svg viewBox="0 0 32 32" class="icon icon-large icon-arrow-down9">
-            <use xlink:href="#arrow-down9"></use>
-          </svg>
-        </a>
       </div>
     </div>
-  </form>
-</div>
-
-<!--
-  Collapsed Filters
--->
-<div class="group-search-filter-tools push-ends mobile-push-half-top text-right">
-  <div class='search-filter-tag push-half-left mobile-push-half-bottom'
-       ng-if="!groupSearchFilter.expanded"
-       ng-repeat='f in groupSearchFilter.getCurrentFilters()'>
-    <a ng-click="groupSearchFilter.openFilter(f)">{{f.getName()}}</a>
-    <svg ng-click='groupSearchFilter.clearFilter(f)'
-         viewBox="0 0 32 32"
-         class="icon icon-close pointer">
-      <use xlink:href="#close"></use>
-    </svg>
+    <div class="text-right push-half-bottom">
+      <button type='submit' class='sm-pull-right btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom'>Update Filters</button>
+      <button type="button" class="btn btn-standard btn-sm btn-block-mobile mobile-push-half-bottom"
+              ng-click="groupSearchFilter.closeFilters(filterForm)">Cancel
+      </button>
+    </div>
   </div>
-
-  <button type="button"
-          class="btn btn-primary btn-sm mobile-push-half-bottom push-half-left"
-          ng-click="groupSearchFilter.openFilters()">Filters</button>
-
-
+  <div ng-if="!groupSearchFilter.expanded" class="push-ends mobile-push-half-top">
+    <button type="button" class="btn btn-primary btn-sm btn-block-mobile mobile-push-half-bottom" ng-click="groupSearchFilter.openFilters()">Filters</button>
+    <button type="button" class='btn btn-sm btn-standard search-filter-tag push-half-left' ng-repeat='f in groupSearchFilter.getCurrentFilters()' ng-click='groupSearchFilter.clearFilter(f)'>
+      {{f.getName()}}
+      <svg viewBox="0 0 32 32" class="icon icon-close">
+        <use xlink:href="#close"></use>
+      </svg>
+    </button>
+    <a class="push-half-left" ng-if='groupSearchFilter.hasFilters()' ng-click='groupSearchFilter.clearFilters()'>Clear Filters</a>
+  </form>
 
 </div>

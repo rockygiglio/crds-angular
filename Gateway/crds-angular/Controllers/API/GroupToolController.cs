@@ -232,11 +232,6 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                catch (DuplicateGroupParticipantException e)
-                {
-                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto(string.Format("Error when accepting: {0}, for group {1}", accept, groupId), ex);

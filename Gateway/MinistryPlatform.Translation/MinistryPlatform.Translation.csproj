@@ -186,7 +186,9 @@
     <Compile Include="Models\MpObjectAttributeConfigurationFactory.cs" />
     <Compile Include="Models\Opportunities\MpResponse.cs" />
     <Compile Include="Models\MpOpportunity.cs" />
-    <Compile Include="Models\MpParticipant.cs" />
+    <Compile Include="Models\Participant.cs" />
+    <Compile Include="Models\People\MpParticipant.cs" />
+    <Compile Include="Models\People\Participant.cs" />
     <Compile Include="Models\MpPledge.cs" />
     <Compile Include="Models\MpPledgeCampaign.cs" />
     <Compile Include="Models\MpPostalAddress.cs" />

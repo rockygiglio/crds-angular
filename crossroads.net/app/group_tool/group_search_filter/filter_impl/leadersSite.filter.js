@@ -1,22 +1,9 @@
 
-import {SearchFilter, SearchFilterValue} from './searchFilter';
+import {SearchFilter} from './searchFilter';
 
 export default class LeadersSiteFilter extends SearchFilter {
-  constructor(filterName, groupService) {
-    super(filterName, [], this._matchingFunction);
-
-    groupService.getSites().then(
-      (data) => {
-        data = _.sortBy( data, 'dp_RecordID' );
-        this.getValues().push.apply(this.getValues(), data.map((a) => {
-          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
-        }));
-      },
-      (/*err*/) => {
-        // TODO what happens on error? (could be 404/no results, or other error)
-      }).finally(
-        () => {
-      });    
+  constructor(filterName, filterValues) {
+    super(filterName, filterValues, this._matchingFunction);
   }
 
   _matchingFunction(result) {

@@ -1,6 +1,9 @@
 <preloader full-screen='false' ng-show='!editGroup.ready'> </preloader>
 <div ng-show='editGroup.ready'>
-  <div dynamic-content="$root.MESSAGES.groupToolEditGroupHeading.content | html"></div>
+  <h1>
+    Edit Your Group
+  </h1>
+  <p>Hi leader! </p>
   <form ng-submit="editGroup.previewGroup()" novalidate name="editGroup.editGroupForm">
     <formly-form model="editGroup.createGroupService.model" fields="editGroup.fields" form="editGroup.editGroupForm" options="editGroup.options" ng-cloak>
       <div class="clearfix col-md-12 push-top text-center sm-text-right">

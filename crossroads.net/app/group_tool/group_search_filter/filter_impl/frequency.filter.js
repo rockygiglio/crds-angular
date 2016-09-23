@@ -1,16 +1,8 @@
-
-import {SearchFilter, SearchFilterValue} from './searchFilter';
+import {SearchFilter} from './searchFilter';
 
 export default class FrequencyFilter extends SearchFilter {
-    constructor(filterName, createGroupService) {
-      super(filterName, [], this._matchingFunction);
-
-      let frequencies = createGroupService.getMeetingFrequencies();
-      frequencies = _.sortBy(frequencies, 'meetingFrequencyId' );
-
-      this.getValues().push.apply(this.getValues(), frequencies.map((a) => {
-        return new SearchFilterValue(a.meetingFrequencyDesc, a.meetingFrequencyId, false);
-      }));        
+    constructor(filterName, filterValues) {
+        super(filterName, filterValues, this._matchingFunction);
     }
 
     _matchingFunction(result) {

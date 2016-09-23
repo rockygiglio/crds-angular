@@ -1,24 +1,9 @@
 
-import {SearchFilter, SearchFilterValue} from './searchFilter';
+import {SearchFilter} from './searchFilter';
 
 export default class MeetingDayFilter extends SearchFilter {
-  constructor(filterName, groupService) {
-    super(filterName, [], this._matchingFunction);
-    
-    groupService.getDaysOfTheWeek().then(
-      (data) => {
-        data = _.sortBy( data, 'dp_RecordID' );
-        this.getValues().push.apply(this.getValues(), data.map((a) => {
-          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordName, false);
-        }));
-        this.getValues().push(new SearchFilterValue('Flexible', 'Flexible Meeting Time', false, undefined, 'groupToolFlexibleMeetingFilterHelpText'));
-      },
-      (err) => {
-        // TODO what happens on error? (could be 404/no results, or other error)
-      }
-    ).finally(
-      () => {
-      });    
+  constructor(filterName, filterValues) {
+    super(filterName, filterValues, this._matchingFunction);
   }
 
   _matchingFunction(result) {
@@ -30,7 +15,7 @@ export default class MeetingDayFilter extends SearchFilter {
     let selectedMeetingDays = this.getSelectedValues();
 
     let filtered = selectedMeetingDays.filter((a) => {
-      return a.getValue() === result.meetingDay || a.getValue() === result.meetingTimeFrequency;
+      return a.getName() === result.meetingDay || a.getName() === result.meetingTimeFrequency;
     });
 
     return filtered !== undefined && filtered.length > 0;

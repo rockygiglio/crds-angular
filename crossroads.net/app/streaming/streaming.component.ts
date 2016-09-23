@@ -106,7 +106,9 @@ export class StreamingComponent {
               if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
                 event.image = event.messageVideo.still.filename
               } 
-            }
+              event.imageSrc = event.image.replace(/https*:/, '')
+
+              }
           })
         });
   }

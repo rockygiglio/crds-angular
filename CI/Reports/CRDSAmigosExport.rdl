@@ -9,6 +9,23 @@
     </DataSource>
   </DataSources>
   <DataSets>
+    <DataSet Name="Congregations">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>select congregation_id, Congregation_Name from congregations where (end_date is null or getdate() between start_date and end_date)
+ and childcare_contact is not null</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="congregation_id">
+          <DataField>congregation_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
     <DataSet Name="DataSet1">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
@@ -120,6 +137,7 @@
         <DataSourceName>DataSource1</DataSourceName>
         <CommandText>select  pledge_campaign_id, campaign_name from Pledge_Campaigns
 where Pledge_Campaign_Type_ID = 2
+and Destination_ID = 4
 and (end_date is null OR end_date &gt; GETDATE())</CommandText>
       </Query>
       <Fields>
@@ -1912,7 +1930,7 @@ and (end_date is null OR end_date &gt; GETDATE())</CommandText>
             <Top>1.475in</Top>
             <Left>0.02778in</Left>
             <Height>0.91667in</Height>
-            <Width>26.98263in</Width>
+            <Width>26.98264in</Width>
             <Style>
               <Border>
                 <Style>None</Style>

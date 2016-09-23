@@ -105,7 +105,7 @@ namespace MinistryPlatform.Translation.Repositories
             return response;
         }
 
-        public MpResponse GetOpportunityResponse(int opportunityId, int eventId, MpParticipant participant)
+        public MpResponse GetOpportunityResponse(int opportunityId, int eventId, Participant participant)
         {
             var searchString = string.Format(",{0},{1},{2}", opportunityId, eventId, participant.ParticipantId);
             List<Dictionary<string, object>> dictionaryList;
@@ -290,7 +290,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int DeleteResponseToOpportunities(int participantId, int opportunityId, int eventId)
         {
-            var participant = new MpParticipant {ParticipantId = participantId};
+            var participant = new Participant {ParticipantId = participantId};
 
             try
             {
@@ -314,7 +314,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int RespondToOpportunity(int participantId, int opportunityId, string comments, int eventId, bool response)
         {
-            var participant = new MpParticipant {ParticipantId = participantId};
+            var participant = new Participant {ParticipantId = participantId};
 
             var values = new Dictionary<string, object>
             {

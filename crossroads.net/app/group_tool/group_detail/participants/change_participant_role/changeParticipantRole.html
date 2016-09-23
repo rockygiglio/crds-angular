@@ -11,7 +11,7 @@
       <!-- groupToolChangeRoleInstructions -->
       <div dynamic-content="$root.MESSAGES.groupToolChangeRoleInstructions.content | html"></div>
 
-      <div class="change-role-option">
+      <div class="radio">
         <label>
           <input type="radio" name="roleOptions" id="roleOptionsParticipant" ng-value="changeParticipantRole.groupRoles.MEMBER" ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }">
           Participant
@@ -20,29 +20,29 @@
         </label>
       </div>
 
-      <div class="change-role-option">
-        <label ng-disabled="changeParticipantRole.isLeaderDisabled()">
-          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.isLeaderDisabled()">
+      <div class="radio">
+        <label>
+          <input type="radio" name="roleOptions" id="roleOptionsLeader" ng-value="changeParticipantRole.groupRoles.LEADER"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.leaderDisabled() || changeParticipantRole.warningLeaderMax()">
           Leader
 
           <!-- groupToolChangeRoleWarningLeaderMax -->
-          <div ng-if="changeParticipantRole.isLeaderDisabled() && changeParticipantRole.warningLeaderMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderMax.content | html" role="alert" class="alert alert-warning push-half-bottom soft-quarter"></div>
+          <div ng-if="changeParticipantRole.warningLeaderMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderMax.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
 
           <!-- groupToolChangeRoleWarningLeaderApproval -->
-          <div ng-if="!changeParticipantRole.isApprovedLeader()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderApproval.content | html" role="alert" class="alert alert-warning push-half-bottom soft-quarter"></div>
+          <div ng-if="changeParticipantRole.leaderDisabled()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningLeaderApproval.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
 
           <!-- groupToolChangeRoleLeaderDescription -->
           <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleLeaderDescription.content | html"></div>
         </label>
       </div>
 
-      <div class="change-role-option">
-        <label ng-disabled="changeParticipantRole.isApprenticeDisabled()">
-          <input type="radio" name="roleOptions" id="roleOptionsApprentice" ng-value="changeParticipantRole.groupRoles.APPRENTICE"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.isApprenticeDisabled()">
+      <div class="radio">
+        <label>
+          <input type="radio" name="roleOptions" id="roleOptionsApprentice" ng-value="changeParticipantRole.groupRoles.APPRENTICE"  ng-model="changeParticipantRole.participant.groupRoleId" ng-model-options="{ updateOn: 'submit' }" ng-disabled="changeParticipantRole.warningApprenticeMax()">
           Apprentice
 
           <!-- groupToolChangeRoleWarningApprenticeMax -->
-          <div ng-if="changeParticipantRole.isApprenticeDisabled()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningApprenticeMax.content | html" role="alert" class="alert alert-warning push-half-bottom soft-quarter"></div>
+          <div ng-if="changeParticipantRole.warningApprenticeMax()" dynamic-content="$root.MESSAGES.groupToolChangeRoleWarningApprenticeMax.content | html" role="alert" class="alert alert-warning flush-bottom soft-quarter"></div>
 
           <!-- groupToolChangeRoleApprenticeDescription -->
           <div class="help-block" dynamic-content="$root.MESSAGES.groupToolChangeRoleApprenticeDescription.content | html"></div>

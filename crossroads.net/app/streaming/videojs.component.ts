@@ -62,20 +62,16 @@ export class VideoJSComponent implements AfterViewInit, OnDestroy {
           "poster" : defaultPlayer.bgLink,
           "controls": true,
           "html5": {
-            "hlsjsConfig": { 
-              "debug": false, 
-              "abrBandWidthFactor": 0.7, 
-              "abrBandWidthUpFactor": 0.6 
-            } 
+            "hlsjsConfig": {
+              "debug": false
+            }
           }
         });
 
         // create play handler (analytics)
         this.player.on('play', () => {
-          if (window.Tracker !== undefined) {
-            window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
-            window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
-          }
+          window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
+          window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
           if ( this.angulartics !== undefined ) {
             this.angulartics.eventTrack('Play', {
               category: 'Streaming',

@@ -11,7 +11,7 @@ namespace crds_angular.Services.Interfaces
     {
         GroupDTO GetGroupDetails(int groupId);
 
-        GroupDTO getGroupDetails(int groupId, int contactId, MpParticipant participant, string authUserToken);
+        GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken);
 
         GroupDTO GetGroupDetailsByInvitationGuid(string token, string invitationGuid);
 
@@ -33,7 +33,7 @@ namespace crds_angular.Services.Interfaces
 
         List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
-        MpParticipant GetParticipantRecord(string token);
+        Participant GetParticipantRecord(string token);
 
         void SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
 

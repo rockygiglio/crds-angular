@@ -415,7 +415,7 @@
         .state('livestreamvjs', {
           parent: 'noHeaderOrFooter',
           url: '/live/videojs',
-          template: '<videojs-landing></videojs-landing>',
+          template: '<videojs></videojs>',
           data: {
             meta: {
               title: 'Live VideoJS',

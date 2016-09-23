@@ -15,7 +15,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
+using Participant = MinistryPlatform.Translation.Models.People.Participant;
 
 namespace crds_angular.test.Services
 {

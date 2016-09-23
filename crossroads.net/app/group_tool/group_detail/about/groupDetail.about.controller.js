@@ -1,17 +1,17 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies) {
+  constructor(GroupService, ImageService, $state, $log, $cookies) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
-    this.stateParams = $stateParams;
     this.log = $log;
     this.cookies = $cookies;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
+    this.isLeader = false;
     this.showFooter = false;
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
@@ -26,6 +26,9 @@ export default class GroupDetailAboutController {
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
         this.setGroupImageUrl();
+        this.groupService.getIsLeader(this.groupId).then((isLeader) => {
+          this.isLeader = isLeader;
+        });        
       },
       (err) => {
         this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
@@ -40,17 +43,6 @@ export default class GroupDetailAboutController {
       // TODO map object posted from create into data object, then call this.setGroupImageUrl()
       //this.setGroupImageUrl();
       this.ready = true;
-    }
-
-    // Set show visibility flag
-    this.showVisibility = !!this.stateParams.showVisibility;
-
-    // If the component is allowed to show visibility or the footer will be rendered with Leader buttons,
-    // Determine if the logged in user is the leader of this group IF not already set as an input binding
-    if (this.isLeader === undefined && (this.showFooter || this.showVisibility)) {
-      this.groupService.getIsLeader(this.groupId).then((isLeader) => {
-        this.isLeader = isLeader;
-      });
     }
   }
 

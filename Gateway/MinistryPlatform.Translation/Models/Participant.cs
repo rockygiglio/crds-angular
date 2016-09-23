@@ -2,7 +2,7 @@
 
 namespace MinistryPlatform.Translation.Models
 {
-    public class MpParticipant
+    public class Participant
     {
         public int ContactId { get; set; }
         public int ParticipantId { get; set;}
@@ -12,8 +12,5 @@ namespace MinistryPlatform.Translation.Models
         public int Age { get; set; }
         public DateTime? AttendanceStart { get; set; }
         public bool ApprovedSmallGroupLeader { get; set; }
-        public string Role { get; set; }
-        public string GroupName { get; set; }
-        public string Nickname { get; set; }
     }
 }

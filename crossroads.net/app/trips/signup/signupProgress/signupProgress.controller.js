@@ -29,7 +29,7 @@
         return 100;
       }
 
-      var percent = Math.round(((vm.currentStep) / (vm.totalSteps+1)) * 100);
+      var percent = Math.round(((vm.currentStep - 1) / vm.totalSteps) * 100);
       return percent;
     }
 

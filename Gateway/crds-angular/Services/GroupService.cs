@@ -16,7 +16,7 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 namespace crds_angular.Services
 {

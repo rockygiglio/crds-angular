@@ -3,9 +3,9 @@
 
   module.exports = FamilySelectDirective;
 
-  FamilySelectDirective.$inject = ['$state', 'TripsSignupService', '$rootScope', '$stateParams', 'emailChange'];
+  FamilySelectDirective.$inject = ['$state', 'TripsSignupService', '$rootScope', '$stateParams'];
 
-  function FamilySelectDirective($state, TripsSignupService, $rootScope, $stateParams, emailChange) {
+  function FamilySelectDirective($state, TripsSignupService, $rootScope, $stateParams) {
     return {
       restrict: 'E',
       replace: true,
@@ -25,8 +25,6 @@
       scope.signUpQuestion = signUpQuestion;
       scope.signupService = TripsSignupService;
       scope.pClass = pClass;
-
-      emailChange.reset();
 
       ////////////////////////////////
       //// Implementation Details ////

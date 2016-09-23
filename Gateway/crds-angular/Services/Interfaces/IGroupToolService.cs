@@ -18,11 +18,11 @@ namespace crds_angular.Services.Interfaces
                                        int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
-                                       MpParticipant toParticipant = null,
+                                       Participant toParticipant = null,
                                        string subjectTemplateContentBlockTitle = null,
                                        string emailTemplateContentBlockTitle = null,
                                        string message = null,
-                                       MpParticipant fromParticipant = null);
+                                       Participant fromParticipant = null);
 
         MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId);
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
@@ -32,6 +32,5 @@ namespace crds_angular.Services.Interfaces
         void EndGroup(int groupId, int reasonEndedId);
         void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
         MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId);
-        void SendSmallGroupPendingInquiryReminderEmails();
     }
 }

@@ -1,5 +1,3 @@
-import EmailChangeService from './emailChange.service.js';
-
 (function() {
   'use strict';
   var constants = require('../../../constants');
@@ -10,7 +8,6 @@ import EmailChangeService from './emailChange.service.js';
   .directive('uniqueEmail', ['$http', 'Session', 'User', require('./profileUniqueEmail.directive')])
   .directive('validateDate', ['$log', require('./profileValidDate.directive')])
   .directive('profilePersonal', require('./profilePersonal.directive'))
-  .service('emailChange', EmailChangeService)
   ;
 
   require('./profilePersonal.template.html');

@@ -28,7 +28,7 @@ namespace crds_angular.Models.Crossroads.Serve
         public ServeRsvp ServeRsvp { get; set; }
 
         [JsonIgnore]
-        public MpParticipant Participant { get; set; }
+        public Participant Participant { get; set; }
 
         [JsonIgnore]
         public List<MinistryPlatform.Translation.Models.MpResponse> Responses { get; set; }

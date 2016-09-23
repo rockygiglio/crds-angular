@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
-using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.People;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
 namespace crds_angular.Services.Interfaces
@@ -15,10 +15,10 @@ namespace crds_angular.Services.Interfaces
         void RegisterForEvent(EventRsvpDto eventDto, string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForPrimaryContactReminder(string token);
         IList<Models.Crossroads.Events.Event> EventsReadyForReminder(string token);
-        IList<MpParticipant> EventParticpants(int eventId, string token);
+        IList<Participant> EventParticpants(int eventId, string token);
         void SendReminderEmails();
         void SendPrimaryContactReminderEmails();
-        List<MpParticipant> MyChildrenParticipants(int contactId, IList<MpParticipant> children, string token);
+        List<Participant> MyChildrenParticipants(int contactId, IList<Participant> children, string token);
         MpEvent GetMyChildcareEvent(int parentEventId, string token);
         MpEvent GetChildcareEvent(int parentEventId);
         bool UpdateEventReservation(EventToolDto eventReservation, int eventId, string token);

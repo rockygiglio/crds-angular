@@ -5,9 +5,10 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Models.People;
 using MinistryPlatform.Translation.Repositories;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
+using Participant = MinistryPlatform.Translation.Models.Participant;
 
 
 namespace crds_angular.Services
@@ -52,7 +53,7 @@ namespace crds_angular.Services
             {                
                 participant.AttendanceStart = person.AttendanceStartDate;
                 // convert to the object with underscores
-                var p = Mapper.Map <Participant>(participant);
+                var p = Mapper.Map <MpParticipant>(participant);
                 _participantService.UpdateParticipant(getDictionary(p));
             }
 
@@ -61,7 +62,7 @@ namespace crds_angular.Services
             // TODO: See About moving the check for new password above or moving the update for user / person into an atomic operation
             //
             // update the user values if the email and/or password has changed
-            if (!(String.IsNullOrEmpty(person.NewPassword)) || (person.EmailAddress != person.OldEmail && person.OldEmail != null))
+            if (!(String.IsNullOrEmpty(person.NewPassword)) || (person.EmailAddress != person.OldEmail))
             {
                 var authData = TranslationService.Login(person.OldEmail, person.OldPassword);
 

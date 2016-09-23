@@ -107,8 +107,6 @@ module.exports = {
     definePlugin,
     assetsPluginInstance,
     new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      compress: { warnings: false },
       sourceMap: false,
       mangle: false,
       output: { ascii_only: true }

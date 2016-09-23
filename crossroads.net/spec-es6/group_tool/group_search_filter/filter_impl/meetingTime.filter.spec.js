@@ -17,15 +17,12 @@ describe('MeetingTimeFilter', () => {
 
       expect(morning.beginTime).toEqual(moment('00:00:00', 'HH:mm:ss'));
       expect(morning.endTime).toEqual(moment('11:59:59', 'HH:mm:ss'));
-      expect(morning.toString()).toEqual('0000-1159');
 
       expect(afternoon.beginTime).toEqual(moment('12:00:00', 'HH:mm:ss'));
       expect(afternoon.endTime).toEqual(moment('17:00:00', 'HH:mm:ss'));
-      expect(afternoon.toString()).toEqual('1200-1700');
       
       expect(evening.beginTime).toEqual(moment('17:00:01', 'HH:mm:ss'));
       expect(evening.endTime).toEqual(moment('23:59:59', 'HH:mm:ss'));
-      expect(evening.toString()).toEqual('1700-2359');
     });
   });
 

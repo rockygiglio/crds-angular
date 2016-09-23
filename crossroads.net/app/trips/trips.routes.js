@@ -190,7 +190,7 @@
               cid = $stateParams.contactId;
             }
 
-            return Profile.Person.get({ contactId: cid }).$promise;
+            return Profile.Person.get({contactId: cid}).$promise;
           },
 
           pageId: function() {
