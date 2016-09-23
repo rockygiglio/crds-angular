@@ -7,15 +7,15 @@ export default class Event {
   static build(object) {
     let title = object['title'];
     let start = object['start'];
-    let end = object['end'];
+    let end   = object['end'];
 
     return new Event(title, start, end);
   }
 
   constructor(title, start, end) {
     this.title     = title;
-    this.start     = moment.tz(start, 'America/New_York');
-    this.end       = moment.tz(end, 'America/New_York');
+    this.start     = moment.tz(start, 'YYYY-MM-DD H:mm:ss', 'America/New_York');
+    this.end       = moment.tz(end, 'YYYY-MM-DD H:mm:ss', 'America/New_York');
     this.dayOfYear = this.start.dayOfYear()
     this.time      = this.start.format('LT [EST]');
   }

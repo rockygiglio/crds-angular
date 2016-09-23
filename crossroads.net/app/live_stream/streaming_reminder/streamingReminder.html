@@ -1,76 +1,73 @@
-<modal id="reminderModal" class="crds-modal">
-  <form>
-    <modal-header >
-      <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
-    </modal-header>
-    <modal-body>
-      <preloader full-screen='true' ng-if="isLoading()"></preloader>
-      <div class="reminder-content" ng-if="!isLoading() && !formSuccess">
+<form name="form" novalidate ng-submit="reminder.submit(form)">
+  <modal-header ng-reflect-show-close="true">
+  <div class="modal-header">
+    <button aria-label="Close" class="close" ng-click="reminder.close()" type="button">
+      <span aria-hidden="true">×</span>
+    </button>
+    <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
+  </div>
+  </modal-header>
+  <modal-body>
+    <div class="modal-body">
+      <preloader full-screen="true" ng-if="reminder.isLoading()"></preloader>
+      <div class="reminder-content" ng-if="!reminder.isLoading() && !reminder.formSuccess && !reminder.formError">
         <div class="schedule">
-          <div dynamic-content="$root.MESSAGES.streamingReminderStreamSelect.content | html "></div>
-
-          <a href="#" class="btn btn-date-select" ng-click="model.day=false;dateTimeError=false" ng-if="model.day">
-            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
-            09/24/2016
-            &nbsp;&nbsp;<i class="glyphicon glyphicon-chevron-down"></i>
+          <div dynamic-content="$root.MESSAGES.streamingReminderStreamSelect.content | html"></div>
+          
+          <a class="btn btn-date-select" href="#" ng-click="reminder.setDay(false)" ng-if="reminder.model.day">
+            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;{{ reminder.model.day }}&nbsp;&nbsp;
+            <i class="glyphicon glyphicon-chevron-down"></i>
           </a>
 
-          <div data-toggle="buttons" ng-hide="model.day">
-            <label class="btn btn-lg btn-date-select">
-              <input autocomplete="off" ngcontrol="day" type="radio" ng-reflect-name="day" ng-reflect-model="false" ng-reflect-value="09/24/2016" value="09/24/2016" class="ng-untouched ng-pristine ng-valid"> Saturday, September 24th
-            </label>
-            <div dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
-          </div>
-
-          <div ng-if="model.day">
-            <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime | html"></div>
+          <div ng-hide="reminder.model.day">
             <div data-toggle="buttons">
-              <label class="btn btn-sm btn-time-select">
-                <input autocomplete="off" type="radio" ng-reflect-name="time" class="ng-untouched ng-pristine ng-valid"> 1:56pm EDT
+              <label class="btn btn-lg btn-date-select" ng-repeat="date in reminder.uniqueDates()" ng-click="reminder.setDay(date)">
+                <input name="day" autocomplete="off" type="radio" ng-model="reminder.model.day" value="{{date.start.format(reminder.dateFormats.display)}}"> {{date.start.format(reminder.dateFormats.display)}}
               </label>
-              <div dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
             </div>
+            <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
           </div>
 
+          <div ng-if="reminder.model.day">
+            <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime.content | html"></div>
+            <div data-toggle="buttons">
+              <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-click="reminder.setTime(event)">
+                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.start.format(reminder.dateFormats.time)}}
+              </label>
+            </div>
+            <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
+          </div>
         </div>
+
+
         <div class="contact">
           <div dynamic-content="$root.MESSAGES.streamingReminderTypeSelect.content | html"></div>
           <div class="btn-group btn-group-justified" data-toggle="buttons">
-            <label class="btn btn-lg btn-time-select active" ng-click="model.type='phone'">
-              <input type="radio" name="type" value="phone" autocomplete="off" > Text
+            <label class="btn btn-lg btn-time-select active" ng-click="reminder.model.type='phone'">
+              <input type="radio" value="phone" ng-model="reminder.model.type"> Text
             </label>
-            <label class="btn btn-lg btn-time-select" ng-click="model.type='email'">
-              <input type="radio" name="type" value="email" autocomplete="off" > Email
+            <label class="btn btn-lg btn-time-select" ng-click="reminder.model.type='email'">
+              <input type="radio" value="email" ng-model="reminder.model.type"> Email
             </label>
           </div>
-
-          <div class="form-group validation-control" ng-if="model.type=='phone'">
-            <input type="tel" class="form-control" placeholder="Enter your phone number" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
-            <div class="alert alert-danger" ng-if="model.isPhoneValid === false">
-              <div dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
-            </div>
+          <div class="form-group validation-control" ng-show="reminder.model.type=='phone'">
+            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <div class="alert alert-danger" ng-if="reminder.model.isPhoneValid===false" dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
           </div>
-          <div class="form-group validation-control" ng-if="model.type=='email'">
-            <input type="email" class="form-control" placeholder="Enter your email address" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
-            <div class="alert alert-danger"  ng-if="model.isEmailValid === false">
-              <div dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
-            </div>
+          <div class="form-group validation-control" ng-show="reminder.model.type=='email'">
+            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email">
+            <div class="alert alert-danger" ng-if="reminder.model.isEmailValid===false" dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
           </div>
         </div>
       </div>
-
-      <div ng-if="formSuccess">
-        <div dynamic-content="$root.MESSAGES.streamingReminderSuccess.content | html"></div>
-      </div>
-
-      <div ng-if="formError">
-        <div dynamic-content="$root.MESSAGES.streamingReminderFailure.content | html"></div>
-      </div>
-      
-    </modal-body>
-    <modal-footer>
-      <button type="submit" class="btn btn-default btn-set-reminder" [disabled]="false" ng-if="!isLoading() && !formSuccess">Set Reminder</button>
-      <button type="button" class="btn btn-default btn-set-reminder" ng-click="close()" ng-if="formSuccess">Close</button>
-    </modal-footer>
-  </form>
-</modal>
+    </div>
+    <div ng-if="reminder.formSuccess" dynamic-content="$root.MESSAGES.streamingReminderSuccess.content | html"></div>
+    <div ng-if="reminder.formError" dynamic-content="$root.MESSAGES.streamingReminderFailure.content | html"></div>
+  </modal-body>
+  <modal-footer>
+  <div class="modal-footer">
+    <button class="btn btn-default btn-set-reminder" type="submit" ng-if="!reminder.isLoading() && !reminder.formSuccess && !reminder.formError">Set Reminder</button>
+    <button type="button" class="btn btn-default btn-set-reminder" ng-click="reminder.close()" ng-if="reminder.formSuccess || reminder.formError">Close</button>
+  </div>
+  </modal-footer>
+</form>
