@@ -38,7 +38,7 @@ export default class ReminderService {
     });
 
     return this.http
-      .post(`${this.url}api/`, body, this.headers);
+      .post(`${this.url}api/sendTextReminder`, body, this.headers);
   }
 
   sendEmailReminder(reminder) {

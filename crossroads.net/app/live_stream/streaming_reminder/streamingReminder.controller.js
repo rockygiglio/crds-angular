@@ -32,13 +32,19 @@ export default class StreamingReminderController {
     };
   }
 
+  validate(form) {
+    if (form) {
+      this.model.isDayValid   = form.day.$viewValue !== '';
+      this.model.isTimeValid  = form.time.$viewValue !== '';
+      this.model.isEmailValid = form.email.$touched && form.email.$valid
+      this.model.isPhoneValid = form.phone.$touched && form.phone.$valid
+    }
+  }
+
   submit(form) {
     this.dateTimeError = false;
 
-    this.model.isDayValid = form.day.$viewValue !== '';
-    this.model.isTimeValid = form.time.$viewValue !== '';
-    this.model.isEmailValid = form.email.$touched && form.email.$valid
-    this.model.isPhoneValid = form.phone.$touched && form.phone.$valid
+    this.validate(form);
 
     if (this.model.isDayValid === false || this.model.isTimeValid === false) {
       this.dateTimeError = true;
@@ -106,7 +112,7 @@ export default class StreamingReminderController {
     this.dateTimeError = false;
     this.model.day = day;
     
-    if (day.start !== 'undefined') {
+    if (day) {
       this.model.day = day.start.format(this.dateFormats.key)
     } else {
       this.model.time = '';
@@ -118,7 +124,7 @@ export default class StreamingReminderController {
   }
 
   resetForm() {
-    this.model = new Reminder(this.reminderService);
+    this.model = new Reminder();
     this.model.day = this.nextDate();
 
     this.formError     = false;
