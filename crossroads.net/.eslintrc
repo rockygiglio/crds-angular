@@ -1,7 +1,7 @@
 {
   "rules": {
-    "camelcase": 0,
-    "curly": 1,
+    "camelcase": false,
+    "curly": true,
     "eqeqeq": true,
     "es3": false,
     "forin": true,
@@ -51,9 +51,13 @@
     "validthis": false,
     "noyield": false,
   },
-  "environments" : {
+  "env" : {
     "browser": true,
     "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
   },
   "globals": {
     "angular": false,

@@ -10,11 +10,11 @@
       <li class="vr"></li>
       <li><strong>{{ countdown.countdown.seconds }}</strong> <small>sec</small></li>
     </ul>
-    <a href="#" class="btn btn-sm btn-reminder">Remind Me</a>
+    <a href="#" class="btn btn-sm btn-reminder" ng-click="countdown.openReminder()">Remind Me</a>
   </div>
   <div ng-if="countdown.isBroadcasting" class="in-progress">
     <i>Live stream in progress...</i> <a class="btn btn-sm">Watch Now</a>
   </div>
 </div>
-<reminder-modal>
-</reminder-modal>
+<streaming-reminder>
+</streaming-reminder>
