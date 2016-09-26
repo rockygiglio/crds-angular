@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.config(addCrdsCheckbox);
+    ngModule.config(addCRDSInput);
 
-    function addCrdsCheckbox(formlyConfigProvider) {
+    function addCRDSInput(formlyConfigProvider) {
         formlyConfigProvider.setType({
             name: 'crdsInput',
             template: '<input class="form-control" ng-model="model[options.key]">',

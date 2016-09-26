@@ -120,7 +120,7 @@ export default class CreateGroupService {
                 }
             }, {
                     key: 'profile.dateOfBirth',
-                    type: 'datepicker',
+                    type: 'crdsDatepicker',
                     templateOptions: {
                         label: 'Birth Date',
                         required: true,
@@ -249,7 +249,7 @@ export default class CreateGroupService {
                     }
                 }, {
                     key: 'group.meeting.time',
-                    type: 'timepicker',
+                    type: 'crdsTimepicker',
                     hideExpression: '!model.specificDay',
                     expressionProperties: {
                         'templateOptions.required': 'model.specificDay'

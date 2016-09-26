@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.run(addCrdsProfilePicture);
+    ngModule.run(addCRDSProfilePicture);
 
-    function addCrdsProfilePicture(formlyConfig) {
+    function addCRDSProfilePicture(formlyConfig) {
         var ngModelAttrs = {};
 
         // bindings

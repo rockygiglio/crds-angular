@@ -3,8 +3,8 @@ export default ngModule => {
   require('./zipCodeValidator')(ngModule);
   require('./crdsBoldCheckBox')(ngModule);
   require('./crdsProfilePicture')(ngModule);
-  require('./timePicker')(ngModule);
-  require('./datePicker')(ngModule);
+  require('./crdsTimePicker')(ngModule);
+  require('./crdsDatePicker')(ngModule);
   require('./crdsInput')(ngModule);
   require('./crdsCheckBox')(ngModule);
   require('./crdsMultiCheckbox')(ngModule);

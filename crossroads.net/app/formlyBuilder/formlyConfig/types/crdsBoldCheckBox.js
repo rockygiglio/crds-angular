@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.run(addBoldCheckbox);
+    ngModule.run(addCRDSBoldCheckbox);
 
-    function addBoldCheckbox(formlyConfig) {
+    function addCRDSBoldCheckbox(formlyConfig) {
         formlyConfig.setType({
             name: 'crdsBoldcheckbox',
             template: require('./templates/crds-boldCheckbox.html'),

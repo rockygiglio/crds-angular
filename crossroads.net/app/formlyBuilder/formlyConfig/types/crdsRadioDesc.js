@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.config(addCrdsRadioDesc);
+    ngModule.config(addCRDSRadioDesc);
 
-    function addCrdsRadioDesc(formlyConfigProvider) {
+    function addCRDSRadioDesc(formlyConfigProvider) {
         formlyConfigProvider.setType({
             name: 'crdsRadioDesc',
             template: require('./templates/crds-radioDescription.html'),
