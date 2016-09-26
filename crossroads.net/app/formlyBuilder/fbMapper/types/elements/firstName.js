@@ -27,6 +27,6 @@ export default function FirstName(fbMapperConfig) {
     fbMapperConfig.setElement({
         name: 'firstName',
         model: getModel(),
-        defaultComposition: defaultComposition;
+        defaultComposition: defaultComposition
     });
 }

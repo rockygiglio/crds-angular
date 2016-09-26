@@ -27,6 +27,6 @@ export default function addMiddleName(fbMapperConfig) {
     fbMapperConfig.setElement({
         name: 'middleName',
         model: getModel(),
-        defaultComposition: defaultComposition;
+        defaultComposition: defaultComposition
     });
 }

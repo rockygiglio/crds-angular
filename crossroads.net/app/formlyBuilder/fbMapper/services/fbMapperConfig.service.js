@@ -17,9 +17,9 @@ export default class fbMapperConfig {
         let newComp = composition;
         _.forEach(composition.elements, (element) => {
             if (typeof(element) === "string") {
-                e = this._getElement(element)
-                element = e.defaultComposition()
-                element.body = e
+                let e = this._getElement(element);
+                element = e.defaultComposition();
+                element.body = e;
             } else {
                 element.body = this._getElement(element.name);
             }

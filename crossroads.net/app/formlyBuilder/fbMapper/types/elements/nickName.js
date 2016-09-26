@@ -23,10 +23,10 @@ export default function addNickName(fbMapperConfig) {
             name: "nickName"
         };
     };
-
+    
     fbMapperConfig.setElement({
         name: 'nickName',
         model: getModel(),
-        defaultComposition: defaultComposition;
+        defaultComposition: defaultComposition
     });
 }
