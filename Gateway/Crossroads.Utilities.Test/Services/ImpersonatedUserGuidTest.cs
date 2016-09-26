@@ -10,14 +10,14 @@ namespace Crossroads.Utilities.Test.Services
         {
             Assert.IsFalse(ImpersonatedUserGuid.HasValue());
 
-            ImpersonatedUserGuid.Set("123");
+            ImpersonatedUserGuid.Set("123", "abcdef");
             Assert.IsTrue(ImpersonatedUserGuid.HasValue());
             Assert.AreEqual("123", ImpersonatedUserGuid.Get());
 
-            ImpersonatedUserGuid.Set("  ");
+            ImpersonatedUserGuid.Set("  ", "  ");
             Assert.IsFalse(ImpersonatedUserGuid.HasValue());
 
-            ImpersonatedUserGuid.Set("123");
+            ImpersonatedUserGuid.Set("123", "abcdef");
             ImpersonatedUserGuid.Clear();
             Assert.IsFalse(ImpersonatedUserGuid.HasValue());
         }
