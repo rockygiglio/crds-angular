@@ -39,7 +39,7 @@ namespace crds_angular.Services
                 throw (new ImpersonationUserNotFoundException(useridToImpersonate));
             }
 
-            ImpersonatedUserGuid.Set(user.Guid);
+            ImpersonatedUserGuid.Set(user.Guid, authToken);
 
             try
             {

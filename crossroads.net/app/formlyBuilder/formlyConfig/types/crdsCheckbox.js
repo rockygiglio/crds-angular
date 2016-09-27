@@ -1,10 +1,10 @@
 export default ngModule => {
-    ngModule.config(addFormlyBuilderCheckbox);
+    ngModule.config(addCRDSCheckbox);
 
-    function addFormlyBuilderCheckbox(formlyConfigProvider) {
+    function addCRDSCheckbox(formlyConfigProvider) {
         formlyConfigProvider.setType({
-            name: 'formlyBuilderCheckbox',
-            template: require('./templates/formlyBuilder-checkbox.html'),
+            name: 'crdsCheckbox',
+            template: require('./templates/crds-checkbox.html'),
             wrapper: ['formlyBuilderHasError'],
             apiCheck: check => ({
                 templateOptions: {

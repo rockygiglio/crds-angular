@@ -1,9 +1,9 @@
 export default ngModule => {
-    ngModule.config(addFormlyBuilderSelect);
+    ngModule.config(addCRDSSelect);
 
-    function addFormlyBuilderSelect(formlyConfigProvider) {
+    function addCRDSSelect(formlyConfigProvider) {
         formlyConfigProvider.setType({
-            name: 'formlyBuilderSelect',
+            name: 'crdsSelect',
             template: '<select class="form-control" ng-model="model[options.key]"></select>',
             wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
             defaultOptions(options) {

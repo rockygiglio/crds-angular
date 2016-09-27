@@ -16,3 +16,4 @@ import countdown from './countdown';
 import streamingReminder from './streaming_reminder';
 import currentSeries from './current_series';
 import currentSeriesModal from './current_series_modal';
+import socialSharing from '../../core/components/social_sharing';

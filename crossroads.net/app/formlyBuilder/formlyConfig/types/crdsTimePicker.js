@@ -24,7 +24,7 @@ export default ngModule => {
         });
 
         formlyConfig.setType({
-            name: 'timepicker',
+            name: 'crdsTimepicker',
             template: '<timepicker ng-model="model[options.key]"></timepicker>',
             wrapper: ['formlyBuilderLabel', 'formlyBuilderHasError'],
             defaultOptions: {

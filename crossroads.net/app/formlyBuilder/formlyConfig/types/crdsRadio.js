@@ -1,10 +1,10 @@
 export default ngModule => {
-    ngModule.config(addFormlyBuilderRadioDesc);
+    ngModule.config(addCRDSRadio);
 
-    function addFormlyBuilderRadioDesc(formlyConfigProvider) {
+    function addCRDSRadio(formlyConfigProvider) {
         formlyConfigProvider.setType({
-            name: 'formlyBuilderRadioDesc',
-            template: require('./templates/formlyBuilder-radioDescription.html'),
+            name: 'crdsRadio',
+            template: require('./templates/crds-radio.html'),
             wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
             defaultOptions: {
                 noFormControl: false
@@ -14,10 +14,7 @@ export default ngModule => {
                     options: check.arrayOf(check.object),
                     labelProp: check.string.optional,
                     valueProp: check.string.optional,
-                    descProp: check.string.optional,
                     inline: check.bool.optional,
-                    descInline: check.bool.optional,
-                    bold: check.bool.optional
                 }
             })
         });

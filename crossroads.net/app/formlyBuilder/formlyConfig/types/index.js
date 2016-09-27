@@ -1,15 +1,15 @@
 export default ngModule => {
-  require('./multiCheckBoxCombo')(ngModule);
+  require('./crdsMultiCheckBoxCombo')(ngModule);
   require('./zipCodeValidator')(ngModule);
-  require('./boldCheckBox')(ngModule);
-  require('./profilePicture')(ngModule);
-  require('./timePicker')(ngModule);
-  require('./datePicker')(ngModule);
-  require('./formlyBuilderInput')(ngModule);
-  require('./formlyBuilderCheckbox')(ngModule);
-  require('./formlyBuilderMultiCheckbox')(ngModule);
-  require('./formlyBuilderRadio')(ngModule);
-  require('./formlyBuilderRadioDesc')(ngModule);
-  require('./formlyBuilderSelect')(ngModule);
-  require('./formlyBuilderTextarea')(ngModule);
+  require('./crdsBoldCheckBox')(ngModule);
+  require('./crdsProfilePicture')(ngModule);
+  require('./crdsTimePicker')(ngModule);
+  require('./crdsDatePicker')(ngModule);
+  require('./crdsInput')(ngModule);
+  require('./crdsCheckbox')(ngModule);
+  require('./crdsMultiCheckbox')(ngModule);
+  require('./crdsRadio')(ngModule);
+  require('./crdsRadioDesc')(ngModule);
+  require('./crdsSelect')(ngModule);
+  require('./crdsTextArea')(ngModule);
 }
